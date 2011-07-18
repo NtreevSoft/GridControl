@@ -1,0 +1,17 @@
+[33mcommit 3dd33513158689c03558b2ff7314d0ad30bb6bfd[m
+Author: choi jeesu <s2quake@ntreev.com>
+Date:   Mon Jul 18 15:52:28 2011 +0900
+
+    add README.txt
+
+[33mcommit 87e1cabd4a32fab1f458ee98661241a3ac6506c9[m
+Author: choi jeesu <s2quake@ntreev.com>
+Date:   Mon Jul 18 14:52:15 2011 +0900
+
+    어셈블리 파일 경로 재 설정
+
+[33mcommit 69c3e67edcb7e7af0a37d8174e8e20ea701d8df1[m
+Author: choi jeesu <s2quake@ntreev.com>
+Date:   Mon Jul 18 12:47:31 2011 +0900
+
+    first commit
