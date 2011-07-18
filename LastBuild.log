@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shfbBuild product="Sandcastle Help File Builder Utilities" version="1.9.3.0" projectFile="D:\NTG git\GridControl\help\GridControlHelp.shfbproj" started="2011-07-18 오후 4:47:14">
+<shfbBuild product="Sandcastle Help File Builder Utilities" version="1.9.3.0" projectFile="D:\NTG git\GridControl\help\GridControlHelp.shfbproj" started="2011-07-18 오후 5:34:14">
 <buildStep step="Initializing">
 </buildStep>
 <buildStep step="FindingTools">
@@ -18,11 +18,11 @@ Copying XML comments files
 <buildStep step="GenerateSharedContent">
 Generating shared content files (ko-KR, 한국어 (대한민국))...
 SHFB: Warning BE0003: Sandcastle shared content for the &#39;ko-KR, 한국어 (대한민국)&#39; language could not be found.  Using &#39;en-US, English (US)&#39; defaults.
-    Last step completed in 00:00:00.1270
+    Last step completed in 00:00:00.0060
 </buildStep>
 <buildStep step="GenerateApiFilter">
 Generating API filter for MRefBuilder...
-    Last step completed in 00:00:00.0210
+    Last step completed in 00:00:00.0070
 </buildStep>
 <buildStep step="GenerateReflectionInfo">
 Generating reflection information...
@@ -35,11 +35,11 @@ Generating reflection information...
   Copyright ⓒ Microsoft 2005-2006
   Info: Applying XSL transformation &#39;C:\Program Files\Sandcastle\ProductionTransforms\MergeDuplicates.xsl&#39;.
   reflection.all -&gt; reflection.org
-    Last step completed in 00:00:02.7282
+    Last step completed in 00:00:01.7561
 </buildStep>
 <buildStep step="GenerateNamespaceSummaries">
 Generating namespace summary information...
-    Last step completed in 00:00:00.0570
+    Last step completed in 00:00:00.0030
 </buildStep>
 <buildStep step="ApplyVisibilityProperties">
 Applying visibility properties to reflection information file
@@ -47,7 +47,7 @@ Applying visibility properties to reflection information file
     91 explicit interface implementations removed
     196 local and base class EII elements removed
     1442 inherited member elements removed
-    Last step completed in 00:00:00.0450
+    Last step completed in 00:00:00.0920
 </buildStep>
 <buildStep step="TransformReflectionInfo">
 Transforming reflection output...
@@ -55,19 +55,19 @@ Transforming reflection output...
   XslTransform (v2.6.10621.1)
   Copyright ⓒ Microsoft 2005-2006
   Info: Applying XSL transformation &#39;C:\Program Files\Sandcastle\ProductionTransforms\ApplyVSDocModel.xsl&#39;.
-  reflection.org -&gt; C:\Users\최지수\AppData\Local\Temp\tmp4DAC.tmp
+  reflection.org -&gt; C:\Users\최지수\AppData\Local\Temp\tmp4F42.tmp
   Info: Applying XSL transformation &#39;C:\Program Files\Sandcastle\ProductionTransforms\AddGuidFilenames.xsl&#39;.
-  C:\Users\최지수\AppData\Local\Temp\tmp4DAC.tmp -&gt; reflection.xml
+  C:\Users\최지수\AppData\Local\Temp\tmp4F42.tmp -&gt; reflection.xml
   XslTransform (v2.6.10621.1)
   Copyright ⓒ Microsoft 2005-2006
   Info: Applying XSL transformation &#39;C:\Program Files\Sandcastle\ProductionTransforms\ReflectionToManifest.xsl&#39;.
   reflection.xml -&gt; manifest.xml
-    Last step completed in 00:00:01.7151
+    Last step completed in 00:00:01.7511
 </buildStep>
 <buildStep step="ModifyHelpTopicFilenames">
 Modifying help topic filenames in reflection information file
     No changes required
-    Last step completed in 00:00:00.0230
+    Last step completed in 00:00:00.0280
 </buildStep>
 <buildStep step="CopyStandardContent">
 Copying standard help content...
@@ -178,7 +178,7 @@ C:\Program Files\Sandcastle\Presentation\vs2005\scripts\script_manifold.js -&gt;
 C:\Program Files\Sandcastle\Presentation\vs2005\scripts\SplitScreen.js -&gt; D:\NTG git\GridControl\bin\help\Working\Output\Website\scripts\SplitScreen.js
 C:\Program Files\Sandcastle\Presentation\vs2005\styles\Presentation.css -&gt; D:\NTG git\GridControl\bin\help\Working\Output\Website\styles\Presentation.css
 C:\Program Files\Sandcastle\Presentation\vs2005\styles\Whidbey\presentation.css -&gt; D:\NTG git\GridControl\bin\help\Working\Output\Website\styles\Whidbey\presentation.css
-    Last step completed in 00:00:00.7460
+    Last step completed in 00:00:00.3090
 </buildStep>
 <buildStep step="CopyConceptualContent">
 Copying conceptual content...
@@ -192,12 +192,12 @@ Copying images and creating the media map file...
     D:\NTG git\GridControl\help\QuickStart\ColumnExtension\ColumnDropDown.jpg -&gt; D:\NTG git\GridControl\bin\help\Working\Media\ColumnDropDown.jpg
     D:\NTG git\GridControl\help\QuickStart\ColumnExtension\ColumnModal.jpg -&gt; D:\NTG git\GridControl\bin\help\Working\Media\ColumnModal.jpg
     D:\NTG git\GridControl\help\QuickStart\BeforeStarting\AssemblyRegistration\CompleteSelectItem.jpg -&gt; D:\NTG git\GridControl\bin\help\Working\Media\CompleteSelectItem.jpg
+    D:\NTG git\GridControl\help\QuickStart\BeforeStarting\ProjectCreation\CreateControl.jpg -&gt; D:\NTG git\GridControl\bin\help\Working\Media\CreateControl.jpg
+    D:\NTG git\GridControl\help\QuickStart\BeforeStarting\ProjectCreation\CreateProject.jpg -&gt; D:\NTG git\GridControl\bin\help\Working\Media\CreateProject.jpg
     D:\NTG git\GridControl\help\QuickStart\BeforeStarting\AssemblyRegistration\SelectItem.jpg -&gt; D:\NTG git\GridControl\bin\help\Working\Media\SelectItem.jpg
     D:\NTG git\GridControl\help\QuickStart\BeforeStarting\AssemblyRegistration\SelectItemInToolbox.jpg -&gt; D:\NTG git\GridControl\bin\help\Working\Media\SelectItemInToolbox.jpg
     D:\NTG git\GridControl\help\QuickStart\BeforeStarting\AssemblyRegistration\SelectItemInToolbox2.jpg -&gt; D:\NTG git\GridControl\bin\help\Working\Media\SelectItemInToolbox2.jpg
     D:\NTG git\GridControl\help\QuickStart\SimpleGridControl\SimpleGridControl.jpg -&gt; D:\NTG git\GridControl\bin\help\Working\Media\SimpleGridControl.jpg
-    D:\NTG git\GridControl\help\QuickStart\BeforeStarting\ProjectCreation\CreateControl.jpg -&gt; D:\NTG git\GridControl\bin\help\Working\Media\CreateControl.jpg
-    D:\NTG git\GridControl\help\QuickStart\BeforeStarting\ProjectCreation\CreateProject.jpg -&gt; D:\NTG git\GridControl\bin\help\Working\Media\CreateProject.jpg
 Generating conceptual topic files
     Parsing topic file &#39;D:\NTG git\GridControl\help\QuickStart\QuickStart.aml&#39;
     D:\NTG git\GridControl\help\QuickStart\QuickStart.aml -&gt; D:\NTG git\GridControl\bin\help\Working\ddueXml\f4010ee5-e46e-4218-8332-01af8dc68ca6.xml
@@ -207,23 +207,23 @@ Generating conceptual topic files
     D:\NTG git\GridControl\help\QuickStart\SimpleGridControl\SimpleGridControl.aml -&gt; D:\NTG git\GridControl\bin\help\Working\ddueXml\89926727-d3e6-4411-9d50-e97c8ae02487.xml
     Parsing topic file &#39;D:\NTG git\GridControl\help\QuickStart\ColumnExtension\ColumnExtension.aml&#39;
     D:\NTG git\GridControl\help\QuickStart\ColumnExtension\ColumnExtension.aml -&gt; D:\NTG git\GridControl\bin\help\Working\ddueXml\700fe066-b38d-44da-bf3d-2fe791df3ba6.xml
-    Last step completed in 00:00:00.0630
+    Last step completed in 00:00:00.0680
 </buildStep>
 <buildStep step="CreateConceptualTopicConfigs">
 Creating conceptual topic configuration files...
     Companion files
     _ContentMetadata_.xml
     ConceptualManifest.xml
-    Last step completed in 00:00:00.0360
+    Last step completed in 00:00:00.0100
 </buildStep>
 <buildStep step="CopyAdditionalContent">
 Copying additional content files...
 No additional content to copy
-    Last step completed in 00:00:00.0050
+    Last step completed in 00:00:00.0030
 </buildStep>
 <buildStep step="MergeTablesOfContents">
 Merging conceptual and additional tables of contents...
-    Last step completed in 00:00:00.0040
+    Last step completed in 00:00:00.0020
 </buildStep>
 <buildStep step="GenerateIntermediateTableOfContents">
 Generating intermediate table of contents file...
@@ -233,13 +233,13 @@ Generating intermediate table of contents file...
   Info: Applying XSL transformation &#39;C:\Program Files\Sandcastle\ProductionTransforms\CreateVSToc.xsl&#39;.
   reflection.xml -&gt; toc.xml
 Generating conceptual content intermediate TOC file...
-    Last step completed in 00:00:00.5440
+    Last step completed in 00:00:00.6840
 </buildStep>
 <buildStep step="CreateBuildAssemblerConfigs">
 Creating Sandcastle configuration files...
     sandcastle.config
     conceptual.config
-    Last step completed in 00:00:00.0770
+    Last step completed in 00:00:00.0310
 </buildStep>
 <buildStep step="MergeCustomConfigs">
 Merging custom build component configurations
@@ -253,7 +253,7 @@ D:\NTG git\GridControl\bin\help\Working\conceptual.config
     Skipping component &#39;Cached Framework Comments Index Data&#39;, not used in conceptual build
     Skipping component &#39;Cached Reflection Index Data&#39;, not used in conceptual build
     Replacing default configuration for &#39;Code Block Component&#39; with the custom configuration
-    Last step completed in 00:00:00.1330
+    Last step completed in 00:00:00.0560
 </buildStep>
 <buildStep step="BuildConceptualTopics">
 Building conceptual help topics...
@@ -345,15 +345,13 @@ Building conceptual help topics...
   Info: SaveComponent: Instantiating component.
   Info: BuildAssembler: Building topic f4010ee5-e46e-4218-8332-01af8dc68ca6
   Info: BuildAssembler: Building topic e3c8b1d6-121e-40c7-a92d-2177f4275216
-  Warn: ResolveArtLinksComponent: Unknown art target &#39;createproject&#39;
-  Warn: ResolveArtLinksComponent: Unknown art target &#39;createcontrol&#39;
   Info: BuildAssembler: Building topic 89926727-d3e6-4411-9d50-e97c8ae02487
   Warn: ResolveReferenceLinksComponent2: Unknown reference link target &#39;P:Ntreev.Windows.Forms.Grid.DataSource&#39;.
   Info: BuildAssembler: Building topic 700fe066-b38d-44da-bf3d-2fe791df3ba6
   Warn: ResolveReferenceLinksComponent2: Unknown reference link target &#39;M:Ntreev.Windows.Forms.ColumnDropDown`1.SetEditingValue&#39;.
   Warn: ResolveReferenceLinksComponent2: Unknown reference link target &#39;P:Ntreev.Windows.Forms.Grid.Column.Result&#39;.
   Info: Processed 4 topics
-    Last step completed in 00:00:45.5886
+    Last step completed in 00:00:47.7477
 </buildStep>
 <buildStep step="BuildReferenceTopics">
 Building reference help topics...
@@ -1550,13 +1548,13 @@ Building reference help topics...
   Info: Processed 862 topics
   Info: CachedCopyFromIndexComponent: Used &quot;reflection&quot; cache entries: 8
   Info: CachedCopyFromIndexComponent: Used &quot;comments&quot; cache entries: 2
-    Last step completed in 00:02:09.8704
+    Last step completed in 00:02:16.5398
 </buildStep>
 <buildStep step="CombiningIntermediateTocFiles">
 Combining conceptual and API intermediate TOC files...
 
 Clearing any prior web output
-    Last step completed in 00:00:00.0100
+    Last step completed in 00:00:00.0120
 </buildStep>
 <buildStep step="ExtractingHtmlInfo">
 Extracting HTML info for HTML Help 1 and/or website...
@@ -1572,16 +1570,16 @@ Processed 866 HTML files
 Sorting keywords and generating See Also indices
 Saving website keyword index to D:\NTG git\GridControl\bin\help\Working\WebKI.xml
 Saving website table of contents to D:\NTG git\GridControl\bin\help\Working\WebTOC.xml
-    Last step completed in 00:00:02.8032
+    Last step completed in 00:00:02.4381
 </buildStep>
 <buildStep step="GenerateHelpFormatTableOfContents">
 Generating website table of contents file...
-    Last step completed in 00:00:00.0030
+    Last step completed in 00:00:00.0020
 </buildStep>
 <buildStep step="GenerateFullTextIndex">
 Generating full-text index for the website...
 
-    Last step completed in 00:00:05.9413
+    Last step completed in 00:00:06.6464
 </buildStep>
 <buildStep step="CopyingWebsiteFiles">
 Copying website files to output folder...
@@ -2779,6 +2777,8 @@ D:\NTG git\GridControl\bin\help\Working\Output\Website\media\ColumnControl.jpg -
 D:\NTG git\GridControl\bin\help\Working\Output\Website\media\ColumnDropDown.jpg -&gt; D:\NTG git\GridControl\bin\help\media\ColumnDropDown.jpg
 D:\NTG git\GridControl\bin\help\Working\Output\Website\media\ColumnModal.jpg -&gt; D:\NTG git\GridControl\bin\help\media\ColumnModal.jpg
 D:\NTG git\GridControl\bin\help\Working\Output\Website\media\CompleteSelectItem.jpg -&gt; D:\NTG git\GridControl\bin\help\media\CompleteSelectItem.jpg
+D:\NTG git\GridControl\bin\help\Working\Output\Website\media\CreateControl.jpg -&gt; D:\NTG git\GridControl\bin\help\media\CreateControl.jpg
+D:\NTG git\GridControl\bin\help\Working\Output\Website\media\CreateProject.jpg -&gt; D:\NTG git\GridControl\bin\help\media\CreateProject.jpg
 D:\NTG git\GridControl\bin\help\Working\Output\Website\media\SelectItem.jpg -&gt; D:\NTG git\GridControl\bin\help\media\SelectItem.jpg
 D:\NTG git\GridControl\bin\help\Working\Output\Website\media\SelectItemInToolbox.jpg -&gt; D:\NTG git\GridControl\bin\help\media\SelectItemInToolbox.jpg
 D:\NTG git\GridControl\bin\help\Working\Output\Website\media\SelectItemInToolbox2.jpg -&gt; D:\NTG git\GridControl\bin\help\media\SelectItemInToolbox2.jpg
@@ -2794,15 +2794,15 @@ D:\NTG git\GridControl\bin\help\Working\Output\Website\scripts\SplitScreen.js -&
 D:\NTG git\GridControl\bin\help\Working\Output\Website\styles\highlight.css -&gt; D:\NTG git\GridControl\bin\help\styles\highlight.css
 D:\NTG git\GridControl\bin\help\Working\Output\Website\styles\Presentation.css -&gt; D:\NTG git\GridControl\bin\help\styles\Presentation.css
 D:\NTG git\GridControl\bin\help\Working\Output\Website\styles\Whidbey\presentation.css -&gt; D:\NTG git\GridControl\bin\help\styles\Whidbey\presentation.css
-    Last step completed in 00:00:03.2202
+    Last step completed in 00:00:03.7022
 </buildStep>
 <buildStep step="CleanIntermediates">
 Removing intermediate files...
-    Last step completed in 00:00:00.5010
+    Last step completed in 00:00:00.3880
 </buildStep>
 <buildStep step="Completed">
 
-Build completed successfully at 07-18-2011 04:50 오후.  Total time: 00:03:14.4161
+Build completed successfully at 07-18-2011 05:37 오후.  Total time: 00:03:22.3886
 
 </buildStep>
 </shfbBuild>
