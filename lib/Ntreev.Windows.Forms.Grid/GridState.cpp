@@ -1102,7 +1102,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		}
 	}
 
-	void ItemPressing::OnMouseUp(_Point location, HitTest hitTest, IStateChangeService^ service)
+	void ItemPressing::OnMouseUp(_Point /*location*/, HitTest /*hitTest*/, IStateChangeService^ /*service*/)
 	{
 		if(Selector->IsSelecting())
 			Selector->EndSelecting(GridControl->NativeSelectionType);

@@ -48,7 +48,7 @@
 				OpenMP="false"
 				UsePrecompiledHeader="2"
 				GenerateXMLDocumentationFiles="true"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
 			<Tool

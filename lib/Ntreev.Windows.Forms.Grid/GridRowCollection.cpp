@@ -81,7 +81,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return item->Index;
 	}
 
-	void RowCollection::currencyManager_ListChanged(object^ /*sender*/, System::ComponentModel::ListChangedEventArgs^ e)
+	void RowCollection::currencyManager_ListChanged(object^ /*sender*/, System::ComponentModel::ListChangedEventArgs^ /*e*/)
 	{
 #if 0 // unused, but
 		switch(e->ListChangedType)

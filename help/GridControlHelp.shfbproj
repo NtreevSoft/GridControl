@@ -156,12 +156,12 @@
       <AlternateText>Simple Creation</AlternateText>
     </Image>
     <Image Include="QuickStart\BeforeStarting\ProjectCreation\CreateProject.jpg">
-      <ImageId>프로젝트 생성</ImageId>
-      <AlternateText>프로젝트 생성</AlternateText>
+      <ImageId>CreateProject</ImageId>
+      <AlternateText>CreateProject</AlternateText>
     </Image>
     <Image Include="QuickStart\BeforeStarting\ProjectCreation\CreateControl.jpg">
-      <ImageId>컨트롤 붙이기</ImageId>
-      <AlternateText>컨트롤 붙이기</AlternateText>
+      <ImageId>CreateControl</ImageId>
+      <AlternateText>CreateControl</AlternateText>
     </Image>
     <Image Include="QuickStart\BeforeStarting\AssemblyRegistration\SelectItem.jpg">
       <ImageId>SelectItem</ImageId>
