@@ -45,7 +45,7 @@
             <list class="nobullet">
               <listItem>
                 <mediaLink>
-                  <image xlink:href="항목 선택"/>
+                  <image xlink:href="SelectItem"/>
                 </mediaLink>
               </listItem>
             </list>
@@ -56,13 +56,13 @@
               <listItem>
                 <mediaLink>
                   <caption>찾아보기 전</caption>
-                  <image xlink:href="도구 상자 항목 선택"/>
+                  <image xlink:href="SelectItemInToolbox"/>
                 </mediaLink>
               </listItem>
               <listItem>
                 <mediaLink>
                   <caption>찾아보기 후</caption>
-                  <image xlink:href="도구 상자 항목 선택후"/>
+                  <image xlink:href="SelectItemInToolbox2"/>
                 </mediaLink>
               </listItem>
             </list>
@@ -72,7 +72,7 @@
             <list class="nobullet">
               <listItem>
                 <mediaLink>
-                  <image xlink:href="항목 등록 완료"/>
+                  <image xlink:href="CompleteSelectItem"/>
                 </mediaLink>
               </listItem>
             </list>
@@ -114,7 +114,7 @@
             <list class="nobullet">
               <listItem>
                 <mediaLink>
-                  <image xlink:href="프로젝트 생성"/>
+                  <image xlink:href="CreateProject"/>
                 </mediaLink>
               </listItem>
             </list>
@@ -127,7 +127,7 @@
             <list class="nobullet">
               <listItem>
                 <mediaLink>
-                  <image xlink:href="컨트롤 붙이기"/>
+                  <image xlink:href="CreateControl"/>
                 </mediaLink>
               </listItem>
             </list>

@@ -25,7 +25,8 @@
     <HelpFileFormat>Website</HelpFileFormat>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\bin\lib\Ntreev.Windows.Forms.Grid.dll" />
-<DocumentationSource sourceFile="..\bin\lib\Ntreev.Windows.Forms.Grid.xml" /></DocumentationSources>
+      <DocumentationSource sourceFile="..\bin\lib\Ntreev.Windows.Forms.Grid.xml" />
+    </DocumentationSources>
     <SyntaxFilters>Standard</SyntaxFilters>
     <RootNamespaceTitle>References</RootNamespaceTitle>
     <RootNamespaceContainer>True</RootNamespaceContainer>
@@ -154,29 +155,29 @@
       <ImageId>SimpleCreation</ImageId>
       <AlternateText>Simple Creation</AlternateText>
     </Image>
-    <Image Include="QuickStart\BeforeStarting\ProjectCreation\프로젝트 생성.jpg">
+    <Image Include="QuickStart\BeforeStarting\ProjectCreation\CreateProject.jpg">
       <ImageId>프로젝트 생성</ImageId>
       <AlternateText>프로젝트 생성</AlternateText>
     </Image>
-    <Image Include="QuickStart\BeforeStarting\ProjectCreation\컨트롤 붙이기.jpg">
+    <Image Include="QuickStart\BeforeStarting\ProjectCreation\CreateControl.jpg">
       <ImageId>컨트롤 붙이기</ImageId>
       <AlternateText>컨트롤 붙이기</AlternateText>
     </Image>
-    <Image Include="QuickStart\BeforeStarting\AssemblyRegistration\항목 선택.jpg">
-      <ImageId>항목 선택</ImageId>
-      <AlternateText>항목 선택</AlternateText>
+    <Image Include="QuickStart\BeforeStarting\AssemblyRegistration\SelectItem.jpg">
+      <ImageId>SelectItem</ImageId>
+      <AlternateText>SelectItem</AlternateText>
     </Image>
-    <Image Include="QuickStart\BeforeStarting\AssemblyRegistration\항목 등록 완료.jpg">
-      <ImageId>항목 등록 완료</ImageId>
-      <AlternateText>항목 등록 완료</AlternateText>
+    <Image Include="QuickStart\BeforeStarting\AssemblyRegistration\CompleteSelectItem.jpg">
+      <ImageId>CompleteSelectItem</ImageId>
+      <AlternateText>CompleteSelectItem</AlternateText>
     </Image>
-    <Image Include="QuickStart\BeforeStarting\AssemblyRegistration\도구 상자 항목 선택후.jpg">
-      <ImageId>도구 상자 항목 선택후</ImageId>
-      <AlternateText>도구 상자 항목 선택후</AlternateText>
+    <Image Include="QuickStart\BeforeStarting\AssemblyRegistration\SelectItemInToolbox2.jpg">
+      <ImageId>SelectItemInToolbox2</ImageId>
+      <AlternateText>SelectItemInToolbox2</AlternateText>
     </Image>
-    <Image Include="QuickStart\BeforeStarting\AssemblyRegistration\도구 상자 항목 선택.jpg">
-      <ImageId>도구 상자 항목 선택</ImageId>
-      <AlternateText>도구 상자 항목 선택</AlternateText>
+    <Image Include="QuickStart\BeforeStarting\AssemblyRegistration\SelectItemInToolbox.jpg">
+      <ImageId>SelectItemInToolbox</ImageId>
+      <AlternateText>SelectItemInToolbox</AlternateText>
     </Image>
   </ItemGroup>
   <ItemGroup>

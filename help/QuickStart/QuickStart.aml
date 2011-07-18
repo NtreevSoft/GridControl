@@ -13,7 +13,6 @@
            zero (0) to limit it to top-level sections only.  -->
       <!-- <autoOutline /> -->
       <para>GridControl를 쉽게 접하고 사용할 수 있도록 주제별로 사용법을 제공합니다.</para>
-      SampleSolution : <token>GridControlSample</token>
     </introduction>
     <!-- Add one or more top-level section elements.  These are collapsible.
          If using <autoOutline />, add an address attribute to identify it
