@@ -1,0 +1,336 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="700fe066-b38d-44da-bf3d-2fe791df3ba6" revisionNumber="1">
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!--
+    <summary>
+      <para>Optional summary abstract</para>
+    </summary>
+    -->
+    <introduction address="Intro">
+      <autoOutline />
+
+      <!-- Uncomment this to generate an outline of the section and sub-section
+           titles.  Specify a numeric value as the inner text to limit it to
+           a specific number of sub-topics when creating the outline.  Specify
+           zero (0) to limit it to top-level sections only.  -->
+      <!-- <autoOutline /> -->
+      <para>새로운 컬럼을 정의 하여 데이터 소스와 연결하는 방법을 제공합니다.</para>
+    </introduction>
+    <!-- Add one or more top-level section elements.  These are collapsible.
+         If using <autoOutline />, add an address attribute to identify it
+         and specify a title so that it can be jumped to with a hyperlink. -->
+    <section address="ColumnKind">
+      <title>컬럼의 종류</title>
+      <content>
+      </content>
+      <sections>
+        <section address="ColumnKind_SubSection1">
+          <title>ColumnControl</title>
+          <content>
+            <para>
+              <codeEntityReference>T:Ntreev.Windows.Forms.Grid.ColumnControl`1</codeEntityReference>은
+              <codeEntityReference>T:System.Windows.Forms.CheckBox</codeEntityReference> 또는
+              <codeEntityReference>T:System.Windows.Forms.TextBox</codeEntityReference>처럼 간단한 형태의 컨트롤을 사용하여 셀을 편집할 수 있는 기능을 제공합니다.
+            </para>
+            <mediaLink>
+              <caption>새로운 컨트롤을 사용하여 Boolean형태의 값을 편집할 수 있는 예제</caption>
+              <image xlink:href="ColumnControl"/>
+            </mediaLink>
+          </content>
+        </section>
+        <section address="ColumnKind_SubSection2">
+          <title>ColumnDropDown</title>
+          <content>
+            <para>
+              <codeEntityReference>T:Ntreev.Windows.Forms.Grid.ColumnDropDown`1</codeEntityReference>은
+              <codeEntityReference>T:System.Windows.Forms.ComboBox</codeEntityReference> 또는
+              <codeEntityReference>T:System.Windows.Forms.TreeView</codeEntityReference>처럼 크기가 크고 복잡한 형태의 컨트롤을 별도의 폼에 부착해서 셀을 편집할 수 있는 기능을 제공합니다.
+            </para>
+            <mediaLink>
+              <caption>MonthCalendar컨트롤을 사용한 예제</caption>
+              <image xlink:href="ColumnDropDown"/>
+            </mediaLink>
+          </content>
+        </section>
+        <section address="ColumnKind_SubSection3">
+          <title>ColumnModal</title>
+          <content>
+            <para>
+              <codeEntityReference>T:Ntreev.Windows.Forms.Grid.ColumnModal</codeEntityReference>은
+              <codeEntityReference>T:System.Windows.Forms.FolderBrowserDialog</codeEntityReference> 또는
+              <codeEntityReference>T:System.Windows.Forms.ColorDialog</codeEntityReference>처럼 대화상자를 띄워 셀을 편집할 수 있는 기능을 제공합니다.
+            </para>
+            <mediaLink>
+              <caption>ColorDialog 대화 상자를 이용한 예제</caption>
+              <image xlink:href="ColumnModal"/>
+            </mediaLink>
+          </content>
+        </section>
+      </sections>
+    </section>
+    <section address="ColumnControl">
+      <title>ColumnControl 정의하기</title>
+      <content>
+        <para>
+          ColumnControl은 컬트롤이 표시 될때 편집될 셀의 크기에 맞추어 자동 조절되며 그리드 컨트롤의 자식으로 추가가 됩니다. 
+          때문에 CheckBox나 TextBox등 작은 크기에서도 편집이 가능한 컨트롤을 사용하는것이 좋습니다.
+        </para>
+        <para>ColumnControl을 상속받아 재정의할 경우 다음과 같은 사항을 준수해야 합니다.</para>
+        <procedure>
+          <title>요구사항</title>
+          <steps class="ordered">
+            <step>
+              <content>
+                <para>
+                  ColumnControl의 generic 인자인 TControl의 형태는 <codeEntityReference qualifyHint="false">T:System.Windows.Forms.UserControl</codeEntityReference>의 파생클래스여야 합니다.
+                </para>
+              </content>
+            </step>
+            <step>
+              <content>
+                <para>
+                  <codeEntityReference qualifyHint="false">M:Ntreev.Windows.Forms.Grid.ColumnControl`1.GetEditingValue(`0)</codeEntityReference>와
+                  <codeEntityReference qualifyHint="false">M:Ntreev.Windows.Forms.Grid.ColumnControl`1.SetEditingValue(`0,System.Object)</codeEntityReference>를 구현해야 합니다.
+                </para>
+                <alert class="note">
+                  <list class="bullet">
+                    <listItem>
+                      <para>
+                        <codeEntityReference qualifyHint="false">M:Ntreev.Windows.Forms.Grid.ColumnControl`1.SetEditingValue(`0,System.Object)</codeEntityReference>의 경우
+                        2번째 인자의 value의 값이 null이 될 수도 있습니다. (DataTable에 의해서 Column이 만들어질 경우 null대신 <codeEntityReference>F:System.DBNull.Value</codeEntityReference>의 값이 넘어옵니다.)
+                      </para>
+                    </listItem>
+                    <listItem>
+                      <para>
+                        일반적으로 value의 Type은 <codeEntityReference>P:Ntreev.Windows.Forms.Grid.Column.DataType</codeEntityReference>과 동일합니다.
+                      </para>
+                    </listItem>
+                  </list>
+                </alert>
+              </content>
+            </step>
+          </steps>
+        </procedure>
+        <link xlink:href="#Intro">Back to the Top</link>
+      </content>
+    </section>
+    <section address="ColumnControlExample">
+      <title>ColumnControl 예제</title>
+      <content>
+        <code language="c#" title="ColumnControl에서 사용할 CheckControl" source="..\\samples\\ColumnExtension\\CheckControl.cs"/>
+        <code language="c#" title="ColumnControl에서 상속받은 ColumnUserControl" source="..\\samples\\ColumnExtension\\ColumnUserControl.cs"/>
+        <link xlink:href="#Intro">Back to the Top</link>
+      </content>
+    </section>
+    <section address="ColumnDropDown">
+      <title>ColumnDropDown 정의하기</title>
+      <content>
+        <para>
+          ColumnDropDown은 셀 편집시 컨트롤을 별도의 폼의 자식에 추가한수 Popup상태로 표시하게 됩니다. 때문에 비교적 크기가 크고 복잡한 컨트롤을 사용하기 좋습니다.          
+        </para>
+        <para>ColumnDropDown을 상속받아 재정의할 경우 다음과 같은 사항을 준수해야 합니다.</para>
+        <procedure>
+          <title>요구사항</title>
+          <steps class="ordered">
+            <step>
+              <content>
+                <para>
+                  ColumnControl의 generic 인자인 TControl의 형태는 <codeEntityReference qualifyHint="false">T:System.Windows.Forms.UserControl</codeEntityReference>의 파생클래스여야 합니다.
+                </para>
+              </content>
+            </step>
+            <step>
+              <content>
+                <para>
+                  <codeEntityReference qualifyHint="false">M:Ntreev.Windows.Forms.Grid.ColumnControl`1.GetEditingValue(`0)</codeEntityReference>와
+                  <codeEntityReference qualifyHint="false">M:Ntreev.Windows.Forms.Grid.ColumnControl`1.SetEditingValue(`0,System.Object)</codeEntityReference>를 구현해야 합니다.
+                </para>
+                <alert class="note">
+                  <list class="bullet">
+                    <listItem>
+                      <para>
+                        <codeEntityReference qualifyHint="false">M:Ntreev.Windows.Forms.ColumnDropDown`1.SetEditingValue</codeEntityReference>의 경우
+                        2번째 인자의 value의 값이 null이 될 수도 있습니다. (DataTable에 의해서 Column이 만들어질 경우 null대신 <codeEntityReference>F:System.DBNull.Value</codeEntityReference>의 값이 넘어옵니다.)
+                      </para>
+                    </listItem>
+                    <listItem>
+                      <para>
+                        일반적으로 value의 Type은 <codeEntityReference>P:Ntreev.Windows.Forms.Grid.Column.DataType</codeEntityReference>과 동일합니다.
+                      </para>
+                    </listItem>
+                  </list>
+                </alert>
+              </content>
+            </step>
+            <step >
+              <content>
+                <para>
+                  편집이 종료되었을때 DropDown을 닫기 위해서 <codeEntityReference>P:Ntreev.Windows.Forms.Grid.Column.Result</codeEntityReference>를 사용하여 종료한다.
+                </para>
+              </content>
+            </step>
+          </steps>
+        </procedure>
+        <procedure>
+          <title>옵션사항</title>
+          <steps class="ordered">
+            <step>
+              <content>
+                <para>
+                  <codeEntityReference>P:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Sizable</codeEntityReference>
+                </para>
+              </content>
+            </step>
+            <step>
+              <content>
+                <para>
+                  <codeEntityReference>M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.GetPreferredSize(System.Drawing.Size)</codeEntityReference>
+                </para>
+              </content>
+            </step>
+          </steps>
+        </procedure>
+        <link xlink:href="#Intro">Back to the Top</link>
+      </content>
+    </section>
+    <section address="ColumnDropDownExample">
+      <title>ColumnDropDown 예제</title>
+      <content>
+        <code language="c#" title="ColumnDropDown에서 상속받은 ColumnUserDropDown" source="..\\samples\\ColumnExtension\\ColumnUserDropDown.cs"/>
+        <link xlink:href="#Intro">Back to the Top</link>
+      </content>
+    </section>
+    <section address="ColumnModal">
+      <title>ColumnModal 정의하기</title>
+      <content>
+        <para>Modal형식의 대화상자를 띄워 셀을 편집할 수 있는 방법을 제공합니다.</para>
+        <alert class="note">
+          <para>
+            ColumnModal은 다른 형식과는 다르게 셀을 편집하기 위한 작업이 자동화 되어있지 않습니다. 그렇기 때문에 <codeEntityReference>M:Ntreev.Windows.Forms.Grid.Column.OnEditValue(Ntreev.Windows.Forms.Grid.EditValueEventArgs)</codeEntityReference>를 재정의한후에
+            대화상자를 띄우는 작업을 직접 구현한 후 최종적으로 변경된 값을 <codeEntityReference qualifyHint="true">P:Ntreev.Windows.Forms.Grid.EditValueEventArgs.Value</codeEntityReference>에 설정해주면 됩니다.
+          </para>
+        </alert>
+        <link xlink:href="#Intro">Back to the Top</link>
+      </content>
+    </section>
+    <section address="ColumnModalExample">
+      <title>ColumnModal 예제</title>
+      <content>
+        <code language="c#" title="ColumnModal에서 상속받은 ColumnUserModal" source="..\\samples\\ColumnExtension\\ColumnUserModal.cs"/>
+        <alert class="note">
+          <para>색상을 그림으로 표현하기 위해 추가적으로 <codeEntityReference>T:Ntreev.Windows.Forms.Grid.IValuePainter</codeEntityReference>를 구현하였습니다.
+        </para>
+        </alert>
+        <link xlink:href="#Intro">Back to the Top</link>
+      </content>
+    </section>
+    <section address="InitDataSource">
+      <title>데이터 소스에 새로운 컬럼 연결하기</title>
+      <content>
+        <para>
+          데이터 소스 초기화시 데이터 타입에 따라서 적당한 컬럼의 인스턴스가 생성됩니다.. 새로 정의한 컬럼을 사용하고자 할때는 데이터 소스가 초기화 될 때 발생되는 이벤트중에 하나인 
+          <codeEntityReference>E:Ntreev.Windows.Forms.Grid.GridControl.ColumnBinding</codeEntityReference>을 사용하시면 됩니다. 
+          이벤트를 받을수 있는 이벤트 핸들러를 등록하여 데이터 타입에 따라 새로운 컬럼의 인스턴스를 설정하면 됩니다.
+        </para>
+      </content>
+      <sections>
+        <section>
+          <title>이벤트 핸들러 등록하기</title>
+          <content>
+            <code language="c#"><![CDATA[this.gridControl1.ColumnBinding += new Ntreev.Windows.Forms.Grid.ColumnBindingEventHandler(this.gridControl1_ColumnBinding);]]></code>
+          </content>
+        </section>
+        <section>
+          <title>데이터 소스 초기화 하기</title>
+          <content>
+            <code language="c#">
+              <![CDATA[
+DataTable dataTable = new DataTable("DataTable");
+dataTable.Columns.Add("Boolean", typeof(bool));
+dataTable.Columns.Add("DateTime", typeof(DateTime));
+dataTable.Columns.Add("Color", typeof(Color));
+
+for (int i = 0; i < 10; i++)
+{
+    dataTable.Rows.Add();
+}
+
+this.gridControl1.DataSource = dataTable;              
+              ]]>
+            </code>
+          </content>
+        </section>
+        <section>
+          <title>새롭게 정의된 컬럼 설정하기</title>
+          <content>
+            <code language="c#">
+              <![CDATA[
+private void gridControl1_ColumnBinding(object sender, Ntreev.Windows.Forms.Grid.ColumnBindingEventArgs e)
+{
+    switch (e.PropertyDescriptor.Name)
+    {
+        case "Boolean":
+            e.BindingColumn = new ColumnUserControl();
+            break;
+        case "DateTime":
+            e.BindingColumn = new ColumnUserDropDown();
+            break;
+        case "Color":
+            e.BindingColumn = new ColumnUserModal();
+            break;
+    }
+}              
+              ]]>
+            </code>
+          </content>
+        </section>
+        <section>
+          <title>전체 소스</title>
+          <content>
+            <code language="c#" source="..\\samples\\ColumnExtension\\Form1.cs"/>
+          </content>
+        </section>
+      </sections>
+    </section>
+    <relatedTopics>
+      <codeEntityReference>T:Ntreev.Windows.Forms.Grid.ColumnControl`1</codeEntityReference>
+      <codeEntityReference>T:Ntreev.Windows.Forms.Grid.ColumnDropDown`1</codeEntityReference>
+      <codeEntityReference>T:Ntreev.Windows.Forms.Grid.ColumnModal</codeEntityReference>
+      <!-- One or more of the following:
+           - A local link
+           - An external link
+           - A code entity reference
+
+      <link xlink:href="Other Topic's ID"/>
+      <link xlink:href="Other Topic's ID">Link inner text</link>
+
+      <externalLink>
+          <linkText>Link text</linkText>
+          <linkAlternateText>Optional alternate link text</linkAlternateText>
+          <linkUri>URI</linkUri>
+      </externalLink>
+
+      <codeEntityReference>API member ID</codeEntityReference>
+
+      Examples:
+
+      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8270" />
+      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8278">Some other topic</link>
+
+      <externalLink>
+          <linkText>SHFB on CodePlex</linkText>
+          <linkAlternateText>Go to CodePlex</linkAlternateText>
+          <linkUri>http://shfb.codeplex.com</linkUri>
+      </externalLink>
+
+      <codeEntityReference>T:TestDoc.TestClass</codeEntityReference>
+      <codeEntityReference>P:TestDoc.TestClass.SomeProperty</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.#ctor</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.#ctor(System.String,System.Int32)</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.ToString</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.FirstMethod</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.SecondMethod(System.Int32,System.String)</codeEntityReference>
+      -->
+    </relatedTopics>
+  </developerConceptualDocument>
+</topic>
