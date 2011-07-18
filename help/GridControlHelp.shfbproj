@@ -24,9 +24,8 @@
     <FeedbackEMailAddress>s2quake%40ntreev.com</FeedbackEMailAddress>
     <HelpFileFormat>Website</HelpFileFormat>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\bin\Library\Ntreev.Windows.Forms.Grid.dll" />
-      <DocumentationSource sourceFile="..\bin\Library\Ntreev.Windows.Forms.Grid.xml" />
-    </DocumentationSources>
+      <DocumentationSource sourceFile="..\bin\lib\Ntreev.Windows.Forms.Grid.dll" />
+<DocumentationSource sourceFile="..\bin\lib\Ntreev.Windows.Forms.Grid.xml" /></DocumentationSources>
     <SyntaxFilters>Standard</SyntaxFilters>
     <RootNamespaceTitle>References</RootNamespaceTitle>
     <RootNamespaceContainer>True</RootNamespaceContainer>
