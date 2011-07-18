@@ -1,0 +1,343 @@
+﻿<html xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:mshelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:msxsl="urn:schemas-microsoft-com:xslt"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><META NAME="save" CONTENT="history" /><title>새로운 컬럼을 정의하려면</title><meta name="Language" content="ko-kr" /><meta name="Microsoft.Help.Id" content="700fe066-b38d-44da-bf3d-2fe791df3ba6" /><meta name="Description" content="새로운 컬럼을 정의 하여 데이터 소스와 연결하는 방법을 제공합니다." /><meta name="Microsoft.Help.ContentType" content="Concepts" /><link rel="stylesheet" type="text/css" href="../styles/Presentation.css" /><link rel="stylesheet" type="text/css" href="ms-help://Hx/HxRuntime/HxLink.css" /><script type="text/javascript" src="../scripts/EventUtilities.js"> </script><script type="text/javascript" src="../scripts/SplitScreen.js"> </script><script type="text/javascript" src="../scripts/Dropdown.js"> </script><script type="text/javascript" src="../scripts/script_manifold.js"> </script><script type="text/javascript" src="../scripts/script_feedBack.js"> </script><script type="text/javascript" src="../scripts/CheckboxMenu.js"> </script><script type="text/javascript" src="../scripts/CommonUtilities.js"> </script><xml><MSHelp:Keyword Index="A" Term="700fe066-b38d-44da-bf3d-2fe791df3ba6" /><MSHelp:Attr Name="RevisionNumber" Value="1" /><MSHelp:Attr Name="AssetID" Value="700fe066-b38d-44da-bf3d-2fe791df3ba6" /><MSHelp:Attr Name="Abstract" Value="새로운 컬럼을 정의 하여 데이터 소스와 연결하는 방법을 제공합니다." /><MSHelp:Attr Name="TopicType" Value="kbArticle" /><MSHelp:Attr Name="Locale" Value="ko-kr" /></xml><link type="text/css" rel="stylesheet" href="../styles/highlight.css" /><script type="text/javascript" src="../scripts/highlight.js"> </script></head><body><input type="hidden" id="userDataCache" class="userDataStyle" /><input type="hidden" id="hiddenScrollOffset" /><img id="collapseImage" style="display:none; height:0; width:0;" src="../icons/collapse_all.gif" alt="Collapse image" title="Collapse image" /><img id="expandImage" style="display:none; height:0; width:0;" src="../icons/expand_all.gif" alt="Expand Image" title="Expand Image" /><img id="collapseAllImage" style="display:none; height:0; width:0;" src="../icons/collapse_all.gif" /><img id="expandAllImage" style="display:none; height:0; width:0;" src="../icons/expand_all.gif" /><img id="dropDownImage" style="display:none; height:0; width:0;" src="../icons/dropdown.gif" /><img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="../icons/dropdownHover.gif" /><img id="copyImage" style="display:none; height:0; width:0;" src="../icons/copycode.gif" alt="Copy image" title="Copy image" /><img id="copyHoverImage" style="display:none; height:0; width:0;" src="../icons/copycodeHighlight.gif" alt="CopyHover image" title="CopyHover image" /><div id="header"><table id="topTable" cellspacing="0" cellpadding="0"><tr><td><span onclick="ExpandCollapseAll(toggleAllImage)" style="cursor:default;" onkeypress="ExpandCollapseAll_CheckKey(toggleAllImage, event)" tabindex="0"><img ID="toggleAllImage" class="toggleAll" src="../icons/collapse_all.gif" /> <label id="collapseAllLabel" for="toggleAllImage" style="display: none;">Collapse All</label><label id="expandAllLabel" for="toggleAllImage" style="display: none;">Expand All</label> </span><span>    </span><span id="devlangsDropdown" class="filter" tabindex="0"><img id="devlangsDropdownImage" src="../icons/dropdown.gif" /> <label id="devlangsMenuAllLabel" for="devlangsDropdownImage" style="display: none;"><nobr>Code: All </nobr></label><label id="devlangsMenuMultipleLabel" for="devlangsDropdownImage" style="display: none;"><nobr>Code: Multiple </nobr></label><label id="devlangsMenuCSharpLabel" for="devlangsDropdownImage" style="display: none;"><nobr>Code: C# </nobr></label><label id="devlangsMenuVisualBasicLabel" for="devlangsDropdownImage" style="display: none;"><nobr>Code: Visual Basic </nobr></label><label id="devlangsMenuManagedCPlusPlusLabel" for="devlangsDropdownImage" style="display: none;"><nobr>Code: Visual C++ </nobr></label></span></td></tr></table><div id="devlangsMenu"><input id="CSharpCheckbox" type="checkbox" data="CSharp,cs,'persist'" value="on" onClick="SetLanguage(this)" /><label class="checkboxLabel" for="CSharpCheckbox">C#</label><br /><input id="VisualBasicCheckbox" type="checkbox" data="VisualBasic,vb,'persist'" value="on" onClick="SetLanguage(this)" /><label class="checkboxLabel" for="VisualBasicCheckbox">Visual Basic</label><br /><input id="ManagedCPlusPlusCheckbox" type="checkbox" data="ManagedCPlusPlus,cpp,'persist'" value="on" onClick="SetLanguage(this)" /><label class="checkboxLabel" for="ManagedCPlusPlusCheckbox">Visual C++</label><br /></div><table id="bottomTable" cellpadding="0" cellspacing="0"><tr id="headerTableRow1"><td align="left"><span id="runningHeaderText">A Ntreev GridControl Library</span></td></tr><tr id="headerTableRow2"><td align="left"><span id="nsrTitle">새로운 컬럼을 정의하려면</span></td></tr><tr id="headerTableRow3"><td align="left"><a href="#seeAlsoToggle" onclick="OpenSection(seeAlsoToggle)">See Also</a> <span id="headfeedbackarea" class="feedbackhead"><a href="javascript:SubmitFeedback('s2quake@ntreev.com','A Ntreev GridControl Library','','1.0.0.0','','%0\dYour%20feedback%20is%20used%20to%20improve%20the%20documentation%20and%20the%20product.%20Your%20e-mail%20address%20will%20not%20be%20used%20for%20any%20other%20purpose%20and%20is%20disposed%20of%20after%20the%20issue%20you%20report%20is%20resolved.%20%20While%20working%20to%20resolve%20the%20issue%20that%20you%20report,%20you%20may%20be%20contacted%20via%20e-mail%20to%20get%20further%20details%20or%20clarification%20on%20the%20feedback%20you%20sent.%20After%20the%20issue%20you%20report%20has%20been%20addressed,%20you%20may%20receive%20an%20e-mail%20to%20let%20you%20know%20that%20your%20feedback%20has%20been%20addressed.%0\A%0\d','Customer%20Feedback');">Send Feedback</a></span></td></tr></table><table id="gradientTable"><tr><td class="nsrBottom" background="../icons/gradient.gif" /></tr></table></div><div id="mainSection"><div id="mainBody"><div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()" /><span style="color: DarkGray"></span><a name="Intro"> </a><div class="introduction"><p><p>This topic contains the following sections.</p></p><ul><li class="outlineSectionEntry"><a href="#ColumnKind">컬럼의 종류</a></li><li class="outlineSectionEntry"><a href="#ColumnControl">ColumnControl 정의하기</a></li><li class="outlineSectionEntry"><a href="#ColumnControlExample">ColumnControl 예제</a></li><li class="outlineSectionEntry"><a href="#ColumnDropDown">ColumnDropDown 정의하기</a></li><li class="outlineSectionEntry"><a href="#ColumnDropDownExample">ColumnDropDown 예제</a></li><li class="outlineSectionEntry"><a href="#ColumnModal">ColumnModal 정의하기</a></li><li class="outlineSectionEntry"><a href="#ColumnModalExample">ColumnModal 예제</a></li><li class="outlineSectionEntry"><a href="#InitDataSource">데이터 소스에 새로운 컬럼 연결하기</a></li><li><a href="#seeAlsoSection">See Also</a></li></ul><p>새로운 컬럼을 정의 하여 데이터 소스와 연결하는 방법을 제공합니다.</p></div><a name="ColumnKind"> </a><h1 class="heading"><span onclick="ExpandCollapse(sectionToggleID0EIAAA)" style="cursor:default;" onkeypress="ExpandCollapse_CheckKey(sectionToggleID0EIAAA, event)" tabindex="0"><img id="sectionToggleID0EIAAA" class="toggle" name="toggleSwitch" src="../icons/collapse_all.gif" />컬럼의 종류</span></h1><div id="sectionSectionID0EIAAA" class="section" name="collapseableSection" style=""><a name="ColumnKind_SubSection1"> </a><h3 class="subHeading">ColumnControl</h3><div class="subsection"><p><span sdata="cer" target="T:Ntreev.Windows.Forms.Grid.ColumnControl`1"><a href="af26a648-091f-9dae-7b60-c79ff3b78b98.htm">ColumnControl<span class="languageSpecificText"><span class="cs">&lt;</span><span class="vb">(Of </span><span class="cpp">&lt;</span><span class="nu">(</span><span class="fs">&lt;'</span></span>TControl<span class="languageSpecificText"><span class="cs">&gt;</span><span class="vb">)</span><span class="cpp">&gt;</span><span class="nu">)</span><span class="fs">&gt;</span></span></a></span>은
+              <span sdata="cer" target="T:System.Windows.Forms.CheckBox"><a href="http://msdn2.microsoft.com/ko-kr/library/0e2txhtd" target="_blank">CheckBox</a></span> 또는
+              <span sdata="cer" target="T:System.Windows.Forms.TextBox"><a href="http://msdn2.microsoft.com/ko-kr/library/48deaakc" target="_blank">TextBox</a></span>처럼 간단한 형태의 컨트롤을 사용하여 셀을 편집할 수 있는 기능을 제공합니다.
+            </p><div class="mediaNear"><div class="caption">새로운 컨트롤을 사용하여 Boolean형태의 값을 편집할 수 있는 예제</div><img alt="Column Control" src="../media/ColumnControl.jpg" /></div></div><a name="ColumnKind_SubSection2"> </a><h3 class="subHeading">ColumnDropDown</h3><div class="subsection"><p><span sdata="cer" target="T:Ntreev.Windows.Forms.Grid.ColumnDropDown`1"><a href="fe595cf6-d3ea-f469-2abd-eb6408c694ca.htm">ColumnDropDown<span class="languageSpecificText"><span class="cs">&lt;</span><span class="vb">(Of </span><span class="cpp">&lt;</span><span class="nu">(</span><span class="fs">&lt;'</span></span>TControl<span class="languageSpecificText"><span class="cs">&gt;</span><span class="vb">)</span><span class="cpp">&gt;</span><span class="nu">)</span><span class="fs">&gt;</span></span></a></span>은
+              <span sdata="cer" target="T:System.Windows.Forms.ComboBox"><a href="http://msdn2.microsoft.com/ko-kr/library/t14e0ws8" target="_blank">ComboBox</a></span> 또는
+              <span sdata="cer" target="T:System.Windows.Forms.TreeView"><a href="http://msdn2.microsoft.com/ko-kr/library/sc9ba94b" target="_blank">TreeView</a></span>처럼 크기가 크고 복잡한 형태의 컨트롤을 별도의 폼에 부착해서 셀을 편집할 수 있는 기능을 제공합니다.
+            </p><div class="mediaNear"><div class="caption">MonthCalendar컨트롤을 사용한 예제</div><img alt="Column Drop Down" src="../media/ColumnDropDown.jpg" /></div></div><a name="ColumnKind_SubSection3"> </a><h3 class="subHeading">ColumnModal</h3><div class="subsection"><p><span sdata="cer" target="T:Ntreev.Windows.Forms.Grid.ColumnModal"><a href="a777104d-7869-e8ba-4a47-bbb7021b887e.htm">ColumnModal</a></span>은
+              <span sdata="cer" target="T:System.Windows.Forms.FolderBrowserDialog"><a href="http://msdn2.microsoft.com/ko-kr/library/5db6b0zy" target="_blank">FolderBrowserDialog</a></span> 또는
+              <span sdata="cer" target="T:System.Windows.Forms.ColorDialog"><a href="http://msdn2.microsoft.com/ko-kr/library/f3fk1e1k" target="_blank">ColorDialog</a></span>처럼 대화상자를 띄워 셀을 편집할 수 있는 기능을 제공합니다.
+            </p><div class="mediaNear"><div class="caption">ColorDialog 대화 상자를 이용한 예제</div><img alt="Column Modal" src="../media/ColumnModal.jpg" /></div></div></div><a name="ColumnControl"> </a><h1 class="heading"><span onclick="ExpandCollapse(sectionToggleID0EHAAA)" style="cursor:default;" onkeypress="ExpandCollapse_CheckKey(sectionToggleID0EHAAA, event)" tabindex="0"><img id="sectionToggleID0EHAAA" class="toggle" name="toggleSwitch" src="../icons/collapse_all.gif" />ColumnControl 정의하기</span></h1><div id="sectionSectionID0EHAAA" class="section" name="collapseableSection" style=""><p>
+          ColumnControl은 컬트롤이 표시 될때 편집될 셀의 크기에 맞추어 자동 조절되며 그리드 컨트롤의 자식으로 추가가 됩니다. 
+          때문에 CheckBox나 TextBox등 작은 크기에서도 편집이 가능한 컨트롤을 사용하는것이 좋습니다.
+        </p><p>ColumnControl을 상속받아 재정의할 경우 다음과 같은 사항을 준수해야 합니다.</p><h3 class="procedureSubHeading">요구사항</h3><div class="subSection"><ol><li><p>
+                  ColumnControl의 generic 인자인 TControl의 형태는 <span sdata="cer" target="T:System.Windows.Forms.UserControl"><a href="http://msdn2.microsoft.com/ko-kr/library/97855yck" target="_blank">UserControl</a></span>의 파생클래스여야 합니다.
+                </p></li><li><p><span sdata="cer" target="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.GetEditingValue(`0)"><a href="a84f8624-37a3-62ef-6b5c-a5a089103d7c.htm">GetEditingValue</a></span>와
+                  <span sdata="cer" target="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.SetEditingValue(`0,System.Object)"><a href="76f0d40e-300d-72ad-f834-654c1b42d972.htm">SetEditingValue</a></span>를 구현해야 합니다.
+                </p><div class="alert"><table><tr><th><img src="../icons/alert_note.gif" title="Note" /> <b>Note</b></th></tr><tr><td><ul><li><p><span sdata="cer" target="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.SetEditingValue(`0,System.Object)"><a href="76f0d40e-300d-72ad-f834-654c1b42d972.htm">SetEditingValue</a></span>의 경우
+                        2번째 인자의 value의 값이 null이 될 수도 있습니다. (DataTable에 의해서 Column이 만들어질 경우 null대신 <span sdata="cer" target="F:System.DBNull.Value"><a href="http://msdn2.microsoft.com/ko-kr/library/3e77ezy5" target="_blank">Value</a></span>의 값이 넘어옵니다.)
+                      </p></li><li><p>
+                        일반적으로 value의 Type은 <span sdata="cer" target="P:Ntreev.Windows.Forms.Grid.Column.DataType"><a href="ed84e760-01f9-6f46-0260-588c8c1969d2.htm">DataType</a></span>과 동일합니다.
+                      </p></li></ul></td></tr></table></div></li></ol></div><span sdata="link"><a href="#Intro">Back to the Top</a></span></div><a name="ColumnControlExample"> </a><h1 class="heading"><span onclick="ExpandCollapse(sectionToggleID0EGAAA)" style="cursor:default;" onkeypress="ExpandCollapse_CheckKey(sectionToggleID0EGAAA, event)" tabindex="0"><img id="sectionToggleID0EGAAA" class="toggle" name="toggleSwitch" src="../icons/collapse_all.gif" />ColumnControl 예제</span></h1><div id="sectionSectionID0EGAAA" class="section" name="collapseableSection" style=""><span id="cbc_1" x-lang="CSharp" codeLanguage="CSharp"><div class="highlight-title"><span class="highlight-copycode" onkeypress="javascript:CopyColorizedCodeCheckKey(this.parentNode, event);" tabindex="0" onmouseover="CopyCodeChangeIcon(this)" onmouseout="CopyCodeChangeIcon(this)" onclick="javascript:CopyColorizedCode(this.parentNode);"><img style="margin-right: 5px;" src="../icons/CopyCode.gif" />Copy</span>ColumnControl에서 사용할 CheckControl</div><div class="code"><pre xml:space="preserve"><span class="highlight-keyword">using</span> System;
+<span class="highlight-keyword">using</span> System.Collections.Generic;
+<span class="highlight-keyword">using</span> System.ComponentModel;
+<span class="highlight-keyword">using</span> System.Drawing;
+<span class="highlight-keyword">using</span> System.Data;
+<span class="highlight-keyword">using</span> System.Linq;
+<span class="highlight-keyword">using</span> System.Text;
+<span class="highlight-keyword">using</span> System.Windows.Forms;
+
+<span class="highlight-keyword">namespace</span> ColumnExtension
+{
+    <span class="highlight-keyword">partial</span> <span class="highlight-keyword">class</span> CheckControl : UserControl
+    {
+        <span class="highlight-keyword">public</span> CheckControl()
+        {
+            InitializeComponent();
+        }
+
+        <span class="highlight-keyword">public</span> <span class="highlight-keyword">bool</span> Value
+        {
+            get
+            {
+                <span class="highlight-keyword">return</span> <span class="highlight-keyword">this</span>.radioButton1.Checked == <span class="highlight-keyword">true</span>;
+            }
+            set
+            {
+                <span class="highlight-keyword">bool</span> oldValue = <span class="highlight-keyword">this</span>.Value;
+                <span class="highlight-keyword">if</span> (value == <span class="highlight-keyword">true</span>)
+                    <span class="highlight-keyword">this</span>.radioButton1.Checked = <span class="highlight-keyword">true</span>;
+                <span class="highlight-keyword">else</span>
+                    <span class="highlight-keyword">this</span>.radioButton2.Checked = <span class="highlight-keyword">true</span>;
+            }
+        }
+
+        <span class="highlight-comment">/// &lt;summary&gt;</span>
+        <span class="highlight-comment">/// Enter키와 Escape키에 대한 기능 구현(필수 사항은 아님)</span>
+        <span class="highlight-comment">/// &lt;/summary&gt;</span>
+        <span class="highlight-comment">/// &lt;remarks&gt;</span>
+        <span class="highlight-comment">/// 기본적으로 Control이 편집되기 시작할때 GridControl에서는 PreviewKeyDown 이벤트에 Enter키와 Escape키에 대해서 반응할 수 있도록 되있다.</span>
+        <span class="highlight-comment">/// 이 컨트롤은 포커스가 2개의 라디오 버튼으로 가있기 때문에 PreviewKeyDown 이벤트가 발생하지 않는다. </span>
+        <span class="highlight-comment">/// 그래서 이 함수에서 Enter키와 Escape키가 발생했을때 강제로 PreviewKeyDown 이벤트를 발생시켜 GridControl에서 편집 종료 행동을 할 수 있도록 해준다.</span>
+        <span class="highlight-comment">/// &lt;/remarks&gt;</span>
+        <span class="highlight-keyword">protected</span> <span class="highlight-keyword">override</span> <span class="highlight-keyword">bool</span> ProcessCmdKey(<span class="highlight-keyword">ref</span> Message msg, Keys keyData)
+        {
+            <span class="highlight-keyword">if</span> (keyData == Keys.Enter || keyData == Keys.Escape)
+            {
+                OnPreviewKeyDown(<span class="highlight-keyword">new</span> PreviewKeyDownEventArgs(keyData));
+            }
+            <span class="highlight-keyword">return</span> <span class="highlight-keyword">base</span>.ProcessCmdKey(<span class="highlight-keyword">ref</span> msg, keyData);
+        }
+    }
+}</pre></div></span><span id="cbc_2" x-lang="CSharp" codeLanguage="CSharp"><div class="highlight-title"><span class="highlight-copycode" onkeypress="javascript:CopyColorizedCodeCheckKey(this.parentNode, event);" tabindex="0" onmouseover="CopyCodeChangeIcon(this)" onmouseout="CopyCodeChangeIcon(this)" onclick="javascript:CopyColorizedCode(this.parentNode);"><img style="margin-right: 5px;" src="../icons/CopyCode.gif" />Copy</span>ColumnControl에서 상속받은 ColumnUserControl</div><div class="code"><pre xml:space="preserve"><span class="highlight-keyword">using</span> System;
+<span class="highlight-keyword">using</span> Ntreev.Windows.Forms.Grid;
+
+<span class="highlight-keyword">namespace</span> ColumnExtension
+{
+    <span class="highlight-keyword">class</span> ColumnUserControl : ColumnControl&lt;CheckControl&gt;
+    {
+        <span class="highlight-comment">/// &lt;summary&gt;</span>
+        <span class="highlight-comment">/// 컬럼의 몇가지 속성을 설정해준다.</span>
+        <span class="highlight-comment">/// &lt;/summary&gt;</span>
+        <span class="highlight-keyword">public</span> ColumnUserControl()
+        {
+            <span class="highlight-keyword">this</span>.DataType = <span class="highlight-keyword">typeof</span>(<span class="highlight-keyword">bool</span>);
+            <span class="highlight-keyword">this</span>.Width = <span class="highlight-number">120</span>;
+        }
+
+        <span class="highlight-comment">/// &lt;summary&gt;</span>
+        <span class="highlight-comment">/// 컨트롤에서 값을 가져온다.</span>
+        <span class="highlight-comment">/// &lt;/summary&gt;</span>
+        <span class="highlight-keyword">protected</span> <span class="highlight-keyword">override</span> <span class="highlight-keyword">object</span> GetEditingValue(CheckControl control)
+        {
+            <span class="highlight-keyword">return</span> control.Value;
+        }
+
+        <span class="highlight-comment">/// &lt;summary&gt;</span>
+        <span class="highlight-comment">/// 컨트롤에 값을 설정한다.</span>
+        <span class="highlight-comment">/// &lt;/summary&gt;</span>
+        <span class="highlight-keyword">protected</span> <span class="highlight-keyword">override</span> <span class="highlight-keyword">void</span> SetEditingValue(CheckControl control, <span class="highlight-keyword">object</span> value)
+        {
+            <span class="highlight-comment">// value가 유효한 값인지 확인을 해준다.</span>
+            <span class="highlight-keyword">if</span> (value == <span class="highlight-keyword">null</span> || value.GetType() != <span class="highlight-keyword">typeof</span>(<span class="highlight-keyword">bool</span>))
+                value = <span class="highlight-keyword">false</span>;
+
+            control.Value = (<span class="highlight-keyword">bool</span>)value;
+        }
+    }
+}</pre></div></span><span sdata="link"><a href="#Intro">Back to the Top</a></span></div><a name="ColumnDropDown"> </a><h1 class="heading"><span onclick="ExpandCollapse(sectionToggleID0EFAAA)" style="cursor:default;" onkeypress="ExpandCollapse_CheckKey(sectionToggleID0EFAAA, event)" tabindex="0"><img id="sectionToggleID0EFAAA" class="toggle" name="toggleSwitch" src="../icons/collapse_all.gif" />ColumnDropDown 정의하기</span></h1><div id="sectionSectionID0EFAAA" class="section" name="collapseableSection" style=""><p>
+          ColumnDropDown은 셀 편집시 컨트롤을 별도의 폼의 자식에 추가한수 Popup상태로 표시하게 됩니다. 때문에 비교적 크기가 크고 복잡한 컨트롤을 사용하기 좋습니다.          
+        </p><p>ColumnDropDown을 상속받아 재정의할 경우 다음과 같은 사항을 준수해야 합니다.</p><h3 class="procedureSubHeading">요구사항</h3><div class="subSection"><ol><li><p>
+                  ColumnControl의 generic 인자인 TControl의 형태는 <span sdata="cer" target="T:System.Windows.Forms.UserControl"><a href="http://msdn2.microsoft.com/ko-kr/library/97855yck" target="_blank">UserControl</a></span>의 파생클래스여야 합니다.
+                </p></li><li><p><span sdata="cer" target="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.GetEditingValue(`0)"><a href="a84f8624-37a3-62ef-6b5c-a5a089103d7c.htm">GetEditingValue</a></span>와
+                  <span sdata="cer" target="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.SetEditingValue(`0,System.Object)"><a href="76f0d40e-300d-72ad-f834-654c1b42d972.htm">SetEditingValue</a></span>를 구현해야 합니다.
+                </p><div class="alert"><table><tr><th><img src="../icons/alert_note.gif" title="Note" /> <b>Note</b></th></tr><tr><td><ul><li><p><span sdata="cer" target="M:Ntreev.Windows.Forms.ColumnDropDown`1.SetEditingValue"><span class="nolink">SetEditingValue</span></span>의 경우
+                        2번째 인자의 value의 값이 null이 될 수도 있습니다. (DataTable에 의해서 Column이 만들어질 경우 null대신 <span sdata="cer" target="F:System.DBNull.Value"><a href="http://msdn2.microsoft.com/ko-kr/library/3e77ezy5" target="_blank">Value</a></span>의 값이 넘어옵니다.)
+                      </p></li><li><p>
+                        일반적으로 value의 Type은 <span sdata="cer" target="P:Ntreev.Windows.Forms.Grid.Column.DataType"><a href="ed84e760-01f9-6f46-0260-588c8c1969d2.htm">DataType</a></span>과 동일합니다.
+                      </p></li></ul></td></tr></table></div></li><li><p>
+                  편집이 종료되었을때 DropDown을 닫기 위해서 <span sdata="cer" target="P:Ntreev.Windows.Forms.Grid.Column.Result"><span class="nolink">Result<span class="languageSpecificText"><span class="cs">()</span><span class="cpp">()</span><span class="nu">()</span><span class="fs">()</span></span></span></span>를 사용하여 종료한다.
+                </p></li></ol></div><h3 class="procedureSubHeading">옵션사항</h3><div class="subSection"><ol><li><p><span sdata="cer" target="P:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Sizable"><a href="f6fcd12b-003c-8eec-5ff6-43ec1e63f1a2.htm">Sizable</a></span></p></li><li><p><span sdata="cer" target="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.GetPreferredSize(System.Drawing.Size)"><a href="a217a227-85ce-5557-bdc6-fd9a6abee1fb.htm">GetPreferredSize(Size)</a></span></p></li></ol></div><span sdata="link"><a href="#Intro">Back to the Top</a></span></div><a name="ColumnDropDownExample"> </a><h1 class="heading"><span onclick="ExpandCollapse(sectionToggleID0EEAAA)" style="cursor:default;" onkeypress="ExpandCollapse_CheckKey(sectionToggleID0EEAAA, event)" tabindex="0"><img id="sectionToggleID0EEAAA" class="toggle" name="toggleSwitch" src="../icons/collapse_all.gif" />ColumnDropDown 예제</span></h1><div id="sectionSectionID0EEAAA" class="section" name="collapseableSection" style=""><span id="cbc_3" x-lang="CSharp" codeLanguage="CSharp"><div class="highlight-title"><span class="highlight-copycode" onkeypress="javascript:CopyColorizedCodeCheckKey(this.parentNode, event);" tabindex="0" onmouseover="CopyCodeChangeIcon(this)" onmouseout="CopyCodeChangeIcon(this)" onclick="javascript:CopyColorizedCode(this.parentNode);"><img style="margin-right: 5px;" src="../icons/CopyCode.gif" />Copy</span>ColumnDropDown에서 상속받은 ColumnUserDropDown</div><div class="code"><pre xml:space="preserve"><span class="highlight-keyword">using</span> System;
+<span class="highlight-keyword">using</span> System.Windows.Forms;
+<span class="highlight-keyword">using</span> Ntreev.Windows.Forms.Grid;
+<span class="highlight-keyword">using</span> System.Drawing;
+
+<span class="highlight-keyword">namespace</span> ColumnExtension
+{
+    <span class="highlight-keyword">class</span> ColumnUserDropDown : ColumnDropDown&lt;MonthCalendar&gt;
+    {
+        <span class="highlight-comment">/// &lt;summary&gt;</span>
+        <span class="highlight-comment">/// 컬럼의 몇가지 속성을 설정해준다.</span>
+        <span class="highlight-comment">/// &lt;/summary&gt;</span>
+        <span class="highlight-keyword">public</span> ColumnUserDropDown()
+        {
+            <span class="highlight-keyword">this</span>.DataType = <span class="highlight-keyword">typeof</span>(DateTime);
+            <span class="highlight-keyword">this</span>.Width = <span class="highlight-number">150</span>;
+
+            <span class="highlight-comment">// 컨트롤의 필요한 속성을 설정해준다.</span>
+            <span class="highlight-keyword">this</span>.EditingControl.MaxSelectionCount = <span class="highlight-number">1</span>;
+
+            <span class="highlight-comment">// 컨트롤의 값의 변경을 확인하기 위하여 이벤트 핸들러를 등록한다.</span>
+            <span class="highlight-keyword">this</span>.EditingControl.DateSelected += <span class="highlight-keyword">new</span> DateRangeEventHandler(EditingControl_DateSelected);
+        }
+
+        <span class="highlight-comment">/// &lt;summary&gt;</span>
+        <span class="highlight-comment">/// 값이 변경되었을때 편집을 종료한다.</span>
+        <span class="highlight-comment">/// &lt;/summary&gt;</span>
+        <span class="highlight-keyword">void</span> EditingControl_DateSelected(<span class="highlight-keyword">object</span> sender, DateRangeEventArgs e)
+        {
+            <span class="highlight-keyword">this</span>.EditingResult = EditingResult.Ok;
+        }
+
+        <span class="highlight-comment">/// &lt;summary&gt;</span>
+        <span class="highlight-comment">/// MonthCalendar 모양새는 늘일수 있는 컨트롤이 아니므로 이 속성의 값을 false로 반환한다.</span>
+        <span class="highlight-comment">/// &lt;/summary&gt;</span>
+        <span class="highlight-keyword">public</span> <span class="highlight-keyword">override</span> <span class="highlight-keyword">bool</span> Sizable
+        {
+            get
+            {
+                <span class="highlight-keyword">return</span> <span class="highlight-keyword">false</span>;
+            }
+        }
+
+        <span class="highlight-comment">/// &lt;summary&gt;</span>
+        <span class="highlight-comment">/// 이 컨트롤이 표시 될때 최적의 크기를 계산하여 넘겨준다.</span>
+        <span class="highlight-comment">/// &lt;/summary&gt;</span>
+        <span class="highlight-keyword">public</span> <span class="highlight-keyword">override</span> System.Drawing.Size GetPreferredSize(System.Drawing.Size proposedSize)
+        {
+            Size size = EditingControl.Size;
+            size.Width += <span class="highlight-number">2</span>;
+            <span class="highlight-keyword">return</span> size;
+        }
+
+        <span class="highlight-comment">/// &lt;summary&gt;</span>
+        <span class="highlight-comment">/// 값의 유효성을 확인하고 수정한다.</span>
+        <span class="highlight-comment">/// &lt;/summary&gt;</span>
+        <span class="highlight-keyword">private</span> DateTime ValidateValue(<span class="highlight-keyword">object</span> value)
+        {
+            <span class="highlight-comment">/// DataSource에 따라 기본값이 null이거나 System.DBNull.Value일 수 있으므로 값의 유효성을 확인한다.</span>
+            <span class="highlight-keyword">if</span> (value == <span class="highlight-keyword">null</span> || value.GetType() != <span class="highlight-keyword">typeof</span>(DateTime))
+                <span class="highlight-keyword">return</span> DateTime.Today;
+            <span class="highlight-keyword">return</span> (DateTime)value;
+        }
+
+        <span class="highlight-comment">/// &lt;summary&gt;</span>
+        <span class="highlight-comment">/// 컨트롤에서 값을 가져온다.</span>
+        <span class="highlight-comment">/// &lt;/summary&gt;</span>
+        <span class="highlight-keyword">protected</span> <span class="highlight-keyword">override</span> <span class="highlight-keyword">object</span> GetEditingValue(MonthCalendar control)
+        {
+            <span class="highlight-keyword">return</span> control.SelectionEnd;
+        }
+
+        <span class="highlight-comment">/// &lt;summary&gt;</span>
+        <span class="highlight-comment">/// 컨트롤에서 값을 설정한다.</span>
+        <span class="highlight-comment">/// &lt;/summary&gt;</span>
+        <span class="highlight-keyword">protected</span> <span class="highlight-keyword">override</span> <span class="highlight-keyword">void</span> SetEditingValue(MonthCalendar control, <span class="highlight-keyword">object</span> value)
+        {
+            DateTime dateTime = ValidateValue(value);
+            control.SelectionStart = dateTime;
+            control.SelectionEnd = dateTime;
+        }
+    }
+}</pre></div></span><span sdata="link"><a href="#Intro">Back to the Top</a></span></div><a name="ColumnModal"> </a><h1 class="heading"><span onclick="ExpandCollapse(sectionToggleID0EDAAA)" style="cursor:default;" onkeypress="ExpandCollapse_CheckKey(sectionToggleID0EDAAA, event)" tabindex="0"><img id="sectionToggleID0EDAAA" class="toggle" name="toggleSwitch" src="../icons/collapse_all.gif" />ColumnModal 정의하기</span></h1><div id="sectionSectionID0EDAAA" class="section" name="collapseableSection" style=""><p>Modal형식의 대화상자를 띄워 셀을 편집할 수 있는 방법을 제공합니다.</p><div class="alert"><table><tr><th><img src="../icons/alert_note.gif" title="Note" /> <b>Note</b></th></tr><tr><td><p>
+            ColumnModal은 다른 형식과는 다르게 셀을 편집하기 위한 작업이 자동화 되어있지 않습니다. 그렇기 때문에 <span sdata="cer" target="M:Ntreev.Windows.Forms.Grid.Column.OnEditValue(Ntreev.Windows.Forms.Grid.EditValueEventArgs)"><a href="85533f58-4e56-a117-8678-db838c676942.htm">OnEditValue(EditValueEventArgs)</a></span>를 재정의한후에
+            대화상자를 띄우는 작업을 직접 구현한 후 최종적으로 변경된 값을 <span sdata="cer" target="P:Ntreev.Windows.Forms.Grid.EditValueEventArgs.Value"><a href="e4e8f06b-77e5-402b-47ac-37ac8b82981a.htm">EditValueEventArgs<span class="languageSpecificText"><span class="cs">.</span><span class="vb">.</span><span class="cpp">::</span><span class="nu">.</span><span class="fs">.</span></span>Value</a></span>에 설정해주면 됩니다.
+          </p></td></tr></table></div><span sdata="link"><a href="#Intro">Back to the Top</a></span></div><a name="ColumnModalExample"> </a><h1 class="heading"><span onclick="ExpandCollapse(sectionToggleID0ECAAA)" style="cursor:default;" onkeypress="ExpandCollapse_CheckKey(sectionToggleID0ECAAA, event)" tabindex="0"><img id="sectionToggleID0ECAAA" class="toggle" name="toggleSwitch" src="../icons/collapse_all.gif" />ColumnModal 예제</span></h1><div id="sectionSectionID0ECAAA" class="section" name="collapseableSection" style=""><span id="cbc_4" x-lang="CSharp" codeLanguage="CSharp"><div class="highlight-title"><span class="highlight-copycode" onkeypress="javascript:CopyColorizedCodeCheckKey(this.parentNode, event);" tabindex="0" onmouseover="CopyCodeChangeIcon(this)" onmouseout="CopyCodeChangeIcon(this)" onclick="javascript:CopyColorizedCode(this.parentNode);"><img style="margin-right: 5px;" src="../icons/CopyCode.gif" />Copy</span>ColumnModal에서 상속받은 ColumnUserModal</div><div class="code"><pre xml:space="preserve"><span class="highlight-keyword">using</span> System;
+<span class="highlight-keyword">using</span> System.Collections.Generic;
+<span class="highlight-keyword">using</span> System.Linq;
+<span class="highlight-keyword">using</span> System.Text;
+<span class="highlight-keyword">using</span> Ntreev.Windows.Forms.Grid;
+<span class="highlight-keyword">using</span> System.Windows.Forms;
+<span class="highlight-keyword">using</span> System.Drawing;
+
+<span class="highlight-keyword">namespace</span> ColumnExtension
+{
+    <span class="highlight-keyword">class</span> ColumnUserModal : ColumnModal, IValuePainter
+    {
+        SolidBrush brush = <span class="highlight-keyword">new</span> SolidBrush(Color.Empty);
+
+        <span class="highlight-keyword">public</span> ColumnUserModal()
+        {
+            <span class="highlight-keyword">this</span>.DataType = <span class="highlight-keyword">typeof</span>(Color);
+        }
+
+        <span class="highlight-keyword">protected</span> <span class="highlight-keyword">override</span> <span class="highlight-keyword">void</span> OnEditValue(EditValueEventArgs e)
+        {
+            <span class="highlight-keyword">base</span>.OnEditValue(e);
+            ColorDialog colorDialog = <span class="highlight-keyword">new</span> ColorDialog();
+
+            <span class="highlight-keyword">if</span>(e.Value != <span class="highlight-keyword">null</span>)
+                colorDialog.Color = ValidateValue(e.Value);
+            <span class="highlight-keyword">if</span> (colorDialog.ShowDialog() == DialogResult.OK)
+                e.Value = colorDialog.Color;
+        }
+
+        <span class="highlight-comment">/// &lt;summary&gt;</span>
+        <span class="highlight-comment">/// 값의 유효성을 확인합니다.</span>
+        <span class="highlight-comment">/// &lt;/summary&gt;</span>
+        <span class="highlight-comment">/// &lt;param name="value"&gt;유효성을 확인할 값의 &lt;see cref="System.Object"/&gt;입니다.&lt;/param&gt;</span>
+        <span class="highlight-comment">/// &lt;returns&gt;</span>
+        <span class="highlight-comment">/// 유효성 확인하여 수정된 &lt;see cref="System.Drawing.Color"/&gt;의 값을 반환합니다.</span>
+        <span class="highlight-comment">/// &lt;/returns&gt;</span>
+        <span class="highlight-keyword">private</span> Color ValidateValue(<span class="highlight-keyword">object</span> value)
+        {
+            <span class="highlight-keyword">if</span> (value == <span class="highlight-keyword">null</span> || value.GetType() != <span class="highlight-keyword">typeof</span>(Color))
+                <span class="highlight-keyword">return</span> Color.Empty;
+            <span class="highlight-keyword">return</span> (Color)value;
+        }
+
+        <span class="highlight-keyword">public</span> <span class="highlight-keyword">void</span> PaintValue(Graphics graphic, Rectangle renderRect, Rectangle clipRect, IStyle style, <span class="highlight-keyword">object</span> value)
+        {
+            brush.Color = ValidateValue(value);
+            clipRect.Height--;
+            graphic.FillRectangle(brush, clipRect);
+            graphic.DrawRectangle(Pens.Black, clipRect);
+        }
+
+        <span class="highlight-keyword">public</span> <span class="highlight-keyword">bool</span> PaintValueSupported
+        {
+            get { <span class="highlight-keyword">return</span> <span class="highlight-keyword">true</span>; }
+        }
+    }
+}</pre></div></span><div class="alert"><table><tr><th><img src="../icons/alert_note.gif" title="Note" /> <b>Note</b></th></tr><tr><td><p>색상을 그림으로 표현하기 위해 추가적으로 <span sdata="cer" target="T:Ntreev.Windows.Forms.Grid.IValuePainter"><a href="6a159856-8772-431e-a694-3bf67b12594d.htm">IValuePainter</a></span>를 구현하였습니다.
+        </p></td></tr></table></div><span sdata="link"><a href="#Intro">Back to the Top</a></span></div><a name="InitDataSource"> </a><h1 class="heading"><span onclick="ExpandCollapse(sectionToggleID0EBAAA)" style="cursor:default;" onkeypress="ExpandCollapse_CheckKey(sectionToggleID0EBAAA, event)" tabindex="0"><img id="sectionToggleID0EBAAA" class="toggle" name="toggleSwitch" src="../icons/collapse_all.gif" />데이터 소스에 새로운 컬럼 연결하기</span></h1><div id="sectionSectionID0EBAAA" class="section" name="collapseableSection" style=""><p>
+          데이터 소스 초기화시 데이터 타입에 따라서 적당한 컬럼의 인스턴스가 생성됩니다.. 새로 정의한 컬럼을 사용하고자 할때는 데이터 소스가 초기화 될 때 발생되는 이벤트중에 하나인 
+          <span sdata="cer" target="E:Ntreev.Windows.Forms.Grid.GridControl.ColumnBinding"><a href="28540c4f-2dd7-4220-eec9-c25e0ad122b1.htm">ColumnBinding</a></span>을 사용하시면 됩니다. 
+          이벤트를 받을수 있는 이벤트 핸들러를 등록하여 데이터 타입에 따라 새로운 컬럼의 인스턴스를 설정하면 됩니다.
+        </p><h3 class="subHeading">이벤트 핸들러 등록하기</h3><div class="subsection"><span id="cbc_5" x-lang="CSharp" codeLanguage="CSharp"><div class="highlight-title"><span class="highlight-copycode" onkeypress="javascript:CopyColorizedCodeCheckKey(this.parentNode, event);" tabindex="0" onmouseover="CopyCodeChangeIcon(this)" onmouseout="CopyCodeChangeIcon(this)" onclick="javascript:CopyColorizedCode(this.parentNode);"><img style="margin-right: 5px;" src="../icons/CopyCode.gif" />Copy</span>C#</div><div class="code"><pre xml:space="preserve"><span class="highlight-keyword">this</span>.gridControl1.ColumnBinding += <span class="highlight-keyword">new</span> Ntreev.Windows.Forms.Grid.ColumnBindingEventHandler(<span class="highlight-keyword">this</span>.gridControl1_ColumnBinding);</pre></div></span></div><h3 class="subHeading">데이터 소스 초기화 하기</h3><div class="subsection"><span id="cbc_6" x-lang="CSharp" codeLanguage="CSharp"><div class="highlight-title"><span class="highlight-copycode" onkeypress="javascript:CopyColorizedCodeCheckKey(this.parentNode, event);" tabindex="0" onmouseover="CopyCodeChangeIcon(this)" onmouseout="CopyCodeChangeIcon(this)" onclick="javascript:CopyColorizedCode(this.parentNode);"><img style="margin-right: 5px;" src="../icons/CopyCode.gif" />Copy</span>C#</div><div class="code"><pre xml:space="preserve">DataTable dataTable = <span class="highlight-keyword">new</span> DataTable(<span class="highlight-literal">"DataTable"</span>);
+dataTable.Columns.Add(<span class="highlight-literal">"Boolean"</span>, <span class="highlight-keyword">typeof</span>(<span class="highlight-keyword">bool</span>));
+dataTable.Columns.Add(<span class="highlight-literal">"DateTime"</span>, <span class="highlight-keyword">typeof</span>(DateTime));
+dataTable.Columns.Add(<span class="highlight-literal">"Color"</span>, <span class="highlight-keyword">typeof</span>(Color));
+
+<span class="highlight-keyword">for</span> (<span class="highlight-keyword">int</span> i = <span class="highlight-number">0</span>; i &lt; <span class="highlight-number">10</span>; i++)
+{
+    dataTable.Rows.Add();
+}
+
+<span class="highlight-keyword">this</span>.gridControl1.DataSource = dataTable;</pre></div></span></div><h3 class="subHeading">새롭게 정의된 컬럼 설정하기</h3><div class="subsection"><span id="cbc_7" x-lang="CSharp" codeLanguage="CSharp"><div class="highlight-title"><span class="highlight-copycode" onkeypress="javascript:CopyColorizedCodeCheckKey(this.parentNode, event);" tabindex="0" onmouseover="CopyCodeChangeIcon(this)" onmouseout="CopyCodeChangeIcon(this)" onclick="javascript:CopyColorizedCode(this.parentNode);"><img style="margin-right: 5px;" src="../icons/CopyCode.gif" />Copy</span>C#</div><div class="code"><pre xml:space="preserve"><span class="highlight-keyword">private</span> <span class="highlight-keyword">void</span> gridControl1_ColumnBinding(<span class="highlight-keyword">object</span> sender, Ntreev.Windows.Forms.Grid.ColumnBindingEventArgs e)
+{
+    <span class="highlight-keyword">switch</span> (e.PropertyDescriptor.Name)
+    {
+        <span class="highlight-keyword">case</span> <span class="highlight-literal">"Boolean"</span>:
+            e.BindingColumn = <span class="highlight-keyword">new</span> ColumnUserControl();
+            <span class="highlight-keyword">break</span>;
+        <span class="highlight-keyword">case</span> <span class="highlight-literal">"DateTime"</span>:
+            e.BindingColumn = <span class="highlight-keyword">new</span> ColumnUserDropDown();
+            <span class="highlight-keyword">break</span>;
+        <span class="highlight-keyword">case</span> <span class="highlight-literal">"Color"</span>:
+            e.BindingColumn = <span class="highlight-keyword">new</span> ColumnUserModal();
+            <span class="highlight-keyword">break</span>;
+    }
+}</pre></div></span></div><h3 class="subHeading">전체 소스</h3><div class="subsection"><span id="cbc_8" x-lang="CSharp" codeLanguage="CSharp"><div class="highlight-title"><span class="highlight-copycode" onkeypress="javascript:CopyColorizedCodeCheckKey(this.parentNode, event);" tabindex="0" onmouseover="CopyCodeChangeIcon(this)" onmouseout="CopyCodeChangeIcon(this)" onclick="javascript:CopyColorizedCode(this.parentNode);"><img style="margin-right: 5px;" src="../icons/CopyCode.gif" />Copy</span>C#</div><div class="code"><pre xml:space="preserve"><span class="highlight-keyword">using</span> System;
+<span class="highlight-keyword">using</span> System.Collections.Generic;
+<span class="highlight-keyword">using</span> System.ComponentModel;
+<span class="highlight-keyword">using</span> System.Data;
+<span class="highlight-keyword">using</span> System.Drawing;
+<span class="highlight-keyword">using</span> System.Linq;
+<span class="highlight-keyword">using</span> System.Text;
+<span class="highlight-keyword">using</span> System.Windows.Forms;
+
+<span class="highlight-keyword">namespace</span> ColumnExtension
+{
+    <span class="highlight-keyword">public</span> <span class="highlight-keyword">partial</span> <span class="highlight-keyword">class</span> Form1 : Form
+    {
+        <span class="highlight-keyword">public</span> Form1()
+        {
+            InitializeComponent();
+
+            DataTable dataTable = <span class="highlight-keyword">new</span> DataTable(<span class="highlight-literal">"DataTable"</span>);
+            dataTable.Columns.Add(<span class="highlight-literal">"Boolean"</span>, <span class="highlight-keyword">typeof</span>(<span class="highlight-keyword">bool</span>));
+            dataTable.Columns.Add(<span class="highlight-literal">"DateTime"</span>, <span class="highlight-keyword">typeof</span>(DateTime));
+            dataTable.Columns.Add(<span class="highlight-literal">"Color"</span>, <span class="highlight-keyword">typeof</span>(Color));
+
+            <span class="highlight-keyword">for</span> (<span class="highlight-keyword">int</span> i = <span class="highlight-number">0</span>; i &lt; <span class="highlight-number">10</span>; i++)
+            {
+                dataTable.Rows.Add();
+            }
+
+            <span class="highlight-keyword">this</span>.gridControl1.DataSource = dataTable;
+        }
+
+        <span class="highlight-keyword">private</span> <span class="highlight-keyword">void</span> gridControl1_ColumnBinding(<span class="highlight-keyword">object</span> sender, Ntreev.Windows.Forms.Grid.ColumnBindingEventArgs e)
+        {
+            <span class="highlight-keyword">switch</span> (e.PropertyDescriptor.Name)
+            {
+                <span class="highlight-keyword">case</span> <span class="highlight-literal">"Boolean"</span>:
+                    e.BindingColumn = <span class="highlight-keyword">new</span> ColumnUserControl();
+                    <span class="highlight-keyword">break</span>;
+                <span class="highlight-keyword">case</span> <span class="highlight-literal">"DateTime"</span>:
+                    e.BindingColumn = <span class="highlight-keyword">new</span> ColumnUserDropDown();
+                    <span class="highlight-keyword">break</span>;
+                <span class="highlight-keyword">case</span> <span class="highlight-literal">"Color"</span>:
+                    e.BindingColumn = <span class="highlight-keyword">new</span> ColumnUserModal();
+                    <span class="highlight-keyword">break</span>;
+            }
+        }
+    }
+}</pre></div></span></div></div><h1 class="heading"><span onclick="ExpandCollapse(seeAlsoToggle)" style="cursor:default;" onkeypress="ExpandCollapse_CheckKey(seeAlsoToggle, event)" tabindex="0"><img id="seeAlsoToggle" class="toggle" name="toggleSwitch" src="../icons/collapse_all.gif" />See Also</span></h1><div id="seeAlsoSection" class="section" name="collapseableSection" style=""><h4 class="subHeading">Reference</h4><div class="seeAlsoStyle"><span sdata="cer" target="T:Ntreev.Windows.Forms.Grid.ColumnControl`1"><a href="af26a648-091f-9dae-7b60-c79ff3b78b98.htm">ColumnControl<span class="languageSpecificText"><span class="cs">&lt;</span><span class="vb">(Of </span><span class="cpp">&lt;</span><span class="nu">(</span><span class="fs">&lt;'</span></span>TControl<span class="languageSpecificText"><span class="cs">&gt;</span><span class="vb">)</span><span class="cpp">&gt;</span><span class="nu">)</span><span class="fs">&gt;</span></span></a></span></div><div class="seeAlsoStyle"><span sdata="cer" target="T:Ntreev.Windows.Forms.Grid.ColumnDropDown`1"><a href="fe595cf6-d3ea-f469-2abd-eb6408c694ca.htm">ColumnDropDown<span class="languageSpecificText"><span class="cs">&lt;</span><span class="vb">(Of </span><span class="cpp">&lt;</span><span class="nu">(</span><span class="fs">&lt;'</span></span>TControl<span class="languageSpecificText"><span class="cs">&gt;</span><span class="vb">)</span><span class="cpp">&gt;</span><span class="nu">)</span><span class="fs">&gt;</span></span></a></span></div><div class="seeAlsoStyle"><span sdata="cer" target="T:Ntreev.Windows.Forms.Grid.ColumnModal"><a href="a777104d-7869-e8ba-4a47-bbb7021b887e.htm">ColumnModal</a></span></div></div></div><div id="footer"><div class="footerLine"><img width="100%" height="3px" src="../icons/footer.gif" alt="Footer image" title="Footer image" /></div><A NAME="feedback"></A><span id="fb" class="feedbackcss"></span><p />내용에 문의사항이 있는 경우 우측의 메일 주소로 연락 바랍니다.
+        <a id="HT_MailLink" href="mailto:s2quake%40ntreev.com?Subject=A Ntreev GridControl Library">s2quake@ntreev.com</a><script type="text/javascript">
+        var HT_mailLink = document.getElementById("HT_MailLink");
+        var HT_mailLinkText = HT_mailLink.innerHTML;
+        HT_mailLink.href += ": " + document.title;
+        HT_mailLink.innerHTML = HT_mailLinkText;
+        </script></div></div></body></html>
