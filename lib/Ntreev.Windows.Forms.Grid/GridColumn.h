@@ -1328,6 +1328,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			return nullptr;
 		}
 
+		void ValidateDefaultValue();
+
 		bool ShouldSerializeCellForeColor();
 		bool ShouldSerializeCellBackColor();
 		bool ShouldSerializeCellFont();
@@ -1379,7 +1381,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 				return ((m_site != nullptr) && m_site->DesignMode);
 			}
 		}
-		
 
 	private: // events
 		event _EventHandler^ Disposed_IComponent

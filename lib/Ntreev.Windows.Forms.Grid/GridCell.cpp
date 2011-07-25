@@ -33,24 +33,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 	}
 
-	//_Color Cell::ForeColor::get()
-	//{
-	//	return m_pItem->GetForeColor();
-	//}
-
-	//_Color Cell::BackColor::get()
-	//{
-	//	return m_pItem->GetBackColor();
-	//}
-
-	//_Font^ Cell::Font::get()
-	//{
-	//	GrFont* pFont = m_pItem->GetRenderingFont();
-	//	return GrFontManager::ToManagedFont(pFont);
-	//	//System::IntPtr fontPtr(m_pItem->GetRenderingFont()->GetFont());
-	//	//return _Font::FromHfont(fontPtr);
-	//}
-
 	_Column^ Cell::Column::get()
 	{
 		return m_column;

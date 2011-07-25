@@ -181,7 +181,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void RowCollection::Insert(int index, Row^ item)
 	{
-
 		if(index < 0 || index > Count)
 			throw gcnew System::ArgumentOutOfRangeException("index");
 		if(item == nullptr)
@@ -201,16 +200,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			if(GridControl->InvokeRowInserting(component) == false)
 			{
 				m_currencyManager->CancelCurrentEdit();
-				throw gcnew System::ArgumentException();
 			}
+			else
+			{
+				m_currencyManager->EndCurrentEdit();
+			
+				m_pDataRowList->InsertDataRow(item->NativeRef, index);
+				item->Component = component;
+				item->RefreshCells();
 
-			m_currencyManager->EndCurrentEdit();
-		
-			m_pDataRowList->InsertDataRow(item->NativeRef, index);
-			item->Component = component;
-			item->RefreshCells();
-
-			GridControl->InvokeRowInserted(item);
+				GridControl->InvokeRowInserted(item);
+			}
 		}
 		finally
 		{

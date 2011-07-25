@@ -20,13 +20,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		
 	}
 
-	//object^ GridObject::GetService(_Type^ serviceType)
-	//{
-	//	if(m_gridControl == nullptr)
-	//		return nullptr;
-	//	return m_gridControl->GetInternalService(serviceType);
-	//}
-
 	void GridObject::GridControl::set(_GridControl^ gridControl)
 	{
 		if(gridControl != nullptr)
@@ -47,22 +40,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 	}
 
-	//void GridObject::InvalidateCell(const GrCell* pCell)
-	//{
-	//	m_gridControl->InvalidateCell(pCell);
-	//}
-
 	void GridObject::Invalidate()
 	{
 		if(m_gridControl == nullptr)
 			return;
 		m_gridControl->Invalidate(false);
 	}
-
-	//void GridObject::Invalidate(_Rectangle rectangle)
-	//{
-	//	m_gridControl->Invalidate(rectangle, false);
-	//}
 
 	void GridObject::Invalidate(int left, int top, int right, int bottom)
 	{

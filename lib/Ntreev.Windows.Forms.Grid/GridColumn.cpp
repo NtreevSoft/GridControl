@@ -443,7 +443,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	Column::_TypeConverter^ Column::TypeConverter::get()
 	{
 		if(m_typeConverter == nullptr)
-			return System::ComponentModel::TypeDescriptor::GetConverter(this->DataType);
+		{
+			try
+			{
+				return System::ComponentModel::TypeDescriptor::GetConverter(this->DataType);
+			}
+			catch(System::ArgumentNullException^ e)
+			{
+				throw gcnew System::ArgumentNullException("DataType이 설정되지 않았습니다.", e);
+			}
+		}
+
 		return m_typeConverter;
 	}
 
@@ -699,6 +709,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	uint Column::ColumnID::get()
 	{
 		return m_pColumn->GetColumnID();	
+	}
+
+	void Column::ValidateDefaultValue()
+	{
+		if(m_dataType == nullptr)
+			return;
 	}
 
 	bool Column::ShouldSerializeCellForeColor()

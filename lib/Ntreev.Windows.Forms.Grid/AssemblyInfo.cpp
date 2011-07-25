@@ -14,9 +14,9 @@ using namespace System::Security::Permissions;
 [assembly:AssemblyTitleAttribute("Ntreev.Windows.Forms.Grid")];
 [assembly:AssemblyDescriptionAttribute("")];
 [assembly:AssemblyConfigurationAttribute("")];
-[assembly:AssemblyCompanyAttribute("NTREEV SOFT Co.,Ltd.")];
+[assembly:AssemblyCompanyAttribute("NtreevSoft Co.,Ltd.")];
 [assembly:AssemblyProductAttribute("GridControl")];
-[assembly:AssemblyCopyrightAttribute("Copyright (c) NTREEV SOFT Co.,Ltd. 2010")];
+[assembly:AssemblyCopyrightAttribute("Copyright (c) NtreevSoft Co.,Ltd. 2010")];
 [assembly:AssemblyTrademarkAttribute("")];
 [assembly:AssemblyCultureAttribute("")];
 
@@ -31,7 +31,7 @@ using namespace System::Security::Permissions;
 // 모든 값을 지정하거나 아래와 같이 '*'를 사용하여 빌드 번호 및 수정 버전이 자동으로
 // 지정되도록 할 수 있습니다.
 
-[assembly:AssemblyVersionAttribute("1.0.*")];
+[assembly:AssemblyVersionAttribute("1.0.4223.34266")];
 
 [assembly:ComVisible(false)];
 

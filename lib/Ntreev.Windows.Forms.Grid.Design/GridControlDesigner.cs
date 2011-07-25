@@ -177,7 +177,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
         {
             base.OnPaintAdornments(pe);
 
-            pe.Graphics.DrawRectangle(System.Drawing.Pens.Red, new System.Drawing.Rectangle(0, 0, 50, 50));
+            //pe.Graphics.DrawRectangle(System.Drawing.Pens.Red, new System.Drawing.Rectangle(0, 0, 50, 50));
         }
 
         protected override bool GetHitTest(System.Drawing.Point point)
