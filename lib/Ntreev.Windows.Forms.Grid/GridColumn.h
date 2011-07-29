@@ -365,22 +365,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	typedef Ntreev::Windows::Forms::Grid::_EditingResult	_EditingResult;
 
 	/// <summary>
-	/// 마우스 커서에 따른 행의 상태를 나타냅니다.
+	/// 마우스 커서에 따른 열의 상태를 나타냅니다.
 	/// </summary>
 	public enum class ColumnState : int
 	{
 		/// <summary>
-		/// 마우스 커서가 행의 영역에 있지 않은 일반적인 상태입니다.
+		/// 마우스 커서가 열의 영역에 있지 않은 일반적인 상태입니다.
 		/// </summary>
 		Normal,
 
 		/// <summary>
-		/// 마우스 커서가 행의 영역에 있고 좌측 버튼이 눌러진 상태입니다.
+		/// 마우스 커서가 열의 영역에 있고 좌측 버튼이 눌러진 상태입니다.
 		/// </summary>
 		Pressed,
 
 		/// <summary>
-		/// 마우스 커서가 행의 영역에 있는 상태입니다.
+		/// 마우스 커서가 열의 영역에 있는 상태입니다.
 		/// </summary>
 		Hot,
 	};
@@ -388,15 +388,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	typedef Ntreev::Windows::Forms::Grid::ColumnState _ColumnState;
 
 	/// <summary>
-	/// 행을 나타내기위한 속성을 정의합니다.
+	/// 열을 나타내기위한 속성을 정의합니다.
 	/// </summary>
 	public interface class IColumnDescriptor
 	{
 		/// <summary>
-		/// 표시할 행의 제목을 가져옵니다.
+		/// 표시할 열의 제목을 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 표시할 행의 제목을 나타내는 <see cref="System::String"/>입니다.
+		/// 표시할 열의 제목을 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
 		property string^ Title
 		{
@@ -404,10 +404,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 이름을 가져옵니다.
+		/// 열의 이름을 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 행의 이름을 나타내는 <see cref="System::String"/>입니다.
+		/// 열의 이름을 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
 		property string^ Name
 		{
@@ -415,10 +415,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 		
 		/// <summary>
-		/// 행의 툴팁을 가져옵니다.
+		/// 열의 툴팁을 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 행의 툴팁을 나타내는 <see cref="System::String"/>입니다.
+		/// 열의 툴팁을 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
 		property string^ Tooltip
 		{
@@ -426,7 +426,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 고유 아이디를 가져옵니다.
+		/// 열의 고유 아이디를 가져옵니다.
 		/// </summary>
 		/// <returns>
 		/// 고유 아이디를 나타내는 <see cref="System::UInt32"/>형태의 정수값입니다.
@@ -437,10 +437,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 너비를 가져옵니다.
+		/// 열의 너비를 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 행의 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
+		/// 열의 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
 		/// </returns>
 		property int Width
 		{
@@ -448,10 +448,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 최소 너비를 가져옵니다.
+		/// 열의 최소 너비를 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 행의 최소 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
+		/// 열의 최소 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
 		/// </returns>
 		property int MinWidth
 		{
@@ -459,10 +459,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 최대 너비를 가져옵니다.
+		/// 열의 최대 너비를 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 행의 최대 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
+		/// 열의 최대 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
 		/// </returns>
 		property int MaxWidth
 		{
@@ -470,10 +470,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 표시 여부를 가져옵니다.
+		/// 열의 표시 여부를 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 행이 표시되면 true를, 그렇지 않다면 false를 가져옵니다.
+		/// 열이 표시되면 true를, 그렇지 않다면 false를 가져옵니다.
 		/// </returns>
 		property bool IsVisible
 		{
@@ -481,14 +481,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 위치 이동 여부를 가져옵니다.
+		/// 열의 위치 이동 여부를 가져옵니다.
 		/// </summary>
 		/// <remarks>
-		/// 이 속성은 마우스를 이용하여 표시되는 행의 위치를 바꿀수 있는지에 대한 여부를 확인하는 것입니다. 
-		/// 이 속성의 값이 false이면 마우스를 이용하여 행의 위치 이동을 할 수 없습니다.
+		/// 이 속성은 마우스를 이용하여 표시되는 열의 위치를 바꿀수 있는지에 대한 여부를 확인하는 것입니다. 
+		/// 이 속성의 값이 false이면 마우스를 이용하여 열의 위치 이동을 할 수 없습니다.
 		/// </remarks>
 		/// <returns>
-		/// 행의 위치 이동이 가능하다면 true를, 그렇지 않다면 false를 가져옵니다.
+		/// 열의 위치 이동이 가능하다면 true를, 그렇지 않다면 false를 가져옵니다.
 		/// </returns>
 		property bool IsMovable
 		{
@@ -496,14 +496,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 너비 조절 여부를 가져옵니다.
+		/// 열의 너비 조절 여부를 가져옵니다.
 		/// </summary>
 		/// <remarks>
-		/// 이 속성은 마우스를 이용하여 행의 너비를 조절할 수 있는지에 대한 여부를 확인합니다. 
-		/// 이 속성의 값이 false이면 마우스를 이용하여 행의 너비조절을 할 수 없습니다.
+		/// 이 속성은 마우스를 이용하여 열의 너비를 조절할 수 있는지에 대한 여부를 확인합니다. 
+		/// 이 속성의 값이 false이면 마우스를 이용하여 열의 너비조절을 할 수 없습니다.
 		/// </remarks>
 		/// <returns>
-		/// 행의 너비 조절이 가능하면 true를, 그렇지 않다면 false를 반환합니다.
+		/// 열의 너비 조절이 가능하면 true를, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
 		property bool IsResizable
 		{
@@ -517,7 +517,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 수평 스크롤시 스크롤에 적용이 되지 않으면 true, 적용이 되면 false를 반환합니다.
 		/// </returns>
 		/// <remarks>
-		/// 행의 갯수가 많아 화면에 다 표시 되지 못할때는 수평 스크롤을 통해서 보이지 않는 행을 볼 수 있습니다. 
+		/// 열의 갯수가 많아 화면에 다 표시 되지 못할때는 수평 스크롤을 통해서 보이지 않는 열을 볼 수 있습니다. 
 		/// 이 속성의 값이 true이면 분할면을 기준으로 좌측에 배치되어 수평 스크롤을 해도 움직이지 않고 고정되어 항상 화면에 표시할 수 있습니다.
 		/// </remarks>
 		property bool IsFrozen
@@ -526,10 +526,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행이 읽기 전용인지에 대한 여부를 가져옵니다.
+		/// 열이 읽기 전용인지에 대한 여부를 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 행이 읽기 전용이라면 true를, 그렇지 않다면 false를 반환합니다.
+		/// 열이 읽기 전용이라면 true를, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
 		property bool IsReadOnly
 		{
@@ -570,10 +570,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 그룹핑 기능이 적용되었는지에 대한 여부를 가져옵니다.
+		/// 열의 그룹핑 기능이 적용되었는지에 대한 여부를 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 행에 그룹핑 기능이 적용되었다면 true를, 그렇지 않다면 false를 반환합니다.
+		/// 열에 그룹핑 기능이 적용되었다면 true를, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
 		property bool IsGrouped
 		{
@@ -592,10 +592,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 정렬방식을 가져옵니다.
+		/// 열의 정렬방식을 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 행의 정렬방식을 나타내는 <see cref="SortType"/>입니다.
+		/// 열의 정렬방식을 나타내는 <see cref="SortType"/>입니다.
 		/// </returns>
 		property _SortType SortType
 		{
@@ -603,10 +603,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 		
 		/// <summary>
-		/// 행이 표시되는 순서를 가져옵니다.
+		/// 열이 표시되는 순서를 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 행이 보여지지 않거나 그리드 컨트롤에 종속되어 있지 안다면 -1을 반환합니다.
+		/// 열이 보여지지 않거나 그리드 컨트롤에 종속되어 있지 안다면 -1을 반환합니다.
 		/// </returns>
 		property int VisibleIndex
 		{
@@ -614,10 +614,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행이 화면에 표시되는 순서를 가져옵니다.
+		/// 열이 화면에 표시되는 순서를 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 행이 화면에 보여지지 않다면 -1을 반환합니다.
+		/// 열이 화면에 보여지지 않다면 -1을 반환합니다.
 		/// </returns>
 		property int DisplayIndex
 		{
@@ -636,10 +636,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 대한 사용자 정의 데이터를 가져옵니다.
+		/// 열의 대한 사용자 정의 데이터를 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 행의 대한 사용자 정의 데이터를 나타내는 <see cref="System::Object"/>입니다.
+		/// 열의 대한 사용자 정의 데이터를 나타내는 <see cref="System::Object"/>입니다.
 		/// </returns>
 		property object^ Tag
 		{
@@ -647,10 +647,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 마우스 커서에 대한 행의 상태를 가져옵니다.
+		/// 마우스 커서에 대한 열의 상태를 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 마우스 커서에 대한 행의 상태를 나타내는 <see cref="ColumnState"/>입니다.
+		/// 마우스 커서에 대한 열의 상태를 나타내는 <see cref="ColumnState"/>입니다.
 		/// </returns>
 		property _ColumnState ColumnState
 		{
@@ -670,7 +670,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	};
 
 	/// <summary>
-	/// 행을 그릴수 있는 개체입니다.
+	/// 열을 그릴수 있는 개체입니다.
 	/// </summary>
 	public ref class ColumnPainter abstract
 	{
@@ -689,19 +689,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		ColumnPainter();
 
 		/// <summary>
-		/// 행의 배경을 그립니다.
+		/// 열의 배경을 그립니다.
 		/// </summary>
 		/// <returns>
 		/// 그리기가 성공하여 기본 그리기 수행이 필요 없을때는 true, 그리기가 실패하여 기본 그리기를 수행할 필요가 있다면 false를 반환합니다.
 		/// </returns>
 		/// <param name="g">그리기에 사용되는 그래픽 개체입니다.</param>
-		/// <param name="renderRect">그리기에 대상이 되는 행의 영역입니다.</param>
-		/// <param name="columnDescriptor">그리기에 대상이 되는 행의 정보를 가져올 수 있는 개체입니다.</param>
-		/// <param name="style">그리기에 대상이 되는 행의 스타일 정보를 가져올 수 있는 개체입니다.</param>
+		/// <param name="renderRect">그리기에 대상이 되는 열의 영역입니다.</param>
+		/// <param name="columnDescriptor">그리기에 대상이 되는 열의 정보를 가져올 수 있는 개체입니다.</param>
+		/// <param name="style">그리기에 대상이 되는 열의 스타일 정보를 가져올 수 있는 개체입니다.</param>
 		virtual bool PaintBackground(_Graphics^ g, _Rectangle renderRect, IColumnDescriptor^ columnDescriptor, IStyle^ style) abstract;
 
 		/// <summary>
-		/// 행의 배경을 제외한 나머지를 그립니다.
+		/// 열의 배경을 제외한 나머지를 그립니다.
 		/// </summary>
 		/// <remarks>
 		/// 배경을 제외한 텍스트 출력 및 정렬 표시등을 그리고 싶다면 이 메서드를 구현하면 됩니다.
@@ -710,9 +710,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 그리기가 성공하여 기본 그리기 수행이 필요 없을때는 true, 그리기가 실패하여 기본 그리기를 수행할 필요가 있다면 false를 반환합니다.
 		/// </returns>
 		/// <param name="g">그리기에 사용되는 그래픽 개체입니다.</param>
-		/// <param name="renderRect">그리기에 대상이 되는 행의 영역입니다.</param>
-		/// <param name="columnDescriptor">그리기에 대상이 되는 행의 정보를 가져올 수 있는 개체입니다.</param>
-		/// <param name="style">그리기에 대상이 되는 행의 스타일 정보를 가져올 수 있는 개체입니다.</param>
+		/// <param name="renderRect">그리기에 대상이 되는 열의 영역입니다.</param>
+		/// <param name="columnDescriptor">그리기에 대상이 되는 열의 정보를 가져올 수 있는 개체입니다.</param>
+		/// <param name="style">그리기에 대상이 되는 열의 스타일 정보를 가져올 수 있는 개체입니다.</param>
 		virtual bool PaintContents(_Graphics^ g, _Rectangle renderRect, IColumnDescriptor^ columnDescriptor, IStyle^ style) abstract;
 
 	protected: // methods
@@ -730,7 +730,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	};
 
 	/// <summary>
-	/// 행을 나타냅니다.
+	/// 열을 나타냅니다.
 	/// </summary>
 	[System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
 	[System::ComponentModel::ToolboxItem(false)]
@@ -779,10 +779,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	public: // properties
 		/// <summary>
-		/// 표시할 행의 제목을 가져오거나 설정합니다.
+		/// 표시할 열의 제목을 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// 표시할 행의 제목을 나타내는 <see cref="System::String"/>입니다.
+		/// 표시할 열의 제목을 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
 		property string^ Title
 		{
@@ -791,15 +791,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 이름을 가져오거나 설정합니다.
+		/// 열의 이름을 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// 행의 이름을 나타내는 <see cref="System::String"/>입니다.
+		/// 열의 이름을 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
 		/// <remarks>
-		/// 행의 이름은 일종의 키 값으로 사용됩니다. 따라서 다른 행과 이름이 같을경우 예외가 발생합니다.
+		/// 열의 이름은 일종의 키 값으로 사용됩니다. 따라서 다른 열과 이름이 같을경우 예외가 발생합니다.
 		/// </remarks>
-		/// <exception cref="System::ArgumentException">이름을 빈 문자열로 설정하거나. <see cref="GridControl"/>에 종속되어 있는 경우 같은 이름을 가진 행이 이미 있을때.</exception>
+		/// <exception cref="System::ArgumentException">이름을 빈 문자열로 설정하거나. <see cref="GridControl"/>에 종속되어 있는 경우 같은 이름을 가진 열이 이미 있을때.</exception>
 		property string^ Name
 		{
 			virtual string^ get() sealed;
@@ -807,10 +807,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 툴팁을 가져오거나 설정합니다.
+		/// 열의 툴팁을 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// 행의 툴팁을 나타내는 <see cref="System::String"/>입니다.
+		/// 열의 툴팁을 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
 		[_DefaultValue("")]
 		property string^ Tooltip
@@ -820,7 +820,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 고유 아이디를 가져옵니다.
+		/// 열의 고유 아이디를 가져옵니다.
 		/// </summary>
 		/// <returns>
 		/// 고유 아이디를 나타내는 <see cref="System::UInt32"/>형태의 정수값입니다.
@@ -832,13 +832,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 너비를 가져오거나 설정합니다.
+		/// 열의 너비를 가져오거나 설정합니다.
 		/// </summary>
 		/// <remarks>
 		/// 최소 너비보가 작거나 최대 너비보다 클 경우 자동으로 값이 수정됩니다.
 		/// </remarks>
 		/// <returns>
-		/// 행의 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
+		/// 열의 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
 		/// </returns>
 		/// <exception cref="System::ArgumentException">0보다 작은 수를 설정할때.</exception>
 		[_Category("Layout"), _DefaultValue(100)]
@@ -849,10 +849,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 최소 너비를 가져오거나 설정합니다.
+		/// 열의 최소 너비를 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// 행의 최소 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
+		/// 열의 최소 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
 		/// </returns>
 		/// <exception cref="System::ArgumentException">0보다 작거나 최대 너비보다 큰 수를 설정할때.</exception>
 		[_Category("Layout"), _DefaultValue(30)]
@@ -863,10 +863,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 최대 너비를 가져오거나 설정합니다.
+		/// 열의 최대 너비를 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// 행의 최대 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
+		/// 열의 최대 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
 		/// </returns>
 		/// <exception cref="System::ArgumentException">0보다 작거나 최소 너비보다 작은 수를 설정할때.</exception>
 		[_Category("Layout"), _DefaultValue(10000)]
@@ -877,10 +877,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 표시 여부를 가져오거나 설정합니다.
+		/// 열의 표시 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// 행이 표시되면 true를, 그렇지 않다면 false를 가져옵니다.
+		/// 열이 표시되면 true를, 그렇지 않다면 false를 가져옵니다.
 		/// </returns>
 		[_Category("Behavior"), _DefaultValue(true)]
 		property bool IsVisible
@@ -890,14 +890,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 위치 이동 여부를 가져오거나 설정합니다.
+		/// 열의 위치 이동 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <remarks>
-		/// 이 속성은 마우스를 이용하여 표시되는 행의 위치를 바꿀수 있는지에 대한 여부를 확인하는 것입니다. 
-		/// 이 속성의 값이 false이면 마우스를 이용하여 행의 위치 이동을 할 수 없습니다.
+		/// 이 속성은 마우스를 이용하여 표시되는 열의 위치를 바꿀수 있는지에 대한 여부를 확인하는 것입니다. 
+		/// 이 속성의 값이 false이면 마우스를 이용하여 열의 위치 이동을 할 수 없습니다.
 		/// </remarks>
 		/// <returns>
-		/// 행의 위치 이동이 가능하다면 true를, 그렇지 않다면 false를 가져옵니다.
+		/// 열의 위치 이동이 가능하다면 true를, 그렇지 않다면 false를 가져옵니다.
 		/// </returns>
 		[_Category("Behavior"), _DefaultValue(false)]
 		property bool IsMovable
@@ -907,14 +907,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 너비 조절 여부를 가져오거나 설정합니다.
+		/// 열의 너비 조절 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <remarks>
-		/// 이 속성은 마우스를 이용하여 행의 너비를 조절할 수 있는지에 대한 여부를 확인합니다. 
-		/// 이 속성의 값이 false이면 마우스를 이용하여 행의 너비조절을 할 수 없습니다.
+		/// 이 속성은 마우스를 이용하여 열의 너비를 조절할 수 있는지에 대한 여부를 확인합니다. 
+		/// 이 속성의 값이 false이면 마우스를 이용하여 열의 너비조절을 할 수 없습니다.
 		/// </remarks>
 		/// <returns>
-		/// 행의 너비 조절이 가능하면 true를, 그렇지 않다면 false를 반환합니다.
+		/// 열의 너비 조절이 가능하면 true를, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
 		[_Category("Behavior"), _DefaultValue(true)]
 		property bool IsResizable
@@ -930,7 +930,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 수평 스크롤시 스크롤에 적용이 되지 않으면 true, 적용이 되면 false를 반환합니다.
 		/// </returns>
 		/// <remarks>
-		/// 행의 갯수가 많아 화면에 다 표시 되지 못할때는 수평 스크롤을 통해서 보이지 않는 행을 볼 수 있습니다. 
+		/// 열의 갯수가 많아 화면에 다 표시 되지 못할때는 수평 스크롤을 통해서 보이지 않는 열을 볼 수 있습니다. 
 		/// 이 속성의 값이 true이면 분할면을 기준으로 좌측에 배치되어 수평 스크롤을 해도 움직이지 않고 고정되어 항상 화면에 표시할 수 있습니다.
 		/// </remarks>
 		[_Category("Behavior"), _DefaultValue(false)]
@@ -941,13 +941,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행이 읽기 전용인지에 대한 여부를 가져오거나 설정합니다.
+		/// 열이 읽기 전용인지에 대한 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// 행이 읽기 전용이라면 true를, 그렇지 않다면 false를 반환합니다.
+		/// 열이 읽기 전용이라면 true를, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
 		/// <remarks>
-		/// 이 속성의 값이 true이면 행이 소유한 모든 셀이 읽기 전용으로 적용됩니다.
+		/// 이 속성의 값이 true이면 열이 소유한 모든 셀이 읽기 전용으로 적용됩니다.
 		/// </remarks>
 		[_Category("Behavior"), _DefaultValue(false)]
 		property bool IsReadOnly
@@ -999,10 +999,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 그룹핑 기능이 적용되었는지에 대한 여부를 가져오거나 설정합니다.
+		/// 열의 그룹핑 기능이 적용되었는지에 대한 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// 행에 그룹핑 기능이 적용되었다면 true를, 그렇지 않다면 false를 반환합니다.
+		/// 열에 그룹핑 기능이 적용되었다면 true를, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
 		[_DefaultValue(false)]
 		property bool IsGrouped
@@ -1018,7 +1018,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 데이터 타입을 나타내는 <see cref="System::Type"/>입니다.
 		/// </returns>
 		[_DefaultValue(string::typeid)]
-		[_EditorAttribute("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
+		[_EditorAttribute("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=1.0.0.1, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
 		property _Type^ DataType
 		{
 			virtual _Type^ get() sealed;
@@ -1043,10 +1043,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 정렬방식을 가져오거나 설정합니다.
+		/// 열의 정렬방식을 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// 행의 정렬방식을 나타내는 <see cref="SortType"/>입니다.
+		/// 열의 정렬방식을 나타내는 <see cref="SortType"/>입니다.
 		/// </returns>
 		[_DefaultValue(_SortType::None)]
 		property _SortType SortType
@@ -1056,7 +1056,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 정렬을 하기 위해 비교하는 개체를 가져오거나 설정합니다.
+		/// 열의 정렬을 하기 위해 비교하는 개체를 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
 		/// 값의 비교를 위한 개체를 나타내는 <see cref="System::Collections::IComparer"/>입니다.
@@ -1069,10 +1069,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행이 표시되는 순서를 가져옵니다.
+		/// 열이 표시되는 순서를 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 행이 보여지지 않거나 그리드 컨트롤에 종속되어 있지 안다면 -1을 반환합니다.
+		/// 열이 보여지지 않거나 그리드 컨트롤에 종속되어 있지 안다면 -1을 반환합니다.
 		/// </returns>
 		[_Browsable(false)]
 		property int VisibleIndex
@@ -1081,10 +1081,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행이 화면에 표시되는 순서를 가져옵니다.
+		/// 열이 화면에 표시되는 순서를 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 행이 화면에 보여지지 않다면 -1을 반환합니다.
+		/// 열이 화면에 보여지지 않다면 -1을 반환합니다.
 		/// </returns>
 		[_Browsable(false)]
 		property int DisplayIndex
@@ -1125,7 +1125,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 셀의 기본값을 나타내는 <see cref="System::Object"/>입니다.
 		/// </returns>
 		/// <remarks>
-		/// 이 속성의 사용 목적은 새로운 열을 추가 하기 위하여 제공되는 <see cref="InsertionRow"/>에 기본값을 제공하기 위해서입니다. 
+		/// 이 속성의 사용 목적은 새로운 행을 추가 하기 위하여 제공되는 <see cref="InsertionRow"/>에 기본값을 제공하기 위해서입니다. 
 		/// 데이터 타입에 대한 검사가 없으므로, 가급적 <see cref="DataType"/>과 같은 타입의 개체를 사용하시기 바랍니다.
 		/// </remarks>
 		[_Browsable(false)]
@@ -1153,10 +1153,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행을 그릴수 있는 개체를 가져오거나 설정합니다.
+		/// 열을 그릴수 있는 개체를 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// 행을 그릴수 있는 개체를 나타내는 <see cref="ColumnPainter"/>입니다.
+		/// 열을 그릴수 있는 개체를 나타내는 <see cref="ColumnPainter"/>입니다.
 		/// </returns>
 		[_Browsable(false)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]

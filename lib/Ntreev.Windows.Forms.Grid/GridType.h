@@ -41,22 +41,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	};
 
 	/// <summary>
-	/// 열의 강조표시 방법을 지정합니다.
+	/// 행의 강조표시 방법을 지정합니다.
 	/// </summary>
 	public enum class RowHighlightType : int
 	{
 		/// <summary>
-		/// 열의 강조표시를 영역을 색상으로 채워 표시합니다.
+		/// 행의 강조표시를 영역을 색상으로 채워 표시합니다.
 		/// </summary>
 		Fill,
 
 		/// <summary>
-		/// 열의 강조표시를 영역의 외곽선을 그려 표시합니다.
+		/// 행의 강조표시를 영역의 외곽선을 그려 표시합니다.
 		/// </summary>
 		Line,
 
 		/// <summary>
-		/// 열의 강조표시를 외곽선과 색상 채우기 모두를 사용합니다.
+		/// 행의 강조표시를 외곽선과 색상 채우기 모두를 사용합니다.
 		/// </summary>
 		Both,
 	};

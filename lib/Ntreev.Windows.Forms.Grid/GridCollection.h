@@ -44,10 +44,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	public:
 		/// <summary>
-		/// 행의 이름으로 셀을 가져옵니다.
+		/// 열의 이름으로 셀을 가져옵니다.
 		/// </summary>
 		/// <param name="columnName">
-		/// 행의 이름입니다.
+		/// 열의 이름입니다.
 		/// </param>
 		/// <returns>
 		/// 찾지 못하는 경우 null을 반환합니다.
@@ -58,7 +58,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 인스턴스로 셀을 가져옵니다.
+		/// 열의 인스턴스로 셀을 가져옵니다.
 		/// </summary>
 		/// <param name="column">
 		/// 찾을 <see cref="Column"/>의 인스턴스입니다.

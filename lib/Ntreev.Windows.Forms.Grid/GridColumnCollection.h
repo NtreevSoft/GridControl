@@ -5,9 +5,9 @@
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
 	/// <summary>
-	/// 행의 컬렉션을 나타냅니다.
+	/// 열의 컬렉션을 나타냅니다.
 	/// </summary>
-	[System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.ColumnCollectionEditor, Ntreev.Windows.Forms.Grid.Design, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
+	[System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.ColumnCollectionEditor, Ntreev.Windows.Forms.Grid.Design, Version=1.0.0.1, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
 	public ref class ColumnCollection : System::Collections::Generic::IEnumerable<_Column^>, System::Collections::IList, GridObject 
 	{
 		ref class Enumerator : System::Collections::Generic::IEnumerator<_Column^>
@@ -62,25 +62,25 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 컬렉션에 새로운 행을 추가합니다.
+		/// 컬렉션에 새로운 열을 추가합니다.
 		/// </summary>
 		/// <remarks>
-		/// 일반적으로 데이터 소스와 바인딩 되지 않는 행을 추가 하기위해 사용합니다.
-		/// 사용자는 <see cref="Column"/>형태의 인스턴스를 새로 생성해 추가 하거나, <see cref="Remove"/>등의 의해 컬렉션에서 제거된 행을 다시 추가할 수 있습니다.
+		/// 일반적으로 데이터 소스와 바인딩 되지 않는 열을 추가 하기위해 사용합니다.
+		/// 사용자는 <see cref="Column"/>형태의 인스턴스를 새로 생성해 추가 하거나, <see cref="Remove"/>등의 의해 컬렉션에서 제거된 열을 다시 추가할 수 있습니다.
 		/// </remarks>
 		/// <param name="item">
-		/// 새롭게 추가할 행의 <see cref="Column"/>입니다.
+		/// 새롭게 추가할 열의 <see cref="Column"/>입니다.
 		/// </param>
 		/// <exception cref="System::ArgumentNullException">
 		/// 매개변수 item의 값이 null일때
 		/// </exception>
 		/// <exception cref="System::ArgumentException">
-		/// 추가할 행이 이미 존재하거나, 같은 이름을 가진 행이 컬렉션에 이미 존재하는 경우
+		/// 추가할 열이 이미 존재하거나, 같은 이름을 가진 열이 컬렉션에 이미 존재하는 경우
 		/// </exception>
 		void Add(_Column^ item);
 
 		/// <summary>
-		/// 컬렉션에 여러개의 새로운 행을 추가합니다.
+		/// 컬렉션에 여러개의 새로운 열을 추가합니다.
 		/// </summary>
 		/// <param name="values">
 		/// 새롭게 추가할 <see cref="Column"/> 개체의 배열입니다.
@@ -89,12 +89,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 매개변수 values의 값이 null일때
 		/// </exception>
 		/// <exception cref="System::ArgumentException">
-		/// 추가할 행이 이미 존재하거나, 같은 이름을 가진 행이 컬렉션에 이미 존재하는 경우
+		/// 추가할 열이 이미 존재하거나, 같은 이름을 가진 열이 컬렉션에 이미 존재하는 경우
 		/// </exception>
 		void AddRange(cli::array<_Column^>^ values);
 
 		/// <summary>
-		/// 새로운 행의 인스턴스를 생성하고 컬렉션에 추가합니다.
+		/// 새로운 열의 인스턴스를 생성하고 컬렉션에 추가합니다.
 		/// </summary>
 		/// <returns>
 		/// 새로 생성된 <see cref="Column"/>의 인스턴스입니다.
@@ -102,13 +102,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		_Column^ AddNew();
 
 		/// <summary>
-		/// 새로운 행의 인스턴스를 생성하고 컬렉션에 추가합니다.
+		/// 새로운 열의 인스턴스를 생성하고 컬렉션에 추가합니다.
 		/// </summary>
 		/// <param name="name">
-		/// 생성될 행의 이름입니다. null값이거나 빈문자열일 경우 임의의 이름이 지정됩니다.
+		/// 생성될 열의 이름입니다. null값이거나 빈문자열일 경우 임의의 이름이 지정됩니다.
 		/// </param>
 		/// <exception cref="System::ArgumentException">
-		/// 같은 이름을 가진 행이 컬렉션에 이미 존재하는 경우
+		/// 같은 이름을 가진 열이 컬렉션에 이미 존재하는 경우
 		/// </exception>
 		/// <returns>
 		/// 새로 생성된 <see cref="Column"/>의 인스턴스입니다.
@@ -116,16 +116,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		_Column^ AddNew(string^ name);
 
 		/// <summary>
-		/// 새로운 행의 인스턴스를 생성하고 컬렉션에 추가합니다.
+		/// 새로운 열의 인스턴스를 생성하고 컬렉션에 추가합니다.
 		/// </summary>
 		/// <param name="name">
-		/// 생성될 행의 이름입니다. null값이거나 빈문자열일 경우 임의의 이름이 지정됩니다.
+		/// 생성될 열의 이름입니다. null값이거나 빈문자열일 경우 임의의 이름이 지정됩니다.
 		/// </param>
 		/// <param name="type">
-		/// 행이 관리할 데이터의 형식입니다. null값일 경우 string형식으로 대체 됩니다.
+		/// 열이 관리할 데이터의 형식입니다. null값일 경우 string형식으로 대체 됩니다.
 		/// </param>
 		/// <exception cref="System::ArgumentException">
-		/// 같은 이름을 가진 행이 컬렉션에 이미 존재하는 경우
+		/// 같은 이름을 가진 열이 컬렉션에 이미 존재하는 경우
 		/// </exception>
 		/// <returns>
 		/// 새로 생성된 <see cref="Column"/>의 인스턴스입니다.
@@ -133,14 +133,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		_Column^ AddNew(string^ name, _Type^ type);
 
 		/// <summary>
-		/// 컬렉션에 새로운 행을 삽입합니다.
+		/// 컬렉션에 새로운 열을 삽입합니다.
 		/// </summary>
 		/// <param name="index">
 		/// 삽입할 위치를 나타냅니다.
 		/// </param>
 		/// <remarks>
-		/// 일반적으로 데이터 소스와 바인딩 되지 않는 행을 삽입 하기위해 사용합니다.
-		/// 사용자는 <see cref="Column"/>형태의 인스턴스를 새로 생성해 삽입 하거나, <see cref="Remove"/>등의 의해 컬렉션에서 제거된 행을 다시 삽입할 수 있습니다.
+		/// 일반적으로 데이터 소스와 바인딩 되지 않는 열을 삽입 하기위해 사용합니다.
+		/// 사용자는 <see cref="Column"/>형태의 인스턴스를 새로 생성해 삽입 하거나, <see cref="Remove"/>등의 의해 컬렉션에서 제거된 열을 다시 삽입할 수 있습니다.
 		/// </remarks>
 		/// <exception cref="System::ArgumentOutOfRangeException">
 		/// index가 0보다 작거나, <see cref="Count"/>보다 클 경우
@@ -149,12 +149,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 매개변수 item의 값이 null일때
 		/// </exception>
 		/// <exception cref="System::ArgumentException">
-		/// 추가할 행이 이미 존재하거나, 같은 이름을 가진 행이 컬렉션에 이미 존재하는 경우
+		/// 추가할 열이 이미 존재하거나, 같은 이름을 가진 열이 컬렉션에 이미 존재하는 경우
 		/// </exception>
 		void Insert(int index, _Column^ item);
 
 		/// <summary>
-		/// 새로운 행의 인스턴스를 생성하고 컬렉션에 삽입합니다.
+		/// 새로운 열의 인스턴스를 생성하고 컬렉션에 삽입합니다.
 		/// </summary>
 		/// <param name="index">
 		/// 삽입할 위치를 나타냅니다.
@@ -168,19 +168,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		_Column^ InsertNew(int index);
 
 		/// <summary>
-		/// 새로운 행의 인스턴스를 생성하고 컬렉션에 삽입합니다.
+		/// 새로운 열의 인스턴스를 생성하고 컬렉션에 삽입합니다.
 		/// </summary>
 		/// <param name="index">
 		/// 삽입할 위치를 나타냅니다.
 		/// </param>
 		/// <param name="name">
-		/// 생성될 행의 이름입니다. null값이거나 빈문자열일 경우 임의의 이름이 지정됩니다.
+		/// 생성될 열의 이름입니다. null값이거나 빈문자열일 경우 임의의 이름이 지정됩니다.
 		/// </param>
 		/// <exception cref="System::ArgumentOutOfRangeException">
 		/// index가 0보다 작거나, <see cref="Count"/>보다 클 경우
 		/// </exception>
 		/// <exception cref="System::ArgumentException">
-		/// 같은 이름을 가진 행이 컬렉션에 이미 존재하는 경우
+		/// 같은 이름을 가진 열이 컬렉션에 이미 존재하는 경우
 		/// </exception>
 		/// <returns>
 		/// 새로 생성된 <see cref="Column"/>의 인스턴스입니다.
@@ -188,22 +188,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		_Column^ InsertNew(int index, string^ name);
 
 		/// <summary>
-		/// 새로운 행의 인스턴스를 생성하고 컬렉션에 삽입합니다.
+		/// 새로운 열의 인스턴스를 생성하고 컬렉션에 삽입합니다.
 		/// </summary>
 		/// <param name="index">
 		/// 삽입할 위치를 나타냅니다.
 		/// </param>
 		/// <param name="name">
-		/// 생성될 행의 이름입니다. null값이거나 빈문자열일 경우 임의의 이름이 지정됩니다.
+		/// 생성될 열의 이름입니다. null값이거나 빈문자열일 경우 임의의 이름이 지정됩니다.
 		/// </param>
 		/// <param name="type">
-		/// 행이 관리할 데이터의 형식입니다. null값일 경우 string형식으로 대체 됩니다.
+		/// 열이 관리할 데이터의 형식입니다. null값일 경우 string형식으로 대체 됩니다.
 		/// </param>
 		/// <exception cref="System::ArgumentOutOfRangeException">
 		/// index가 0보다 작거나, <see cref="Count"/>보다 클 경우
 		/// </exception>
 		/// <exception cref="System::ArgumentException">
-		/// 같은 이름을 가진 행이 컬렉션에 이미 존재하는 경우
+		/// 같은 이름을 가진 열이 컬렉션에 이미 존재하는 경우
 		/// </exception>
 		/// <returns>
 		/// 새로 생성된 <see cref="Column"/>의 인스턴스입니다.
@@ -211,41 +211,41 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		_Column^ InsertNew(int index, string^ name, _Type^ type);
 
 		/// <summary>
-		/// 컬렉션에서 행을 제거합니다.
+		/// 컬렉션에서 열을 제거합니다.
 		/// </summary>
 		/// <param name="item">
-		/// 제거할 행의 <see cref="Column"/>입니다.
+		/// 제거할 열의 <see cref="Column"/>입니다.
 		/// </param>
 		/// <remarks>
-		/// 데이터 소스와 바인딩 된 행을 제거할 수 없습니다.
+		/// 데이터 소스와 바인딩 된 열을 제거할 수 없습니다.
 		/// </remarks>
 		/// <exception cref="System::ArgumentNullException">
 		/// 매개변수 item의 값이 null일때
 		/// </exception>
 		/// <exception cref="System::ArgumentException">
-		/// 이미 제거가 된 경우 또는 제거할 수 없는 행일 경우
+		/// 이미 제거가 된 경우 또는 제거할 수 없는 열일 경우
 		/// </exception>
 		void Remove(_Column^ item);
 
 		/// <summary>
-		/// 컬렉션에서 지정된 위치의 행을 제거합니다.
+		/// 컬렉션에서 지정된 위치의 열을 제거합니다.
 		/// </summary>
 		/// <param name="index">
-		/// 제거할 행의 위치를 나타냅니다.
+		/// 제거할 열의 위치를 나타냅니다.
 		/// </param>
 		/// <remarks>
-		/// 데이터 소스와 바인딩 된 행을 제거할 수 없습니다.
+		/// 데이터 소스와 바인딩 된 열을 제거할 수 없습니다.
 		/// </remarks>
 		/// <exception cref="System::ArgumentOutOfRangeException">
 		/// index가 0보다 작거나, <see cref="Count"/>보다 클 경우
 		/// </exception>
 		/// <exception cref="System::ArgumentException">
-		/// 제거할 수 없는 행일 경우
+		/// 제거할 수 없는 열일 경우
 		/// </exception>
 		void RemoveAt(int index);
 
 		/// <summary>
-		/// 컬렉션에서 행의 위치를 확인합니다.
+		/// 컬렉션에서 열의 위치를 확인합니다.
 		/// </summary>
 		/// <exception cref="System::ArgumentNullException">
 		/// 매개변수 item의 값이 null일때
@@ -256,7 +256,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		int	IndexOf(_Column^ item);
 
 		/// <summary>
-		/// 컬렉션에서 행이 포함되어 있는지 확인합니다.
+		/// 컬렉션에서 열이 포함되어 있는지 확인합니다.
 		/// </summary>
 		/// <exception cref="System::ArgumentNullException">
 		/// 매개변수 item의 값이 null일때
@@ -288,10 +288,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	public: // properties
 		/// <summary>
-		/// 지정한 인덱스에 있는 행을 가져옵니다.
+		/// 지정한 인덱스에 있는 열을 가져옵니다.
 		/// </summary>
 		/// <param name="index">
-		/// 가져올 행의의 인덱스(0부터 시작)입니다.
+		/// 가져올 열의의 인덱스(0부터 시작)입니다.
 		/// </param>
 		/// <returns>
 		/// 지정한 인덱스의 <see cref="Column"/>입니다.
@@ -316,13 +316,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 컬렉션에서 이름으로 행을 찾습니다.
+		/// 컬렉션에서 이름으로 열을 찾습니다.
 		/// </summary>
 		/// <param name="columnName">
 		/// 찾을 항목의 이름입니다.
 		/// </param>
 		/// <returns>
-		/// 같은 이름의 행이 없을 경우 null을 반환합니다.
+		/// 같은 이름의 열이 없을 경우 null을 반환합니다.
 		/// </returns>
 		property Column^ default[string^]
 		{
@@ -443,9 +443,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		_Column^ CreateColumnInstance(_Type^ dataType, string^ name);
 		_Column^ CreateColumnInstanceCore(_Type^ columnType, string^ name);
 
-		//_Column^ NewDefaultColumn(_PropertyDescriptor^ propertyDescriptor);
-		//_Column^ NewDefaultColumn(_Type^ type);
-
 		string^	NewColumnName();
 
 		void currencyManager_ListChanged(object^ sender, System::ComponentModel::ListChangedEventArgs^ e);
@@ -461,14 +458,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	private:
 		GrColumnList* m_pColumnList;
 		System::Windows::Forms::CurrencyManager^ m_currencyManager;
-		//PropertyDescriptorList^ m_list;
 
 		System::ComponentModel::ListChangedEventHandler^ m_listChangedEventHandler;
 		System::Windows::Forms::BindingCompleteEventHandler^ m_bindingCompleteEventHandler;
 	};
 
 	/// <summary>
-	/// 선택된 행의 컬렉션을 나타냅니다.
+	/// 선택된 열의 컬렉션을 나타냅니다.
 	/// </summary>
 	public ref class SelectedColumnCollection : System::Collections::Generic::IEnumerable<_Column^>, System::Collections::ICollection, GridObject
 	{
@@ -565,7 +561,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	};
 
 	/// <summary>
-	/// 표시되는 행의 컬렉션을 나타냅니다.
+	/// 표시되는 열의 컬렉션을 나타냅니다.
 	/// </summary>
 	public ref class VisibleColumnCollection : System::Collections::Generic::IEnumerable<_Column^>, System::Collections::ICollection, GridObject
 	{
@@ -616,10 +612,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	public: // properties
 		/// <summary>
-		/// 지정한 인덱스에 있는 행을 가져옵니다.
+		/// 지정한 인덱스에 있는 열을 가져옵니다.
 		/// </summary>
 		/// <param name="index">
-		/// 가져올 행의 인덱스(0부터 시작)입니다.
+		/// 가져올 열의 인덱스(0부터 시작)입니다.
 		/// </param>
 		/// <returns>
 		/// 지정한 인덱스의 <see cref="Column"/>입니다.
@@ -682,7 +678,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	};
 
 	/// <summary>
-	/// 화면에 표시되는 행의 컬렉션을 나타냅니다.
+	/// 화면에 표시되는 열의 컬렉션을 나타냅니다.
 	/// </summary>
 	public ref class DisplayableColumnCollection : System::Collections::Generic::IEnumerable<_Column^>, System::Collections::ICollection, GridObject
 	{
@@ -729,10 +725,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	public: // properties
 		/// <summary>
-		/// 지정한 인덱스에 있는 행을 가져옵니다.
+		/// 지정한 인덱스에 있는 열을 가져옵니다.
 		/// </summary>
 		/// <param name="index">
-		/// 가져올 행의 인덱스(0부터 시작)입니다.
+		/// 가져올 열의 인덱스(0부터 시작)입니다.
 		/// </param>
 		/// <returns>
 		/// 지정한 인덱스의 <see cref="Column"/>입니다.
@@ -795,7 +791,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	};
 
 	/// <summary>
-	/// 스크롤 되지 않는 행의 컬렉션을 나타냅니다.
+	/// 스크롤 되지 않는 열의 컬렉션을 나타냅니다.
 	/// </summary>
 	public ref class FrozenColumnCollection : System::Collections::Generic::IEnumerable<_Column^>, System::Collections::ICollection, GridObject
 	{
@@ -846,10 +842,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	public: // properties
 		/// <summary>
-		/// 지정한 인덱스에 있는 행을 가져옵니다.
+		/// 지정한 인덱스에 있는 열을 가져옵니다.
 		/// </summary>
 		/// <param name="index">
-		/// 가져올 행의 인덱스(0부터 시작)입니다.
+		/// 가져올 열의 인덱스(0부터 시작)입니다.
 		/// </param>
 		/// <returns>
 		/// 지정한 인덱스의 <see cref="Column"/>입니다.
@@ -911,7 +907,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		GrColumnList*		m_pColumnList;
 	};
 	/// <summary>
-	/// 스크롤 되는 행의 컬렉션을 나타냅니다.
+	/// 스크롤 되는 열의 컬렉션을 나타냅니다.
 	/// </summary>
 	public ref class UnfrozenColumnCollection : System::Collections::Generic::IEnumerable<_Column^>, System::Collections::ICollection, GridObject
 	{
@@ -962,10 +958,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	public: // properties
 		/// <summary>
-		/// 지정한 인덱스에 있는 행을 가져옵니다.
+		/// 지정한 인덱스에 있는 열을 가져옵니다.
 		/// </summary>
 		/// <param name="index">
-		/// 가져올 행의 인덱스(0부터 시작)입니다.
+		/// 가져올 열의 인덱스(0부터 시작)입니다.
 		/// </param>
 		/// <returns>
 		/// 지정한 인덱스의 <see cref="Column"/>입니다.

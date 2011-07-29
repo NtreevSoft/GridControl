@@ -391,7 +391,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		DeleteAll();
 	}
-
 	
 	SelectedColumnCollection::Enumerator::Enumerator(const GrSelectedColumns* selectedColumns)
 		: m_selectedColumns(selectedColumns)

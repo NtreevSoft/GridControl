@@ -143,7 +143,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	public delegate void RowEventHandler(object^ sender, RowEventArgs^ e);
 
 	/// <summary>
-	/// 새로운 열이 <see cref="Ntreev::Windows::Forms::Grid::InsertionRow"/>를 참조하여 추가되는 이벤트의 데이터를 제공합니다.
+	/// 새로운 행이 <see cref="Ntreev::Windows::Forms::Grid::InsertionRow"/>를 참조하여 추가되는 이벤트의 데이터를 제공합니다.
 	/// </summary>
 	public ref class InsertionRowInsertingEventArgs : RowEventArgs
 	{
@@ -158,10 +158,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	public: // properties
 		/// <summary>
-		/// InsertionRow를 참조하여 새로운 열을 추가 할지에 대한 여부를 가져오거나 설정합니다.
+		/// InsertionRow를 참조하여 새로운 행을 추가 할지에 대한 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// 새로운 열을 추가하는 작업이 취소되면 true, 그렇지 않으면 false를 반환합니다.
+		/// 새로운 행을 추가하는 작업이 취소되면 true, 그렇지 않으면 false를 반환합니다.
 		/// </returns>
 		property bool Cancel 
 		{
@@ -174,12 +174,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	};
 	
 	/// <summary>
-	/// 새로운 열이 <see cref="Ntreev::Windows::Forms::Grid::InsertionRow"/>를 참조하여 추가되는 이벤트를 처리하는 메서드를 나타냅니다.
+	/// 새로운 행이 <see cref="Ntreev::Windows::Forms::Grid::InsertionRow"/>를 참조하여 추가되는 이벤트를 처리하는 메서드를 나타냅니다.
 	/// </summary>
 	public delegate void InsertionRowInsertingEventHandler(object^ sender, InsertionRowInsertingEventArgs^ e);
 
 	/// <summary>
-	/// 새로운 열이 추가되는 이벤트의 데이터를 제공합니다.
+	/// 새로운 행이 추가되는 이벤트의 데이터를 제공합니다.
 	/// </summary>
 	public ref class RowInsertingEventArgs : _EventArgs
 	{
@@ -198,10 +198,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	public: // properties
 		/// <summary>
-		/// 새로운 열을 추가 할지에 대한 여부를 가져오거나 설정합니다.
+		/// 새로운 행을 추가 할지에 대한 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// 새로운 열을 추가하는 작업이 취소되면 true, 그렇지 않으면 false를 반환합니다.
+		/// 새로운 행을 추가하는 작업이 취소되면 true, 그렇지 않으면 false를 반환합니다.
 		/// </returns>
 		property bool Cancel
 		{
@@ -231,12 +231,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	};
 
 	/// <summary>
-	/// 새로운 열이 추가되는 이벤트를 처리하는 메서드를 나타냅니다.
+	/// 새로운 행이 추가되는 이벤트를 처리하는 메서드를 나타냅니다.
 	/// </summary>
 	public delegate void RowInsertingEventHandler(object^ sender, RowInsertingEventArgs^ e);
 
 	/// <summary>
-	/// 열이 제거되는 이벤트의 데이터를 제공합니다.
+	/// 행이 제거되는 이벤트의 데이터를 제공합니다.
 	/// </summary>
 	public ref class RowRemovingEventArgs : RowEventArgs
 	{
@@ -255,10 +255,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	public: // properties
 		/// <summary>
-		/// 열을 제거 할지에 대한 여부를 가져오거나 설정합니다.
+		/// 행을 제거 할지에 대한 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// 열을 제거하는 작업이 취소되면 true, 그렇지 않으면 false를 반환합니다.
+		/// 행을 제거하는 작업이 취소되면 true, 그렇지 않으면 false를 반환합니다.
 		/// </returns>
 		property bool Cancel
 		{
@@ -271,12 +271,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	};
 
 	/// <summary>
-	/// 열이 제거되는 이벤트를 처리하는 메서드를 나타냅니다.
+	/// 행이 제거되는 이벤트를 처리하는 메서드를 나타냅니다.
 	/// </summary>
 	public delegate void RowRemovingEventHandler(object^ sender, RowRemovingEventArgs^ e);
 
 	/// <summary>
-	/// 열이 제거된후 발생하는 이벤트의 데이터를 제공합니다.
+	/// 행이 제거된후 발생하는 이벤트의 데이터를 제공합니다.
 	/// </summary>
 	public ref class RowRemovedEventArgs : _EventArgs
 	{
@@ -316,7 +316,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	};
 
 	/// <summary>
-	/// 열이 제거된후 발생하는 이벤트를 처리하는 메서드를 나타냅니다.
+	/// 행이 제거된후 발생하는 이벤트를 처리하는 메서드를 나타냅니다.
 	/// </summary>
 	public delegate void RowRemovedEventHandler(object^ sender, RowRemovedEventArgs^ e);
 
@@ -430,7 +430,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	public delegate void ColumnEventHandler(object^ sender, ColumnEventArgs^ e);
 
 	/// <summary>
-	/// 새로운 행이 추가되는 이벤트의 데이터를 제공합니다.
+	/// 새로운 열이 추가되는 이벤트의 데이터를 제공합니다.
 	/// </summary>
 	public ref class ColumnInsertingEventArgs : ColumnEventArgs
 	{
@@ -448,10 +448,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	public: // properties
 		/// <summary>
-		/// 새로운 행을 추가 할지에 대한 여부를 가져오거나 설정합니다.
+		/// 새로운 열을 추가 할지에 대한 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// 새로운 행을 추가하는 작업이 취소되면 true, 그렇지 않으면 false를 반환합니다.
+		/// 새로운 열을 추가하는 작업이 취소되면 true, 그렇지 않으면 false를 반환합니다.
 		/// </returns>
 		property bool Cancel
 		{
@@ -464,7 +464,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	};
 	
 	/// <summary>
-	/// 새로운 행이 추가되는 이벤트를 처리하는 메서드를 나타냅니다.
+	/// 새로운 열이 추가되는 이벤트를 처리하는 메서드를 나타냅니다.
 	/// </summary>
 	public delegate void ColumnInsertingEventHandler(object^ sender, ColumnInsertingEventArgs^ e);
 
@@ -522,7 +522,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// </returns>
 		/// <remarks>
 		/// 이 속성의 값이 true로 설정되었다면 각 이벤트에 해당하는 기본 작업이 취소됩니다.
-		/// ColumnMouseDown일 경우 행의 셀 선택 기능이 취소 되며, ColumnMouseUp일 경우 Column정렬 기능이 취소됩니다.
+		/// ColumnMouseDown일 경우 열의 셀 선택 기능이 취소 되며, ColumnMouseUp일 경우 Column정렬 기능이 취소됩니다.
 		/// </remarks>
 		property bool Handled	
 		{

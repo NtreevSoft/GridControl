@@ -69,7 +69,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	};
 
 	/// <summary>
-	/// 열을 나타냅니다.
+	/// 행을 나타냅니다.
 	/// </summary>
 	[System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
 	public ref class Row : RowBase
@@ -103,15 +103,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		void ApplyEdit();
 
 		/// <summary>
-		/// 열을 화면에 표시되도록 스크롤을 조정합니다.
+		/// 행을 화면에 표시되도록 스크롤을 조정합니다.
 		/// </summary>
 		void EnsureVisible();
 
 		/// <summary>
-		/// 열을 선택합니다.
+		/// 행을 선택합니다.
 		/// </summary>
 		/// <param name="selectionType">
-		/// 열을 선택하기 위한 방법을 지정합니다.
+		/// 행을 선택하기 위한 방법을 지정합니다.
 		/// </param>
 		void Select(_SelectionType selectionType);
 
@@ -199,10 +199,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 이름으로 항목를 가져옵니다.
+		/// 열의 이름으로 항목를 가져옵니다.
 		/// </summary>
 		/// <param name="columnName">
-		/// 찾을 셀을 소유한 행의 이름입니다.
+		/// 찾을 셀을 소유한 열의 이름입니다.
 		/// </param>
 		/// <returns>
 		/// 찾지 못하는 경우 null을 반환합니다.
@@ -213,7 +213,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 인스턴스로 항목를 가져옵니다.
+		/// 열의 인스턴스로 항목를 가져옵니다.
 		/// </summary>
 		/// <param name="column">
 		/// 찾을 항목의 <see cref="Column"/>의 인스턴스 입니다.
@@ -244,7 +244,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 열의 높이를 가져오거나 설정합니다.
+		/// 행의 높이를 가져오거나 설정합니다.
 		/// </summary>
 		/// <exception cref="System::ArgumentOutOfRangeException">
 		/// 매개변수가 0보다 작을 경우
@@ -262,7 +262,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 열의 최소높이를 가져오거나 설정합니다.
+		/// 행의 최소높이를 가져오거나 설정합니다.
 		/// </summary>
 		/// <exception cref="System::ArgumentOutOfRangeException">
 		/// 매개변수가 0보다 작을 경우
@@ -280,7 +280,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 열의 최대높이를 가져오거나 설정합니다.
+		/// 행의 최대높이를 가져오거나 설정합니다.
 		/// </summary>
 		/// <exception cref="System::ArgumentOutOfRangeException">
 		/// 매개변수가 0보다 작을 경우
@@ -353,10 +353,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 현재의 열이 편집중인지에 대한 여부를 가져옵니다.
+		/// 현재의 행이 편집중인지에 대한 여부를 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 현재의 열이 편집중이면 true를 반환하고, 그렇지 않다면 false를 반환합니다.
+		/// 현재의 행이 편집중이면 true를 반환하고, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
 #ifdef _DEBUG
 		[_Category("Debug")]
@@ -387,7 +387,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// <see cref="Ntreev::Windows::Forms::Grid::GridControl"/>내에 열의 인덱스를 가져옵니다.
+		/// <see cref="Ntreev::Windows::Forms::Grid::GridControl"/>내에 행의 인덱스를 가져옵니다.
 		/// </summary>
 		/// <returns>
 		/// <see cref="Ntreev::Windows::Forms::Grid::GridControl"/>내에 포함되 있다면 인덱스(0부터 시작)를 반환하고, 그렇지 않다면 0xffffffff를 반환합니다.
@@ -502,7 +502,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	};
 
 	/// <summary>
-	/// 새로운 열을 추가하기 위한 편집가능한 열을 제공합니다.
+	/// 새로운 행을 추가하기 위한 편집가능한 행을 제공합니다.
 	/// </summary>
 	public ref class InsertionRow : Row
 	{

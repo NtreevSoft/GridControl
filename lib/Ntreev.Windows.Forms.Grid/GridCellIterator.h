@@ -12,16 +12,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 	public: // methods
 		/// <summary>
-		/// 현재의 열에서 첫번째 셀로 이동합니다.
+		/// 현재의 행에서 첫번째 셀로 이동합니다.
 		/// </summary>
 		/// <remarks>
-		/// Frozen된 행이 있다면 Frozen된 행을 제외한 첫번째 셀로 이동합니다.
+		/// Frozen된 열이 있다면 Frozen된 열을 제외한 첫번째 셀로 이동합니다.
 		/// </remarks>
 		/// <param name="range">선택 범위를 나타내는 <see cref="Ntreev::Windows::Forms::Grid::SelectionRange"/>입니다.</param>
 		void FirstCell(_SelectionRange range);
 
 		/// <summary>
-		/// 현재의 열에서 마지막 셀로 이동합니다.
+		/// 현재의 행에서 마지막 셀로 이동합니다.
 		/// </summary>
 		/// <param name="range">선택 범위를 나타내는 <see cref="Ntreev::Windows::Forms::Grid::SelectionRange"/>입니다.</param>
 		void LastCell(_SelectionRange range);

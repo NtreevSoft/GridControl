@@ -146,7 +146,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	public: // methods
 		/// <summary>
-		/// 대상이 되는 행이 화면내에 표시 될 수 있도록 스크롤을 조정합니다.
+		/// 대상이 되는 열이 화면내에 표시 될 수 있도록 스크롤을 조정합니다.
 		/// </summary>
 		/// <param name="column">화면내에 표시하려 하는 <see cref="Column"/>의 인스턴스입니다.</param>
 		void EnsureVisible(_Column^ column);
@@ -201,7 +201,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	public: // methods
 		/// <summary>
-		/// 대상이 되는 열이 화면내에 표시 될 수 있도록 스크롤을 조정합니다.
+		/// 대상이 되는 행이 화면내에 표시 될 수 있도록 스크롤을 조정합니다.
 		/// </summary>
 		/// <param name="row">화면내에 표시하려 하는 <see cref="Row"/>의 인스턴스입니다.</param>
 		void EnsureVisible(_Row^ row);

@@ -242,36 +242,52 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		_Graphics^ graphics = e->Graphics;
 		Debug::OutputFunction function(__FUNCTION__);
 		
-		UpdateGridRect();
+		try
+		{
+			UpdateGridRect();
 
-		GrRect clipping(e->ClipRectangle);
+			GrRect clipping(e->ClipRectangle);
 
-		if(clipping.right > this->DisplayRectangle.Right)
-			clipping.right = this->DisplayRectangle.Right;
-		if(clipping.bottom > this->DisplayRectangle.Bottom)
-			clipping.bottom = this->DisplayRectangle.Bottom;
-		
+			clipping.right  = System::Math::Min(clipping.right, this->DisplayRectangle.Right);
+			clipping.bottom = System::Math::Min(clipping.bottom, this->DisplayRectangle.Bottom);		
 
-		System::IntPtr hdc = e->Graphics->GetHdc();
-		m_pGridRenderer->OnBeginRender(hdc.ToPointer());
-		m_pGridCore->Render(m_pGridRenderer, &clipping);
+			System::IntPtr hdc = e->Graphics->GetHdc();
+			try
+			{
+				m_pGridRenderer->OnBeginRender(hdc.ToPointer());
+				m_pGridCore->Render(m_pGridRenderer, &clipping);
+				m_pGridRenderer->OnEndRender();
+			}
+			catch(System::Exception^ exception)
+			{
+				throw exception;
+			}
+			finally
+			{
+				e->Graphics->ReleaseHdc(hdc);
+			}
 
-		m_pGridRenderer->OnEndRender();
-		e->Graphics->ReleaseHdc(hdc);
+			PaintColumnControls(graphics, e->ClipRectangle);
 
-		PaintColumnControls(graphics, e->ClipRectangle);
+			if(IsRowNumberVisible == false)
+				PaintRowState(graphics);
+					
+			m_errorDescriptor->Paint(graphics);
 
-		if(IsRowNumberVisible == false)
-			PaintRowState(graphics);
-				
-		m_errorDescriptor->Paint(graphics);
+			UserControl::OnPaint(e);
+		}
+		catch(System::Exception^ exception)
+		{
+			using namespace System::Drawing;
+			e->Graphics->Clear(Color::White);
 
-		// invalidate test
-		//_Graphics^ g2 = CreateGraphics();
-		//g2->FillRectangle(System::Drawing::Brushes::Black, DisplayRectangle);
-		//delete g2;
+			PointF location((PointF)this->DisplayRectangle.Location);
+			SizeF size = e->Graphics->MeasureString(exception->Message, this->Font);
+			e->Graphics->DrawString(exception->Message, this->Font, Brushes::Black, location);
 
-		UserControl::OnPaint(e);
+			location.Y += size.Height;
+			e->Graphics->DrawString(exception->StackTrace, this->Font, Brushes::Black, location);
+		}
 	}
 
 	void GridControl::PaintColumnControls(_Graphics^ graphics, _Rectangle clipRectangle)

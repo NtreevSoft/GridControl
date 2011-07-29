@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?define TargetedVisualStudioVersion = "9.0" ?>
+<?define VisualStudioRegistryRoot8 = "Software\Microsoft\VisualStudio\8.0" ?>
+<?define VisualStudioRegistryRoot9 = "Software\Microsoft\VisualStudio\9.0" ?>
+<?define VisualStudioRegistryRoot10 = "Software\Microsoft\VisualStudio\10.0" ?>
+<?define GridControlAssemblyName = "Ntreev.Windows.Forms.Grid, Version=1.0.4223.34266, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca, processorArchitecture=MSIL" ?>
+<?define NtreevSoft = "NtreevSoft" ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="51f2fb0b-b25a-4833-a9b4-a299d2e1f6a8" Name="NtreevSoft GridControl" Language="1033" Version="1.0.0.0" Manufacturer="$(var.NtreevSoft)" UpgradeCode="51f8e005-a714-41ce-a16f-29745b2593e1">
+    <Package InstallerVersion="200" Compressed="yes" />
+
+    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
+    
+    <Property Id="ALLUSERS" Value="1"/>
+
+    <Property Id="TOOLBOXINSTALLER8">
+      <RegistrySearch Id="TbxPackageKey8" Root="HKLM" Key="$(var.VisualStudioRegistryRoot8)\Packages\{2c298b35-07da-45f1-96a3-be55d91c8d7a}" Type="raw" />
+    </Property>
+
+    <Property Id="TOOLBOXINSTALLER9">
+      <RegistrySearch Id="TbxPackageKey9" Root="HKLM" Key="$(var.VisualStudioRegistryRoot9)\Packages\{2c298b35-07da-45f1-96a3-be55d91c8d7a}" Type="raw" />
+    </Property>
+
+    <Property Id="TOOLBOXINSTALLER10">
+      <RegistrySearch Id="TbxPackageKey10" Root="HKLM" Key="$(var.VisualStudioRegistryRoot10)\Packages\{2c298b35-07da-45f1-96a3-be55d91c8d7a}" Type="raw" />
+    </Property>
+
+    <Condition Message="Visual Studio is not installed"> TOOLBOXINSTALLER8 OR TOOLBOXINSTALLER9 OR TOOLBOXINSTALLER10</Condition>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder" Name="PFiles">
+        <Directory Id="NtreevSoftFolder" Name="$(var.NtreevSoft)">
+          <Directory Id="INSTALLLOCATION" Name="GridControl">
+            <!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+            <Merge Id="TbxCtrlsInstDefaultItemsCA" Language="1033" SourceFile="TbxCtrlsInstDefaultItemsCA.msm" DiskId="1" />
+            <Merge Id="TbxCtrlsInstDefaultItemsCA9" Language="1033" SourceFile="TbxCtrlsInstDefaultItemsCA.9.0.msm" DiskId="1" />
+
+            <Component Id="CopyFiles" Guid="d689b695-be61-40a4-bdbd-4cb4418ea9bd">
+              <File Id="Grid.xml" Assembly="no" Source="..\..\bin\lib\Ntreev.Windows.Forms.Grid.xml" DiskId="1" />
+              <File Id="Grid.dll" Assembly="no" Name="Ntreev.Windows.Forms.Grid.dll" Source="..\..\bin\lib\Ntreev.Windows.Forms.Grid.dll" DiskId="1" />
+            </Component>
+
+            <Component Id="CopyFilesGAC" Guid="8FAB569E-13A2-4b2a-B5F6-A539CF082E9F">
+              <File Id="Grid.Design.dll" Assembly=".net" KeyPath="yes" Source="..\..\bin\lib\Ntreev.Windows.Forms.Grid.Design.dll" DiskId="1" />
+
+            </Component>
+
+            <Component Id="NtreevSoftControls_Registration_2005" Guid="68D920F8-2E96-4595-8664-AFC458C69A49">
+              <RegistryKey Root="HKLM" Key="$(var.VisualStudioRegistryRoot8)\ToolboxControlsInstaller\$(var.GridControlAssemblyName)">
+                <RegistryValue Value="NtreevSoft Controls" Type="string" />
+                <RegistryValue Value="[INSTALLLOCATION]Ntreev.Windows.Forms.Grid.dll" Type="string" Name="CodeBase" />
+              </RegistryKey >
+            </Component>
+
+            <Component Id="NtreevSoftControls_Registration_2008" Guid="B74650E2-08AF-4748-ABB7-293E6D3A2EDA">
+              <RegistryKey Root="HKLM" Key="$(var.VisualStudioRegistryRoot9)\ToolboxControlsInstaller\$(var.GridControlAssemblyName)">
+                <RegistryValue Value="NtreevSoft Controls" Type="string" />
+                <RegistryValue Value="[INSTALLLOCATION]Ntreev.Windows.Forms.Grid.dll" Type="string" Name="CodeBase" />
+              </RegistryKey >
+            </Component>
+
+            <Component Id="NtreevSoftControls_Registration_2010" Guid="C537D781-2AD0-4af8-A7A8-F2A77F9DC3BC">
+              <RegistryKey Root="HKLM" Key="$(var.VisualStudioRegistryRoot10)\ToolboxControlsInstaller\$(var.GridControlAssemblyName)">
+                <RegistryValue Value="NtreevSoft Controls" Type="string" />
+                <RegistryValue Value="[INSTALLLOCATION]Ntreev.Windows.Forms.Grid.dll" Type="string" Name="CodeBase" />
+              </RegistryKey >
+            </Component>
+
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <Feature Id="ProductFeature" Title="Install GridControl" Level="1" ConfigurableDirectory="INSTALLLOCATION" Display="expand" Absent="disallow">
+      <!-- TODO: Remove the comments around this ComponentRef element and the Component above in order to add resources to this installer. -->
+      <ComponentRef Id="CopyFiles" />
+      <ComponentRef Id="CopyFilesGAC" />
+
+      <Feature Id="RegisterVisualStudio8" Title="Visual Studio 2005" Level="1">
+        <ComponentRef Id="NtreevSoftControls_Registration_2005" />
+        <MergeRef Id="TbxCtrlsInstDefaultItemsCA" />
+        <Condition Level="0">TOOLBOXINSTALLER8 = ""</Condition>
+      </Feature>
+
+      <Feature Id="RegisterVisualStudio9" Title="Visual Studio 2008" Level="1">
+        <ComponentRef Id="NtreevSoftControls_Registration_2008" />
+        <MergeRef Id="TbxCtrlsInstDefaultItemsCA9" />
+        <Condition Level="0">TOOLBOXINSTALLER9 = ""</Condition>
+      </Feature>
+
+      <Feature Id="RegisterVisualStudio10" Title="Visual Studio 2010" Level="1">
+        <ComponentRef Id="NtreevSoftControls_Registration_2010" />
+        <MergeRef Id="TbxCtrlsInstDefaultItemsCA9" />
+        <Condition Level="0">TOOLBOXINSTALLER10 = ""</Condition>
+      </Feature>
+   
+      <!-- Note: The following ComponentGroupRef is required to pull in generated authoring from project references. -->
+      <!--<ComponentGroupRef Id="Product.Generated" />-->
+
+    </Feature>
+
+    <UIRef Id="WixUI_FeatureTree"/>
+  
+  </Product>
+
+</Wix>

@@ -47,7 +47,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 셀의 편집으로 인해 값이 변경되었다면 셀은 이전값을 보관하고 있게 됩니다. 
 		/// 그래서 <see cref="CancelEdit"/>메서드를 통해서 이전값으로 되돌릴수가 있게 됩니다. 
 		/// 이 메서드는 이전값을 삭제하여 <see cref="CancelEdit"/>호출로 인해 이전 값으로 되돌릴 수 없도록 하는 기능입니다.
-		/// 추가적으로 그리드 컨트롤에서 포커스된 열이 변경될때는 자동적으로 이 메서드가 호출됩니다.
+		/// 추가적으로 그리드 컨트롤에서 포커스된 행이 변경될때는 자동적으로 이 메서드가 호출됩니다.
 		/// </remarks>
 		bool ApplyEdit();
 
@@ -118,7 +118,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// 일반적으로 값의 데이터 타입은 이 셀을 소유한 행의 <see cref="Ntreev::Windows::Forms::Grid::Column::DataType"/>과 같은 형태 이어야만 합니다.
+		/// 일반적으로 값의 데이터 타입은 이 셀을 소유한 열의 <see cref="Ntreev::Windows::Forms::Grid::Column::DataType"/>과 같은 형태 이어야만 합니다.
 		/// 만약 데이터 타입이 다를 경우 <see cref="Ntreev::Windows::Forms::Grid::Column::TypeConverter"/>를 사용하여 값의 변환이 가능한지 여부를 조사합니다.
 		/// 값의 변환이 가능하다면 변환을 하여 값을 설정하게 되고 반대의 경우는 예외가 발생하게 됩니다.
 		/// </para>
@@ -146,10 +146,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 이 셀을 소유한 행의 인스턴스를 가져옵니다.
+		/// 이 셀을 소유한 열의 인스턴스를 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 행을 나타내는 <see cref="Column"/>의 인스턴스입니다.
+		/// 열을 나타내는 <see cref="Column"/>의 인스턴스입니다.
 		/// </returns>
 #ifdef _DEBUG
 		[_Category("Behavior")]
@@ -162,7 +162,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 이 셀을 소유한 행의 고유 아이디를 가져옵니다.
+		/// 이 셀을 소유한 열의 고유 아이디를 가져옵니다.
 		/// </summary>
 		/// <returns>
 		/// 고유 아이디를 나타내는 <see cref="System::UInt32"/>형태의 정수값입니다.
@@ -178,10 +178,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 이 셀을 소유한 열의 인스턴스를 가져옵니다.
+		/// 이 셀을 소유한 행의 인스턴스를 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// 열을 나타내는 <see cref="Row"/>의 인스턴스입니다.
+		/// 행을 나타내는 <see cref="Row"/>의 인스턴스입니다.
 		/// </returns>
 #ifdef _DEBUG
 		[_Category("Behavior")]
@@ -194,7 +194,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 이 셀을 소유한 열의 고유 아이디를 가져옵니다.
+		/// 이 셀을 소유한 행의 고유 아이디를 가져옵니다.
 		/// </summary>
 		/// <returns>
 		/// 고유 아이디를 나타내는 <see cref="System::UInt32"/>형태의 정수값입니다.
@@ -266,7 +266,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 셀이 화면에 표시되고 있는지의 여부를 가져옵니다.
 		/// </summary>
 		/// <remarks>
-		/// 행 또는 열의 갯수가 많아 한 화면에 모두 표시하지 못할때 현재 화면에 표시되고 있는지를 확인할때 사용하는 속성입니다.
+		/// 열 또는 행의 갯수가 많아 한 화면에 모두 표시하지 못할때 현재 화면에 표시되고 있는지를 확인할때 사용하는 속성입니다.
 		/// </remarks>
 		/// <returns>
 		/// 셀이 화면에 표시되고 있다면 true를, 그렇지 않다면 false를 반환합니다.
@@ -285,7 +285,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 읽기 전용인지에 대한 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <remarks>
-		/// 이 셀을 소유하는 행 또는 열의 읽기 전용 속성값이 ture라면 셀 속성값의 상관없이 true를 반환합니다.
+		/// 이 셀을 소유하는 열 또는 행의 읽기 전용 속성값이 ture라면 셀 속성값의 상관없이 true를 반환합니다.
 		/// </remarks>
 		/// <returns>
 		/// 읽기 전용이라면 true를, 그렇지 않다면 false를 반환합니다.

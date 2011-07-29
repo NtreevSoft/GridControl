@@ -35,14 +35,14 @@ namespace Ntreev.Windows.Forms.Grid.Design
                     items.Add(new DesignerActionPropertyItem("DataSource", "DataSource"));
 //                    items.Add(new DesignerActionPropertyItem("DataMember", "DataMember"));
 
-                    items.Add(new DesignerActionPropertyItem("Columns", "행 편집"));
+                    items.Add(new DesignerActionPropertyItem("Columns", "열 편집"));
 
 
                     //items.Add(new DesignerActionTextItem("항목 편집", "Behavior"));
                     //items.Add(new DesignerActionTextItem("열 편집", "Behavior"));
 
-                    items.Add(new DesignerActionMethodItem(this, "AddNewColumn", "행 추가"));
-                    items.Add(new DesignerActionMethodItem(this, "AddNewRow", "열 추가"));
+                    items.Add(new DesignerActionMethodItem(this, "AddNewColumn", "열 추가"));
+                    items.Add(new DesignerActionMethodItem(this, "AddNewRow", "행 추가"));
 
                     //// Add a DesignerActionPropertyItem for the Anchor
                     //// property. This will be displayed in a panel using

@@ -2345,9 +2345,10 @@ void GrColumn::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const
 		if(sortType != GrSort::None)
 		{
 			GrRect rtSort;
-			rtSort = rtRender;
 			rtSort.right	= rtRender.right - 6;
-			rtSort.left		= rtRender.right - 16;
+			rtSort.left		= rtSort.right - 10;
+			rtSort.top		= (rtRender.bottom + rtRender.top) / 2 - 5;
+			rtSort.bottom	= rtSort.top + 10;
 			pRenderer->DrawSortGlyph(&rtSort, sortType);
 
 			rtText.right = rtSort.left;
@@ -4980,9 +4981,10 @@ void GrGroupingInfo::Render(GrGridRenderer* pRenderer, const GrRect* /*pClipping
 	pRenderer->DrawHeader(renderStyle, &rtRender, backColor);
 
 	GrRect rtSort;
-	rtSort = rtRender;
 	rtSort.right	= rtRender.right - 6;
-	rtSort.left		= rtRender.right - 16;
+	rtSort.left		= rtSort.right - 10;
+	rtSort.top		= (rtRender.bottom + rtRender.top) / 2 - 5;
+	rtSort.bottom	= rtSort.top + 10;
 
 	pRenderer->DrawSortGlyph(&rtSort, m_sortType);
 	RenderText(pRenderer, foreColor, &rtRender);

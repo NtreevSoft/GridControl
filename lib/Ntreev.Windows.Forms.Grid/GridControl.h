@@ -11,7 +11,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	/// </summary>
 	[System::ComponentModel::ToolboxItem(true)]
 	[System::Drawing::ToolboxBitmap(GridControl::typeid)]
-	[System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+	[System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=1.0.0.1, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
 	[System::Windows::Forms::Docking(System::Windows::Forms::DockingBehavior::Ask)]
 	public ref class GridControl : System::Windows::Forms::UserControl
 	{
@@ -28,26 +28,26 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		GridControl();
 
 		/// <summary>
-		/// 삽입열에 속한 셀의 값들을 이용하여 새로운 열의 인스턴스를 생성하고 <see cref="GridControl::Rows"/>에 추가합니다.
+		/// 삽입열에 속한 셀의 값들을 이용하여 새로운 행의 인스턴스를 생성하고 <see cref="GridControl::Rows"/>에 추가합니다.
 		/// </summary>
 		/// <returns>
 		/// 삽입열에 속한 셀들의 값중 옳바르지 않은 값이 존재하거나 이벤트 등의 의해서 작업이 실패할 경우 null을 반환합니다.
-		/// 성공시 새로 생성된 열의 인스턴스가 반환됩니다.
+		/// 성공시 새로 생성된 행의 인스턴스가 반환됩니다.
 		/// </returns>
 		Row^ AddNewRowFromInsertion();
 
 		/// <summary>
-		/// 기본값을 이용하여 새로운 행을 만들고 <see cref="GridControl::Rows"/>에 추가합니다.
+		/// 기본값을 이용하여 새로운 열을 만들고 <see cref="GridControl::Rows"/>에 추가합니다.
 		/// </summary>
 		Row^ AddNewRow();
 
 		/// <summary>
-		/// 열을 <see cref="GridControl::Rows"/>에서 제거 합니다.
+		/// 행을 <see cref="GridControl::Rows"/>에서 제거 합니다.
 		/// </summary>
 		/// <param name="row"><see cref="Row"/>의 인스턴스입니다.</param>
-		/// <exception cref="System::Exception">제거할 열의 타입이 <see cref="InsertionRow"/>일때 발생합니다.</exception>
-		/// <exception cref="System::ArgumentNullException">제거할 열의 인스턴스가 null일경우 발생합니다.</exception>
-		/// <exception cref="System::ArgumentException">제거할 열이 이미 제거되었거나 사용한적이 없는 열일때 발생합니다.</exception>
+		/// <exception cref="System::Exception">제거할 행의 타입이 <see cref="InsertionRow"/>일때 발생합니다.</exception>
+		/// <exception cref="System::ArgumentNullException">제거할 행의 인스턴스가 null일경우 발생합니다.</exception>
+		/// <exception cref="System::ArgumentException">제거할 행이 이미 제거되었거나 사용한적이 없는 행일때 발생합니다.</exception>
 		void RemoveRow(Row^ row);
 
 		/// <summary>
@@ -63,13 +63,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		void EnsureVisible(Cell^ cell);
 
 		/// <summary>
-		/// 대상이 되는 열이 화면내에 표시 될 수 있도록 수직 스크롤을 조정합니다.
+		/// 대상이 되는 행이 화면내에 표시 될 수 있도록 수직 스크롤을 조정합니다.
 		/// </summary>
 		/// <param name="row">화면내에 표시하려 하는 <see cref="Row"/>의 인스턴스입니다.</param>
 		void EnsureVisible(_Row^ row);
 
 		/// <summary>
-		/// 대상이 되는 행이 화면내에 표시 될 수 있도록 수평 스크롤을 조정합니다.
+		/// 대상이 되는 열이 화면내에 표시 될 수 있도록 수평 스크롤을 조정합니다.
 		/// </summary>
 		/// <param name="column">화면내에 표시하려 하는 <see cref="Column"/>의 인스턴스입니다.</param>
 		void EnsureVisible(_Column^ column);
@@ -139,13 +139,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 너비조절을 수행하기 위한 행과 행 사이의 감지영역입니다.
+		/// 열의 너비조절을 수행하기 위한 열과 열 사이의 감지영역입니다.
 		/// </summary>
 		/// <remarks>
-		/// 마우스 드래깅을 이용하여 행의 너비조절을 하기 위하여 커서가 해당 영역 안에 있는지 확인하게 됩니다.
-		/// 행과 행 사이를 기준으로 -/+ 속성값 만큼의 너비안에 커서가 들어가게 되면 마우스 클릭시 행의 너비 조절을 할 수 있습니다.
+		/// 마우스 드래깅을 이용하여 열의 너비조절을 하기 위하여 커서가 해당 영역 안에 있는지 확인하게 됩니다.
+		/// 열과 열 사이를 기준으로 -/+ 속성값 만큼의 너비안에 커서가 들어가게 되면 마우스 클릭시 열의 너비 조절을 할 수 있습니다.
 		/// </remarks>
-		[_Description("행의 너비조절을 수행하기 위한 행과 행 사이의 감지영역을 설정합니다.")]
+		[_Description("행의 너비조절을 수행하기 위한 열과 열 사이의 감지영역을 설정합니다.")]
 		[_Category("Behavior"), _DefaultValue(10)]
 		property int ColumnSplitter
 		{
@@ -154,13 +154,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 열의 높이조절을 수행하기 위한 열과 열 사이의 감지영역입니다.
+		/// 행의 높이조절을 수행하기 위한 행과 행 사이의 감지영역입니다.
 		/// </summary>
 		/// <remarks>
-		/// 마우스 드래깅을 이용하여 열의 높이조절을 하기 위하여  커서가 해당 영역 안에 있는지 확인하게 됩니다.
-		/// 열과 열 사이를 기준으로 -/+ 속성값 만큼의 높이안에 커서가 들어가게 되면 마우스 클릭시 열의 높이 조절을 할 수 있습니다.
+		/// 마우스 드래깅을 이용하여 행의 높이조절을 하기 위하여  커서가 해당 영역 안에 있는지 확인하게 됩니다.
+		/// 행과 행 사이를 기준으로 -/+ 속성값 만큼의 높이안에 커서가 들어가게 되면 마우스 클릭시 행의 높이 조절을 할 수 있습니다.
 		/// </remarks>
-		[_Description("열의 높이조절을 수행하기 위한 열과 열 사이의 감지영역을 설정합니다.")]
+		[_Description("열의 높이조절을 수행하기 위한 행과 행 사이의 감지영역을 설정합니다.")]
 		[_Category("Behavior"), _DefaultValue(3)]
 		property int RowSplitter
 		{
@@ -169,11 +169,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 너비를 자동적으로 조절되는지에 대한 여부를 가져오거나 설정합니다.
+		/// 열의 너비를 자동적으로 조절되는지에 대한 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <remarks>
 		/// 셀의 내용이 변하게 되면 최대 너비를 계산하여 자동으로 설정됩니다.
-		/// CellWordwrap 값이 true인 행에 대해서는 이 기능이 적용되지 않습니다.
+		/// CellWordwrap 값이 true인 열에 대해서는 이 기능이 적용되지 않습니다.
 		/// </remarks>
 		[_Description("행의 너비를 자동적으로 조절할지에 대한 여부를 가져오거나 설정합니다.")]
 		[_Category("Behavior"), _DefaultValue(false)]
@@ -184,7 +184,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 열의 높이를 자동적으로 조절되는지에 대한 여부를 가져오거나 설정합니다.
+		/// 행의 높이를 자동적으로 조절되는지에 대한 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <remarks>
 		/// 셀의 내용이 변경되어 문자열의 라인수가 변경되면 최대 높이를 계산하여 자동으로 설정됩니다.
@@ -212,7 +212,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 목록을 가져옵니다.
+		/// 열의 목록을 가져옵니다.
 		/// </summary>
 		[_Description("행의 목록을 가져옵니다.")]
 		[_Category("Behavior")]
@@ -223,11 +223,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 표시되는 행의 목록을 가져옵니다.
+		/// 표시되는 열의 목록을 가져옵니다.
 		/// </summary>
 #ifdef _DEBUG
 		[_Category("Behavior")]
-		[_Description("표시되는 행의 목록을 가져옵니다.")]
+		[_Description("표시되는 열의 목록을 가져옵니다.")]
 #else
 		[_Browsable(false)]
 #endif
@@ -237,7 +237,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// Displayable 행의 목록을 가져옵니다.
+		/// Displayable 열의 목록을 가져옵니다.
 		/// </summary>
 #ifdef _DEBUG
 		[_Category("Behavior")]
@@ -250,7 +250,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// Frozen 행의 목록을 가져옵니다.
+		/// Frozen 열의 목록을 가져옵니다.
 		/// </summary>
 #ifdef _DEBUG
 		[_Category("Behavior")]
@@ -263,7 +263,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// Unfrozen 행의 목록을 가져옵니다.
+		/// Unfrozen 열의 목록을 가져옵니다.
 		/// </summary>
 #ifdef _DEBUG
 		[_Category("Behavior")]
@@ -276,11 +276,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 포커스로 설정된 행을 가져옵니다.
+		/// 포커스로 설정된 열을 가져옵니다.
 		/// </summary>
 #ifdef _DEBUG
 		[_Category("Focus")]
-		[_Description("포커스로 설정된 행을 가져옵니다.")]
+		[_Description("포커스로 설정된 열을 가져옵니다.")]
 #else
 		[_Browsable(false)]
 #endif
@@ -290,7 +290,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 선택된 행들의 목록을 가져옵니다.
+		/// 선택된 열들의 목록을 가져옵니다.
 		/// </summary>
 #ifdef _DEBUG
 		[_Category("Behavior")]
@@ -303,7 +303,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 열의 목록을 가져옵니다.
+		/// 행의 목록을 가져옵니다.
 		/// </summary>
 		[_Category("Behavior")]
 		[_Description("열의 목록을 가져옵니다.")]
@@ -314,7 +314,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// Visible 열의 목록을 가져옵니다.
+		/// Visible 행의 목록을 가져옵니다.
 		/// </summary>
 #ifdef _DEBUG
 		[_Category("Behavior")]
@@ -327,7 +327,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// Displayable 열의 목록을 가져옵니다.
+		/// Displayable 행의 목록을 가져옵니다.
 		/// </summary>
 #ifdef _DEBUG
 		[_Category("Behavior")]
@@ -343,7 +343,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 삽입열을 가져옵니다.
 		/// </summary>
 		/// <remarks>
-		/// 새로운 열을 추가 하기 위하여 그리드컨트롤에서는 삽입열이라는 특수한 열을 제공합니다.
+		/// 새로운 행을 추가 하기 위하여 그리드컨트롤에서는 삽입열이라는 특수한 행을 제공합니다.
 		/// 삽입열은 새로 만들거나 삭제할 수 없습니다.
 		/// </remarks>
 		[_Category("Behavior")]
@@ -353,7 +353,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 선택된 열들의 목록을 가져옵니다.
+		/// 선택된 행들의 목록을 가져옵니다.
 		/// </summary>
 		/// <remarks>
 		/// 각 요소는 현재 화면상에 보여지는 순서로 이루어져있습니다.
@@ -369,11 +369,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}	
 
 		/// <summary>
-		/// 포커스로 설정된 열을 가져옵니다.
+		/// 포커스로 설정된 행을 가져옵니다.
 		/// </summary>
 #ifdef _DEBUG
 		[_Category("Focus")]
-		[_Description("포커스로 설정된 열을 가져옵니다.")]
+		[_Description("포커스로 설정된 행을 가져옵니다.")]
 #else
 		[_Browsable(false)]
 #endif
@@ -387,7 +387,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// </summary>
 #ifdef _DEBUG
 		[_Category("Focus")]
-		[_Description("포커스로 설정된 열을 가져옵니다.")]
+		[_Description("포커스로 설정된 행을 가져옵니다.")]
 #else
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
 		[_Browsable(false)]
@@ -431,12 +431,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 위치 이동에 대한 여부를 가져오거나 설정합니다.
+		/// 열의 위치 이동에 대한 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <remarks>
-		/// 이 속성의 값이 false일 경우 마우스 드래깅을 이용한 행의 위치 이동 기능이 제한됩니다.
+		/// 이 속성의 값이 false일 경우 마우스 드래깅을 이용한 열의 위치 이동 기능이 제한됩니다.
 		/// </remarks>
-		[_Description("마우스를 이용하여 행의 위치 이동을 할 수 있는지에 대한 여부를 설정합니다.")]
+		[_Description("마우스를 이용하여 열의 위치 이동을 할 수 있는지에 대한 여부를 설정합니다.")]
 		[_Category("Behavior"), _DefaultValue(true)]
 		property bool EnableColumnMoving
 		{
@@ -445,12 +445,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 너비조절에 대한 여부를 가져오거나 설정합니다.
+		/// 열의 너비조절에 대한 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <remarks>
-		/// 이 속성의 값이 false일 경우 마우스 드래깅을 이용한 행의 너비조절 기능이 제한됩니다.
+		/// 이 속성의 값이 false일 경우 마우스 드래깅을 이용한 열의 너비조절 기능이 제한됩니다.
 		/// </remarks>
-		[_Description("마우스를 이용하여 행의 너비 조절을 할 수 있는지에 대한 여부를 설정합니다.")]
+		[_Description("마우스를 이용하여 열의 너비 조절을 할 수 있는지에 대한 여부를 설정합니다.")]
 		[_Category("Behavior"), _DefaultValue(true)]
 		property bool EnableColumnResizing
 		{
@@ -459,10 +459,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 수평 스크롤 적용에 대한 여부를 가져오거나 설정합니다.
+		/// 열의 수평 스크롤 적용에 대한 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <remarks>
-		/// Column Frozing은 지정된 행이 스크롤에 영향을 받지 않도록 하는 기능입니다.
+		/// Column Frozing은 지정된 열이 스크롤에 영향을 받지 않도록 하는 기능입니다.
 		/// 이 속성의 값이 false일 경우 마우스를 이용하여 Frozing을 설정하는 기능이 제한됩니다.
 		/// </remarks>
 		[_Description("행의 스크롤 적용여부를 설정합니다.")]
@@ -474,12 +474,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 정렬여부를 가져오거나 설정합니다.
+		/// 열의 정렬여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <remarks>
-		/// 이 속성의 값이 false일 경우 마우스 클릭으로 행의 정렬기능이 제한됩니다.
+		/// 이 속성의 값이 false일 경우 마우스 클릭으로 열의 정렬기능이 제한됩니다.
 		/// </remarks>
-		[_Description("마우스 클릭을 사용하여 행의 내용을 정렬할 수 있는지에 대한 여부를 설정합니다.")]
+		[_Description("마우스 클릭을 사용하여 열의 내용을 정렬할 수 있는지에 대한 여부를 설정합니다.")]
 		[_Category("Behavior"), _DefaultValue(true)]
 		property bool EnableSorting
 		{
@@ -502,12 +502,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 열의 높이조절에 대한 여부를 가져오거나 설정합니다.
+		/// 행의 높이조절에 대한 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <remarks>
-		/// 이 속성의 값이 false일 경우 마우스 드래깅을 이용한 열 높이조절 기능이 제한됩니다.
+		/// 이 속성의 값이 false일 경우 마우스 드래깅을 이용한 행 높이조절 기능이 제한됩니다.
 		/// </remarks>
-		[_Description("마우스를 이용하여 열의 높이를 조절할 수 있는지에 대한 여부를 설정합니다.")]
+		[_Description("마우스를 이용하여 행의 높이를 조절할 수 있는지에 대한 여부를 설정합니다.")]
 		[_Category("Behavior"), _DefaultValue(true)]
 		property bool EnableRowResizing
 		{
@@ -544,7 +544,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 열의 숫자 표시에 대한 여부를 가져오거나 설정합니다.
+		/// 행의 숫자 표시에 대한 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <remarks>
 		/// 이 속성의 값이 false일 경우에는 DataGridView 형식으로 표시합니다.
@@ -565,9 +565,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		property bool						IsMarginVisible			{ bool get();	void set(bool); }
 
 		/// <summary>
-		/// 새로운 행을 추가하기위한 Insertion열에 표시 여부를 가져오거나 설정합니다.
+		/// 새로운 열을 추가하기위한 Insertion열에 표시 여부를 가져오거나 설정합니다.
 		/// </summary>
-		[_Description("새로운 행을 추가하기위한 삽입열의 표시 여부를 설정합니다.")]
+		[_Description("새로운 열을 추가하기위한 삽입열의 표시 여부를 설정합니다.")]
 		[_Category("Appearance"), _DefaultValue(true)]
 		property bool						IsInsertionRowVisible	{ bool get();	void set(bool); }
 
@@ -583,7 +583,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 열의 전체선택에 대한 여부를 가져오거나 설정합니다.
+		/// 행의 전체선택에 대한 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <remarks>
 		/// 이 속성의 값이 true일 경우 마우스로 인한 셀 선택시 같은 범위내에 있는 모든 셀들이 선택됩니다.
@@ -597,12 +597,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 포커스된 열의 강조 표시 여부를 가져오거나 설정합니다.
+		/// 포커스된 행의 강조 표시 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <remarks>
 		/// 이 속성의 값이 true일 경우 포커스 된 열은 강조 표시가 되며, 그 방법은 <see cref="RowHighlightType"/>의 값으로 변경시킬 수 있습니다.
 		/// </remarks>
-		[_Description("포커스된 열의 강조 표시 여부를 설정합니다.")]
+		[_Description("포커스된 행의 강조 표시 여부를 설정합니다.")]
 		[_Category("Behavior"), _DefaultValue(false)]
 		property bool RowHighlight
 		{
@@ -610,9 +610,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 포커스된 열의 강조 표시의 방법을 가져오거나 설정합니다.
+		/// 포커스된 행의 강조 표시의 방법을 가져오거나 설정합니다.
 		/// </summary>
-		[_Description("포커스된 열의 강조 표시 방법을 설정합니다.")]
+		[_Description("포커스된 행의 강조 표시 방법을 설정합니다.")]
 		[_Category("Behavior"), _DefaultValue(_RowHighlightType::Fill)]
 		property _RowHighlightType RowHighlightType
 		{
@@ -801,10 +801,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 열이 삽입되기 전에 발생합니다.
+		/// 행이 삽입되기 전에 발생합니다.
 		/// </summary>
 		/// <remarks>
-		/// 열이 삽입되는 것을 원하지 않는 경우 이벤트 데이터를 통하여 취소시킬 수 있습니다.
+		/// 행이 삽입되는 것을 원하지 않는 경우 이벤트 데이터를 통하여 취소시킬 수 있습니다.
 		/// </remarks>
 		[_Description("열이 삽입되기 전에 발생합니다.")]
 		[_Category("Row")]
@@ -817,7 +817,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 열이 삽입된 후에 발생합니다.
+		/// 행이 삽입된 후에 발생합니다.
 		/// </summary>
 		[_Description("열이 삽입된 후에 발생합니다.")]
 		[_Category("Row")]
@@ -830,10 +830,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 열이 목록에서 제거되기 전에 발생합니다.
+		/// 행이 목록에서 제거되기 전에 발생합니다.
 		/// </summary>
 		/// <remarks>
-		/// 열이 목록에서 제거되는 것을 원하지 않는다면 이벤트 데이터를 통하여 취소시킬 수 있습니다.
+		/// 행이 목록에서 제거되는 것을 원하지 않는다면 이벤트 데이터를 통하여 취소시킬 수 있습니다.
 		/// </remarks>
 		[_Description("열이 목록에서 제거되기 전에 발생합니다.")]
 		[_Category("Row")]
@@ -846,7 +846,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 열이 목록에서 제거된 후에 발생합니다.
+		/// 행이 목록에서 제거된 후에 발생합니다.
 		/// </summary>
 		[_Description("열이 목록에서 제거된 후에 발생합니다.")]
 		[_Category("Row")]
@@ -859,12 +859,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 삽입열에 의하여 새로운 열이 삽입되기 전에 발생합니다.
+		/// 삽입열에 의하여 새로운 행이 삽입되기 전에 발생합니다.
 		/// </summary>
 		/// <remarks>
-		/// 삽입열에 의하여 새로운 열이 삽입되는 것을 원하지 않는다면 이벤트 데이터를 통하여 취소시킬 수 있습니다.
+		/// 삽입열에 의하여 새로운 행이 삽입되는 것을 원하지 않는다면 이벤트 데이터를 통하여 취소시킬 수 있습니다.
 		/// </remarks>
-		[_Description("삽입열에 의하여 새로운 열이 삽입되기 전에 발생합니다.")]
+		[_Description("삽입열에 의하여 새로운 행이 삽입되기 전에 발생합니다.")]
 		[_Category("Row")]
 		event InsertionRowInsertingEventHandler^ InsertionRowInserting
 		{
@@ -875,9 +875,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 삽입열에 의하여 새로운 열이 삽입된 후에 발생합니다.
+		/// 삽입열에 의하여 새로운 행이 삽입된 후에 발생합니다.
 		/// </summary>
-		[_Description("삽입열에 의하여 새로운 열이 삽입된 후에 발생합니다.")]
+		[_Description("삽입열에 의하여 새로운 행이 삽입된 후에 발생합니다.")]
 		[_Category("Row")]
 		event RowEventHandler^ InsertionRowInserted
 		{
@@ -888,7 +888,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행들의 선택 범위가 변경되었을때 발생합니다.
+		/// 열들의 선택 범위가 변경되었을때 발생합니다.
 		/// </summary>
 		[_Description("행들의 선택 범위가 변경되었을때 발생합니다.")]
 		[_Category("Selection")]
@@ -901,7 +901,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 열들의 선택 범위가 변경되었을때 발생합니다.
+		/// 행들의 선택 범위가 변경되었을때 발생합니다.
 		/// </summary>
 		[_Description("열들의 선택 범위가 변경되었을때 발생합니다.")]
 		[_Category("Selection")]
@@ -966,10 +966,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행이 삽입되기 전에 발생합니다.
+		/// 열이 삽입되기 전에 발생합니다.
 		/// </summary>
 		/// <remarks>
-		/// 행이 삽입되는것을 원하지 않는다면 이벤트 데이터를 통하여 취소시킬 수 있습니다.
+		/// 열이 삽입되는것을 원하지 않는다면 이벤트 데이터를 통하여 취소시킬 수 있습니다.
 		/// </remarks>
 		[_Description("행이 삽입되기 전에 발생합니다.")]
 		[_Category("Column")]
@@ -982,7 +982,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행이 삽입된 후에 발생합니다.
+		/// 열이 삽입된 후에 발생합니다.
 		/// </summary>
 		[_Description("행이 삽입된 후에 발생합니다.")]
 		[_Category("Column")]
@@ -995,7 +995,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행이 데이터 소스와 연결되기 전에 발생합니다.
+		/// 열이 데이터 소스와 연결되기 전에 발생합니다.
 		/// </summary>
 		[_Description("행이 데이터 소스와 연결되기 전에 발생합니다.")]
 		[_Category("Column")]
@@ -1008,7 +1008,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행이 데이터 소스와 연결된 후에 발생합니다.
+		/// 열이 데이터 소스와 연결된 후에 발생합니다.
 		/// </summary>
 		[_Description("행이 데이터 소스와 연결된 후에 발생합니다.")]
 		[_Category("Column")]
@@ -1021,7 +1021,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 		
 		/// <summary>
-		/// 행의 너비가 변경되었을때 발생합니다.
+		/// 열의 너비가 변경되었을때 발생합니다.
 		/// </summary>
 		[_Description("행의 너비가 변경되었을때 발생합니다.")]
 		[_Category("Column")]
@@ -1034,9 +1034,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 마우스의 커서 위치가 행의 영역안으로 들어갔을때 발생합니다.
+		/// 마우스의 커서 위치가 열의 영역안으로 들어갔을때 발생합니다.
 		/// </summary>
-		[_Description("마우스의 커서 위치가 행의 영역안으로 들어갔을때 발생합니다.")]
+		[_Description("마우스의 커서 위치가 열의 영역안으로 들어갔을때 발생합니다.")]
 		[_Category("Column")]
 		event ColumnMouseEventHandler^ ColumnMouseEnter
 		{
@@ -1047,9 +1047,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 마우스의 커서 위치가 행의 영역밖으로 나갔을때 발생합니다.
+		/// 마우스의 커서 위치가 열의 영역밖으로 나갔을때 발생합니다.
 		/// </summary>
-		[_Description("마우스의 커서 위치가 행의 영역밖으로 나갔을때 발생합니다.")]
+		[_Description("마우스의 커서 위치가 열의 영역밖으로 나갔을때 발생합니다.")]
 		[_Category("Column")]
 		event ColumnMouseEventHandler^ ColumnMouseLeave
 		{
@@ -1060,7 +1060,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 영역안에서 마우스의 좌측버튼이 눌러졌을때 발생합니다.
+		/// 열의 영역안에서 마우스의 좌측버튼이 눌러졌을때 발생합니다.
 		/// </summary>
 		[_Description("행의 영역안에서 마우스의 좌측버튼이 눌러졌을때 발생합니다.")]
 		[_Category("Column")]
@@ -1073,7 +1073,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 행의 영역안에서 마우스의 좌측버튼이 띄워졌을때 발생합니다.
+		/// 열의 영역안에서 마우스의 좌측버튼이 띄워졌을때 발생합니다.
 		/// </summary>
 		[_Description("행의 영역안에서 마우스의 좌측버튼이 띄워졌을때 발생합니다.")]
 		[_Category("Column")]
@@ -1086,9 +1086,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 마우스의 커서 위치가 행의 영역안에서 움직였을때 발생합니다.
+		/// 마우스의 커서 위치가 열의 영역안에서 움직였을때 발생합니다.
 		/// </summary>
-		[_Description("마우스의 커서 위치가 행의 영역안에서 움직였을때 발생합니다.")]
+		[_Description("마우스의 커서 위치가 열의 영역안에서 움직였을때 발생합니다.")]
 		[_Category("Column")]
 		event ColumnMouseEventHandler^ ColumnMouseMove
 		{

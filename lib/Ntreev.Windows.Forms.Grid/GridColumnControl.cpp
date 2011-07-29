@@ -49,8 +49,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			m_viewControl->Font = style->Font;
 		SetEditingValue(m_viewControl, value);
 		System::IntPtr hdc = graphics->GetHdc();
-		m_controlPainter->Do(hdc, m_viewControl, renderRect, value);
-		graphics->ReleaseHdc();
+		try
+		{
+			m_controlPainter->Do(hdc, m_viewControl, renderRect, value);
+		}
+		catch(System::Exception^ exception)
+		{
+			throw exception;
+		}
+		finally
+		{
+			graphics->ReleaseHdc();
+		}
 	}
 
 	generic<class TControl> where TControl : _Control
