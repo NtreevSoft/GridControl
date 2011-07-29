@@ -139,6 +139,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 		else if(value1 == nullptr)
 		{
+			if(value2 == nullptr)
+				return pDataRow1->GetDataRowIndex() < pDataRow2->GetDataRowIndex();
 			return true;
 		}
 
