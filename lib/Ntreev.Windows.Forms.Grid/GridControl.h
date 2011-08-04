@@ -1311,10 +1311,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			Private::ErrorDescriptor^ get() { return m_errorDescriptor; }
 		}
 
-		//property _HitTest% HitTest
-		//{
-		//	_HitTest% get() { return m_hitTest; }
-		//}
+		property GridState::StateManager^ StateManager
+		{
+			GridState::StateManager^ get() { return m_states; }
+		}
 
 		property _SelectionType SelectionType
 		{

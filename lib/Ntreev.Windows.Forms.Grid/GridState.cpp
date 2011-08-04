@@ -253,6 +253,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			ChangeState(changeService.NextState, changeService.Reference, changeService.Data);
 	}
 
+	State StateManager::GetHitTest(_Point location)
+	{
+		HitTest hitTest;
+		if(this->GridControl->DoHitTest(location, hitTest) == false)
+			return _State::Unknown;
+		StateBase^ base = GetHitTest(hitTest.pHittedCell, hitTest.localPoint);
+		return base != nullptr ? base->State : _State::Unknown;
+	}
+
 	StateBase^ StateManager::GetHitTest(GrCell* pHitted, _Point localHitted)
 	{
 		for each(StateBase^ item in m_states)
@@ -1247,12 +1256,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		: StateBase(gridControl)
 	{
 		m_dropDownForm = gcnew Ntreev::Windows::Forms::Grid::Private::ColumnDropDownForm(gridControl);
-		gridControl->FocusedCellChanged += gcnew CellEventHandler(this, &ItemEditing::gridControl_FocusedCellChanged);
-	}
-
-	void ItemEditing::gridControl_FocusedCellChanged(object^ /*sender*/, CellEventArgs^ /*e*/)
-	{
-		m_cell = nullptr;
 	}
 
 	bool ItemEditing::GetHitTest(GrCell* pHitted, _Point /*localLocation*/)
@@ -1265,18 +1268,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 	void ItemEditing::OnBegin(GrCell* pCell, object^ data, IStateChangeService^ service)
 	{
-		Cell^ cell = Cell::FromNative((GrItem*)pCell);
-		if(cell == m_cell)
-		{
-			m_cell = nullptr;
-			service->NextState = _State::Normal;
-		}
-		else
-		{
-			m_cell = cell;
-		}
-
+		m_cell = Cell::FromNative((GrItem*)pCell);
 		EditingReason^ reason = dynamic_cast<EditingReason^>(data);
+		
 		if(reason != nullptr && m_cell != nullptr)
 			service->NextState = OnBegin(reason);
 	}
@@ -1506,7 +1500,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 				if (!rect.Contains(cursorPos))
 				{
 					LeaveEdit();
-					m_cell = nullptr;
 				}
 			}
 			break;
@@ -1515,16 +1508,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		return false;
 	}
 
-	void ItemEditing::messageFilter_Cancelled(object^ /*sender*/, _EventArgs^ /*e*/)
-	{
-		LeaveEdit();
-	}
-
 	void ItemEditing::dropDownForm_VisibleChanged(object^ /*sender*/, _EventArgs^ /*e*/)
 	{
 		LeaveEdit();
-		if(m_dropDownForm->IsCursorIn == false)
-			m_cell = nullptr;
 	}
 
 	void ItemEditing::OnEditingResultChanged(object^ /*sender*/, ColumnEventArgs^ e)

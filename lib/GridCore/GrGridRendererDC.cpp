@@ -73,6 +73,12 @@ GrGridRendererDC::GrGridRendererDC(void* hWnd) : GrGridRenderer(hWnd)
 	m_hTreeTheme		= OpenThemeData(m_hWnd, L"TREEVIEW");
 	m_hTooltip			= OpenThemeData(m_hWnd, L"TOOLTIP");
 
+	m_bSortUpTheme   = IsThemePartDefined(m_hColumnTheme, HP_HEADERSORTARROW, HSAS_SORTEDUP) == TRUE ? true : false;
+	m_bSortDownTheme = IsThemePartDefined(m_hColumnTheme, HP_HEADERSORTARROW, HSAS_SORTEDDOWN) == TRUE ? true : false;
+
+	m_bOpenedTheme = IsThemePartDefined(m_hColumnTheme, TVP_GLYPH, GLPS_OPENED) == TRUE ? true : false;
+	m_bClosedTheme = IsThemePartDefined(m_hColumnTheme, TVP_GLYPH, GLPS_CLOSED) == TRUE ? true : false;
+
 	m_hOverlayBmp		= CreateBitmap(4, 4, 1, 32, NULL);
 	m_hColorBmp			= CreateBitmap(4, 4, 1, 32, NULL);
 
@@ -97,8 +103,6 @@ GrGridRendererDC::GrGridRendererDC(void* hWnd) : GrGridRenderer(hWnd)
 	lb.lbColor = RGB(0,0,0); 
 	lb.lbHatch = HS_CROSS; 
 	m_hSplitterMovingPen= ExtCreatePen(PS_GEOMETRIC|PS_ENDCAP_FLAT, DEF_SPLITTER_SIZE, &lb, 2, Style);
-
-
 }
 
 GrGridRendererDC::~GrGridRendererDC()
@@ -159,19 +163,49 @@ void GrGridRendererDC::DrawSplitterRow(const GrRect* pRenderRect)
 void GrGridRendererDC::DrawTreeGlyph(const GrRect* pRenderRect, bool bOpened)
 {
 	RECT2 rt = pRenderRect;
-	if(m_hTreeTheme)
+
+	if(bOpened == true)
 	{
-		if(bOpened)
+		if(m_hTreeTheme != NULL && m_bOpenedTheme == true)
+		{
 			DrawThemeBackground(m_hTreeTheme, m_hdc, TVP_GLYPH, GLPS_OPENED, &rt, &rt);
+		}
 		else
-			DrawThemeBackground(m_hTreeTheme, m_hdc, TVP_GLYPH, GLPS_CLOSED, &rt, &rt);
+		{
+			GrPoint ptCenter = pRenderRect->GetCenter();
+
+			rt.left   = ptCenter.x-4;
+			rt.top    = ptCenter.y-4;
+			rt.right  = ptCenter.x+5;
+			rt.bottom = ptCenter.y+5;
+
+			Rectangle(m_hdc, rt.left, rt.top, rt.right, rt.bottom);
+			MoveToEx(m_hdc, rt.left+2, ptCenter.y, 0);
+			LineTo(m_hdc, rt.right-2, ptCenter.y);
+		}
 	}
 	else
 	{
-		if(bOpened)
-			::DrawTextW(m_hdc, L"＋", 1, &rt, DT_CENTER|DT_VCENTER|DT_SINGLELINE );
+		if(m_hTreeTheme != NULL && m_bClosedTheme == true)
+		{
+			DrawThemeBackground(m_hTreeTheme, m_hdc, TVP_GLYPH, GLPS_CLOSED, &rt, &rt);
+		}
 		else
-			::DrawTextW(m_hdc, L"－", 1, &rt, DT_CENTER|DT_VCENTER|DT_SINGLELINE );
+		{
+			GrPoint ptCenter = pRenderRect->GetCenter();
+
+			rt.left   = ptCenter.x-4;
+			rt.top    = ptCenter.y-4;
+			rt.right  = ptCenter.x+5;
+			rt.bottom = ptCenter.y+5;
+
+			Rectangle(m_hdc, rt.left, rt.top, rt.right, rt.bottom);
+			MoveToEx(m_hdc, rt.left+2, ptCenter.y, 0);
+			LineTo(m_hdc, rt.right-2, ptCenter.y);
+
+			MoveToEx(m_hdc, ptCenter.x, rt.top+2, 0);
+			LineTo(m_hdc, ptCenter.x, rt.bottom-2);
+		}
 	}
 }
 
@@ -368,33 +402,59 @@ void GrGridRendererDC::DrawHeader(GrFlag renderStyle, const GrRect* pRenderRect,
 void GrGridRendererDC::DrawSortGlyph(const GrRect* pRenderRect, GrSort::Type sortType)
 {
 	RECT2 rtRender = pRenderRect;
-	if(m_hColumnTheme)
+
+	switch(sortType)
 	{
-		switch(sortType)
+	case GrSort::Up:
 		{
-		case GrSort::Up:
-			DrawThemeBackground(m_hColumnTheme, m_hdc, HP_HEADERSORTARROW, HSAS_SORTEDUP, &rtRender, &rtRender);
-			break;
-		case GrSort::Down:
-			DrawThemeBackground(m_hColumnTheme, m_hdc, HP_HEADERSORTARROW, HSAS_SORTEDDOWN, &rtRender, &rtRender);
-			break;
-		case GrSort::None:
-			break;
+			if(m_hColumnTheme != NULL && m_bSortUpTheme == true)
+			{
+				DrawThemeBackground(m_hColumnTheme, m_hdc, HP_HEADERSORTARROW, HSAS_SORTEDUP, &rtRender, &rtRender);
+			}
+			else
+			{
+				GrPoint ptCenter = pRenderRect->GetCenter();
+
+				MoveToEx(m_hdc, ptCenter.x, ptCenter.y-2 , 0);
+				LineTo(m_hdc, ptCenter.x+1, ptCenter.y-2);
+
+				MoveToEx(m_hdc, ptCenter.x-1, ptCenter.y-1, 0);
+				LineTo(m_hdc, ptCenter.x+2, ptCenter.y-1);
+
+				MoveToEx(m_hdc, ptCenter.x-2, ptCenter.y, 0);
+				LineTo(m_hdc, ptCenter.x+3, ptCenter.y);
+
+				MoveToEx(m_hdc, ptCenter.x-3, ptCenter.y+1, 0);
+				LineTo(m_hdc, ptCenter.x+4, ptCenter.y+1);
+			}
 		}
-	}
-	else
-	{
-		switch(sortType)
+		break;
+	case GrSort::Down:
 		{
-		case GrSort::Up:
-			::DrawTextW(m_hdc, L"▲", 1, &rtRender, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-			break;
-		case GrSort::Down:
-			::DrawTextW(m_hdc, L"▼", 1, &rtRender, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-			break;
-		case GrSort::None:
-			break;
+			if(m_hColumnTheme != NULL && m_bSortDownTheme == true)
+			{
+				DrawThemeBackground(m_hColumnTheme, m_hdc, HP_HEADERSORTARROW, HSAS_SORTEDDOWN, &rtRender, &rtRender);
+			}
+			else
+			{
+				GrPoint ptCenter = pRenderRect->GetCenter();
+
+				MoveToEx(m_hdc, ptCenter.x, ptCenter.y+1 , 0);
+				LineTo(m_hdc, ptCenter.x+1, ptCenter.y+1);
+
+				MoveToEx(m_hdc, ptCenter.x-1, ptCenter.y, 0);
+				LineTo(m_hdc, ptCenter.x+2, ptCenter.y);
+
+				MoveToEx(m_hdc, ptCenter.x-2, ptCenter.y-1, 0);
+				LineTo(m_hdc, ptCenter.x+3, ptCenter.y-1);
+
+				MoveToEx(m_hdc, ptCenter.x-3, ptCenter.y-2, 0);
+				LineTo(m_hdc, ptCenter.x+4, ptCenter.y-2);
+			}
 		}
+		break;
+	case GrSort::None:
+		break;
 	}
 }
 

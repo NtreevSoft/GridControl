@@ -65,7 +65,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		for each(Cell^ cell in this)
 		{
-			if(cell->Column->Name == columnName)
+			if(cell->Column->ColumnName == columnName)
 				return cell;
 		}
 		return nullptr;

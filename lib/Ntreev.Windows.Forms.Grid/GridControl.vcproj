@@ -401,6 +401,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\bitmap2.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\GridResource.resx"
 				SubType="Designer"
 				>
@@ -443,6 +447,10 @@
 			</File>
 			<File
 				RelativePath=".\RowFocused.png"
+				>
+			</File>
+			<File
+				RelativePath=".\sortdown.bmp"
 				>
 			</File>
 		</Filter>

@@ -409,7 +409,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 열의 이름을 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
-		property string^ Name
+		property string^ ColumnName
 		{
 			string^ get();
 		}
@@ -800,7 +800,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 열의 이름은 일종의 키 값으로 사용됩니다. 따라서 다른 열과 이름이 같을경우 예외가 발생합니다.
 		/// </remarks>
 		/// <exception cref="System::ArgumentException">이름을 빈 문자열로 설정하거나. <see cref="GridControl"/>에 종속되어 있는 경우 같은 이름을 가진 열이 이미 있을때.</exception>
-		property string^ Name
+		property string^ ColumnName
 		{
 			virtual string^ get() sealed;
 			virtual void set(string^); 
@@ -899,7 +899,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 열의 위치 이동이 가능하다면 true를, 그렇지 않다면 false를 가져옵니다.
 		/// </returns>
-		[_Category("Behavior"), _DefaultValue(false)]
+		[_Category("Behavior"), _DefaultValue(true)]
 		property bool IsMovable
 		{
 			virtual bool get() sealed;
@@ -1061,7 +1061,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 값의 비교를 위한 개체를 나타내는 <see cref="System::Collections::IComparer"/>입니다.
 		/// </returns>
-		[_Browsable(false)]
+		[_Browsable(false), _DefaultValue((string^)nullptr)]
 		property System::Collections::IComparer^ SortComparer
 		{
 			System::Collections::IComparer^ get();
@@ -1333,6 +1333,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		bool ShouldSerializeCellForeColor();
 		bool ShouldSerializeCellBackColor();
 		bool ShouldSerializeCellFont();
+		bool ShouldSerializeTitle();
 		
 		
 	private: // properties

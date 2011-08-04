@@ -185,7 +185,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	string^ Column::ToString()
 	{
-		return Name;
+		return this->ColumnName;
 	}
 
 	string^ Column::Title::get()
@@ -204,7 +204,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		Invalidate(this);
 	}
 
-	string^ Column::Name::get()
+	string^ Column::ColumnName::get()
 	{
 		if(m_propertyDescriptor != nullptr)
 			return m_propertyDescriptor->Name;
@@ -215,7 +215,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return m_name;
 	}
 	
-	void Column::Name::set(string^ value)
+	void Column::ColumnName::set(string^ value)
 	{
 		if(value == m_name)
 			return;
@@ -270,7 +270,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			if(m_title == nullptr)
 				this->Title = value->DisplayName;
 			if(m_name == nullptr)
-				this->Name = value->Name;
+				this->ColumnName = value->Name;
 			if(value->IsBrowsable == false)
 				this->IsVisible = false;
 			if(value->IsReadOnly == true)
@@ -732,5 +732,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	bool Column::ShouldSerializeCellFont()
 	{
 		return m_pColumn->GetItemFont() != nullptr;
+	}
+
+	bool Column::ShouldSerializeTitle()
+	{
+		return this->Title != this->ColumnName;
 	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

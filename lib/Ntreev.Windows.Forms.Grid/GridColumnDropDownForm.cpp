@@ -19,9 +19,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		{
 			switch (m.Msg)
 			{				
+			case Win32::API::WM_LBUTTONDBLCLK:
 			case Win32::API::WM_LBUTTONDOWN:
 			case Win32::API::WM_RBUTTONDOWN:
 			case Win32::API::WM_MBUTTONDOWN:
+			case Win32::API::WM_NCLBUTTONDBLCLK:
 			case Win32::API::WM_NCLBUTTONDOWN:
 			case Win32::API::WM_NCRBUTTONDOWN:
 			case Win32::API::WM_NCMBUTTONDOWN:
@@ -29,8 +31,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 					_Point cursorPos = System::Windows::Forms::Cursor::Position;
 					if (!m_dropDownForm->Bounds.Contains(cursorPos))
 					{
+						_GridControl^ gridControl = m_dropDownForm->GridControl;
 						m_dropDownForm->Visible = false;
 						m_dropDownForm = nullptr;
+
+						_Rectangle rect = gridControl->RectangleToScreen(gridControl->DisplayRectangle);
+						if(rect.Contains(cursorPos) == true)
+						{
+							_Point clientPos = gridControl->PointToClient(cursorPos);
+							_Cell^ cell = gridControl->GetCellAt(clientPos);
+							if(cell != nullptr)
+							{
+								return cell->IsFocused;
+							}
+						}
 					}
 				}				
 				break;
@@ -64,7 +78,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		}
 	}
 
-	ColumnDropDownForm::ColumnDropDownForm(GridControl^ gridControl)
+	ColumnDropDownForm::ColumnDropDownForm(_GridControl^ gridControl)
 		: m_gridControl(gridControl)
 	{
 		this->SuspendLayout();

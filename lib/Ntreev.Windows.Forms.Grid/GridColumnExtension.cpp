@@ -108,10 +108,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 	void ColumnTextBox::SetEditingValue(System::Windows::Forms::TextBox^ control, object^ value)
 	{
-		if(CellMultiline == true)
-			control->Text = TypeConverter->ConvertToString(value)->Replace(L"\n", L"\r\n");
-		else
-			control->Text = TypeConverter->ConvertToString(value);
+		control->Text = TypeConverter->ConvertToString(value);
 	}
 
 	void ColumnTextBox::OnControlCreated(System::Windows::Forms::TextBox^ control)
@@ -125,9 +122,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 	object^ ColumnTextBox::GetEditingValue(System::Windows::Forms::TextBox^ control)
 	{
-		//string^ text = control->Text->Replace(L"\r\n", L"\n");
-
-
 		if(DataType != string::typeid && control->Text == "")
 			return nullptr;
 

@@ -11,11 +11,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		typedef System::Windows::Forms::VisualStyles::VisualStyleRenderer	_VisualStyleRenderer;
 		typedef System::Windows::Forms::VisualStyles::VisualStyleElement	_VisualStyleElement;
 	public: // methods
-		ColumnDropDownForm(GridControl^ gridControl);
+		ColumnDropDownForm(_GridControl^ gridControl);
 
 		void Show(IColumnDropDown^ column, _Cell^ editingCell, _Rectangle rect);
 
-	public:
+	public: // properties
 		property bool Sizable
 		{ 
 			void set(bool); 
@@ -26,9 +26,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			void set(_Rectangle); 
 		}
 
-		property bool IsCursorIn
+		property _GridControl^ GridControl
 		{
-			bool get() { return m_isin; }
+			_GridControl^ get() { return m_gridControl; }
 		}
 
 	protected: // methods
@@ -53,7 +53,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		bool					m_sizing;
 		bool					m_sizable;
 		bool					m_isin;
-		GridControl^			m_gridControl;
+		_GridControl^			m_gridControl;
 
 
 		System::Windows::Forms::VisualStyles::VisualStyleRenderer^	visualRenderer;
@@ -66,16 +66,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			virtual bool PreFilterMessage(System::Windows::Forms::Message% m);
 
 		public:
-			property System::Windows::Forms::Form^ DropDownForm
+			property ColumnDropDownForm^ DropDownForm
 			{
-				System::Windows::Forms::Form^ get() { return m_dropDownForm; }
-				void set(System::Windows::Forms::Form^ value) { m_dropDownForm = value; }
+				ColumnDropDownForm^ get() { return m_dropDownForm; }
+				void set(ColumnDropDownForm^ value) { m_dropDownForm = value; }
 			}
 		public:
 			virtual void WndProc(System::Windows::Forms::Message% m) override;
 
 		private: 
-			System::Windows::Forms::Form^ m_dropDownForm;
+			ColumnDropDownForm^ m_dropDownForm;
 		}^ m_filter;
 	};
 } /*namespace Private*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

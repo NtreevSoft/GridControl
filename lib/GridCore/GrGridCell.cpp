@@ -3763,6 +3763,7 @@ IDataRow* GrDataRowFinder::Find(int y) const
 	_Type::const_iterator itor = m_rows.lower_bound(y);
 	if(itor == m_rows.end())
 		return NULL;
+
 	return (*itor).second;
 }
 
@@ -4635,6 +4636,8 @@ const GrCell* GrDataRowList::HitDisplayTest(GrPoint pt) const
 	int y = DisplayToGlobal(pt.y);
 	const IDataRow* pDataRow = m_rowFinder.Find(y);
 	if(pDataRow == NULL)
+		return NULL;
+	if(y < pDataRow->GetY())
 		return NULL;
 
 	if(pt.x < pDataRow->GetDisplayX() + pDataRow->GetWidth())

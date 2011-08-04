@@ -109,14 +109,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(item->Index != 0xffffffff)
 			throw gcnew System::ArgumentException("이미 추가된 항목입니다.");
 
-		if(this[item->Name] != nullptr)
-			throw gcnew System::ArgumentException(string::Format("\"{0}\"의 이름을 가진 항목이 이미 있습니다.", item->Name));
+		if(this[item->ColumnName] != nullptr)
+			throw gcnew System::ArgumentException(string::Format("\"{0}\"의 이름을 가진 항목이 이미 있습니다.", item->ColumnName));
 
-		if(item->Name == "")
-			item->Name = NewColumnName();
+		if(item->ColumnName == "")
+			item->ColumnName = NewColumnName();
 
 		if(item->Title == "")
-			item->Title = item->Name;
+			item->Title = item->ColumnName;
 
 		if(GridControl->InvokeColumnInserting(item) == false)
 			return;
@@ -147,7 +147,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		_Column^ column = CreateColumnInstance(type, name);
 		column->Title = name;
-		column->Name = name;
+		column->ColumnName = name;
 		column->DataType = type;
 		Insert(index, column);
 		return column;
@@ -218,7 +218,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		for each(_Column^ column in this)
 		{
-			if(column->Name == columnName)
+			if(column->ColumnName == columnName)
 				return column;
 		}
 		return nullptr;

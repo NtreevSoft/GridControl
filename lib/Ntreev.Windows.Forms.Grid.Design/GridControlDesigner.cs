@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using System.ComponentModel.Design.Serialization;
+using Ntreev.Windows.Forms.Grid.GridState;
 
 namespace Ntreev.Windows.Forms.Grid.Design
 {
@@ -184,6 +185,24 @@ namespace Ntreev.Windows.Forms.Grid.Design
         {
             GridControl gridControl = this.Control as GridControl;
             point = gridControl.PointToClient(point);
+
+            State state = gridControl.StateManager.GetHitTest(point);
+            switch (state)
+            {
+                case State.ColumnPressing:
+                case State.ColumnResizing:
+                case State.ColumnSplitterMoving:
+                case State.RowPressing:
+                case State.RowResizing:
+                case State.GroupingInfoPressing:
+                case State.GroupingCellPressing:
+                case State.GroupingExpandPressing:
+                    return true;
+
+            }
+
+            if (gridControl.DisplayRectangle.Contains(point) == false)
+                return true;
             return gridControl.GetCellAt(point) != null;
         }
     }

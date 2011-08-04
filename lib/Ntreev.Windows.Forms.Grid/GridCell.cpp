@@ -65,20 +65,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(object::Equals(value, oldValue) == true)
 			return;
 
-		if(value != nullptr && value->GetType() != this->Column->DataType)
-		{
-			if(this->Column->DataType == string::typeid)
-			{
-				value = value->ToString();
-			}
-			else
-			{
-				System::ComponentModel::TypeConverter^ typeConverter = Column->TypeConverter;
-				if(typeConverter->CanConvertFrom(value->GetType()) == false)
-					throw gcnew System::ArgumentException("타입이 잘못되었습니다");
-				value = typeConverter->ConvertFrom(value);
-			}
-		}
+		value = ValidateValue(value);
 
 		if(GridControl->InvokeValueChanging(this, value, oldValue) == false)
 			return;
@@ -115,6 +102,30 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		string^ text = m_column->TypeConverter->ConvertToString(value);
 		m_pItem->SetText(ToNativeString::Convert(text));
+	}
+
+	object^ Cell::ValidateValue(object^ value)
+	{
+		if(value == nullptr)
+			return value;
+
+		_Type^ dataType = this->Column->DataType;
+		_Type^ valueType = value->GetType();
+
+		if(dataType == valueType)
+			return value;
+
+		if(dataType == string::typeid)
+			return value->ToString();
+
+		System::ComponentModel::TypeConverter^ typeConverter = this->Column->TypeConverter;
+		if(typeConverter->CanConvertFrom(valueType) == false)
+		{
+			string^ reason = string::Format("{0}형식을 {1}으로 변환할 수 없습니다.", valueType, dataType);
+			throw gcnew System::ArgumentException(reason);
+		}
+
+		return typeConverter->ConvertFrom(value);
 	}
 
 	Cell^ Cell::FromNative(GrItem* pItem)

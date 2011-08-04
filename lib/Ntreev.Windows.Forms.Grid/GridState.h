@@ -21,6 +21,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		ItemPressing,
 		ItemButtonPressing,
 		ItemEditing,
+
+		Unknown,
 	};
 
 	typedef Ntreev::Windows::Forms::Grid::GridState::State _State;
@@ -130,6 +132,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		void ChangeDefaultState();
 
 		void ChangeState(_State state, GrCell* pCell, object^ userData);
+
+		State GetHitTest(_Point location);
 
 	public: // properties
 		property _State State
@@ -469,18 +473,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	private: // methods
 		_State OnBegin(EditingReason^ by);
 
-		void gridControl_FocusedCellChanged(object^ sender, CellEventArgs^ e);
-
-	private:
+	private: // methods
 		virtual bool PreFilterMessage(System::Windows::Forms::Message% m) sealed = System::Windows::Forms::IMessageFilter::PreFilterMessage;
 
 		void dropDownForm_VisibleChanged(object^ /*sender*/, _EventArgs^ e);
-		void						messageFilter_Cancelled(object^ sender, _EventArgs^ e);
-		void						OnEditingResultChanged(object^ sender, ColumnEventArgs^ e);
-		void						OnColumnControlPreviewKeyDown(object^ sender, System::Windows::Forms::PreviewKeyDownEventArgs^ ke);
+		void OnEditingResultChanged(object^ sender, ColumnEventArgs^ e);
+		void OnColumnControlPreviewKeyDown(object^ sender, System::Windows::Forms::PreviewKeyDownEventArgs^ ke);
 
-		void						LeaveEdit(bool update);
-		void						LeaveEdit();
+		void LeaveEdit(bool update);
+		void LeaveEdit();
 
 	private:
 		_Column^					m_column;

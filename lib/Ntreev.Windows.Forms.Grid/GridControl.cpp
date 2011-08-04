@@ -281,12 +281,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			using namespace System::Drawing;
 			e->Graphics->Clear(Color::White);
 
-			PointF location((PointF)this->DisplayRectangle.Location);
-			SizeF size = e->Graphics->MeasureString(exception->Message, this->Font);
-			e->Graphics->DrawString(exception->Message, this->Font, Brushes::Black, location);
+			StringFormat^ format = gcnew StringFormat(StringFormat::GenericDefault);
 
+			PointF location((PointF)this->DisplayRectangle.Location);
+			SizeF size = e->Graphics->MeasureString(exception->Message, this->Font, this->DisplayRectangle.Width, format);
+
+			e->Graphics->DrawString(exception->Message, this->Font, Brushes::Black, RectangleF(location, size), format);
+
+			size = e->Graphics->MeasureString(exception->StackTrace, this->Font, this->DisplayRectangle.Width, format);
 			location.Y += size.Height;
-			e->Graphics->DrawString(exception->StackTrace, this->Font, Brushes::Black, location);
+			e->Graphics->DrawString(exception->StackTrace, this->Font, Brushes::Black, RectangleF(location, size), format);
 		}
 	}
 

@@ -401,6 +401,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		void UpdateNativeText(object^ value);
 
+		object^ ValidateValue(object^ value);
+
 		static Cell^ FromNative(GrItem* pItem);
 
 	internal: // properties
