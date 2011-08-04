@@ -115,10 +115,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #endif
 		m_states = gcnew GridState::StateManager(this);
 
-		m_bCtrlKey				= false;
-		m_bShiftKey				= false;
-		m_bAltKey				= false;
-
 		m_enableColumnMoving	= true;
 		m_enableColumnResizing	= true;
 		m_enableColumnFrozing	= true;
@@ -218,10 +214,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			m_pGridCore->SetSelectionVisible(false);
 			Invalidate(false);
 		}
-
-		ControlKey	= false;
-		ShiftKey	= false;
-		m_bAltKey   = false;
 
 		UserControl::OnLostFocus(e);
 	}
@@ -396,14 +388,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void GridControl::SetDataConnection(object^ dataSource, string^ dataMember)
 	{
-		//if(m_dataSource != dataSource || m_dataMember != dataMember)
-		//{
-		//	//Clear();
-		//}
-
-		//m_dataSource = dataSource;
-		//m_dataMember = dataMember;
-
 		if(dataSource == nullptr)
 		{
 			if(dataMember == string::Empty)
@@ -440,12 +424,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			UpdateGridRect();
 
 			SetNativeEvent(true);
-
-			
-			
-
-			//InitializeDataSource();
-			//m_manager->ListChanged += gcnew System::ComponentModel::ListChangedEventHandler(this, &GridControl::manager_ListChanged);
 
 			OnDataBindingComplete(_EventArgs::Empty);
 			Invalidate(false);
@@ -546,98 +524,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return UserControl::GetService(serviceType);
 	}
 
-	//void GridControl::OnMouseMove(System::Windows::Forms::MouseEventArgs^ e)
-	//{
-	//	UserControl::OnMouseMove(e);
-	//	return;
-	//	_HitTest hitOld = m_hitTest;
-	//	DoHitTest(e->Location, m_hitTest);
-
-	//	switch(e->Button)
-	//	{
-	//	case System::Windows::Forms::MouseButtons::Left:
-	//		OnMouseMoveLButton(e);
-	//		break;
-	//	case System::Windows::Forms::MouseButtons::Middle:
-	//		OnMouseMoveMButton(e);
-	//		break;
-	//	case System::Windows::Forms::MouseButtons::None:
-	//		HitState = m_hitTest.HitState;
-	//		OnMouseMoveNone(e, m_hitTest, hitOld);
-	//		break;
-	//	}
-	//}
-
-	//void GridControl::OnMouseUp(System::Windows::Forms::MouseEventArgs^ e)
-	//{
-	//	Debug::OutputFunction function(__FUNCTION__);
-	//	UserControl::OnMouseUp(e);
-	//	return;
-	//	HitState = m_hitTest.HitState;
-
-	//	switch(e->Button)
-	//	{
-	//	case System::Windows::Forms::MouseButtons::Left:
-	//		OnMouseLButtonUp(e);
-	//		break;
-	//	case System::Windows::Forms::MouseButtons::Middle:
-	//		OnMouseMButtonUp(e);
-	//		break;
-	//	case System::Windows::Forms::MouseButtons::Right:
-	//		OnMouseRButtonUp(e);
-	//		break;
-	//	}
-	//	
-	//}
-
-	//void GridControl::OnMouseDoubleClick(System::Windows::Forms::MouseEventArgs^ e)
-	//{
-	//	Debug::OutputFunction function(__FUNCTION__);
-	//	//if(m_bCreated == false)
-	//		
-	//	UserControl::OnMouseDoubleClick(e);
-	//	return;
-	//	if(DoHitTest(e->Location, m_hitTest) == false)
-	//		return;
-
-	//	HitState = m_hitTest.HitState;
-	//	switch(e->Button)
-	//	{
-	//	case System::Windows::Forms::MouseButtons::Left:
-	//		OnMouseLButtonDoubleClick(e);
-	//		break;
-	//	case System::Windows::Forms::MouseButtons::Right:
-	//		OnMouseRButtonDoubleClick(e);
-	//		break;
-	//	}
-	//}
-
-	//void GridControl::OnMouseDown(System::Windows::Forms::MouseEventArgs^ e)
-	//{
-	//	Debug::OutputFunction function(__FUNCTION__);
-	//	UserControl::OnMouseDown(e);
-	//	return;
-	//	if(DoHitTest(e->Location, m_hitTest) == false)
-	//	{
-	//		return;
-	//	}
-
-	//	HitState = m_hitTest.HitState;
-	//	switch(e->Button)
-	//	{
-	//	case System::Windows::Forms::MouseButtons::Left:
-	//		OnMouseLButtonDown(e);
-	//		break;
-	//	case System::Windows::Forms::MouseButtons::Middle:
-	//		OnMouseMButtonDown(e);
-	//		break;
-	//	case System::Windows::Forms::MouseButtons::Right:
-	//		OnMouseRButtonDown(e);
-	//		break;
-	//	}
-	//	//UserControl::OnMouseDown(e);
-	//}
-
 	void GridControl::OnMouseLeave(_EventArgs^ e)
 	{
 		m_pGridCore->SetMouseOver(NULL, GrPoint::Empty);
@@ -683,28 +569,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 				OnDataMemberChanged(_EventArgs::Empty);
 		}
 	}
-
-	//IColumnSet^ GridControl::ColumnSet::get()
-	//{
-	//	if(m_columnSet == nullptr)
-	//		return m_defaultColumnSet;
-	//	return m_columnSet;
-	//}
-
-	//void GridControl::ColumnSet::set(IColumnSet^ value)
-	//{
-	//	m_columnSet = value;
-	//}
-
-	//IRowSet^ GridControl::RowSet::get()
-	//{
-	//	return m_rowSet;
-	//}
-
-	//void GridControl::RowSet::set(IRowSet^ value)
-	//{
-	//	m_rowSet = value;
-	//}
 
 	bool GridControl::AutoFitColumn::get()
 	{
@@ -790,10 +654,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		m_states->ChangeDefaultState();
 
-		ControlKey	= false;
-		ShiftKey	= false;
-		m_bAltKey   = false;
-
 		UserControl::OnLeave(e);
 	}
 
@@ -821,15 +681,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		this->CurrencyManagerChanged(this, e);
 	}
 
-	void GridControl::OnKeyPress(System::Windows::Forms::KeyPressEventArgs^ e)
-	{
-		if(dynamic_cast<IEditByChar^>(FocusedColumn))
-		{
-			EditCell(m_focusedCell, gcnew EditingReason(e->KeyChar, false));
-		}
-		UserControl::OnKeyPress(e);
-	}
-
 	void GridControl::RemoveRow(Row^ row)
 	{
 		m_rowList->Remove(row);
@@ -852,75 +703,95 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return false;
 	}
 
-	bool GridControl::ProcessCmdKey(System::Windows::Forms::Message% msg, _Keys keyData)
+	bool GridControl::IsInputKey(System::Windows::Forms::Keys keyData) 
 	{
-		_Keys keyCode = (_Keys)((int)keyData & (int)_Keys::KeyCode);
+		using namespace System::Windows::Forms;
 
-		if(keyCode == _Keys::Tab)
+		bool result = false;
+
+		Keys key = keyData & Keys::KeyCode;
+
+		switch (key)
 		{
-			if(m_bShiftKey == true)
-				m_cellIterator->MoveLeft(_SelectionRange::One);
-			else
-				m_cellIterator->MoveRight(_SelectionRange::One);
-			Update();
-			return true;
+		case Keys::Up:
+		case Keys::Down:
+		case Keys::Right:
+		case Keys::Left:
+			result = true;
+			break;
+
+		default:
+			result = UserControl::IsInputKey(keyData);
+			break;
 		}
 
-		if(m_states->State == GridState::State::ItemEditing)
-			return System::Windows::Forms::UserControl::ProcessCmdKey(msg, keyData);
+		return result;
+	}
 
-		switch(keyCode)
+	void GridControl::OnPreviewKeyDown(System::Windows::Forms::PreviewKeyDownEventArgs^ e)
+	{
+		using namespace System::Windows::Forms;
+
+		switch(e->KeyCode)
 		{
-		case _Keys::Up:
+		case Keys::Tab:
+			{
+				if(e->Shift == true)
+					m_cellIterator->MoveLeft(_SelectionRange::One);
+				else
+					m_cellIterator->MoveRight(_SelectionRange::One);
+			}
+			break;
+		case Keys::Up:
 			{
 				m_cellIterator->MoveUp(this->SelectionRange);
 			}
 			break;
-		case _Keys::Down:
+		case Keys::Down:
 			{
 				m_cellIterator->MoveDown(this->SelectionRange);
 			}
 			break;
-		case _Keys::Left:
+		case Keys::Left:
 			{
 				m_cellIterator->MoveLeft(this->SelectionRange);
 			}
 			break;
-		case _Keys::Right:
+		case Keys::Right:
 			{
 				m_cellIterator->MoveRight(this->SelectionRange);
 			}
 			break;
-		case _Keys::End:
+		case Keys::End:
 			{
-				if(m_bCtrlKey == true)
+				if(e->Control == true)
 					m_cellIterator->LastRow(this->SelectionRange);
 				else
 					m_cellIterator->LastCell(this->SelectionRange);
 			}
 			break;
-		case _Keys::Home:
+		case Keys::Home:
 			{
-				if(m_bCtrlKey == true)
+				if(e->Control == true)
 					m_cellIterator->FirstRow(this->SelectionRange);
 				else
 					m_cellIterator->FirstCell(this->SelectionRange);
 			}
 			break;
-		case _Keys::PageUp:
+		case Keys::PageUp:
 			{
 				m_cellIterator->PageUp(this->SelectionRange);
 			}
 			break;
-		case _Keys::PageDown:
+		case Keys::PageDown:
 			{
 				m_cellIterator->PageDown(this->SelectionRange);
 			}
 			break;
-		case _Keys::Enter:
+		case Keys::Enter:
 			{
 				if(m_focusedCell == nullptr)
-					return UserControl::ProcessCmdKey(msg, keyData);
+					return UserControl::OnPreviewKeyDown(e);
 
 				if(m_focusedCell->Row == m_insertionRow)
 				{
@@ -935,11 +806,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 				}
 				else if(m_focusedCell != nullptr)
 				{
-					EditCell(m_focusedCell, gcnew EditingReason(keyCode));
+					EditCell(m_focusedCell, gcnew EditingReason());
 				}
 			}
 			break;
-		case _Keys::F12:
+		case Keys::F12:
 			{
 				if(m_insertionRow->IsVisible == true)
 				{
@@ -949,20 +820,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 				}
 			}
 			break;
-		case _Keys::F2:
+		case Keys::F2:
 			{
 				if(m_focusedCell != nullptr)
 				{
-					EditCell(m_focusedCell, gcnew EditingReason(keyCode));
+					EditCell(m_focusedCell, gcnew EditingReason());
 				}
 				else
 				{
-					return UserControl::ProcessCmdKey(msg, keyData);
+					break;
 				}
 			}
 			break;
 
-		case _Keys::Escape:
+		case Keys::Escape:
 			{
 				if(m_focusedCell != nullptr && m_focusedCell->IsEdited == true)
 				{
@@ -979,32 +850,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 				Invalidate(false);
 			}
 			break;
-
-		default:
-			{
-				Column^ column = FocusedColumn;
-				IEditByKeyCode^ keyEdit = dynamic_cast<IEditByKeyCode^>(column);
-				if(keyEdit != nullptr && keyEdit->KeyTest(keyCode) == true)
-				{
-					EditCell(m_focusedCell, gcnew EditingReason(keyCode));
-					break;
-				}
-			}
-			return UserControl::ProcessCmdKey(msg, keyData);
-		}
-		Update();
-		return true;
-	}
-
-	void GridControl::OnPreviewKeyDown(System::Windows::Forms::PreviewKeyDownEventArgs^ e)
-	{
-		ControlKey	= e->Control;
-		ShiftKey	= e->Shift;
-		m_bAltKey   = e->Alt;
-
-		switch(e->KeyCode)
-		{
-		case _Keys::ProcessKey:
+		case Keys::ProcessKey:
 			{
 				if(dynamic_cast<IEditByIme^>(FocusedColumn))
 				{
@@ -1040,14 +886,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		UserControl::OnKeyDown(e);
 	}
 
-	void GridControl::OnKeyUp(System::Windows::Forms::KeyEventArgs^ e)
+	void GridControl::OnKeyPress(System::Windows::Forms::KeyPressEventArgs^ e)
 	{
-		Debug::OutputFunction function(__FUNCTION__);
-		
-		ControlKey	= e->Control;
-		ShiftKey	= e->Shift;
-		m_bAltKey   = e->Alt;
-		UserControl::OnKeyUp(e);
+		if(dynamic_cast<IEditByChar^>(FocusedColumn))
+		{
+			EditCell(m_focusedCell, gcnew EditingReason(e->KeyChar, false));
+		}
+		UserControl::OnKeyPress(e);
 	}
 
 	void GridControl::gridCore_SelectedRowsChanged()
@@ -1239,28 +1084,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	_SelectionType GridControl::SelectionType::get()
 	{
-		return m_selectionType;
-	}
-
-	void GridControl::SelectionType::set(_SelectionType value)
-	{
-		if(m_selectionType == value)
-			return;
-		m_selectionType = value;
-		Debug::WriteLine(m_selectionType);
+		using namespace System::Windows::Forms;
+		if((Control::ModifierKeys & Keys::Control) == Keys::Control && m_multiSelect == true)
+			return _SelectionType::Add;
+		return _SelectionType::Normal;
 	}
 
 	_SelectionRange GridControl::SelectionRange::get()
 	{
-		return m_selectionRange;
-	}
+		using namespace System::Windows::Forms;
 
-	void GridControl::SelectionRange::set(_SelectionRange value)
-	{
-		if(m_selectionRange == value)
-			return;
-		m_selectionRange = value;
-		Debug::WriteLine(m_selectionRange);
+		if((Control::ModifierKeys & Keys::Shift) == Keys::Shift && m_multiSelect == true)
+			return _SelectionRange::Multi;
+		return _SelectionRange::One;
 	}
 
 	RowCollection^ GridControl::Rows::get()
@@ -1496,24 +1332,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	bool GridControl::IsGrouped::get()
 	{
 		return m_pGridCore->IsGrouped();
-	}
-
-	void GridControl::ControlKey::set(bool value)
-	{
-		if(value == true && m_multiSelect == true)
-			SelectionType = _SelectionType::Add;
-		else
-			SelectionType = _SelectionType::Normal;
-		m_bCtrlKey = value;
-	}
-
-	void GridControl::ShiftKey::set(bool value)
-	{
-		if(value == true && m_multiSelect == true)
-			SelectionRange = _SelectionRange::Multi;
-		else
-			SelectionRange = _SelectionRange::One;
-		m_bShiftKey = value;
 	}
 
 	bool GridControl::InvokeValueChanging(Cell^ cell, object^ value, object^ oldValue)

@@ -1319,15 +1319,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		property _SelectionType SelectionType
 		{
 			_SelectionType get();
-		private: 
-			void set(_SelectionType); 
 		}
 
 		property _SelectionRange SelectionRange
 		{
 			_SelectionRange get();  
-		private: 
-			void set(_SelectionRange); 
 		}
 
 		property _CurrencyManager^ CurrencyManager
@@ -1675,14 +1671,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		virtual void OnKeyPress(System::Windows::Forms::KeyPressEventArgs^ e) override;
 
 		/// <summary>
-		/// <see cref="KeyUp"/> 이벤트를 발생시킵니다.
-		/// </summary>
-		/// <param name="e">
-		/// 이벤트 데이터가 들어 있는 <see cref="System::Windows::Forms::KeyEventArgs"/>입니다.
-		/// </param>
-		virtual void OnKeyUp(System::Windows::Forms::KeyEventArgs^ e) override;
-
-		/// <summary>
 		/// <see cref="FontChanged"/> 이벤트를 발생시킵니다.
 		/// </summary>
 		/// <param name="e">
@@ -1755,18 +1743,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		virtual void WndProc(System::Windows::Forms::Message% m) override;
 
 		/// <summary>
-		/// 명령 키를 처리합니다.
+		/// 지정된 키가 일반 입력 키인지 또는 전처리를 필요로 하는 특수 키인지 여부를 확인합니다.
 		/// </summary>
-		/// <param name="msg">
-		/// 처리할 창 메시지를 나타내며 참조에 의해 전달되는 <see cref="System::Windows::Forms::Message"/>입니다.
-		/// </param>
 		/// <param name="keyData">
-		/// 처리할 키를 나타내는 <see cref="System::Windows::Forms::Keys"/> 값 중 하나입니다.
+		/// <see cref="System::Windows::Forms::Keys"/> 값 중 하나입니다.
 		/// </param>
 		/// <returns>
-		/// 컨트롤이 문자를 처리하면 true이고, 그렇지 않으면 false입니다.
+		/// 지정된 키가 일반 입력 키이면 true이고, 그렇지 않으면 false입니다.
 		/// </returns>
-		virtual bool ProcessCmdKey(System::Windows::Forms::Message% msg, System::Windows::Forms::Keys keyData) override;
+		virtual bool IsInputKey(System::Windows::Forms::Keys keyData) override;
 
 		/// <summary>
 		/// 사용 가능한 다음 컨트롤을 선택하여 활성 컨트롤로 만듭니다.
@@ -1797,15 +1782,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		void ResetRows();
 
 	private: // properties
-		property bool ControlKey
-		{
-			void set(bool); 
-		}
+		//property bool ControlKey
+		//{
+		//	void set(bool); 
+		//}
 
-		property bool ShiftKey
-		{
-			void set(bool); 
-		}
+		//property bool ShiftKey
+		//{
+		//	void set(bool); 
+		//}
 
 	private: // variables
 		//static	int						s_ref = 0;
@@ -1841,9 +1826,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		GrGridRenderer*					m_pGridRenderer;
 		class NativeEvent*				m_pEvent;
 
-		bool							m_bCtrlKey;
-		bool							m_bShiftKey;
-		bool							m_bAltKey;
+		//bool							m_bCtrlKey;
+		//bool							m_bShiftKey;
+		//bool							m_bAltKey;
 
 		Private::ErrorDescriptor^		m_errorDescriptor;
 		IToolTip^						m_tooltips;
