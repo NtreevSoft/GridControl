@@ -101,9 +101,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		/// <param name="value">
 		/// <see cref="System::Array"/>같은 <see cref="System::Collections::IList"/> 인터페이스를 구현하는 개체입니다. 
 		/// </param>
+		[System::ComponentModel::Category("Data")]
+		[System::ComponentModel::RefreshProperties(System::ComponentModel::RefreshProperties::Repaint)]
+		[System::ComponentModel::AttributeProvider(System::ComponentModel::IListSource::typeid)]
+		[_DefaultValue((string^)nullptr)]
 		property object^ DataSource
 		{
+			object^ get();
 			void set(object^); 
+		}
+
+		[System::ComponentModel::Editor("System.Windows.Forms.Design.ListControlStringCollectionEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", System::Drawing::Design::UITypeEditor::typeid)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Content)]
+		[System::ComponentModel::MergableProperty(false)]
+		property System::Windows::Forms::ListBox::ObjectCollection^ Items
+		{
+			System::Windows::Forms::ListBox::ObjectCollection^ get();
 		}
 		
 		/// <summary>

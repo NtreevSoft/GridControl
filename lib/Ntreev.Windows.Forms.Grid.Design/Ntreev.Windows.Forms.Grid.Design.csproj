@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{8EB27EC4-86A3-44A7-9767-19C343709894}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -76,6 +76,8 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetDir)$(TargetName).dll" "$(TargetDir)..\$(TargetName).dll"
-copy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)..\$(TargetName).pdb"</PostBuildEvent>
+copy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)..\$(TargetName).pdb"
+"C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\gacutil.exe" /i "$(TargetDir)$(TargetName).dll"</PostBuildEvent>
+    <PreBuildEvent>"C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\gacutil.exe" /u "Ntreev.Windows.Forms.Grid.Design"</PreBuildEvent>
   </PropertyGroup>
 </Project>

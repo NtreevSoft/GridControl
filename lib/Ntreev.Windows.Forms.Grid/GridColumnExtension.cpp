@@ -3,7 +3,6 @@
 #include "GridControl.h"
 #include "GridRow.h"
 #include "GridCell.h"
-#include "GridDebug.h"
 #include "GridColumnDropDown.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Columns
@@ -146,44 +145,54 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	{
 		System::Windows::Forms::ListBox^ listBox = EditingControl;
 
-		// 렌더링이 되기 전에는 데이터 갱신이 되지 않으므로 강제로 갱신할 수 있도록 그래픽 객체를 생성후 지워준다.
-		delete listBox->CreateGraphics();
+		//// 렌더링이 되기 전에는 데이터 갱신이 되지 않으므로 강제로 갱신할 수 있도록 그래픽 객체를 생성후 지워준다.
+		//delete listBox->CreateGraphics();
 
 		int itemHeight = listBox->Font->Height - 1;
 		_Size size;
 	
 		size.Width = proposedSize.Width;
-		
-		if(listBox->Items->Count > MaxDropDownItems)
+
+		int itemCount = listBox->Items->Count;
+
+		if(listBox->DataSource != nullptr)
+		{
+			System::Windows::Forms::BindingContext^ bindingContext = gcnew System::Windows::Forms::BindingContext();
+			System::Windows::Forms::BindingManagerBase^ managerBase = bindingContext[listBox->DataSource];
+			if(managerBase != nullptr)
+			{
+				itemCount = managerBase->Count;
+			}
+		}
+				
+		if(itemCount > MaxDropDownItems)
 		{
 			size.Height = itemHeight * (MaxDropDownItems);
 		}
 		else
 		{
-			size.Height = itemHeight * (listBox->Items->Count);
+			size.Height = itemHeight * (itemCount);
 		}
 
 		return size;
 	}
 
-	void ColumnComboBox::DataSource::set(object^ ds)
+	object^ ColumnComboBox::DataSource::get()
 	{
-		System::Windows::Forms::ListBox^ listBox = EditingControl;
-		listBox->BeginUpdate();
-		listBox->Items->Clear();
-		System::Collections::IEnumerable^ enumerable = dynamic_cast<System::Collections::IEnumerable^>(ds);
-		if(enumerable)
-		{
-			System::Collections::IEnumerator^ enumerator = enumerable->GetEnumerator();
-			while(enumerator->MoveNext())
-			{
-				object^ object = enumerator->Current;
-				listBox->Items->Add(object);
-			}
-		}
-		listBox->EndUpdate();
+		return this->EditingControl->DataSource;
 	}
 
+	void ColumnComboBox::DataSource::set(object^ value)
+	{
+		System::Windows::Forms::ListBox^ listBox = EditingControl;
+		listBox->DataSource = value;
+	}
+
+	System::Windows::Forms::ListBox::ObjectCollection^ ColumnComboBox::Items::get()
+	{
+		return this->EditingControl->Items;
+	}
+	
 	void ColumnComboBox::MaxDropDownItems::set(int count)
 	{
 		m_nMaxDropDownItems = count;

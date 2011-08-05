@@ -346,6 +346,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		[_Description("선택되어 있는지의 여부를 가져오거나 설정합니다.")]
 		[_Category("Appearance")]
 		[_DefaultValue(false)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
 		property bool IsSelected
 		{
 			bool get();

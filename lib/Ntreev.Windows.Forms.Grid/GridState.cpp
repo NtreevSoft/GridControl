@@ -10,9 +10,6 @@
 #include "GridColumnCollection.h"
 #include "GridTooltip.h"
 #include "GridResource.h"
-
-#include "GridDebug.h"
-
 #include "GridSelectionTimer.h"
 #include "GridCellIterator.h"
 #include "GridWin32.h"
@@ -397,9 +394,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 							if(cell->ErrorDescription != "")
 								GridControl->ToolTip->Show(cell->ErrorDescription);
 						}
-						catch(System::Exception^ e)
+						catch(System::Exception^)
 						{
-							Debug::WriteLine(e->Message);
 						}
 					}
 					break;
@@ -1403,7 +1399,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		CellEventArgs^ e = gcnew CellEventArgs(m_cell);
 		GridControl->InvokeEndEdit(e);
 
-		Debug::WriteLine("OnStopEdit Start");
+		System::Diagnostics::Debug::WriteLine("OnStopEdit Start");
 		GridCore->ShowClippedText(true);
 
 		if(m_cell->IsReadOnly == true)
@@ -1481,7 +1477,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			GridCore->GetDataRowList()->Update(true);
 
 		GridControl->EnsureVisible(m_cell);
-		Debug::WriteLine("OnStopEdit End");
+		System::Diagnostics::Debug::WriteLine("OnStopEdit End");
 	}
 
 	bool ItemEditing::PreFilterMessage(System::Windows::Forms::Message% m)
@@ -1515,7 +1511,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 	void ItemEditing::OnEditingResultChanged(object^ /*sender*/, ColumnEventArgs^ e)
 	{
-		Debug::OutputFunction function(__FUNCTION__);
 		LeaveEdit(e->Column->EditingResult == _EditingResult::Ok ? true : false);
 	}
 

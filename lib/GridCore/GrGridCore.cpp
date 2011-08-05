@@ -404,6 +404,8 @@ void GrGridCore::Clip(uint nStartCol, uint nStartRow)
 	if(m_bNeedToColumnClipping == true || m_nHScrollValue != nStartCol)
 	{
 		m_pColumnList->Clip(&m_rtDisplay, nStartCol);
+		//m_pTextUpdater->AddTextBound(m_pCaption);
+		//m_pTextUpdater->AddTextBound(m_pGroupingList);
 	}
 
 	m_nHScrollValue = nStartCol;

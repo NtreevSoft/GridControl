@@ -2,7 +2,6 @@
 #include "GridColumnDropDownForm.h"
 #include "GridColumn.h"
 #include "GridControl.h"
-#include "GridDebug.h"
 #include "GridWin32.h"
 #include "GridCell.h"
 
@@ -184,7 +183,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			int yOffset = e->Location.Y - m_lButtonDownPoint.Y;
 
 			this->Size = _Size(m_firstSize.Width + xOffset, m_firstSize.Height	+ yOffset);
-			//PerformLayout();
 		}
 
 		m_mouseMovePoint = e->Location;
@@ -252,8 +250,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		while(owner->ParentForm != nullptr)
 			owner = owner->ParentForm;
 		
-		Debug::WriteLine("ShowPopup : {0}", owner->Name);
-
 		m_filter->DropDownForm = this;
 		m_filter->AssignHandle(owner->Handle);
 		_Control^ control = column->EditingControl;
@@ -271,9 +267,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		this->Rectangle	= _Rectangle(location, size);
 		
 		this->Owner = owner;
-		//owner->AddOwnedForm(this);
-		//this->Tag = owner;
-
 		this->ResumeLayout(false);
 		this->Show();
 		this->Activate();

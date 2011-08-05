@@ -2,7 +2,6 @@
 #include "GridErrorDescriptor.h"
 #include "GridControl.h"
 #include "GridCell.h"
-#include "GridDebug.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Private
 {
@@ -46,7 +45,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			m_errorCount = 0;
 			//m_errorCell			= nullptr;
 		}
-		Debug::WriteLine("The Elapsed event was raised at {0}", e->SignalTime);
+		System::Diagnostics::Debug::WriteLine(string::Format("The Elapsed event was raised at {0}", e->SignalTime));
 		Invalidate();
 	}
 

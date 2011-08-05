@@ -3,7 +3,6 @@
 #include "GridTooltip.h"
 #include "GridColumn.h"
 #include "GridControl.h"
-#include "GridDebug.h"
 
 #include <commctrl.h>
 #pragma comment(lib, "comctl32.lib")

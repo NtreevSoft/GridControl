@@ -315,10 +315,6 @@
 				</File>
 			</File>
 			<File
-				RelativePath=".\GridDebug.h"
-				>
-			</File>
-			<File
 				RelativePath=".\GridDef.h"
 				>
 			</File>
@@ -541,10 +537,6 @@
 			</File>
 			<File
 				RelativePath=".\GridControl.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridDebug.cpp"
 				>
 			</File>
 			<File

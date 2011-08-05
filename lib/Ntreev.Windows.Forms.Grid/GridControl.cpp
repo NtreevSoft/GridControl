@@ -10,7 +10,6 @@
 #include "GridCollection.h"
 #include "GridRowCollection.h"
 #include "GridColumnCollection.h"
-#include "GridDebug.h"
 #include "GridWin32.h"
 #include "GridTimeTest.h"
 #include "GridColumnExtension.h"
@@ -98,6 +97,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	GridControl::GridControl()
 	{
+		System::Diagnostics::Trace::WriteLine("TraceTraceTraceTrace");
+		System::Diagnostics::Debug::WriteLine("DebugDebugDebugDebug");
 #ifdef _TIME_TEST
 		Private::GridTimeTest timeTest("GridControl 생성자");
 #endif
@@ -156,11 +157,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_defaultDataSource		= gcnew System::Data::DataTable();
 		m_defaultManager		= dynamic_cast<_CurrencyManager^>(this->BindingContext[m_defaultDataSource]);
 
-		DoubleBuffered			= m_pGridRenderer->DoubleBuffered();
+		this->DoubleBuffered	= m_pGridRenderer->DoubleBuffered();
+		this->Name				= L"GridControl";
+
 		//BorderStyle			= System::Windows::Forms::BorderStyle::FixedSingle;
 		//AllowDrop				= true;
 
-		InitializeComponent();
 		SetNativeEvent(true);
 
 		this->CurrencyManagerChanged(this, gcnew CurrencyManagerChangedEventArgs(m_defaultManager));
@@ -197,8 +199,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void GridControl::OnGotFocus(_EventArgs^ e)
 	{
-		Debug::OutputFunction function(__FUNCTION__);
-
 		m_pGridCore->SetSelectionVisible(true);	
 		Invalidate(false);
 
@@ -207,8 +207,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void GridControl::OnLostFocus(_EventArgs^ e)
 	{
-		Debug::OutputFunction function(__FUNCTION__);
-
 		if(m_hideSelection == true)
 		{
 			m_pGridCore->SetSelectionVisible(false);
@@ -232,8 +230,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void GridControl::OnPaint(System::Windows::Forms::PaintEventArgs^ e)
 	{
 		_Graphics^ graphics = e->Graphics;
-		Debug::OutputFunction function(__FUNCTION__);
-		
+	
 		try
 		{
 			UpdateGridRect();
@@ -650,10 +647,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void GridControl::OnLeave(_EventArgs^ e)
 	{
-		Debug::OutputFunction function(__FUNCTION__);
-
 		m_states->ChangeDefaultState();
-
 		UserControl::OnLeave(e);
 	}
 
@@ -668,7 +662,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_pGridCore->SetFont(this->Font);
 		Invalidate(false);
 		UserControl::OnFontChanged(e);
-		Debug::WriteLine("Invalidate");
+		System::Diagnostics::Debug::WriteLine("Invalidate");
 	}
 
 	void GridControl::OnCurrencyManagerChanged(CurrencyManagerChangedEventArgs^ e)
@@ -694,13 +688,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	Row^ GridControl::AddNewRowFromInsertion()
 	{
 		return m_rowList->AddNewFromInsertion();
-	}
-
-	bool GridControl::DefaultEditKeyTest(System::Windows::Forms::Keys key)
-	{
-		if(key == _Keys::F2 || key == _Keys::Enter)
-			return true;
-		return false;
 	}
 
 	bool GridControl::IsInputKey(System::Windows::Forms::Keys keyData) 
@@ -790,23 +777,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			break;
 		case Keys::Enter:
 			{
-				if(m_focusedCell == nullptr)
-					return UserControl::OnPreviewKeyDown(e);
-
-				if(m_focusedCell->Row == m_insertionRow)
+				if(m_focusedCell != nullptr)
 				{
-					Row^ row = AddNewRowFromInsertion();
-					if(row == nullptr)
-						break;
+					if(m_focusedCell->Row == m_insertionRow)
+					{
+						Row^ row = AddNewRowFromInsertion();
+						if(row == nullptr)
+							break;
 
-					_Cell^ cell = row[m_focusedCell->Column];
-					cell->Select(_SelectionType::Normal);
-					cell->Focus();
-					cell->EnsureVisible();
-				}
-				else if(m_focusedCell != nullptr)
-				{
-					EditCell(m_focusedCell, gcnew EditingReason());
+						_Cell^ cell = row[m_focusedCell->Column];
+						cell->Select(_SelectionType::Normal);
+						cell->Focus();
+						cell->EnsureVisible();
+					}
+					else
+					{
+						EditCell(m_focusedCell, gcnew EditingReason());
+					}
 				}
 			}
 			break;
@@ -832,7 +819,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 				}
 			}
 			break;
-
 		case Keys::Escape:
 			{
 				if(m_focusedCell != nullptr && m_focusedCell->IsEdited == true)
@@ -918,12 +904,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void GridControl::gridCore_FocusChanged()
 	{
-		Debug::OutputFunction function(__FUNCTION__);
 		GrItem* pFocusedItem = Focuser->GetItem();
 
 		Column^ oldFocusedColumn = FocusedColumn;
 		Row^	oldFocusedRow    = FocusedRow;
-		
 
 		if(pFocusedItem == nullptr)
 		{
@@ -936,9 +920,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 #ifndef _TIME_TEST
 		if(pFocusedItem)
-			Debug::WriteLine("Focused Item is existed");
+			System::Diagnostics::Debug::WriteLine("Focused Item is existed");
 		else
-			Debug::WriteLine("Focused Item is null");
+			System::Diagnostics::Debug::WriteLine("Focused Item is null");
 #endif
 		if(FocusedColumn != oldFocusedColumn)
 		{
@@ -1653,9 +1637,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			Selector->SetAnchor(pItem);
 			Focuser->Set(pItem);
 		}
-		catch(System::Exception^ e)
+		catch(System::Exception^)
 		{
-			Debug::WriteLine(e->Message);
+			
 		}
 
 		DataBindingComplete(this, e);

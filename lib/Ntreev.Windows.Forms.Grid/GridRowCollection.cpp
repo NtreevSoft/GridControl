@@ -4,7 +4,6 @@
 #include "GridControl.h"
 #include "GridColumn.h"
 #include "GridCell.h"
-#include "GridDebug.h"
 
 #include <vcclr.h>
 

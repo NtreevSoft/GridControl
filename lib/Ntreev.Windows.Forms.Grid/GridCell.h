@@ -221,6 +221,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <exception cref="System::InvalidOperationException">Cell.Row가 사용되지 않거나, 숨겨져 있을때 발생합니다.</exception>
 		[_Category("Behavior")]
 		[_DefaultValue(false)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
 		property bool IsSelected
 		{
 			bool get();
@@ -240,6 +241,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <exception cref="System::InvalidOperationException">Cell.Row가 사용되지 않거나, 숨겨져 있을때 발생합니다.</exception>
 		[_Category("Behavior")]
 		[_DefaultValue(false)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
 		property bool IsFocused
 		{
 			bool get();

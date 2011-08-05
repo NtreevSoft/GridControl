@@ -1,7 +1,6 @@
 ﻿#include "StdAfx.h"
 #include "GridSelectionTimer.h"
 #include "GridControl.h"
-#include "GridDebug.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Private
 {

@@ -10,6 +10,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	/// 그리드 컨트롤 개체입니다.
 	/// </summary>
 	[System::ComponentModel::ToolboxItem(true)]
+	[System::ComponentModel::DefaultEvent("")]
 	[System::Drawing::ToolboxBitmap(GridControl::typeid)]
 	[System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=1.0.0.1, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
 	[System::Windows::Forms::Docking(System::Windows::Forms::DockingBehavior::Ask)]
@@ -1766,7 +1767,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		
 	private: // methods
 		void SetNativeEvent(bool attached);
-		bool DefaultEditKeyTest(System::Windows::Forms::Keys key);
 
 		void OnCurrencyManagerChanged(CurrencyManagerChangedEventArgs^ e);
 
@@ -1782,15 +1782,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		void ResetRows();
 
 	private: // properties
-		//property bool ControlKey
-		//{
-		//	void set(bool); 
-		//}
-
-		//property bool ShiftKey
-		//{
-		//	void set(bool); 
-		//}
 
 	private: // variables
 		//static	int						s_ref = 0;
@@ -1826,23 +1817,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		GrGridRenderer*					m_pGridRenderer;
 		class NativeEvent*				m_pEvent;
 
-		//bool							m_bCtrlKey;
-		//bool							m_bShiftKey;
-		//bool							m_bAltKey;
-
 		Private::ErrorDescriptor^		m_errorDescriptor;
 		IToolTip^						m_tooltips;
 		_CellIterator^					m_cellIterator;
 
 		GridState::StateManager^		m_states;
 
-		//_HitState						m_hitState;
 		_SelectionType					m_selectionType;
 		_SelectionRange					m_selectionRange;
-
 		_Rectangle						m_dataRectangle;
-
-		//_HitTest						m_hitTest;
 
 		bool							m_enableColumnMoving;
 		bool							m_enableColumnResizing;
@@ -1896,28 +1879,5 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		_CurrencyManager^				m_manager;
 		_CurrencyManager^				m_defaultManager;
 		System::Data::DataTable^		m_defaultDataSource;
-
-		
-
-
-#pragma region Windows Form Designer generated code
-		// 자동으로 만들어지는 변수들 
-	private: System::ComponentModel::IContainer^		components;
-
-			 /// <summary>
-			 /// 디자이너 지원에 필요한 메서드입니다.
-			 /// 이 메서드의 내용을 코드 편집기로 수정하지 마십시오.
-			 /// </summary>
-	private: System::Void InitializeComponent() { 
-				 this->SuspendLayout();
-				 // 
-				 // GridControl
-				 // 
-				 this->Name = L"GridControl";
-				 this->ResumeLayout(false);
-
-			 }
-
-#pragma endregion	//Windows Form Designer generated code
 	};
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

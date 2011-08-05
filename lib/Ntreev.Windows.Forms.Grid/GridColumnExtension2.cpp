@@ -1,6 +1,5 @@
 ﻿#include "StdAfx.h"
 #include "GridColumnExtension2.h"
-#include "GridDebug.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Columns
 {

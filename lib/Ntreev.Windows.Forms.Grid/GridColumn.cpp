@@ -6,7 +6,6 @@
 #include "GridCollection.h"
 #include "GridColumnCollection.h"
 #include "GridRowCollection.h"
-#include "GridDebug.h"
 #include "GridResource.h"
 #include "GridAttributes.h"
 
@@ -68,18 +67,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 			m_sortedDownRenderer = gcnew _VisualStyleRenderer(_VisualStyleElement::Header::SortArrow::SortedDown);
 		}
-		catch(System::Exception^ e)
+		catch(System::Exception^)
 		{
-			Debug::WriteLine(e);
+			
 		}
 
 		try
 		{
 			m_sortedUpRenderer   = gcnew _VisualStyleRenderer(_VisualStyleElement::Header::SortArrow::SortedUp);
 		}
-		catch(System::Exception^ e)
+		catch(System::Exception^)
 		{
-			Debug::WriteLine(e);
+		
 		}
 	}
 

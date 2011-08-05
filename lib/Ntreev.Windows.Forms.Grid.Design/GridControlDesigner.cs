@@ -8,12 +8,13 @@ using System.Globalization;
 using System.Reflection;
 using System.ComponentModel.Design.Serialization;
 using Ntreev.Windows.Forms.Grid.GridState;
+using System.Diagnostics;
 
 namespace Ntreev.Windows.Forms.Grid.Design
 {
     public class GridControlDesigner : System.Windows.Forms.Design.ControlDesigner
     {
-        class ActionList : System.ComponentModel.Design.DesignerActionList
+        public class ActionList : System.ComponentModel.Design.DesignerActionList
         {
             GridControl gridControl;
 
@@ -30,26 +31,12 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
                 try
                 {
-                    // Add a descriptive header.
-                    //items.Add(new DesignerActionHeaderItem("Anchor Styles"));
                     items.Add(new DesignerActionPropertyItem("CaptionText", "제목"));
                     items.Add(new DesignerActionPropertyItem("DataSource", "DataSource"));
-//                    items.Add(new DesignerActionPropertyItem("DataMember", "DataMember"));
-
                     items.Add(new DesignerActionPropertyItem("Columns", "열 편집"));
-
-
-                    //items.Add(new DesignerActionTextItem("항목 편집", "Behavior"));
-                    //items.Add(new DesignerActionTextItem("열 편집", "Behavior"));
-
+                    items.Add(new DesignerActionPropertyItem("Rows", "행 편집"));
                     items.Add(new DesignerActionMethodItem(this, "AddNewColumn", "열 추가"));
                     items.Add(new DesignerActionMethodItem(this, "AddNewRow", "행 추가"));
-
-                    //// Add a DesignerActionPropertyItem for the Anchor
-                    //// property. This will be displayed in a panel using
-                    //// the AnchorStyles UI Type Editor.
-                    
-
                 }
                 catch (System.Exception e)
                 {
@@ -83,6 +70,14 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 get
                 {
                     return this.gridControl.Columns;
+                }
+            }
+
+            public RowCollection Rows
+            {
+                get
+                {
+                    return this.gridControl.Rows;
                 }
             }
 
@@ -187,12 +182,12 @@ namespace Ntreev.Windows.Forms.Grid.Design
             point = gridControl.PointToClient(point);
 
             State state = gridControl.StateManager.GetHitTest(point);
+
             switch (state)
             {
                 case State.ColumnPressing:
                 case State.ColumnResizing:
                 case State.ColumnSplitterMoving:
-                case State.RowPressing:
                 case State.RowResizing:
                 case State.GroupingInfoPressing:
                 case State.GroupingCellPressing:
@@ -203,7 +198,9 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
             if (gridControl.DisplayRectangle.Contains(point) == false)
                 return true;
-            return gridControl.GetCellAt(point) != null;
+
+            //return gridControl.GetCellAt(point) != null;
+            return false;
         }
     }
 }

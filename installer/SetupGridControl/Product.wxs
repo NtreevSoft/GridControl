@@ -9,7 +9,7 @@
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Product Id="51f2fb0b-b25a-4833-a9b4-a299d2e1f6a8" Name="NtreevSoft GridControl" Language="1033" Version="1.0.4232.28109" Manufacturer="$(var.NtreevSoft)" UpgradeCode="51f8e005-a714-41ce-a16f-29745b2593e1">
-    <Package InstallerVersion="200" Compressed="yes" />
+    <Package InstallerVersion="201" Compressed="yes" />
 
     <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
     

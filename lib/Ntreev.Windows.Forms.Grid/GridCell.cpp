@@ -1,6 +1,5 @@
 ﻿#include "StdAfx.h"
 #include "GridCell.h"
-#include "GridDebug.h"
 #include "GridUtil.h"
 #include "GridColumn.h"
 #include "GridRow.h"
@@ -26,9 +25,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 				text = m_column->TypeConverter->ConvertToString(value);
 			pItem->SetText(ToNativeString::Convert(text));
 		}
-		catch(System::Exception^ e)
+		catch(System::Exception^)
 		{
-			Debug::WriteLine(e);
 			pItem->SetText(L"");
 		}
 	}
@@ -308,10 +306,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			m_value = Column->DefaultValue;
 			UpdateNativeText(m_value);
 		}
-		catch(System::Exception^ e)
+		catch(System::Exception^)
 		{
-			Debug::WriteLine(e->Message);
-			return;
+
 		}
 	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

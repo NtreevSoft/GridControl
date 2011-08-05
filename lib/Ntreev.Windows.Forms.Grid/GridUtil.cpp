@@ -5,38 +5,9 @@
 #include "GridCell.h"
 #include "GridControl.h"
 #include "GridCollection.h"
-#include "GridDebug.h"
-
-//#include "GrGridCell.h"
-//#include "GrGridCore.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	//ToNativeString::ToNativeString(string^ text)
-	//{
-	//	ptr = System::Runtime::InteropServices::Marshal::StringToHGlobalUni(text);
-	//}
-
-	//ToNativeString::~ToNativeString()
-	//{
-	//	System::Runtime::InteropServices::Marshal::FreeHGlobal(ptr);
-	//}
-
-	//ToNativeString::!ToNativeString()
-	//{
-
-	//}
-
-	//ToNativeString::operator const wchar_t*() 
-	//{ 
-	//	return (const wchar_t*)ptr.ToPointer(); 
-	//}
-
-	//const wchar_t* ToNativeString::c_str()
-	//{
-	//	return (const wchar_t*)ptr.ToPointer(); 
-	//}
-
 	const wchar_t* ToNativeString::Convert(string^ text)
 	{
 		pin_ptr<const wchar_t> unmngStr = PtrToStringChars(text);

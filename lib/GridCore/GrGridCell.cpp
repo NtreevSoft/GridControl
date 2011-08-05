@@ -3588,7 +3588,7 @@ void GrGroupingList::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) 
 		pGroupingInfo->Render(pRenderer, pClipping);
 	}
 
-	RenderText(pRenderer, foreColor, &rtRender);
+	RenderText(pRenderer, foreColor, &rtRender, pClipping);
 }
 
 int GrGroupingList::GetWidth() const

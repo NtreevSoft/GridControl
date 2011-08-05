@@ -2,7 +2,6 @@
 #ifdef _TIME_TEST
 
 #include "GridTimeTest.h"
-#include "GridDebug.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Private
 {
