@@ -41,6 +41,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			break;
 		case EditingReasonType::Ime:
 			{
+				textBox->Text = "";
 			}
 			break;
 		}

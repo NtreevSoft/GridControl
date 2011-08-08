@@ -175,7 +175,8 @@ void	GrRect::DoEmpty()
 
 GrPoint GrRect::GetCenter() const
 {
-	return GrPoint((left + right)/2, (top + bottom)/2);
+	return GrPoint((left & right) + ((left ^ right) >> 1), (top & bottom) + ((top ^ bottom) >> 1));
+	//return GrPoint((left + right)/2, (top + bottom)/2);
 }
 
 #if 0

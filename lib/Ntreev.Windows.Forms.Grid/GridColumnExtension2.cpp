@@ -130,12 +130,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 				checked = false;
 		}
 
-		// 길이가 홀수일때 렌더링 위치가 어긋남.
-		if(renderRect.Width % 2 == 1)
-			renderRect.X--;
-		if(renderRect.Height % 2 == 1)
-			renderRect.Y--;
-
 		if(checked == true)
 		{
 			if(m_rendererChecked != nullptr)

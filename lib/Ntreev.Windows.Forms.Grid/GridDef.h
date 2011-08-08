@@ -31,6 +31,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
 	ref class GridControl;
 	ref class CaptionRow;
+	ref class GroupingRow;
 	ref class Column;
 	ref class Cell;
 	ref class RowBase;
@@ -86,5 +87,6 @@ typedef Ntreev::Windows::Forms::Grid::RowBase		_RowBase;
 typedef Ntreev::Windows::Forms::Grid::Row			_Row;
 typedef Ntreev::Windows::Forms::Grid::Cell			_Cell;
 typedef Ntreev::Windows::Forms::Grid::CaptionRow	_CaptionRow;
+typedef Ntreev::Windows::Forms::Grid::GroupingRow	_GroupingRow;
 typedef Ntreev::Windows::Forms::Grid::InsertionRow	_InsertionRow;
 typedef Ntreev::Windows::Forms::Grid::CellIterator	_CellIterator;

@@ -68,7 +68,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(GridControl->InvokeValueChanging(this, value, oldValue) == false)
 			return;
 
-		if(this->Row->IsEditing == true)
+		if(this->Row->IsBeingEdited == true)
 		{
 			if(m_oldValue == nullptr)
 			{

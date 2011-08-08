@@ -114,7 +114,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
         {
             //System.Windows.Forms.MessageBox.Show("GridControlDesigner");
             //System.Windows.Forms.MessageBox.Show(typeof(RowCollectionEditor).AssemblyQualifiedName);
-            
+
         }
 
         public override void Initialize(System.ComponentModel.IComponent component)
@@ -146,12 +146,12 @@ namespace Ntreev.Windows.Forms.Grid.Design
         {
             get
             {
-            //    if (this.designerVerbs == null)
-            //    {
-            //        this.designerVerbs = new DesignerVerbCollection();
-            //        this.designerVerbs.Add(new DesignerVerb(SR.GetString("DataGridViewEditColumnsVerb"), new EventHandler(this.OnEditColumns)));
-            //        this.designerVerbs.Add(new DesignerVerb(SR.GetString("DataGridViewAddColumnVerb"), new EventHandler(this.OnAddColumn)));
-            //    }
+                //    if (this.designerVerbs == null)
+                //    {
+                //        this.designerVerbs = new DesignerVerbCollection();
+                //        this.designerVerbs.Add(new DesignerVerb(SR.GetString("DataGridViewEditColumnsVerb"), new EventHandler(this.OnEditColumns)));
+                //        this.designerVerbs.Add(new DesignerVerb(SR.GetString("DataGridViewAddColumnVerb"), new EventHandler(this.OnAddColumn)));
+                //    }
 
                 return base.Verbs;
             }
@@ -180,7 +180,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
         {
             GridControl gridControl = this.Control as GridControl;
             point = gridControl.PointToClient(point);
-
+            
             State state = gridControl.StateManager.GetHitTest(point);
 
             switch (state)
@@ -195,6 +195,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
                     return true;
 
             }
+
 
             if (gridControl.DisplayRectangle.Contains(point) == false)
                 return true;

@@ -327,6 +327,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GridGroupingRow.h"
+				>
+			</File>
+			<File
 				RelativePath=".\GridNativeCollection.h"
 				>
 			</File>
@@ -336,6 +340,10 @@
 			</File>
 			<File
 				RelativePath=".\GridRow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridRowBase.h"
 				>
 			</File>
 			<File
@@ -548,6 +556,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GridGroupingRow.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GridNativeCollection.cpp"
 				>
 			</File>
@@ -557,6 +569,10 @@
 			</File>
 			<File
 				RelativePath=".\GridRow.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridRowBase.cpp"
 				>
 			</File>
 			<File

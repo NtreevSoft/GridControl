@@ -213,6 +213,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
+		/// 그룹핑 표시열을 가져옵니다.
+		/// </summary>
+		/// <remarks>
+		/// 그룹핑 표시에 대한 인터페이스를 제공합니다.
+		/// </remarks>
+		[_Description("그룹핑 표시에 대한 인터페이스를 제공합니다.")]
+		[_Category("Behavior")]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Content)]
+		property _GroupingRow^ GroupingRow
+		{
+			_GroupingRow^ get(); 
+		}
+
+		/// <summary>
 		/// 열의 목록을 가져옵니다.
 		/// </summary>
 		[_Description("행의 목록을 가져옵니다.")]
@@ -578,6 +592,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		[_Description("상단의 제목 표시 여부를 설정합니다.")]
 		[_Category("Appearance"), _DefaultValue(true)]
 		property bool IsCaptionRowVisible
+		{
+			bool get();	
+			void set(bool);
+		}
+
+		/// <summary>
+		/// 상단의 그룹핑 표시 여부를 가져오거나 설정합니다.
+		/// </summary>
+		[_Description("상단의 그룹핑 표시 여부를 설정합니다.")]
+		[_Category("Appearance"), _DefaultValue(true)]
+		property bool IsGroupingRowVisible
 		{
 			bool get();	
 			void set(bool);
@@ -1801,6 +1826,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		Design::Style^					m_style;
 
 		_CaptionRow^					m_captionRow;
+		_GroupingRow^					m_groupingRow;
 		_InsertionRow^					m_insertionRow;
 		_Cell^							m_focusedCell;
 

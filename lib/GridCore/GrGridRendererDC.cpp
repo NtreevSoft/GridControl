@@ -73,11 +73,12 @@ GrGridRendererDC::GrGridRendererDC(void* hWnd) : GrGridRenderer(hWnd)
 	m_hTreeTheme		= OpenThemeData(m_hWnd, L"TREEVIEW");
 	m_hTooltip			= OpenThemeData(m_hWnd, L"TOOLTIP");
 
-	m_bSortUpTheme   = IsThemePartDefined(m_hColumnTheme, HP_HEADERSORTARROW, HSAS_SORTEDUP) == TRUE ? true : false;
-	m_bSortDownTheme = IsThemePartDefined(m_hColumnTheme, HP_HEADERSORTARROW, HSAS_SORTEDDOWN) == TRUE ? true : false;
+	OSVERSIONINFOW osInfo;
+	memset(&osInfo, 0, sizeof(OSVERSIONINFOW));
+	osInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFOW);
+	::GetVersionExW(&osInfo);
 
-	m_bOpenedTheme = IsThemePartDefined(m_hColumnTheme, TVP_GLYPH, GLPS_OPENED) == TRUE ? true : false;
-	m_bClosedTheme = IsThemePartDefined(m_hColumnTheme, TVP_GLYPH, GLPS_CLOSED) == TRUE ? true : false;
+	m_dwMajorVersion = osInfo.dwMajorVersion;
 
 	m_hOverlayBmp		= CreateBitmap(4, 4, 1, 32, NULL);
 	m_hColorBmp			= CreateBitmap(4, 4, 1, 32, NULL);
@@ -166,7 +167,7 @@ void GrGridRendererDC::DrawTreeGlyph(const GrRect* pRenderRect, bool bOpened)
 
 	if(bOpened == true)
 	{
-		if(m_hTreeTheme != NULL && m_bOpenedTheme == true)
+		if(m_hTreeTheme != NULL && m_dwMajorVersion >= 6)
 		{
 			DrawThemeBackground(m_hTreeTheme, m_hdc, TVP_GLYPH, GLPS_OPENED, &rt, &rt);
 		}
@@ -186,7 +187,7 @@ void GrGridRendererDC::DrawTreeGlyph(const GrRect* pRenderRect, bool bOpened)
 	}
 	else
 	{
-		if(m_hTreeTheme != NULL && m_bClosedTheme == true)
+		if(m_hTreeTheme != NULL && m_dwMajorVersion >= 6)
 		{
 			DrawThemeBackground(m_hTreeTheme, m_hdc, TVP_GLYPH, GLPS_CLOSED, &rt, &rt);
 		}
@@ -407,7 +408,7 @@ void GrGridRendererDC::DrawSortGlyph(const GrRect* pRenderRect, GrSort::Type sor
 	{
 	case GrSort::Up:
 		{
-			if(m_hColumnTheme != NULL && m_bSortUpTheme == true)
+			if(m_hColumnTheme != NULL && m_dwMajorVersion >= 6)
 			{
 				DrawThemeBackground(m_hColumnTheme, m_hdc, HP_HEADERSORTARROW, HSAS_SORTEDUP, &rtRender, &rtRender);
 			}
@@ -431,7 +432,7 @@ void GrGridRendererDC::DrawSortGlyph(const GrRect* pRenderRect, GrSort::Type sor
 		break;
 	case GrSort::Down:
 		{
-			if(m_hColumnTheme != NULL && m_bSortDownTheme == true)
+			if(m_hColumnTheme != NULL && m_dwMajorVersion >= 6)
 			{
 				DrawThemeBackground(m_hColumnTheme, m_hdc, HP_HEADERSORTARROW, HSAS_SORTEDDOWN, &rtRender, &rtRender);
 			}

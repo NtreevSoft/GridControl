@@ -7,7 +7,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	CaptionRow::CaptionRow(_GridControl^ gridControl, GrCaption* pCaption) 
 		: CellBase(gridControl, pCaption) , m_pCaption(pCaption)
 	{
-		
+		m_pCaption->ManagedRef = this;
 	}
 
 	string^ CaptionRow::Text::get()
@@ -52,5 +52,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		m_pCaption->SetVisible(value);
 		Invalidate();
+	}
+
+	CaptionRow^ CaptionRow::FromNative(GrCaption* pCaption)
+	{
+		object^ ref = pCaption->ManagedRef;
+		return safe_cast<CaptionRow^>(ref);
 	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

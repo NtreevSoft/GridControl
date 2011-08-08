@@ -12,27 +12,6 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	RowBase::RowBase(_GridControl^ gridControl, IDataRow* pIDataRow)
-		: CellBase(gridControl, pIDataRow), m_pIDataRow(pIDataRow)
-	{
-
-	}
-
-	bool RowBase::IsVisible::get()
-	{
-		return m_pIDataRow->GetVisible();
-	}
-
-	uint RowBase::DisplayIndex::get()
-	{
-		return m_pIDataRow->GetDisplayIndex();
-	}
-
-	uint RowBase::VisibleIndex::get()
-	{
-		return m_pIDataRow->GetVisibleIndex();
-	}
-
 	Row::Row(_GridControl^ gridControl) : m_pDataRow(new GrDataRow()), RowBase(gridControl, m_pDataRow)
 	{
 		m_pDataRow->ManagedRef = this;
@@ -116,49 +95,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return m_cellCollection[pColumn];
 	}
 
-	int Row::Height::get()
-	{	
-		return m_pDataRow->GetHeight();
-	}
-
-	void Row::Height::set(int value)
-	{
-		if(value < 0 || 
-			value < m_pDataRow->GetMinHeight() ||
-			value > m_pDataRow->GetMaxHeight() )
-			throw gcnew System::ArgumentOutOfRangeException("value");
-		m_pDataRow->SetHeight(value);
-		Invalidate();
-	}
-
-	int Row::MinHeight::get()
-	{
-		return m_pDataRow->GetMinHeight();
-	}
-
-	void Row::MinHeight::set(int value)
-	{
-		if(value < 0 || 
-			value > m_pDataRow->GetMaxHeight() )
-			throw gcnew System::ArgumentOutOfRangeException("value");
-		m_pDataRow->SetMinHeight(value);
-		Invalidate();
-	}
-
-	int Row::MaxHeight::get()
-	{
-		return m_pDataRow->GetMaxHeight();
-	}
-
-	void Row::MaxHeight::set(int value)
-	{
-		if(value < 0 || 
-			value < m_pDataRow->GetMinHeight())
-			throw gcnew System::ArgumentOutOfRangeException("value");
-		m_pDataRow->SetMaxHeight(value);
-		Invalidate();
-	}
-
 	bool Row::IsVisible::get()
 	{
 		return m_pDataRow->GetVisible();
@@ -213,7 +149,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return safe_cast<Row^>(ref);
 	}
 
-	bool Row::IsEditing::get()
+	bool Row::IsBeingEdited::get()
 	{
 		return m_editing;
 	}
@@ -250,6 +186,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 		finally
 		{
+			m_editedCount = 0;
 			m_editing = false;
 		}
 	}
@@ -271,6 +208,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 		finally
 		{
+			m_editedCount = 0;
 			m_editing = false;
 		}
 	}

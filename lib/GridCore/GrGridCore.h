@@ -97,8 +97,8 @@ public:
 	bool					IsGrouped() const;
 	bool					IsUpdating() const { return m_bUpdating; }
 
-	bool					GetEnableGrouping() const;
-	void					SetEnableGrouping(bool b) const;
+	bool					CanBeGrouped() const;
+	void					EnableGrouping(bool b) const;
 
 	int						GetGroupingMargin() const;
 	void					ShowClippedText(bool bShow = true);

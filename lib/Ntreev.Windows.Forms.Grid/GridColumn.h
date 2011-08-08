@@ -581,6 +581,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
+		/// 열의 그룹핑 기능을 적용할 수 있는지에 대한 여부를 가져오거나 설정합니다.
+		/// </summary>
+		/// <returns>
+		/// 열에 그룹핑 기능을 적용할 수 있다면 true를, 그렇지 않다면 false를 반환합니다.
+		/// </returns>
+		property bool CanBeGrouped
+		{
+			bool get();
+		}
+
+		/// <summary>
 		/// 소유한 셀들이 가질 값의 데이터 타입을 가져옵니다.
 		/// </summary>
 		/// <returns>
@@ -1006,6 +1017,24 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// </returns>
 		[_DefaultValue(false)]
 		property bool IsGrouped
+		{
+			virtual bool get() sealed;
+			void set(bool);
+		}
+
+		/// <summary>
+		/// 열의 그룹핑 기능을 적용할 수 있는지에 대한 여부를 가져오거나 설정합니다.
+		/// </summary>
+		/// <returns>
+		/// 열에 그룹핑 기능을 적용할 수 있다면 true를, 그렇지 않다면 false를 반환합니다.
+		/// </returns>
+		/// <remarks>
+		/// 이 속성은 사용자가 그룹핑 기능을 사용할지에 대한 판단근거로 사용하기 위해 제공됩니다. 
+		/// 때문에 이 속성이 false라고 해도 그룹핑 기능을 사용할 수 없는것은 아닙니다.
+		/// 하지만 마우스를 이용한 그룹핑 기능을 사용할 수 없습니다.
+		/// </remarks>
+		[_DefaultValue(false)]
+		property bool CanBeGrouped
 		{
 			virtual bool get() sealed;
 			void set(bool);

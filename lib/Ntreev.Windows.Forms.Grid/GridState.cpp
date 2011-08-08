@@ -477,6 +477,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 						IDataRow* pFocusedRow = Focuser->GetFocusedRow();
 						if(pFocusedRow != nullptr)
 							Selector->SetRowAnchor(pFocusedRow);
+
+						if(GridControl->Site != nullptr)
+						{
+							using namespace System::ComponentModel::Design;
+							ISelectionService^ selectionService = (ISelectionService^)GridControl->GetInternalService(ISelectionService::typeid);
+							cli::array<object^>^ components = gcnew cli::array<object^>(1) { column, };
+							selectionService->SetSelectedComponents(components);
+						}
 					}
 					break;
 				default:
@@ -505,7 +513,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 	void ColumnPressing::OnMouseDragMove(_Point location, HitTest hitTest)
 	{
-		m_cursor = m_cursor = System::Windows::Forms::Cursors::No;;
+		m_cursor = m_cursor = System::Windows::Forms::Cursors::No;
 
 		if(hitTest.pHittedCell == nullptr)
 			return;
@@ -582,6 +590,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			break;
 		case GrCellType_GroupingInfo:
 			{
+				if(m_pColumn->CanBeGrouped() == false)
+					break;
+
 				if(m_pColumn->GetGrouped() == false)
 				{
 					m_targetCell = (GrGroupingInfo*)hitTest.pHittedCell;
@@ -591,6 +602,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			break;
 		case GrCellType_Row:
 			{
+				if(m_pColumn->CanBeGrouped() == false)
+					break;
+
 				if(m_pColumn->GetGrouped() == false && dynamic_cast<GrGroupingList*>(hitTest.pHittedCell) != nullptr)
 				{
 					m_targetCell = nullptr;
@@ -1322,14 +1336,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		if(controlAttacher != nullptr)
 		{
 			controlAttacher->InvokeAttaching(by, m_cell->Value);
-			try
-			{
-				controlAttacher->SetValue(m_cell->Value);
-			}
-			catch(System::Exception^)
-			{
-
-			}
+			
 		}
 
 		switch(m_column->EditingType)
@@ -1356,7 +1363,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 					_Point pt = by->Location;
 					_Rectangle rectangle(editingControl->Location, editingControl->Size);
 					if(rectangle.Contains(pt) == true)
-						Win32::API::InvokeLButtonDownEvent(pt);
+					{
+						pt = this->GridControl->PointToScreen(pt);
+						pt = editingControl->PointToClient(pt);
+						Win32::API::SendMessage(editingControl->Handle, Win32::API::WM_LBUTTONDOWN, System::IntPtr::Zero, Win32::API::MakeLParam(pt.X,pt.Y));
+						//Win32::API::InvokeLButtonDownEvent(pt);
+					}
 				}
 			}
 			break;
@@ -1375,6 +1387,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 		if(controlAttacher != nullptr)
 		{
+			try
+			{
+				controlAttacher->SetValue(m_cell->Value);
+			}
+			catch(System::Exception^)
+			{
+
+			}
 			controlAttacher->InvokeAttached(by, m_cell->Value);
 		}
 
@@ -1399,7 +1419,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		CellEventArgs^ e = gcnew CellEventArgs(m_cell);
 		GridControl->InvokeEndEdit(e);
 
-		System::Diagnostics::Debug::WriteLine("OnStopEdit Start");
 		GridCore->ShowClippedText(true);
 
 		if(m_cell->IsReadOnly == true)
@@ -1439,11 +1458,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 		m_column->EditingResultChanged -= gcnew ColumnEventHandler(this, &ItemEditing::OnEditingResultChanged);
 
-		if(controlAttacher != nullptr)
-		{
-			controlAttacher->InvokeDetaching(modified, m_cell->Value);
-		}
-
 		switch(m_column->EditingType)
 		{
 		case _EditingType::Control:
@@ -1477,7 +1491,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			GridCore->GetDataRowList()->Update(true);
 
 		GridControl->EnsureVisible(m_cell);
-		System::Diagnostics::Debug::WriteLine("OnStopEdit End");
 	}
 
 	bool ItemEditing::PreFilterMessage(System::Windows::Forms::Message% m)
@@ -2003,7 +2016,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		m_resizingMax		= rtDisplay.top + 1000;
 
 		m_downY				= location.Y;
-		Invalidate();
 	}
 
 	void RowResizing::OnMouseDoubleClick(_Point /*location*/, HitTest /*hitTest*/, IStateChangeService^ /*service*/)

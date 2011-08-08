@@ -198,6 +198,40 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 	}
 
+	void ColumnCollection::SetItemsByDesigner(cli::array<object^>^ values)
+	{
+		GrGroupingList* pGroupingList = GridCore->GetGroupingList();
+		std::vector<GrColumn*> groupings;
+		groupings.reserve(pGroupingList->GetGroupingCount());
+
+		for(uint i=0 ; i<pGroupingList->GetGroupingCount() ; i++)
+		{
+			GrColumn* pColumn = pGroupingList->GetGrouping(i)->GetColumn();
+			groupings.push_back(pColumn);
+		}
+
+		this->Clear_IList();
+
+		for_stl_const(std::vector<GrColumn*>, groupings, itor)
+		{
+			std::vector<GrColumn*>::value_type value = *itor;
+			value->SetGrouped(false);
+		}
+
+		for each(object^ item in values)
+		{
+			this->Add_IList(item);
+		}
+
+		for_stl_const(std::vector<GrColumn*>, groupings, itor)
+		{
+			std::vector<GrColumn*>::value_type value = *itor;
+			if(value->GetIndex() == INVALID_INDEX)
+				continue;
+			value->SetGrouped(true);
+		}
+	}
+
 	Column^ ColumnCollection::default::get(int index)
 	{
 		if(index < 0 || index >= (int)m_pColumnList->GetColumnCount())

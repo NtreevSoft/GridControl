@@ -450,14 +450,14 @@ void GrGridCore::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) cons
 	m_pRootRow->Render(pRenderer, pClipping);
 }
 
-bool GrGridCore::GetEnableGrouping() const
+bool GrGridCore::CanBeGrouped() const
 {
-	return m_pGroupingList->GetEnableGrouping();
+	return m_pGroupingList->CanBeGrouped();
 }
 
-void GrGridCore::SetEnableGrouping(bool b) const
+void GrGridCore::EnableGrouping(bool b) const
 {
-	m_pGroupingList->SetEnableGrouping(b);
+	m_pGroupingList->EnableGrouping(b);
 	m_pHeaderList->SetVisibleChanged();
 }
 

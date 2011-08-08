@@ -142,8 +142,6 @@ void GrColumnList::InsertColumn(GrColumn* pColumn, uint nIndex)
 
 void GrColumnList::RemoveColumn(GrColumn* pColumn)
 {
-	pColumn->SetGrouped(false);
-
 	_Columns::iterator itor = std::find(m_vecColumns.begin(), m_vecColumns.end(), pColumn);
 
 	uint nIndex = pColumn->GetIndex();
@@ -157,6 +155,8 @@ void GrColumnList::RemoveColumn(GrColumn* pColumn)
 
 	m_vecColumns.erase(itor);
 	m_vecColumnsRemoved.push_back(pColumn);
+
+	m_pGridCore->DetachObject(pColumn);
 
 	Update(true);
 
@@ -1715,6 +1715,7 @@ GrColumn::GrColumn()
 	m_bVisible			= true;
 	m_bReadOnly			= false;
 	m_bCanBeSorted		= true;
+	m_bCanBeGrouped		= true;
 	m_bMovable			= true;
 	m_bResizable		= true;
 	m_bFrozen			= false;
@@ -1772,6 +1773,13 @@ void GrColumn::OnGridCoreAttached()
 	GrCell::OnGridCoreAttached();
 	m_pColumnList = m_pGridCore->GetColumnList();
 	m_pGridCore->AttachObject(m_pGroupingInfo);
+}
+
+void GrColumn::OnGridCoreDetached()
+{
+	GrCell::OnGridCoreDetached();
+	m_pGridCore->DetachObject(m_pGroupingInfo);
+	m_pColumnList = NULL;
 }
 
 GrColumn::~GrColumn()
@@ -1988,6 +1996,16 @@ void GrColumn::EnableSort(bool bEnable)
 bool GrColumn::CanBeSort() const
 {
 	return m_bCanBeSorted;
+}
+
+void GrColumn::EnableGrouping(bool bEnable)
+{
+	m_bCanBeGrouped = bEnable;
+}
+
+bool GrColumn::CanBeGrouped() const
+{
+	return m_bCanBeGrouped;
 }
 
 void GrColumn::SetWidth(int width) 
@@ -3371,6 +3389,7 @@ GrGroupingList::GrGroupingList()
 	SetText(L"그룹핑할 컬럼을 이쪽으로 드래그하여 옮기세요");
 	ComputeLayout();
 	m_bEnableGrouping = true;
+	m_bVisible = true;
 }
 
 GrGroupingList::~GrGroupingList()
@@ -3383,11 +3402,6 @@ uint GrGroupingList::GetGroupingCount() const
 	if(m_bEnableGrouping == false)
 		return 0;
 	return m_vecGroupings.size();
-}
-
-GrColumn* GrGroupingList::GetGroupingColumn(uint nLevel) const
-{
-	return GetGrouping(nLevel)->GetColumn();
 }
 
 void GrGroupingList::ChangeGroupingInfo(GrGroupingInfo* pGroupingInfo, GrGroupingInfo* pWhere)
@@ -3432,15 +3446,24 @@ void GrGroupingList::SetGroupingSortState(uint nLevel, GrSort::Type sortType)
 
 bool GrGroupingList::GetVisible() const 
 {
-	return GetEnableGrouping(); 
+	if(m_bEnableGrouping == false)
+		return false;
+	return m_bVisible; 
 }
 
-bool GrGroupingList::GetEnableGrouping() const
+void GrGroupingList::SetVisible(bool b)
+{
+	m_bVisible = b;
+	GrHeaderRow* pHeaderList = dynamic_cast<GrHeaderRow*>(GetParent());
+	pHeaderList->SetVisibleChanged();
+}
+
+bool GrGroupingList::CanBeGrouped() const
 {
 	return m_bEnableGrouping;
 }
 
-void GrGroupingList::SetEnableGrouping(bool b)
+void GrGroupingList::EnableGrouping(bool b)
 {
 	if(m_bEnableGrouping == b)
 		return;
@@ -3448,7 +3471,7 @@ void GrGroupingList::SetEnableGrouping(bool b)
 	Changed(this, &GrEventArgs::Empty);
 }
 
-void GrGroupingList::NotifyGroupingChanged(GrGroupingInfo* pGroupingInfo, uint* pLevel)
+void GrGroupingList::NotifyGroupingChanged(GrGroupingInfo* pGroupingInfo)
 {
 	_Groupings::iterator itor = find(m_vecGroupings.begin(), m_vecGroupings.end(), pGroupingInfo);
 
@@ -3456,7 +3479,6 @@ void GrGroupingList::NotifyGroupingChanged(GrGroupingInfo* pGroupingInfo, uint* 
 	{
 		if(itor == m_vecGroupings.end())
 		{
-			*pLevel = m_vecGroupings.size();
 			m_vecGroupings.push_back(pGroupingInfo);
 		}
 	}
@@ -3464,9 +3486,16 @@ void GrGroupingList::NotifyGroupingChanged(GrGroupingInfo* pGroupingInfo, uint* 
 	{
 		if(itor != m_vecGroupings.end())
 		{
-			*pLevel = INVALID_INDEX;
+			(*itor)->m_nGroupingLevel = INVALID_INDEX;
 			m_vecGroupings.erase(itor);
 		}
+	}
+
+	uint index = 0;
+	for_stl(_Groupings, m_vecGroupings, itor)
+	{
+		_Groupings::value_type value = *itor;
+		value->m_nGroupingLevel = index++;
 	}
 
 	ComputeLayout();
@@ -3886,7 +3915,7 @@ void GrDataRowList::BuildGrouping(GrRow* pParent, uint nGroupingLevel)
 {
 	GrGroupingList* pGroupingList = m_pGridCore->GetGroupingList();
 	m_pGridCore->AttachObject(pGroupingList);
-	GrColumn* pColumn = pGroupingList->GetGroupingColumn(nGroupingLevel);
+	GrColumn* pColumn = pGroupingList->GetGrouping(nGroupingLevel)->GetColumn();
 
 	_DataRows vecSort;
 
@@ -4588,9 +4617,11 @@ bool GrDataRowList::GetRowNumberVisible() const
 {
 	return m_bVisibleRowNumber;
 }
+
 void GrDataRowList::SetRowNumberVisible(bool b)
 {
 	m_bVisibleRowNumber = b;
+	m_pGridCore->Invalidate();
 }
 
 void GrDataRowList::Sort(GrColumn* pColumn)
@@ -4868,12 +4899,12 @@ void GrGroupingInfo::OnGridCoreAttached()
 	GrCell::OnGridCoreAttached();
 	SetText(m_pColumn->GetText());
 	m_pGroupingList = m_pGridCore->GetGroupingList();
-	m_pGroupingList->NotifyGroupingChanged(this, &m_nGroupingLevel);
+	m_pGroupingList->NotifyGroupingChanged(this);
 }
 
 void GrGroupingInfo::OnGridCoreDetached()
 {
-	m_pGroupingList->NotifyGroupingChanged(this, &m_nGroupingLevel);
+	m_pGroupingList->NotifyGroupingChanged(this);
 	m_pGroupingList = NULL;
 	GrCell::OnGridCoreDetached();
 }
@@ -4882,12 +4913,13 @@ void GrGroupingInfo::SetGrouped(bool b)
 {
 	if(m_bGrouped == b)
 		return;
+
 	m_bGrouped = b;
 	SetText(m_pColumn->GetText());
 
 	if(m_pGroupingList != NULL)
 	{
-		m_pGroupingList->NotifyGroupingChanged(this, &m_nGroupingLevel);
+		m_pGroupingList->NotifyGroupingChanged(this);
 	}
 }
 
@@ -4898,7 +4930,7 @@ bool GrGroupingInfo::GetGrouped() const
 
 void GrGroupingInfo::SetExpanded(bool b)
 {
-	if(m_pGroupingList->GetEnableGrouping() == false)
+	if(m_pGroupingList->CanBeGrouped() == false)
 		return;
 	m_bExpanded = b;
 	m_pGroupingList->NotifyExpanded(this);
@@ -4916,7 +4948,7 @@ GrSort::Type GrGroupingInfo::GetSortType() const
 
 void GrGroupingInfo::SetSortType(GrSort::Type sortType)
 {
-	if(m_pGroupingList->GetEnableGrouping() == false)
+	if(m_pGroupingList->CanBeGrouped() == false)
 		return;
 	m_sortType = (sortType == GrSort::Up) ? GrSort::Up : GrSort::Down;
 	m_pGroupingList->NotifySortChanged(this);
@@ -5069,6 +5101,7 @@ void GrHeaderRow::AdjustRowHeight()
 void GrHeaderRow::SetVisibleChanged()
 {
 	m_bVisibleChanged = true;
+	m_pGridCore->Invalidate();
 }
 
 void GrHeaderRow::SetFitChanged()

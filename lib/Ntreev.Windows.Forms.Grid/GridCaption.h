@@ -77,6 +77,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	internal: // methods
 		CaptionRow(_GridControl^ gridControl, GrCaption* pCaption);
 
+		static CaptionRow^ FromNative(GrCaption* pCaption);
+
 	private: // variables
 		GrCaption*	m_pCaption;
 	};

@@ -5,6 +5,7 @@
 #include "GridCell.h"
 #include "GridRow.h"
 #include "GridCaption.h"
+#include "GridGroupingRow.h"
 #include "GridEvent.h"
 #include "GridResource.h"
 #include "GridCollection.h"
@@ -147,6 +148,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		
 		m_cellIterator			= gcnew _CellIterator(this);
 		m_captionRow			= gcnew _CaptionRow(this, m_pGridCore->GetCaptionRow());
+		m_groupingRow			= gcnew _GroupingRow(this, m_pGridCore->GetGroupingList());
 		m_insertionRow			= gcnew _InsertionRow(this, m_pGridCore->GetInsertionRow());
 
 		m_hScrollProperty		= gcnew HScrollProperty(this, UserControl::HorizontalScroll);
@@ -397,9 +399,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 			manager = dynamic_cast<_CurrencyManager^>(this->BindingContext[dataSource, dataMember]);
 		}
-		catch(System::Exception^)
+		catch(System::Exception^ e)
 		{
-			return;
+			throw e;
 		}
 
 		if(manager != nullptr)
@@ -530,6 +532,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	_CaptionRow^ GridControl::CaptionRow::get()
 	{
 		return m_captionRow;
+	}
+
+	_GroupingRow^ GridControl::GroupingRow::get()
+	{
+		return m_groupingRow;
 	}
 
 	object^ GridControl::DataSource::get()
@@ -918,12 +925,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			m_focusedCell = Cell::FromNative(pFocusedItem);
 		}
 
-#ifndef _TIME_TEST
-		if(pFocusedItem)
-			System::Diagnostics::Debug::WriteLine("Focused Item is existed");
-		else
-			System::Diagnostics::Debug::WriteLine("Focused Item is null");
-#endif
 		if(FocusedColumn != oldFocusedColumn)
 		{
 			OnFocusedColumnChanged(_EventArgs::Empty);
@@ -1182,7 +1183,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			return;
 
 		m_captionRow->IsVisible = value;
-		Invalidate(false);
+	}
+
+	bool GridControl::IsGroupingRowVisible::get()
+	{
+		return m_groupingRow->IsVisible;
+	}
+
+	void GridControl::IsGroupingRowVisible::set(bool value)
+	{
+		if(value == m_groupingRow->IsVisible)
+			return;
+
+		m_groupingRow->IsVisible = value;
 	}
 
 	bool GridControl::EnableColumnMoving::get()
@@ -1247,15 +1260,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	bool GridControl::EnableGrouping::get()
 	{
-		return m_pGridCore->GetEnableGrouping();
+		return m_pGridCore->CanBeGrouped();
 	}
 
 	void GridControl::EnableGrouping::set(bool value)
 	{
-		if(value == m_pGridCore->GetEnableGrouping())
+		if(value == m_pGridCore->CanBeGrouped())
 			return;
 
-		m_pGridCore->SetEnableGrouping(value);
+		m_pGridCore->EnableGrouping(value);
 		Invalidate(false);
 	}
 

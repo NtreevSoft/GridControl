@@ -565,6 +565,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_pColumn->SetGrouped(value);
 	}
 
+	bool Column::CanBeGrouped::get()
+	{
+		return m_pColumn->CanBeGrouped();
+	}
+
+	void Column::CanBeGrouped::set(bool value)
+	{
+		m_pColumn->EnableGrouping(value);
+	}
+
 	Column::_ColumnPainter^ Column::ColumnPainter::get()
 	{
 		return m_columnPainter;

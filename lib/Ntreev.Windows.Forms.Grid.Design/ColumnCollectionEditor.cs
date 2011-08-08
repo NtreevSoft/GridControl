@@ -29,5 +29,12 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 return false;
             return base.CanRemoveInstance(value);
         }
+
+        protected override object SetItems(object editValue, object[] value)
+        {
+            ColumnCollection columns = editValue as ColumnCollection;
+            columns.SetItemsByDesigner(value);
+            return editValue;
+        }
     }
 }

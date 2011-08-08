@@ -417,6 +417,9 @@ public:
 	void						EnableSort(bool bEnable = true);
 	bool						CanBeSort() const;
 
+	void						EnableGrouping(bool bEnable = true);
+	bool						CanBeGrouped() const;
+
 	void						SetClipped(bool b);
 	bool						GetClipped() const;
 
@@ -471,6 +474,7 @@ public:
 
 protected:
 	virtual void				OnGridCoreAttached();
+	virtual void				OnGridCoreDetached();
 
 private:
 	void						SetPriority(int nPriority);
@@ -511,6 +515,7 @@ private:
 	bool						m_bVisible;
 	bool						m_bReadOnly;
 	bool						m_bCanBeSorted;
+	bool						m_bCanBeGrouped;
 	bool						m_bMovable;
 	bool						m_bResizable;
 	bool						m_bFrozen;
@@ -1264,6 +1269,11 @@ private:
 	GrVertAlign					m_vertAlign;
 
 	bool						m_bVisible;
+
+#ifdef _MANAGED
+public:
+	gcroot<System::Object^>		ManagedRef;
+#endif
 };
 
 class GrGroupingList : public GrRow
@@ -1293,21 +1303,22 @@ public:
 	uint						GetGroupingCount() const;
 	GrGroupingInfo*				GetGrouping(uint nLevel) const;
 	GrGroupingInfo*				GetGrouping(GrColumn* pColumn) const;
-	GrColumn*					GetGroupingColumn(uint nLevel) const;
 
 	void						ChangeGroupingInfo(GrGroupingInfo* pGroupingInfo, GrGroupingInfo* pWhere);
 
 	void						ExpandGrouping(uint nLevel, bool bExpand);
 	void						SetGroupingSortState(uint nLevel, GrSort::Type sortType);
 
-	bool						GetEnableGrouping() const;
-	void						SetEnableGrouping(bool b);
+	void						SetVisible(bool b);
+
+	bool						CanBeGrouped() const;
+	void						EnableGrouping(bool b);
 
 	_GrEvent					Changed;
 	_GrGroupingEvent			Expanded;
 	_GrGroupingEvent			SortChanged;
 
-	void						NotifyGroupingChanged(GrGroupingInfo* pGroupingInfo, uint* pLevel);
+	void						NotifyGroupingChanged(GrGroupingInfo* pGroupingInfo);
 	void						NotifyExpanded(GrGroupingInfo* pGroupingInfo);
 	void						NotifySortChanged(GrGroupingInfo* pGroupingInfo);
 
@@ -1326,6 +1337,7 @@ private:
 	_Groupings					m_vecGroupings;
 	bool						m_bEnableGrouping;
 };
+
 class GrGroupingInfo : public GrCell
 {
 	typedef std::map<uint, GrGroupingRow*> _MapGroupingRows;

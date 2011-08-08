@@ -39,14 +39,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		/// </summary>
 		/// <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
 		/// <returns>셀에 적용할 값의 <see cref="System::Object"/>입니다.</returns>
-		virtual Object^ GetEditingValue(System::Windows::Forms::TextBox^ control) override;
+		virtual object^ GetEditingValue(System::Windows::Forms::TextBox^ control) override;
 
 		/// <summary>
 		/// 셀의 값을 컨트롤에 적용할때 호출됩니다.
 		/// </summary>
 		/// <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
 		/// <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
-		virtual void SetEditingValue(System::Windows::Forms::TextBox^ control, Object^ value) override;
+		virtual void SetEditingValue(System::Windows::Forms::TextBox^ control, object^ value) override;
 
 		/// <summary>
 		/// <see cref="Attaching"/>이벤트를 발생시킵니다.

@@ -76,8 +76,8 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetDir)$(TargetName).dll" "$(TargetDir)..\$(TargetName).dll"
-copy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)..\$(TargetName).pdb"
-"C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\gacutil.exe" /i "$(TargetDir)$(TargetName).dll"</PostBuildEvent>
-    <PreBuildEvent>"C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\gacutil.exe" /u "Ntreev.Windows.Forms.Grid.Design"</PreBuildEvent>
+copy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)..\$(TargetName).pdb"</PostBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

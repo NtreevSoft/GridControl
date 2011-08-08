@@ -148,21 +148,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// </summary>
 		/// <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
 		/// <returns>셀에 적용할 값의 <see cref="System::Object"/>입니다.</returns>
-		virtual Object^						GetEditingValue(TEditing control) abstract;
+		virtual object^						GetEditingValue(TEditing control) abstract;
 
 		/// <summary>
 		/// 셀의 값을 컨트롤에 적용할때 호출됩니다.
 		/// </summary>
 		/// <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
 		/// <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
-		virtual void						SetEditingValue(TEditing control, Object^ value) abstract;
+		virtual void						SetEditingValue(TEditing control, object^ value) abstract;
 
 		/// <summary>
 		/// 셀의 값을 그리기 위해 컨트롤에 적용할때 호출됩니다.
 		/// </summary>
 		/// <param name="viewControl">표시에 사용되는 컨트롤의 인스턴스입니다.</param>
 		/// <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
-		virtual void						SetViewValue(TView viewControl, Object^ value) abstract;
+		virtual void						SetViewValue(TView viewControl, object^ value) abstract;
 
 		/// <summary>
 		/// 컨트롤을 셀의 위치로 이동하고 셀의 크기로 조정할때 호출됩니다.
@@ -217,16 +217,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 	private: // variables
-		[System::NonSerialized]
 		TEditing							m_control;
-		[System::NonSerialized]
 		TView								m_viewControl;
 		AttachEventHandler<TEditing>^		m_eventAttaching;
 		AttachEventHandler<TEditing>^		m_eventAttached;
 		DetachEventHandler<TEditing>^		m_eventDetaching;
 		DetachEventHandler<TEditing>^		m_eventDetached;
 
-		[System::NonSerialized]
 		Win32::BitBlt^						m_controlPainter;
 	};
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

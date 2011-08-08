@@ -143,23 +143,6 @@ void GrFocuser::SetFocusing(IFocusable* pFocusable)
 
 void GrFocuser::OnFocusChanging(GrEventArgs* e)
 {
-	GrCell* pCell = dynamic_cast<GrCell*>(m_pFocus);
-	if(pCell != NULL)
-	{
-		if(m_pGridCore->GetRowHighlight() == true)
-		{
-			GrRow* pRow = pCell->GetRow();
-			GrRect rt = pRow->GetDisplayRect();
-			rt.right = m_pGridCore->GetDisplayRect()->right;
-			rt.Expand(1, 1, 1, 1);
-			m_pGridCore->Invalidate(rt);
-		}
-		else
-		{
-			m_pGridCore->Invalidate(pCell->GetDisplayRect());
-		}
-	}
-
 	FocusChanging(this, e);
 }
 
@@ -177,18 +160,7 @@ void GrFocuser::OnFocusChanged(GrEventArgs* e)
 	GrCell* pCell = dynamic_cast<GrCell*>(m_pFocus);
 	if(pCell != NULL)
 	{
-		if(m_pGridCore->GetRowHighlight() == true)
-		{
-			GrRow* pRow = pCell->GetRow();
-			GrRect rt = pRow->GetDisplayRect();
-			rt.right = m_pGridCore->GetDisplayRect()->right;
-			rt.Expand(1, 1, 1, 1);
-			m_pGridCore->Invalidate(rt);
-		}
-		else
-		{
-			m_pGridCore->Invalidate(pCell->GetDisplayRect());
-		}
+		m_pGridCore->Invalidate();
 	}
 }
 

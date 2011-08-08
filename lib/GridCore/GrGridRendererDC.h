@@ -76,10 +76,7 @@ private:
 	HTHEME					m_hTreeTheme;
 	HTHEME					m_hTooltip;
 
-	bool					m_bSortUpTheme;
-	bool					m_bSortDownTheme;
-	bool					m_bOpenedTheme;
-	bool					m_bClosedTheme;
+	DWORD					m_dwMajorVersion;
 
 	GrPoint					m_ptTransform;
 };

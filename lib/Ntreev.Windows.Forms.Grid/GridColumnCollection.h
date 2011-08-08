@@ -430,6 +430,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		_Column^ Bind(_PropertyDescriptor^ propertyDescriptor);
 
 		void DeleteAll();
+
+		void SetItemsByDesigner(cli::array<object^>^ values);
 		
 	internal: // property
 		property Column^ default[GrColumn*] 
