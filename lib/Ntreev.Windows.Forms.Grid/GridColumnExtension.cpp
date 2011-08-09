@@ -12,31 +12,25 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 	}
 
-	void ColumnTextBox::OnAttaching(AttachEventArgs<System::Windows::Forms::TextBox^>^ e)
+	void ColumnTextBox::OnAttaching(AttachEventArgs^ e)
 	{
 		ColumnControl::OnAttaching(e);
-		System::Windows::Forms::TextBox^ textBox = e->Control;
-		textBox->ReadOnly	= IsReadOnly;
-		textBox->Multiline	= CellMultiline;
-		textBox->WordWrap	= CellWordWrap;
+		this->EditingControl->ReadOnly	= IsReadOnly;
+		this->EditingControl->Multiline	= CellMultiline;
+		this->EditingControl->WordWrap	= CellWordWrap;
 	} 
 
-	void ColumnTextBox::OnAttached(AttachEventArgs<System::Windows::Forms::TextBox^>^ e)
+	void ColumnTextBox::OnAttached(AttachEventArgs^ e)
 	{
 		ColumnControl::OnAttached(e);
-		System::Windows::Forms::TextBox^ textBox = e->Control;
+
+		System::Windows::Forms::TextBox^ textBox = this->EditingControl;
 		switch(e->By->EditingReasonType)
 		{
 		case EditingReasonType::Char:
 			{
 				textBox->Text = e->By->Char.ToString();
 				textBox->Select(textBox->TextLength, 0);
-			}
-			break;
-		case EditingReasonType::Mouse:
-			{
-				//m_textBox->Select(0, 0);
-				//m_textBox->SelectionStart = 0;
 			}
 			break;
 		case EditingReasonType::Ime:
@@ -47,15 +41,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		}
 	}
 
-	void ColumnTextBox::OnDetaching(DetachEventArgs<System::Windows::Forms::TextBox^>^ e)
+	void ColumnTextBox::OnDetaching(DetachEventArgs^ e)
 	{
 		ColumnControl::OnDetaching(e);
-		e->Control->Select(0, 0);
+		this->EditingControl->Select(0, 0);
 	}
 
 	void ColumnTextBox::textBox_OnKeyPress(object^ /*sender*/, System::Windows::Forms::KeyPressEventArgs^ e)
 	{
-		System::Windows::Forms::TextBox^ textBox = EditingControl;
+		System::Windows::Forms::TextBox^ textBox = this->EditingControl;
 		switch(e->KeyChar)
 		{
 		case '\r':
@@ -79,29 +73,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		}
 	}
 
-	void ColumnTextBox::textBox_OnKeyDown(object^ /*sender*/, System::Windows::Forms::KeyEventArgs^ /*e*/)
-	{
-		//switch(e->KeyData)
-		//{
-		//case ::Keys::Return:
-		//	{
-		//		if(m_textBox->Multiline && e->Control == true)
-		//		{
-		//			GridControl->EditingCell->Row->Height = m_textBox->Lines->Length * (m_textBox->Font->Height * 1.75f);
-		//		}
-		//	}
-		//	break;
-		//}
-	}
-
 	void ColumnTextBox::SetControlLayout(System::Windows::Forms::TextBox^ control, _Point location, _Size size)
 	{
-		System::Windows::Forms::TextBox^ textBox = EditingControl;
+		System::Windows::Forms::TextBox^ textBox = this->EditingControl;
 		_Point pt = textBox->GetPositionFromCharIndex(0);
 		_Point newPoint = location - (_Size)pt;
 
 		_Size newSize(size.Width + pt.X, size.Height);
-		//ColumnControl(SetBoundsCore
 
 		ColumnControl::SetControlLayout(control, newPoint, newSize);
 	}
@@ -117,12 +95,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 		control->BorderStyle = BorderStyle::None;
 		control->KeyPress += gcnew KeyPressEventHandler(this, &ColumnTextBox::textBox_OnKeyPress);
-		control->KeyDown  += gcnew KeyEventHandler(this, &ColumnTextBox::textBox_OnKeyDown);
 	}
 
 	object^ ColumnTextBox::GetEditingValue(System::Windows::Forms::TextBox^ control)
 	{
-		if(DataType != string::typeid && control->Text == "")
+		if(this->DataType != string::typeid && control->Text == "")
 			return nullptr;
 
 		return TypeConverter->ConvertFrom(control->Text);
@@ -139,15 +116,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		
 		listBox->MouseMove   += gcnew MouseEventHandler(this, &ColumnComboBox::listBox_OnMouseMove);
 		listBox->MouseClick  += gcnew MouseEventHandler(this, &ColumnComboBox::listBox_OnMouseClick);
-		listBox->FontChanged += gcnew _EventHandler(this, &ColumnComboBox::listBox_OnFontChanged);
 	}
 
 	_Size ColumnComboBox::GetPreferredSize(_Size proposedSize)
 	{
-		System::Windows::Forms::ListBox^ listBox = EditingControl;
+		using namespace System::Windows::Forms;
 
-		//// 렌더링이 되기 전에는 데이터 갱신이 되지 않으므로 강제로 갱신할 수 있도록 그래픽 객체를 생성후 지워준다.
-		//delete listBox->CreateGraphics();
+		ListBox^ listBox = this->EditingControl;
 
 		int itemHeight = listBox->Font->Height - 1;
 		_Size size;
@@ -158,17 +133,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 		if(listBox->DataSource != nullptr)
 		{
-			System::Windows::Forms::BindingContext^ bindingContext = gcnew System::Windows::Forms::BindingContext();
-			System::Windows::Forms::BindingManagerBase^ managerBase = bindingContext[listBox->DataSource];
+			BindingContext^ bindingContext = gcnew BindingContext();
+			BindingManagerBase^ managerBase = bindingContext[listBox->DataSource];
 			if(managerBase != nullptr)
 			{
 				itemCount = managerBase->Count;
 			}
 		}
 				
-		if(itemCount > MaxDropDownItems)
+		if(itemCount > this->MaxDropDownItems)
 		{
-			size.Height = itemHeight * (MaxDropDownItems);
+			size.Height = itemHeight * (this->MaxDropDownItems);
 		}
 		else
 		{
@@ -185,8 +160,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 	void ColumnComboBox::DataSource::set(object^ value)
 	{
-		System::Windows::Forms::ListBox^ listBox = EditingControl;
-		listBox->DataSource = value;
+		this->EditingControl->DataSource = value;
 	}
 
 	System::Windows::Forms::ListBox::ObjectCollection^ ColumnComboBox::Items::get()
@@ -213,8 +187,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 	void ColumnComboBox::listBox_OnMouseMove(object^ /*sender*/, System::Windows::Forms::MouseEventArgs^ e)
 	{
-		int selIndex = EditingControl->IndexFromPoint(e->Location);
-		EditingControl->SelectedIndex = selIndex;
+		int selIndex = this->EditingControl->IndexFromPoint(e->Location);
+		this->EditingControl->SelectedIndex = selIndex;
 	}
 
 	void ColumnComboBox::listBox_OnMouseClick(object^ /*sender*/, System::Windows::Forms::MouseEventArgs^ e)
@@ -225,9 +199,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			this->EditingResult = _EditingResult::Cancel;
 	}
 
-	void ColumnComboBox::listBox_OnFontChanged(object^ /*sender*/, _EventArgs^ /*e*/)
+	bool ColumnComboBox::ShouldSerializeMaxDropDownItems()
 	{
-
+		return m_nMaxDropDownItems != DefaultMaxDropDownItems;
 	}
 
 	object^ ColumnComboBox::GetEditingValue(System::Windows::Forms::ListBox^ control)
@@ -247,11 +221,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 	void ColumnPathSelector::OnEditValue(EditValueEventArgs^ e)
 	{
+		using namespace System::Windows::Forms;
+
 		ColumnModal::OnEditValue(e);
 		if(e->Value != nullptr)
 			m_folderBrowerDialog->SelectedPath = e->Value->ToString();
-		System::Windows::Forms::DialogResult dr = m_folderBrowerDialog->ShowDialog();
-		if(dr == System::Windows::Forms::DialogResult::OK)
+		DialogResult dr = m_folderBrowerDialog->ShowDialog();
+		if(dr == DialogResult::OK)
 			e->Value = m_folderBrowerDialog->SelectedPath;
 		e->SuppressEditing = true;
 	}

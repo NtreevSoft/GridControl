@@ -66,4 +66,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		return m_pDataRow->GetVisibleIndex();
 	}
+
+	bool RowBase::ShouldSerializeHeight()
+	{
+		return m_pDataRow->GetHeight() != GrRow::DefaultHeight;
+	}
+	
+	bool RowBase::ShouldSerializeMinHeight()
+	{
+		return m_pDataRow->GetMinHeight() != GrRow::DefaultMinHeight;
+	}
+	
+	bool RowBase::ShouldSerializeMaxHeight()
+	{
+		return m_pDataRow->GetMaxHeight() != GrRow::DefaultMaxHeight;
+	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

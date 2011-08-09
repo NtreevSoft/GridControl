@@ -74,10 +74,67 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			void set(bool); 
 		}
 
+		/// <summary>
+		/// 제목의 높이를 가져오거나 설정합니다.
+		/// </summary>
+		/// <exception cref="System::ArgumentOutOfRangeException">
+		/// 매개변수가 0보다 작을 경우
+		/// </exception>
+		/// <exception cref="System::ArgumentOutOfRangeException">
+		/// 매개변수가 <see cref="MinHeight"/>보다 작거나 <see cref="MaxHeight"/>보다 클경우
+		/// </exception>
+		[_Description("제목의 높이입니다.")]
+		[_Category("Layout")]
+		property int Height
+		{
+			int get();
+			void set(int);
+		}
+
+		/// <summary>
+		/// 제목의 최소높이를 가져오거나 설정합니다.
+		/// </summary>
+		/// <exception cref="System::ArgumentOutOfRangeException">
+		/// 매개변수가 0보다 작을 경우
+		/// </exception>
+		/// <exception cref="System::ArgumentOutOfRangeException">
+		/// 매개변수가 <see cref="MaxHeight"/>보다 클경우
+		/// </exception>
+		[_Description("제목의 최소높이입니다.")]
+		[_Category("Layout")]
+		property int MinHeight
+		{
+			int get();
+			void set(int);
+		}
+
+		/// <summary>
+		/// 제목의 최대높이를 가져오거나 설정합니다.
+		/// </summary>
+		/// <exception cref="System::ArgumentOutOfRangeException">
+		/// 매개변수가 0보다 작을 경우
+		/// </exception>
+		/// <exception cref="System::ArgumentOutOfRangeException">
+		/// 매개변수가 <see cref="MinHeight"/>보다 작을경우
+		/// </exception>
+		[_Description("제목의 최대높이입니다.")]
+		[_Category("Layout")]
+		property int MaxHeight
+		{
+			int get();
+			void set(int);
+		}
+
 	internal: // methods
 		CaptionRow(_GridControl^ gridControl, GrCaption* pCaption);
 
 		static CaptionRow^ FromNative(GrCaption* pCaption);
+
+	private: // methods
+		bool ShouldSerializeHeight();
+		bool ShouldSerializeMinHeight();
+		bool ShouldSerializeMaxHeight();
+
 
 	private: // variables
 		GrCaption*	m_pCaption;

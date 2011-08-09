@@ -179,21 +179,31 @@ namespace Ntreev.Windows.Forms.Grid.Design
         protected override bool GetHitTest(System.Drawing.Point point)
         {
             GridControl gridControl = this.Control as GridControl;
+            if (gridControl == null)
+                return false;
+
             point = gridControl.PointToClient(point);
-            
-            State state = gridControl.StateManager.GetHitTest(point);
 
-            switch (state)
+            try
             {
-                case State.ColumnPressing:
-                case State.ColumnResizing:
-                case State.ColumnSplitterMoving:
-                case State.RowResizing:
-                case State.GroupingInfoPressing:
-                case State.GroupingCellPressing:
-                case State.GroupingExpandPressing:
-                    return true;
+                State state = gridControl.StateManager.GetHitTest(point);
 
+                switch (state)
+                {
+                    case State.ColumnPressing:
+                    case State.ColumnResizing:
+                    case State.ColumnSplitterMoving:
+                    case State.RowResizing:
+                    case State.GroupingInfoPressing:
+                    case State.GroupingCellPressing:
+                    case State.GroupingExpandPressing:
+                        return true;
+
+                }
+            }
+            catch (Exception)
+            {
+                return false;
             }
 
 

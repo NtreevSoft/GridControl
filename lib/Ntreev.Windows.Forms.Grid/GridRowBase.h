@@ -17,7 +17,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// </exception>
 		[_Description("열의 높이입니다.")]
 		[_Category("Layout")]
-		[_DefaultValue(21)]
 		property int Height
 		{
 			int get();
@@ -35,7 +34,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// </exception>
 		[_Description("열의 최소높이입니다.")]
 		[_Category("Layout")]
-		[_DefaultValue(0)]
 		property int MinHeight
 		{
 			int get();
@@ -53,7 +51,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// </exception>
 		[_Description("열의 최대높이입니다.")]
 		[_Category("Layout")]
-		[_DefaultValue(10000)]
 		property int MaxHeight
 		{
 			int get();
@@ -117,6 +114,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	internal: // methods
 		RowBase(_GridControl^ gridControl, IDataRow* pDataRow);
+
+	private: // methods
+		bool ShouldSerializeHeight();
+		bool ShouldSerializeMinHeight();
+		bool ShouldSerializeMaxHeight();
 
 	private: // variables
 		IDataRow*		m_pDataRow;

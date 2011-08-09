@@ -225,7 +225,10 @@ GrRect::operator System::Drawing::Rectangle () const
 
 GrPadding::GrPadding()
 {
-
+	this->left = 0;
+	this->top = 0;
+	this->right = 0;
+	this->bottom = 0;
 }
 
 GrPadding::GrPadding(int l, int t, int r, int b)

@@ -6,11 +6,15 @@
 
 #include <assert.h>
 
-
 IFocusable* IFocusable::Null = 0;
 uint GrCell::m_snID = 0;
 
 GrEventArgs GrEventArgs::Empty;
+
+
+int GrRow::DefaultHeight = 21;
+int	GrRow::DefaultMinHeight = 0;
+int	GrRow::DefaultMaxHeight = 10000;
 
 class SortColumn
 {
@@ -560,6 +564,12 @@ void GrColumnList::NotifyVertAlignChanged(GrColumn* pColumn)
 	OnColumnVertAlignChanged(&e);
 }
 
+void GrColumnList::NotifyPaddingChanged(GrColumn* pColumn)
+{
+	GrColumnEventArgs e(pColumn);
+	OnColumnPaddingChanged(&e);
+}
+
 void GrColumnList::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const
 {
 	GrRect rtRender = GetDisplayRect();
@@ -608,7 +618,7 @@ GrColumn* GrColumnList::GetColumn(uint nIndex) const
 	return m_vecColumns[nIndex];
 }
 
-GrCell::GrCell() : m_padding(5, 2, 5, 2)
+GrCell::GrCell() : m_padding(GrPadding::Default)
 {
 	m_dwFlag			= 0;
 	m_nTextLineHeight	= 0;
@@ -624,11 +634,6 @@ GrCell::GrCell() : m_padding(5, 2, 5, 2)
 GrCell::~GrCell()
 {
 
-}
-
-GrPadding GrCell::GetPadding() const
-{
-	return m_padding;
 }
 
 void GrCell::SetPadding(GrPadding padding)
@@ -651,10 +656,11 @@ GrRect GrCell::GetRect() const
 GrRect GrCell::GetClientRect() const
 {
 	GrRect rtClient;
-	rtClient.left	= m_padding.left;
-	rtClient.top	= m_padding.top;
-	rtClient.right	= GetWidth()  - m_padding.right;
-	rtClient.bottom	= GetHeight() - m_padding.bottom;
+	GrPadding padding = GetPadding();
+	rtClient.left	= padding.left;
+	rtClient.top	= padding.top;
+	rtClient.right	= GetWidth()  - padding.right;
+	rtClient.bottom	= GetHeight() - padding.bottom;
 	return rtClient;
 }
 
@@ -695,8 +701,9 @@ const GrRect* GrCell::GetTextBound() const
 void GrCell::AlignText()
 {
 	GrPoint ptStart;
-	const int nWidth  = GetWidth()  - (m_padding.left + m_padding.right);
-	const int nHeight = GetHeight() - (m_padding.top  + m_padding.bottom);
+	GrPadding padding = GetPadding();
+	const int nWidth  = GetWidth()  - (padding.left + padding.right);
+	const int nHeight = GetHeight() - (padding.top  + padding.bottom);
 	GrSize szTextBound = m_rtTextBound.GetSize();
 
 	for(uint i=0 ; i<GetTextLineCount() ; i++)
@@ -729,8 +736,8 @@ void GrCell::AlignText()
 			break;
 		}
 
-		cl.x = ptStart.x + m_padding.left;
-		cl.y = ptStart.y + m_padding.top;
+		cl.x = ptStart.x + padding.left;
+		cl.y = ptStart.y + padding.top;
 
 		if(i==0)
 		{
@@ -756,13 +763,14 @@ void GrCell::AlignText()
 void GrCell::ComputeTextBound()
 {
 	GrFont* pFont = GetRenderingFont();
+	GrPadding padding = GetPadding();
 	m_vecTextLine.clear();
 
 	int nMaxWidth  = 0;
 	int nMaxHeight = 0;
 
 	GrRect rtOldTextBound = m_rtTextBound;
-	int nCellWidth = GetWidth() - (m_padding.left + m_padding.right);
+	int nCellWidth = GetWidth() - (padding.left + padding.right);
 	//assert(nCellWidth > 0);
 
 	if(GetTextMulitiline() == false)
@@ -781,9 +789,9 @@ void GrCell::ComputeTextBound()
 		const GrLineDesc* pLineDesc = GetTextLine(i);
 		nMaxWidth	= std::max(nMaxWidth, pLineDesc->nWidth);
 	}
-	nMaxWidth	+= (m_padding.left + m_padding.right);
+	nMaxWidth	+= (padding.left + padding.right);
 
-	nMaxHeight = GetTextLineCount() * m_nTextLineHeight + m_padding.top + m_padding.bottom;
+	nMaxHeight = GetTextLineCount() * m_nTextLineHeight + padding.top + padding.bottom;
 
 	if(nMaxWidth > GetWidth() || nMaxHeight > GetHeight())
 		AddFlag(GRCF_TEXT_CLIPPED);
@@ -830,7 +838,7 @@ void GrCell::RenderText(GrGridRenderer* pRenderer, GrColor foreColor, const GrRe
 		if(IsTextClipped() == true || pClipping != NULL)
 		{
 			GrRect rtClip = *pDisplayRect;
-			rtClip.Contract(m_padding);
+			rtClip.Contract(GetPadding());
 
 			if(pClipping != NULL)
 			{
@@ -870,8 +878,10 @@ void GrCell::OnGridCoreAttached()
 
 void GrCell::OnGridCoreDetached()
 {
-	m_pTextUpdater->RemoveTextBound(this);
-	m_pTextUpdater->RemoveTextAlign(this);
+	if(m_bTextAlign == true)
+		m_pTextUpdater->RemoveTextAlign(this);
+	if(m_bTextBound == true)
+		m_pTextUpdater->RemoveTextBound(this);
 	m_pTextUpdater = NULL;
 	GrObject::OnGridCoreDetached();
 }
@@ -980,6 +990,11 @@ GrColor GrCell::GetForeColor(bool /*inherited*/) const
 GrColor GrCell::GetBackColor(bool /*inherited*/) const
 {
 	return m_backColor;
+}
+
+GrPadding GrCell::GetPadding(bool /*inherited*/) const
+{
+	return m_padding;
 }
 
 GrFont* GrCell::GetFont(bool /*inherited*/) const
@@ -1423,6 +1438,23 @@ GrColor	GrItem::GetBackColor(bool inherited) const
 	return pStyle->GetRowItemBackColor(m_pDataRow->GetVisibleDataRowIndex());
 }
 
+GrPadding GrItem::GetPadding(bool inherited) const
+{
+	GrPadding purePadding = GrCell::GetPadding(false);
+	if(inherited == false)
+		return purePadding;
+
+	GrPadding padding = purePadding;
+	if(padding != GrPadding::Default)
+		return padding;
+
+	padding = m_pColumn->GetItemPadding();
+	if(padding != GrPadding::Default)
+		return padding;
+
+	return GrPadding::Default;
+}
+
 GrFont* GrItem::GetFont(bool inherited) const
 {
 	GrFont* pPureFont = GrCell::GetFont(false);
@@ -1750,6 +1782,7 @@ GrColumn::GrColumn()
 	m_itemMultiline		= false;
 	m_itemBackColor		= GrColor::Empty;
 	m_itemForeColor		= GrColor::Empty;
+	m_itemPadding		= GrPadding::Default;
 	m_pItemFont			= NULL;
 
 	m_pGroupingInfo		= NULL;
@@ -2182,19 +2215,26 @@ bool GrColumn::GetItemMultiline() const
 	return m_itemMultiline;
 }
 
+GrColor GrColumn::GetItemForeColor() const
+{
+	return m_itemForeColor;
+}
+
 GrColor GrColumn::GetItemBackColor() const
 {
 	return m_itemBackColor;
 }
-GrColor GrColumn::GetItemForeColor() const
+
+GrPadding GrColumn::GetItemPadding() const
 {
-	return m_itemForeColor;
+	return m_itemPadding;
 }
 
 GrFont* GrColumn::GetItemFont() const
 {
 	return m_pItemFont;
 }
+
 GrColumnList* GrColumn::GetColumnList() const
 {
 	return m_pColumnList;
@@ -2236,19 +2276,34 @@ void GrColumn::SetItemMultiline(bool b)
 		m_pColumnList->NotifyMultilineChanged(this);
 }
 
-void GrColumn::SetItemBackColor(GrColor color)
-{
-	m_itemBackColor = color;
-}
-
 void GrColumn::SetItemForeColor(GrColor color)
 {
 	m_itemForeColor = color;
+	if(m_pGridCore != NULL)
+		m_pGridCore->Invalidate();
+}
+
+void GrColumn::SetItemBackColor(GrColor color)
+{
+	m_itemBackColor = color;
+	if(m_pGridCore != NULL)
+		m_pGridCore->Invalidate();
+}
+
+void GrColumn::SetItemPadding(GrPadding padding)
+{
+	m_itemPadding = padding;
+	if(m_pGridCore != NULL)
+		m_pGridCore->Invalidate();
+	if(m_nIndex != INVALID_INDEX)
+		m_pColumnList->NotifyPaddingChanged(this);
 }
 
 void GrColumn::SetItemFont(GrFont* pFont)
 {
 	m_pItemFont = pFont;
+	if(m_pGridCore != NULL)
+		m_pGridCore->Invalidate();
 }
 
 void GrColumn::SetVisible(bool b)
@@ -2536,6 +2591,11 @@ void GrColumnList::OnColumnVertAlignChanged(GrColumnEventArgs* e)
 	ColumnVertAlignChanged(this, e);
 }
 
+void GrColumnList::OnColumnPaddingChanged(GrColumnEventArgs* e)
+{
+	ColumnPaddingChanged(this, e);
+}
+
 uint GrColumnList::GetVisibleColumnCount() const
 {
 	return m_vecVisibleColumns.size();
@@ -2684,9 +2744,9 @@ GrRow::GrRow()
 	m_bVisible			= true;
 	m_bResizable		= true;
 
-	m_nHeight			= DEF_ROW_HEIGHT;
-	m_nMinHeight		= 0;
-	m_nMaxHeight		= 10000;
+	m_nHeight			= GrRow::DefaultHeight;
+	m_nMinHeight		= GrRow::DefaultMinHeight;
+	m_nMaxHeight		= GrRow::DefaultMaxHeight;
 	m_pParent			= NULL;
 	m_nHierarchyLevel	= 0;
 	m_bFitting			= false;
@@ -3744,7 +3804,7 @@ GrColumn* GrGroupingRow::GetColumn() const
 GrInsertionRow::GrInsertionRow()
 {
 	SetText(L"☞");
-	SetHeight(DEF_ROW_HEIGHT);
+	SetHeight(GrRow::DefaultHeight);
 	SetDisplayable(true);
 	AddFlag(GRCF_SYSTEM_OBJCT);
 }

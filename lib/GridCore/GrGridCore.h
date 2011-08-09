@@ -8,8 +8,6 @@ class GrItemSelector;
 class GrFocuser;
 class GrHitTester;
 
-#define DEF_ROW_HEIGHT	21
-
 struct GrHitTestRange
 {
 	uint		nStartVisibleRow;
@@ -137,10 +135,11 @@ private:
 	void					focusSetter_FocusChanging(GrObject* pSender, GrEventArgs* e);
 	void					focusSetter_FocusChanged(GrObject* pSender, GrEventArgs* e);
 
-	void					dataColumnList_ColumnWidthChanged(GrObject* pSender, GrColumnEventArgs* e);
-	void					dataColumnList_ColumnWordwrapChanged(GrObject* pSender, GrColumnEventArgs* e);
-	void					dataColumnList_ColumnHorzAlignChanged(GrObject* pSender, GrColumnEventArgs* e);
-	void					dataColumnList_ColumnVertAlignChanged(GrObject* pSender, GrColumnEventArgs* e);
+	void					columnList_ColumnWidthChanged(GrObject* pSender, GrColumnEventArgs* e);
+	void					columnList_ColumnWordwrapChanged(GrObject* pSender, GrColumnEventArgs* e);
+	void					columnList_ColumnHorzAlignChanged(GrObject* pSender, GrColumnEventArgs* e);
+	void					columnList_ColumnVertAlignChanged(GrObject* pSender, GrColumnEventArgs* e);
+	void					columnList_ColumnPaddingChanged(GrObject* pSender, GrColumnEventArgs* e);
 
 	void					groupingList_Changed(GrObject* pSender, GrEventArgs* e);
 

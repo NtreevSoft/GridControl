@@ -26,7 +26,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	}
 
 	generic<class TControl> where TControl : _Control
-	void ColumnDropDown<TControl>::OnAttaching(AttachEventArgs<TControl>^ e)
+	void ColumnDropDown<TControl>::OnAttaching(AttachEventArgs^ e)
 	{
 		EditingControl->Dock    = System::Windows::Forms::DockStyle::Fill;
 		EditingControl->Visible	= true;
@@ -36,12 +36,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	generic<class TControl> where TControl : _Control
 	void ColumnDropDown<TControl>::InvokeAttaching(EditingReason^ by, object^ value)
 	{
-		AttachEventArgs<TControl> e(by, value, m_control);
+		AttachEventArgs e(by, value);
 		OnAttaching(%e);
 	}
 
 	generic<class TControl> where TControl : _Control
-	void ColumnDropDown<TControl>::OnAttached(AttachEventArgs<TControl>^ e)
+	void ColumnDropDown<TControl>::OnAttached(AttachEventArgs^ e)
 	{
 		Attached(this, e);
 	}
@@ -49,12 +49,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	generic<class TControl> where TControl : _Control
 	void ColumnDropDown<TControl>::InvokeAttached(EditingReason^ by, object^ value)
 	{
-		AttachEventArgs<TControl> e(by, value, m_control);
+		AttachEventArgs e(by, value);
 		OnAttached(%e);
 	}
 
 	generic<class TControl> where TControl : _Control
-	void ColumnDropDown<TControl>::OnDetaching(DetachEventArgs<TControl>^ e)
+	void ColumnDropDown<TControl>::OnDetaching(DetachEventArgs^ e)
 	{
 		Detaching(this, e);
 	}
@@ -62,12 +62,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	generic<class TControl> where TControl : _Control
 	void ColumnDropDown<TControl>::InvokeDetaching(bool modified, object^ value)
 	{
-		DetachEventArgs<TControl> de(modified, value, m_control);
+		DetachEventArgs de(modified, value);
 		OnDetaching(%de);
 	}
 
 	generic<class TControl> where TControl : _Control
-	void ColumnDropDown<TControl>::OnDetached(DetachEventArgs<TControl>^ e)
+	void ColumnDropDown<TControl>::OnDetached(DetachEventArgs^ e)
 	{
 		Detached(this, e);
 	}
@@ -75,7 +75,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	generic<class TControl> where TControl : _Control
 	void ColumnDropDown<TControl>::InvokeDetached(bool modified, object^ value)
 	{
-		DetachEventArgs<TControl> de(modified, value, m_control);
+		DetachEventArgs de(modified, value);
 		OnDetached(%de);
 	}
 

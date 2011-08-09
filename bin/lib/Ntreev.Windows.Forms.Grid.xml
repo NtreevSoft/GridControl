@@ -1806,6 +1806,39 @@ ime키 정보를 이용하여 편집을 시작합니다.
 모든 선택된 개체를 제거후 대상을 선택합니다.
 </summary>
         </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.CaptionRow.MaxHeight">
+            <summary>
+제목의 최대높이를 가져오거나 설정합니다.
+</summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+매개변수가 0보다 작을 경우
+</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+매개변수가 <see cref="P:Ntreev.Windows.Forms.Grid.CaptionRow.MinHeight" />보다 작을경우
+</exception>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.CaptionRow.MinHeight">
+            <summary>
+제목의 최소높이를 가져오거나 설정합니다.
+</summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+매개변수가 0보다 작을 경우
+</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+매개변수가 <see cref="P:Ntreev.Windows.Forms.Grid.CaptionRow.MaxHeight" />보다 클경우
+</exception>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.CaptionRow.Height">
+            <summary>
+제목의 높이를 가져오거나 설정합니다.
+</summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+매개변수가 0보다 작을 경우
+</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+매개변수가 <see cref="P:Ntreev.Windows.Forms.Grid.CaptionRow.MinHeight" />보다 작거나 <see cref="P:Ntreev.Windows.Forms.Grid.CaptionRow.MaxHeight" />보다 클경우
+</exception>
+        </member>
         <member name="P:Ntreev.Windows.Forms.Grid.CaptionRow.IsVisible">
             <summary>
 제목의 표시 여부를 가져오거나 설정합니다.
@@ -1974,23 +2007,23 @@ ComboBox형태의 컨트롤을 지원하는 Column개체를 나타냅니다.
             <param name="location">셀의 안쪽영역의 위치입니다.</param>
             <param name="size">셀의 안쪽영역의 크기입니다.</param>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.OnDetaching(Ntreev.Windows.Forms.Grid.DetachEventArgs`1{System.Windows.Forms.TextBox})">
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.OnDetaching(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Detaching" />이벤트를 발생시킵니다.
 </summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs`1" />입니다.</param>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />입니다.</param>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.OnAttached(Ntreev.Windows.Forms.Grid.AttachEventArgs`1{System.Windows.Forms.TextBox})">
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.OnAttached(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Attached" />이벤트를 발생시킵니다.
 </summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs`1" />입니다.</param>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.OnAttaching(Ntreev.Windows.Forms.Grid.AttachEventArgs`1{System.Windows.Forms.TextBox})">
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.OnAttaching(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Attaching" />이벤트를 발생시킵니다.
 </summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs`1" />입니다.</param>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.SetEditingValue(System.Windows.Forms.TextBox,System.Object)">
             <summary>
@@ -2030,29 +2063,29 @@ ComboBox형태의 컨트롤을 지원하는 Column개체를 나타냅니다.
 문자열 형태의 편집을 지원하는 Column개체를 나타냅니다.
 </summary>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnDetached(Ntreev.Windows.Forms.Grid.DetachEventArgs`1{`0})">
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnDetached(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Detached" />이벤트를 발생시킵니다.
 </summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs`1" />입니다.</param>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />입니다.</param>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnDetaching(Ntreev.Windows.Forms.Grid.DetachEventArgs`1{`0})">
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnDetaching(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Detaching" />이벤트를 발생시킵니다.
 </summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs`1" />입니다.</param>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />입니다.</param>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnAttached(Ntreev.Windows.Forms.Grid.AttachEventArgs`1{`0})">
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnAttached(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Attached" />이벤트를 발생시킵니다.
 </summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs`1" />입니다.</param>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnAttaching(Ntreev.Windows.Forms.Grid.AttachEventArgs`1{`0})">
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnAttaching(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Attaching" />이벤트를 발생시킵니다.
 </summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs`1" />입니다.</param>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.SetEditingValue(`0,System.Object)">
             <summary>
@@ -2492,6 +2525,9 @@ row가 null일경우 발생합니다.
             <exception cref="T:System.ArgumentException">
 추가할 행이 이미 존재하거나, 같은 이름을 가진 행이 컬렉션에 이미 존재하는 경우
 </exception>
+            <exception cref="T:System.NotSupportedException">
+새로운 행을 생성할 수 없는 경우
+</exception>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.AddNewFromInsertion">
             <summary>
@@ -2500,6 +2536,9 @@ row가 null일경우 발생합니다.
             <returns>
 새로 생성된 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />의 인스턴스입니다.
 </returns>
+            <exception cref="T:System.NotSupportedException">
+새로운 행을 생성할 수 없는 경우
+</exception>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.AddNew(System.Int32)">
             <summary>
@@ -2508,6 +2547,12 @@ row가 null일경우 발생합니다.
             <returns>
 새로 생성된 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />의 인스턴스들입니다.
 </returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+생성 갯수가 0보다 같거나 작을 경우
+</exception>
+            <exception cref="T:System.NotSupportedException">
+새로운 행을 생성할 수 없는 경우
+</exception>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.AddNew">
             <summary>
@@ -2570,29 +2615,29 @@ row가 null일경우 발생합니다.
 CheckBox를 지원하는 Column개체를 나타냅니다.
 </summary>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnDetached(Ntreev.Windows.Forms.Grid.DetachEventArgs`1{`0})">
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnDetached(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Detached" />이벤트를 발생시킵니다.
 </summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs`1" />입니다.</param>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />입니다.</param>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnDetaching(Ntreev.Windows.Forms.Grid.DetachEventArgs`1{`0})">
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnDetaching(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Detaching" />이벤트를 발생시킵니다.
 </summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs`1" />입니다.</param>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />입니다.</param>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnAttached(Ntreev.Windows.Forms.Grid.AttachEventArgs`1{`0})">
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnAttached(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Attached" />이벤트를 발생시킵니다.
 </summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs`1" />입니다.</param>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnAttaching(Ntreev.Windows.Forms.Grid.AttachEventArgs`1{`0})">
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnAttaching(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Attaching" />이벤트를 발생시킵니다.
 </summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs`1" />입니다.</param>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.SetControlLayout(`0,System.Drawing.Point,System.Drawing.Size)">
             <summary>
@@ -2823,29 +2868,29 @@ Frozen된 열이 있다면 Frozen된 열을 제외한 첫번째 셀로 이동합
 셀의 포커스 및 선택방법을 지정하는 개체를 나타냅니다.
 </summary>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`2.OnDetached(Ntreev.Windows.Forms.Grid.DetachEventArgs`1{`0})">
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`2.OnDetached(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`2.Detached" />이벤트를 발생시킵니다.
 </summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs`1" />입니다.</param>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />입니다.</param>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`2.OnDetaching(Ntreev.Windows.Forms.Grid.DetachEventArgs`1{`0})">
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`2.OnDetaching(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`2.Detaching" />이벤트를 발생시킵니다.
 </summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs`1" />입니다.</param>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />입니다.</param>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`2.OnAttached(Ntreev.Windows.Forms.Grid.AttachEventArgs`1{`0})">
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`2.OnAttached(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`2.Attached" />이벤트를 발생시킵니다.
 </summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs`1" />입니다.</param>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`2.OnAttaching(Ntreev.Windows.Forms.Grid.AttachEventArgs`1{`0})">
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`2.OnAttaching(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`2.Attaching" />이벤트를 발생시킵니다.
 </summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs`1" />입니다.</param>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`2.SetViewControlLayout(`1,System.Drawing.Point,System.Drawing.Size)">
             <summary>
@@ -2924,6 +2969,11 @@ Frozen된 열이 있다면 Frozen된 열을 제외한 첫번째 셀로 이동합
         <member name="E:Ntreev.Windows.Forms.Grid.ColumnControl`2.Attaching">
             <summary>
 셀 편집이 시작되고 컨트롤이 보여지기 전에 발생합니다.
+</summary>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.ColumnControl`2.IsViewControlTransparented">
+            <summary>
+셀을 표시할때 사용되는 컨트롤이 투명화를 지원하는지를 가져옵니다.
 </summary>
         </member>
         <member name="P:Ntreev.Windows.Forms.Grid.ColumnControl`2.PaintValueSupported">
@@ -3708,6 +3758,14 @@ private void gridControl1_Paint(object sender, PaintEventArgs e)
 셀의 글꼴을 나타내는 <see cref="T:System.Drawing.Font" />입니다.
 </returns>
         </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.Column.CellPadding">
+            <summary>
+셀의 내부간격을 가져오거나 설정합니다.
+</summary>
+            <returns>
+셀의 내부간격을 나타내는 <see cref="T:System.Windows.Forms.Padding" />입니다.
+</returns>
+        </member>
         <member name="P:Ntreev.Windows.Forms.Grid.Column.CellBackColor">
             <summary>
 셀의 배경색을 가져오거나 설정합니다.
@@ -4027,6 +4085,11 @@ private void gridControl1_Paint(object sender, PaintEventArgs e)
         <member name="M:Ntreev.Windows.Forms.Grid.Column.ResetCellFont">
             <summary>
 셀의 글꼴을 기본값으로 되돌립니다.
+</summary>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Column.ResetCellPadding">
+            <summary>
+셀의 내부간격을 기본값으로 되돌립니다.
 </summary>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.Column.ResetCellBackColor">
@@ -4369,7 +4432,7 @@ private void gridControl1_Paint(object sender, PaintEventArgs e)
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.EditValueEventArgs.#ctor(Ntreev.Windows.Forms.Grid.EditingReason,System.Object)">
             <summary>
-                <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs`1" />클래스의 새 인스턴스를 초기화합니다.
+                <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />클래스의 새 인스턴스를 초기화합니다.
 </summary>
             <param name="by">어떠한 방식으로 셀 편집이 시작되었는지를 나타내는 <see cref="T:Ntreev.Windows.Forms.Grid.EditingReason" />개체입니다.</param>
             <param name="value">편집할 값을 나타냅니다.</param>
@@ -4456,20 +4519,12 @@ ime형태의 키 이벤트로 셀을 편집할 수 있는지를 나타내는 개
 컨트롤을 제공할 수 있는 개체를 나타냅니다.
 </summary>
         </member>
-        <member name="T:Ntreev.Windows.Forms.Grid.DetachEventHandler`1">
+        <member name="T:Ntreev.Windows.Forms.Grid.DetachEventHandler">
             <summary> 
 셀 편집을 위해 사용했던 컨트롤이 그리드 컨트롤이나 DropDown폼에서 제거될때 사용되는 이벤트를 처리하는 메서드를 나타냅니다.
 </summary>
-            <typeparam name="TControl">
-편집에 사용되는 컨트롤의 타입입니다.
-</typeparam>
         </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.DetachEventArgs`1.Control">
-            <summary>
-편집에 사용됬던 컨트롤의 인스턴스입니다.
-</summary>
-        </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.DetachEventArgs`1.Value">
+        <member name="P:Ntreev.Windows.Forms.Grid.DetachEventArgs.Value">
             <summary>
 편집된 값을 가져옵니다.
 </summary>
@@ -4477,7 +4532,7 @@ ime형태의 키 이벤트로 셀을 편집할 수 있는지를 나타내는 개
 편집된 값의 <see cref="T:System.Object" />입니다.
 </returns>
         </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.DetachEventArgs`1.Modified">
+        <member name="P:Ntreev.Windows.Forms.Grid.DetachEventArgs.Modified">
             <summary>
 값의 편집여부를 가져옵니다.
 </summary>
@@ -4485,60 +4540,44 @@ ime형태의 키 이벤트로 셀을 편집할 수 있는지를 나타내는 개
 값이 편집되었다면 true를, 그렇지 않다면 false를 반환합니다.
 </returns>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.DetachEventArgs`1.#ctor(System.Boolean,System.Object,`0)">
+        <member name="M:Ntreev.Windows.Forms.Grid.DetachEventArgs.#ctor(System.Boolean,System.Object)">
             <summary>
-                <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs`1" />클래스의 새 인스턴스를 초기화합니다.
+                <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />클래스의 새 인스턴스를 초기화합니다.
 </summary>
             <param name="modified">값이 편집되었는지는 나타냅니다.</param>
             <param name="value">편집된 값을 나타냅니다.</param>
-            <param name="control">편집에 사용되었던 컨트롤의 인스턴스입니다.</param>
         </member>
-        <member name="T:Ntreev.Windows.Forms.Grid.DetachEventArgs`1">
+        <member name="T:Ntreev.Windows.Forms.Grid.DetachEventArgs">
             <summary> 
 셀 편집을 위해 사용했던 컨트롤이 그리드 컨트롤이나 DropDown폼에서 제거될때 사용되는 이벤트의 데이터를 제공합니다.
 </summary>
-            <typeparam name="TControl">
-편집에 사용되는 컨트롤의 타입입니다.
-</typeparam>
         </member>
-        <member name="T:Ntreev.Windows.Forms.Grid.AttachEventHandler`1">
+        <member name="T:Ntreev.Windows.Forms.Grid.AttachEventHandler">
             <summary> 
 셀 편집을 위해 컨트롤이 그리드 컨트롤이나 DropDown폼에 부착될때 사용되는 이벤트를 처리하는 메서드를 나타냅니다.
 </summary>
-            <typeparam name="TControl">
-편집에 사용되는 컨트롤의 타입입니다.
-</typeparam>
         </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.AttachEventArgs`1.Control">
-            <summary>
-편집에 사용되는 컨트롤의 인스턴스를 가져옵니다.
-</summary>
-        </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.AttachEventArgs`1.Value">
+        <member name="P:Ntreev.Windows.Forms.Grid.AttachEventArgs.Value">
             <summary>
 편집되기 전에 현재의 값을 가져옵니다.
 </summary>
         </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.AttachEventArgs`1.By">
+        <member name="P:Ntreev.Windows.Forms.Grid.AttachEventArgs.By">
             <summary>
 셀의 편집이 어떠한 방식으로 시작되었는지를 나타내는 <see cref="T:Ntreev.Windows.Forms.Grid.EditingReason" />개체를 가져옵니다.
 </summary>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.AttachEventArgs`1.#ctor(Ntreev.Windows.Forms.Grid.EditingReason,System.Object,`0)">
+        <member name="M:Ntreev.Windows.Forms.Grid.AttachEventArgs.#ctor(Ntreev.Windows.Forms.Grid.EditingReason,System.Object)">
             <summary>
-                <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs`1" />클래스의 새 인스턴스를 초기화합니다.
+                <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />클래스의 새 인스턴스를 초기화합니다.
 </summary>
             <param name="by">어떠한 방식으로 셀 편집이 시작되었는지를 나타내는 <see cref="T:Ntreev.Windows.Forms.Grid.EditingReason" />개체입니다.</param>
             <param name="value">편집할 값을 나타냅니다.</param>
-            <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
         </member>
-        <member name="T:Ntreev.Windows.Forms.Grid.AttachEventArgs`1">
+        <member name="T:Ntreev.Windows.Forms.Grid.AttachEventArgs">
             <summary> 
 셀 편집을 위해 컨트롤이 그리드 컨트롤이나 DropDown폼에 부착될때 사용되는 이벤트의 데이터를 제공합니다.
 </summary>
-            <typeparam name="TControl">
-편집에 사용되는 컨트롤의 타입입니다.
-</typeparam>
         </member>
         <member name="T:Ntreev.Windows.Forms.Grid.EditingResult">
             <summary>

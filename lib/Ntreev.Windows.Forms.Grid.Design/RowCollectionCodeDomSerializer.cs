@@ -36,13 +36,16 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
                 RowCollection rows = value as RowCollection;
 
-                foreach (Row item in rows)
+                if (rows != null)
                 {
-                    object rowCode = SerializeRow(manager, target, item);
-
-                    if (rowCode is CodeStatementCollection)
+                    foreach (Row item in rows)
                     {
-                        statements.AddRange(rowCode as CodeStatementCollection);
+                        object rowCode = SerializeRow(manager, target, item);
+
+                        if (rowCode is CodeStatementCollection)
+                        {
+                            statements.AddRange(rowCode as CodeStatementCollection);
+                        }
                     }
                 }
             }

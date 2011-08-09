@@ -211,6 +211,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 				GridControl->InvokeRowInserted(item);
 			}
 		}
+		catch(System::Exception^ e)
+		{
+			throw e;
+		}
 		finally
 		{
 			m_currencyManager->ListChanged += m_listChangedEventHandler;
@@ -240,14 +244,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			Insert(Count, row);
 			return row;
 		}
-		catch(System::Exception^)
+		catch(System::Exception^ e)
 		{
-			return nullptr;
+			throw e;
 		}
 	}
 
 	cli::array<Row^>^ RowCollection::AddNew(int count)
 	{
+		if(count <= 0)
+			throw gcnew System::ArgumentOutOfRangeException("count", "생성 갯수는 0보다 커야 합니다.");
 		cli::array<Row^>^ rows = gcnew cli::array<Row^>(count);
 
 		for(int i=0 ; i<count ; i++)
@@ -265,9 +271,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 			m_currencyManager->AddNew();
 		}
-		catch(System::Exception^)
+		catch(System::Exception^ e)
 		{
 			m_currencyManager->ListChanged += m_listChangedEventHandler;
+			throw e;
 		}
 
 		Row^ row = gcnew Row(GridControl);

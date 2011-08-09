@@ -62,53 +62,61 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			virtual bool get() { return true; }
 		}
 
+		/// <summary>
+		/// 셀을 표시할때 사용되는 컨트롤이 투명화를 지원하는지를 가져옵니다.
+		/// </summary>
+		property bool IsViewControlTransparented
+		{
+			virtual bool get() { return false; }
+		}
+
 	public: // events
 		/// <summary>
 		/// 셀 편집이 시작되고 컨트롤이 보여지기 전에 발생합니다.
 		/// </summary>
 		[_Description("셀 편집이 시작되고 컨트롤이 보여지기 전에 발생합니다.")]
-		event AttachEventHandler<TEditing>^	Attaching
+		event AttachEventHandler^	Attaching
 		{
-			void add(AttachEventHandler<TEditing>^ p) { m_eventAttaching += p; }
-			void remove(AttachEventHandler<TEditing>^ p) { m_eventAttaching += p; }
+			void add(AttachEventHandler^ p) { m_eventAttaching += p; }
+			void remove(AttachEventHandler^ p) { m_eventAttaching += p; }
 		private:
-			void raise(object^ sender, AttachEventArgs<TEditing>^ e) { if(m_eventAttaching != nullptr) { m_eventAttaching->Invoke(sender, e); } }
+			void raise(object^ sender, AttachEventArgs^ e) { if(m_eventAttaching != nullptr) { m_eventAttaching->Invoke(sender, e); } }
 		}
 
 		/// <summary>
 		/// 셀 편집이 시작되고 컨트롤이 보여진 후에 발생합니다.
 		/// </summary>
 		[_Description("셀 편집이 시작되고 컨트롤이 보여진 후에 발생합니다.")]
-		event AttachEventHandler<TEditing>^	Attached
+		event AttachEventHandler^	Attached
 		{
-			void add(AttachEventHandler<TEditing>^ p) { m_eventAttached += p; }
-			void remove(AttachEventHandler<TEditing>^ p) { m_eventAttached += p; }
+			void add(AttachEventHandler^ p) { m_eventAttached += p; }
+			void remove(AttachEventHandler^ p) { m_eventAttached += p; }
 		private:
-			void raise(object^ sender, AttachEventArgs<TEditing>^ e) { if(m_eventAttached != nullptr) { m_eventAttached->Invoke(sender, e); } }
+			void raise(object^ sender, AttachEventArgs^ e) { if(m_eventAttached != nullptr) { m_eventAttached->Invoke(sender, e); } }
 		}
 
 		/// <summary>
 		/// 셀 편집이 종료되고 컨트롤이 감춰지기 전에 발생합니다.
 		/// </summary>
 		[_Description("셀 편집이 종료되고 컨트롤이 감춰지기 전에 발생합니다.")]
-		event DetachEventHandler<TEditing>^	Detaching
+		event DetachEventHandler^	Detaching
 		{
-			void add(DetachEventHandler<TEditing>^ p) { m_eventDetaching += p; }
-			void remove(DetachEventHandler<TEditing>^ p) { m_eventDetaching += p; }
+			void add(DetachEventHandler^ p) { m_eventDetaching += p; }
+			void remove(DetachEventHandler^ p) { m_eventDetaching += p; }
 		private:
-			void raise(object^ sender, DetachEventArgs<TEditing>^ e) { if(m_eventDetaching != nullptr) { m_eventDetaching->Invoke(sender, e); } }
+			void raise(object^ sender, DetachEventArgs^ e) { if(m_eventDetaching != nullptr) { m_eventDetaching->Invoke(sender, e); } }
 		}
 
 		/// <summary>
 		/// 셀 편집이 종료되고 컨트롤이 감춰진 후에 발생합니다.
 		/// </summary>
 		[_Description("셀 편집이 종료되고 컨트롤이 감춰진 후에 발생합니다.")]
-		event DetachEventHandler<TEditing>^	Detached
+		event DetachEventHandler^	Detached
 		{
-			void add(DetachEventHandler<TEditing>^ p) { m_eventDetached += p; }
-			void remove(DetachEventHandler<TEditing>^ p) { m_eventDetached += p; }
+			void add(DetachEventHandler^ p) { m_eventDetached += p; }
+			void remove(DetachEventHandler^ p) { m_eventDetached += p; }
 		private:
-			void raise(object^ sender, DetachEventArgs<TEditing>^ e) { if(m_eventDetached != nullptr) { m_eventDetached->Invoke(sender, e); } }
+			void raise(object^ sender, DetachEventArgs^ e) { if(m_eventDetached != nullptr) { m_eventDetached->Invoke(sender, e); } }
 		}
 		
 	internal: // methods
@@ -184,25 +192,25 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <see cref="Attaching"/>이벤트를 발생시킵니다.
 		/// </summary>
 		/// <param name="e">이벤트 데이터가 들어있는 <see cref="AttachEventArgs"/>입니다.</param>
-		virtual void						OnAttaching(AttachEventArgs<TEditing>^ e);
+		virtual void						OnAttaching(AttachEventArgs^ e);
 
 		/// <summary>
 		/// <see cref="Attached"/>이벤트를 발생시킵니다.
 		/// </summary>
 		/// <param name="e">이벤트 데이터가 들어있는 <see cref="AttachEventArgs"/>입니다.</param>
-		virtual void						OnAttached(AttachEventArgs<TEditing>^ e);
+		virtual void						OnAttached(AttachEventArgs^ e);
 
 		/// <summary>
 		/// <see cref="Detaching"/>이벤트를 발생시킵니다.
 		/// </summary>
 		/// <param name="e">이벤트 데이터가 들어있는 <see cref="DetachEventArgs"/>입니다.</param>
-		virtual void						OnDetaching(DetachEventArgs<TEditing>^ e);
+		virtual void						OnDetaching(DetachEventArgs^ e);
 
 		/// <summary>
 		/// <see cref="Detached"/>이벤트를 발생시킵니다.
 		/// </summary>
 		/// <param name="e">이벤트 데이터가 들어있는 <see cref="DetachEventArgs"/>입니다.</param>
-		virtual void						OnDetached(DetachEventArgs<TEditing>^ e);
+		virtual void						OnDetached(DetachEventArgs^ e);
 
 	private: // methods
 		virtual void SetControlLayout2(_Control^ control, _Point location, _Size size) sealed = IColumnControl::SetControlLayout
@@ -219,11 +227,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	private: // variables
 		TEditing							m_control;
 		TView								m_viewControl;
-		AttachEventHandler<TEditing>^		m_eventAttaching;
-		AttachEventHandler<TEditing>^		m_eventAttached;
-		DetachEventHandler<TEditing>^		m_eventDetaching;
-		DetachEventHandler<TEditing>^		m_eventDetached;
 
-		Win32::BitBlt^						m_controlPainter;
+		AttachEventHandler^					m_eventAttaching;
+		AttachEventHandler^					m_eventAttached;
+		DetachEventHandler^					m_eventDetaching;
+		DetachEventHandler^					m_eventDetached;
+
+		Win32::ControlPainter^				m_controlPainter;
 	};
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

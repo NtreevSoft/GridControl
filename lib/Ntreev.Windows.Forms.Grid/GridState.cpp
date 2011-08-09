@@ -1336,7 +1336,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		if(controlAttacher != nullptr)
 		{
 			controlAttacher->InvokeAttaching(by, m_cell->Value);
-			
 		}
 
 		switch(m_column->EditingType)
@@ -1353,10 +1352,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 				columnControl->SetControlLayout(columnControl->EditingControl, clientRectangle.Location, clientRectangle.Size);
 				editingControl->Visible	= true;
 				GridControl->Controls->Add(editingControl);
-				editingControl->Update();
 				GridControl->ResumeLayout(false);
 				GridControl->PerformLayout();
-				editingControl->Focus();
+
+				try
+				{
+					columnControl->SetValue(m_cell->Value);
+				}
+				catch(System::Exception^)
+				{
+
+				}
 
 				if(by->EditingReasonType == EditingReasonType::Mouse)
 				{
@@ -1370,6 +1376,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 						//Win32::API::InvokeLButtonDownEvent(pt);
 					}
 				}
+				else
+				{
+					editingControl->Focus();
+				}
+
+				columnControl->InvokeAttached(by, m_cell->Value);
 			}
 			break;
 		case _EditingType::DropDown:
@@ -1379,23 +1391,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 				m_dropDownForm->Show(columnDropDown, m_cell, screenRect);
 				m_dropDownForm->VisibleChanged += gcnew System::EventHandler(this, &ItemEditing::dropDownForm_VisibleChanged);
+
+				try
+				{
+					columnDropDown->SetValue(m_cell->Value);
+				}
+				catch(System::Exception^)
+				{
+
+				}
+
+				columnDropDown->InvokeAttached(by, m_cell->Value);
 			}
 			break;
 		case _EditingType::Modal:
 			break;
-		}
-
-		if(controlAttacher != nullptr)
-		{
-			try
-			{
-				controlAttacher->SetValue(m_cell->Value);
-			}
-			catch(System::Exception^)
-			{
-
-			}
-			controlAttacher->InvokeAttached(by, m_cell->Value);
 		}
 
 		m_column->EditingResultChanged += gcnew ColumnEventHandler(this, &ItemEditing::OnEditingResultChanged);

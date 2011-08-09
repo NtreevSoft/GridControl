@@ -55,10 +55,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	/// <summary> 
 	/// 셀 편집을 위해 컨트롤이 그리드 컨트롤이나 DropDown폼에 부착될때 사용되는 이벤트의 데이터를 제공합니다.
 	/// </summary>
-	/// <typeparam name="TControl">
-	/// 편집에 사용되는 컨트롤의 타입입니다.
-	/// </typeparam>
-	generic<class TControl> where TControl : _Control
 	public ref class AttachEventArgs : _EventArgs
 	{
 	public: // methods
@@ -67,9 +63,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// </summary>
 		/// <param name="by">어떠한 방식으로 셀 편집이 시작되었는지를 나타내는 <see cref="EditingReason"/>개체입니다.</param>
 		/// <param name="value">편집할 값을 나타냅니다.</param>
-		/// <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
-		AttachEventArgs(EditingReason^ by, object^ value, TControl control)
-			: m_editingReason(by), m_value(value), m_control(control)
+		AttachEventArgs(EditingReason^ by, object^ value)
+			: m_editingReason(by), m_value(value)
 		{
 
 		}
@@ -91,36 +86,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			object^ get() { return m_value; }
 		}
 
-		/// <summary>
-		/// 편집에 사용되는 컨트롤의 인스턴스를 가져옵니다.
-		/// </summary>
-		property TControl Control
-		{
-			TControl get() { return m_control; }
-		}
-
 	private: // variables
 		EditingReason^	m_editingReason;
 		object^		m_value;
-		TControl	m_control;
 	};
 
 	/// <summary> 
 	/// 셀 편집을 위해 컨트롤이 그리드 컨트롤이나 DropDown폼에 부착될때 사용되는 이벤트를 처리하는 메서드를 나타냅니다.
 	/// </summary>
-	/// <typeparam name="TControl">
-	/// 편집에 사용되는 컨트롤의 타입입니다.
-	/// </typeparam>
-	generic<class TControl> where TControl : _Control
-	public delegate void AttachEventHandler(object^ sender, AttachEventArgs<TControl>^ e);
+	public delegate void AttachEventHandler(object^ sender, AttachEventArgs^ e);
 
 	/// <summary> 
 	/// 셀 편집을 위해 사용했던 컨트롤이 그리드 컨트롤이나 DropDown폼에서 제거될때 사용되는 이벤트의 데이터를 제공합니다.
 	/// </summary>
-	/// <typeparam name="TControl">
-	/// 편집에 사용되는 컨트롤의 타입입니다.
-	/// </typeparam>
-	generic<class TControl> where TControl : _Control
 	public ref class DetachEventArgs : _EventArgs
 	{
 	public: // methods
@@ -129,9 +107,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// </summary>
 		/// <param name="modified">값이 편집되었는지는 나타냅니다.</param>
 		/// <param name="value">편집된 값을 나타냅니다.</param>
-		/// <param name="control">편집에 사용되었던 컨트롤의 인스턴스입니다.</param>
-		DetachEventArgs(bool modified, object^ value, TControl control)
-			: m_modified(modified), m_value(value), m_control(control)
+		DetachEventArgs(bool modified, object^ value)
+			: m_modified(modified), m_value(value)
 		{
 
 		}
@@ -159,28 +136,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			object^ get() { return m_value; }
 		}
 
-		/// <summary>
-		/// 편집에 사용됬던 컨트롤의 인스턴스입니다.
-		/// </summary>
-		property TControl Control
-		{
-			TControl get() { return m_control; }
-		}
-
 	private: // variables
 		bool		m_modified;
 		object^		m_value;
-		TControl	m_control;
 	};
 
 	/// <summary> 
 	/// 셀 편집을 위해 사용했던 컨트롤이 그리드 컨트롤이나 DropDown폼에서 제거될때 사용되는 이벤트를 처리하는 메서드를 나타냅니다.
 	/// </summary>
-	/// <typeparam name="TControl">
-	/// 편집에 사용되는 컨트롤의 타입입니다.
-	/// </typeparam>
-	generic<class TControl> where TControl : _Control
-	public delegate void DetachEventHandler(object^ sender, DetachEventArgs<TControl>^ e);
+	public delegate void DetachEventHandler(object^ sender, DetachEventArgs^ e);
 
 	/// <summary>
 	/// 컨트롤을 제공할 수 있는 개체를 나타냅니다.
@@ -784,6 +748,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		void ResetCellBackColor();
 
 		/// <summary>
+		/// 셀의 내부간격을 기본값으로 되돌립니다.
+		/// </summary>
+		void ResetCellPadding();
+
+		/// <summary>
 		/// 셀의 글꼴을 기본값으로 되돌립니다.
 		/// </summary>
 		void ResetCellFont();
@@ -1274,6 +1243,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
+		/// 셀의 내부간격을 가져오거나 설정합니다.
+		/// </summary>
+		/// <returns>
+		/// 셀의 내부간격을 나타내는 <see cref="System::Windows::Forms::Padding"/>입니다.
+		/// </returns>
+		[_Category("Cell")]
+		property _Padding CellPadding
+		{
+			_Padding get();
+			void set(_Padding);
+		}
+
+		/// <summary>
 		/// 셀의 글꼴을 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
@@ -1361,6 +1343,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		bool ShouldSerializeCellForeColor();
 		bool ShouldSerializeCellBackColor();
+		bool ShouldSerializeCellPadding();
 		bool ShouldSerializeCellFont();
 		bool ShouldSerializeTitle();
 		

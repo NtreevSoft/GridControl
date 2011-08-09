@@ -51,35 +51,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		static const int WM_NCMBUTTONDBLCLK	= 0x00A9;
 	};
 
-	ref class BitBlt
+	ref class ControlPainter
 	{
-		value struct Key
-		{
-			Key(_Size% size, object^ value)
-				: size(size), value(value)
-			{
-
-			}
-			
-			_Size		size;
-			object^		value;
-		};
-
-		ref class Image
-		{
-		public:
-			void*	m_dc;
-		};
 	public:
-		BitBlt();
+		ControlPainter();
 
-		virtual void Do(System::IntPtr hdc, _Control^ control, _Rectangle% renderRect, object^ value);
+		void BitBlt(System::IntPtr hdc, _Control^ control, _Rectangle% renderRect, object^ value);
+		void TransparentBlt(System::IntPtr hdc, _Control^ control, _Rectangle% renderRect, object^ value);
 
 	private:
 		void*							m_dc;
 		int								m_width;
 		int								m_height;
 
-		System::Collections::Generic::Dictionary<Key, Image^> m_images;
+		void*							m_colorKeyBrush;
+		const uint						m_colorKey;
 	};
 } /*namespace Win32*/} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

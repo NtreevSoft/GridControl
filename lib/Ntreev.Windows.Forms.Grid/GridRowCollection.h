@@ -62,6 +62,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 새로 생성된 <see cref="Row"/>의 인스턴스들입니다.
 		/// </returns>
+		/// <exception cref="System::ArgumentOutOfRangeException">
+		/// 생성 갯수가 0보다 같거나 작을 경우
+		/// </exception>
+		/// <exception cref="System::NotSupportedException">
+		/// 새로운 행을 생성할 수 없는 경우
+		/// </exception>
 		cli::array<Row^>^ AddNew(int count);
 
 		/// <summary>
@@ -70,6 +76,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 새로 생성된 <see cref="Row"/>의 인스턴스입니다.
 		/// </returns>
+		/// <exception cref="System::NotSupportedException">
+		/// 새로운 행을 생성할 수 없는 경우
+		/// </exception>
 		Row^ AddNewFromInsertion();
 
 		/// <summary>
@@ -83,6 +92,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// </exception>
 		/// <exception cref="System::ArgumentException">
 		/// 추가할 행이 이미 존재하거나, 같은 이름을 가진 행이 컬렉션에 이미 존재하는 경우
+		/// </exception>
+		/// <exception cref="System::NotSupportedException">
+		/// 새로운 행을 생성할 수 없는 경우
 		/// </exception>
 		virtual void Add(Row^ item);
 

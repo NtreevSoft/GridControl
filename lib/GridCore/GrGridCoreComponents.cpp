@@ -1064,14 +1064,22 @@ void GrTextUpdater::AddTextAlign(GrColumn* pColumn)
 
 void GrTextUpdater::RemoveTextBound(GrCell* pCell)
 {
-	if(pCell->m_bTextBound == false)
-		return;
+	GrCells::iterator itor = std::find(m_vecTextBounds.begin(), m_vecTextBounds.end(), pCell);
+	if(itor != m_vecTextBounds.end())
+	{
+		pCell->m_bTextBound = false;
+		m_vecTextBounds.erase(itor);
+	}
 }
 
 void GrTextUpdater::RemoveTextAlign(GrCell* pCell)
 {
-	if(pCell->m_bTextAlign == false)
-		return;
+	GrCells::iterator itor = std::find(m_vecTextAligns.begin(), m_vecTextAligns.end(), pCell);
+	if(itor != m_vecTextAligns.end())
+	{
+		pCell->m_bTextAlign = false;
+		m_vecTextAligns.erase(itor);
+	}
 }
 
 void GrTextUpdater::UpdateTextBound()

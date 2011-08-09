@@ -76,7 +76,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	namespace Win32
 	{
-		ref class BitBlt;
+		ref class ControlPainter;
 	}
 
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -389,7 +389,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		if(dataSource == nullptr)
 		{
-			if(dataMember == string::Empty)
+			if(m_manager != nullptr)
 				Clear();
 			return;
 		}
@@ -406,7 +406,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		if(manager != nullptr)
 		{
-			if(m_dataMember != dataMember)
+			if(m_manager != manager)
 				Clear();
 
 			m_dataSource = dataSource;

@@ -156,7 +156,6 @@ public:
 
 	GrRect						GetClientRect() const;
 	GrRect						GetRect() const;
-	GrPadding					GetPadding() const;
 	GrPoint						GetPosition() const;
 	GrSize						GetSize() const;
 	uint						GetID() const;
@@ -196,8 +195,10 @@ public:
 	virtual GrColor				GetRenderingForeColor() const;
 	virtual GrColor				GetRenderingBackColor() const;
 	virtual GrFont*				GetRenderingFont() const;
+
 	virtual GrColor				GetForeColor(bool inherited = true) const;
 	virtual GrColor				GetBackColor(bool inherited = true) const;
+	virtual GrPadding			GetPadding(bool inherited = true) const;
 	virtual GrFont*				GetFont(bool inherited = true) const;
 
 	void						SetBackColor(GrColor color);
@@ -314,8 +315,10 @@ public:
 	virtual GrFont*				GetRenderingFont() const;
 	virtual GrColor				GetRenderingForeColor() const;
 	virtual GrColor				GetRenderingBackColor() const;
-	virtual GrColor				GetBackColor(bool inherited = true) const;
+
 	virtual GrColor				GetForeColor(bool inherited = true) const;
+	virtual GrColor				GetBackColor(bool inherited = true) const;
+	virtual GrPadding			GetPadding(bool inherited = true) const;
 	virtual GrFont*				GetFont(bool inherited = true) const;
 
 protected:
@@ -365,8 +368,9 @@ public:
 	GrVertAlign					GetItemVertAlign() const;
 	bool						GetItemWordWrap() const;
 	bool						GetItemMultiline() const;
-	GrColor						GetItemBackColor() const;
 	GrColor						GetItemForeColor() const;
+	GrColor						GetItemBackColor() const;
+	GrPadding					GetItemPadding() const;
 	GrFont*						GetItemFont() const;
 
 	int							GetDisplayX() const { return m_nDisplayX; }
@@ -383,8 +387,9 @@ public:
 	void						SetItemVertAlign(GrVertAlign vertAlign);
 	void						SetItemWordWrap(bool b);
 	void						SetItemMultiline(bool b);
-	void						SetItemBackColor(GrColor color);
 	void						SetItemForeColor(GrColor color);
+	void						SetItemBackColor(GrColor color);
+	void						SetItemPadding(GrPadding padding);
 	void						SetItemFont(GrFont* pFont);
 	void						SetItemTextSeparator(std::wstring separator);
 
@@ -544,6 +549,7 @@ private:
 
 	GrColor						m_itemBackColor;
 	GrColor						m_itemForeColor;
+	GrPadding					m_itemPadding;
 	GrFont*						m_pItemFont;
 
 	GrGroupingInfo*				m_pGroupingInfo;
@@ -637,6 +643,7 @@ public:
 
 	virtual void				GetVisibleList(GrRowArray* pVisible) const;
 	const GrRect*				GetBound() const { return &m_rtBound; }
+	virtual GrPadding			GetPadding(bool /*inherited*/) const { return GrPadding::Default; }
 
 	virtual void				Sort(GrSort::Type sortType);
 	virtual void				Sort(FuncSortRow fnSort, void* dwUserData);
@@ -644,6 +651,11 @@ public:
 	void						AddChild(GrRow* pRow);
 	void						ReserveChild(uint reserve);
 	void						ClearChild();
+
+public:
+	static int		DefaultHeight;
+	static int		DefaultMinHeight;
+	static int		DefaultMaxHeight;
 
 protected:
 	virtual void				OnHeightChanged();
@@ -1050,6 +1062,7 @@ public:
 	void 						NotifyMultilineChanged(GrColumn* pColumn);
 	void 						NotifyHorzAlignChanged(GrColumn* pColumn);
 	void 						NotifyVertAlignChanged(GrColumn* pColumn);
+	void 						NotifyPaddingChanged(GrColumn* pColumn);
 
 	_GrColumnEvent				ColumnInserted;
 	_GrColumnEvent				ColumnRemoved;
@@ -1060,6 +1073,7 @@ public:
 	_GrColumnEvent				ColumnMultilineChanged;
 	_GrColumnEvent				ColumnHorzAlignChanged;
 	_GrColumnEvent				ColumnVertAlignChanged;
+	_GrColumnEvent				ColumnPaddingChanged;
 
 protected:
 	virtual void				OnPositionUpdated(GrPoint pt);
@@ -1076,6 +1090,7 @@ protected:
 	virtual void 				OnColumnMultilineChanged(GrColumnEventArgs* e);
 	virtual void 				OnColumnHorzAlignChanged(GrColumnEventArgs* e);
 	virtual void 				OnColumnVertAlignChanged(GrColumnEventArgs* e);
+	virtual void 				OnColumnPaddingChanged(GrColumnEventArgs* e);
 
 	void						BuildVisibleColumnList();
 

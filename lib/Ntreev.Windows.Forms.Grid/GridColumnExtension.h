@@ -52,19 +52,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		/// <see cref="Attaching"/>이벤트를 발생시킵니다.
 		/// </summary>
 		/// <param name="e">이벤트 데이터가 들어있는 <see cref="AttachEventArgs"/>입니다.</param>
-		virtual void OnAttaching(AttachEventArgs<System::Windows::Forms::TextBox^>^ e) override;
+		virtual void OnAttaching(AttachEventArgs^ e) override;
 
 		/// <summary>
 		/// <see cref="Attached"/>이벤트를 발생시킵니다.
 		/// </summary>
 		/// <param name="e">이벤트 데이터가 들어있는 <see cref="AttachEventArgs"/>입니다.</param>
-		virtual void OnAttached(AttachEventArgs<System::Windows::Forms::TextBox^>^ e) override;
+		virtual void OnAttached(AttachEventArgs^ e) override;
 
 		/// <summary>
 		/// <see cref="Detaching"/>이벤트를 발생시킵니다.
 		/// </summary>
 		/// <param name="e">이벤트 데이터가 들어있는 <see cref="DetachEventArgs"/>입니다.</param>
-		virtual void OnDetaching(DetachEventArgs<System::Windows::Forms::TextBox^>^ e) override;
+		virtual void OnDetaching(DetachEventArgs^ e) override;
 
 		/// <summary>
 		/// 컨트롤을 셀의 위치로 이동하고 셀의 크기로 조정할때 호출됩니다.
@@ -76,7 +76,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 	private: // variables
 		void textBox_OnKeyPress(object^ sender, System::Windows::Forms::KeyPressEventArgs^ e);
-		void textBox_OnKeyDown(object^ sender, System::Windows::Forms::KeyEventArgs^ e);
 	};
 
 	/// <summary>
@@ -111,6 +110,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			void set(object^); 
 		}
 
+		[System::ComponentModel::Category("Data")]
 		[System::ComponentModel::Editor("System.Windows.Forms.Design.ListControlStringCollectionEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", System::Drawing::Design::UITypeEditor::typeid)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Content)]
 		[System::ComponentModel::MergableProperty(false)]
@@ -125,7 +125,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		/// <returns>
 		/// 펼쳐질 목록에 보여질 최대 아이템 갯수를 나타내는 <see cref="System::Int32"/>형태의 정수값 입니다. 기본 값은 8입니다.(<see cref="DefaultMaxDropDownItems"/>)
 		/// </returns>
-		[_DefaultValue(8)]
 		property int MaxDropDownItems
 		{ 
 			int get();
@@ -151,7 +150,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		virtual bool KeyTest(System::Windows::Forms::Keys key) sealed = IEditByKeyCode::KeyTest;
 		void listBox_OnMouseMove(object^ sender, System::Windows::Forms::MouseEventArgs^ e);
 		void listBox_OnMouseClick(object^ sender, System::Windows::Forms::MouseEventArgs^ e);
-		void listBox_OnFontChanged(object^ sender, _EventArgs^ e);
+
+		bool ShouldSerializeMaxDropDownItems();
 
 	public: // variables
 		/// <summary>

@@ -13,7 +13,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		if(PaintValueSupported == true)
 		{
-			m_controlPainter = gcnew Win32::BitBlt();
+			m_controlPainter = gcnew Win32::ControlPainter();
 			m_viewControl = safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid));
 			OnViewControlCreated(m_control);
 		}
@@ -29,7 +29,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		if(PaintValueSupported == true)
 		{
-			m_controlPainter = gcnew Win32::BitBlt();
+			m_controlPainter = gcnew Win32::ControlPainter();
 			m_viewControl = safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid, controlArgs));
 			OnViewControlCreated(m_control);
 		}
@@ -51,7 +51,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		System::IntPtr hdc = graphics->GetHdc();
 		try
 		{
-			m_controlPainter->Do(hdc, m_viewControl, renderRect, value);
+			m_controlPainter->BitBlt(hdc, m_viewControl, renderRect, value);
 		}
 		catch(System::Exception^ exception)
 		{
@@ -89,7 +89,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	}
 
 	generic<class TControl> where TControl : _Control
-	void ColumnControl<TControl>::OnAttaching(AttachEventArgs<TControl>^ e)
+	void ColumnControl<TControl>::OnAttaching(AttachEventArgs^ e)
 	{
 		Attaching(this, e);
 	}
@@ -97,12 +97,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	generic<class TControl> where TControl : _Control
 	void ColumnControl<TControl>::InvokeAttaching(EditingReason^ by, object^ value)
 	{
-		AttachEventArgs<TControl> ae(by, value, m_control);
+		AttachEventArgs ae(by, value);
 		OnAttaching(%ae);
 	}
  
 	generic<class TControl> where TControl : _Control
-	void ColumnControl<TControl>::OnAttached(AttachEventArgs<TControl>^ e)
+	void ColumnControl<TControl>::OnAttached(AttachEventArgs^ e)
 	{
 		Attached(this, e);
 	}
@@ -110,12 +110,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	generic<class TControl> where TControl : _Control
 	void ColumnControl<TControl>::InvokeAttached(EditingReason^ by, object^ value)
 	{
-		AttachEventArgs<TControl> ae(by, value, m_control);
+		AttachEventArgs ae(by, value);
 		OnAttached(%ae);
 	}
 
 	generic<class TControl> where TControl : _Control
-	void ColumnControl<TControl>::OnDetaching(DetachEventArgs<TControl>^ e)
+	void ColumnControl<TControl>::OnDetaching(DetachEventArgs^ e)
 	{
 		Detaching(this, e);
 	}
@@ -123,12 +123,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	generic<class TControl> where TControl : _Control
 	void ColumnControl<TControl>::InvokeDetaching(bool modified, object^ value)
 	{
-		DetachEventArgs<TControl> de(modified, value, m_control);
+		DetachEventArgs de(modified, value);
 		OnDetaching(%de);
 	}
 
 	generic<class TControl> where TControl : _Control
-	void ColumnControl<TControl>::OnDetached(DetachEventArgs<TControl>^ e)
+	void ColumnControl<TControl>::OnDetached(DetachEventArgs^ e)
 	{
 		Detached(this, e);
 	}
@@ -136,7 +136,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	generic<class TControl> where TControl : _Control
 	void ColumnControl<TControl>::InvokeDetached(bool modified, object^ value)
 	{
-		DetachEventArgs<TControl> de(modified, value, m_control);
+		DetachEventArgs de(modified, value);
 		OnDetached(%de);
 	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

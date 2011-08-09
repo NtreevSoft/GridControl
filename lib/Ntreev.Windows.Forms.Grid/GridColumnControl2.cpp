@@ -8,7 +8,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	generic<class TEditing, class TView> where TEditing : _Control where TView : _Control
 	ColumnControl<TEditing, TView>::ColumnControl()
 	{
-		m_controlPainter = gcnew Win32::BitBlt();
+		m_controlPainter = gcnew Win32::ControlPainter();
 
 		m_control = safe_cast<TEditing>(System::Activator::CreateInstance(TEditing::typeid));
 		OnControlCreated(m_control);
@@ -20,7 +20,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	generic<class TEditing, class TView> where TEditing : _Control where TView : _Control
 	ColumnControl<TEditing, TView>::ColumnControl(... cli::array<object^>^ controlArgs)
 	{
-		m_controlPainter = gcnew Win32::BitBlt();
+		m_controlPainter = gcnew Win32::ControlPainter();
 
 		m_control = safe_cast<TEditing>(System::Activator::CreateInstance(TEditing::typeid, controlArgs));
 		OnControlCreated(m_control);
@@ -43,7 +43,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		System::IntPtr hdc = graphics->GetHdc();
 		try
 		{
-			m_controlPainter->Do(hdc, m_viewControl, renderRect, value);
+			if(this->IsViewControlTransparented == true)
+				m_controlPainter->TransparentBlt(hdc, m_viewControl, renderRect, value);
+			else
+				m_controlPainter->BitBlt(hdc, m_viewControl, renderRect, value);
 		}
 		catch(System::Exception^ exception)
 		{
@@ -90,7 +93,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	}
 
 	generic<class TEditing, class TView> where TEditing : _Control where TView : _Control
-	void ColumnControl<TEditing, TView>::OnAttaching(AttachEventArgs<TEditing>^ e)
+	void ColumnControl<TEditing, TView>::OnAttaching(AttachEventArgs^ e)
 	{
 		Attaching(this, e);
 	}
@@ -98,12 +101,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	generic<class TEditing, class TView> where TEditing : _Control where TView : _Control
 	void ColumnControl<TEditing, TView>::InvokeAttaching(EditingReason^ by, object^ value)
 	{
-		AttachEventArgs<TEditing> ae(by, value, m_control);
+		AttachEventArgs ae(by, value);
 		OnAttaching(%ae);
 	}
 
 	generic<class TEditing, class TView> where TEditing : _Control where TView : _Control
-	void ColumnControl<TEditing, TView>::OnAttached(AttachEventArgs<TEditing>^ e)
+	void ColumnControl<TEditing, TView>::OnAttached(AttachEventArgs^ e)
 	{
 		Attached(this, e);
 	}
@@ -111,12 +114,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	generic<class TEditing, class TView> where TEditing : _Control where TView : _Control
 	void ColumnControl<TEditing, TView>::InvokeAttached(EditingReason^ by, object^ value)
 	{
-		AttachEventArgs<TEditing> ae(by, value, m_control);
+		AttachEventArgs ae(by, value);
 		OnAttached(%ae);
 	}
 
 	generic<class TEditing, class TView> where TEditing : _Control where TView : _Control
-	void ColumnControl<TEditing, TView>::OnDetaching(DetachEventArgs<TEditing>^ e)
+	void ColumnControl<TEditing, TView>::OnDetaching(DetachEventArgs^ e)
 	{
 		Detaching(this, e);
 	}
@@ -124,12 +127,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	generic<class TEditing, class TView> where TEditing : _Control where TView : _Control
 	void ColumnControl<TEditing, TView>::InvokeDetaching(bool modified, object^ value)
 	{
-		DetachEventArgs<TEditing> de(modified, value, m_control);
+		DetachEventArgs de(modified, value);
 		OnDetaching(%de);
 	}
 
 	generic<class TEditing, class TView> where TEditing : _Control where TView : _Control
-	void ColumnControl<TEditing, TView>::OnDetached(DetachEventArgs<TEditing>^ e)
+	void ColumnControl<TEditing, TView>::OnDetached(DetachEventArgs^ e)
 	{
 		Detached(this, e);
 	}
@@ -137,7 +140,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	generic<class TEditing, class TView> where TEditing : _Control where TView : _Control
 	void ColumnControl<TEditing, TView>::InvokeDetached(bool modified, object^ value)
 	{
-		DetachEventArgs<TEditing> de(modified, value, m_control);
+		DetachEventArgs de(modified, value);
 		OnDetached(%de);
 	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

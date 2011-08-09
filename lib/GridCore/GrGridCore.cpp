@@ -218,10 +218,11 @@ GrGridCore::GrGridCore(void)
 	m_pRootRow->AddChild(m_pDataRowList);
 
 	m_pGroupingList->Changed.Add(this, &GrGridCore::groupingList_Changed);
-	m_pColumnList->ColumnWidthChanged.Add(this, &GrGridCore::dataColumnList_ColumnWidthChanged);
-	m_pColumnList->ColumnWordwrapChanged.Add(this, &GrGridCore::dataColumnList_ColumnWordwrapChanged);
-	m_pColumnList->ColumnHorzAlignChanged.Add(this, &GrGridCore::dataColumnList_ColumnHorzAlignChanged);
-	m_pColumnList->ColumnVertAlignChanged.Add(this, &GrGridCore::dataColumnList_ColumnVertAlignChanged);
+	m_pColumnList->ColumnWidthChanged.Add(this, &GrGridCore::columnList_ColumnWidthChanged);
+	m_pColumnList->ColumnWordwrapChanged.Add(this, &GrGridCore::columnList_ColumnWordwrapChanged);
+	m_pColumnList->ColumnHorzAlignChanged.Add(this, &GrGridCore::columnList_ColumnHorzAlignChanged);
+	m_pColumnList->ColumnVertAlignChanged.Add(this, &GrGridCore::columnList_ColumnVertAlignChanged);
+	m_pColumnList->ColumnPaddingChanged.Add(this, &GrGridCore::columnList_ColumnPaddingChanged);
 
 	OnCreated(&GrEventArgs::Empty);
 }
@@ -508,19 +509,19 @@ void GrGridCore::ShowClippedText(bool bShow)
 	m_bShowClippedText = bShow;
 }
 
-void GrGridCore::dataColumnList_ColumnHorzAlignChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
+void GrGridCore::columnList_ColumnHorzAlignChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
 {
 	GrColumn* pColumn = e->GetColumn();
 	m_pTextUpdater->AddTextAlign(pColumn);
 }
 
-void GrGridCore::dataColumnList_ColumnVertAlignChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
+void GrGridCore::columnList_ColumnVertAlignChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
 {
 	GrColumn* pColumn = e->GetColumn();
 	m_pTextUpdater->AddTextAlign(pColumn);
 }
 
-void GrGridCore::dataColumnList_ColumnWidthChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
+void GrGridCore::columnList_ColumnWidthChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
 {
 	if(m_bUpdating == true)
 		return;
@@ -529,13 +530,19 @@ void GrGridCore::dataColumnList_ColumnWidthChanged(GrObject* /*pSender*/, GrColu
 	SetWidthChanged();
 }
 
-void GrGridCore::dataColumnList_ColumnWordwrapChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
+void GrGridCore::columnList_ColumnWordwrapChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
 {
 	if(m_bUpdating == true)
 		return;
 	GrColumn* pColumn = e->GetColumn();
 	m_pTextUpdater->AddTextBound(pColumn);
 	SetWidthChanged();
+}
+
+void GrGridCore::columnList_ColumnPaddingChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
+{
+	GrColumn* pColumn = e->GetColumn();
+	m_pTextUpdater->AddTextBound(pColumn);
 }
 
 void GrGridCore::SetFont(GrFont* pFont)

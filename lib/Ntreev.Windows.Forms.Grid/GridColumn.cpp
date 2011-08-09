@@ -626,17 +626,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 	}
 
-	_Color Column::CellBackColor::get()
-	{
-		return m_pColumn->GetItemBackColor();
-	}
-
-	void Column::CellBackColor::set(_Color value)
-	{
-		m_pColumn->SetItemBackColor(value);
-		Invalidate();
-	}
-
 	_Color Column::CellForeColor::get()
 	{
 		return m_pColumn->GetItemForeColor();
@@ -645,7 +634,26 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void Column::CellForeColor::set(_Color value)
 	{
 		m_pColumn->SetItemForeColor(value);
-		Invalidate();
+	}
+
+	_Color Column::CellBackColor::get()
+	{
+		return m_pColumn->GetItemBackColor();
+	}
+
+	void Column::CellBackColor::set(_Color value)
+	{
+		m_pColumn->SetItemBackColor(value);
+	}
+
+	_Padding Column::CellPadding::get()
+	{
+		return m_pColumn->GetItemPadding();
+	}
+
+	void Column::CellPadding::set(_Padding value)
+	{
+		m_pColumn->SetItemPadding(value);
 	}
 
 	_Font^ Column::CellFont::get()
@@ -676,12 +684,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void Column::ResetCellBackColor()
 	{
-		CellBackColor = _Color::Empty;
+		this->CellBackColor = _Color::Empty;
+	}
+
+	void Column::ResetCellPadding()
+	{
+		this->CellPadding = GrPadding::Default;
 	}
 
 	void Column::ResetCellForeColor()
 	{
-		CellForeColor = _Color::Empty;
+		this->CellForeColor = _Color::Empty;
 	}
 
 	void Column::ResetCellFont()
@@ -736,6 +749,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	bool Column::ShouldSerializeCellBackColor()
 	{
 		return m_pColumn->GetItemBackColor() != GrColor::Empty;
+	}
+
+	bool Column::ShouldSerializeCellPadding()
+	{
+		return m_pColumn->GetItemPadding() != GrPadding::Default;
 	}
 	
 	bool Column::ShouldSerializeCellFont()

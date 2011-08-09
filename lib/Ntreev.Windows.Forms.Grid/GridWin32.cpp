@@ -67,16 +67,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		//::mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 	}
 
-	BitBlt::BitBlt()
+	ControlPainter::ControlPainter()
+		: m_colorKey(RGB(0,128,128))
 	{
 		m_width = 500;
 		m_height = 500;
 		m_dc = ::CreateCompatibleDC(NULL);
 		HBITMAP hBitmap = ::CreateBitmap(m_width, m_height, 1, 32, NULL);
 		SelectObject((HDC)m_dc, hBitmap);
+		SetBkMode((HDC)m_dc, TRANSPARENT);
+
+		m_colorKeyBrush = CreateSolidBrush(m_colorKey);
 	}
 
-	void BitBlt::Do(System::IntPtr hdc, _Control^ control, _Rectangle% renderRect, object^ /*value*/)
+	void ControlPainter::TransparentBlt(System::IntPtr hdc, _Control^ control, _Rectangle% renderRect, object^ /*value*/)
 	{
 		HDC _hdc = (HDC)hdc.ToPointer();
 		if(m_width < renderRect.Width || m_height < renderRect.Height)
@@ -89,14 +93,46 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		}
 
 		HWND hControl = (HWND)control->Handle.ToPointer();
-		::SendMessage(hControl, WM_PRINT, (WPARAM)m_dc, PRF_CLIENT|PRF_CHILDREN);
+		
+		RECT r;
+		SetRect(&r, 0, 0, m_width, m_height);
+		FillRect((HDC)m_dc, &r, (HBRUSH)m_colorKeyBrush);
 
-		//HWND hChild = ::GetWindow(hControl, GW_CHILD);
-		//while(hChild != NULL)
-		//{
-		//	::SendMessage(hChild, WM_PRINT, (WPARAM)m_dc, PRF_CLIENT);
-		//	hChild = ::GetWindow(hChild, GW_HWNDNEXT);
-		//}
-		::BitBlt(_hdc, renderRect.X, renderRect.Y, renderRect.Width, renderRect.Height, (HDC)m_dc, 0, 0, SRCCOPY);
+		SendMessage(hControl, WM_PRINT, (WPARAM)m_dc, PRF_CLIENT|PRF_CHILDREN);
+
+		int destWidth = control->Width - (renderRect.Left - control->Left);
+		destWidth = System::Math::Min(destWidth, renderRect.Width);
+
+		int destHeight = control->Height - (renderRect.Top - control->Top);
+		destHeight = System::Math::Min(destHeight, renderRect.Height);
+
+		::TransparentBlt(_hdc, renderRect.X, renderRect.Y, destWidth, destHeight, (HDC)m_dc,
+			renderRect.Left - control->Left, renderRect.Top - control->Top, destWidth, destHeight, m_colorKey);
+	}
+
+	void ControlPainter::BitBlt(System::IntPtr hdc, _Control^ control, _Rectangle% renderRect, object^ /*value*/)
+	{
+		HDC _hdc = (HDC)hdc.ToPointer();
+		if(m_width < renderRect.Width || m_height < renderRect.Height)
+		{
+			m_width		= System::Math::Max(m_width, renderRect.Width);
+			m_height	= System::Math::Max(m_height, renderRect.Height);
+			HBITMAP hh	= CreateBitmap(m_width, m_height, 1, 32, NULL);
+			HGDIOBJ hOldBitmap = SelectObject((HDC)m_dc, hh);
+			DeleteObject(hOldBitmap);
+		}
+
+		HWND hControl = (HWND)control->Handle.ToPointer();
+
+		SendMessage(hControl, WM_PRINT, (WPARAM)m_dc, PRF_CLIENT|PRF_CHILDREN);
+
+		int destWidth = control->Width - (renderRect.Left - control->Left);
+		destWidth = System::Math::Min(destWidth, renderRect.Width);
+
+		int destHeight = control->Height - (renderRect.Top - control->Top);
+		destHeight = System::Math::Min(destHeight, renderRect.Height);
+
+		::BitBlt(_hdc, renderRect.X, renderRect.Y, destWidth, destHeight, (HDC)m_dc,
+			renderRect.Left - control->Left, renderRect.Top - control->Top, SRCCOPY);
 	}
 } /*namespace Win32*/} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
