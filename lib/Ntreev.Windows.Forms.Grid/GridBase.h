@@ -55,7 +55,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		//void InvalidateCell(const GrCell* pCell);
 
-		//void Invalidate(_Rectangle rectangle);
+		void Invalidate(_Rectangle rectangle);
 
 		void Invalidate(int left, int top, int right, int bottom);
 

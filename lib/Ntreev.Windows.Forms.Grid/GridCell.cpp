@@ -17,18 +17,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		m_pItem->ManagedRef = this;
 		
-		try
-		{
-			object^ value = ValueCore;
-			string^ text = "";
-			if(value != nullptr || value != System::DBNull::Value)
-				text = m_column->TypeConverter->ConvertToString(value);
-			pItem->SetText(ToNativeString::Convert(text));
-		}
-		catch(System::Exception^)
-		{
-			pItem->SetText(L"");
-		}
+
+		UpdateNativeText();
 	}
 
 	_Column^ Cell::Column::get()
@@ -93,13 +83,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void Cell::UpdateNativeText()
 	{
-		UpdateNativeText(Value);
+		UpdateNativeText(this->ValueCore);
 	}
 
 	void Cell::UpdateNativeText(object^ value)
 	{
-		string^ text = m_column->TypeConverter->ConvertToString(value);
-		m_pItem->SetText(ToNativeString::Convert(text));
+		try
+		{
+			string^ text = "";
+			if(value != nullptr && value != System::DBNull::Value)
+				text = m_column->TypeConverter->ConvertToString(value);
+			m_pItem->SetText(ToNativeString::Convert(text));
+		}
+		catch(System::Exception^)
+		{
+			m_pItem->SetText(L"");
+		}
 	}
 
 	object^ Cell::ValidateValue(object^ value)

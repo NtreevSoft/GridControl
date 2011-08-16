@@ -504,6 +504,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		{
 			m_locationStart = _Point::Empty;
 		}
+
+		if(column->ColumnPainter != nullptr)
+		{
+			this->Invalidate(column->DisplayRectangle);
+		}
 	}
 
 	void ColumnPressing::OnMouseDragBegin(_Point /*location*/)
@@ -687,6 +692,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 				m_pColumn->SetSortType(sortType);
 			}
 		}
+
+		if(column->ColumnPainter != nullptr)
+		{
+			this->Invalidate(column->DisplayRectangle);
+		}
+
 		m_timer->Stop();
 		GridCore->SetMouseUnpressed();
 	}
