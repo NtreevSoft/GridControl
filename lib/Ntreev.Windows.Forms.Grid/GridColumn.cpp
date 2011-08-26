@@ -503,7 +503,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	object^ Column::DefaultValue::get()
 	{
-		return m_defaultValue;
+		if(m_defaultValue == nullptr)
+			return nullptr;
+
+		if(m_defaultValue->GetType() == this->DataType)
+			return m_defaultValue;
+
+		if(this->TypeConverter->CanConvertFrom(m_defaultValue->GetType()) == false)
+			return nullptr;
+		return this->TypeConverter->ConvertFrom(m_defaultValue);
 	}
 	
 	void Column::DefaultValue::set(object^ value)
@@ -737,7 +745,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void Column::ValidateDefaultValue()
 	{
-		if(m_dataType == nullptr)
+		if(m_dataType == nullptr || m_defaultValue == nullptr)
 			return;
 	}
 

@@ -932,6 +932,9 @@ CellWordwrap 값이 true인 열에 대해서는 이 기능이 적용되지 않�
             <returns>
 데이터 소스가 바인딩 될때 사용할 데이터 멤버의 이름입니다.
 </returns>
+            <exception cref="T:System.NotSupportedException">
+데이터 초기화에 실패 했거나 데이터 소스가 IList, IListSource 또는 IBindingList 인터페이스를 구현하는 개체가 아닐때.
+</exception>
         </member>
         <member name="P:Ntreev.Windows.Forms.Grid.GridControl.DataSource">
             <summary>
@@ -940,6 +943,9 @@ CellWordwrap 값이 true인 열에 대해서는 이 기능이 적용되지 않�
             <returns>
 데이터 소스를 나타내는 개체입니다.
 </returns>
+            <exception cref="T:System.NotSupportedException">
+데이터 초기화에 실패 했거나 데이터 소스가 IList, IListSource 또는 IBindingList 인터페이스를 구현하는 개체가 아닐때.
+</exception>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.GridControl.GetCellAt(System.Drawing.Point)">
             <summary>
@@ -3542,6 +3548,9 @@ private void gridControl1_Paint(object sender, PaintEventArgs e)
             <returns>
 데이터 타입을 나타내는 <see cref="T:System.Type" />입니다.
 </returns>
+            <exception cref="T:System.InvalidOperationException">
+그리드 컨트롤에 바인딩 된 후에 값을 설정하려고 할때.
+</exception>
         </member>
         <member name="P:Ntreev.Windows.Forms.Grid.Column.CanBeGrouped">
             <summary>

@@ -427,6 +427,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			OnDataBindingComplete(_EventArgs::Empty);
 			Invalidate(false);
 		}
+
+		if(dataSource != nullptr && dataMember != string::Empty && manager == nullptr)
+		{
+			throw gcnew System::NotSupportedException("데이터 소스 초기화에 실패했습니다. 데이터 소스가 IList, IListSource 또는 IBindingList 인터페이스를 구현하는 개체인지 확인하십시오");
+		}
 	}
 
 	void GridControl::UpdateGridRect()

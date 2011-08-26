@@ -8,7 +8,8 @@
 <?define NtreevSoft = "NtreevSoft" ?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="51f2fb0b-b25a-4833-a9b4-a299d2e1f6a8" Name="NtreevSoft GridControl" Language="1033" Version="1.0.4232.28109" Manufacturer="$(var.NtreevSoft)" UpgradeCode="51f8e005-a714-41ce-a16f-29745b2593e1">
+  <Product Id="51f2fb0b-b25a-4833-a9b4-a299d2e1f6a8" Name="NtreevSoft GridControl" Language="1033" 
+           Version="1.0.0.0" Manufacturer="$(var.NtreevSoft)" UpgradeCode="51f8e005-a714-41ce-a16f-29745b2593e1">
     <Package InstallerVersion="201" Compressed="yes" />
 
     <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
@@ -27,6 +28,12 @@
       <RegistrySearch Id="TbxPackageKey10" Root="HKLM" Key="$(var.VisualStudioRegistryRoot10)\Packages\{2c298b35-07da-45f1-96a3-be55d91c8d7a}" Type="raw" />
     </Property>
 
+    <Binary Id="TbcInstallerCheck" SourceFile="..\..\bin\installer\TbcInstallerCheck.CA.dll" />
+
+    <Property Id="SOME_PUBLIC_PROPERTY">Hello, from deferred CA</Property>
+    <CustomAction Id="TbcInstallerCheckId.SetProperty" Return="check" Property="TbcInstallerCheckId" Value="[SOME_PUBLIC_PROPERTY]"/>
+    <CustomAction Id="TbcInstallerCheckId" BinaryKey="TbcInstallerCheck" DllEntry="CustomAction1" Execute="immediate" Return="check"/>
+
     <Condition Message="Visual Studio is not installed"> TOOLBOXINSTALLER8 OR TOOLBOXINSTALLER9 OR TOOLBOXINSTALLER10</Condition>
 
     <Directory Id="TARGETDIR" Name="SourceDir">
@@ -39,12 +46,11 @@
 
             <Component Id="CopyFiles" Guid="d689b695-be61-40a4-bdbd-4cb4418ea9bd">
               <File Id="Grid.xml" Assembly="no" Source="..\..\bin\lib\Ntreev.Windows.Forms.Grid.xml" DiskId="1" />
-              <File Id="Grid.dll" Assembly="no" Name="Ntreev.Windows.Forms.Grid.dll" Source="..\..\bin\lib\Ntreev.Windows.Forms.Grid.dll" DiskId="1" />
+              <File Id="Grid.dll" Assembly="no" Source="..\..\bin\lib\Ntreev.Windows.Forms.Grid.dll" DiskId="1" />
             </Component>
 
             <Component Id="CopyFilesGAC" Guid="8FAB569E-13A2-4b2a-B5F6-A539CF082E9F">
               <File Id="Grid.Design.dll" Assembly=".net" KeyPath="yes" Source="..\..\bin\lib\Ntreev.Windows.Forms.Grid.Design.dll" DiskId="1" />
-
             </Component>
 
             <Component Id="NtreevSoftControls_Registration_2005" Guid="68D920F8-2E96-4595-8664-AFC458C69A49">
@@ -96,10 +102,12 @@
         <Condition Level="0">TOOLBOXINSTALLER10 = ""</Condition>
       </Feature>
    
-      <!-- Note: The following ComponentGroupRef is required to pull in generated authoring from project references. -->
-      <!--<ComponentGroupRef Id="Product.Generated" />-->
-
     </Feature>
+
+    <InstallUISequence>
+      <Custom Action="TbcInstallerCheckId.SetProperty" Before="AppSearch">NOT Installed</Custom>
+      <Custom Action="TbcInstallerCheckId" After="TbcInstallerCheckId.SetProperty">NOT Installed</Custom>
+    </InstallUISequence>
 
     <UIRef Id="WixUI_FeatureTree"/>
   

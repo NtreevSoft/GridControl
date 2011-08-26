@@ -32,10 +32,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 				gcnew GroupingCellPressing(gridControl),
 				gcnew GroupingExpandPressing(gridControl), 
 				gcnew ItemPressing(gridControl),
-				//gcnew ItemSelecting(this),
 				gcnew ItemButtonPressing(gridControl),
 				gcnew ItemEditing(gridControl),
-				//gcnew Panning(this),
 		};
 
 		m_defaultState = m_states[0];
@@ -2121,4 +2119,4 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			}
 		}
 	}
-} /*namespace State2*/} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
+} /*namespace GridState*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -12,7 +12,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	[System::ComponentModel::ToolboxItem(true)]
 	[System::ComponentModel::DefaultEvent("")]
 	[System::Drawing::ToolboxBitmap(GridControl::typeid)]
-	[System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=1.0.0.1, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+	[System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=1.0.0.2, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
 	[System::Windows::Forms::Docking(System::Windows::Forms::DockingBehavior::Ask)]
 	public ref class GridControl : System::Windows::Forms::UserControl
 	{
@@ -114,6 +114,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 데이터 소스를 나타내는 개체입니다.
 		/// </returns>
+		/// <exception cref="System::NotSupportedException">
+		/// 데이터 초기화에 실패 했거나 데이터 소스가 IList, IListSource 또는 IBindingList 인터페이스를 구현하는 개체가 아닐때.
+		/// </exception>
 		[System::ComponentModel::Category("Data")]
 		[System::ComponentModel::RefreshProperties(System::ComponentModel::RefreshProperties::Repaint)]
 		//[System::ComponentModel::TypeConverter("System.Windows.Forms.Design.DataSourceConverter, System.Design, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
@@ -131,6 +134,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 데이터 소스가 바인딩 될때 사용할 데이터 멤버의 이름입니다.
 		/// </returns>
+		/// <exception cref="System::NotSupportedException">
+		/// 데이터 초기화에 실패 했거나 데이터 소스가 IList, IListSource 또는 IBindingList 인터페이스를 구현하는 개체가 아닐때.
+		/// </exception>
 		[System::ComponentModel::DefaultValue("")]
 		[System::ComponentModel::Editor("System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", System::Drawing::Design::UITypeEditor::typeid)]
 		property string^ DataMember
