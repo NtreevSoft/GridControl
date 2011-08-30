@@ -53,8 +53,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,4245,31717
- PRODUCTVERSION 1,0,4245,31717
+ FILEVERSION 1,0,4259,22338
+ PRODUCTVERSION 1,0,4259,22338
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -71,12 +71,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "NtreevSoft"
             VALUE "FileDescription", "GridControl"
-            VALUE "FileVersion", "1, 0, 4245, 31717"
+            VALUE "FileVersion", "1, 0, 4259, 22338"
             VALUE "InternalName", "GridControl"
             VALUE "LegalCopyright", "Copyright (C) NtreevSoft Co.,Ltd. 2010"
             VALUE "OriginalFilename", "Ntreev.Windows.Forms.Grid.dll"
             VALUE "ProductName", "GridControl"
-            VALUE "ProductVersion", "1, 0, 4245, 31717"
+            VALUE "ProductVersion", "1, 0, 4259, 22338"
         END
     END
     BLOCK "VarFileInfo"
