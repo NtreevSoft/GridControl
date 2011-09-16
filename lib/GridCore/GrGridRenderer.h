@@ -2,7 +2,6 @@
 
 #include "GrGridType.h"
 
-
 #define	GRRS_FOCUSED		0x00000001
 #define	GRRS_MOUSEOVER		0x00000002
 #define	GRRS_SELECTED		0x00000004

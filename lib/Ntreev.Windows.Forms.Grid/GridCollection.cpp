@@ -6,7 +6,6 @@
 #include "GridControl.h"
 #include "GridColumnExtension.h"
 
-
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
 	CellCollection::Enumerator::Enumerator(GrDataRow* pDataRow, GrColumnList* pColumnList)

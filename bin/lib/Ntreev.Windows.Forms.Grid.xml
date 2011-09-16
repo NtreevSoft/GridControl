@@ -1846,6 +1846,33 @@ ime키 정보를 이용하여 편집을 시작합니다.
 ColumnDropDownForm에 대한 요약입니다.
 </summary>
         </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Private.About.InitializeComponent">
+            <summary>
+디자이너 지원에 필요한 메서드입니다.
+이 메서드의 내용을 코드 편집기로 수정하지 마십시오.
+</summary>
+        </member>
+        <member name="F:Ntreev.Windows.Forms.Grid.Private.About.components">
+            <summary>
+필수 디자이너 변수입니다.
+</summary>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Private.About.Dispose">
+            <summary>
+사용 중인 모든 리소스를 정리합니다.
+</summary>
+        </member>
+        <member name="T:Ntreev.Windows.Forms.Grid.Private.About">
+            <summary>
+About에 대한 요약입니다.
+
+경고: 이 클래스의 이름을 변경하면 이 클래스가 의존하는
+         모든 .resx 파일과 관련된 관리되는 리소스 컴파일러 도구의
+         '리소스 파일 이름' 속성도 변경해야 합니다. 그렇지 않은 경우
+         디자이너는 이 폼과 관련된 지역화된 리소스와
+         올바르게 상호 작용할 수 없습니다.
+</summary>
+        </member>
         <member name="M:Ntreev.Windows.Forms.Grid.Private.ColumnUITypeEditorForm.InitializeComponent">
             <summary>
 디자이너 지원에 필요한 메서드입니다.
@@ -2432,131 +2459,6 @@ index가 0보다 작거나, <see cref="P:Ntreev.Windows.Forms.Grid.ColumnCollect
 제목을 표시하는 개체입니다.
 </summary>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnPathSelector.OnEditValue(Ntreev.Windows.Forms.Grid.EditValueEventArgs)">
-            <summary>
-값이 편집될때 호출됩니다.
-</summary>
-            <param name="e">값이 편집될때 필요한 데이터를 제공하는 <see cref="T:Ntreev.Windows.Forms.Grid.EditValueEventArgs" />개체입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnPathSelector.#ctor">
-            <summary>
-                <see cref="T:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox" />클래스의 새 인스턴스를 초기화합니다.
-</summary>
-        </member>
-        <member name="T:Ntreev.Windows.Forms.Grid.Columns.ColumnPathSelector">
-            <summary>
-Modal형식으로 경로 데이터를 편집할 수 있는 Column개체를 나타냅니다.
-</summary>
-        </member>
-        <member name="F:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox.DefaultMaxDropDownItems">
-            <summary>
-펼쳐질 목록에 보여질 아이템 갯수의 기본값입니다.
-</summary>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox.SetEditingValue(System.Windows.Forms.ListBox,System.Object)">
-            <summary>
-셀의 값을 컨트롤에 적용할때 호출됩니다.
-</summary>
-            <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
-            <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox.GetEditingValue(System.Windows.Forms.ListBox)">
-            <summary>
-컨트롤에서 셀에 적용할 값을 가져올때 호출됩니다.
-</summary>
-            <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
-            <returns>셀에 적용할 값의 <see cref="T:System.Object" />입니다.</returns>
-        </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox.MaxDropDownItems">
-            <summary>
-펼쳐질 목록에 보여질 최대 아이템 갯수를 가져오거나 설정합니다.
-</summary>
-            <returns>
-펼쳐질 목록에 보여질 최대 아이템 갯수를 나타내는 <see cref="T:System.Int32" />형태의 정수값 입니다. 기본 값은 8입니다.(<see cref="F:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox.DefaultMaxDropDownItems" />)
-</returns>
-        </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox.DataSource">
-            <summary>
-펼쳐질 목록에 표시할 데이터 소스를 가져오거나 설정합니다.
-</summary>
-            <param name="value">
-                <see cref="T:System.Array" />같은 <see cref="T:System.Collections.IList" /> 인터페이스를 구현하는 개체입니다. 
-</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox.#ctor">
-            <summary>
-                <see cref="T:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox" />클래스의 새 인스턴스를 초기화합니다.
-</summary>
-        </member>
-        <member name="T:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox">
-            <summary>
-ComboBox형태의 컨트롤을 지원하는 Column개체를 나타냅니다.
-</summary>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.SetControlLayout(System.Windows.Forms.TextBox,System.Drawing.Point,System.Drawing.Size)">
-            <summary>
-컨트롤을 셀의 위치로 이동하고 셀의 크기로 조정할때 호출됩니다.
-</summary>
-            <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
-            <param name="location">셀의 안쪽영역의 위치입니다.</param>
-            <param name="size">셀의 안쪽영역의 크기입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.OnDetaching(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
-            <summary>
-                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Detaching" />이벤트를 발생시킵니다.
-</summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.OnAttached(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
-            <summary>
-                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Attached" />이벤트를 발생시킵니다.
-</summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.OnAttaching(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
-            <summary>
-                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Attaching" />이벤트를 발생시킵니다.
-</summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.SetEditingValue(System.Windows.Forms.TextBox,System.Object)">
-            <summary>
-셀의 값을 컨트롤에 적용할때 호출됩니다.
-</summary>
-            <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
-            <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.GetEditingValue(System.Windows.Forms.TextBox)">
-            <summary>
-컨트롤에서 셀에 적용할 값을 가져올때 호출됩니다.
-</summary>
-            <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
-            <returns>셀에 적용할 값의 <see cref="T:System.Object" />입니다.</returns>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.OnControlCreated(System.Windows.Forms.TextBox)">
-            <summary>
-편집용 컨트롤이 생성된후에 호출됩니다.
-</summary>
-            <param name="control">생성된 컨트롤의 인스턴스입니다.</param>
-        </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.PaintValueSupported">
-            <summary>
-별도의 셀 렌더링 기능을 지원하는지에 대한 여부를 가져옵니다.
-</summary>
-            <remarks>
-                <see cref="T:Ntreev.Windows.Forms.Grid.ColumnControl`1" />클래스의 인스턴스 생성시 이 속성이 true이면 셀을 표시하기 위한 별도의 컨트롤을 생성합니다.
-</remarks>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.#ctor">
-            <summary>
-                <see cref="T:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox" />클래스의 새 인스턴스를 초기화합니다.
-</summary>
-        </member>
-        <member name="T:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox">
-            <summary>
-문자열 형태의 편집을 지원하는 Column개체를 나타냅니다.
-</summary>
-        </member>
         <member name="M:Ntreev.Windows.Forms.Grid.IToolTip.Hide">
             <summary>
 툴팁을 감춥니다.
@@ -2575,291 +2477,6 @@ ComboBox형태의 컨트롤을 지원하는 Column개체를 나타냅니다.
             <summary>
 툴팁 사용방법에 대한 메서드를 정의합니다.
 </summary>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnDetached(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
-            <summary>
-                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Detached" />이벤트를 발생시킵니다.
-</summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnDetaching(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
-            <summary>
-                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Detaching" />이벤트를 발생시킵니다.
-</summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnAttached(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
-            <summary>
-                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Attached" />이벤트를 발생시킵니다.
-</summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnAttaching(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
-            <summary>
-                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Attaching" />이벤트를 발생시킵니다.
-</summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.SetEditingValue(`0,System.Object)">
-            <summary>
-셀의 값을 컨트롤에 적용할때 호출됩니다.
-</summary>
-            <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
-            <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.GetEditingValue(`0)">
-            <summary>
-컨트롤에서 셀에 적용할 값을 가져올때 호출됩니다.
-</summary>
-            <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
-            <returns>셀에 적용할 값의 <see cref="T:System.Object" />입니다.</returns>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnControlCreated(`0)">
-            <summary>
-편집용 컨트롤이 생성된후에 호출됩니다.
-</summary>
-            <param name="control">생성된 컨트롤의 인스턴스입니다.</param>
-        </member>
-        <member name="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Detached">
-            <summary>
-셀 편집이 종료되고 컨트롤이 감춰진 후에 발생합니다.
-</summary>
-        </member>
-        <member name="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Detaching">
-            <summary>
-셀 편집이 종료되고 컨트롤이 감춰지기 전에 발생합니다.
-</summary>
-        </member>
-        <member name="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Attached">
-            <summary>
-셀 편집이 시작되고 컨트롤이 보여진 후에 발생합니다.
-</summary>
-        </member>
-        <member name="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Attaching">
-            <summary>
-셀 편집이 시작되고 컨트롤이 보여지기 전에 발생합니다.
-</summary>
-        </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.EditingControl">
-            <summary>
-셀이 편집될때 사용되는 컨트롤의 인스턴스를 가져옵니다.
-</summary>
-        </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.DefaultEditingResult">
-            <summary>
-편집이 비정상적으로 종료가 되었을때 새로운 값을 갱신하는 기본 방법을 가져옵니다.
-</summary>
-            <returns>
-비정상적인 편집 종료시 값의 갱신 여부를 확인하는 <see cref="D:Ntreev.Windows.Forms.Grid._EditingResult" />입니다.
-</returns>
-        </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.EditingType">
-            <summary>
-셀을 편집하는 방식을 가져옵니다.
-</summary>
-        </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Sizable">
-            <summary>
-DropDown에 사용되는 form의 크기를 사용자가 조절할 수 있는지에 대한 여부를 가져옵니다.
-</summary>
-            <returns>
-사용자가 DropDown의 사용되는 form 크기를 조절할 수 있으면 true를 그렇지 않으면 false를 반환합니다.
-</returns>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.GetPreferredSize(System.Drawing.Size)">
-            <summary>
-컨트롤이 DropDown에 부착되기전에 원하는 컨트롤의 크기를 조사하기 위해 호출됩니다.
-</summary>
-            <param name="proposedSize">편집되는 셀의 크기입니다.</param>
-            <returns>DropDown에 부착될 컨트롤의 크기입니다.</returns>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.#ctor(System.Object[])">
-            <summary>
-                <paramref name="controlArgs" />를 사용하여 컨트롤을 생성하고 <see cref="T:Ntreev.Windows.Forms.Grid.ColumnDropDown`1" />클래스의 새 인스턴스를 초기화합니다.
-</summary>
-            <remarks>
-만약 컨트롤의 특수 생성자가 있을때에는 <paramref name="controlArgs" />를 사용하여 필요한 인자를 넘길 수 있습니다.
-</remarks>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.#ctor">
-            <summary>
-컨트롤을 생성하고 <see cref="T:Ntreev.Windows.Forms.Grid.ColumnDropDown`1" />클래스의 새 인스턴스를 초기화합니다.
-</summary>
-        </member>
-        <member name="T:Ntreev.Windows.Forms.Grid.ColumnDropDown`1">
-            <summary>
-DropDown형식에 컨트롤을 부착해 편집할 수 있는 기능을 제공합니다.
-</summary>
-            <typeparam name="TControl"> 
-편집할때 사용할 컨트롤의 타입입니다.
-</typeparam>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnCheckBox.OnEditValue(Ntreev.Windows.Forms.Grid.EditValueEventArgs)">
-            <summary>
-값이 편집될때 호출됩니다.
-</summary>
-            <param name="e">값이 편집될때 필요한 데이터를 제공하는 <see cref="T:Ntreev.Windows.Forms.Grid.EditValueEventArgs" />개체입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnCheckBox.SetEditingValue(System.Windows.Forms.CheckBox,System.Object)">
-            <summary>
-셀의 값을 컨트롤에 적용할때 호출됩니다.
-</summary>
-            <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
-            <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnCheckBox.GetEditingValue(System.Windows.Forms.CheckBox)">
-            <summary>
-컨트롤에서 셀에 적용할 값을 가져올때 호출됩니다.
-</summary>
-            <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
-            <returns>셀에 적용할 값의 <see cref="T:System.Object" />입니다.</returns>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnCheckBox.PaintValue(System.Drawing.Graphics,System.Drawing.Rectangle,System.Drawing.Rectangle,Ntreev.Windows.Forms.Grid.IStyle,System.Object)">
-            <summary>
-셀을 그릴때 호출됩니다.
-</summary>
-            <param name="graphics">그리는데 필요한 개체입니다.</param>
-            <param name="renderRect">그려질 셀의 안쪽 영역을 나타냅니다.</param>
-            <param name="clipRect">클립 영역을 나타냅니다.</param>
-            <param name="style">셀의 배경색 및 전경색, 글꼴을 가져오는 개체입니다.</param>
-            <param name="value">그려질 셀의 값을 나타냅니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnCheckBox.#ctor">
-            <summary>
-                <see cref="T:Ntreev.Windows.Forms.Grid.Columns.ColumnCheckBox" />클래스의 새 인스턴스를 초기화합니다.
-</summary>
-        </member>
-        <member name="T:Ntreev.Windows.Forms.Grid.Columns.ColumnCheckBox">
-            <summary>
-CheckBox를 지원하는 Column개체를 나타냅니다.
-</summary>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnDetached(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
-            <summary>
-                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Detached" />이벤트를 발생시킵니다.
-</summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnDetaching(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
-            <summary>
-                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Detaching" />이벤트를 발생시킵니다.
-</summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnAttached(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
-            <summary>
-                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Attached" />이벤트를 발생시킵니다.
-</summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnAttaching(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
-            <summary>
-                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Attaching" />이벤트를 발생시킵니다.
-</summary>
-            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.SetControlLayout(`0,System.Drawing.Point,System.Drawing.Size)">
-            <summary>
-컨트롤을 셀의 위치로 이동하고 셀의 크기로 조정할때 호출됩니다.
-</summary>
-            <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
-            <param name="location">셀의 안쪽영역의 위치입니다.</param>
-            <param name="size">셀의 안쪽영역의 크기입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.SetEditingValue(`0,System.Object)">
-            <summary>
-셀의 값을 컨트롤에 적용할때 호출됩니다.
-</summary>
-            <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
-            <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.GetEditingValue(`0)">
-            <summary>
-컨트롤에서 셀에 적용할 값을 가져올때 호출됩니다.
-</summary>
-            <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
-            <returns>셀에 적용할 값의 <see cref="T:System.Object" />입니다.</returns>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnViewControlCreated(`0)">
-            <summary>
-                <see cref="P:Ntreev.Windows.Forms.Grid.ColumnControl`1.PaintValueSupported" />의 값이 true일때 셀 표시용 컨트롤이 생성된후에 호출됩니다.
-</summary>
-            <param name="control">생성된 컨트롤의 인스턴스입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnControlCreated(`0)">
-            <summary>
-편집용 컨트롤이 생성된후에 호출됩니다.
-</summary>
-            <param name="control">생성된 컨트롤의 인스턴스입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.PaintValue(System.Drawing.Graphics,System.Drawing.Rectangle,System.Drawing.Rectangle,Ntreev.Windows.Forms.Grid.IStyle,System.Object)">
-            <summary>
-셀을 그릴때 호출됩니다.
-</summary>
-            <param name="graphics">그리는데 필요한 개체입니다.</param>
-            <param name="renderRect">그려질 셀의 안쪽 영역을 나타냅니다.</param>
-            <param name="clipRect">클립 영역을 나타냅니다.</param>
-            <param name="style">셀의 배경색 및 전경색, 글꼴을 가져오는 개체입니다.</param>
-            <param name="value">그려질 셀의 값을 나타냅니다.</param>
-        </member>
-        <member name="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Detached">
-            <summary>
-셀 편집이 종료되고 컨트롤이 감춰진 후에 발생합니다.
-</summary>
-        </member>
-        <member name="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Detaching">
-            <summary>
-셀 편집이 종료되고 컨트롤이 감춰지기 전에 발생합니다.
-</summary>
-        </member>
-        <member name="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Attached">
-            <summary>
-셀 편집이 시작되고 컨트롤이 보여진 후에 발생합니다.
-</summary>
-        </member>
-        <member name="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Attaching">
-            <summary>
-셀 편집이 시작되고 컨트롤이 보여지기 전에 발생합니다.
-</summary>
-        </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.ColumnControl`1.PaintValueSupported">
-            <summary>
-별도의 셀 렌더링 기능을 지원하는지에 대한 여부를 가져옵니다.
-</summary>
-            <remarks>
-                <see cref="T:Ntreev.Windows.Forms.Grid.ColumnControl`1" />클래스의 인스턴스 생성시 이 속성이 true이면 셀을 표시하기 위한 별도의 컨트롤을 생성합니다.
-</remarks>
-        </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.ColumnControl`1.EditingControl">
-            <summary>
-셀이 편집될때 사용되는 컨트롤의 인스턴스를 가져옵니다.
-</summary>
-        </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.ColumnControl`1.EditingType">
-            <summary>
-셀을 편집하는 방식을 가져옵니다.
-</summary>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.#ctor(System.Object[])">
-            <summary>
-                <paramref name="controlArgs" />를 사용하여 컨트롤을 생성하고 <see cref="T:Ntreev.Windows.Forms.Grid.ColumnControl`1" />클래스의 새 인스턴스를 초기화합니다.
-</summary>
-            <remarks>
-만약 컨트롤의 특수 생성자가 있을때에는 <paramref name="controlArgs" />를 사용하여 필요한 인자를 넘길 수 있습니다.
-</remarks>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.#ctor">
-            <summary>
-컨트롤을 생성하고 <see cref="T:Ntreev.Windows.Forms.Grid.ColumnControl`1" />클래스의 새 인스턴스를 초기화합니다.
-</summary>
-        </member>
-        <member name="T:Ntreev.Windows.Forms.Grid.ColumnControl`1">
-            <summary>
-컨트롤을 이용해 편집할 수 있고 셀을 그릴 수 있는 기능을 제공합니다.
-</summary>
-            <typeparam name="TControl"> 
-편집할때 사용할 컨트롤의 타입입니다.
-</typeparam>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`2.OnDetached(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
             <summary>
@@ -3013,32 +2630,415 @@ CheckBox를 지원하는 Column개체를 나타냅니다.
 셀을 표시할때 사용할 컨트롤의 타입입니다.
 </typeparam>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Private.About.InitializeComponent">
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnCheckBox.OnEditValue(Ntreev.Windows.Forms.Grid.EditValueEventArgs)">
             <summary>
-디자이너 지원에 필요한 메서드입니다.
-이 메서드의 내용을 코드 편집기로 수정하지 마십시오.
+값이 편집될때 호출됩니다.
+</summary>
+            <param name="e">값이 편집될때 필요한 데이터를 제공하는 <see cref="T:Ntreev.Windows.Forms.Grid.EditValueEventArgs" />개체입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnCheckBox.SetEditingValue(System.Windows.Forms.CheckBox,System.Object)">
+            <summary>
+셀의 값을 컨트롤에 적용할때 호출됩니다.
+</summary>
+            <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
+            <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnCheckBox.GetEditingValue(System.Windows.Forms.CheckBox)">
+            <summary>
+컨트롤에서 셀에 적용할 값을 가져올때 호출됩니다.
+</summary>
+            <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
+            <returns>셀에 적용할 값의 <see cref="T:System.Object" />입니다.</returns>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnCheckBox.PaintValue(System.Drawing.Graphics,System.Drawing.Rectangle,System.Drawing.Rectangle,Ntreev.Windows.Forms.Grid.IStyle,System.Object)">
+            <summary>
+셀을 그릴때 호출됩니다.
+</summary>
+            <param name="graphics">그리는데 필요한 개체입니다.</param>
+            <param name="renderRect">그려질 셀의 안쪽 영역을 나타냅니다.</param>
+            <param name="clipRect">클립 영역을 나타냅니다.</param>
+            <param name="style">셀의 배경색 및 전경색, 글꼴을 가져오는 개체입니다.</param>
+            <param name="value">그려질 셀의 값을 나타냅니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnCheckBox.#ctor">
+            <summary>
+                <see cref="T:Ntreev.Windows.Forms.Grid.Columns.ColumnCheckBox" />클래스의 새 인스턴스를 초기화합니다.
 </summary>
         </member>
-        <member name="F:Ntreev.Windows.Forms.Grid.Private.About.components">
+        <member name="T:Ntreev.Windows.Forms.Grid.Columns.ColumnCheckBox">
             <summary>
-필수 디자이너 변수입니다.
+CheckBox를 지원하는 Column개체를 나타냅니다.
 </summary>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Private.About.Dispose">
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnPathSelector.OnEditValue(Ntreev.Windows.Forms.Grid.EditValueEventArgs)">
             <summary>
-사용 중인 모든 리소스를 정리합니다.
+값이 편집될때 호출됩니다.
+</summary>
+            <param name="e">값이 편집될때 필요한 데이터를 제공하는 <see cref="T:Ntreev.Windows.Forms.Grid.EditValueEventArgs" />개체입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnPathSelector.#ctor">
+            <summary>
+                <see cref="T:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox" />클래스의 새 인스턴스를 초기화합니다.
 </summary>
         </member>
-        <member name="T:Ntreev.Windows.Forms.Grid.Private.About">
+        <member name="T:Ntreev.Windows.Forms.Grid.Columns.ColumnPathSelector">
             <summary>
-About에 대한 요약입니다.
-
-경고: 이 클래스의 이름을 변경하면 이 클래스가 의존하는
-         모든 .resx 파일과 관련된 관리되는 리소스 컴파일러 도구의
-         '리소스 파일 이름' 속성도 변경해야 합니다. 그렇지 않은 경우
-         디자이너는 이 폼과 관련된 지역화된 리소스와
-         올바르게 상호 작용할 수 없습니다.
+Modal형식으로 경로 데이터를 편집할 수 있는 Column개체를 나타냅니다.
 </summary>
+        </member>
+        <member name="F:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox.DefaultMaxDropDownItems">
+            <summary>
+펼쳐질 목록에 보여질 아이템 갯수의 기본값입니다.
+</summary>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox.SetEditingValue(System.Windows.Forms.ListBox,System.Object)">
+            <summary>
+셀의 값을 컨트롤에 적용할때 호출됩니다.
+</summary>
+            <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
+            <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox.GetEditingValue(System.Windows.Forms.ListBox)">
+            <summary>
+컨트롤에서 셀에 적용할 값을 가져올때 호출됩니다.
+</summary>
+            <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
+            <returns>셀에 적용할 값의 <see cref="T:System.Object" />입니다.</returns>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox.MaxDropDownItems">
+            <summary>
+펼쳐질 목록에 보여질 최대 아이템 갯수를 가져오거나 설정합니다.
+</summary>
+            <returns>
+펼쳐질 목록에 보여질 최대 아이템 갯수를 나타내는 <see cref="T:System.Int32" />형태의 정수값 입니다. 기본 값은 8입니다.(<see cref="F:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox.DefaultMaxDropDownItems" />)
+</returns>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox.DataSource">
+            <summary>
+펼쳐질 목록에 표시할 데이터 소스를 가져오거나 설정합니다.
+</summary>
+            <param name="value">
+                <see cref="T:System.Array" />같은 <see cref="T:System.Collections.IList" /> 인터페이스를 구현하는 개체입니다. 
+</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox.#ctor">
+            <summary>
+                <see cref="T:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox" />클래스의 새 인스턴스를 초기화합니다.
+</summary>
+        </member>
+        <member name="T:Ntreev.Windows.Forms.Grid.Columns.ColumnComboBox">
+            <summary>
+ComboBox형태의 컨트롤을 지원하는 Column개체를 나타냅니다.
+</summary>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.SetControlLayout(System.Windows.Forms.TextBox,System.Drawing.Point,System.Drawing.Size)">
+            <summary>
+컨트롤을 셀의 위치로 이동하고 셀의 크기로 조정할때 호출됩니다.
+</summary>
+            <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
+            <param name="location">셀의 안쪽영역의 위치입니다.</param>
+            <param name="size">셀의 안쪽영역의 크기입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.OnDetaching(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Detaching" />이벤트를 발생시킵니다.
+</summary>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.OnAttached(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Attached" />이벤트를 발생시킵니다.
+</summary>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.OnAttaching(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Attaching" />이벤트를 발생시킵니다.
+</summary>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.SetEditingValue(System.Windows.Forms.TextBox,System.Object)">
+            <summary>
+셀의 값을 컨트롤에 적용할때 호출됩니다.
+</summary>
+            <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
+            <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.GetEditingValue(System.Windows.Forms.TextBox)">
+            <summary>
+컨트롤에서 셀에 적용할 값을 가져올때 호출됩니다.
+</summary>
+            <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
+            <returns>셀에 적용할 값의 <see cref="T:System.Object" />입니다.</returns>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.OnControlCreated(System.Windows.Forms.TextBox)">
+            <summary>
+편집용 컨트롤이 생성된후에 호출됩니다.
+</summary>
+            <param name="control">생성된 컨트롤의 인스턴스입니다.</param>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.PaintValueSupported">
+            <summary>
+별도의 셀 렌더링 기능을 지원하는지에 대한 여부를 가져옵니다.
+</summary>
+            <remarks>
+                <see cref="T:Ntreev.Windows.Forms.Grid.ColumnControl`1" />클래스의 인스턴스 생성시 이 속성이 true이면 셀을 표시하기 위한 별도의 컨트롤을 생성합니다.
+</remarks>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.#ctor">
+            <summary>
+                <see cref="T:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox" />클래스의 새 인스턴스를 초기화합니다.
+</summary>
+        </member>
+        <member name="T:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox">
+            <summary>
+문자열 형태의 편집을 지원하는 Column개체를 나타냅니다.
+</summary>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnDetached(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Detached" />이벤트를 발생시킵니다.
+</summary>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnDetaching(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Detaching" />이벤트를 발생시킵니다.
+</summary>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnAttached(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Attached" />이벤트를 발생시킵니다.
+</summary>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnAttaching(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Attaching" />이벤트를 발생시킵니다.
+</summary>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.SetEditingValue(`0,System.Object)">
+            <summary>
+셀의 값을 컨트롤에 적용할때 호출됩니다.
+</summary>
+            <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
+            <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.GetEditingValue(`0)">
+            <summary>
+컨트롤에서 셀에 적용할 값을 가져올때 호출됩니다.
+</summary>
+            <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
+            <returns>셀에 적용할 값의 <see cref="T:System.Object" />입니다.</returns>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.OnControlCreated(`0)">
+            <summary>
+편집용 컨트롤이 생성된후에 호출됩니다.
+</summary>
+            <param name="control">생성된 컨트롤의 인스턴스입니다.</param>
+        </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Detached">
+            <summary>
+셀 편집이 종료되고 컨트롤이 감춰진 후에 발생합니다.
+</summary>
+        </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Detaching">
+            <summary>
+셀 편집이 종료되고 컨트롤이 감춰지기 전에 발생합니다.
+</summary>
+        </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Attached">
+            <summary>
+셀 편집이 시작되고 컨트롤이 보여진 후에 발생합니다.
+</summary>
+        </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Attaching">
+            <summary>
+셀 편집이 시작되고 컨트롤이 보여지기 전에 발생합니다.
+</summary>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.EditingControl">
+            <summary>
+셀이 편집될때 사용되는 컨트롤의 인스턴스를 가져옵니다.
+</summary>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.DefaultEditingResult">
+            <summary>
+편집이 비정상적으로 종료가 되었을때 새로운 값을 갱신하는 기본 방법을 가져옵니다.
+</summary>
+            <returns>
+비정상적인 편집 종료시 값의 갱신 여부를 확인하는 <see cref="D:Ntreev.Windows.Forms.Grid._EditingResult" />입니다.
+</returns>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.EditingType">
+            <summary>
+셀을 편집하는 방식을 가져옵니다.
+</summary>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.Sizable">
+            <summary>
+DropDown에 사용되는 form의 크기를 사용자가 조절할 수 있는지에 대한 여부를 가져옵니다.
+</summary>
+            <returns>
+사용자가 DropDown의 사용되는 form 크기를 조절할 수 있으면 true를 그렇지 않으면 false를 반환합니다.
+</returns>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.GetPreferredSize(System.Drawing.Size)">
+            <summary>
+컨트롤이 DropDown에 부착되기전에 원하는 컨트롤의 크기를 조사하기 위해 호출됩니다.
+</summary>
+            <param name="proposedSize">편집되는 셀의 크기입니다.</param>
+            <returns>DropDown에 부착될 컨트롤의 크기입니다.</returns>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.#ctor(System.Object[])">
+            <summary>
+                <paramref name="controlArgs" />를 사용하여 컨트롤을 생성하고 <see cref="T:Ntreev.Windows.Forms.Grid.ColumnDropDown`1" />클래스의 새 인스턴스를 초기화합니다.
+</summary>
+            <remarks>
+만약 컨트롤의 특수 생성자가 있을때에는 <paramref name="controlArgs" />를 사용하여 필요한 인자를 넘길 수 있습니다.
+</remarks>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnDropDown`1.#ctor">
+            <summary>
+컨트롤을 생성하고 <see cref="T:Ntreev.Windows.Forms.Grid.ColumnDropDown`1" />클래스의 새 인스턴스를 초기화합니다.
+</summary>
+        </member>
+        <member name="T:Ntreev.Windows.Forms.Grid.ColumnDropDown`1">
+            <summary>
+DropDown형식에 컨트롤을 부착해 편집할 수 있는 기능을 제공합니다.
+</summary>
+            <typeparam name="TControl"> 
+편집할때 사용할 컨트롤의 타입입니다.
+</typeparam>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnDetached(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Detached" />이벤트를 발생시킵니다.
+</summary>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnDetaching(Ntreev.Windows.Forms.Grid.DetachEventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Detaching" />이벤트를 발생시킵니다.
+</summary>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.DetachEventArgs" />입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnAttached(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Attached" />이벤트를 발생시킵니다.
+</summary>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnAttaching(Ntreev.Windows.Forms.Grid.AttachEventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Attaching" />이벤트를 발생시킵니다.
+</summary>
+            <param name="e">이벤트 데이터가 들어있는 <see cref="T:Ntreev.Windows.Forms.Grid.AttachEventArgs" />입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.SetControlLayout(`0,System.Drawing.Point,System.Drawing.Size)">
+            <summary>
+컨트롤을 셀의 위치로 이동하고 셀의 크기로 조정할때 호출됩니다.
+</summary>
+            <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
+            <param name="location">셀의 안쪽영역의 위치입니다.</param>
+            <param name="size">셀의 안쪽영역의 크기입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.SetEditingValue(`0,System.Object)">
+            <summary>
+셀의 값을 컨트롤에 적용할때 호출됩니다.
+</summary>
+            <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
+            <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.GetEditingValue(`0)">
+            <summary>
+컨트롤에서 셀에 적용할 값을 가져올때 호출됩니다.
+</summary>
+            <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
+            <returns>셀에 적용할 값의 <see cref="T:System.Object" />입니다.</returns>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnViewControlCreated(`0)">
+            <summary>
+                <see cref="P:Ntreev.Windows.Forms.Grid.ColumnControl`1.PaintValueSupported" />의 값이 true일때 셀 표시용 컨트롤이 생성된후에 호출됩니다.
+</summary>
+            <param name="control">생성된 컨트롤의 인스턴스입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnControlCreated(`0)">
+            <summary>
+편집용 컨트롤이 생성된후에 호출됩니다.
+</summary>
+            <param name="control">생성된 컨트롤의 인스턴스입니다.</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.PaintValue(System.Drawing.Graphics,System.Drawing.Rectangle,System.Drawing.Rectangle,Ntreev.Windows.Forms.Grid.IStyle,System.Object)">
+            <summary>
+셀을 그릴때 호출됩니다.
+</summary>
+            <param name="graphics">그리는데 필요한 개체입니다.</param>
+            <param name="renderRect">그려질 셀의 안쪽 영역을 나타냅니다.</param>
+            <param name="clipRect">클립 영역을 나타냅니다.</param>
+            <param name="style">셀의 배경색 및 전경색, 글꼴을 가져오는 개체입니다.</param>
+            <param name="value">그려질 셀의 값을 나타냅니다.</param>
+        </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Detached">
+            <summary>
+셀 편집이 종료되고 컨트롤이 감춰진 후에 발생합니다.
+</summary>
+        </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Detaching">
+            <summary>
+셀 편집이 종료되고 컨트롤이 감춰지기 전에 발생합니다.
+</summary>
+        </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Attached">
+            <summary>
+셀 편집이 시작되고 컨트롤이 보여진 후에 발생합니다.
+</summary>
+        </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.ColumnControl`1.Attaching">
+            <summary>
+셀 편집이 시작되고 컨트롤이 보여지기 전에 발생합니다.
+</summary>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.ColumnControl`1.PaintValueSupported">
+            <summary>
+별도의 셀 렌더링 기능을 지원하는지에 대한 여부를 가져옵니다.
+</summary>
+            <remarks>
+                <see cref="T:Ntreev.Windows.Forms.Grid.ColumnControl`1" />클래스의 인스턴스 생성시 이 속성이 true이면 셀을 표시하기 위한 별도의 컨트롤을 생성합니다.
+</remarks>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.ColumnControl`1.EditingControl">
+            <summary>
+셀이 편집될때 사용되는 컨트롤의 인스턴스를 가져옵니다.
+</summary>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.ColumnControl`1.EditingType">
+            <summary>
+셀을 편집하는 방식을 가져옵니다.
+</summary>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.#ctor(System.Object[])">
+            <summary>
+                <paramref name="controlArgs" />를 사용하여 컨트롤을 생성하고 <see cref="T:Ntreev.Windows.Forms.Grid.ColumnControl`1" />클래스의 새 인스턴스를 초기화합니다.
+</summary>
+            <remarks>
+만약 컨트롤의 특수 생성자가 있을때에는 <paramref name="controlArgs" />를 사용하여 필요한 인자를 넘길 수 있습니다.
+</remarks>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.#ctor">
+            <summary>
+컨트롤을 생성하고 <see cref="T:Ntreev.Windows.Forms.Grid.ColumnControl`1" />클래스의 새 인스턴스를 초기화합니다.
+</summary>
+        </member>
+        <member name="T:Ntreev.Windows.Forms.Grid.ColumnControl`1">
+            <summary>
+컨트롤을 이용해 편집할 수 있고 셀을 그릴 수 있는 기능을 제공합니다.
+</summary>
+            <typeparam name="TControl"> 
+편집할때 사용할 컨트롤의 타입입니다.
+</typeparam>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.CellIterator.MoveDown(Ntreev.Windows.Forms.Grid.SelectionRange)">
             <summary>

@@ -1432,7 +1432,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		string^						m_siteName;
 	};
+} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
 
+// Column::EditValue 때문에 인텔리센스가 오작동하여 아래의 클래스 네임스페이스가 정확시 표시가 안됨.. 이유는 모르겠음.
+namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
+{
 	/// <summary>
 	/// 모달형식으로 셀을 편집할 수 있는 기능을 제공합니다.
 	/// </summary>

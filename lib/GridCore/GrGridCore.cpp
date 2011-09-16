@@ -478,15 +478,12 @@ void GrGridCore::Clear()
 
 	m_nGroupingMargin = 0;
 	m_rtDisplay.DoEmpty();
-	
 
 	OnCleared(&GrEventArgs::Empty);
-
 
 	//int n = GrCell::m_snCreated;
 	//if(m_nInitialObjectCount != n)
 	//	throw new exception("Clear시 해제 되지 않은 개체가 있습니다");
-
 }
 
 void GrGridCore::Invalidate()

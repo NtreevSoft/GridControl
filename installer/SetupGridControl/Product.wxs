@@ -7,12 +7,10 @@
 <?define ProductRegistry = "Software\NtreevSoft\GridControl" ?>
 
 <!--<?define AssemblyVersion = "1.0.4245.31717" ?>-->
-<?define AssemblyVersion = "1.0.4259.22338" ?>
+<?define AssemblyVersion = "1.0.4261.29948" ?>
 <?define AssemblyName = "Ntreev.Windows.Forms.Grid, Version=$(var.AssemblyVersion), Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca, processorArchitecture=MSIL" ?>
-<?define AssemblyPath = "..\..\bin\lib\$(var.AssemblyVersion)\" ?>
-
-
-<!--<?define AssemblyPath = "..\..\bin\lib\" ?>-->
+<!--<?define AssemblyPath = "..\..\bin\lib\$(var.AssemblyVersion)\" ?>-->
+<?define AssemblyPath = "..\..\bin\lib\" ?>
 <?define NtreevSoft = "NtreevSoft" ?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -36,6 +34,10 @@
       <RegistrySearch Id="InstallDirVS10" Root="HKLM" Key="$(var.VisualStudioRegistryRoot10)" Name="InstallDir" Type="directory" />
     </Property>
 
+    <Property Id="INSTALLED_ASSEMBLY_VERSION">
+      <RegistrySearch Id="InstalledAssemblyVersion" Root="HKLM" Key="$(var.ProductRegistry)" Name="AssemblyVersion" Type="raw" />
+    </Property>
+
     <Condition Message="Visual Studio is not installed">Installed OR (NOT Installed AND (INSTALLDIR_VS8 OR INSTALLDIR_VS9 OR INSTALLDIR_VS10))</Condition>
 
     <Directory Id="TARGETDIR" Name="SourceDir">
@@ -45,6 +47,12 @@
             <!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
             <Merge Id="TbxCtrlsInstDefaultItemsCA" Language="1033" SourceFile="TbxCtrlsInstDefaultItemsCA.msm" DiskId="1" />
             <Merge Id="TbxCtrlsInstDefaultItemsCA9" Language="1033" SourceFile="TbxCtrlsInstDefaultItemsCA.9.0.msm" DiskId="1" />
+
+            <!--<Component Id="RemoveOldRegistry" Guid="78B42CE1-BCFB-4d58-BCDC-5B77E0DC2F78" KeyPath="yes">
+              <RemoveRegistryKey Root="HKLM" Key="$(var.VisualStudioRegistryRoot8)\ToolboxControlsInstaller\Ntreev.Windows.Forms.Grid, Version=[INSTALLED_ASSEMBLY_VERSION], Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca, processorArchitecture=MSIL" Action="removeOnInstall" />
+              <RemoveRegistryKey Root="HKLM" Key="$(var.VisualStudioRegistryRoot9)\ToolboxControlsInstaller\Ntreev.Windows.Forms.Grid, Version=[INSTALLED_ASSEMBLY_VERSION], Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca, processorArchitecture=MSIL" Action="removeOnInstall" />
+              <RemoveRegistryKey Root="HKLM" Key="$(var.VisualStudioRegistryRoot10)\ToolboxControlsInstaller\Ntreev.Windows.Forms.Grid, Version=[INSTALLED_ASSEMBLY_VERSION], Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca, processorArchitecture=MSIL" Action="removeOnInstall" />
+            </Component>-->
 
             <Component Id="CopyFiles" Guid="d689b695-be61-40a4-bdbd-4cb4418ea9bd">
               <File Id="Grid.xml" Assembly="no" Source="$(var.AssemblyPath)Ntreev.Windows.Forms.Grid.xml" DiskId="1" />
@@ -60,12 +68,18 @@
                 <RegistryValue Value="NtreevSoft Controls" Type="string" />
                 <RegistryValue Value="[INSTALLLOCATION]Ntreev.Windows.Forms.Grid.dll" Type="string" Name="CodeBase" />
               </RegistryKey >
+              <RegistryKey Root="HKLM" Key="$(var.ProductRegistry)">
+                <RegistryValue Value="1" Name="Visual Studio 8.0" Type="integer" />
+              </RegistryKey >
             </Component>
 
             <Component Id="NtreevSoftControls_Registration_2008" Guid="B74650E2-08AF-4748-ABB7-293E6D3A2EDA">
               <RegistryKey Root="HKLM" Key="$(var.VisualStudioRegistryRoot9)\ToolboxControlsInstaller\$(var.AssemblyName)">
                 <RegistryValue Value="NtreevSoft Controls" Type="string" />
                 <RegistryValue Value="[INSTALLLOCATION]Ntreev.Windows.Forms.Grid.dll" Type="string" Name="CodeBase" />
+              </RegistryKey >
+              <RegistryKey Root="HKLM" Key="$(var.ProductRegistry)">
+                <RegistryValue Value="1" Name="Visual Studio 9.0" Type="integer" />
               </RegistryKey >
             </Component>
 
@@ -74,8 +88,18 @@
                 <RegistryValue Value="NtreevSoft Controls" Type="string" />
                 <RegistryValue Value="[INSTALLLOCATION]Ntreev.Windows.Forms.Grid.dll" Type="string" Name="CodeBase" />
               </RegistryKey >
+              <RegistryKey Root="HKLM" Key="$(var.ProductRegistry)">
+                <RegistryValue Value="1" Name="Visual Studio 10.0" Type="integer" />
+              </RegistryKey >
             </Component>
 
+            <!--<Component Id="ProductRegistryValue" Guid="D9284560-675B-4aa2-AFDD-D4C6E70FEEB4">
+              <RegistryKey Root="HKLM" Key="$(var.ProductRegistry)">
+                <RegistryValue Value="$(var.AssemblyVersion)" Name="AssemblyVersion" Type="string" />
+                <RegistryValue Value="[INSTALLLOCATION]" Type="string" />
+              </RegistryKey >
+            </Component>-->
+            
           </Directory>
         </Directory>
       </Directory>
@@ -83,8 +107,11 @@
 
     <Feature Id="ProductFeature" Title="Install GridControl" Level="1" ConfigurableDirectory="INSTALLLOCATION" Display="expand" Absent="disallow">
       <!-- TODO: Remove the comments around this ComponentRef element and the Component above in order to add resources to this installer. -->
+      <!--<ComponentRef Id="RemoveOldRegistry" />-->
       <ComponentRef Id="CopyFiles" />
       <ComponentRef Id="CopyFilesGAC" />
+      <!--<ComponentRef Id="ProductRegistryValue" />-->
+      
 
       <Feature Id="RegisterVisualStudio8" Title="Visual Studio 2005" Level="1">
         <ComponentRef Id="NtreevSoftControls_Registration_2005" />
@@ -103,7 +130,6 @@
         <!--<MergeRef Id="TbxCtrlsInstDefaultItemsCA9" />-->
         <Condition Level="0"><![CDATA[INSTALLDIR_VS10 = ""]]></Condition>
       </Feature>
-   
     </Feature>
 
     <UIRef Id="WixUI_FeatureTree"/>

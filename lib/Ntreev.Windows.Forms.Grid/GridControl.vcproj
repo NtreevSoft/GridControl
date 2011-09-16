@@ -363,6 +363,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GridStyle.h"
+				>
+			</File>
+			<File
 				RelativePath=".\GridStyleProvider.h"
 				>
 			</File>
@@ -411,14 +415,6 @@
 			<File
 				RelativePath=".\GridResource.resx"
 				SubType="Designer"
-				>
-			</File>
-			<File
-				RelativePath=".\GridStyle.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridStyle.h"
 				>
 			</File>
 			<File
@@ -589,6 +585,10 @@
 			</File>
 			<File
 				RelativePath=".\GridState.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridStyle.cpp"
 				>
 			</File>
 			<File

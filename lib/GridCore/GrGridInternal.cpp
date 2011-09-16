@@ -3,7 +3,6 @@
 #include "GrGridRenderer.h"
 #include <assert.h>
 
-
 uint GrUtil::Sum(uint n1, int n2)
 {
 	uint nReturn = n1 + n2;
