@@ -1,20 +1,43 @@
+ï»¿//=====================================================================================================================
+// Ntreev Grid for .Net 1.0
+// https://github.com/NtreevSoft/GridControl
+// 
+// Released under the MIT License.
+// 
+// Copyright (c) 2010 Ntreev Soft co., Ltd.
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit 
+// persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the 
+// Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+// WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//=====================================================================================================================
+
+
 #pragma once
 #include "GridCellBase.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
 	/// <summary>
-	/// Á¦¸ñÀ» Ç¥½ÃÇÏ´Â °³Ã¼ÀÔ´Ï´Ù.
+	/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½Ã¼ï¿½Ô´Ï´ï¿½.
 	/// </summary>
 	[System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
 	public ref class GroupingRow : CellBase
 	{
 	public: // methods
 		/// <summary>
-		/// ÇöÀç <see cref="System:Object"/>¸¦ ³ªÅ¸³»´Â <see cref="System::String"/>À» ¹ÝÈ¯ÇÕ´Ï´Ù.
+		/// ï¿½ï¿½ï¿½ï¿½ <see cref="System:Object"/>ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ <see cref="System::String"/>ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Õ´Ï´ï¿½.
 		/// </summary>
 		/// <returns>
-		/// ÇöÀç <see cref="System:Object"/>¸¦ ³ªÅ¸³»´Â <see cref="System::String"/>ÀÔ´Ï´Ù.
+		/// ï¿½ï¿½ï¿½ï¿½ <see cref="System:Object"/>ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ <see cref="System::String"/>ï¿½Ô´Ï´ï¿½.
 		/// </returns>
 		virtual string^ ToString() override
 		{
@@ -23,10 +46,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	public: // properties
 		/// <summary>
-		/// Á¦¸ñÀ» °¡Á®¿À°Å³ª ¼³Á¤ÇÕ´Ï´Ù.
+		/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 		/// </summary>
 		/// <returns>
-		/// Á¦¸ñÀ» ³ªÅ¸³»´Â ¹®ÀÚ¿­ÀÔ´Ï´Ù.
+		/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½Ô´Ï´ï¿½.
 		/// </returns>
 		[_Category("Layout")]
 		property string^ Text
@@ -36,10 +59,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// Á¦¸ñÀÇ Ç¥½Ã ¿©ºÎ¸¦ °¡Á®¿À°Å³ª ¼³Á¤ÇÕ´Ï´Ù.
+		/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 		/// </summary>
 		/// <returns>
-		/// Á¦¸ñÀÌ Ç¥½ÃµÇ¸é true¸¦, ±×·¸Áö ¾ÊÀ¸¸é false¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
+		/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ÃµÇ¸ï¿½ trueï¿½ï¿½, ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ falseï¿½ï¿½ ï¿½ï¿½È¯ï¿½Õ´Ï´ï¿½.
 		/// </returns>
 		[_Category("Appearance"), _DefaultValue(true)]
 		property bool IsVisible

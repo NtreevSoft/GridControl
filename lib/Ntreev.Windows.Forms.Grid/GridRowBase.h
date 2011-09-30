@@ -1,3 +1,26 @@
+ï»¿//=====================================================================================================================
+// Ntreev Grid for .Net 1.0
+// https://github.com/NtreevSoft/GridControl
+// 
+// Released under the MIT License.
+// 
+// Copyright (c) 2010 Ntreev Soft co., Ltd.
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit 
+// persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the 
+// Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+// WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//=====================================================================================================================
+
+
 #pragma once
 #include "GridCellBase.h"
 
@@ -7,15 +30,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 	public: // properties
 		/// <summary>
-		/// ÇàÀÇ ³ôÀÌ¸¦ °¡Á®¿À°Å³ª ¼³Á¤ÇÕ´Ï´Ù.
+		/// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 		/// </summary>
 		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// ¸Å°³º¯¼ö°¡ 0º¸´Ù ÀÛÀ» °æ¿ì
+		/// ï¿½Å°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 		/// </exception>
 		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// ¸Å°³º¯¼ö°¡ <see cref="MinHeight"/>º¸´Ù ÀÛ°Å³ª <see cref="MaxHeight"/>º¸´Ù Å¬°æ¿ì
+		/// ï¿½Å°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ <see cref="MinHeight"/>ï¿½ï¿½ï¿½ï¿½ ï¿½Û°Å³ï¿½ <see cref="MaxHeight"/>ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½
 		/// </exception>
-		[_Description("¿­ÀÇ ³ôÀÌÀÔ´Ï´Ù.")]
+		[_Description("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.")]
 		[_Category("Layout")]
 		property int Height
 		{
@@ -24,15 +47,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// ÇàÀÇ ÃÖ¼Ò³ôÀÌ¸¦ °¡Á®¿À°Å³ª ¼³Á¤ÇÕ´Ï´Ù.
+		/// ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼Ò³ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 		/// </summary>
 		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// ¸Å°³º¯¼ö°¡ 0º¸´Ù ÀÛÀ» °æ¿ì
+		/// ï¿½Å°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 		/// </exception>
 		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// ¸Å°³º¯¼ö°¡ <see cref="MaxHeight"/>º¸´Ù Å¬°æ¿ì
+		/// ï¿½Å°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ <see cref="MaxHeight"/>ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½
 		/// </exception>
-		[_Description("¿­ÀÇ ÃÖ¼Ò³ôÀÌÀÔ´Ï´Ù.")]
+		[_Description("ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼Ò³ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.")]
 		[_Category("Layout")]
 		property int MinHeight
 		{
@@ -41,15 +64,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// ÇàÀÇ ÃÖ´ë³ôÀÌ¸¦ °¡Á®¿À°Å³ª ¼³Á¤ÇÕ´Ï´Ù.
+		/// ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 		/// </summary>
 		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// ¸Å°³º¯¼ö°¡ 0º¸´Ù ÀÛÀ» °æ¿ì
+		/// ï¿½Å°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 		/// </exception>
 		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// ¸Å°³º¯¼ö°¡ <see cref="MinHeight"/>º¸´Ù ÀÛÀ»°æ¿ì
+		/// ï¿½Å°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ <see cref="MinHeight"/>ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		/// </exception>
-		[_Description("¿­ÀÇ ÃÖ´ë³ôÀÌÀÔ´Ï´Ù.")]
+		[_Description("ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.")]
 		[_Category("Layout")]
 		property int MaxHeight
 		{
@@ -58,12 +81,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// Ç¥½ÃµÇ°í ÀÖ´ÂÁöÀÇ ¿©ºÎ¸¦ °¡Á®¿À°Å³ª ¼³Á¤ÇÕ´Ï´Ù.
+		/// Ç¥ï¿½ÃµÇ°ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 		/// </summary>
 		/// <returns>
-		/// Ç¥½ÃµÇ°í ÀÖ´Ù¸é true¸¦ ¹ÝÈ¯ÇÏ°í, ±×·¸Áö ¾Ê´Ù¸é false¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
+		/// Ç¥ï¿½ÃµÇ°ï¿½ ï¿½Ö´Ù¸ï¿½ trueï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ï°ï¿½, ï¿½×·ï¿½ï¿½ï¿½ ï¿½Ê´Ù¸ï¿½ falseï¿½ï¿½ ï¿½ï¿½È¯ï¿½Õ´Ï´ï¿½.
 		/// </returns>
-		[_Description("Ç¥½ÃµÇ°í ÀÖ´ÂÁöÀÇ ¿©ºÎ¸¦ °¡Á®¿À°Å³ª ¼³Á¤ÇÕ´Ï´Ù.")]
+		[_Description("Ç¥ï¿½ÃµÇ°ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.")]
 		[_Category("Appearance")]
 		[_DefaultValue(true)]
 		property bool IsVisible 
@@ -73,17 +96,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// Ç¥½ÃµÇ´Â ÀÎµ¦½º¸¦ °¡Á®¿É´Ï´Ù.
+		/// Ç¥ï¿½ÃµÇ´ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½É´Ï´ï¿½.
 		/// </summary>
 		/// <returns>
-		/// Ç¥½Ã°¡ µÈ´Ù¸é ÀÎµ¦½º(0ºÎÅÍ ½ÃÀÛ)¸¦ ¹ÝÈ¯ÇÏ°í, ±×·¸Áö ¾Ê´Ù¸é 0xffffffff¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
+		/// Ç¥ï¿½Ã°ï¿½ ï¿½È´Ù¸ï¿½ ï¿½Îµï¿½ï¿½ï¿½(0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ï°ï¿½, ï¿½×·ï¿½ï¿½ï¿½ ï¿½Ê´Ù¸ï¿½ 0xffffffffï¿½ï¿½ ï¿½ï¿½È¯ï¿½Õ´Ï´ï¿½.
 		/// </returns>
 		/// <remarks>
-		/// Ç¥½Ã ¿©ºÎ¸¦ È®ÀÎÇÏ±â À§ÇØ¼­´Â <see cref="IsVisible"/>¸¦ È®ÀÎÇÏ¸é µË´Ï´Ù.
+		/// Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½Î¸ï¿½ È®ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½ï¿½ <see cref="IsVisible"/>ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½Ë´Ï´ï¿½.
 		/// </remarks>
 #ifdef _DEBUG
 		[_Category("Debug")]
-		[_Description("Ç¥½ÃµÇ´Â ÀÎµ¦½ºÀÔ´Ï´Ù.")]
+		[_Description("Ç¥ï¿½ÃµÇ´ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.")]
 #else
 		[_Browsable(false)]
 #endif
@@ -93,17 +116,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// È­¸é¿¡ Ç¥½ÃµÇ´Â ÀÎµ¦½º¸¦ °¡Á®¿É´Ï´Ù.
+		/// È­ï¿½é¿¡ Ç¥ï¿½ÃµÇ´ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½É´Ï´ï¿½.
 		/// </summary>
 		/// <returns>
-		/// È­¸é¿¡ Ç¥½Ã°¡ µÈ´Ù¸é ÀÎµ¦½º(0ºÎÅÍ ½ÃÀÛ)¸¦ ¹ÝÈ¯ÇÏ°í, ±×·¸Áö ¾Ê´Ù¸é 0xffffffff¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
+		/// È­ï¿½é¿¡ Ç¥ï¿½Ã°ï¿½ ï¿½È´Ù¸ï¿½ ï¿½Îµï¿½ï¿½ï¿½(0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ï°ï¿½, ï¿½×·ï¿½ï¿½ï¿½ ï¿½Ê´Ù¸ï¿½ 0xffffffffï¿½ï¿½ ï¿½ï¿½È¯ï¿½Õ´Ï´ï¿½.
 		/// </returns>
 		/// <remarks>
-		/// È­¸é¿¡ Ç¥½Ã ¿©ºÎ¸¦ È®ÀÎÇÏ±â À§ÇØ¼­´Â <see cref="IsDisplayable"/>¸¦ È®ÀÎÇÏ¸é µË´Ï´Ù.
+		/// È­ï¿½é¿¡ Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½Î¸ï¿½ È®ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½ï¿½ <see cref="IsDisplayable"/>ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½Ë´Ï´ï¿½.
 		/// </remarks>
 #ifdef _DEBUG
 		[_Category("Debug")]
-		[_Description("È­¸é¿¡ Ç¥½ÃµÇ´Â ÀÎµ¦½ºÀÔ´Ï´Ù")]
+		[_Description("È­ï¿½é¿¡ Ç¥ï¿½ÃµÇ´ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½")]
 #else
 		[_Browsable(false)]
 #endif
