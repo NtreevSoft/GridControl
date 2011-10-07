@@ -317,7 +317,8 @@ void GrColumnList::Clip(const GrRect* pDisplayRect, uint nVisibleStart)
 
 	m_pColumnSplitter->m_nDisplayX = nDisplayX;
 
-	nDisplayX += DEF_SPLITTER_SIZE;
+	if(m_pColumnSplitter->GetVisible() == true)
+		nDisplayX += m_pColumnSplitter->GetWidth();
 
 	
 	for(uint i=m_nFrozenCount+nVisibleStart ; i<GetVisibleColumnCount() ; i++)
@@ -521,7 +522,9 @@ void GrColumnList::gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 	m_pSortColumn    = NULL;
 	m_nFrozenCount	 = 0;
 	m_nColumnID		 = 0;
-	m_nDisplayableRight = m_pColumnSplitter->m_nDisplayX + m_pColumnSplitter->GetWidth();
+	m_nDisplayableRight = m_pColumnSplitter->m_nDisplayX;
+	if(m_pColumnSplitter->GetVisible() == true)
+		m_nDisplayableRight += m_pColumnSplitter->GetWidth();
 
 	for_stl_const(_Columns, m_vecColumns, itor)
 	{
@@ -632,7 +635,8 @@ void GrColumnList::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) co
 
 void GrColumnList::RenderSplitter(GrGridRenderer* pRenderer, const GrRect* pClipping) const
 {
-	m_pColumnSplitter->Render(pRenderer, pClipping);
+	if(m_pColumnSplitter->GetVisible() == true)
+		m_pColumnSplitter->Render(pRenderer, pClipping);
 }
 
 GrColumn* GrColumnList::GetColumn(uint nIndex) const
@@ -2555,7 +2559,8 @@ void GrColumnList::OnUpdatePositionCell(int x, GrUpdateDesc* pUpdateDesc)
 		x += pColumn->GetWidth();
 	}
 
-	x += m_pColumnSplitter->GetWidth();
+	if(m_pColumnSplitter->GetVisible() == true)
+		x += m_pColumnSplitter->GetWidth();
 
 	m_nUnfrozenX = x;
 
@@ -4784,6 +4789,8 @@ GrColumnSplitter::GrColumnSplitter(GrColumnList* pColumnList) : m_pColumnList(pC
 	AddFlag(GRCF_HIDE_TEXT);
 
 	SetText(L"ColumnSplitter");
+
+	m_bVisible = true;
 }
 
 int GrColumnSplitter::GetX() const
@@ -4810,7 +4817,16 @@ int GrColumnSplitter::GetHeight() const
 
 bool GrColumnSplitter::GetVisible() const
 {
-	return true;
+	return m_bVisible;
+}
+
+void GrColumnSplitter::SetVisible(bool b)
+{
+	if(m_bVisible == b)
+		return;
+	m_bVisible = b;
+
+	m_pColumnList->SetVisibleChanged();
 }
 
 GrMouseOverState GrColumnSplitter::HitMouseOverTest(GrPoint /*pt*/) const 

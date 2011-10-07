@@ -47,7 +47,6 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
             public override DesignerActionItemCollection GetSortedActionItems()
             {
-
                 DesignerActionItemCollection items = new DesignerActionItemCollection();
 
                 try

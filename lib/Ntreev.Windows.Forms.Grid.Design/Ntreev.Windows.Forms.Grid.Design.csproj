@@ -36,6 +36,11 @@
     <RegisterForComInterop>false</RegisterForComInterop>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="EnvDTE90, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Microsoft Visual Studio 9.0\Common7\IDE\PublicAssemblies\EnvDTE90.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -45,9 +50,24 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Microsoft Visual Studio 9.0\Common7\IDE\PublicAssemblies\VSLangProj.dll</HintPath>
+    </Reference>
+    <Reference Include="VSLangProj90, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Microsoft Visual Studio 9.0\Common7\IDE\PublicAssemblies\VSLangProj90.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssembliesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AssembliesForm.Designer.cs">
+      <DependentUpon>AssembliesForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ColumnCollectionEditor.cs" />
+    <Compile Include="GridControlCodeDomSerializer.cs" />
     <Compile Include="GridControlDesigner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RowCollectionCodeDomSerializer.cs" />
@@ -65,6 +85,23 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="GridControl.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AssembliesForm.resx">
+      <DependentUpon>AssembliesForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\VSObject_Assembly.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\VSObject_Enum.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\VSObject_Namespace.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\VSObject_Structure.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

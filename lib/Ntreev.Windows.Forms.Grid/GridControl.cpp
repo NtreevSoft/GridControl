@@ -1254,6 +1254,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void GridControl::EnableColumnFrozing::set(bool value)
 	{
 		m_enableColumnFrozing = value;
+		m_pColumnList->GetColumnSplitter()->SetVisible(value);
 	}
 
 	bool GridControl::EnableSorting::get()

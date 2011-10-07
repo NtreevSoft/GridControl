@@ -1025,7 +1025,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 때문에 이 속성이 false라고 해도 그룹핑 기능을 사용할 수 없는것은 아닙니다.
 		/// 하지만 마우스를 이용한 그룹핑 기능을 사용할 수 없습니다.
 		/// </remarks>
-		[_DefaultValue(false)]
+		[_DefaultValue(true)]
 		property bool CanBeGrouped
 		{
 			virtual bool get() sealed;

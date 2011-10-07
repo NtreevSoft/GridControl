@@ -27,6 +27,13 @@ using System.ComponentModel.Design;
 using Ntreev.Windows.Forms.Grid;
 using Ntreev.Windows.Forms.Grid.Columns;
 using System.Reflection;
+using System.Windows.Forms;
+using System.ComponentModel;
+using System.Drawing.Design;
+using System.Drawing;
+using System.Windows.Forms.Design;
+using EnvDTE;
+using VSLangProj;
 
 namespace Ntreev.Windows.Forms.Grid.Design
 {
@@ -35,12 +42,14 @@ namespace Ntreev.Windows.Forms.Grid.Design
         public ColumnCollectionEditor(Type type)
             : base(type)
         {
-            
+
         }
 
         protected override Type[] CreateNewItemTypes()
         {
-            return new Type[] { typeof(ColumnTextBox), typeof(ColumnComboBox), typeof(ColumnCheckBox), };
+            return new Type[] { typeof(string), typeof(int), typeof(bool), typeof(float), 
+                typeof(System.Drawing.Color), typeof(System.Drawing.Point), typeof(System.Drawing.Rectangle),
+                typeof(Etc), };
         }
 
         protected override bool CanRemoveInstance(object value)
@@ -56,6 +65,61 @@ namespace Ntreev.Windows.Forms.Grid.Design
             ColumnCollection columns = editValue as ColumnCollection;
             columns.SetItemsByDesigner(value);
             return editValue;
+        }
+
+        protected override object CreateInstance(Type itemType)
+        {
+            IDesignerHost d = GetService(typeof(IDesignerHost)) as IDesignerHost;
+
+            if (itemType == typeof(Etc))
+            {
+                IDesignerHost designerHost = GetService(typeof(IDesignerHost)) as IDesignerHost;
+                IReferenceService refService = GetService(typeof(IReferenceService)) as IReferenceService;
+                ITypeResolutionService resService = GetService(typeof(ITypeResolutionService)) as ITypeResolutionService;
+                DTE dte = GetService(typeof(DTE)) as DTE;
+
+                if (dte.ActiveWindow.Project.Object is VSProject)
+
+                {
+                    VSProject vsproj = dte.ActiveWindow.Project.Object as VSProject;
+
+                    List<Assembly> assemblies = new List<Assembly>();
+
+                    for (int i = 1; i <= vsproj.References.Count; i++)
+                    {
+                        Reference reference = vsproj.References.Item(i);
+                        Assembly assembly = resService.GetAssembly(new AssemblyName(reference.Name));
+                        assemblies.Add(assembly);
+                    }
+
+                    AssembliesForm form = new AssembliesForm(assemblies.ToArray());
+
+
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        return ColumnCollection.CreateColumnInstance(this.Context, form.SelectedType);
+                    }
+                }
+
+                return null;
+            }
+
+            return ColumnCollection.CreateColumnInstance(this.Context, itemType);
+        }
+
+        protected override string GetDisplayText(object value)
+        {
+            Column column = value as Column;
+            return column.ColumnName;
+        }
+
+        class Etc
+        {
+            public override string ToString()
+            {
+
+                return "Etc";
+            }
         }
     }
 }

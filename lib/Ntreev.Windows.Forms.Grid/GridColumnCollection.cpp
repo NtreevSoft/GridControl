@@ -145,6 +145,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			return;
 
 		item->GridControl = GridControl;
+
 		//item->PropertyDescriptor2 = nullptr;
 		m_pColumnList->InsertColumn(item->NativeRef, index);
 
@@ -168,7 +169,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(type == nullptr)
 			type = string::typeid;
 
-		_Column^ column = CreateColumnInstance(type, name);
+		_Column^ column = CreateColumnInstance(type);
 		column->Title = name;
 		column->ColumnName = name;
 		column->DataType = type;
@@ -286,20 +287,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return Column::FromNative(pColumn);
 	}
 
-	_Column^ ColumnCollection::CreateColumnInstanceCore(_Type^ columnType, string^ /*name*/)
+	_Column^ ColumnCollection::CreateColumnInstanceCore(System::IServiceProvider^ serviceProvider, _Type^ columnType)
 	{
 		using namespace System::ComponentModel;
 		using namespace System::ComponentModel::Design;
-
-		IDesignerHost^ designerHost = dynamic_cast<IDesignerHost^>(GridControl->GetInternalService(IDesignerHost::typeid));
+		IDesignerHost^ designerHost = dynamic_cast<IDesignerHost^>(serviceProvider->GetService(IDesignerHost::typeid));
 		if(designerHost != nullptr)
 		{
 			return dynamic_cast<Column^>(designerHost->CreateComponent(columnType));
 		}
 
-		return dynamic_cast<_Column^>(TypeDescriptor::CreateInstance(gcnew ServiceProvider(GridControl), columnType, nullptr, nullptr));
+		return dynamic_cast<_Column^>(TypeDescriptor::CreateInstance(serviceProvider, columnType, nullptr, nullptr));
 	}
-
+	
 	Column^	ColumnCollection::CreateColumnInstance(_PropertyDescriptor^ propertyDescriptor)
 	{
 		System::Type^ dataType = propertyDescriptor->PropertyType;
@@ -309,57 +309,67 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(propertyDescriptor->DesignTimeOnly == true)
 			editor = nullptr;
 
+		ServiceProvider^ serviceProvider = gcnew ServiceProvider(this->GridControl);
+
 		if(editor != nullptr)
 		{
-			column = CreateColumnInstanceCore(ColumnUITypeEditor::typeid, propertyDescriptor->Name);
+			column = CreateColumnInstanceCore(serviceProvider, ColumnUITypeEditor::typeid);
 		}
 		else if(dataType == bool::typeid)
 		{
-			column = CreateColumnInstanceCore(Columns::ColumnCheckBox::typeid, propertyDescriptor->Name);
+			column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnCheckBox::typeid);
 		}
 		else if(dataType->IsEnum == true)
 		{
-			column = CreateColumnInstanceCore(Columns::ColumnComboBox::typeid, propertyDescriptor->Name);
+			column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnComboBox::typeid);
 			
 			Columns::ColumnComboBox^ columnComboBox = dynamic_cast<Columns::ColumnComboBox^>(column);
 			columnComboBox->DataSource = System::Enum::GetValues(dataType);
 		}
 		else
 		{
-			column = CreateColumnInstanceCore(Columns::ColumnTextBox::typeid, propertyDescriptor->Name);
+			column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnTextBox::typeid);
 		}
 
 		return column;
 	}
 
-	_Column^ ColumnCollection::CreateColumnInstance(_Type^ type, string^ name)
+	_Column^ ColumnCollection::CreateColumnInstance(System::IServiceProvider^ serviceProvider, _Type^ dataType)
 	{
 		using namespace System::ComponentModel;
 		Column^ column = nullptr;
 
-		object^ editor = TypeDescriptor::GetEditor(type, System::Drawing::Design::UITypeEditor::typeid);
+		object^ editor = TypeDescriptor::GetEditor(dataType, System::Drawing::Design::UITypeEditor::typeid);
 
 		if(editor != nullptr)
 		{
-			column = CreateColumnInstanceCore(ColumnUITypeEditor::typeid, name);
+			column = CreateColumnInstanceCore(serviceProvider, ColumnUITypeEditor::typeid);
 		}
-		else if(type == bool::typeid)
+		else if(dataType == bool::typeid)
 		{
-			column = CreateColumnInstanceCore(Columns::ColumnCheckBox::typeid, name);
+			column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnCheckBox::typeid);
 		}
-		else if(type->IsEnum == true)
+		else if(dataType->IsEnum == true)
 		{
-			column = CreateColumnInstanceCore(Columns::ColumnComboBox::typeid, name);
+			column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnComboBox::typeid);
 			
 			Columns::ColumnComboBox^ columnComboBox = dynamic_cast<Columns::ColumnComboBox^>(column);
-			columnComboBox->DataSource = System::Enum::GetValues(type);
+			columnComboBox->DataSource = System::Enum::GetValues(dataType);
 		}
 		else
 		{
-			column = CreateColumnInstanceCore(Columns::ColumnTextBox::typeid, name);
+			column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnTextBox::typeid);
 		}
 
+		if(column != nullptr)
+			column->DataType = dataType;
+
 		return column;
+	}
+
+	_Column^ ColumnCollection::CreateColumnInstance(_Type^ dataType)
+	{
+		return CreateColumnInstance(gcnew ServiceProvider(this->GridControl), dataType);
 	}
 
 	string^ ColumnCollection::NewColumnName()

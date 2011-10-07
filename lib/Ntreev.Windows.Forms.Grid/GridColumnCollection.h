@@ -462,11 +462,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			Column^ get(GrColumn*); 
 		}
 
+		static _Column^ CreateColumnInstance(System::IServiceProvider^ serviceProvider, _Type^ dataType);
+
 	private: // methods
 
 		_Column^ CreateColumnInstance(_PropertyDescriptor^ propertyDescriptor);
-		_Column^ CreateColumnInstance(_Type^ dataType, string^ name);
-		_Column^ CreateColumnInstanceCore(_Type^ columnType, string^ name);
+
+		_Column^ CreateColumnInstance(_Type^ dataType);
+
+		static _Column^ CreateColumnInstanceCore(System::IServiceProvider^ serviceProvider, _Type^ columnType);
 
 		string^	NewColumnName();
 

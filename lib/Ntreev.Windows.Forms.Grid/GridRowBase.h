@@ -30,15 +30,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 	public: // properties
 		/// <summary>
-		/// ���� ���̸� �������ų� �����մϴ�.
+		/// 행의 높이를 가져오거나 설정합니다.
 		/// </summary>
 		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// �Ű������� 0���� ���� ���
+		/// 매개변수가 0보다 작을 경우
 		/// </exception>
 		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// �Ű������� <see cref="MinHeight"/>���� �۰ų� <see cref="MaxHeight"/>���� Ŭ���
+		/// 매개변수가 <see cref="MinHeight"/>보다 작거나 <see cref="MaxHeight"/>보다 클경우
 		/// </exception>
-		[_Description("���� �����Դϴ�.")]
+		[_Description("열의 높이입니다.")]
 		[_Category("Layout")]
 		property int Height
 		{
@@ -47,15 +47,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// ���� �ּҳ��̸� �������ų� �����մϴ�.
+		/// 행의 최소높이를 가져오거나 설정합니다.
 		/// </summary>
 		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// �Ű������� 0���� ���� ���
+		/// 매개변수가 0보다 작을 경우
 		/// </exception>
 		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// �Ű������� <see cref="MaxHeight"/>���� Ŭ���
+		/// 매개변수가 <see cref="MaxHeight"/>보다 클경우
 		/// </exception>
-		[_Description("���� �ּҳ����Դϴ�.")]
+		[_Description("열의 최소높이입니다.")]
 		[_Category("Layout")]
 		property int MinHeight
 		{
@@ -64,15 +64,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// ���� �ִ���̸� �������ų� �����մϴ�.
+		/// 행의 최대높이를 가져오거나 설정합니다.
 		/// </summary>
 		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// �Ű������� 0���� ���� ���
+		/// 매개변수가 0보다 작을 경우
 		/// </exception>
 		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// �Ű������� <see cref="MinHeight"/>���� �������
+		/// 매개변수가 <see cref="MinHeight"/>보다 작을경우
 		/// </exception>
-		[_Description("���� �ִ�����Դϴ�.")]
+		[_Description("열의 최대높이입니다.")]
 		[_Category("Layout")]
 		property int MaxHeight
 		{
@@ -81,12 +81,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// ǥ�õǰ� �ִ����� ���θ� �������ų� �����մϴ�.
+		/// 표시되고 있는지의 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// ǥ�õǰ� �ִٸ� true�� ��ȯ�ϰ�, �׷��� �ʴٸ� false�� ��ȯ�մϴ�.
+		/// 표시되고 있다면 true를 반환하고, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
-		[_Description("ǥ�õǰ� �ִ����� ���θ� �������ų� �����մϴ�.")]
+		[_Description("표시되고 있는지의 여부를 가져오거나 설정합니다.")]
 		[_Category("Appearance")]
 		[_DefaultValue(true)]
 		property bool IsVisible 
@@ -96,17 +96,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// ǥ�õǴ� �ε����� �����ɴϴ�.
+		/// 표시되는 인덱스를 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// ǥ�ð� �ȴٸ� �ε���(0���� ����)�� ��ȯ�ϰ�, �׷��� �ʴٸ� 0xffffffff�� ��ȯ�մϴ�.
+		/// 표시가 된다면 인덱스(0부터 시작)를 반환하고, 그렇지 않다면 0xffffffff를 반환합니다.
 		/// </returns>
 		/// <remarks>
-		/// ǥ�� ���θ� Ȯ���ϱ� ���ؼ��� <see cref="IsVisible"/>�� Ȯ���ϸ� �˴ϴ�.
+		/// 표시 여부를 확인하기 위해서는 <see cref="IsVisible"/>를 확인하면 됩니다.
 		/// </remarks>
 #ifdef _DEBUG
 		[_Category("Debug")]
-		[_Description("ǥ�õǴ� �ε����Դϴ�.")]
+		[_Description("표시되는 인덱스입니다.")]
 #else
 		[_Browsable(false)]
 #endif
@@ -116,17 +116,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// ȭ�鿡 ǥ�õǴ� �ε����� �����ɴϴ�.
+		/// 화면에 표시되는 인덱스를 가져옵니다.
 		/// </summary>
 		/// <returns>
-		/// ȭ�鿡 ǥ�ð� �ȴٸ� �ε���(0���� ����)�� ��ȯ�ϰ�, �׷��� �ʴٸ� 0xffffffff�� ��ȯ�մϴ�.
+		/// 화면에 표시가 된다면 인덱스(0부터 시작)를 반환하고, 그렇지 않다면 0xffffffff를 반환합니다.
 		/// </returns>
 		/// <remarks>
-		/// ȭ�鿡 ǥ�� ���θ� Ȯ���ϱ� ���ؼ��� <see cref="IsDisplayable"/>�� Ȯ���ϸ� �˴ϴ�.
+		/// 화면에 표시 여부를 확인하기 위해서는 <see cref="IsDisplayable"/>를 확인하면 됩니다.
 		/// </remarks>
 #ifdef _DEBUG
 		[_Category("Debug")]
-		[_Description("ȭ�鿡 ǥ�õǴ� �ε����Դϴ�")]
+		[_Description("화면에 표시되는 인덱스입니다")]
 #else
 		[_Browsable(false)]
 #endif

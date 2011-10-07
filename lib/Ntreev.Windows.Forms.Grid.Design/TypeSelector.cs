@@ -32,19 +32,52 @@ namespace Ntreev.Windows.Forms.Grid.Design
 {
     class TypeSelector : UITypeEditor
     {
-        class EditingControl : ListBox
+        class TypeSelectorCore
         {
-            IWindowsFormsEditorService editorService;
+            readonly ListBox listBox = new ListBox();
 
-            public EditingControl(IWindowsFormsEditorService editorService)
+            IWindowsFormsEditorService editorService;
+            Type selectedType = null;
+
+            public TypeSelectorCore(IWindowsFormsEditorService editorService, Type baseType)
             {
                 this.editorService = editorService;
-                this.BorderStyle = BorderStyle.None;
+                this.selectedType = baseType;
+                this.listBox.BorderStyle = BorderStyle.None;
+
+                object[] types = { typeof(string), typeof(int), typeof(bool), typeof(float), 
+                    typeof(System.Drawing.Color), typeof(System.Drawing.Point), typeof(System.Drawing.Rectangle) };
+
+                if (types.Contains(baseType) == false)
+                    this.listBox.Items.Add(baseType);
+                this.listBox.Items.AddRange(types);
+                this.listBox.Items.Add("Etc...");
+
+                this.listBox.SelectedItem = baseType;
+
+                this.listBox.SelectedIndexChanged += new EventHandler(listBox_SelectedIndexChanged);
             }
 
-            protected override void OnSelectedIndexChanged(EventArgs e)
+            public void DropDownControl()
             {
-                base.OnSelectedIndexChanged(e);
+                this.editorService.DropDownControl(this.listBox);
+            }
+
+            public Type SelectedType
+            {
+                get { return this.selectedType; }
+            }
+
+            void listBox_SelectedIndexChanged(object sender, EventArgs e)
+            {
+                if (this.listBox.SelectedItem.ToString() == "Etc...")
+                {
+                    AssembliesForm assembliesForm = new AssembliesForm();
+                    if (assembliesForm.ShowDialog() == DialogResult.OK)
+                    {
+                        this.selectedType = assembliesForm.SelectedType;
+                    }
+                }
                 this.editorService.CloseDropDown();
             }
         }
@@ -54,28 +87,12 @@ namespace Ntreev.Windows.Forms.Grid.Design
             IWindowsFormsEditorService editorService = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
             if (editorService != null)
             {
-                EditingControl listBox = new EditingControl(editorService);
-                listBox.Items.AddRange(new object[] {
-                    typeof(string), typeof(int), typeof(float), typeof(bool), 
-                    typeof(System.Drawing.Color), typeof(System.Drawing.Point), typeof(System.Drawing.Rectangle),
-                });
-                listBox.Items.Add("찾아보기...");
+                TypeSelectorCore typeSelector = new TypeSelectorCore(editorService, value as Type);
 
-                listBox.SelectedItem = value;
+                typeSelector.DropDownControl();
 
-                //ITypeResolutionService typeService = provider.GetService(typeof(ITypeResolutionService)) as ITypeResolutionService;
-
-                //if (typeService != null)
-                //{
-                //    int qwer = 0;
-                //}
-
-                editorService.DropDownControl(listBox);
-
-                
-
-                if (listBox.SelectedItem != null && listBox.SelectedItem.GetType() != typeof(string))
-                    return listBox.SelectedItem;
+                return typeSelector.SelectedType;
+               
             }
             return base.EditValue(context, provider, value);
         }

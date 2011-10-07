@@ -1171,6 +1171,8 @@ public:
 	virtual const GrRow*		GetRow() const	{ return m_pColumnList; }
 	virtual	GrRow*				GetRow()		{ return m_pColumnList; }
 
+	void						SetVisible(bool b);
+
 	GrColumnList*				GetColumnList() const { return m_pColumnList; }
 
 protected:
@@ -1179,6 +1181,7 @@ private:
 	GrColumnList*				m_pColumnList;
 	int							m_nX;
 	int							m_nDisplayX;
+	bool						m_bVisible;
 	friend class GrColumnList;
 };
 
