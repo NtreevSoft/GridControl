@@ -733,7 +733,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	[System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
 	[System::ComponentModel::ToolboxItem(false)]
 	[System::ComponentModel::DesignTimeVisible(false)]
-
 	public ref class Column abstract : CellBase, IColumnDescriptor, System::ComponentModel::IComponent, System::ComponentModel::ISite
 	{
 	internal: // typedefs
