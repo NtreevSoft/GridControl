@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0
+// Ntreev Grid for .Net 1.0.4300.26762
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -1042,7 +1042,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 그리드 컨트롤에 바인딩 된 후에 값을 설정하려고 할때.
 		/// </exception>
 		[_DefaultValue(string::typeid)]
-		[_EditorAttribute("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=1.0.0.2, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
+		[_EditorAttribute("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=1.0.4300.26762, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
 		property _Type^ DataType
 		{
 			virtual _Type^ get() sealed;

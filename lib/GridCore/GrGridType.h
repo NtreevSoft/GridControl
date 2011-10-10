@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0
+// Ntreev Grid for .Net 1.0.4300.26762
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -649,4 +649,4 @@ typedef GrRange<int, 0>		GrIntRange;
 typedef GrRange<uint, 0>	GrIndexRange;
 
 #define foreach_range(_class_type, _instance, _value) \
-		for(_class_type::value_type _value = _instance.GetMinValue() ; _value < _instance.GetMaxValue() ; _value++) 
+		for(_class_type::value_type _value = _instance.GetMinValue() ; _value < _instance.GetMaxValue() ; _value++)

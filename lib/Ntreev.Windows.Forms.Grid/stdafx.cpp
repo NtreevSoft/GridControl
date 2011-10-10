@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0
+// Ntreev Grid for .Net 1.0.4300.26762
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -25,4 +25,3 @@
 #include "GrGridCore.h"
 
 #include "stdafx.h"
-

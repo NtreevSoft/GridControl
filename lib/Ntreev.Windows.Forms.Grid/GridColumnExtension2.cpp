@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0
+// Ntreev Grid for .Net 1.0.4300.26762
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -156,7 +156,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		if(checked == true)
 		{
 			if(m_rendererChecked != nullptr)
-				m_rendererChecked->DrawBackground(graphics, renderRect);
+			{
+				_Rectangle rectangle = renderRect;
+				if(rectangle.Width % 2 == 1)
+					rectangle.Width--;
+				if(rectangle.Height % 2 == 1)
+					rectangle.Height--;
+
+				m_rendererChecked->DrawBackground(graphics, rectangle);
+			}
 			else
 			{
 				int x1 = renderRect.Width/2 - 6 + renderRect.Left;
@@ -167,7 +175,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		else
 		{
 			if(m_rendererUnchecked != nullptr)
-				m_rendererUnchecked->DrawBackground(graphics, renderRect);
+			{
+				_Rectangle rectangle = renderRect;
+				if(rectangle.Width % 2 == 1)
+					rectangle.Width--;
+				if(rectangle.Height % 2 == 1)
+					rectangle.Height--;
+				m_rendererUnchecked->DrawBackground(graphics, rectangle);
+			}
 			else
 			{
 				int x1 = renderRect.Width/2 - 6 + renderRect.Left;

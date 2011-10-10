@@ -203,6 +203,11 @@
 			AssemblyName="mscorlib, Version=2.0.0.0, PublicKeyToken=b77a5c561934e089, processorArchitecture=IA64"
 			MinFrameworkVersion="131072"
 		/>
+		<AssemblyReference
+			RelativePath="System.XML.dll"
+			AssemblyName="System.Xml, Version=2.0.0.0, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL"
+			MinFrameworkVersion="131072"
+		/>
 	</References>
 	<Files>
 		<Filter
@@ -325,6 +330,15 @@
 			<File
 				RelativePath=".\GridEvent.h"
 				>
+			</File>
+			<File
+				RelativePath=".\GridFlagControl.h"
+				FileType="4"
+				>
+				<File
+					RelativePath=".\GridFlagControl.resx"
+					>
+				</File>
 			</File>
 			<File
 				RelativePath=".\GridGroupingRow.h"
@@ -549,6 +563,10 @@
 			</File>
 			<File
 				RelativePath=".\GridEvent.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridFlagControl.cpp"
 				>
 			</File>
 			<File

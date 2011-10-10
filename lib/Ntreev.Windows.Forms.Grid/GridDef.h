@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0
+// Ntreev Grid for .Net 1.0.4300.26762
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -19,7 +19,6 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //=====================================================================================================================
-
 
 
 typedef System::Object					object;

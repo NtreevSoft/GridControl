@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0
+// Ntreev Grid for .Net 1.0.4300.26762
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -138,9 +138,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(item->ColumnName == "")
 			item->ColumnName = NewColumnName();
 
-		if(item->Title == "")
-			item->Title = item->ColumnName;
-
 		if(GridControl->InvokeColumnInserting(item) == false)
 			return;
 
@@ -170,7 +167,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			type = string::typeid;
 
 		_Column^ column = CreateColumnInstance(type);
-		column->Title = name;
 		column->ColumnName = name;
 		column->DataType = type;
 		Insert(index, column);
@@ -321,10 +317,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 		else if(dataType->IsEnum == true)
 		{
-			column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnComboBox::typeid);
-			
-			Columns::ColumnComboBox^ columnComboBox = dynamic_cast<Columns::ColumnComboBox^>(column);
-			columnComboBox->DataSource = System::Enum::GetValues(dataType);
+			if(dataType->GetCustomAttributes(System::FlagsAttribute::typeid, true)->Length != 0)
+			{
+				column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnFlagControl::typeid);
+			}
+			else
+			{
+				column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnComboBox::typeid);
+				//Columns::ColumnComboBox^ columnComboBox = dynamic_cast<Columns::ColumnComboBox^>(column);
+				//columnComboBox->DataSource = System::Enum::GetValues(dataType);
+			}
 		}
 		else
 		{
@@ -351,10 +353,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 		else if(dataType->IsEnum == true)
 		{
-			column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnComboBox::typeid);
-			
-			Columns::ColumnComboBox^ columnComboBox = dynamic_cast<Columns::ColumnComboBox^>(column);
-			columnComboBox->DataSource = System::Enum::GetValues(dataType);
+			if(dataType->GetCustomAttributes(System::FlagsAttribute::typeid, true)->Length != 0)
+			{
+				column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnFlagControl::typeid);
+			}
+			else
+			{
+				column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnComboBox::typeid);
+				//Columns::ColumnComboBox^ columnComboBox = dynamic_cast<Columns::ColumnComboBox^>(column);
+				//columnComboBox->DataSource = System::Enum::GetValues(dataType);
+			}
 		}
 		else
 		{

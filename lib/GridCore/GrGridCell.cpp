@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0
+// Ntreev Grid for .Net 1.0.4300.26762
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -1840,6 +1840,17 @@ void GrColumn::OnGridCoreDetached()
 	GrCell::OnGridCoreDetached();
 	m_pGridCore->DetachObject(m_pGroupingInfo);
 	m_pColumnList = NULL;
+}
+
+void GrColumn::OnTextChanged()
+{
+	GrCell::OnTextChanged();
+	if(m_pGridCore == NULL)
+		return;
+
+	if(GetDisplayable() == false)
+		return;
+	m_pGridCore->Invalidate(GetDisplayRect());
 }
 
 GrColumn::~GrColumn()

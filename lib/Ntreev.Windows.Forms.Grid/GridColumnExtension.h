@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0
+// Ntreev Grid for .Net 1.0.4300.26762
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -24,6 +24,7 @@
 #pragma once
 #include "GridColumnControl.h"
 #include "GridColumnDropDown.h"
+#include "GridFlagControl.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Columns
 {
@@ -169,6 +170,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		/// <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
 		virtual void SetEditingValue(System::Windows::Forms::ListBox^ control, object^ value) override;
 
+		virtual void OnAttaching(AttachEventArgs^ e) override;
+
 	private: // methods
 		virtual bool KeyTest(System::Windows::Forms::Keys key) sealed = IEditByKeyCode::KeyTest;
 		void listBox_OnMouseMove(object^ sender, System::Windows::Forms::MouseEventArgs^ e);
@@ -206,6 +209,52 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 	private: // variables
 		System::Windows::Forms::FolderBrowserDialog^ m_folderBrowerDialog;
+	};
+
+	/// <summary>
+	/// 열거형을 비트 필드 형태의 편집을 지원하는 Column개체를 나타냅니다.
+	/// </summary>
+	public ref class ColumnFlagControl : ColumnDropDown<FlagControl^>
+	{
+	public:
+		/// <summary>
+		/// <see cref="ColumnFlagControl"/>클래스의 새 인스턴스를 초기화합니다.
+		/// </summary>
+		ColumnFlagControl();
+
+	public:
+		/// <summary>
+		/// 컨트롤이 DropDown에 부착되기전에 원하는 컨트롤의 크기를 조사하기 위해 호출됩니다.
+		/// </summary>
+		/// <param name="proposedSize">편집되는 셀의 크기입니다.</param>
+		/// <returns>DropDown에 부착될 컨트롤의 크기입니다.</returns>
+		virtual _Size GetPreferredSize(_Size proposedSize) override;
+
+	protected:
+		/// <summary>
+		/// 컨트롤에서 셀에 적용할 값을 가져올때 호출됩니다.
+		/// </summary>
+		/// <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
+		/// <returns>셀에 적용할 값의 <see cref="System::Object"/>입니다.</returns>
+        virtual object^ GetEditingValue(FlagControl^ control) override;
+
+		/// <summary>
+		/// 셀의 값을 컨트롤에 적용할때 호출됩니다.
+		/// </summary>
+		/// <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
+		/// <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
+        virtual void SetEditingValue(FlagControl^ control, object^ value) override;
+
+		/// <summary>
+		/// <see cref="Attaching"/>이벤트를 발생시킵니다.
+		/// </summary>
+		/// <param name="e">이벤트 데이터가 들어있는 <see cref="AttachEventArgs"/>입니다.</param>
+		virtual void OnAttaching(AttachEventArgs^ e) override;
+
+	private:
+        void EditingControl_EditOK(object^ sender, _EventArgs^ e);
+
+        void EditingControl_EditCanceled(object^ sender, _EventArgs^ e);
 	};
 
 	Column^ CreateCheckBox();

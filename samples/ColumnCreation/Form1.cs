@@ -31,7 +31,7 @@ namespace ColumnCreation
             ColumnComboBox columnComboBox = new ColumnComboBox();
             columnComboBox.DataType = typeof(EnumSample);
             columnComboBox.DataSource = System.Enum.GetValues(typeof(EnumSample));
-            columnComboBox.Name = "EnumSample 수동";
+            columnComboBox.ColumnName = "EnumSample 수동";
 
             this.gridControl1.Columns.Add(columnComboBox);
 

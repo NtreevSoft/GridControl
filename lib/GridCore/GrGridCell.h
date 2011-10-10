@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0
+// Ntreev Grid for .Net 1.0.4300.26762
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -503,6 +503,8 @@ public:
 protected:
 	virtual void				OnGridCoreAttached();
 	virtual void				OnGridCoreDetached();
+
+	virtual void				OnTextChanged();
 
 private:
 	void						SetPriority(int nPriority);

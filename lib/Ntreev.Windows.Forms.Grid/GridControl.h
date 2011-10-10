@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0
+// Ntreev Grid for .Net 1.0.4300.26762
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -35,8 +35,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	[System::ComponentModel::ToolboxItem(true)]
 	[System::ComponentModel::DefaultEvent("")]
 	[System::Drawing::ToolboxBitmap(GridControl::typeid)]
-	[System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=1.0.0.2, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
-	[System::ComponentModel::Design::Serialization::DesignerSerializer("Ntreev.Windows.Forms.Grid.Design.GridControlCodeDomSerializer, Ntreev.Windows.Forms.Grid.Design, Version=1.0.0.2, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", "System.ComponentModel.Design.Serialization.CodeDomSerializer")]
+	[System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=1.0.4300.26762, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+	[System::ComponentModel::Design::Serialization::DesignerSerializer("Ntreev.Windows.Forms.Grid.Design.GridControlCodeDomSerializer, Ntreev.Windows.Forms.Grid.Design, Version=1.0.4300.26762, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", "System.ComponentModel.Design.Serialization.CodeDomSerializer")]
 	[System::Windows::Forms::Docking(System::Windows::Forms::DockingBehavior::Ask)]
 	public ref class GridControl : System::Windows::Forms::UserControl
 	{
@@ -633,6 +633,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		[_Description("상단의 그룹핑 표시 여부를 설정합니다.")]
 		[_Category("Appearance"), _DefaultValue(true)]
 		property bool IsGroupingRowVisible
+		{
+			bool get();	
+			void set(bool);
+		}
+
+		/// <summary>
+		/// 컬럼 고정 분할면 표시 여부를 가져오거나 설정합니다.
+		/// </summary>
+		[_Description("컬럼 고정 분할면 표시 여부를 설정합니다.")]
+		[_Category("Appearance"), _DefaultValue(true)]
+		property bool IsFrozingSplitterVisible
 		{
 			bool get();	
 			void set(bool);

@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 1.0
+//Ntreev Grid for .Net 1.0.4300.26762
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.
@@ -84,6 +84,9 @@ namespace Ntreev.Windows.Forms.Grid.Design
                     VSProject vsproj = dte.ActiveWindow.Project.Object as VSProject;
 
                     List<Assembly> assemblies = new List<Assembly>();
+
+                    Assembly projectAseembly = Assembly.Load(dte.ActiveWindow.Project.Name);
+                    assemblies.Add(projectAseembly);
 
                     for (int i = 1; i <= vsproj.References.Count; i++)
                     {

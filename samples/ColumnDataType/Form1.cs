@@ -17,7 +17,7 @@ namespace ColumnAdvancedExtension
             InitializeComponent();
 
             ColumnFlagControl column = new ColumnFlagControl();
-            column.Name = "NtreevGames";
+            column.ColumnName = "NtreevGames";
             column.Width = 200;
 
             this.gridControl1.Columns.Add(column);

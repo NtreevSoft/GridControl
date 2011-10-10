@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0
+// Ntreev Grid for .Net 1.0.4300.26762
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -456,7 +456,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		m_brush = gcnew System::Drawing::SolidBrush(_Color::Black);
 
 		m_pColumnList = GridCore->GetColumnList();
-		
+
 	}
 
 	bool ColumnPressing::GetHitTest(GrCell* pHitted, _Point localLocation)
@@ -895,38 +895,43 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	void ColumnResizing::OnMouseDragEnd(bool cancel, HitTest /*hitTest*/)
 	{
 		if(cancel == true)
+		{
+			Invalidate();
 			return;
+		}
 
 		int nNewWidth = m_pColumn->GetWidth() + (m_resizingLocation - m_resizingStart);
-		if(m_pColumn->GetWidth() == nNewWidth)
-			return;
-
-		GrColumnList* pColumnList = m_pColumn->GetColumnList();
-		int x = int::MaxValue;
-		if(m_pColumn->GetFullSelected() == true)
+		if(m_pColumn->GetWidth() != nNewWidth)
 		{
-			for(uint i=0 ; i<pColumnList->GetVisibleColumnCount() ; i++)
+			GrColumnList* pColumnList = m_pColumn->GetColumnList();
+			int x = int::MaxValue;
+			if(m_pColumn->GetFullSelected() == true)
 			{
-				GrColumn* pColumn = pColumnList->GetVisibleColumn(i);
-				if(pColumn->GetFullSelected() == false)
-					continue;
-				if(pColumn->GetResizable() == false)
-					continue;
-				pColumn->SetWidth(nNewWidth);
-				x = System::Math::Min(x, pColumn->GetDisplayX());
+				for(uint i=0 ; i<pColumnList->GetVisibleColumnCount() ; i++)
+				{
+					GrColumn* pColumn = pColumnList->GetVisibleColumn(i);
+					if(pColumn->GetFullSelected() == false)
+						continue;
+					if(pColumn->GetResizable() == false)
+						continue;
+					pColumn->SetWidth(nNewWidth);
+					x = System::Math::Min(x, pColumn->GetDisplayX());
+				}
+				if(x == int::MaxValue)
+					x = 0;
 			}
-			if(x == int::MaxValue)
-				x = 0;
+			else
+			{
+				m_pColumn->SetWidth(nNewWidth);
+				x = m_pColumn->GetDisplayX();
+			}
+			Invalidate(x, GridControl->DisplayRectangle.Top, GridControl->DisplayRectangle.Right, GridControl->DisplayRectangle.Bottom);
 		}
 		else
 		{
-			m_pColumn->SetWidth(nNewWidth);
-			x = m_pColumn->GetDisplayX();
+			Invalidate();
 		}
-
-		Invalidate(x, GridControl->DisplayRectangle.Top, GridControl->DisplayRectangle.Right, GridControl->DisplayRectangle.Bottom);
 	}
-
 
 	void ColumnResizing::OnMouseDoubleClick(_Point /*location*/, HitTest /*hitTest*/, IStateChangeService^ /*service*/)
 	{
@@ -1312,7 +1317,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	{
 		m_cell = Cell::FromNative((GrItem*)pCell);
 		EditingReason^ reason = dynamic_cast<EditingReason^>(data);
-		
+
 		if(reason != nullptr && m_cell != nullptr)
 			service->NextState = OnBegin(reason);
 	}
@@ -2127,7 +2132,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 					if(pDataRow->GetResizable() == false)
 						continue;
 					pDataRow->SetHeight(nNewHeight);
-					
+
 					y = System::Math::Min(pDataRow->GetDisplayY(), y);
 				}
 
@@ -2140,6 +2145,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 				m_pRow->SetHeight(nNewHeight);
 				Invalidate(GridControl->DisplayRectangle.Left, m_pRow->GetY(), GridControl->DisplayRectangle.Right, GridControl->DisplayRectangle.Bottom);
 			}
+		}
+		else
+		{
+			Invalidate();
 		}
 	}
 } /*namespace GridState*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0
+// Ntreev Grid for .Net 1.0.4300.26762
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -1226,6 +1226,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_groupingRow->IsVisible = value;
 	}
 
+	bool GridControl::IsFrozingSplitterVisible::get()
+	{
+		return m_pColumnList->GetColumnSplitter()->GetVisible();
+	}
+
+	void GridControl::IsFrozingSplitterVisible::set(bool value)
+	{
+		m_pColumnList->GetColumnSplitter()->SetVisible(value);
+	}
+
 	bool GridControl::EnableColumnMoving::get()
 	{
 		return m_enableColumnMoving;
@@ -1254,7 +1264,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void GridControl::EnableColumnFrozing::set(bool value)
 	{
 		m_enableColumnFrozing = value;
-		m_pColumnList->GetColumnSplitter()->SetVisible(value);
 	}
 
 	bool GridControl::EnableSorting::get()

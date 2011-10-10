@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0
+// Ntreev Grid for .Net 1.0.4300.26762
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -61,6 +61,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <summary>
 		/// 셀이 편집될때 사용되는 컨트롤의 인스턴스를 가져옵니다.
 		/// </summary>
+		[System::ComponentModel::Browsable(false)]
 		property TControl EditingControl
 		{
 			TControl get() { return m_control; } 

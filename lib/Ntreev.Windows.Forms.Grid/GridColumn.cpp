@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0
+// Ntreev Grid for .Net 1.0.4300.26762
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -213,17 +213,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	string^ Column::Title::get()
 	{
 		if(m_title == nullptr)
-			return string::Empty;
+			return this->ColumnName;
 		return m_title;
 	}
 	
 	void Column::Title::set(string^ value)
 	{
-		if(value == nullptr)
-			value = string::Empty;
 		m_title = value;
-		m_pColumn->SetText(ToNativeString::Convert(value));
-		Invalidate(this);
+		if(m_title != nullptr)
+			m_pColumn->SetText(ToNativeString::Convert(value));
+		else
+			m_pColumn->SetText(ToNativeString::Convert(m_name));
 	}
 
 	string^ Column::ColumnName::get()
@@ -255,6 +255,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		m_name = value;
+
+		if(m_title == nullptr)
+		{
+			this->Title = nullptr;
+		}
 	}
 
 	string^ Column::Tooltip::get()

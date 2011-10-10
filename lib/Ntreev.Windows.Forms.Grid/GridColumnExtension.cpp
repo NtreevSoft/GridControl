@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0
+// Ntreev Grid for .Net 1.0.4300.26762
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -87,7 +87,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 				{
 					Row^ row = GridControl->EditingCell->Row;
 					textBox->Height = (textBox->Lines->Length + 1) * (textBox->Font->Height);
-					
+
 					row->Height = textBox->Height + GridControl->EditingCell->Padding.Vertical;
 					GridControl->Refresh();
 				}
@@ -136,7 +136,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		System::Windows::Forms::ListBox^ listBox = EditingControl;
 
 		listBox->BorderStyle = BorderStyle::None;
-		
+
 		listBox->MouseMove   += gcnew MouseEventHandler(this, &ColumnComboBox::listBox_OnMouseMove);
 		listBox->MouseClick  += gcnew MouseEventHandler(this, &ColumnComboBox::listBox_OnMouseClick);
 	}
@@ -149,7 +149,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 		int itemHeight = listBox->Font->Height - 1;
 		_Size size;
-	
+
 		size.Width = proposedSize.Width;
 
 		int itemCount = listBox->Items->Count;
@@ -163,7 +163,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 				itemCount = managerBase->Count;
 			}
 		}
-				
+
 		if(itemCount > this->MaxDropDownItems)
 		{
 			size.Height = itemHeight * (this->MaxDropDownItems);
@@ -190,7 +190,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	{
 		return this->EditingControl->Items;
 	}
-	
+
 	void ColumnComboBox::MaxDropDownItems::set(int count)
 	{
 		m_nMaxDropDownItems = count;
@@ -237,6 +237,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		control->SelectedItem = value;
 	}
 
+	void ColumnComboBox::OnAttaching(AttachEventArgs^ e)
+	{
+		if(this->DataSource == nullptr && this->DataType->IsEnum == true)
+		{
+			this->DataSource = System::Enum::GetValues(this->DataType);
+		}
+
+		ColumnDropDown::OnAttaching(e);
+	}
+
 	ColumnPathSelector::ColumnPathSelector()
 	{
 		m_folderBrowerDialog = gcnew System::Windows::Forms::FolderBrowserDialog();
@@ -253,5 +263,45 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		if(dr == DialogResult::OK)
 			e->Value = m_folderBrowerDialog->SelectedPath;
 		e->SuppressEditing = true;
+	}
+
+	ColumnFlagControl::ColumnFlagControl()
+	{
+		this->EditingControl->EditOK += gcnew _EventHandler(this, &ColumnFlagControl::EditingControl_EditOK);
+		this->EditingControl->EditCanceled += gcnew _EventHandler(this, &ColumnFlagControl::EditingControl_EditCanceled);
+	}
+
+	_Size ColumnFlagControl::GetPreferredSize(_Size proposedSize)
+	{
+		return _Size(proposedSize.Width, this->EditingControl->Height);
+	}
+
+	object^ ColumnFlagControl::GetEditingValue(FlagControl^ control)
+	{
+		return System::Enum::ToObject(this->DataType, control->Value);
+	}
+
+	void ColumnFlagControl::SetEditingValue(FlagControl^ control, object^ value)
+	{
+		if (value == nullptr)
+			control->Value = 0;
+		else
+			control->Value = (int)value;
+	}
+
+	void ColumnFlagControl::OnAttaching(AttachEventArgs^ e)
+	{
+		this->EditingControl->FlagType = this->DataType;
+		ColumnDropDown<FlagControl^>::OnAttaching(e);
+	}
+
+	void ColumnFlagControl::EditingControl_EditOK(object^ /*sender*/, _EventArgs^ /*e*/)
+	{
+		this->EditingResult = _EditingResult::Ok;
+	}
+
+	void ColumnFlagControl::EditingControl_EditCanceled(object^ /*sender*/, _EventArgs^ /*e*/)
+	{
+		this->EditingResult = _EditingResult::Cancel;
 	}
 } /*namespace Extensiton*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
