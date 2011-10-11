@@ -58,7 +58,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			break;
 		case EditingReasonType::Ime:
 			{
-				textBox->Text = "";
+				textBox->Text = string::Empty;
 			}
 			break;
 		}
@@ -122,7 +122,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 	object^ ColumnTextBox::GetEditingValue(System::Windows::Forms::TextBox^ control)
 	{
-		if(this->DataType != string::typeid && control->Text == "")
+		if(this->DataType != string::typeid && control->Text == string::Empty)
 			return nullptr;
 
 		return TypeConverter->ConvertFrom(control->Text);

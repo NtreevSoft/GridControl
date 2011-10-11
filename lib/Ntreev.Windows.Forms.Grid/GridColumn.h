@@ -1327,6 +1327,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		virtual	void OnEditingResultChanged(object^ sender, ColumnEventArgs^ e);
 
+		void AsyncDisplayText();
+
 	internal: // properties
 		property _PropertyDescriptor^ PropertyDescriptor
 		{
@@ -1371,6 +1373,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		bool ShouldSerializeCellPadding();
 		bool ShouldSerializeCellFont();
 		bool ShouldSerializeTitle();
+
+		void propertyDescriptor_ValueChanged(object^ sender, _EventArgs^ e);
 		
 		
 	private: // properties
@@ -1449,6 +1453,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		ColumnEventHandler^			m_eventEditingResultChanged;
 
 		_EventHandler^				m_eventDisposed;
+
+		_EventHandler^				m_propertyDescriptorValueChanged;
+
 
 		System::ComponentModel::ISite^	m_site;
 

@@ -169,6 +169,8 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
         void selectionService_SelectionChanged(object sender, EventArgs e)
         {
+            if (this.Control == null)
+                return;
             this.Control.Invalidate();
         }
 

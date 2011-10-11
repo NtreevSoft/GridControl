@@ -220,10 +220,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void Column::Title::set(string^ value)
 	{
 		m_title = value;
-		if(m_title != nullptr)
-			m_pColumn->SetText(ToNativeString::Convert(value));
-		else
-			m_pColumn->SetText(ToNativeString::Convert(m_name));
+		AsyncDisplayText();
 	}
 
 	string^ Column::ColumnName::get()
@@ -265,7 +262,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	string^ Column::Tooltip::get()
 	{
 		if(m_tooltip == nullptr)
+		{
+			if(m_propertyDescriptor != nullptr)
+				return m_propertyDescriptor->Description;
 			return string::Empty;
+		}
 		return m_tooltip;
 	}
 	
@@ -282,22 +283,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return m_propertyDescriptor;
 	}
 
+	void Column::propertyDescriptor_ValueChanged(object^ sender, _EventArgs^ e)
+	{
+		AsyncDisplayText();
+	}
+
 	void Column::PropertyDescriptor::set(_PropertyDescriptor^ value)
 	{
-		if(value == nullptr)
+		if(value != nullptr)
 		{
-			return;
-		}
-		else
-		{
-			if(m_dataType == nullptr)
-				this->DataType = value->PropertyType;
-			if(m_typeConverter == nullptr)
-				this->TypeConverter = value->Converter;
-			if(m_title == nullptr)
-				this->Title = value->DisplayName;
-			if(m_name == nullptr)
-				this->ColumnName = value->Name;
 			if(value->IsBrowsable == false)
 				this->IsVisible = false;
 			if(value->IsReadOnly == true)
@@ -341,8 +335,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			if(sortableAttr != nullptr)
 				this->CanBeSorted = sortableAttr->Sortable;
 		}
-
+	
 		m_propertyDescriptor = value;
+
+		AsyncDisplayText();
 	}
 
 	int Column::Width::get()
@@ -435,6 +431,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void Column::IsReadOnly::set(bool value)
 	{
+		if(m_propertyDescriptor != nullptr && m_propertyDescriptor->IsReadOnly == true)
+		{
+			throw gcnew System::InvalidOperationException("읽기 전용으로 바인딩된 컬럼에는 설정할 수 없습니다.");
+		}
 		m_pColumn->SetReadOnly(value);
 	}
 
@@ -473,6 +473,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		if(m_typeConverter == nullptr)
 		{
+			if(m_propertyDescriptor != nullptr)
+				return m_propertyDescriptor->Converter;
+
 			try
 			{
 				return System::ComponentModel::TypeDescriptor::GetConverter(this->DataType);
@@ -800,5 +803,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	bool Column::ShouldSerializeTitle()
 	{
 		return this->Title != this->ColumnName;
+	}
+
+	void Column::AsyncDisplayText()
+	{
+		m_pColumn->SetText(ToNativeString::Convert(this->Title));
 	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

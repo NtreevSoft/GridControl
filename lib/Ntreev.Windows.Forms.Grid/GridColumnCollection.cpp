@@ -135,7 +135,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(this[item->ColumnName] != nullptr)
 			throw gcnew System::ArgumentException(string::Format("\"{0}\"의 이름을 가진 항목이 이미 있습니다.", item->ColumnName));
 
-		if(item->ColumnName == "")
+		if(item->ColumnName == string::Empty)
 			item->ColumnName = NewColumnName();
 
 		if(GridControl->InvokeColumnInserting(item) == false)
@@ -143,7 +143,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		item->GridControl = GridControl;
 
-		//item->PropertyDescriptor2 = nullptr;
 		m_pColumnList->InsertColumn(item->NativeRef, index);
 
 		GridControl->InvokeColumnInserted(item);
@@ -161,7 +160,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	_Column^ ColumnCollection::InsertNew(int index, string^ name, _Type^ type)
 	{
-		if(name == nullptr || name == "")
+		if(name == nullptr || name == string::Empty)
 			name = NewColumnName();
 		if(type == nullptr)
 			type = string::typeid;
@@ -192,7 +191,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		GridControl->InvokeColumnBinding(%e);
 		_Column^ column = e.BindingColumn;
 		if(column == nullptr)
+		{
 			column = CreateColumnInstance(propertyDescriptor);
+		}
 
 		if(column->GridControl == nullptr)
 		{
@@ -268,7 +269,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	Column^ ColumnCollection::default::get(string^ columnName)
 	{
 		if(columnName == nullptr)
-			columnName = "";
+			columnName = string::Empty;
 
 		for each(_Column^ column in this)
 		{
@@ -324,8 +325,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			else
 			{
 				column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnComboBox::typeid);
-				//Columns::ColumnComboBox^ columnComboBox = dynamic_cast<Columns::ColumnComboBox^>(column);
-				//columnComboBox->DataSource = System::Enum::GetValues(dataType);
 			}
 		}
 		else
@@ -360,8 +359,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			else
 			{
 				column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnComboBox::typeid);
-				//Columns::ColumnComboBox^ columnComboBox = dynamic_cast<Columns::ColumnComboBox^>(column);
-				//columnComboBox->DataSource = System::Enum::GetValues(dataType);
 			}
 		}
 		else
@@ -394,8 +391,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return name;
 	}
 
-	void ColumnCollection::currencyManager_ListChanged(object^ /*sender*/, System::ComponentModel::ListChangedEventArgs^ e)
+	void ColumnCollection::currencyManager_ListChanged(object^ sender, System::ComponentModel::ListChangedEventArgs^ e)
 	{
+		using namespace System::ComponentModel::Design;
+
 		switch(e->ListChangedType)
 		{
 		case System::ComponentModel::ListChangedType::PropertyDescriptorAdded:
@@ -406,7 +405,41 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			break;
 		case System::ComponentModel::ListChangedType::PropertyDescriptorChanged:
 			{
+				using namespace System::Windows::Forms;
+				using namespace System::Collections::Generic;
 
+				CurrencyManager^ currencyManager = dynamic_cast<CurrencyManager^>(sender);
+
+				List<_Column^>^ bindedColumns = gcnew List<_Column^>();
+
+				for each(_Column^ item in this)
+				{
+					if(item->PropertyDescriptor != nullptr)
+						bindedColumns->Add(item);
+				}
+
+				_PropertyDescriptor^ changedPropertyDescriptor = nullptr;
+
+				for each(_PropertyDescriptor^ item in currencyManager->GetItemProperties())
+				{
+					Column^ column = this[item->Name];
+					if(column != nullptr)
+					{
+						column->PropertyDescriptor = item;
+						bindedColumns->Remove(column);
+					}
+					else
+					{
+						changedPropertyDescriptor = item;
+					}
+				}
+
+				if(bindedColumns->Count == 1 && changedPropertyDescriptor != nullptr)
+				{
+					bindedColumns[0]->PropertyDescriptor = changedPropertyDescriptor;
+				}
+
+				int qewr=0;
 			}
 			break;
 		case System::ComponentModel::ListChangedType::PropertyDescriptorDeleted:
@@ -418,6 +451,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 				column->GridControl = nullptr;
 				m_pColumnList->RemoveColumn(column->NativeRef);
+				
+				IDesignerHost^ designerHost = dynamic_cast<IDesignerHost^>(this->GridControl->GetInternalService(IDesignerHost::typeid));
+				if(designerHost != nullptr)
+				{
+					column->PropertyDescriptor = nullptr;
+					designerHost->DestroyComponent(column);
+				}
+
 				Invalidate();
 			}
 			break;
@@ -460,6 +501,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_currencyManager->ListChanged += m_listChangedEventHandler;
 		m_currencyManager->BindingComplete += m_bindingCompleteEventHandler;
 		m_currencyManager->MetaDataChanged += gcnew _EventHandler(this, &ColumnCollection::currencyManager_MetaDataChanged);
+
 	}
 
 	void ColumnCollection::gridControl_Clearing(object^ /*sender*/, _EventArgs^ /*e*/)

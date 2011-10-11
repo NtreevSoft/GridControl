@@ -44,33 +44,57 @@ namespace Ntreev.Windows.Forms.Grid.Design
         }
 
         public AssembliesForm(Assembly[] assemblies)
+            :this(assemblies, null)
+        {
+            
+        }
+
+        public AssembliesForm(Assembly[] assemblies, Type classType)
         {
             InitializeComponent();
 
             foreach (Assembly assembly in assemblies)
             {
                 Type[] types = assembly.GetExportedTypes();
+                string assemblyName = assembly.GetName().Name;
 
-                TreeNode node = this.treeView1.Nodes.Add(assembly.GetName().Name, assembly.GetName().Name, 0, 0);
+                TreeNode assemblyNode = null;
+
                 foreach (Type type in types)
                 {
-                    if (type.IsValueType == false)
+                    if (classType != null)
+                    {
+                        if (classType.IsAssignableFrom(type) == false)
+                            continue;
+
+                        if (type.IsAbstract == true)
+                            continue;
+
+                        if (type.GetConstructor(new Type[] {}) == null)
+                            continue;
+                    }
+                    else if (type.IsValueType == false)
+                    {
                         continue;
+                    }
+
+                    if(assemblyNode == null)
+                        assemblyNode = this.treeView1.Nodes.Add(assemblyName, assemblyName, 0, 0);
 
                     TreeNode namespaceNode = null;
-                    if (node.Nodes.Find(type.Namespace, false).Length != 0)
+                    if (assemblyNode.Nodes.Find(type.Namespace, false).Length != 0)
                     {
-                        namespaceNode = node.Nodes[type.Namespace];
+                        namespaceNode = assemblyNode.Nodes[type.Namespace];
                     }
                     else
                     {
-                        namespaceNode = node.Nodes.Add(type.Namespace, type.Namespace, 1, 1);
+                        namespaceNode = assemblyNode.Nodes.Add(type.Namespace, type.Namespace, 1, 1);
                     }
 
                     int imageIndex = type.IsEnum == true ? 2 : 3;
                     TreeNode typeNode = namespaceNode.Nodes.Add(type.Name, type.Name, imageIndex, imageIndex);
                     typeNode.Tag = type;
-                                            
+
                 }
             }
             this.treeView1.Sort();

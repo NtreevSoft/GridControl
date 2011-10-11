@@ -30,7 +30,7 @@ using System.ComponentModel;
 
 namespace Ntreev.Windows.Forms.Grid.Design
 {
-    
+
     public class GridControlCodeDomSerializer : CodeDomSerializer
     {
         public override object Serialize(IDesignerSerializationManager manager, object value)
@@ -38,9 +38,10 @@ namespace Ntreev.Windows.Forms.Grid.Design
             GridControl gridControl = value as GridControl;
 
             CodeDomSerializer userControlSerializer = (CodeDomSerializer)manager.GetSerializer(typeof(UserControl), typeof(CodeDomSerializer));
+            CodeDomSerializer columnSerializer = (CodeDomSerializer)manager.GetSerializer(typeof(Column), typeof(CodeDomSerializer));
+
             CodeStatementCollection codes = new CodeStatementCollection();
 
-            CodeDomSerializer columnSerializer = (CodeDomSerializer)manager.GetSerializer(typeof(Component), typeof(CodeDomSerializer));
 
             foreach (Column item in gridControl.Columns)
             {
@@ -57,7 +58,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
             }
 
             object codeObject = userControlSerializer.Serialize(manager, value);
-          
+
 
             if (codeObject is CodeStatementCollection)
             {
@@ -65,7 +66,6 @@ namespace Ntreev.Windows.Forms.Grid.Design
             }
 
             return codes;
-
         }
     }
 }

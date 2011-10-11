@@ -1847,6 +1847,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		void ResetColumns();
 		void ResetRows();
 
+		void dataSource_Initialized(object^ sender, _EventArgs^ e);
+
 	private: // properties
 
 	private: // variables

@@ -113,7 +113,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		try
 		{
-			string^ text = "";
+			string^ text = string::Empty;
 			if(value != nullptr && value != System::DBNull::Value)
 				text = m_column->TypeConverter->ConvertToString(value);
 			m_pItem->SetText(ToNativeString::Convert(text));

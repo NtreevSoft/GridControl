@@ -412,7 +412,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 						{
 							GrItem* pItem = dynamic_cast<GrItem*>(hitTest.pHittedCell);
 							Cell^ cell = Cell::FromNative(pItem);
-							if(cell->ErrorDescription != "")
+							if(cell->ErrorDescription != string::Empty)
 								GridControl->ToolTip->Show(cell->ErrorDescription);
 						}
 						catch(System::Exception^)

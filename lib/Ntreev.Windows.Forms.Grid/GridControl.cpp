@@ -151,7 +151,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_multiSelect			= true;
 
 		m_dataSource			= nullptr;
-		m_dataMember			= "";
+		m_dataMember			= string::Empty;
 
 		m_tooltips				= gcnew Private::GridTooltip(this, 3);
 		m_errorDescriptor		= gcnew Private::ErrorDescriptor(this);
@@ -409,27 +409,43 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	}
 
 	void GridControl::SetDataConnection(object^ dataSource, string^ dataMember)
-	{
+	{\
+		using namespace System::ComponentModel;
+
 		if(dataSource == nullptr)
 		{
 			if(m_manager != nullptr)
 				Clear();
+			m_dataMember = dataMember;
 			return;
 		}
 
 		_CurrencyManager^ manager;
 		try
 		{
+			ISupportInitializeNotification^ support = dynamic_cast<ISupportInitializeNotification^>(dataSource);
 			manager = dynamic_cast<_CurrencyManager^>(this->BindingContext[dataSource, dataMember]);
 		}
 		catch(System::Exception^ e)
 		{
-			throw e;
+
+			ISupportInitializeNotification^ support = dynamic_cast<ISupportInitializeNotification^>(dataSource);
+			if(support != nullptr)
+			{
+				//m_dataSource = dataSource;
+				m_dataMember = dataMember;
+				support->Initialized += gcnew _EventHandler(this, &GridControl::dataSource_Initialized);
+				return;
+			}
+			else
+			{
+				throw e;
+			}
 		}
 
 		if(manager != nullptr)
 		{
-			if(m_manager != manager)
+			if(m_manager != nullptr && m_manager != manager)
 				Clear();
 
 			m_dataSource = dataSource;
@@ -454,6 +470,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(dataSource != nullptr && dataMember != string::Empty && manager == nullptr)
 		{
 			throw gcnew System::NotSupportedException("데이터 소스 초기화에 실패했습니다. 데이터 소스가 IList, IListSource 또는 IBindingList 인터페이스를 구현하는 개체인지 확인하십시오");
+		}
+	}
+
+	void GridControl::dataSource_Initialized(object^ sender, _EventArgs^ e)
+	{
+		using namespace System::ComponentModel;
+
+		ISupportInitializeNotification^ support = dynamic_cast<ISupportInitializeNotification^>(sender);
+
+		if(support->IsInitialized == true)
+		{
+			SetDataConnection(sender, m_dataMember);
 		}
 	}
 
@@ -1086,7 +1114,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_defaultDataSource->Clear();
 
 		m_dataSource	= nullptr;
-		m_dataMember	= "";
+		m_dataMember	= string::Empty;
 
 		OnCurrencyManagerChanged(gcnew CurrencyManagerChangedEventArgs(nullptr));
 		m_manager = nullptr;

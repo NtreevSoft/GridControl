@@ -103,9 +103,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return item->Index;
 	}
 
+#define _USE_currencyManager_ListChanged
+
+#ifndef _USE_currencyManager_ListChanged
 	void RowCollection::currencyManager_ListChanged(object^ /*sender*/, System::ComponentModel::ListChangedEventArgs^ /*e*/)
 	{
-#if 0 // unused, but
+
+	}
+#else
+	void RowCollection::currencyManager_ListChanged(object^ sender, System::ComponentModel::ListChangedEventArgs^ e)
+	{
 		switch(e->ListChangedType)
 		{
 		case System::ComponentModel::ListChangedType::ItemAdded:
@@ -157,8 +164,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			}
 			break;
 		}
-#endif
 	}
+#endif
 
 	void RowCollection::gridControl_CurrencyManagerChanged(object^ /*sender*/, CurrencyManagerChangedEventArgs^ e)
 	{
@@ -232,6 +239,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 				item->RefreshCells();
 
 				GridControl->InvokeRowInserted(item);
+
+				m_list->Add(component);
 			}
 		}
 		catch(System::Exception^ e)
@@ -329,6 +338,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			
 			InsertionRow->SetDefaultValue();
 			GridControl->InvokeInsertionRowInserted(row);
+			m_list->Add(row->Component);
 		}
 		finally
 		{
@@ -366,6 +376,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 			RowRemovedEventArgs eRemoved(0);
 			GridControl->InvokeRowRemoved(%eRemoved);
+			m_list->Remove(item->Component);
 			Invalidate();
 		}
 		finally

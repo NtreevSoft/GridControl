@@ -49,7 +49,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
         {
             return new Type[] { typeof(string), typeof(int), typeof(bool), typeof(float), 
                 typeof(System.Drawing.Color), typeof(System.Drawing.Point), typeof(System.Drawing.Rectangle),
-                typeof(Etc), };
+                typeof(EtcType), typeof(EtcColumn), };
         }
 
         protected override bool CanRemoveInstance(object value)
@@ -71,40 +71,13 @@ namespace Ntreev.Windows.Forms.Grid.Design
         {
             IDesignerHost d = GetService(typeof(IDesignerHost)) as IDesignerHost;
 
-            if (itemType == typeof(Etc))
+            if (itemType == typeof(EtcType))
             {
-                IDesignerHost designerHost = GetService(typeof(IDesignerHost)) as IDesignerHost;
-                IReferenceService refService = GetService(typeof(IReferenceService)) as IReferenceService;
-                ITypeResolutionService resService = GetService(typeof(ITypeResolutionService)) as ITypeResolutionService;
-                DTE dte = GetService(typeof(DTE)) as DTE;
-
-                if (dte.ActiveWindow.Project.Object is VSProject)
-
-                {
-                    VSProject vsproj = dte.ActiveWindow.Project.Object as VSProject;
-
-                    List<Assembly> assemblies = new List<Assembly>();
-
-                    Assembly projectAseembly = Assembly.Load(dte.ActiveWindow.Project.Name);
-                    assemblies.Add(projectAseembly);
-
-                    for (int i = 1; i <= vsproj.References.Count; i++)
-                    {
-                        Reference reference = vsproj.References.Item(i);
-                        Assembly assembly = resService.GetAssembly(new AssemblyName(reference.Name));
-                        assemblies.Add(assembly);
-                    }
-
-                    AssembliesForm form = new AssembliesForm(assemblies.ToArray());
-
-
-                    if (form.ShowDialog() == DialogResult.OK)
-                    {
-                        return ColumnCollection.CreateColumnInstance(this.Context, form.SelectedType);
-                    }
-                }
-
-                return null;
+                return CreateInstanceBySelectingType();
+            }
+            else if (itemType == typeof(EtcColumn))
+            {
+                return CreateInstanceBySelectingColumn();
             }
 
             return ColumnCollection.CreateColumnInstance(this.Context, itemType);
@@ -116,12 +89,104 @@ namespace Ntreev.Windows.Forms.Grid.Design
             return column.ColumnName;
         }
 
-        class Etc
+        object CreateInstanceBySelectingType()
+        {
+            IDesignerHost designerHost = GetService(typeof(IDesignerHost)) as IDesignerHost;
+            IReferenceService refService = GetService(typeof(IReferenceService)) as IReferenceService;
+            ITypeResolutionService resService = GetService(typeof(ITypeResolutionService)) as ITypeResolutionService;
+            DTE dte = GetService(typeof(DTE)) as DTE;
+
+            if (dte.ActiveWindow.Project.Object is VSProject)
+            {
+                VSProject vsproj = dte.ActiveWindow.Project.Object as VSProject;
+
+                List<Assembly> assemblies = new List<Assembly>();
+
+                try
+                {
+                    Assembly projectAseembly = Assembly.Load(dte.ActiveWindow.Project.Name);
+                    if (projectAseembly != null)
+                        assemblies.Add(projectAseembly);
+                }
+                catch (Exception)
+                {
+                }
+
+                for (int i = 1; i <= vsproj.References.Count; i++)
+                {
+                    Reference reference = vsproj.References.Item(i);
+                    Assembly assembly = resService.GetAssembly(new AssemblyName(reference.Name));
+                    assemblies.Add(assembly);
+                }
+
+                AssembliesForm form = new AssembliesForm(assemblies.ToArray());
+
+
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    return ColumnCollection.CreateColumnInstance(this.Context, form.SelectedType);
+                }
+            }
+
+            return null;
+        }
+
+        object CreateInstanceBySelectingColumn()
+        {
+            IDesignerHost designerHost = GetService(typeof(IDesignerHost)) as IDesignerHost;
+            IReferenceService refService = GetService(typeof(IReferenceService)) as IReferenceService;
+            ITypeResolutionService resService = GetService(typeof(ITypeResolutionService)) as ITypeResolutionService;
+            DTE dte = GetService(typeof(DTE)) as DTE;
+
+            if (dte.ActiveWindow.Project.Object is VSProject)
+            {
+                VSProject vsproj = dte.ActiveWindow.Project.Object as VSProject;
+
+                List<Assembly> assemblies = new List<Assembly>();
+
+                try
+                {
+                    Assembly projectAseembly = Assembly.Load(dte.ActiveWindow.Project.Name);
+                    if (projectAseembly != null)
+                        assemblies.Add(projectAseembly);
+                }
+                catch (Exception)
+                {
+                }
+
+                for (int i = 1; i <= vsproj.References.Count; i++)
+                {
+                    Reference reference = vsproj.References.Item(i);
+                    Assembly assembly = resService.GetAssembly(new AssemblyName(reference.Name));
+                    assemblies.Add(assembly);
+                }
+
+                AssembliesForm form = new AssembliesForm(assemblies.ToArray(), typeof(Column));
+
+
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    return ColumnCollection.CreateColumnInstanceCore(this.Context, form.SelectedType);
+                }
+            }
+
+            return null;
+
+        }
+
+        class EtcType
         {
             public override string ToString()
             {
+                return "EtcType";
+            }
+        }
 
-                return "Etc";
+        class EtcColumn
+        {
+            public override string ToString()
+            {
+                return "EtcColumn";
             }
         }
     }

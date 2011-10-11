@@ -444,7 +444,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		virtual property object^ ValueCore
 		{
 			object^ get();
-			void set(object^); 
+			void set(object^);
 		}
 
 	private: // variables
