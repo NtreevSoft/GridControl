@@ -37,7 +37,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 		m_changed			= false;
 
-		GridControl->Cleared += gcnew _EventHandler(this, &ErrorDescriptor::gridControl_Cleared);
+		GridControl->Cleared += gcnew ClearEventHandler(this, &ErrorDescriptor::gridControl_Cleared);
 	}
 
 	void ErrorDescriptor::Add(Cell^ cell)
@@ -72,7 +72,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		Invalidate();
 	}
 
-	void ErrorDescriptor::gridControl_Cleared(object^ /*sender*/, _EventArgs^  /*e*/)
+	void ErrorDescriptor::gridControl_Cleared(object^ /*sender*/, ClearEventArgs^ /*e*/)
 	{
 		m_cells->Clear();
 	}

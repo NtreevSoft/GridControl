@@ -450,8 +450,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	internal: // methods
 		ColumnCollection(_GridControl^ gridControl);
 
-		_Column^ Bind(_PropertyDescriptor^ propertyDescriptor);
-
 		void DeleteAll();
 
 		void SetItemsByDesigner(cli::array<object^>^ values);
@@ -466,15 +464,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		static _Column^ CreateColumnInstanceCore(System::IServiceProvider^ serviceProvider, _Type^ columnType);
 
+		static void DestroyColumnInstance(System::IServiceProvider^ serviceProvider, Column^ column);
+
 	private: // methods
 
 		_Column^ CreateColumnInstance(_PropertyDescriptor^ propertyDescriptor);
 
 		_Column^ CreateColumnInstance(_Type^ dataType);
 
-		
-
 		string^	NewColumnName();
+
+		_Column^ Bind(_PropertyDescriptor^ propertyDescriptor);
+
+		void Unbind(_Column^ column);
 
 		void currencyManager_ListChanged(object^ sender, System::ComponentModel::ListChangedEventArgs^ e);
 
@@ -482,9 +484,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		void currencyManager_MetaDataChanged(object^ sender, _EventArgs^ e);
 
+		void gridControl_CurrencyManagerChanging(object^ sender, CurrencyManagerChangingEventArgs^ e);
+
 		void gridControl_CurrencyManagerChanged(object^ sender, CurrencyManagerChangedEventArgs^ e);
 
-		void gridControl_Clearing(object^ sender, _EventArgs^ e);
+		void gridControl_Clearing(object^ sender, ClearEventArgs^ e);
+
+		void gridControl_Cleared(object^ sender, ClearEventArgs^ e);
 
 	private:
 		GrColumnList* m_pColumnList;
@@ -492,6 +498,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		System::ComponentModel::ListChangedEventHandler^ m_listChangedEventHandler;
 		System::Windows::Forms::BindingCompleteEventHandler^ m_bindingCompleteEventHandler;
+		System::Collections::ArrayList^ m_tempBindableColumns;
 	};
 
 	/// <summary>

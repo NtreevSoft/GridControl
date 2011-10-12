@@ -409,21 +409,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	}
 
 	void GridControl::SetDataConnection(object^ dataSource, string^ dataMember)
-	{\
+	{
 		using namespace System::ComponentModel;
 
 		if(dataSource == nullptr)
 		{
-			if(m_manager != nullptr)
-				Clear();
+			ClearCore(true);
 			m_dataMember = dataMember;
 			return;
 		}
 
 		_CurrencyManager^ manager;
+
 		try
 		{
-			ISupportInitializeNotification^ support = dynamic_cast<ISupportInitializeNotification^>(dataSource);
+			//ISupportInitializeNotification^ support = dynamic_cast<ISupportInitializeNotification^>(dataSource);
 			manager = dynamic_cast<_CurrencyManager^>(this->BindingContext[dataSource, dataMember]);
 		}
 		catch(System::Exception^ e)
@@ -443,10 +443,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			}
 		}
 
+		if(m_manager != manager)
+			ClearCore(true);
+
 		if(manager != nullptr)
 		{
-			if(m_manager != nullptr && m_manager != manager)
-				Clear();
+			CurrencyManagerChangingEventArgs e(manager);
+
+			OnCurrencyManagerChanging(%e);
+
+			if(e.Cancel == true)
+			{
+				throw gcnew System::NotSupportedException(e.CancelReason);
+			}
 
 			m_dataSource = dataSource;
 			m_dataMember = dataMember;
@@ -454,6 +463,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			m_manager = manager;
 
 			SetNativeEvent(false);
+			
 
 			OnCurrencyManagerChanged(gcnew CurrencyManagerChangedEventArgs(manager));
 
@@ -726,6 +736,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		Invalidate(false);
 		UserControl::OnFontChanged(e);
 		System::Diagnostics::Debug::WriteLine("Invalidate");
+	}
+
+	void GridControl::OnCurrencyManagerChanging(CurrencyManagerChangingEventArgs^ e)
+	{
+		this->CurrencyManagerChanging(this, e);
 	}
 
 	void GridControl::OnCurrencyManagerChanged(CurrencyManagerChangedEventArgs^ e)
@@ -1106,7 +1121,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void GridControl::Clear()
 	{
-		OnClearing(_EventArgs::Empty);
+		ClearCore(false);
+	}
+
+	void GridControl::ClearCore(bool dataSourceOnly)
+	{
+		using namespace System::Collections::Generic;
+		ClearEventArgs e(dataSourceOnly);
+		OnClearing(%e);
+
 		//SetNativeEvent(false);
 		m_pGridCore->Clear();
 		m_focusedCell	= nullptr;
@@ -1116,11 +1139,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_dataSource	= nullptr;
 		m_dataMember	= string::Empty;
 
+		OnCurrencyManagerChanging(gcnew CurrencyManagerChangingEventArgs(nullptr));
 		OnCurrencyManagerChanged(gcnew CurrencyManagerChangedEventArgs(nullptr));
-		m_manager = nullptr;
+		m_manager		= nullptr;
 
-		OnCleared(_EventArgs::Empty);
-		Invalidate(false);
+		OnCleared(%e);
 	}
 
 	_SelectionType GridControl::SelectionType::get()
@@ -1683,14 +1706,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		EndEdit(this, e);
 	}
 
-	void GridControl::OnClearing(_EventArgs^ e)
+	void GridControl::OnClearing(ClearEventArgs^ e)
 	{
 		Clearing(this, e);
 	}
 
-	void GridControl::OnCleared(_EventArgs^ e)
+	void GridControl::OnCleared(ClearEventArgs^ e)
 	{
 		Cleared(this, e);
+		Invalidate(false);
 	}
 
 	void GridControl::OnDataSourceChanged(_EventArgs^ e)

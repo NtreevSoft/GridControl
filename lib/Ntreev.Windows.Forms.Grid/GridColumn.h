@@ -534,6 +534,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			bool get();
 		}
 
+		///// <summary>
+		///// 열이 데이터 소스와 바인딩 될 수 있는지에 대한 여부를 가져오거나 설정합니다.
+		///// </summary>
+		///// <returns>
+		///// 열이 데이터 소스와 바인딩 될 수 있다면 true를, 그렇지 않다면 false를 반환합니다.
+		///// </returns>
+		//property bool IsBindable
+		//{
+		//	bool get();
+		//}
+
 		/// <summary>
 		/// 소유한 셀들의 선택 여부를 가져옵니다.
 		/// </summary>
@@ -1014,10 +1025,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 열의 그룹핑 기능을 적용할 수 있는지에 대한 여부를 가져오거나 설정합니다.
+		/// 열의 그룹핑 기능을 적용 할 수 있는지에 대한 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// 열에 그룹핑 기능을 적용할 수 있다면 true를, 그렇지 않다면 false를 반환합니다.
+		/// 열에 그룹핑 기능을 적용 할 수 있다면 true를, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
 		/// <remarks>
 		/// 이 속성은 사용자가 그룹핑 기능을 사용할지에 대한 판단근거로 사용하기 위해 제공됩니다. 
@@ -1030,6 +1041,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			virtual bool get() sealed;
 			void set(bool);
 		}
+
+		///// <summary>
+		///// 열이 데이터 소스와 바인딩 될 수 있는지에 대한 여부를 가져오거나 설정합니다.
+		///// </summary>
+		///// <returns>
+		///// 열이 데이터 소스와 바인딩 될 수 있다면 true를, 그렇지 않다면 false를 반환합니다.
+		///// </returns>
+		///// <remarks>
+		///// 이 속성이 true로 설정되었다면 그리드 컨트롤의 DataSource초기화에 영향을 받지 않습니다.
+		///// 만약 그리드 컨트롤내의 모든 열과 행을 지우고자 한다면 <seealso cref="Ntreev::Windows::Forms::Grid::GridControl::DataSource"/> 속성에 null을 설정하는 대신에
+		///// <seealso cref="Ntreev::Windows::Forms::Grid::GridControl::Clear"/>를 사용하십시오.
+		///// </remarks>
+		//property bool IsBindable
+		//{
+		//	virtual bool get() sealed;
+		//	void set(bool);
+		//}
 
 		/// <summary>
 		/// 소유한 셀들이 가질 값의 데이터 타입을 가져오거나 설정합니다.
@@ -1305,6 +1333,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			virtual _EditingType get() abstract; 
 		}
 
+		/// <summary>
+		/// 데이터 소스 삭제시 이 열의 인스턴스 삭제 여부를 가져옵니다.
+		/// </summary>
+		/// <returns>
+		/// 데이터 소스 삭제시 이 열의 인스턴스가 삭제된다면 true를 그렇지 않다면 false를 반환합니다.
+		/// </returns>
+		[_DefaultValue(false)]
+		property bool HasLifeline;
+
 	protected: // methods
 		/// <summary>
 		/// 소멸자 입니다.
@@ -1453,9 +1490,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		ColumnEventHandler^			m_eventEditingResultChanged;
 
 		_EventHandler^				m_eventDisposed;
-
-		_EventHandler^				m_propertyDescriptorValueChanged;
-
 
 		System::ComponentModel::ISite^	m_site;
 

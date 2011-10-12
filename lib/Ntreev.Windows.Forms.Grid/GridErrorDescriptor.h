@@ -43,7 +43,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 	private:
 		void							errorTimer_Elapsed(object^ sender, _ElapsedEventArgs^  e);
-		void							gridControl_Cleared(object^ sender, _EventArgs^  e);
+		void							gridControl_Cleared(object^ sender, ClearEventArgs^  e);
 
 	private:
 		_CellsList^						m_cells;

@@ -602,6 +602,44 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	/// </summary>
 	public delegate void BeginEditEventHandler(object^ sender, BeginEditEventArgs^ e);
 
+	/// <summary>
+	/// 데이터가 초기화 되는 이벤트의 데이터를 제공합니다.
+	/// </summary>
+	public ref class ClearEventArgs : _EventArgs
+	{
+	public: // methods
+		/// <summary>
+		/// <see cref="ClearEventArgs"/>클래스의 새 인스턴스를 초기화합니다.
+		/// </summary>
+		/// <param name="dataSourceOnly">
+		/// 바인딩 할 수 있는 열까지 삭제해야 되는지를 나타냅니다.
+		/// </param>
+		ClearEventArgs(bool dataSourceOnly)
+			: m_dataSourceOnly(dataSourceOnly)
+		{
+		}
+
+	public: // properties
+		/// <summary>
+		/// 바인딩 할 수 있는 열까지 삭제해야 되는지에 대한 여부를 가져옵니다.
+		/// </summary>
+		/// <returns>
+		/// 바인딩 할 수 있는 열까지 삭제해야 한다면 true, 그렇지 않으면 false를 반환합니다.
+		/// </returns>
+		property bool DataSourceOnly 
+		{
+			bool get() { return m_dataSourceOnly; }
+		}
+
+	private: // variables
+		bool		m_dataSourceOnly;
+	};
+
+	/// <summary>
+	/// 데이터가 초기화 되는 이벤트를 처리하는 메서드를 나타냅니다.
+	/// </summary>
+	public delegate void ClearEventHandler(object^ sender, ClearEventArgs^ e);
+
 	ref class CurrencyManagerChangedEventArgs : _EventArgs
 	{
 	public: // methods
@@ -622,4 +660,29 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	};
 
 	delegate void CurrencyManagerChangedEventHandler(object^ sender, CurrencyManagerChangedEventArgs^ e);
+
+	ref class CurrencyManagerChangingEventArgs : CurrencyManagerChangedEventArgs
+	{
+	public: // methods
+		CurrencyManagerChangingEventArgs(System::Windows::Forms::CurrencyManager^ currencyManager)
+			: m_cancel(false), CurrencyManagerChangedEventArgs(currencyManager)
+		{
+			this->CancelReason = string::Empty;
+		}
+
+	public: // properties
+		property bool Cancel
+		{
+			bool get() { return m_cancel; }
+			void set(bool value) { m_cancel = value; }
+		}
+
+		property string^ CancelReason;
+
+	private: // variables
+		bool m_cancel;
+	};
+
+	delegate void CurrencyManagerChangingEventHandler(object^ sender, CurrencyManagerChangingEventArgs^ e);
+
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

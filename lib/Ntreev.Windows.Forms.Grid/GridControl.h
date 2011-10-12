@@ -437,6 +437,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
 		[_Browsable(false)]
 #endif
+		[_DefaultValue((string^)nullptr)]
 		property Cell^ FocusedCell
 		{
 			Cell^ get(); 
@@ -1215,12 +1216,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// </summary>
 		[_Description("모든 데이터가 삭제되기 전에 발생합니다.")]
 		[_Category("Behavior")]
-		event _EventHandler^ Clearing
+		event ClearEventHandler^ Clearing
 		{
-			void add(_EventHandler^ p) { m_eventClearing += p; }
-			void remove(_EventHandler^ p) { m_eventClearing -= p; }
+			void add(ClearEventHandler^ p) { m_eventClearing += p; }
+			void remove(ClearEventHandler^ p) { m_eventClearing -= p; }
 		private:
-			void raise(object^ sender, _EventArgs^ e) { if(m_eventClearing != nullptr) m_eventClearing->Invoke(sender, e); }
+			void raise(object^ sender, ClearEventArgs^ e) { if(m_eventClearing != nullptr) m_eventClearing->Invoke(sender, e); }
 		}
 
 		/// <summary>
@@ -1228,12 +1229,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// </summary>
 		[_Description("모든 데이터가 삭제된 후에 발생합니다.")]
 		[_Category("Behavior")]
-		event _EventHandler^ Cleared
+		event ClearEventHandler^ Cleared
 		{
-			void add(_EventHandler^ p) { m_eventCleared += p; }
-			void remove(_EventHandler^ p) { m_eventCleared -= p; }
+			void add(ClearEventHandler^ p) { m_eventCleared += p; }
+			void remove(ClearEventHandler^ p) { m_eventCleared -= p; }
 		private:
-			void raise(object^ sender, _EventArgs^ e) { if(m_eventCleared != nullptr) m_eventCleared->Invoke(sender, e); }
+			void raise(object^ sender, ClearEventArgs^ e) { if(m_eventCleared != nullptr) m_eventCleared->Invoke(sender, e); }
 		}
 
 		/// <summary>
@@ -1399,6 +1400,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 	internal: // events
+		event CurrencyManagerChangingEventHandler^ CurrencyManagerChanging
+		{
+			void add(CurrencyManagerChangingEventHandler^ p) { m_eventCurrencyManagerChanging += p; }
+			void remove(CurrencyManagerChangingEventHandler^ p) { m_eventCurrencyManagerChanging -= p; }
+		private:
+			void raise(object^ sender, CurrencyManagerChangingEventArgs^ e) { if(m_eventCurrencyManagerChanging != nullptr) m_eventCurrencyManagerChanging->Invoke(sender, e); }
+		}
+
 		event CurrencyManagerChangedEventHandler^ CurrencyManagerChanged
 		{
 			void add(CurrencyManagerChangedEventHandler^ p) { m_eventCurrencyManagerChanged += p; }
@@ -1638,7 +1647,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <param name="e">
 		/// 이벤트 데이터가 들어 있는 <see cref="System::EventArgs"/>입니다.
 		/// </param>
-		virtual void OnClearing(_EventArgs^ e);
+		virtual void OnClearing(ClearEventArgs^ e);
 
 		/// <summary>
 		/// <see cref="Cleared"/> 이벤트를 발생시킵니다.
@@ -1646,7 +1655,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <param name="e">
 		/// 이벤트 데이터가 들어 있는 <see cref="System::EventArgs"/>입니다.
 		/// </param>
-		virtual void OnCleared(_EventArgs^ e);
+		virtual void OnCleared(ClearEventArgs^ e);
 
 		/// <summary>
 		/// <see cref="DataSourceChanged"/> 이벤트를 발생시킵니다.
@@ -1834,6 +1843,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	private: // methods
 		void SetNativeEvent(bool attached);
 
+		void OnCurrencyManagerChanging(CurrencyManagerChangingEventArgs^ e);
+
 		void OnCurrencyManagerChanged(CurrencyManagerChangedEventArgs^ e);
 
 		void UpdateDataRectangle();
@@ -1846,6 +1857,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		
 		void ResetColumns();
 		void ResetRows();
+
+		void ClearCore(bool deleteBindable);
 
 		void dataSource_Initialized(object^ sender, _EventArgs^ e);
 
@@ -1934,12 +1947,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		CellEventHandler^				m_eventCellDoubleClicked;
 		BeginEditEventHandler^			m_eventBeginEdit;
 		CellEventHandler^				m_eventEndEdit;
-		_EventHandler^					m_eventClearing;
-		_EventHandler^					m_eventCleared;
+		ClearEventHandler^				m_eventClearing;
+		ClearEventHandler^				m_eventCleared;
 		_EventHandler^					m_eventDataSourceChanged;
 		_EventHandler^					m_eventDataMemberChanged;
 		_EventHandler^					m_eventDataBindingComplete;
 
+		CurrencyManagerChangingEventHandler^m_eventCurrencyManagerChanging;
 		CurrencyManagerChangedEventHandler^	m_eventCurrencyManagerChanged;
 
 		_EventHandler^					m_eventStateBegin;

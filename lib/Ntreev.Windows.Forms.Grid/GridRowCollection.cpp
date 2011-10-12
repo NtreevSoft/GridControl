@@ -145,10 +145,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			break;
 		case System::ComponentModel::ListChangedType::ItemChanged:
 			{
-				//object^ component = m_list[e->NewIndex];
+				object^ component = m_list[e->NewIndex];
 
-				//Row^ row = this[component];
-				//row[e->PropertyDescriptor2->Name]->UpdateNativeText();
+				Row^ row = this[component];
+				if(e->PropertyDescriptor == nullptr)
+				{
+					for each(_Cell^ item in row->Cells)
+					{
+						item->UpdateNativeText();
+					}
+				}
+				else
+				{
+					row[e->PropertyDescriptor->Name]->UpdateNativeText();
+				}
 			}
 			break;
 		case System::ComponentModel::ListChangedType::ItemMoved:

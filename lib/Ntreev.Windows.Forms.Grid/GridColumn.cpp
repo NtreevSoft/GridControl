@@ -283,7 +283,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return m_propertyDescriptor;
 	}
 
-	void Column::propertyDescriptor_ValueChanged(object^ sender, _EventArgs^ e)
+	void Column::propertyDescriptor_ValueChanged(object^ sender, _EventArgs^ /*e*/)
 	{
 		AsyncDisplayText();
 	}
@@ -334,6 +334,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			SortableAttribute^ sortableAttr = dynamic_cast<SortableAttribute^>(value->Attributes[SortableAttribute::typeid]);
 			if(sortableAttr != nullptr)
 				this->CanBeSorted = sortableAttr->Sortable;
+		}
+		else
+		{
+
 		}
 	
 		m_propertyDescriptor = value;

@@ -122,6 +122,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 			m_pItem->SetText(L"");
 		}
+		finally
+		{
+			this->Invalidate();
+		}
 	}
 
 	object^ Cell::ValidateValue(object^ value)

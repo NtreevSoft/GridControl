@@ -535,8 +535,9 @@ void GrColumnList::gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 	for_stl_const(_Columns, m_vecColumnsRemoved, itor)
 	{
 		_Columns::value_type value = *itor;
-		delete value;
+		value->m_nColumnID = INVALID_INDEX;
 	}
+	m_vecColumnsRemoved.clear();
 	
 	m_vecColumns.clear();
 	m_mapColumnByPosition.clear();

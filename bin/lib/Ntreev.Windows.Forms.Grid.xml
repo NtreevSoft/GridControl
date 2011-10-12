@@ -178,7 +178,7 @@ Windows 메시지를 처리합니다.
 이벤트 데이터가 들어 있는 <see cref="T:System.EventArgs" />입니다.
 </param>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnCleared(System.EventArgs)">
+        <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnCleared(Ntreev.Windows.Forms.Grid.ClearEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.GridControl.Cleared" /> 이벤트를 발생시킵니다.
 </summary>
@@ -186,7 +186,7 @@ Windows 메시지를 처리합니다.
 이벤트 데이터가 들어 있는 <see cref="T:System.EventArgs" />입니다.
 </param>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnClearing(System.EventArgs)">
+        <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnClearing(Ntreev.Windows.Forms.Grid.ClearEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.GridControl.Clearing" /> 이벤트를 발생시킵니다.
 </summary>
@@ -1284,6 +1284,32 @@ GridControl에 종속되어 사용되는 개체를 나타냅니다.
         <member name="T:Ntreev.Windows.Forms.Grid.IGridControlProvider">
             <summary>
 GridControl 속성을 얻을수 있는 인터페이스를 제공합니다.
+</summary>
+        </member>
+        <member name="T:Ntreev.Windows.Forms.Grid.ClearEventHandler">
+            <summary>
+데이터가 초기화 되는 이벤트를 처리하는 메서드를 나타냅니다.
+</summary>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.ClearEventArgs.DataSourceOnly">
+            <summary>
+바인딩 할 수 있는 열까지 삭제해야 되는지에 대한 여부를 가져옵니다.
+</summary>
+            <returns>
+바인딩 할 수 있는 열까지 삭제해야 한다면 true, 그렇지 않으면 false를 반환합니다.
+</returns>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.ClearEventArgs.#ctor(System.Boolean)">
+            <summary>
+                <see cref="T:Ntreev.Windows.Forms.Grid.ClearEventArgs" />클래스의 새 인스턴스를 초기화합니다.
+</summary>
+            <param name="dataSourceOnly">
+바인딩 할 수 있는 열까지 삭제해야 되는지를 나타냅니다.
+</param>
+        </member>
+        <member name="T:Ntreev.Windows.Forms.Grid.ClearEventArgs">
+            <summary>
+데이터가 초기화 되는 이벤트의 데이터를 제공합니다.
 </summary>
         </member>
         <member name="T:Ntreev.Windows.Forms.Grid.BeginEditEventHandler">
@@ -3810,6 +3836,14 @@ private void gridControl1_Paint(object sender, PaintEventArgs e)
 소멸자 입니다.
 </summary>
         </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.Column.HasLifeline">
+            <summary>
+데이터 소스 삭제시 이 열의 인스턴스 삭제 여부를 가져옵니다.
+</summary>
+            <returns>
+데이터 소스 삭제시 이 열의 인스턴스가 삭제된다면 true를 그렇지 않다면 false를 반환합니다.
+</returns>
+        </member>
         <member name="P:Ntreev.Windows.Forms.Grid.Column.EditingType">
             <summary>
 셀을 편집하는 방식을 가져옵니다.
@@ -3986,10 +4020,10 @@ private void gridControl1_Paint(object sender, PaintEventArgs e)
         </member>
         <member name="P:Ntreev.Windows.Forms.Grid.Column.CanBeGrouped">
             <summary>
-열의 그룹핑 기능을 적용할 수 있는지에 대한 여부를 가져오거나 설정합니다.
+열의 그룹핑 기능을 적용 할 수 있는지에 대한 여부를 가져오거나 설정합니다.
 </summary>
             <returns>
-열에 그룹핑 기능을 적용할 수 있다면 true를, 그렇지 않다면 false를 반환합니다.
+열에 그룹핑 기능을 적용 할 수 있다면 true를, 그렇지 않다면 false를 반환합니다.
 </returns>
             <remarks>
 이 속성은 사용자가 그룹핑 기능을 사용할지에 대한 판단근거로 사용하기 위해 제공됩니다. 

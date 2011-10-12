@@ -171,7 +171,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		void gridControl_MouseDoubleClick(object^ sender, System::Windows::Forms::MouseEventArgs^ e);
 		void gridControl_Paint(object^ sender, System::Windows::Forms::PaintEventArgs^ e);
 		void gridControl_PreviewKeyDown(object^ sender, System::Windows::Forms::PreviewKeyDownEventArgs^ e);
-		void gridControl_Clearing(object^ sender, _EventArgs^ e);
+		void gridControl_Clearing(object^ sender, ClearEventArgs^ e);
 
 		void ChangeState(StateBase^ state, GrCell* pHitted, object^ userData);
 		StateBase^	GetHitTest(GrCell* pHitted, _Point localHitted);

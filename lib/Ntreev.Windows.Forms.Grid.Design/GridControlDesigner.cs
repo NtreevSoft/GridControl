@@ -31,6 +31,7 @@ using System.ComponentModel.Design.Serialization;
 using Ntreev.Windows.Forms.Grid.GridState;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Design;
 
 namespace Ntreev.Windows.Forms.Grid.Design
 {
@@ -194,10 +195,11 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 {
                     items.Add(new DesignerActionPropertyItem("CaptionText", "제목"));
                     items.Add(new DesignerActionPropertyItem("DataSource", "DataSource"));
+                    items.Add(new DesignerActionPropertyItem("DataMember", "DataMember"));
                     items.Add(new DesignerActionPropertyItem("Columns", "열 편집"));
                     items.Add(new DesignerActionPropertyItem("Rows", "행 편집"));
-                    items.Add(new DesignerActionMethodItem(this, "AddNewColumn", "열 추가"));
-                    items.Add(new DesignerActionMethodItem(this, "AddNewRow", "행 추가"));
+
+                    items.Add(new DesignerActionMethodItem(this, "Clear", "전체 삭제"));
                 }
                 catch (System.Exception e)
                 {
@@ -206,26 +208,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
                 return items;
             }
-
-            void AddNewColumn()
-            {
-                this.gridControl.Columns.AddNew();
-                this.gridControl.Refresh();
-            }
-
-            void AddNewRow()
-            {
-                this.gridControl.Rows.AddNew();
-                this.gridControl.Refresh();
-
-                IComponentChangeService changeService = GetService(typeof(IComponentChangeService)) as IComponentChangeService;
-
-                PropertyDescriptorCollection props = System.ComponentModel.TypeDescriptor.GetProperties(this.gridControl);
-                PropertyDescriptor propertyDescriptor = props["Rows"];
-                if (changeService != null)
-                    changeService.OnComponentChanged(this.gridControl, propertyDescriptor, this.gridControl.Rows, this.gridControl.Rows);
-            }
-
+            
             public ColumnCollection Columns
             {
                 get
@@ -265,6 +248,25 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 {
                     this.gridControl.DataSource = value;
                 }
+            }
+
+            [Editor("System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(UITypeEditor))]
+            public string DataMember
+            {
+                get
+                {
+                    return this.gridControl.DataMember;
+                }
+                set
+                {
+
+                    this.gridControl.DataMember = value;
+                }
+            }
+
+            void Clear()
+            {
+                this.gridControl.Clear();
             }
         }
 

@@ -68,7 +68,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		gridControl->MouseDoubleClick += gcnew System::Windows::Forms::MouseEventHandler(this, &StateManager::gridControl_MouseDoubleClick);
 		gridControl->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &StateManager::gridControl_Paint);
 		gridControl->PreviewKeyDown += gcnew System::Windows::Forms::PreviewKeyDownEventHandler(this, &StateManager::gridControl_PreviewKeyDown);
-		gridControl->Clearing += gcnew _EventHandler(this, &StateManager::gridControl_Clearing);
+		gridControl->Clearing += gcnew ClearEventHandler(this, &StateManager::gridControl_Clearing);
 	}
 
 	void StateManager::ChangeDefaultState()
@@ -236,7 +236,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		}
 	}
 
-	void StateManager::gridControl_Clearing(object^ /*sender*/, _EventArgs^ /*e*/)
+	void StateManager::gridControl_Clearing(object^ /*sender*/, ClearEventArgs^ /*e*/)
 	{
 		ChangeDefaultState();
 	}
