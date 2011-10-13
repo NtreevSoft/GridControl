@@ -414,7 +414,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		if(dataSource == nullptr)
 		{
-			ClearCore(true);
+			if(m_dataSource != nullptr)
+				ClearCore(true);
 			m_dataMember = dataMember;
 			return;
 		}
@@ -443,7 +444,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			}
 		}
 
-		if(m_manager != manager)
+		if(m_manager != nullptr && m_manager != manager)
 			ClearCore(true);
 
 		if(manager != nullptr)
@@ -491,6 +492,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		if(support->IsInitialized == true)
 		{
+			support->Initialized -= gcnew _EventHandler(this, &GridControl::dataSource_Initialized);
 			SetDataConnection(sender, m_dataMember);
 		}
 	}

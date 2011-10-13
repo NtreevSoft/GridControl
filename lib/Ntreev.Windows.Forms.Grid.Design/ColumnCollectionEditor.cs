@@ -34,11 +34,14 @@ using System.Drawing;
 using System.Windows.Forms.Design;
 using EnvDTE;
 using VSLangProj;
+using System.Collections;
 
 namespace Ntreev.Windows.Forms.Grid.Design
 {
     public class ColumnCollectionEditor : CollectionEditor
     {
+        ArrayList created = new ArrayList();
+
         public ColumnCollectionEditor(Type type)
             : base(type)
         {
@@ -60,11 +63,40 @@ namespace Ntreev.Windows.Forms.Grid.Design
             return base.CanRemoveInstance(value);
         }
 
+        protected override IList GetObjectsFromInstance(object instance)
+        {
+            if (instance == null)
+                return null;
+            this.created.Add(instance);
+            return base.GetObjectsFromInstance(instance);
+        }
+
         protected override object SetItems(object editValue, object[] value)
         {
             ColumnCollection columns = editValue as ColumnCollection;
             columns.SetItemsByDesigner(value);
             return editValue;
+        }
+
+        protected override object[] GetItems(object editValue)
+        {
+            
+            return base.GetItems(editValue);
+        }
+
+        protected override void DestroyInstance(object instance)
+        {
+            base.DestroyInstance(instance);
+        }
+
+        protected override void CancelChanges()
+        {
+            base.CancelChanges();
+
+            foreach (Column item in this.created)
+            {
+                item.Dispose();
+            }
         }
 
         protected override object CreateInstance(Type itemType)
@@ -80,7 +112,12 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 return CreateInstanceBySelectingColumn();
             }
 
-            return ColumnCollection.CreateColumnInstance(this.Context, itemType);
+            return ColumnCollection.CreateColumnInstance(d, itemType);
+        }
+
+        void service_ComponentChanged(object sender, ComponentChangedEventArgs e)
+        {
+            int qwer = 0;
         }
 
         protected override string GetDisplayText(object value)

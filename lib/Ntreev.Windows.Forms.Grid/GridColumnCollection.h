@@ -464,8 +464,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		static _Column^ CreateColumnInstanceCore(System::IServiceProvider^ serviceProvider, _Type^ columnType);
 
-		static void DestroyColumnInstance(System::IServiceProvider^ serviceProvider, Column^ column);
-
 	private: // methods
 
 		_Column^ CreateColumnInstance(_PropertyDescriptor^ propertyDescriptor);

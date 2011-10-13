@@ -311,6 +311,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return *m_pItem->GetTextBound();
 	}
 
+	bool Cell::ShouldSerializeValue()
+	{
+		if(this->Column->PropertyDescriptor != nullptr)
+			return false;
+		
+		if(this->ValueCore == nullptr || this->ValueCore->ToString() == "")
+			return false;
+
+		return true;
+	}
+
 	InsertionCell::InsertionCell(_GridControl^ gridControl, GrItem* pItem, object^ defaultValue)
 		: m_value(defaultValue), Cell(gridControl, pItem)
 	{

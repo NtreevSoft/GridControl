@@ -33,6 +33,16 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
     public class GridControlCodeDomSerializer : CodeDomSerializer
     {
+        public override object Deserialize(IDesignerSerializationManager manager, object codeObject)
+        {
+            return base.Deserialize(manager, codeObject);
+        }
+
+        protected override object DeserializeInstance(IDesignerSerializationManager manager, Type type, object[] parameters, string name, bool addToContainer)
+        {
+            return base.DeserializeInstance(manager, type, parameters, name, addToContainer);
+        }
+
         public override object Serialize(IDesignerSerializationManager manager, object value)
         {
             GridControl gridControl = value as GridControl;
@@ -41,7 +51,6 @@ namespace Ntreev.Windows.Forms.Grid.Design
             CodeDomSerializer columnSerializer = (CodeDomSerializer)manager.GetSerializer(typeof(Column), typeof(CodeDomSerializer));
 
             CodeStatementCollection codes = new CodeStatementCollection();
-
 
             foreach (Column item in gridControl.Columns)
             {

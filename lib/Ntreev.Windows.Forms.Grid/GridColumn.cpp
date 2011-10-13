@@ -197,6 +197,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	Column::~Column()
 	{
+ 		Lock(this);
+
 		if((m_site != nullptr) && (m_site->Container != nullptr))
 		{
 			m_site->Container->Remove(this);

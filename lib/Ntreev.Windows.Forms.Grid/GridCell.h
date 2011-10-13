@@ -161,7 +161,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		[_Category("Data")]
 		[_Editor("Ntreev.Windows.Forms.Grid.Design.ValueEditor", System::Drawing::Design::UITypeEditor::typeid)]
 		[System::ComponentModel::TypeConverter(System::ComponentModel::StringConverter::typeid)]
-		[_DefaultValue((string^)nullptr)]
 		property object^ Value
 		{
 			object^ get();
@@ -446,6 +445,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			object^ get();
 			void set(object^);
 		}
+
+	private: // methods
+		bool ShouldSerializeValue();
 
 	private: // variables
 		_Column^	m_column;

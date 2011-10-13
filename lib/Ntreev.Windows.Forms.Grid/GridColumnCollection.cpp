@@ -220,12 +220,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void ColumnCollection::Unbind(_Column^ column)
 	{
 		column->PropertyDescriptor = nullptr;
+
 		if(column->HasLifeline == true)
 		{
 			column->GridControl = nullptr;
 			m_pColumnList->RemoveColumn(column->NativeRef);
-
-			DestroyColumnInstance(gcnew ServiceProvider(this->GridControl), column);
+			delete column;
 		}
 	}
 
@@ -351,21 +351,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		return column;
-	}
-
-	void ColumnCollection::DestroyColumnInstance(System::IServiceProvider^ serviceProvider, Column^ column)
-	{
-		using namespace System::ComponentModel;
-		using namespace System::ComponentModel::Design;
-		IDesignerHost^ designerHost = dynamic_cast<IDesignerHost^>(serviceProvider->GetService(IDesignerHost::typeid));
-		if(designerHost != nullptr)
-		{
-			designerHost->DestroyComponent(column);
-		}
-		else
-		{
-			delete column;
-		}
 	}
 
 	_Column^ ColumnCollection::CreateColumnInstance(System::IServiceProvider^ serviceProvider, _Type^ dataType)

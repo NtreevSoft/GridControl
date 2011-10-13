@@ -174,4 +174,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	public: // methods
 		static const wchar_t* Convert(string^ text);
 	};
+
+	private ref class Lock
+	{
+		object^ m_pObject;
+	public:
+		Lock( object ^ pObject ) : m_pObject( pObject ) 
+		{
+			System::Threading::Monitor::Enter( m_pObject );
+		}
+		~Lock() {
+			System::Threading::Monitor::Exit( m_pObject );
+		}
+	};
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
