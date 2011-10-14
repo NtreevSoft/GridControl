@@ -32,6 +32,7 @@ using Ntreev.Windows.Forms.Grid.GridState;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Design;
+using System.Windows.Forms;
 
 namespace Ntreev.Windows.Forms.Grid.Design
 {
@@ -42,7 +43,6 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
         public GridControlDesigner()
         {
-
         }
 
         public override void Initialize(System.ComponentModel.IComponent component)
@@ -112,16 +112,36 @@ namespace Ntreev.Windows.Forms.Grid.Design
         protected override void OnPaintAdornments(System.Windows.Forms.PaintEventArgs pe)
         {
             base.OnPaintAdornments(pe);
+            GridControl gridControl = this.Control as GridControl;
+
+            foreach (Column item in gridControl.DisplayableColumns)
+            {
+                if (item.PropertyDescriptor == null)
+                    continue;
+
+                Image image;
+                if (item.HasLifeline == true)
+                    image = Properties.Resources.DataSource_Only;
+                else
+                    image = Properties.Resources.DataSource_Binding;
+
+                int x = item.DisplayRectangle.Left - image.Width / 3;
+                int y = item.DisplayRectangle.Top + image.Height / 3;
+
+                pe.Graphics.DrawImage(image, x, y);
+            }
 
             if (this.selectionService.PrimarySelection is Column)
             {
                 Column column = this.selectionService.PrimarySelection as Column;
+                if (column.GridControl == gridControl)
+                {
 
-                Rectangle rectancle = column.DisplayRectangle;
-                rectancle.Width--;
-                rectancle.Height--;
-                 pe.Graphics.DrawRectangle(Pens.Black, rectancle);
-                
+                    Rectangle rectancle = column.DisplayRectangle;
+                    rectancle.Width--;
+                    rectancle.Height--;
+                    pe.Graphics.DrawRectangle(Pens.Black, rectancle);
+                }
             }
 
             //pe.Graphics.DrawRectangle(System.Drawing.Pens.Red, new System.Drawing.Rectangle(0, 0, 50, 50));

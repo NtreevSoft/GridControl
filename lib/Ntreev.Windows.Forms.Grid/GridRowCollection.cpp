@@ -66,29 +66,51 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_pDataRowList = GridCore->GetDataRowList();
 
 		m_listChangedEventHandler = gcnew System::ComponentModel::ListChangedEventHandler(this, &RowCollection::currencyManager_ListChanged);
-		m_list = gcnew System::Collections::ArrayList();
 		
 		gridControl->CurrencyManagerChanged += gcnew CurrencyManagerChangedEventHandler(this, &RowCollection::gridControl_CurrencyManagerChanged);
 	}
 
-	Row^ RowCollection::BindNew(object^ component)
+	void RowCollection::Bind(object^ component, int componentIndex)
 	{
 		if(GridControl->InvokeRowInserting(component) == false)
-			return nullptr;
+			return;
 
 		Row^ row = gcnew Row(GridControl);
-		row->Component = component;
-
 		m_pDataRowList->AddDataRow(row->NativeRef);
-		row->RefreshCells();
+		row->Component = component;
+		row->ComponentIndex = componentIndex;
 
 		GridControl->InvokeRowInserted(row);
-		return row;
 	}
 
-	bool RowCollection::Unbind(int /*componentIndex*/)
+	void RowCollection::Unbind(int componentIndex)
 	{
-		return false;
+		for each(_Row^ item in this)
+		{
+			if(item->ComponentIndex == componentIndex)
+			{
+				m_pDataRowList->RemoveDataRow(item->NativeRef);
+				GridControl->InvokeRowRemoved(gcnew RowRemovedEventArgs(componentIndex));
+			}
+			else if(item->ComponentIndex > componentIndex)
+			{
+				item->ComponentIndex--;
+			}
+		}
+	}
+
+	void RowCollection::SetItemsByDesigner(cli::array<object^>^ values)
+	{
+		using namespace System::Collections::Generic;
+		for each(object^ item in values)
+		{
+			_Row^ row = dynamic_cast<_Row^>(item);
+
+			if(row->Index < 0)
+			{
+				Add(row);
+			}
+		}
 	}
 
 	bool RowCollection::Contains(Row^ item)
@@ -117,35 +139,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 		case System::ComponentModel::ListChangedType::ItemAdded:
 			{
-				object^ component = m_currencyManager->List[e->NewIndex];
-				BindNew(component);
-				System::Diagnostics::Debug::Assert(m_list->Count == e->NewIndex);
-				m_list->Add(component);
-				Invalidate();
+				int componentIndex = e->NewIndex;
+				Bind(m_currencyManager->List[componentIndex], componentIndex);
 			}
 			break;
 		case System::ComponentModel::ListChangedType::ItemDeleted:
 			{
-				object^ component = m_list[e->NewIndex];
-
-				m_list->RemoveAt(e->NewIndex);
-
-				Row^ row = this[component];
-				if(row == nullptr)
-					return;
-		
-				GridControl->InvokeRowRemoving(row);
-
-				m_pDataRowList->RemoveDataRow(row->NativeRef);
-
-				RowRemovedEventArgs eRemoved(0);
-				GridControl->InvokeRowRemoved(%eRemoved);
-				Invalidate();
+				Unbind(e->NewIndex);
 			}
 			break;
 		case System::ComponentModel::ListChangedType::ItemChanged:
 			{
-				object^ component = m_list[e->NewIndex];
+				object^ component = m_currencyManager->List[e->NewIndex];
 
 				Row^ row = this[component];
 				if(e->PropertyDescriptor == nullptr)
@@ -169,7 +174,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		case System::ComponentModel::ListChangedType::Reset:
 			{
 				m_pDataRowList->ClearDataRow();
-				m_list->Clear();
 				Invalidate();
 			}
 			break;
@@ -183,18 +187,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			m_currencyManager->ListChanged -= m_listChangedEventHandler;
 
 		m_currencyManager = e->CurrecnyManager;
-		m_list->Clear();
 
 		if(m_currencyManager == nullptr)
 			return;
 
-		m_list->Capacity = m_currencyManager->List->Count;
+		int componentIndex = 0;
 		for each(object^ item in m_currencyManager->List)
 		{
-			BindNew(item);
+			Bind(item, componentIndex++);
 		}
-
-		m_list->AddRange(m_currencyManager->List);
 
 		m_currencyManager->ListChanged += m_listChangedEventHandler;
 	}
@@ -246,11 +247,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			
 				m_pDataRowList->InsertDataRow(item->NativeRef, index);
 				item->Component = component;
-				item->RefreshCells();
+				item->ComponentIndex = m_currencyManager->List->Count - 1;
 
 				GridControl->InvokeRowInserted(item);
-
-				m_list->Add(component);
 			}
 		}
 		catch(System::Exception^ e)
@@ -322,7 +321,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		Row^ row = gcnew Row(GridControl);
 		m_pDataRowList->AddDataRow(row->NativeRef);
 		row->Component = m_currencyManager->Current;
-		row->RefreshCells();
+		row->ComponentIndex = m_currencyManager->List->Count - 1;
 		row->IsVisible = false;
 
 		for(int i=0 ; i<InsertionRow->CellCount ; i++)
@@ -340,6 +339,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			{
 				m_currencyManager->CancelCurrentEdit();	
 				m_pDataRowList->RemoveDataRow(row->NativeRef);
+				row->Component = nullptr;
+				row->ComponentIndex = -1;
 				return nullptr;
 			}
 			
@@ -348,7 +349,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			
 			InsertionRow->SetDefaultValue();
 			GridControl->InvokeInsertionRowInserted(row);
-			m_list->Add(row->Component);
 		}
 		finally
 		{
@@ -383,10 +383,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			m_currencyManager->RemoveAt(index);
 			m_pDataRowList->RemoveDataRow(item->NativeRef);
 
-
 			RowRemovedEventArgs eRemoved(0);
 			GridControl->InvokeRowRemoved(%eRemoved);
-			m_list->Remove(item->Component);
 			Invalidate();
 		}
 		finally

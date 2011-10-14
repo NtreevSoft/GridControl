@@ -68,6 +68,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #endif
 		property _GridControl^ GridControl 
 		{
+
 			virtual _GridControl^ get() sealed { return m_gridControl; }
 		internal:
 			void set(_GridControl^ value);

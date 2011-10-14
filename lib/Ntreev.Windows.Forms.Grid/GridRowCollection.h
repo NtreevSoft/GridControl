@@ -265,9 +265,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	internal: // methods
 		RowCollection(_GridControl^ gridControl);
 
-		Row^ BindNew(object^ component);
+		void Bind(object^ component, int componentIndex);
 
-		bool Unbind(int componentIndex);
+		void Unbind(int componentIndex);
+
+		void SetItemsByDesigner(cli::array<object^>^ values);
 
 	internal: // properties
 		property Row^ default[GrDataRow*]
@@ -416,7 +418,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		GrDataRowList*		m_pDataRowList;
 
 		System::Windows::Forms::CurrencyManager^ m_currencyManager;
-		System::Collections::ArrayList^	m_list;
 		System::ComponentModel::ListChangedEventHandler^ m_listChangedEventHandler;
 	};
 

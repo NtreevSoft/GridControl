@@ -313,8 +313,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	bool Cell::ShouldSerializeValue()
 	{
-		if(this->Column->PropertyDescriptor != nullptr)
-			return false;
+		//if(this->Column->PropertyDescriptor != nullptr)
+		//	return false;
 		
 		if(this->ValueCore == nullptr || this->ValueCore->ToString() == "")
 			return false;

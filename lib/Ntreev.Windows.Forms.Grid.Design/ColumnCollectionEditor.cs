@@ -45,7 +45,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
         public ColumnCollectionEditor(Type type)
             : base(type)
         {
-
+            
         }
 
         protected override Type[] CreateNewItemTypes()
@@ -76,17 +76,6 @@ namespace Ntreev.Windows.Forms.Grid.Design
             ColumnCollection columns = editValue as ColumnCollection;
             columns.SetItemsByDesigner(value);
             return editValue;
-        }
-
-        protected override object[] GetItems(object editValue)
-        {
-            
-            return base.GetItems(editValue);
-        }
-
-        protected override void DestroyInstance(object instance)
-        {
-            base.DestroyInstance(instance);
         }
 
         protected override void CancelChanges()

@@ -37,7 +37,6 @@ namespace Ntreev.Windows.Forms.Grid.Design
             
         }
 
-
         protected override object CreateInstance(Type itemType)
         {
             GridControl gridControl = this.Context.Instance as GridControl;
@@ -51,6 +50,21 @@ namespace Ntreev.Windows.Forms.Grid.Design
             if (gridControl == null)
                 return null;
             return new Row(gridControl);
+        }
+                
+        protected override object SetItems(object editValue, object[] value)
+        {
+            RowCollection rows = editValue as RowCollection;
+            rows.SetItemsByDesigner(value);
+            return editValue;
+        }
+
+        protected override void DestroyInstance(object instance)
+        {
+            Row row = instance as Row;
+            //row.SetComponent(null, -1);
+            row.GridControl.Rows.Remove(row);
+            base.DestroyInstance(instance);
         }
     }
 }

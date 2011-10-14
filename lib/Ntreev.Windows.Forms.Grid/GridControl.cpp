@@ -421,27 +421,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		_CurrencyManager^ manager;
+		ISupportInitializeNotification^ support = dynamic_cast<ISupportInitializeNotification^>(dataSource);
 
-		try
+		if(support != nullptr && support->IsInitialized == false)
 		{
-			//ISupportInitializeNotification^ support = dynamic_cast<ISupportInitializeNotification^>(dataSource);
-			manager = dynamic_cast<_CurrencyManager^>(this->BindingContext[dataSource, dataMember]);
+			m_dataMember = dataMember;
+			support->Initialized += gcnew _EventHandler(this, &GridControl::dataSource_Initialized);
+			return;
 		}
-		catch(System::Exception^ e)
-		{
+		
+		manager = dynamic_cast<_CurrencyManager^>(this->BindingContext[dataSource, dataMember]);
 
-			ISupportInitializeNotification^ support = dynamic_cast<ISupportInitializeNotification^>(dataSource);
-			if(support != nullptr)
-			{
-				//m_dataSource = dataSource;
-				m_dataMember = dataMember;
-				support->Initialized += gcnew _EventHandler(this, &GridControl::dataSource_Initialized);
-				return;
-			}
-			else
-			{
-				throw e;
-			}
+		if(support != nullptr)
+		{
+			support->Initialized -= gcnew _EventHandler(this, &GridControl::dataSource_Initialized);
 		}
 
 		if(m_manager != nullptr && m_manager != manager)

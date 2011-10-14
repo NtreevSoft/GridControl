@@ -306,10 +306,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		using namespace System::ComponentModel;
 		using namespace System::ComponentModel::Design;
-		IDesignerHost^ designerHost = dynamic_cast<IDesignerHost^>(serviceProvider->GetService(IDesignerHost::typeid));
-		if(designerHost != nullptr)
+		if(serviceProvider != nullptr)
 		{
-			return dynamic_cast<Column^>(designerHost->CreateComponent(columnType));
+			IDesignerHost^ designerHost = dynamic_cast<IDesignerHost^>(serviceProvider->GetService(IDesignerHost::typeid));
+			if(designerHost != nullptr)
+			{
+				return dynamic_cast<Column^>(designerHost->CreateComponent(columnType));
+			}
 		}
 
 		return dynamic_cast<_Column^>(TypeDescriptor::CreateInstance(serviceProvider, columnType, nullptr, nullptr));
@@ -428,12 +431,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 				CurrencyManager^ currencyManager = dynamic_cast<CurrencyManager^>(sender);
 
-				List<_Column^>^ bindedColumns = gcnew List<_Column^>();
+				List<_Column^>^ boundColumns = gcnew List<_Column^>();
 
 				for each(_Column^ item in this)
 				{
 					if(item->PropertyDescriptor != nullptr)
-						bindedColumns->Add(item);
+						boundColumns->Add(item);
 				}
 
 				_PropertyDescriptor^ changedPropertyDescriptor = nullptr;
@@ -444,7 +447,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 					if(column != nullptr)
 					{
 						column->PropertyDescriptor = item;
-						bindedColumns->Remove(column);
+						boundColumns->Remove(column);
 					}
 					else
 					{
@@ -452,9 +455,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 					}
 				}
 
-				if(bindedColumns->Count == 1 && changedPropertyDescriptor != nullptr)
+				if(boundColumns->Count == 1 && changedPropertyDescriptor != nullptr)
 				{
-					bindedColumns[0]->PropertyDescriptor = changedPropertyDescriptor;
+					boundColumns[0]->PropertyDescriptor = changedPropertyDescriptor;
 				}
 			}
 			break;

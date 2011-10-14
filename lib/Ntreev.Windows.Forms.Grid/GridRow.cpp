@@ -51,6 +51,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void Row::Component::set(object^ value)
 	{
 		m_component = value;
+		if(m_component != nullptr)
+		{
+			RefreshCells();
+		}
 	}
 
 	GrDataRow* Row::NativeRef::get()

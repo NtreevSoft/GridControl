@@ -129,5 +129,11 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
             this.DialogResult = DialogResult.OK;
         }
+
+        private void toolStripButton2_LocationChanged(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

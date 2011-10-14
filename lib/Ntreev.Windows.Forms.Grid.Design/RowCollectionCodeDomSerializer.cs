@@ -69,6 +69,11 @@ namespace Ntreev.Windows.Forms.Grid.Design
                         }
                     }
                 }
+
+                foreach (CodeObject item in statements)
+                {
+                    item.UserData["statement-ordering"] = "end";
+                }
             }
 
             return codeObject;
@@ -112,35 +117,6 @@ namespace Ntreev.Windows.Forms.Grid.Design
             }
 
             return codeObject;
-
-            //ExpressionContext contextParent = manager.Context[typeof(ExpressionContext)] as ExpressionContext;
-
-
-            //ExpressionContext expression = new ExpressionContext(codeIndexer, typeof(Row), rows, row);
-
-            //manager.Context.Push(expression);
-
-            //CodeDomSerializer rowSerialzier = (CodeDomSerializer)manager.GetSerializer(typeof(Row), typeof(CodeDomSerializer));
-
-            //object codeObject = rowSerialzier.Serialize(manager, row);
-
-            // //if(codeObject is CodeStatementCollection)
-            ////{
-            ////    CodeStatementCollection statements = codeObject as CodeStatementCollection;
-
-            ////    foreach (Cell item in row.Cells)
-            ////    {
-            ////        CodeStatementCollection cellwCodeStatements = SerializeCell(manager, codeIndexer, item, row.Cells);
-
-            ////        statements.AddRange(cellwCodeStatements);
-            ////    }
-            ////}
-
-            //manager.Context.Pop();
-            //if (codeObject == null)
-            //    return null;
-
-            //return codeObject as CodeStatementCollection;
         }
 
         object SerializeCell(IDesignerSerializationManager manager, CodeExpression target, Cell cell)
