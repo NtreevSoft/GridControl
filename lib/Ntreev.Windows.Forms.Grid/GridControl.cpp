@@ -121,8 +121,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	GridControl::GridControl()
 	{
-		System::Diagnostics::Trace::WriteLine("TraceTraceTraceTrace");
-		System::Diagnostics::Debug::WriteLine("DebugDebugDebugDebug");
+		System::Diagnostics::Trace::Write("weq");
 #ifdef _TIME_TEST
 		Private::GridTimeTest timeTest("GridControl 생성자");
 #endif
@@ -181,20 +180,24 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		m_defaultDataSource		= gcnew System::Data::DataTable();
 		m_defaultManager		= dynamic_cast<_CurrencyManager^>(this->BindingContext[m_defaultDataSource]);
+		m_listChangedEventHandler = gcnew System::ComponentModel::ListChangedEventHandler(this, &GridControl::currencyManager_ListChanged);
+		m_bindingCompleteEventHandler = gcnew System::Windows::Forms::BindingCompleteEventHandler(this, &GridControl::currencyManager_BindingComplete);
 
 		this->DoubleBuffered	= m_pGridRenderer->DoubleBuffered();
 		this->Name				= L"GridControl";
 
-		//BorderStyle			= System::Windows::Forms::BorderStyle::FixedSingle;
-		//AllowDrop				= true;
-
 		SetNativeEvent(true);
 
-		this->CurrencyManagerChanged(this, gcnew CurrencyManagerChangedEventArgs(m_defaultManager));
+
+		OnCurrencyManagerChanging(gcnew CurrencyManagerChangingEventArgs(m_defaultManager));
+		OnCurrencyManagerChanged(gcnew CurrencyManagerChangedEventArgs(m_defaultManager));
 	}
 
 	GridControl::~GridControl()
 	{
+		m_manager->ListChanged -= m_listChangedEventHandler;
+		m_manager->BindingComplete -= m_bindingCompleteEventHandler;
+
 		this->Columns->DeleteAll();
 
 		delete m_rowList;
@@ -255,7 +258,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void GridControl::OnPaint(System::Windows::Forms::PaintEventArgs^ e)
 	{
 		_Graphics^ graphics = e->Graphics;
-	
+
 		try
 		{
 			UpdateGridRect();
@@ -263,7 +266,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			GrRect clipping(e->ClipRectangle);
 
 			clipping.right  = System::Math::Min(clipping.right, this->DisplayRectangle.Right);
-			clipping.bottom = System::Math::Min(clipping.bottom, this->DisplayRectangle.Bottom);		
+			clipping.bottom = System::Math::Min(clipping.bottom, this->DisplayRectangle.Bottom);	
+
+			System::Diagnostics::Trace::WriteLine(e->ClipRectangle);
 
 			System::IntPtr hdc = e->Graphics->GetHdc();
 			try
@@ -412,72 +417,68 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		using namespace System::ComponentModel;
 
-		if(dataSource == nullptr)
-		{
-			if(m_dataSource != nullptr)
-				ClearCore(true);
-			m_dataMember = dataMember;
+		DataBindingRef(this);
+
+		if(m_dataSource == dataSource && m_dataMember == dataMember)
 			return;
-		}
 
 		_CurrencyManager^ manager;
-		ISupportInitializeNotification^ support = dynamic_cast<ISupportInitializeNotification^>(dataSource);
 
-		if(support != nullptr && support->IsInitialized == false)
+		if(dataSource == nullptr)
 		{
-			m_dataMember = dataMember;
-			support->Initialized += gcnew _EventHandler(this, &GridControl::dataSource_Initialized);
-			return;
+			manager = m_defaultManager;
 		}
-		
-		manager = dynamic_cast<_CurrencyManager^>(this->BindingContext[dataSource, dataMember]);
-
-		if(support != nullptr)
+		else
 		{
-			support->Initialized -= gcnew _EventHandler(this, &GridControl::dataSource_Initialized);
-		}
+			ISupportInitializeNotification^ support = dynamic_cast<ISupportInitializeNotification^>(dataSource);
 
-		if(m_manager != nullptr && m_manager != manager)
-			ClearCore(true);
-
-		if(manager != nullptr)
-		{
-			CurrencyManagerChangingEventArgs e(manager);
-
-			OnCurrencyManagerChanging(%e);
-
-			if(e.Cancel == true)
+			if(support != nullptr && support->IsInitialized == false)
 			{
-				throw gcnew System::NotSupportedException(e.CancelReason);
+				m_dataMember = dataMember;
+				support->Initialized += gcnew _EventHandler(this, &GridControl::dataSource_Initialized);
+				return;
 			}
 
-			m_dataSource = dataSource;
-			m_dataMember = dataMember;
+			manager = dynamic_cast<_CurrencyManager^>(this->BindingContext[dataSource, dataMember]);
 
-			m_manager = manager;
-
-			SetNativeEvent(false);
-			
-
-			OnCurrencyManagerChanged(gcnew CurrencyManagerChangedEventArgs(manager));
-
-			m_insertionRow->SetDefaultValue();
-
-			UpdateGridRect();
-
-			SetNativeEvent(true);
-
-			OnDataBindingComplete(_EventArgs::Empty);
-			Invalidate(false);
+			if(manager == nullptr)
+			{
+				throw gcnew System::NotSupportedException("데이터 소스 초기화에 실패했습니다. 데이터 소스가 IList, IListSource 또는 IBindingList 인터페이스를 구현하는 개체인지 확인하십시오");
+			}
+			else if(support != nullptr)
+			{
+				support->Initialized -= gcnew _EventHandler(this, &GridControl::dataSource_Initialized);
+			}
 		}
 
-		if(dataSource != nullptr && dataMember != string::Empty && manager == nullptr)
+		CurrencyManagerChangingEventArgs e(manager);
+		OnCurrencyManagerChanging(%e);
+
+		if(e.Cancel == true)
 		{
-			throw gcnew System::NotSupportedException("데이터 소스 초기화에 실패했습니다. 데이터 소스가 IList, IListSource 또는 IBindingList 인터페이스를 구현하는 개체인지 확인하십시오");
+			throw gcnew System::NotSupportedException(e.CancelReason);
 		}
+
+		SetNativeEvent(false);
+
+		if(m_manager != manager)
+			ClearCore(true);
+
+		m_dataSource = dataSource;
+		m_dataMember = dataMember;
+
+		SetNativeEvent(true);
+
+		OnCurrencyManagerChanged(gcnew CurrencyManagerChangedEventArgs(manager));
+		OnDataBindingComplete(_EventArgs::Empty);
+
+		//if(dataSource != nullptr && dataMember != string::Empty && manager == nullptr)
+		//{
+		//	throw gcnew System::NotSupportedException("데이터 소스 초기화에 실패했습니다. 데이터 소스가 IList, IListSource 또는 IBindingList 인터페이스를 구현하는 개체인지 확인하십시오");
+		//}
 	}
 
-	void GridControl::dataSource_Initialized(object^ sender, _EventArgs^ e)
+	void GridControl::dataSource_Initialized(object^ sender, _EventArgs^ /*e*/)
 	{
 		using namespace System::ComponentModel;
 
@@ -533,6 +534,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		m_states->ChangeDefaultState();
 		UserControl::OnSizeChanged(e);
+		this->Invalidate(false);
 	}
 
 	void GridControl::OnClientSizeChanged(_EventArgs^ e)
@@ -609,9 +611,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		if(m_dataSource != value)
 		{
-			if(value == nullptr)
+			if(value == nullptr || m_dataSource != nullptr)
 				m_dataMember = string::Empty;
-
+			
 			SetDataConnection(value, m_dataMember);
 			if(m_dataSource == value)
 				OnDataSourceChanged(_EventArgs::Empty);
@@ -735,17 +737,53 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void GridControl::OnCurrencyManagerChanging(CurrencyManagerChangingEventArgs^ e)
 	{
+		System::Diagnostics::Debug::Assert(e->CurrecnyManager != nullptr);
+		if(m_manager != nullptr)
+		{
+			m_manager->ListChanged -= m_listChangedEventHandler;
+			m_manager->BindingComplete -= m_bindingCompleteEventHandler;
+		}
+
 		this->CurrencyManagerChanging(this, e);
 	}
 
 	void GridControl::OnCurrencyManagerChanged(CurrencyManagerChangedEventArgs^ e)
 	{
-		if(e->CurrecnyManager != nullptr)
-		{
-			m_pGridCore->Reserve(m_manager->GetItemProperties()->Count, m_manager->List->Count);
-		}
+		System::Diagnostics::Debug::Assert(e->CurrecnyManager != nullptr);
+
+		m_manager = e->CurrecnyManager;
+		m_pGridCore->Reserve(m_manager ->GetItemProperties()->Count, m_manager ->List->Count);
+		m_manager->ListChanged += m_listChangedEventHandler;
+		m_manager->BindingComplete += m_bindingCompleteEventHandler;
 
 		this->CurrencyManagerChanged(this, e);
+
+		m_insertionRow->SetDefaultValue();
+		UpdateGridRect();
+	}
+
+	void GridControl::currencyManager_ListChanged(object^ /*sender*/, System::ComponentModel::ListChangedEventArgs^ e)
+	{
+		switch(e->ListChangedType)
+		{
+		case System::ComponentModel::ListChangedType::Reset:
+			{
+				m_manager->EndCurrentEdit();
+				m_pGridCore->Clear();
+				m_pGridCore->Reserve(m_manager->GetItemProperties()->Count, m_manager->List->Count);
+
+				if(this->BindingContext->Contains(m_dataSource, m_dataMember) == false)
+				{
+					m_dataMember = string::Empty;
+				}
+			}
+			break;
+		}
+	}
+
+	void GridControl::currencyManager_BindingComplete(object^ sender, System::Windows::Forms::BindingCompleteEventArgs^ e)
+	{
+		int qwer=0;
 	}
 
 	void GridControl::RemoveRow(Row^ row)
@@ -1040,6 +1078,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void GridControl::EditCell(Cell^ cell, EditingReason^ editBy)
 	{
+		if(cell->IsReadOnly == true)
+			return;
+
 		if(cell->IsFocused == false)
 			cell->IsFocused = true;
 
@@ -1116,27 +1157,24 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void GridControl::Clear()
 	{
+		OnCurrencyManagerChanging(gcnew CurrencyManagerChangingEventArgs(m_defaultManager));
 		ClearCore(false);
+
+		m_dataSource	= nullptr;
+		m_dataMember	= string::Empty;
+		m_manager		= nullptr;
+		OnCurrencyManagerChanged(gcnew CurrencyManagerChangedEventArgs(m_defaultManager));
 	}
 
 	void GridControl::ClearCore(bool dataSourceOnly)
 	{
-		using namespace System::Collections::Generic;
 		ClearEventArgs e(dataSourceOnly);
 		OnClearing(%e);
 
-		//SetNativeEvent(false);
 		m_pGridCore->Clear();
 		m_focusedCell	= nullptr;
-		
+
 		m_defaultDataSource->Clear();
-
-		m_dataSource	= nullptr;
-		m_dataMember	= string::Empty;
-
-		OnCurrencyManagerChanging(gcnew CurrencyManagerChangingEventArgs(nullptr));
-		OnCurrencyManagerChanged(gcnew CurrencyManagerChangedEventArgs(nullptr));
-		m_manager		= nullptr;
 
 		OnCleared(%e);
 	}
@@ -1807,5 +1845,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	VScrollProperty^ GridControl::VerticalScroll::get()
 	{
 		return m_vScrollProperty;
+	}
+
+	GridControl::DataBindingRef::DataBindingRef(GridControl^ gridControl)
+		: m_gridControl(gridControl)
+	{
+		m_gridControl->m_dataBindingRef++;
+	}
+
+	GridControl::DataBindingRef::~DataBindingRef()
+	{
+		m_gridControl->m_dataBindingRef--;
 	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

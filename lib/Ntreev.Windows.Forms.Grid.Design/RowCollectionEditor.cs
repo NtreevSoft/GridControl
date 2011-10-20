@@ -31,40 +31,38 @@ namespace Ntreev.Windows.Forms.Grid.Design
     [DesignerSerializer(typeof(RowCollectionCodeDomSerializer), typeof(CodeDomSerializer))]
     public class RowCollectionEditor : CollectionEditor
     {
+        GridControl gridControl = null;
         public RowCollectionEditor(Type type)
             : base(type)
         {
             
         }
 
+        public override object EditValue(System.ComponentModel.ITypeDescriptorContext context, IServiceProvider provider, object value)
+        {
+            RowCollection rows = value as RowCollection;
+            this.gridControl = rows.GridControl;
+
+            //if (this.gridControl.DataSource != null && provider.GetService(typeof(IDesignerHost)) != null)
+            //    return value;
+
+            return base.EditValue(context, provider, value);
+        }
+
         protected override object CreateInstance(Type itemType)
         {
-            GridControl gridControl = this.Context.Instance as GridControl;
-            
-            if(gridControl == null)
-            {
-                GridControlDesigner.ActionList actionList = this.Context.Instance as GridControlDesigner.ActionList;
-                gridControl = actionList.Component as GridControl;
-            }
-
-            if (gridControl == null)
-                return null;
-            return new Row(gridControl);
+            return this.gridControl.AddNewRow();
         }
-                
+
         protected override object SetItems(object editValue, object[] value)
         {
-            RowCollection rows = editValue as RowCollection;
-            rows.SetItemsByDesigner(value);
             return editValue;
         }
 
         protected override void DestroyInstance(object instance)
         {
             Row row = instance as Row;
-            //row.SetComponent(null, -1);
-            row.GridControl.Rows.Remove(row);
-            base.DestroyInstance(instance);
+            this.gridControl.Rows.Remove(row);
         }
     }
 }

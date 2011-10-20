@@ -478,10 +478,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		void currencyManager_ListChanged(object^ sender, System::ComponentModel::ListChangedEventArgs^ e);
 
-		void currencyManager_BindingComplete(object^ sender, System::Windows::Forms::BindingCompleteEventArgs^ e);
-
-		void currencyManager_MetaDataChanged(object^ sender, _EventArgs^ e);
-
 		void gridControl_CurrencyManagerChanging(object^ sender, CurrencyManagerChangingEventArgs^ e);
 
 		void gridControl_CurrencyManagerChanged(object^ sender, CurrencyManagerChangedEventArgs^ e);
@@ -492,10 +488,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	private:
 		GrColumnList* m_pColumnList;
-		System::Windows::Forms::CurrencyManager^ m_currencyManager;
-
+		System::Windows::Forms::CurrencyManager^ m_manager;
 		System::ComponentModel::ListChangedEventHandler^ m_listChangedEventHandler;
-		System::Windows::Forms::BindingCompleteEventHandler^ m_bindingCompleteEventHandler;
 		System::Collections::ArrayList^ m_tempBindableColumns;
 	};
 

@@ -27,30 +27,27 @@ using System.ComponentModel.Design.Serialization;
 using System.CodeDom;
 using System.Windows.Forms;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 
 namespace Ntreev.Windows.Forms.Grid.Design
 {
-
     public class GridControlCodeDomSerializer : CodeDomSerializer
     {
-        public override object Deserialize(IDesignerSerializationManager manager, object codeObject)
-        {
-            return base.Deserialize(manager, codeObject);
-        }
-
-        protected override object DeserializeInstance(IDesignerSerializationManager manager, Type type, object[] parameters, string name, bool addToContainer)
-        {
-            return base.DeserializeInstance(manager, type, parameters, name, addToContainer);
-        }
-
         public override object Serialize(IDesignerSerializationManager manager, object value)
         {
+            if (IsSerialized(manager, value) == true)
+                return GetExpression(manager, value);
+
             GridControl gridControl = value as GridControl;
 
             CodeDomSerializer userControlSerializer = (CodeDomSerializer)manager.GetSerializer(typeof(UserControl), typeof(CodeDomSerializer));
             CodeDomSerializer columnSerializer = (CodeDomSerializer)manager.GetSerializer(typeof(Column), typeof(CodeDomSerializer));
 
-            CodeStatementCollection codes = new CodeStatementCollection();
+            CodeStatementCollection statements = new CodeStatementCollection();
+
+
+            //SerializeValue(manager, gridControl.DataSource, statements);
+
 
             foreach (Column item in gridControl.Columns)
             {
@@ -62,19 +59,46 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
                 if (columnCodes is CodeStatementCollection)
                 {
-                    codes.AddRange(columnCodes as CodeStatementCollection);
+                    statements.AddRange(columnCodes as CodeStatementCollection);
                 }
             }
 
             object codeObject = userControlSerializer.Serialize(manager, value);
 
-
             if (codeObject is CodeStatementCollection)
             {
-                codes.AddRange(codeObject as CodeStatementCollection);
+                statements.AddRange(codeObject as CodeStatementCollection);
             }
 
-            return codes;
+            return statements;
+        }
+
+        void SerializeValue(IDesignerSerializationManager manager, object value, CodeStatementCollection statements)
+        {
+            if (value == null)
+                return;
+
+            CodeDomSerializer serializer = (CodeDomSerializer)manager.GetSerializer(value.GetType(), typeof(CodeDomSerializer));
+
+            object codes = serializer.Serialize(manager, value);
+
+            if (codes is CodeStatementCollection)
+            {
+                statements.AddRange(codes as CodeStatementCollection);
+            }
+
+            if (value is IComponent)
+            {
+                IDesigner designer = System.ComponentModel.TypeDescriptor.CreateDesigner(value as IComponent, typeof(IDesigner));
+                if (designer is ComponentDesigner)
+                {
+                    ComponentDesigner componentDesigner = designer as ComponentDesigner;
+                    foreach (object item in componentDesigner.AssociatedComponents)
+                    {
+                        SerializeValue(manager, item, statements);
+                    }
+                }
+            }
         }
     }
 }

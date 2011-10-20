@@ -77,6 +77,41 @@ typedef unsigned char	byte;
 #define for_stl_map_ptr(key, type, var_ptr, itor) for(map<key, type>::iterator itor = var_ptr->begin() ; itor != var_ptr->end() ; itor++)
 #define for_stl_map_const_ptr(key, type, var_ptr, itor) for(map<key, type>::const_iterator itor = var_ptr->begin() ; itor != var_ptr->end() ; itor++)
 
+template<typename T>
+class Iterator 
+{
+public:
+	Iterator(const T& container)
+		: m_container(container)
+	{
+		m_iterator = m_container.begin();
+	}
+
+	typedef typename T::value_type ValueType;
+
+	operator ValueType () const
+	{
+		return *m_iterator;
+	}
+
+	bool IsEnd() const
+	{
+		return m_iterator != m_container.end();
+	}
+
+	void Next()
+	{
+		m_iterator++;
+	}
+
+private:
+	const T& m_container;
+	typename T::const_iterator m_iterator;
+};
+
+#define for_each_stl(_container_type, _container_instance, _value_name) \
+	for(Iterator< _container_type > _value_name(_container_instance) ; _value_name.IsEnd() == false ; _value_name.Next() )
+
 class GrState
 {
 public:

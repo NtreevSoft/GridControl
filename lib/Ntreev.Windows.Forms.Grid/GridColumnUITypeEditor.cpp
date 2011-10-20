@@ -28,10 +28,10 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	ref class TypeDescriptorContext : System::ComponentModel::ITypeDescriptorContext
+	ref class InternalTypeDescriptorContext : System::ComponentModel::ITypeDescriptorContext
 	{
 	public:
-		TypeDescriptorContext(object^ instance, _GridControl^ gridControl, _PropertyDescriptor^ propertyDescriptor)
+		InternalTypeDescriptorContext(object^ instance, _GridControl^ gridControl, _PropertyDescriptor^ propertyDescriptor)
 			: m_instance(instance), m_gridControl(gridControl), m_propertyDescriptor(propertyDescriptor)
 		{
 
@@ -134,16 +134,32 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		while(owner->ParentForm != nullptr)
 			owner = owner->ParentForm;
 
-		_Rectangle rect = GridControl->FocusedCell->DisplayRectangle;
-		_Point location(rect.Left, rect.Bottom);
-		location = GridControl->PointToScreen(location);
+		if(dynamic_cast<IBindingList^>(e->Value) != nullptr)
+		{
+			IBindingList^ bindingList = dynamic_cast<IBindingList^>(e->Value);
+			
+			Form form;
+			_GridControl^ gridControl = gcnew _GridControl();
+			gridControl->Dock = DockStyle::Fill;
+			gridControl->DataSource = bindingList;
 
-		TypeDescriptorContext^ typeDescriptorContext = gcnew TypeDescriptorContext(GridControl->FocusedRow->Component, GridControl, this->PropertyDescriptor);
-		object^ value = UITypeEditor->EditValue(typeDescriptorContext, gcnew WindowsFormsEditorService(owner, location), e->Value);
+			form.Controls->Add(gridControl);
 
-		
-		if(object::Equals(value, e->Value) == false)
-			e->Value = value;
+			form.ShowDialog(owner);
+			e->CancelEdit = true;
+		}
+		else
+		{
+			_Rectangle rect = GridControl->FocusedCell->DisplayRectangle;
+			_Point location(rect.Left, rect.Bottom);
+			location = GridControl->PointToScreen(location);
+
+			InternalTypeDescriptorContext^ typeDescriptorContext = gcnew InternalTypeDescriptorContext(GridControl->FocusedRow->Component, GridControl, this->PropertyDescriptor);
+			object^ value = UITypeEditor->EditValue(typeDescriptorContext, gcnew WindowsFormsEditorService(owner, location), e->Value);
+
+			if(object::Equals(value, e->Value) == false)
+				e->Value = value;
+		}
 		e->SuppressEditing = true;
 	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

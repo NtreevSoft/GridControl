@@ -303,7 +303,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <param name="by">어떠한 방식으로 셀 편집이 시작되었는지를 나타내는 <see cref="EditingReason"/>개체입니다.</param>
 		/// <param name="value">편집할 값을 나타냅니다.</param>
 		EditValueEventArgs(EditingReason^ by, object^ value)
-			: m_editingReason(by), m_value(value), m_suppressEditing(false)
+			: m_editingReason(by), m_value(value), m_suppressEditing(false), m_cancel(false)
 		{
 
 		}
@@ -334,14 +334,27 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// </returns>
 		property bool SuppressEditing
 		{
-			bool get() { return m_suppressEditing; }
+			bool get() { if(m_cancel == true) return true; return m_suppressEditing; }
 			void set(bool value) { m_suppressEditing = value; }
+		}
+
+		/// <summary>
+		/// 값의 변경 여부에 관계 없이 편집을 취소할지에 대한 여부를 가져오거나 설정합니다.
+		/// </summary>
+		/// <returns>
+		/// 값의 변경 여부에 관계 없이 편집을 취소 하려면 true를, 그렇지 않으면 false를 반환합니다.
+		/// </returns>
+		property bool CancelEdit
+		{
+			bool get() { return m_cancel; }
+			void set(bool value) { m_cancel = value; }
 		}
 
 	private: // variables
 		object^		m_value;
 		EditingReason^	m_editingReason;
 		bool		m_suppressEditing;
+		bool		m_cancel;
 	};
 
 	/// <summary>
@@ -744,6 +757,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	[System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
 	[System::ComponentModel::ToolboxItem(false)]
 	[System::ComponentModel::DesignTimeVisible(false)]
+	[System::ComponentModel::Designer("Ntreev.Windows.Forms.Grid.Design.ColumnDesigner, Ntreev.Windows.Forms.Grid.Design, Version=1.0.4300.26762, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
 	public ref class Column abstract : CellBase, IColumnDescriptor, System::ComponentModel::IComponent, System::ComponentModel::ISite, System::IServiceProvider
 	{
 	internal: // typedefs
@@ -813,6 +827,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 열의 이름은 일종의 키 값으로 사용됩니다. 따라서 다른 열과 이름이 같을경우 예외가 발생합니다.
 		/// </remarks>
 		/// <exception cref="System::ArgumentException">이름을 빈 문자열로 설정하거나. <see cref="GridControl"/>에 종속되어 있는 경우 같은 이름을 가진 열이 이미 있을때.</exception>
+		[System::ComponentModel::RefreshProperties(System::ComponentModel::RefreshProperties::Repaint)]
 		property string^ ColumnName
 		{
 			virtual string^ get() sealed;
@@ -1347,7 +1362,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 소멸자 입니다.
 		/// </summary>
 		~Column();
-		
 
 		/// <summary>
 		/// 값이 편집될때 호출됩니다.
@@ -1428,7 +1442,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		property System::ComponentModel::ISite^ Site_IComponent
 		{
 			virtual System::ComponentModel::ISite^ get() sealed = System::ComponentModel::IComponent::Site::get { return m_site; }
-			virtual void set(System::ComponentModel::ISite^ value) sealed  = System::ComponentModel::IComponent::Site::set { m_site = value; }
+			virtual void set(System::ComponentModel::ISite^ value) sealed  = System::ComponentModel::IComponent::Site::set;
 		}
 
 		property string^ Name_ISite

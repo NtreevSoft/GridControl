@@ -47,8 +47,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
         public override object Serialize(IDesignerSerializationManager manager, object value)
         {
             object codeObject = base.Serialize(manager, value);
-
-            
+                        
             if (codeObject is CodeStatementCollection)
             {
                 CodeStatementCollection statements = codeObject as CodeStatementCollection;

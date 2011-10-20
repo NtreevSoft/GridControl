@@ -491,20 +491,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 				{
 				case _SelectionType::Normal:
 					{
-						Selector->SelectItems(m_pColumn, GrSelectionType_Normal);
-						Selector->SetColumnAnchor(m_pColumn);
-						Focuser->Set(m_pColumn);
-
-						IDataRow* pFocusedRow = Focuser->GetFocusedRow();
-						if(pFocusedRow != nullptr)
-							Selector->SetRowAnchor(pFocusedRow);
-
 						if(GridControl->Site != nullptr)
 						{
 							using namespace System::ComponentModel::Design;
 							ISelectionService^ selectionService = (ISelectionService^)GridControl->GetInternalService(ISelectionService::typeid);
 							cli::array<object^>^ components = gcnew cli::array<object^>(1) { column, };
 							selectionService->SetSelectedComponents(components);
+						}
+						else
+						{
+							Selector->SelectItems(m_pColumn, GrSelectionType_Normal);
+							Selector->SetColumnAnchor(m_pColumn);
+							Focuser->Set(m_pColumn);
+
+							IDataRow* pFocusedRow = Focuser->GetFocusedRow();
+							if(pFocusedRow != nullptr)
+								Selector->SetRowAnchor(pFocusedRow);
 						}
 					}
 					break;
@@ -711,6 +713,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 				GrSort::Type sortType = (GrSort::Type)n;
 
 				m_pColumn->SetSortType(sortType);
+				GridControl->Refresh();
+				if(GridControl->FocusedCell != nullptr)
+					GridControl->EnsureVisible(GridControl->FocusedCell);
 			}
 		}
 
@@ -1345,8 +1350,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 		EditValueEventArgs eve(by, m_cell->Value);
 		m_column->Invoke_EditValue(%eve);
-		if(object::Equals(eve.Value, m_cell->Value) == false)
-			m_cell->Value = eve.Value;
+
+		if(eve.CancelEdit != true)
+		{
+			if(object::Equals(eve.Value, m_cell->Value) == false)
+				m_cell->Value = eve.Value;
+		}
 
 		if(eve.SuppressEditing == true)
 		{

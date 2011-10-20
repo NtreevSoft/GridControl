@@ -57,6 +57,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			uint			m_index;
 			GrDataRowList*	m_pDataRowList;
 		};
+
+		ref class Manager
+		{
+		public:
+			Manager()
+			{
+
+			}
+			~Manager()
+			{
+
+			}
+		};
 	private: // typedefs
 			
 	public: // methods
@@ -216,7 +229,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <exception cref="System::ArgumentOutOfRangeException">
 		/// index가 0보다 작거나, <see cref="Count"/>보다 클 경우
 		/// </exception>
-		_Row^ GetAt(int index)
+		Row^ GetAt(int index)
 		{
 			return this[index];
 		}
@@ -296,13 +309,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		virtual int Add_IList(object^ value) sealed = System::Collections::IList::Add
 		{
 			int count = this->Count;
-			Add((_Row^)value);
+			Add((Row^)value);
 			return count;
 		}
 
 		virtual bool Contains_IList(object^ value) sealed = System::Collections::IList::Contains
 		{
-			return this->Contains((_Row^)value);
+			return this->Contains((Row^)value);
 		}
 
 		virtual void Clear_IList() sealed = System::Collections::IList::Clear
@@ -315,17 +328,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		virtual int IndexOf_IList(object^ value) sealed = System::Collections::IList::IndexOf
 		{
-			return this->IndexOf((_Row^)value);
+			return this->IndexOf((Row^)value);
 		}
 
 		virtual void Insert_IList(int index, object^ value) sealed = System::Collections::IList::Insert
 		{
-			this->Insert(index, (_Row^)value);
+			this->Insert(index, (Row^)value);
 		}
 
 		virtual void Remove_IList(object^ value) sealed = System::Collections::IList::Remove
 		{
-			this->Remove((_Row^)value);
+			this->Remove((Row^)value);
 		}
 
 		virtual void CopyTo_ICollection(System::Array^ array, int index) sealed = System::Collections::ICollection::CopyTo
@@ -365,9 +378,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		void currencyManager_ListChanged(object^ sender, System::ComponentModel::ListChangedEventArgs^ e);
 
+		void currencyManager_CurrentChanged(object^ sender, System::EventArgs^ e);
+
+		void gridControl_CurrencyManagerChanging(object^ sender, CurrencyManagerChangingEventArgs^ e);
+
 		void gridControl_CurrencyManagerChanged(object^ sender, CurrencyManagerChangedEventArgs^ e);
 
-		void ArgumentTest(_Row^ item);
+		void ArgumentTest(Row^ item);
 
 	private: //properties
 		property object^ default_IList[int]
@@ -417,7 +434,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	private: // variables
 		GrDataRowList*		m_pDataRowList;
 
-		System::Windows::Forms::CurrencyManager^ m_currencyManager;
+		System::Windows::Forms::CurrencyManager^ m_manager;
+		int m_locked;
+		
+		System::EventHandler^ m_currentChangedEventHandler;
 		System::ComponentModel::ListChangedEventHandler^ m_listChangedEventHandler;
 	};
 
@@ -426,7 +446,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	/// </summary>
 	public ref class SelectedRowCollection : System::Collections::Generic::IEnumerable<Row^>, System::Collections::ICollection, GridObject
 	{
-		ref class Enumerator : System::Collections::Generic::IEnumerator<_Row^>
+		ref class Enumerator : System::Collections::Generic::IEnumerator<Row^>
 		{
 		public:
 			Enumerator(const GrSelectedRows* selectedRows);
@@ -434,9 +454,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			virtual bool MoveNext();
 			virtual void Reset();
 
-			property _Row^ Current
+			property Row^ Current
 			{
-				virtual _Row^ get();
+				virtual Row^ get();
 			}
 
 		private:
@@ -583,7 +603,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	public ref class VisibleRowCollection : System::Collections::Generic::IEnumerable<RowBase^>, System::Collections::ICollection, GridObject
 	{
 	private:
-		ref class Enumerator : System::Collections::Generic::IEnumerator<_RowBase^>
+		ref class Enumerator : System::Collections::Generic::IEnumerator<RowBase^>
 		{
 		public:
 			Enumerator(GrDataRowList* pDataRowList);
@@ -591,9 +611,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			virtual bool MoveNext();
 			virtual void Reset();
 
-			property _RowBase^ Current
+			property RowBase^ Current
 			{
-				virtual _RowBase^ get();
+				virtual RowBase^ get();
 			}
 
 		private:
@@ -700,7 +720,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	public ref class DisplayableRowCollection : System::Collections::Generic::IEnumerable<RowBase^>, System::Collections::ICollection, GridObject
 	{
 	private:
-		ref class Enumerator : System::Collections::Generic::IEnumerator<_RowBase^>
+		ref class Enumerator : System::Collections::Generic::IEnumerator<RowBase^>
 		{
 		public:
 			Enumerator(GrDataRowList* pDataRowList);
@@ -708,9 +728,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			virtual bool MoveNext();
 			virtual void Reset();
 
-			property _RowBase^ Current
+			property RowBase^ Current
 			{
-				virtual _RowBase^ get();
+				virtual RowBase^ get();
 			}
 
 		private:

@@ -35,7 +35,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	[System::ComponentModel::ToolboxItem(true)]
 	[System::ComponentModel::DefaultEvent("")]
 	[System::Drawing::ToolboxBitmap(GridControl::typeid)]
-	[System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=1.0.4300.26762, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+	[System::ComponentModel::Designer("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=1.0.4300.26762, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
 	[System::ComponentModel::Design::Serialization::DesignerSerializer("Ntreev.Windows.Forms.Grid.Design.GridControlCodeDomSerializer, Ntreev.Windows.Forms.Grid.Design, Version=1.0.4300.26762, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", "System.ComponentModel.Design.Serialization.CodeDomSerializer")]
 	[System::Windows::Forms::Docking(System::Windows::Forms::DockingBehavior::Ask)]
 	public ref class GridControl : System::Windows::Forms::UserControl
@@ -1394,10 +1394,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			_SelectionRange get();  
 		}
 
-		property _CurrencyManager^ CurrencyManager
-		{
-			_CurrencyManager^ get() { if(m_manager == nullptr) return m_defaultManager; return m_manager; }
-		}
+		//property _CurrencyManager^ CurrencyManager
+		//{
+		//	_CurrencyManager^ get() { if(m_manager == nullptr) return m_defaultManager; return m_manager; }
+		//}
 
 	internal: // events
 		event CurrencyManagerChangingEventHandler^ CurrencyManagerChanging
@@ -1844,7 +1844,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		void SetNativeEvent(bool attached);
 
 		void OnCurrencyManagerChanging(CurrencyManagerChangingEventArgs^ e);
-
 		void OnCurrencyManagerChanged(CurrencyManagerChangedEventArgs^ e);
 
 		void UpdateDataRectangle();
@@ -1858,9 +1857,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		void ResetColumns();
 		void ResetRows();
 
-		void ClearCore(bool deleteBindable);
+		void ClearCore(bool dataSourceOnly);
 
 		void dataSource_Initialized(object^ sender, _EventArgs^ e);
+		void currencyManager_ListChanged(object^ sender, System::ComponentModel::ListChangedEventArgs^ e);
+		void currencyManager_BindingComplete(object^ sender, System::Windows::Forms::BindingCompleteEventArgs^ e);
 
 	private: // properties
 
@@ -1958,9 +1959,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		_EventHandler^					m_eventStateBegin;
 		_EventHandler^					m_eventStateEnd;
-		
+
 		_CurrencyManager^				m_manager;
 		_CurrencyManager^				m_defaultManager;
 		System::Data::DataTable^		m_defaultDataSource;
+		int								m_dataBindingRef;
+
+		ref class DataBindingRef
+		{
+		public:
+			DataBindingRef(GridControl^ gridControl);
+			~DataBindingRef();
+		private:
+			GridControl^ m_gridControl;
+		};
+
+		System::ComponentModel::ListChangedEventHandler^ m_listChangedEventHandler;
+		System::Windows::Forms::BindingCompleteEventHandler^ m_bindingCompleteEventHandler;
 	};
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

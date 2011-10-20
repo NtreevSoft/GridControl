@@ -36,13 +36,14 @@ using System.Windows.Forms;
 
 namespace Ntreev.Windows.Forms.Grid.Design
 {
-    public class GridControlDesigner : System.Windows.Forms.Design.ControlDesigner
+    public partial class GridControlDesigner : System.Windows.Forms.Design.ControlDesigner
     {
-        DesignerActionListCollection mactionLists;
         ISelectionService selectionService;
+        IComponentChangeService componentChangeService;
 
         public GridControlDesigner()
         {
+            
         }
 
         public override void Initialize(System.ComponentModel.IComponent component)
@@ -54,49 +55,25 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 this.selectionService = GetService(typeof(ISelectionService)) as ISelectionService;
                 this.selectionService.SelectionChanged += new EventHandler(selectionService_SelectionChanged);
             }
-        }
 
-        public override void InitializeNewComponent(System.Collections.IDictionary defaultValues)
-        {
-            base.InitializeNewComponent(defaultValues);
-
-            if (this.selectionService == null)
+            if(this.componentChangeService == null)
             {
-                this.selectionService = GetService(typeof(ISelectionService)) as ISelectionService;
-                this.selectionService.SelectionChanged += new EventHandler(selectionService_SelectionChanged);
+                this.componentChangeService = GetService(typeof(IComponentChangeService)) as IComponentChangeService;
+                this.componentChangeService.ComponentRemoved += new ComponentEventHandler(componentChangeService_ComponentRemoved);
             }
         }
 
-        public override DesignerActionListCollection ActionLists
+        public override System.Collections.ICollection AssociatedComponents
         {
             get
             {
-                if (this.mactionLists == null)
-                {
-                    this.mactionLists = new DesignerActionListCollection();
-                    this.mactionLists.Add(new ActionList(this.Component));
-                    this.mactionLists[0].AutoShow = true;
-                }
-
-                return this.mactionLists;
+                GridControl gridControl = this.Control as GridControl;
+                if(gridControl == null)
+                    return base.AssociatedComponents;
+                return gridControl.Columns.ToArray();
             }
         }
-
-        public override DesignerVerbCollection Verbs
-        {
-            get
-            {
-                //    if (this.designerVerbs == null)
-                //    {
-                //        this.designerVerbs = new DesignerVerbCollection();
-                //        this.designerVerbs.Add(new DesignerVerb(SR.GetString("DataGridViewEditColumnsVerb"), new EventHandler(this.OnEditColumns)));
-                //        this.designerVerbs.Add(new DesignerVerb(SR.GetString("DataGridViewAddColumnVerb"), new EventHandler(this.OnAddColumn)));
-                //    }
-
-                return base.Verbs;
-            }
-        }
-
+          
         protected override InheritanceAttribute InheritanceAttribute
         {
             get
@@ -134,7 +111,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
             if (this.selectionService.PrimarySelection is Column)
             {
                 Column column = this.selectionService.PrimarySelection as Column;
-                if (column.GridControl == gridControl)
+                if (column.GridControl == gridControl && column.IsDisplayable == true)
                 {
 
                     Rectangle rectancle = column.DisplayRectangle;
@@ -188,6 +165,17 @@ namespace Ntreev.Windows.Forms.Grid.Design
              return false;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (this.componentChangeService != null)
+            {
+                this.componentChangeService.ComponentRemoved -= new ComponentEventHandler(componentChangeService_ComponentRemoved);
+                this.componentChangeService = null;
+            }
+
+            base.Dispose(disposing);
+        }
+
         void selectionService_SelectionChanged(object sender, EventArgs e)
         {
             if (this.Control == null)
@@ -195,101 +183,11 @@ namespace Ntreev.Windows.Forms.Grid.Design
             this.Control.Invalidate();
         }
 
-        #region classes
-
-        public class ActionList : System.ComponentModel.Design.DesignerActionList
+        void componentChangeService_ComponentRemoved(object sender, ComponentEventArgs e)
         {
-            GridControl gridControl;
-
-            public ActionList(System.ComponentModel.IComponent component)
-                : base(component)
-            {
-                this.gridControl = component as GridControl;
-            }
-
-            public override DesignerActionItemCollection GetSortedActionItems()
-            {
-                DesignerActionItemCollection items = new DesignerActionItemCollection();
-
-                try
-                {
-                    items.Add(new DesignerActionPropertyItem("CaptionText", "제목"));
-                    items.Add(new DesignerActionPropertyItem("DataSource", "DataSource"));
-                    items.Add(new DesignerActionPropertyItem("DataMember", "DataMember"));
-                    items.Add(new DesignerActionPropertyItem("Columns", "열 편집"));
-                    items.Add(new DesignerActionPropertyItem("Rows", "행 편집"));
-
-                    items.Add(new DesignerActionMethodItem(this, "Clear", "전체 삭제"));
-                }
-                catch (System.Exception e)
-                {
-                    System.Windows.Forms.MessageBox.Show(e.Message);
-                }
-
-                return items;
-            }
-            
-            public ColumnCollection Columns
-            {
-                get
-                {
-                    return this.gridControl.Columns;
-                }
-            }
-
-            public RowCollection Rows
-            {
-                get
-                {
-                    return this.gridControl.Rows;
-                }
-            }
-
-            public string CaptionText
-            {
-                get
-                {
-                    return this.gridControl.CaptionRow.Text;
-                }
-                set
-                {
-                    this.gridControl.CaptionRow.Text = value;
-                }
-            }
-
-            [AttributeProvider(typeof(IListSource))]
-            public object DataSource
-            {
-                get
-                {
-                    return this.gridControl.DataSource;
-                }
-                set
-                {
-                    this.gridControl.DataSource = value;
-                }
-            }
-
-            [Editor("System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(UITypeEditor))]
-            public string DataMember
-            {
-                get
-                {
-                    return this.gridControl.DataMember;
-                }
-                set
-                {
-
-                    this.gridControl.DataMember = value;
-                }
-            }
-
-            void Clear()
-            {
-                this.gridControl.Clear();
-            }
+            GridControl gridControl = this.Control as GridControl;
+            if (gridControl.DataSource == e.Component)
+                gridControl.DataSource = null;
         }
-
-        #endregion
     }
 }

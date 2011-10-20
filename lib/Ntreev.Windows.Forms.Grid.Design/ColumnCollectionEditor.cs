@@ -40,8 +40,6 @@ namespace Ntreev.Windows.Forms.Grid.Design
 {
     public class ColumnCollectionEditor : CollectionEditor
     {
-        ArrayList created = new ArrayList();
-
         public ColumnCollectionEditor(Type type)
             : base(type)
         {
@@ -52,7 +50,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
         {
             return new Type[] { typeof(string), typeof(int), typeof(bool), typeof(float), 
                 typeof(System.Drawing.Color), typeof(System.Drawing.Point), typeof(System.Drawing.Rectangle),
-                typeof(EtcType), typeof(EtcColumn), };
+                new EtcType(), new EtcColumn(), };
         }
 
         protected override bool CanRemoveInstance(object value)
@@ -67,7 +65,6 @@ namespace Ntreev.Windows.Forms.Grid.Design
         {
             if (instance == null)
                 return null;
-            this.created.Add(instance);
             return base.GetObjectsFromInstance(instance);
         }
 
@@ -78,25 +75,15 @@ namespace Ntreev.Windows.Forms.Grid.Design
             return editValue;
         }
 
-        protected override void CancelChanges()
-        {
-            base.CancelChanges();
-
-            foreach (Column item in this.created)
-            {
-                item.Dispose();
-            }
-        }
-
         protected override object CreateInstance(Type itemType)
         {
             IDesignerHost d = GetService(typeof(IDesignerHost)) as IDesignerHost;
 
-            if (itemType == typeof(EtcType))
+            if (itemType.Name == "EtcType...")
             {
                 return CreateInstanceBySelectingType();
             }
-            else if (itemType == typeof(EtcColumn))
+            else if (itemType.Name == "EtcColumn...")
             {
                 return CreateInstanceBySelectingColumn();
             }
@@ -145,7 +132,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
                     assemblies.Add(assembly);
                 }
 
-                AssembliesForm form = new AssembliesForm(assemblies.ToArray());
+                TypeSelectorForm form = new TypeSelectorForm(assemblies.ToArray());
 
 
                 if (form.ShowDialog() == DialogResult.OK)
@@ -187,7 +174,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
                     assemblies.Add(assembly);
                 }
 
-                AssembliesForm form = new AssembliesForm(assemblies.ToArray(), typeof(Column));
+                TypeSelectorForm form = new TypeSelectorForm(assemblies.ToArray(), typeof(Column));
 
 
                 if (form.ShowDialog() == DialogResult.OK)
@@ -200,19 +187,25 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
         }
 
-        class EtcType
+        class EtcType : TypeDelegator
         {
-            public override string ToString()
+            public override string Name
             {
-                return "EtcType";
+                get
+                {
+                    return "EtcType...";
+                }
             }
         }
-
-        class EtcColumn
+        
+        class EtcColumn : TypeDelegator
         {
-            public override string ToString()
+            public override string Name
             {
-                return "EtcColumn";
+                get
+                {
+                    return "EtcColumn...";
+                }
             }
         }
     }

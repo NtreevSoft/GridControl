@@ -33,23 +33,23 @@ using System.ComponentModel.Design;
 
 namespace Ntreev.Windows.Forms.Grid.Design
 {
-    public partial class AssembliesForm : Form
+    public partial class TypeSelectorForm : Form
     {
         Type type = null;
 
-        public AssembliesForm()
+        public TypeSelectorForm()
             :this(null)
         {
 
         }
 
-        public AssembliesForm(Assembly[] assemblies)
+        public TypeSelectorForm(Assembly[] assemblies)
             :this(assemblies, null)
         {
             
         }
 
-        public AssembliesForm(Assembly[] assemblies, Type classType)
+        public TypeSelectorForm(Assembly[] assemblies, Type classType)
         {
             InitializeComponent();
 

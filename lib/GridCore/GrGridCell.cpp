@@ -141,15 +141,14 @@ void GrColumnList::InsertColumn(GrColumn* pColumn, uint nIndex)
 	{
 		pColumn->SetColumnID(m_nColumnID++);
 	}
-	else
-	{
-		_Columns::iterator itor = find(m_vecColumnsRemoved.begin(), m_vecColumnsRemoved.end(), pColumn);
+	
+	_Columns::iterator itor = find(m_vecColumnsRemoved.begin(), m_vecColumnsRemoved.end(), pColumn);
+	if(itor != m_vecColumnsRemoved.end())
 		m_vecColumnsRemoved.erase(itor);
-	}
 
 	m_pGridCore->AttachObject(pColumn);
 
-	_Columns::iterator itor = m_vecColumns.insert(m_vecColumns.begin() + nIndex, pColumn);
+	itor = m_vecColumns.insert(m_vecColumns.begin() + nIndex, pColumn);
 	nIndex = std::min(nIndex, m_vecColumns.size());
 	for( ; itor != m_vecColumns.end() ; itor++)
 	{
@@ -185,7 +184,7 @@ void GrColumnList::RemoveColumn(GrColumn* pColumn)
 
 	m_pGridCore->DetachObject(pColumn);
 
-	Update(true);
+	SetVisibleChanged();
 
 	GrColumnEventArgs e(pColumn);
 	OnColumnRemoved(&e);
@@ -535,9 +534,9 @@ void GrColumnList::gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 	for_stl_const(_Columns, m_vecColumnsRemoved, itor)
 	{
 		_Columns::value_type value = *itor;
-		value->m_nColumnID = INVALID_INDEX;
+		value->SetColumnID(INVALID_INDEX);
 	}
-	m_vecColumnsRemoved.clear();
+	//m_vecColumnsRemoved.clear();
 	
 	m_vecColumns.clear();
 	m_mapColumnByPosition.clear();
@@ -657,6 +656,8 @@ GrCell::GrCell() : m_padding(GrPadding::Default)
 	m_bTextBound		= false;
 	m_bTextAlign		= false;
 	m_pTextUpdater		= NULL;
+
+	Tag = NULL;
 }
 
 GrCell::~GrCell()
@@ -796,36 +797,39 @@ void GrCell::ComputeTextBound()
 
 	int nMaxWidth  = 0;
 	int nMaxHeight = 0;
-
 	GrRect rtOldTextBound = m_rtTextBound;
-	int nCellWidth = GetWidth() - (padding.left + padding.right);
-	//assert(nCellWidth > 0);
 
-	if(GetTextMulitiline() == false)
+	if(m_strText.size() > 0)
 	{
-		GrTextUtil::SingleLine(&m_textLine, m_strText, pFont);
-	}
-	else
-	{
-		GrTextUtil::MultiLine(&m_vecTextLine, m_strText, nCellWidth, pFont, GetTextWordWrap());
+		int nCellWidth = GetWidth() - (padding.left + padding.right);
+		//assert(nCellWidth > 0);
+
+		if(GetTextMulitiline() == false)
+		{
+			GrTextUtil::SingleLine(&m_textLine, m_strText, pFont);
+		}
+		else
+		{
+			GrTextUtil::MultiLine(&m_vecTextLine, m_strText, nCellWidth, pFont, GetTextWordWrap());
+		}
+
+		m_nTextLineHeight = pFont->GetHeight();
+
+		for(uint i=0 ; i<GetTextLineCount() ; i++)
+		{
+			const GrLineDesc* pLineDesc = GetTextLine(i);
+			nMaxWidth	= std::max(nMaxWidth, pLineDesc->nWidth);
+		}
 	}
 
-	m_nTextLineHeight = pFont->GetHeight();
-
-	for(uint i=0 ; i<GetTextLineCount() ; i++)
-	{
-		const GrLineDesc* pLineDesc = GetTextLine(i);
-		nMaxWidth	= std::max(nMaxWidth, pLineDesc->nWidth);
-	}
 	nMaxWidth	+= (padding.left + padding.right);
-
 	nMaxHeight = GetTextLineCount() * m_nTextLineHeight + padding.top + padding.bottom;
 
 	if(nMaxWidth > GetWidth() || nMaxHeight > GetHeight())
 		AddFlag(GRCF_TEXT_CLIPPED);
 	else
 		RemoveFlag(GRCF_TEXT_CLIPPED);
-
+	
 	m_rtTextBound.left	= 0;
 	m_rtTextBound.top	= 0;
 	m_rtTextBound.right = nMaxWidth;
@@ -1856,7 +1860,22 @@ void GrColumn::OnTextChanged()
 
 GrColumn::~GrColumn()
 {
+	m_nVisibleIndex		= INVALID_INDEX;
+	m_nDisplayIndex		= INVALID_INDEX;
+	m_nIndex			= INVALID_INDEX;
+	m_nColumnID			= INVALID_INDEX;
+
 	delete m_pGroupingInfo;
+
+#ifdef _MANAGED
+	System::ComponentModel::IComponent^ managedRef = this->ManagedRef;
+	if(managedRef != nullptr)
+	{
+		delete this->ManagedRef;
+		this->ManagedRef = nullptr;
+	}
+
+#endif
 }
 
 GrMouseOverState GrColumn::HitMouseOverTest(GrPoint pt) const
@@ -3001,6 +3020,12 @@ void GrDataRow::OnGridCoreDetached()
 		pFocuser->Set(IFocusable::Null);
 	SetSelected(false);
 
+	for_stl_const(_Items, m_vecItems, itor)
+	{
+		_Items::value_type value = *itor;
+		m_pGridCore->DetachObject(value);
+	}
+
 	IDataRow::OnGridCoreDetached();
 }
 
@@ -3017,14 +3042,28 @@ void GrDataRow::ClearItem()
 GrDataRow::~GrDataRow()
 {
 	ClearItem();	
+
+#ifdef _MANAGED
+	this->ManagedRef = nullptr;
+#endif
 }
 
 void GrDataRow::AddItem(GrColumn* pColumn)
 {
-	GrItem* pItem = new GrItem(pColumn, this);
+	GrColID columnID = pColumn->GetColumnID();
+	GrItem* pItem = NULL;
+	if(columnID >= m_vecItems.size())
+	{
+		pItem = new GrItem(pColumn, this);
+		m_vecItems.push_back(pItem);
+	}
+	else
+	{
+		pItem = GetItem(pColumn);
+	}
+
 	if(m_pGridCore != NULL)
 		m_pGridCore->AttachObject(pItem);
-	m_vecItems.push_back(pItem);
 }
 
 void GrDataRow::Reserve(uint count)
@@ -3934,7 +3973,6 @@ void GrDataRowList::OnGridCoreAttached()
 	m_pGridCore->Cleared.Add(this, &GrDataRowList::gridCore_Cleared);
 	m_pGridCore->Created.Add(this, &GrDataRowList::gridCore_Created);
 
-
 	for_stl_const(_DataRows, m_vecDataRows, itor)
 	{
 		_DataRows::value_type value = *itor;
@@ -4222,10 +4260,13 @@ void GrDataRowList::groupingList_SortChanged(GrObject* /*pSender*/, GrGroupingEv
 	SetVisibleChanged();
 }
 
+//void GrDataRowList::columnList_ColumnRemoved(void
+
 void GrDataRowList::gridCore_Created(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 {
 	GrColumnList* pColumnList = m_pGridCore->GetColumnList();
-	pColumnList->ColumnInserted.Add(this, &GrDataRowList::columnList_ColumnBinded);
+	pColumnList->ColumnInserted.Add(this, &GrDataRowList::columnList_ColumnInserted);
+	pColumnList->ColumnRemoved.Add(this, &GrDataRowList::columnList_ColumnRemoved);
 
 	m_pInsertionRow->SetDataRowID(INSERTION_ROW);
 }
@@ -4254,25 +4295,39 @@ void GrDataRowList::gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 	m_rowFinder.Build(&m_vecVisibleRows);
 }
 
-void GrDataRowList::columnList_ColumnBinded(GrObject* /*pSender*/, GrColumnEventArgs* e)
+void GrDataRowList::columnList_ColumnInserted(GrObject* /*pSender*/, GrColumnEventArgs* e)
 {
 	GrColumn* pColumn = e->GetColumn();
 
 	if(pColumn->GetColumnID() >= m_vecColumns.size())
 	{
 		m_vecColumns.push_back(pColumn);
-		m_pInsertionRow->AddItem(pColumn);
-		for_stl_const(_DataRows, m_vecDataRows, itor)
-		{
-			_DataRows::value_type value = *itor;
-			value->AddItem(pColumn);
-		}
+	}
 
-		for_stl_const(_DataRows, m_vecDataRowsRemoved, itor)
-		{
-			_DataRows::value_type value = *itor;
-			value->AddItem(pColumn);
-		}
+	m_pInsertionRow->AddItem(pColumn);
+	for_stl_const(_DataRows, m_vecDataRows, itor)
+	{
+		_DataRows::value_type value = *itor;
+		value->AddItem(pColumn);
+	}
+
+	for_stl_const(_DataRows, m_vecDataRowsRemoved, itor)
+	{
+		_DataRows::value_type value = *itor;
+		value->AddItem(pColumn);
+	}
+}
+
+void GrDataRowList::columnList_ColumnRemoved(GrObject* /*pSender*/, GrColumnEventArgs* e)
+{
+	GrItem* pItem = m_pInsertionRow->GetItem(e->GetColumn());
+	m_pGridCore->DetachObject(pItem);
+
+	for_stl_const(_DataRows, m_vecDataRows, itor)
+	{
+		_DataRows::value_type value = *itor;
+		pItem = value->GetItem(e->GetColumn());
+		m_pGridCore->DetachObject(pItem);
 	}
 }
 
@@ -4412,6 +4467,7 @@ void GrDataRowList::InsertDataRow(GrDataRow* pDataRow, uint nIndex)
 	}
 
 	SetListChanged();
+	m_pGridCore->Invalidate();
 }
 
 void GrDataRowList::RemoveDataRow(GrDataRow* pDataRow)
@@ -4438,6 +4494,7 @@ void GrDataRowList::RemoveDataRow(GrDataRow* pDataRow)
 	if(pDataRow->HasFocused() == true)
 		m_pGridCore->GetFocuser()->Set(IFocusable::Null);
 
+	m_pGridCore->Invalidate();
 
 	Update(true);
 	m_rowFinder.Build(&m_vecVisibleRows);

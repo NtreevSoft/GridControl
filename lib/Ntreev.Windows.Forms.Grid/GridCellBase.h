@@ -238,11 +238,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 	protected: // methods
-		/// <summary>
-		/// 소멸자 입니다.
-		/// </summary>
-		virtual ~CellBase();
-
 		///// <summary>
 		///// 대상 개체를 serialize하는 데 필요한 데이터로 <see cref="System::Runtime::Serialization::SerializationInfo"/>를 채웁니다.
 		///// </summary>

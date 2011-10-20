@@ -205,6 +205,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		this->Disposed_IComponent(this, _EventArgs::Empty);
+
+		if(m_pColumn != nullptr)
+		{
+			if(m_pColumn->GetIndex() != INVALID_INDEX)
+			{
+				GrColumnList* pColumnList = m_pColumn->GetColumnList();
+				pColumnList->RemoveColumn(m_pColumn);
+			}
+			m_pColumn->ManagedRef = nullptr;
+			m_pColumn = nullptr;
+		}
 	}
 
 	string^ Column::ToString()
@@ -285,7 +296,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return m_propertyDescriptor;
 	}
 
-	void Column::propertyDescriptor_ValueChanged(object^ sender, _EventArgs^ /*e*/)
+	void Column::propertyDescriptor_ValueChanged(object^ /*sender*/, _EventArgs^ /*e*/)
 	{
 		AsyncDisplayText();
 	}
@@ -294,13 +305,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		if(value != nullptr)
 		{
-			if(value->IsBrowsable == false)
-				this->IsVisible = false;
-			if(value->IsReadOnly == true)
-				this->IsReadOnly = true;
-			if(m_tooltip == nullptr)
-				this->Tooltip = value->Description;
-
 			if(m_defaultValue == nullptr)
 			{
 				typedef System::ComponentModel::DefaultValueAttribute _DefaultValue;
@@ -341,8 +345,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 
 		}
-	
+
 		m_propertyDescriptor = value;
+
+		m_pColumn->SetReadOnly(this->IsReadOnly);
+		m_pColumn->SetVisible(this->IsVisible);
 
 		AsyncDisplayText();
 	}
@@ -391,6 +398,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	
 	bool Column::IsVisible::get()
 	{
+		if(m_propertyDescriptor != nullptr && m_propertyDescriptor->IsBrowsable == false)
+			return false;
 		return m_pColumn->GetVisible();
 	}
 
@@ -432,6 +441,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	bool Column::IsReadOnly::get()
 	{
+		if(m_propertyDescriptor != nullptr && m_propertyDescriptor->IsReadOnly == true)
+			return true;
+
 		return m_pColumn->GetReadOnly();
 	}
 
@@ -749,6 +761,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	Column^ Column::FromNative(const GrColumn* pColumn)
 	{
+		if(pColumn == nullptr)
+			return nullptr;
 		object^ ref = pColumn->ManagedRef;
 		return safe_cast<Column^>(ref);
 	}
@@ -814,5 +828,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void Column::AsyncDisplayText()
 	{
 		m_pColumn->SetText(ToNativeString::Convert(this->Title));
+	}
+
+	void Column::Site_IComponent::set(System::ComponentModel::ISite^ value)
+	{
+		m_site = value;
 	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -644,7 +644,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 	public: // methods
 		CurrencyManagerChangedEventArgs(System::Windows::Forms::CurrencyManager^ currencyManager)
-			: m_currencyManager(currencyManager)
+			: m_manager(currencyManager)
 		{
 
 		}
@@ -652,11 +652,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	public: // properties
 		property System::Windows::Forms::CurrencyManager^ CurrecnyManager
 		{
-			System::Windows::Forms::CurrencyManager^ get() { return m_currencyManager; }
+			System::Windows::Forms::CurrencyManager^ get() { return m_manager; }
 		}
 
 	private: // variables
-		System::Windows::Forms::CurrencyManager^ m_currencyManager;
+		System::Windows::Forms::CurrencyManager^ m_manager;
 	};
 
 	delegate void CurrencyManagerChangedEventHandler(object^ sender, CurrencyManagerChangedEventArgs^ e);

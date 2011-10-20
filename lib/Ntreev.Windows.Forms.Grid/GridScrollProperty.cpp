@@ -460,15 +460,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(m_scrollProperties->Visible == false)
 			return;
 
-		int value = e->Delta / SystemInformation::MouseWheelScrollDelta * SystemInformation::MouseWheelScrollLines;
-		int rowCount = (int)m_pDataRowList->GetDisplayableRowCount();
+		int scrollLine = 1;
+		if((GridControl->ModifierKeys & Keys::Shift) == Keys::Shift)
+			scrollLine = SystemInformation::MouseWheelScrollLines;
 
-		if(rowCount > 1)
-		{
-			IDataRow* pDataRow = m_pDataRowList->GetDisplayableRow(rowCount - 1);
-			if(pDataRow->GetClipped() == true)
-				rowCount--;
-		}
+		int value = e->Delta / SystemInformation::MouseWheelScrollDelta * scrollLine;
+		int rowCount = (int)m_pDataRowList->GetDisplayableRowCount();
 
 		if(rowCount < System::Math::Abs(value))
 		{
@@ -477,7 +474,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			else
 				value = rowCount;
 		}
-		
 
 		this->Value = m_scrollProperties->Value - value;
 	}

@@ -4517,6 +4517,14 @@ private void gridControl1_Paint(object sender, PaintEventArgs e)
 셀을 편집하는 이벤트를 처리하는 메서드를 나타냅니다.
 </summary>
         </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.EditValueEventArgs.CancelEdit">
+            <summary>
+값의 변경 여부에 관계 없이 편집을 취소할지에 대한 여부를 가져오거나 설정합니다.
+</summary>
+            <returns>
+값의 변경 여부에 관계 없이 편집을 취소 하려면 true를, 그렇지 않으면 false를 반환합니다.
+</returns>
+        </member>
         <member name="P:Ntreev.Windows.Forms.Grid.EditValueEventArgs.SuppressEditing">
             <summary>
 컨트롤을 사용하여 계속 편집을 진행할지에 대한 여부를 가져오거나 설정합니다.
@@ -5046,11 +5054,6 @@ index가 0보다 작거나, <see cref="P:Ntreev.Windows.Forms.Grid.Row.CellCount
             <param name="e">
 이벤트 데이터가 들어 있는 <see cref="T:System.EventArgs" />입니다.
 </param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.CellBase.Dispose">
-            <summary>
-소멸자 입니다.
-</summary>
         </member>
         <member name="E:Ntreev.Windows.Forms.Grid.CellBase.FontChanged">
             <summary>

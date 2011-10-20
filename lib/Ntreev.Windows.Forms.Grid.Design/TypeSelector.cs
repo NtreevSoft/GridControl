@@ -72,7 +72,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
             {
                 if (this.listBox.SelectedItem.ToString() == "Etc...")
                 {
-                    AssembliesForm assembliesForm = new AssembliesForm();
+                    TypeSelectorForm assembliesForm = new TypeSelectorForm();
                     if (assembliesForm.ShowDialog() == DialogResult.OK)
                     {
                         this.selectedType = assembliesForm.SelectedType;

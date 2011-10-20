@@ -67,7 +67,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_pColumnList = GridCore->GetColumnList();
 
 		m_listChangedEventHandler = gcnew System::ComponentModel::ListChangedEventHandler(this, &ColumnCollection::currencyManager_ListChanged);
-		m_bindingCompleteEventHandler = gcnew System::Windows::Forms::BindingCompleteEventHandler(this, &ColumnCollection::currencyManager_BindingComplete);
 
 		gridControl->CurrencyManagerChanging += gcnew CurrencyManagerChangingEventHandler(this, &ColumnCollection::gridControl_CurrencyManagerChanging);
 		gridControl->CurrencyManagerChanged += gcnew CurrencyManagerChangedEventHandler(this, &ColumnCollection::gridControl_CurrencyManagerChanged);
@@ -231,43 +230,51 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void ColumnCollection::DeleteAll()
 	{
-		for each(_Column^ item in this)
+		while(this->Count > 0)
 		{
-			delete item;
+			Column^ column = this[this->Count - 1];
+			delete column;
 		}
 	}
 
 	void ColumnCollection::SetItemsByDesigner(cli::array<object^>^ values)
 	{
-		GrGroupingList* pGroupingList = GridCore->GetGroupingList();
-		std::vector<GrColumn*> groupings;
-		groupings.reserve(pGroupingList->GetGroupingCount());
+		//GrGroupingList* pGroupingList = GridCore->GetGroupingList();
+		//std::vector<GrColumn*> groupings;
+		//groupings.reserve(pGroupingList->GetGroupingCount());
 
-		for(uint i=0 ; i<pGroupingList->GetGroupingCount() ; i++)
-		{
-			GrColumn* pColumn = pGroupingList->GetGrouping(i)->GetColumn();
-			groupings.push_back(pColumn);
-		}
+		//for(uint i=0 ; i<pGroupingList->GetGroupingCount() ; i++)
+		//{
+		//	GrColumn* pColumn = pGroupingList->GetGrouping(i)->GetColumn();
+		//	groupings.push_back(pColumn);
+		//}
 
-		this->Clear_IList();
+		//this->Clear_IList();
 
-		for_stl_const(std::vector<GrColumn*>, groupings, itor)
-		{
-			std::vector<GrColumn*>::value_type value = *itor;
-			value->SetGrouped(false);
-		}
+		//for_stl_const(std::vector<GrColumn*>, groupings, itor)
+		//{
+		//	std::vector<GrColumn*>::value_type value = *itor;
+		//	value->SetGrouped(false);
+		//}
+
+		//for each(object^ item in values)
+		//{
+		//	this->Add_IList(item);
+		//}
+
+		//for_stl_const(std::vector<GrColumn*>, groupings, itor)
+		//{
+		//	std::vector<GrColumn*>::value_type value = *itor;
+		//	if(value->GetIndex() == INVALID_INDEX)
+		//		continue;
+		//	value->SetGrouped(true);
+		//}
 
 		for each(object^ item in values)
 		{
-			this->Add_IList(item);
-		}
-
-		for_stl_const(std::vector<GrColumn*>, groupings, itor)
-		{
-			std::vector<GrColumn*>::value_type value = *itor;
-			if(value->GetIndex() == INVALID_INDEX)
-				continue;
-			value->SetGrouped(true);
+			Column^ column = dynamic_cast<Column^>(item);
+			if(column->Index < 0)
+				this->Add_IList(item);
 		}
 	}
 
@@ -414,6 +421,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void ColumnCollection::currencyManager_ListChanged(object^ sender, System::ComponentModel::ListChangedEventArgs^ e)
 	{
+		using namespace System::ComponentModel;
 		using namespace System::ComponentModel::Design;
 
 		switch(e->ListChangedType)
@@ -468,85 +476,64 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 				Unbind(column);
 			}
 			break;
+		case System::ComponentModel::ListChangedType::Reset:
+			{
+				PropertyDescriptorCollection^ props = m_manager->GetItemProperties();
+
+				for each(PropertyDescriptor^ item in props)
+				{
+					Bind(item);
+				}
+			}
+			break;
 		}
-	}
-
-	void ColumnCollection::currencyManager_MetaDataChanged(object^ /*sender*/, _EventArgs^ /*e*/)
-	{
-
-	}
-
-	void ColumnCollection::currencyManager_BindingComplete(object^ /*sender*/, System::Windows::Forms::BindingCompleteEventArgs^ /*e*/)
-	{
-
 	}
 
 	void ColumnCollection::gridControl_CurrencyManagerChanging(object^ /*sender*/, CurrencyManagerChangingEventArgs^ e)
 	{
-		System::Windows::Forms::CurrencyManager^ currencyManager = e->CurrecnyManager;
+		System::Windows::Forms::CurrencyManager^ manager = e->CurrecnyManager;
 
 		if(e->Cancel == true)
 			return;
 
-		if(currencyManager == nullptr)
-			return;
+		for each(_PropertyDescriptor^ item in manager->GetItemProperties())
+		{
+			_Column^ column = this[item->Name];
+			if(column == nullptr)
+				continue;
 
-		return;
-		//for each(_PropertyDescriptor^ item in m_currencyManager->GetItemProperties())
-		//{
-		//	_Column^ column = this[item->Name];
-		//	if(column == nullptr)
-		//		continue;
+			if(column->DataType != item->PropertyType)
+			{
+				System::Text::StringBuilder^ builder = gcnew System::Text::StringBuilder();
 
-		//	if(column->IsBindable == false)
-		//	{
-		//		System::Text::StringBuilder^ builder = gcnew System::Text::StringBuilder();
+				builder->AppendLine(string::Format("{0} 은 연결될 데이터 소스와 데이터 타입이 다릅니다.", item->Name));
+				builder->AppendLine(string::Format("    GridControl : {0}", column->DataType));
+				builder->AppendLine(string::Format("    DataSource  : {0}", item->PropertyType));
 
-		//		builder->AppendLine(string::Format("{0} 은 데이터 소스와 연결할 수 없습니다.", item->Name));
-		//		builder->AppendLine("    Column.IsBindable속성이 true인지 확인하세요");
-		//		
-		//		e->Cancel = true;
-		//		e->CancelReason = builder->ToString();
-		//	}
-		//	else if(column->DataType != item->PropertyType)
-		//	{
-		//		System::Text::StringBuilder^ builder = gcnew System::Text::StringBuilder();
-
-		//		builder->AppendLine(string::Format("{0} 은 연결될 데이터 소스와 데이터 타입이 다릅니다.", item->Name));
-		//		builder->AppendLine(string::Format("    GridControl : {0}", column->DataType));
-		//		builder->AppendLine(string::Format("    DataSource  : {0}", item->PropertyType));
-
-		//		e->Cancel = true;
-		//		e->CancelReason = builder->ToString();
-		//	}
-		//		
-		//	if(e->Cancel == true)
-		//		return;
-		//}
+				e->Cancel = true;
+				e->CancelReason = builder->ToString();
+			}
+				
+			if(e->Cancel == true)
+				return;
+		}
 	}
 
 	void ColumnCollection::gridControl_CurrencyManagerChanged(object^ /*sender*/, CurrencyManagerChangedEventArgs^ e)
 	{
-		if(m_currencyManager != nullptr)
+		if(m_manager != nullptr)
 		{
-			m_currencyManager->ListChanged -= m_listChangedEventHandler;
-			m_currencyManager->BindingComplete -= m_bindingCompleteEventHandler;
-			m_currencyManager->MetaDataChanged -= gcnew _EventHandler(this, &ColumnCollection::currencyManager_MetaDataChanged);
+			m_manager->ListChanged -= m_listChangedEventHandler;
 		}
 
-		m_currencyManager = e->CurrecnyManager;
+		m_manager = e->CurrecnyManager;
 
-		if(m_currencyManager == nullptr)
-			return;
-
-		for each(_PropertyDescriptor^ item in m_currencyManager->GetItemProperties())
+		for each(_PropertyDescriptor^ item in m_manager->GetItemProperties())
 		{
 			Bind(item);
 		}
 
-		m_currencyManager->ListChanged += m_listChangedEventHandler;
-		m_currencyManager->BindingComplete += m_bindingCompleteEventHandler;
-		m_currencyManager->MetaDataChanged += gcnew _EventHandler(this, &ColumnCollection::currencyManager_MetaDataChanged);
+		m_manager->ListChanged += m_listChangedEventHandler;
 	}
 
 	void ColumnCollection::gridControl_Clearing(object^ /*sender*/, ClearEventArgs^ e)
@@ -557,8 +544,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 			for each(_Column^ item in this)
 			{
-				item->PropertyDescriptor = nullptr;
-				if(item->HasLifeline == false)
+				if(item->HasLifeline == false || item->PropertyDescriptor == nullptr)
 					m_tempBindableColumns->Add(item);
 			}
 

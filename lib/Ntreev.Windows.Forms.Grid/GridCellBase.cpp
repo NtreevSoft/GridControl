@@ -40,11 +40,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	}
 
-	CellBase::~CellBase()
-	{
-
-	}
-
 	_Color CellBase::BackColor::get()
 	{
 		return m_pCell->GetBackColor();

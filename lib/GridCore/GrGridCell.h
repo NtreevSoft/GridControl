@@ -29,6 +29,12 @@
 
 #ifdef _MANAGED
 #include <vcclr.h>
+
+public interface class IManagedObject
+{
+	property System::Object^ ManagedObject;
+};
+
 #endif
 
 #define INVALID_INDEX		((uint)-1)
@@ -381,7 +387,6 @@ class GrColumn : public GrCell
 {
 public:
 	GrColumn();
-	virtual ~GrColumn();
 
 	GrColumnList*				GetColumnList() const;
 
@@ -507,6 +512,8 @@ protected:
 	virtual void				OnTextChanged();
 
 private:
+	virtual ~GrColumn();
+
 	void						SetPriority(int nPriority);
 
 	void						SetX(int x) { m_nX = x; };
@@ -526,7 +533,7 @@ public:
 
 #ifdef _MANAGED
 public:
-	gcroot<System::Object^> ManagedRef;
+	gcroot<System::ComponentModel::IComponent^> ManagedRef;
 #endif
 
 private:
@@ -569,8 +576,6 @@ private:
 	GrVertAlign					m_itemVertAlign;
 	bool						m_itemWordWrap;
 	bool						m_itemMultiline;
-	//GrDataType					m_itemDataType;
-
 
 	GrColor						m_itemBackColor;
 	GrColor						m_itemForeColor;
@@ -836,8 +841,8 @@ private:
 
 private:	// friend variables;
 	uint						m_nSelectedCells;
-	friend class				GrItemSelector;
 
+	friend class GrItemSelector;
 	friend class GrGridCore;
 	friend class GrDataRowList;
 };
@@ -968,7 +973,8 @@ private:
 	void						groupingList_SortChanged(GrObject* pSender, GrGroupingEventArgs* e);
 	void						gridCore_Created(GrObject* pSender, GrEventArgs* e);
 	void						gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
-	void						columnList_ColumnBinded(GrObject* pSender, GrColumnEventArgs* e);
+	void						columnList_ColumnInserted(GrObject* pSender, GrColumnEventArgs* e);
+	void						columnList_ColumnRemoved(GrObject* pSender, GrColumnEventArgs* e);
 	void						focuser_FocusedChanged(GrObject* pSender, GrEventArgs* e);
 
 private:

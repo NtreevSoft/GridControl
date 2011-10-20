@@ -35,6 +35,8 @@ class GrObject
 public:
 	GrObject() : m_pGridCore(0) {}
 
+	bool IsGridCoreAttached() const { return m_pGridCore != NULL; }
+
 protected:
 	virtual void				OnGridCoreAttached() {};
 	virtual void				OnGridCoreDetached() {};
