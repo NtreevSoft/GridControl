@@ -479,7 +479,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void Column::DataType::set(_Type^ value)
 	{
 		if(m_propertyDescriptor != nullptr)
+		{
+			if(value == m_propertyDescriptor->PropertyType)
+				return;
 			throw gcnew System::InvalidOperationException("바인딩된 컬럼에는 데이터 타입을 설정할 수 없습니다.");
+		}
 
 		if(value == nullptr)
 			throw gcnew System::ArgumentNullException("value");

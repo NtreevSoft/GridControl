@@ -493,6 +493,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		System::Windows::Forms::CurrencyManager^ manager = e->CurrecnyManager;
 
+		if(manager == nullptr)
+			return;
+
 		if(e->Cancel == true)
 			return;
 
@@ -504,6 +507,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 			if(column->DataType != item->PropertyType)
 			{
+				if(column->TypeConverter->CanConvertFrom(item->PropertyType) == true)
+					continue;
+
 				System::Text::StringBuilder^ builder = gcnew System::Text::StringBuilder();
 
 				builder->AppendLine(string::Format("{0} 은 연결될 데이터 소스와 데이터 타입이 다릅니다.", item->Name));
@@ -527,6 +533,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		m_manager = e->CurrecnyManager;
+
+		if(m_manager == nullptr)
+			return;
 
 		for each(_PropertyDescriptor^ item in m_manager->GetItemProperties())
 		{

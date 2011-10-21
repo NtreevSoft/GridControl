@@ -195,8 +195,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	GridControl::~GridControl()
 	{
-		m_manager->ListChanged -= m_listChangedEventHandler;
-		m_manager->BindingComplete -= m_bindingCompleteEventHandler;
+		if(m_pGridCore == nullptr)
+			return;
+
+		OnCurrencyManagerChanging(gcnew CurrencyManagerChangingEventArgs(nullptr));
+		OnCurrencyManagerChanged(gcnew CurrencyManagerChangedEventArgs(nullptr));
 
 		this->Columns->DeleteAll();
 
@@ -737,7 +740,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void GridControl::OnCurrencyManagerChanging(CurrencyManagerChangingEventArgs^ e)
 	{
-		System::Diagnostics::Debug::Assert(e->CurrecnyManager != nullptr);
 		if(m_manager != nullptr)
 		{
 			m_manager->ListChanged -= m_listChangedEventHandler;
@@ -749,17 +751,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void GridControl::OnCurrencyManagerChanged(CurrencyManagerChangedEventArgs^ e)
 	{
-		System::Diagnostics::Debug::Assert(e->CurrecnyManager != nullptr);
-
 		m_manager = e->CurrecnyManager;
-		m_pGridCore->Reserve(m_manager ->GetItemProperties()->Count, m_manager ->List->Count);
-		m_manager->ListChanged += m_listChangedEventHandler;
-		m_manager->BindingComplete += m_bindingCompleteEventHandler;
 
-		this->CurrencyManagerChanged(this, e);
+		if(m_manager != nullptr)
+		{
+			m_pGridCore->Reserve(m_manager ->GetItemProperties()->Count, m_manager ->List->Count);
+			m_manager->ListChanged += m_listChangedEventHandler;
+			m_manager->BindingComplete += m_bindingCompleteEventHandler;
 
-		m_insertionRow->SetDefaultValue();
-		UpdateGridRect();
+			this->CurrencyManagerChanged(this, e);
+
+			m_insertionRow->SetDefaultValue();
+			UpdateGridRect();
+		}
 	}
 
 	void GridControl::currencyManager_ListChanged(object^ /*sender*/, System::ComponentModel::ListChangedEventArgs^ e)
@@ -768,7 +772,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 		case System::ComponentModel::ListChangedType::Reset:
 			{
-				m_manager->EndCurrentEdit();
 				m_pGridCore->Clear();
 				m_pGridCore->Reserve(m_manager->GetItemProperties()->Count, m_manager->List->Count);
 
@@ -1653,6 +1656,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void GridControl::OnFocusedCellChanged(CellEventArgs^ e)
 	{
 		FocusedCellChanged(this, e);
+
+		if(e->Cell != nullptr)
+		{
+			m_manager->Position = e->Cell->Row->ComponentIndex;
+		}
 	}
 
 	void GridControl::OnColumnInserting(ColumnInsertingEventArgs^ e)

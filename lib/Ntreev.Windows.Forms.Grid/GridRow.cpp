@@ -255,6 +255,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void Row::Focus()
 	{
 		Focuser->Set(m_pDataRow);
+
+		if(Focuser->Get() != nullptr)
+			return;
+
+		if(this->Cells->Count > 0)
+		{
+			this[0]->Focus();
+		}
 	}
 
 	void Row::ResetCellBackColor()

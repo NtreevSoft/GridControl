@@ -126,7 +126,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return item->Index;
 	}
 
-	void RowCollection::currencyManager_ListChanged(object^ /*sender*/, System::ComponentModel::ListChangedEventArgs^ e)
+	void RowCollection::currencyManager_ListChanged(object^ sender, System::ComponentModel::ListChangedEventArgs^ e)
 	{
 		switch(e->ListChangedType)
 		{
@@ -161,7 +161,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			break;
 		case System::ComponentModel::ListChangedType::ItemMoved:
 			{
-				int qwe=0;
+				
 			}
 			break;
 		case System::ComponentModel::ListChangedType::Reset:
@@ -170,15 +170,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 				{
 					Bind(item, this->Count);
 				}
+
+				currencyManager_CurrentChanged(sender, _EventArgs::Empty);
 			}
 			break;
 		}
 	}
 
-	void RowCollection::currencyManager_CurrentChanged(object^ /*sender*/, System::EventArgs^ e)
+	void RowCollection::currencyManager_CurrentChanged(object^ sender, System::EventArgs^ e)
 	{
-		if(m_manager->Count < 1)
+		if(m_manager->Position < 0)
 			return;
+
+		Row^ focusedRow = this->GridControl->FocusedRow;
+		if(focusedRow != nullptr && focusedRow->ComponentIndex == m_manager->Position)
+			return;
+
 		Row^ row = this[m_manager->Current];
 		if(row != nullptr)
 		{
@@ -201,6 +208,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		m_manager = e->CurrecnyManager;
+
+		if(m_manager == nullptr)
+			return;
 
 		int componentIndex = 0;
 		for each(object^ item in m_manager->List)

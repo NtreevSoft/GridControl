@@ -61,6 +61,33 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 this.componentChangeService = GetService(typeof(IComponentChangeService)) as IComponentChangeService;
                 this.componentChangeService.ComponentRemoved += new ComponentEventHandler(componentChangeService_ComponentRemoved);
             }
+
+            ContainerFilterService containerFilterService = GetService(typeof(ContainerFilterService)) as ContainerFilterService;
+
+
+            IServiceContainer serviceContainer = GetService(typeof(IServiceContainer)) as IServiceContainer;
+            if (serviceContainer != null)
+            {
+                ContainerFilterService newFilter = null;
+
+                if (containerFilterService != null)
+                {
+                    if (containerFilterService.GetType() != typeof(GridControlContainerFilterService))
+                    {
+                        newFilter = new GridControlContainerFilterService(containerFilterService);
+                        serviceContainer.RemoveService(typeof(ContainerFilterService));
+                    }
+                }
+                else
+                {
+                    newFilter = new GridControlContainerFilterService();
+                }
+
+                if (newFilter != null)
+                {
+                    serviceContainer.AddService(typeof(ContainerFilterService), newFilter);
+                }
+            }
         }
 
         public override System.Collections.ICollection AssociatedComponents
