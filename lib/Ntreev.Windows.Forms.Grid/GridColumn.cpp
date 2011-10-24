@@ -468,25 +468,39 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	_Type^ Column::DataType::get()
 	{
-		if(m_propertyDescriptor != nullptr)
-			return m_propertyDescriptor->PropertyType;
-
 		if(m_dataType == nullptr)
+		{
+			if(m_propertyDescriptor != nullptr)
+				return m_propertyDescriptor->PropertyType;
 			return string::typeid;
+		}
 		return m_dataType;
 	}
 	
 	void Column::DataType::set(_Type^ value)
 	{
+		if(value == nullptr)
+			value = string::typeid;
+
+		if(m_dataType == value)
+			return;
+
 		if(m_propertyDescriptor != nullptr)
 		{
-			if(value == m_propertyDescriptor->PropertyType)
-				return;
-			throw gcnew System::InvalidOperationException("바인딩된 컬럼에는 데이터 타입을 설정할 수 없습니다.");
-		}
+			System::ComponentModel::TypeConverter^ converter
+				= System::ComponentModel::TypeDescriptor::GetConverter(value);
 
-		if(value == nullptr)
-			throw gcnew System::ArgumentNullException("value");
+			if(converter->CanConvertFrom(m_propertyDescriptor->PropertyType) == false)
+			{
+				System::Text::StringBuilder^ builder = gcnew System::Text::StringBuilder();
+
+				builder->AppendLine(string::Format("데이터소스에서 데이터 타입을 변환할 수가 없습니다. 새로운 TypeConverter를 구현하세요"));
+				builder->AppendLine(string::Format("    DataSource  : {0}", m_propertyDescriptor->PropertyType));
+				builder->AppendLine(string::Format("    GridControl : {0}", value));
+
+				throw gcnew System::NotSupportedException(builder->ToString());
+			}
+		}
 
 		m_dataType = value;
 	}
@@ -497,15 +511,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 			if(m_propertyDescriptor != nullptr)
 				return m_propertyDescriptor->Converter;
-
-			try
-			{
-				return System::ComponentModel::TypeDescriptor::GetConverter(this->DataType);
-			}
-			catch(System::ArgumentNullException^ e)
-			{
-				throw gcnew System::ArgumentNullException("DataType이 설정되지 않았습니다.", e);
-			}
+			return System::ComponentModel::TypeDescriptor::GetConverter(this->DataType);
 		}
 
 		return m_typeConverter;
@@ -513,8 +519,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void Column::TypeConverter::set(_TypeConverter^ converter)
 	{
-		if(converter == nullptr)
-			throw gcnew System::ArgumentNullException("converter");
 		m_typeConverter = converter;
 	}
 
@@ -829,9 +833,87 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return this->Title != this->ColumnName;
 	}
 
+	bool Column::ShouldSerializeDataType()
+	{
+		if(m_dataType == nullptr)
+			return false;
+
+		if(m_propertyDescriptor == nullptr)
+		{
+			return m_dataType != string::typeid;
+		}
+		return m_dataType != m_propertyDescriptor->PropertyType;
+	}
+
+	bool Column::ShouldSerializeTypeConverter()
+	{
+		if(m_propertyDescriptor == nullptr)
+		{
+			return System::ComponentModel::TypeDescriptor::GetConverter(m_dataType) != m_typeConverter;
+		}
+		return m_typeConverter != m_propertyDescriptor->Converter;
+	}
+
 	void Column::AsyncDisplayText()
 	{
 		m_pColumn->SetText(ToNativeString::Convert(this->Title));
+	}
+
+	bool Column::CanConvertFrom(_Type^ sourceType)
+	{
+		if(m_dataType == nullptr)
+			return true;
+		return this->TypeConverter->CanConvertFrom(sourceType);
+	}
+
+	object^ Column::ConvertFromSource(object^ value)
+	{
+		if(value == System::DBNull::Value || value == nullptr)
+			return nullptr;
+
+		if(m_propertyDescriptor == nullptr)
+			return value;
+
+		if(m_propertyDescriptor->PropertyType == this->DataType)
+			return value;
+
+		System::ComponentModel::TypeConverter^ typeConverter = nullptr;
+
+		if(m_typeConverter == nullptr)
+		{
+			typeConverter = System::ComponentModel::TypeDescriptor::GetConverter(this->DataType);
+		}
+		else
+		{
+			typeConverter = m_typeConverter;
+		}
+
+		return typeConverter->ConvertFrom(value);
+	}
+
+	object^ Column::ConvertToSource(object^ value)
+	{
+		if(value == nullptr)
+			return nullptr;
+
+		if(m_propertyDescriptor == nullptr)
+			return value;
+
+		if(m_propertyDescriptor->PropertyType == this->DataType)
+			return value;
+
+		System::ComponentModel::TypeConverter^ typeConverter = nullptr;
+
+		if(m_typeConverter == nullptr)
+		{
+			typeConverter = System::ComponentModel::TypeDescriptor::GetConverter(this->DataType);
+		}
+		else
+		{
+			typeConverter = m_typeConverter;
+		}
+
+		return typeConverter->ConvertTo(value, m_propertyDescriptor->PropertyType);
 	}
 
 	void Column::Site_IComponent::set(System::ComponentModel::ISite^ value)

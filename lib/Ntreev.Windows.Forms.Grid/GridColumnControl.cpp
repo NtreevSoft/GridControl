@@ -32,13 +32,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	ColumnControl<TControl>::ColumnControl()
 	{
 		m_control = safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid));
-		OnControlCreated(m_control);
 
 		if(PaintValueSupported == true)
 		{
 			m_controlPainter = gcnew Win32::ControlPainter();
 			m_viewControl = safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid));
-			OnViewControlCreated(m_control);
 		}
 
 		NativeRef->m_bCustomItemRender = PaintValueSupported;
@@ -48,13 +46,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	ColumnControl<TControl>::ColumnControl(... cli::array<object^>^ controlArgs)
 	{
 		m_control = safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid, controlArgs));
-		OnControlCreated(m_control);
 
 		if(PaintValueSupported == true)
 		{
 			m_controlPainter = gcnew Win32::ControlPainter();
 			m_viewControl = safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid, controlArgs));
-			OnViewControlCreated(m_control);
 		}
 
 		NativeRef->m_bCustomItemRender = PaintValueSupported;
@@ -84,18 +80,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 			graphics->ReleaseHdc();
 		}
-	}
-
-	generic<class TControl> where TControl : _Control
-	void ColumnControl<TControl>::OnControlCreated(TControl /*control*/)
-	{
-
-	}
-
-	generic<class TControl> where TControl : _Control
-		void ColumnControl<TControl>::OnViewControlCreated(TControl /*control*/)
-	{
-
 	}
 
 	generic<class TControl> where TControl : _Control

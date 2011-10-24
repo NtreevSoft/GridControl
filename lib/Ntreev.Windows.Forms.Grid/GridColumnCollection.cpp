@@ -239,42 +239,45 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void ColumnCollection::SetItemsByDesigner(cli::array<object^>^ values)
 	{
-		//GrGroupingList* pGroupingList = GridCore->GetGroupingList();
-		//std::vector<GrColumn*> groupings;
-		//groupings.reserve(pGroupingList->GetGroupingCount());
+		GrGroupingList* pGroupingList = GridCore->GetGroupingList();
+		std::vector<GrColumn*> groupings;
+		groupings.reserve(pGroupingList->GetGroupingCount());
 
-		//for(uint i=0 ; i<pGroupingList->GetGroupingCount() ; i++)
-		//{
-		//	GrColumn* pColumn = pGroupingList->GetGrouping(i)->GetColumn();
-		//	groupings.push_back(pColumn);
-		//}
+		for(uint i=0 ; i<pGroupingList->GetGroupingCount() ; i++)
+		{
+			GrColumn* pColumn = pGroupingList->GetGrouping(i)->GetColumn();
+			groupings.push_back(pColumn);
+		}
 
-		//this->Clear_IList();
+		for(uint i=m_pColumnList->GetColumnCount()-1 ; i>=0 && i<m_pColumnList->GetColumnCount() ; i--)
+		{
+			GrColumn* pColumn = m_pColumnList->GetColumn(i);
+			m_pColumnList->RemoveColumn(pColumn);
+		}
 
-		//for_stl_const(std::vector<GrColumn*>, groupings, itor)
-		//{
-		//	std::vector<GrColumn*>::value_type value = *itor;
-		//	value->SetGrouped(false);
-		//}
+		m_pColumnList->Update(true);
 
-		//for each(object^ item in values)
-		//{
-		//	this->Add_IList(item);
-		//}
-
-		//for_stl_const(std::vector<GrColumn*>, groupings, itor)
-		//{
-		//	std::vector<GrColumn*>::value_type value = *itor;
-		//	if(value->GetIndex() == INVALID_INDEX)
-		//		continue;
-		//	value->SetGrouped(true);
-		//}
+		for_stl_const(std::vector<GrColumn*>, groupings, itor)
+		{
+			std::vector<GrColumn*>::value_type value = *itor;
+			value->SetGrouped(false);
+		}
 
 		for each(object^ item in values)
 		{
 			Column^ column = dynamic_cast<Column^>(item);
-			if(column->Index < 0)
+			if(column->ColumnID == INVALID_INDEX)
 				this->Add_IList(item);
+			else
+				m_pColumnList->AddColumn(column->NativeRef);
+		}
+
+		for_stl_const(std::vector<GrColumn*>, groupings, itor)
+		{
+			std::vector<GrColumn*>::value_type value = *itor;
+			if(value->GetIndex() == INVALID_INDEX)
+				continue;
+			value->SetGrouped(true);
 		}
 	}
 
@@ -338,7 +341,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		if(editor != nullptr)
 		{
-			column = CreateColumnInstanceCore(serviceProvider, ColumnUITypeEditor::typeid);
+			column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnUITypeEditor::typeid);
 		}
 		else if(dataType == bool::typeid)
 		{
@@ -372,7 +375,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		if(editor != nullptr)
 		{
-			column = CreateColumnInstanceCore(serviceProvider, ColumnUITypeEditor::typeid);
+			column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnUITypeEditor::typeid);
 		}
 		else if(dataType == bool::typeid)
 		{
@@ -429,7 +432,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		case System::ComponentModel::ListChangedType::PropertyDescriptorAdded:
 			{
 				Bind(e->PropertyDescriptor);
-				Invalidate();
 			}
 			break;
 		case System::ComponentModel::ListChangedType::PropertyDescriptorChanged:
@@ -507,7 +509,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 			if(column->DataType != item->PropertyType)
 			{
-				if(column->TypeConverter->CanConvertFrom(item->PropertyType) == true)
+				if(column->CanConvertFrom(item->PropertyType) == true)
 					continue;
 
 				System::Text::StringBuilder^ builder = gcnew System::Text::StringBuilder();

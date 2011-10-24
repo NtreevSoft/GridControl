@@ -32,7 +32,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 {
 	ColumnTextBox::ColumnTextBox()
 	{
+		using namespace System::Windows::Forms;
 
+		this->EditingControl->BorderStyle = BorderStyle::None;
+		this->EditingControl->KeyPress += gcnew KeyPressEventHandler(this, &ColumnTextBox::textBox_OnKeyPress);
 	}
 
 	void ColumnTextBox::OnAttaching(AttachEventArgs^ e)
@@ -110,14 +113,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	void ColumnTextBox::SetEditingValue(System::Windows::Forms::TextBox^ control, object^ value)
 	{
 		control->Text = TypeConverter->ConvertToString(value);
-	}
-
-	void ColumnTextBox::OnControlCreated(System::Windows::Forms::TextBox^ control)
-	{
-		using namespace System::Windows::Forms;
-
-		control->BorderStyle = BorderStyle::None;
-		control->KeyPress += gcnew KeyPressEventHandler(this, &ColumnTextBox::textBox_OnKeyPress);
 	}
 
 	object^ ColumnTextBox::GetEditingValue(System::Windows::Forms::TextBox^ control)

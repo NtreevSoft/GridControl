@@ -78,6 +78,10 @@ namespace Ntreev.Windows.Forms.Grid.Design
                         this.selectedType = assembliesForm.SelectedType;
                     }
                 }
+                else
+                {
+                    this.selectedType = this.listBox.SelectedItem as Type;
+                }
                 this.editorService.CloseDropDown();
             }
         }
@@ -88,11 +92,8 @@ namespace Ntreev.Windows.Forms.Grid.Design
             if (editorService != null)
             {
                 TypeSelectorCore typeSelector = new TypeSelectorCore(editorService, value as Type);
-
                 typeSelector.DropDownControl();
-
                 return typeSelector.SelectedType;
-               
             }
             return base.EditValue(context, provider, value);
         }

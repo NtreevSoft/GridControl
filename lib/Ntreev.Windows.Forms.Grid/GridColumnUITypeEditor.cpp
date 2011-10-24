@@ -26,13 +26,13 @@
 #include "GridControl.h"
 #include "GridCell.h"
 
-namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
+namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Columns
 {
 	ref class InternalTypeDescriptorContext : System::ComponentModel::ITypeDescriptorContext
 	{
 	public:
-		InternalTypeDescriptorContext(object^ instance, _GridControl^ gridControl, _PropertyDescriptor^ propertyDescriptor)
-			: m_instance(instance), m_gridControl(gridControl), m_propertyDescriptor(propertyDescriptor)
+		InternalTypeDescriptorContext(object^ instance, _GridControl^ gridControl)
+			: m_instance(instance), m_gridControl(gridControl), m_propertyDescriptor(nullptr)
 		{
 
 		}
@@ -67,7 +67,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 			virtual _PropertyDescriptor^ get()
 			{
-				return m_propertyDescriptor;
+				return nullptr;
 			}
 		}
 
@@ -90,16 +90,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	System::Drawing::Design::UITypeEditor^ ColumnUITypeEditor::UITypeEditor::get()
 	{
+		using namespace System::ComponentModel;
+
 		if(m_typeEditor == nullptr)
 		{
-			if(this->PropertyDescriptor == nullptr)
-			{
-				m_typeEditor = (System::Drawing::Design::UITypeEditor^)System::ComponentModel::TypeDescriptor::GetEditor(DataType, System::Drawing::Design::UITypeEditor::typeid);
-			}
-			else
-			{
-				m_typeEditor = (System::Drawing::Design::UITypeEditor^)this->PropertyDescriptor->GetEditor(System::Drawing::Design::UITypeEditor::typeid);
-			}
+			m_typeEditor = (System::Drawing::Design::UITypeEditor^)TypeDescriptor::GetEditor(this->DataType, System::Drawing::Design::UITypeEditor::typeid);
 		}
 
 		return m_typeEditor;
@@ -154,7 +149,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			_Point location(rect.Left, rect.Bottom);
 			location = GridControl->PointToScreen(location);
 
-			InternalTypeDescriptorContext^ typeDescriptorContext = gcnew InternalTypeDescriptorContext(GridControl->FocusedRow->Component, GridControl, this->PropertyDescriptor);
+
+			InternalTypeDescriptorContext^ typeDescriptorContext = gcnew InternalTypeDescriptorContext(GridControl->FocusedRow->Component, GridControl);
 			object^ value = UITypeEditor->EditValue(typeDescriptorContext, gcnew WindowsFormsEditorService(owner, location), e->Value);
 
 			if(object::Equals(value, e->Value) == false)
@@ -162,4 +158,4 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 		e->SuppressEditing = true;
 	}
-} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
+} /*namespace Columns*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

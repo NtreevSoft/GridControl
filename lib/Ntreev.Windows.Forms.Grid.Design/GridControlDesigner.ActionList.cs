@@ -24,13 +24,14 @@ using System.ComponentModel.Design;
 using System.ComponentModel;
 using System.Drawing.Design;
 using Ntreev.Windows.Forms.Grid.Design.Properties;
+using System.Windows.Forms.Design.Behavior;
 
 namespace Ntreev.Windows.Forms.Grid.Design
 {
     public partial class GridControlDesigner : System.Windows.Forms.Design.ControlDesigner
     {
         DesignerActionListCollection mactionLists;
-        DesignerVerbCollection designerVerbs;
+        //DesignerVerbCollection designerVerbs;
  
         public override DesignerActionListCollection ActionLists
         {
@@ -57,10 +58,6 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 //    this.designerVerbs.Add(new DesignerVerb(SR.GetString("DataGridViewEditColumnsVerb"), new EventHandler(this.OnEditColumns)));
                 //    this.designerVerbs.Add(new DesignerVerb(SR.GetString("DataGridViewAddColumnVerb"), new EventHandler(this.OnAddColumn)));
                 //}
-                
-                
-                
-
                 return base.Verbs;
             }
         }
@@ -157,4 +154,9 @@ namespace Ntreev.Windows.Forms.Grid.Design
             }
         }
     }
+    class ContextMenu : Behavior
+    {
+
+    }
+
 }

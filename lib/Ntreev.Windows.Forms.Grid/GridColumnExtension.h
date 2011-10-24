@@ -53,12 +53,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 	protected: // methods
 		/// <summary>
-		/// 편집용 컨트롤이 생성된후에 호출됩니다.
-		/// </summary>
-		/// <param name="control">생성된 컨트롤의 인스턴스입니다.</param>
-		virtual void OnControlCreated(System::Windows::Forms::TextBox^ control) override;
-
-		/// <summary>
 		/// 컨트롤에서 셀에 적용할 값을 가져올때 호출됩니다.
 		/// </summary>
 		/// <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>

@@ -289,15 +289,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// </returns>
 		bool Contains(_Column^ item);
 
-		///// <summary>
-		/////
-		//void Clear()
-		//{
-		//	this->Clear_IList();
-		//}
-
-		
-
 		/// <summary>
 		/// 컬렉션을 반복하는 열거자를 가져옵니다.
         /// </summary>

@@ -271,8 +271,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			clipping.right  = System::Math::Min(clipping.right, this->DisplayRectangle.Right);
 			clipping.bottom = System::Math::Min(clipping.bottom, this->DisplayRectangle.Bottom);	
 
-			System::Diagnostics::Trace::WriteLine(e->ClipRectangle);
-
 			System::IntPtr hdc = e->Graphics->GetHdc();
 			try
 			{
@@ -772,7 +770,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 		case System::ComponentModel::ListChangedType::Reset:
 			{
-				m_pGridCore->Clear();
+				//m_pGridCore->Clear();
 				m_pGridCore->Reserve(m_manager->GetItemProperties()->Count, m_manager->List->Count);
 
 				if(this->BindingContext->Contains(m_dataSource, m_dataMember) == false)

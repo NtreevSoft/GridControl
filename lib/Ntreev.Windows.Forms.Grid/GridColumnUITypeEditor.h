@@ -25,7 +25,7 @@
 #include "GridColumn.h"
 #include "ColumnUITypeEditorForm.h"
 
-namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
+namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Columns
 {
 	ref class WindowsFormsEditorService : System::Windows::Forms::Design::IWindowsFormsEditorService, System::IServiceProvider
     {
@@ -120,4 +120,4 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	private:
 		_UITypeEditor^ m_typeEditor;
 	};
-} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
+} /*namespace Columns*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

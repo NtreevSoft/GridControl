@@ -166,6 +166,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			break;
 		case System::ComponentModel::ListChangedType::Reset:
 			{
+				m_pDataRowList->ClearDataRow();
 				for each(object^ item in m_manager->List)
 				{
 					Bind(item, this->Count);
@@ -233,13 +234,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void RowCollection::Clear()
 	{
+		ManagerEventDetach managerEventDeatch(this);
 		m_pDataRowList->ClearDataRow();
 
-		m_manager->ListChanged -= m_listChangedEventHandler;
 		for(int i=m_manager->Count-1 ; i>=0 ; i--)
 			m_manager->RemoveAt(i);
-	
-		m_manager->ListChanged += m_listChangedEventHandler;
 	}
 
 	void RowCollection::Insert(int index, Row^ item)
@@ -253,36 +252,26 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(item->Index != 0xffffffff)
 			throw gcnew System::ArgumentException();
 
-		m_manager->ListChanged -= m_listChangedEventHandler;
+		ManagerEventDetach managerEventDeatch(this);
+		
+		m_manager->AddNew();
+		object^ component = m_manager->Current;
 
-		try
+		if(GridControl->InvokeRowInserting(component) == false)
 		{
-			m_manager->AddNew();
-			object^ component = m_manager->Current;
-			
-			if(GridControl->InvokeRowInserting(component) == false)
-			{
-				m_manager->CancelCurrentEdit();
-			}
-			else
-			{
-				m_manager->EndCurrentEdit();
-			
-				m_pDataRowList->InsertDataRow(item->NativeRef, index);
-				item->Component = component;
-				item->ComponentIndex = m_manager->List->Count - 1;
+			m_manager->CancelCurrentEdit();
+		}
+		else
+		{
+			m_manager->EndCurrentEdit();
 
-				GridControl->InvokeRowInserted(item);
-			}
+			m_pDataRowList->InsertDataRow(item->NativeRef, index);
+			item->Component = component;
+			item->ComponentIndex = m_manager->List->Count - 1;
+
+			GridControl->InvokeRowInserted(item);
 		}
-		catch(System::Exception^ e)
-		{
-			throw e;
-		}
-		finally
-		{
-			m_manager->ListChanged += m_listChangedEventHandler;
-		}
+		
 	}
 
 	void RowCollection::RemoveAt(int index)
@@ -329,7 +318,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	Row^ RowCollection::AddNewFromInsertion()
 	{
-		m_manager->ListChanged -= m_listChangedEventHandler;
+		ManagerEventDetach managerEventDeatch(this);
 
 		try
 		{
@@ -337,7 +326,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 		catch(System::Exception^ e)
 		{
-			m_manager->ListChanged += m_listChangedEventHandler;
 			throw e;
 		}
 
@@ -356,27 +344,35 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			cell->Tag		= sourceCell->Tag;
 		}
 
+		if(GridControl->InvokeInsertionRowInserting(row) == false)
+		{
+			m_manager->CancelCurrentEdit();	
+			m_pDataRowList->RemoveDataRow(row->NativeRef);
+			row->Component = nullptr;
+			row->ComponentIndex = -1;
+			return nullptr;
+		}
+
 		try
 		{
-			if(GridControl->InvokeInsertionRowInserting(row) == false)
-			{
-				m_manager->CancelCurrentEdit();	
-				m_pDataRowList->RemoveDataRow(row->NativeRef);
-				row->Component = nullptr;
-				row->ComponentIndex = -1;
-				return nullptr;
-			}
-			
 			m_manager->EndCurrentEdit();
 			row->IsVisible = true;
-			
-			InsertionRow->SetDefaultValue();
 			GridControl->InvokeInsertionRowInserted(row);
+		}
+		catch(System::Exception^ e)
+		{
+			m_manager->CancelCurrentEdit();
+			m_manager->Position = -1;
+			m_pDataRowList->RemoveDataRow(row->NativeRef);
+			row->Component = nullptr;
+			row->ComponentIndex = -1;
+			throw e;
 		}
 		finally
 		{
-			m_manager->ListChanged += m_listChangedEventHandler;
+			InsertionRow->SetDefaultValue();
 		}
+		
 		return row;
 	}
 
@@ -392,28 +388,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(item->Index == INVALID_INDEX)
 			throw gcnew System::ArgumentException("이미 지워지거나 사용되지 않은 row입니다.");
 
-		m_manager->ListChanged -= m_listChangedEventHandler;
+		ManagerEventDetach managerEventDeatch(this);
 
-		try
-		{
-			if(GridControl->InvokeRowRemoving(item) == false)
-				return false;
-			
-			int index = m_manager->List->IndexOf(item->Component);
-			if(index < 0)
-				throw gcnew System::ArgumentException("이미 지워지거나 사용되지 않은 row입니다.");
+		if(GridControl->InvokeRowRemoving(item) == false)
+			return false;
 
-			m_manager->RemoveAt(index);
-			m_pDataRowList->RemoveDataRow(item->NativeRef);
+		int index = m_manager->List->IndexOf(item->Component);
+		if(index < 0)
+			throw gcnew System::ArgumentException("이미 지워지거나 사용되지 않은 row입니다.");
 
-			RowRemovedEventArgs eRemoved(0);
-			GridControl->InvokeRowRemoved(%eRemoved);
-			Invalidate();
-		}
-		finally
-		{
-			m_manager->ListChanged += m_listChangedEventHandler;
-		}
+		m_manager->RemoveAt(index);
+		m_pDataRowList->RemoveDataRow(item->NativeRef);
+
+		RowRemovedEventArgs eRemoved(0);
+		GridControl->InvokeRowRemoved(%eRemoved);
+		Invalidate();
+		
 
 		return true;
 	}

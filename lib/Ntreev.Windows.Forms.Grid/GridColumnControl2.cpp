@@ -34,9 +34,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_controlPainter = gcnew Win32::ControlPainter();
 
 		m_control = safe_cast<TEditing>(System::Activator::CreateInstance(TEditing::typeid));
-		OnControlCreated(m_control);
 		m_viewControl = safe_cast<TView>(System::Activator::CreateInstance(TView::typeid));
-		OnViewControlCreated(m_viewControl);
 		NativeRef->m_bCustomItemRender = true;
 	}
 
@@ -46,9 +44,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_controlPainter = gcnew Win32::ControlPainter();
 
 		m_control = safe_cast<TEditing>(System::Activator::CreateInstance(TEditing::typeid, controlArgs));
-		OnControlCreated(m_control);
 		m_viewControl = safe_cast<TView>(System::Activator::CreateInstance(TView::typeid, controlArgs));
-		OnViewControlCreated(m_viewControl);
 		NativeRef->m_bCustomItemRender = true;
 	}
 	
@@ -79,18 +75,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 			graphics->ReleaseHdc();
 		}
-	}
-
-	generic<class TEditing, class TView> where TEditing : _Control where TView : _Control
-	void ColumnControl<TEditing, TView>::OnControlCreated(TEditing /*control*/)
-	{
-
-	}
-
-	generic<class TEditing, class TView> where TEditing : _Control where TView : _Control
-	void ColumnControl<TEditing, TView>::OnViewControlCreated(TView /*control*/)
-	{
-
 	}
 
 	generic<class TEditing, class TView> where TEditing : _Control where TView : _Control

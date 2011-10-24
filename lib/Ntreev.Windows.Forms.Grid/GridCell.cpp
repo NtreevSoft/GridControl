@@ -294,16 +294,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		_PropertyDescriptor^ propertyDescriptor = Column->PropertyDescriptor;
 		if(propertyDescriptor == nullptr)
 			return m_value;
-		return propertyDescriptor->GetValue(Row->Component);
+		object^ value = propertyDescriptor->GetValue(Row->Component);
+		return this->Column->ConvertFromSource(value);
 	}
 
 	void Cell::ValueCore::set(object^ value)
 	{
 		_PropertyDescriptor^ propertyDescriptor = Column->PropertyDescriptor;
 		if(propertyDescriptor == nullptr)
+		{
 			m_value = value;
-		else
+		}
+		else if(propertyDescriptor->IsReadOnly == false)
+		{
+			value = this->Column->ConvertToSource(value);
 			propertyDescriptor->SetValue(Row->Component, value);
+		}
 	}
 
 	_Rectangle Cell::TextBound::get()

@@ -58,17 +58,25 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			GrDataRowList*	m_pDataRowList;
 		};
 
-		ref class Manager
+		ref class ManagerEventDetach
 		{
 		public:
-			Manager()
+			ManagerEventDetach(RowCollection^ rowCollection)
+				: m_rowCollection(rowCollection)
 			{
-
+				m_rowCollection->m_manager->ListChanged -= m_rowCollection->m_listChangedEventHandler;
+				m_rowCollection->m_manager->CurrentChanged -= m_rowCollection->m_currentChangedEventHandler;
+				m_rowCollection->m_locked++;
 			}
-			~Manager()
+			~ManagerEventDetach()
 			{
-
+				m_rowCollection->m_locked--;
+				m_rowCollection->m_manager->ListChanged += m_rowCollection->m_listChangedEventHandler;
+				m_rowCollection->m_manager->CurrentChanged += m_rowCollection->m_currentChangedEventHandler;
 			}
+
+		private:
+			RowCollection^ m_rowCollection;
 		};
 	private: // typedefs
 			

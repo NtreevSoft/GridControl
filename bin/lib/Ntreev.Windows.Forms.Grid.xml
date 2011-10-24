@@ -2113,12 +2113,6 @@ ComboBox형태의 컨트롤을 지원하는 Column개체를 나타냅니다.
             <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
             <returns>셀에 적용할 값의 <see cref="T:System.Object" />입니다.</returns>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.OnControlCreated(System.Windows.Forms.TextBox)">
-            <summary>
-편집용 컨트롤이 생성된후에 호출됩니다.
-</summary>
-            <param name="control">생성된 컨트롤의 인스턴스입니다.</param>
-        </member>
         <member name="P:Ntreev.Windows.Forms.Grid.Columns.ColumnTextBox.PaintValueSupported">
             <summary>
 별도의 셀 렌더링 기능을 지원하는지에 대한 여부를 가져옵니다.
@@ -2755,18 +2749,6 @@ CheckBox를 지원하는 Column개체를 나타냅니다.
             <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
             <returns>셀에 적용할 값의 <see cref="T:System.Object" />입니다.</returns>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnViewControlCreated(`0)">
-            <summary>
-                <see cref="P:Ntreev.Windows.Forms.Grid.ColumnControl`1.PaintValueSupported" />의 값이 true일때 셀 표시용 컨트롤이 생성된후에 호출됩니다.
-</summary>
-            <param name="control">생성된 컨트롤의 인스턴스입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.OnControlCreated(`0)">
-            <summary>
-편집용 컨트롤이 생성된후에 호출됩니다.
-</summary>
-            <param name="control">생성된 컨트롤의 인스턴스입니다.</param>
-        </member>
         <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.PaintValue(System.Drawing.Graphics,System.Drawing.Rectangle,System.Drawing.Rectangle,Ntreev.Windows.Forms.Grid.IStyle,System.Object)">
             <summary>
 셀을 그릴때 호출됩니다.
@@ -3022,18 +3004,6 @@ Frozen된 열이 있다면 Frozen된 열을 제외한 첫번째 셀로 이동합
 </summary>
             <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
             <returns>셀에 적용할 값의 <see cref="T:System.Object" />입니다.</returns>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`2.OnViewControlCreated(`1)">
-            <summary>
-                <see cref="P:Ntreev.Windows.Forms.Grid.ColumnControl`2.PaintValueSupported" />의 값이 true일때 셀 표시용 컨트롤이 생성된후에 호출됩니다.
-</summary>
-            <param name="control">생성된 컨트롤의 인스턴스입니다.</param>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`2.OnControlCreated(`0)">
-            <summary>
-편집용 컨트롤이 생성된후에 호출됩니다.
-</summary>
-            <param name="control">생성된 컨트롤의 인스턴스입니다.</param>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`2.PaintValue(System.Drawing.Graphics,System.Drawing.Rectangle,System.Drawing.Rectangle,Ntreev.Windows.Forms.Grid.IStyle,System.Object)">
             <summary>
