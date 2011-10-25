@@ -31,13 +31,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	generic<class TControl> where TControl : _Control
 	ColumnControl<TControl>::ColumnControl()
 	{
-		m_control = safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid));
-
-		if(PaintValueSupported == true)
-		{
-			m_controlPainter = gcnew Win32::ControlPainter();
-			m_viewControl = safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid));
-		}
+		m_controlPainter = gcnew Win32::ControlPainter();
+		m_control = CreateControlInstance(nullptr);
+		m_viewControl = CreateControlInstance(nullptr);
 
 		NativeRef->m_bCustomItemRender = PaintValueSupported;
 	}
@@ -45,15 +41,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	generic<class TControl> where TControl : _Control
 	ColumnControl<TControl>::ColumnControl(... cli::array<object^>^ controlArgs)
 	{
-		m_control = safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid, controlArgs));
-
-		if(PaintValueSupported == true)
-		{
-			m_controlPainter = gcnew Win32::ControlPainter();
-			m_viewControl = safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid, controlArgs));
-		}
+		m_controlPainter = gcnew Win32::ControlPainter();
+		m_control = CreateControlInstance(controlArgs);
+		m_viewControl = CreateControlInstance(controlArgs);
 
 		NativeRef->m_bCustomItemRender = PaintValueSupported;
+	}
+
+	generic<class TControl> where TControl : _Control
+	TControl ColumnControl<TControl>::CreateControlInstance(... cli::array<object^>^ controlArgs)
+	{
+		if(controlArgs == nullptr)
+			return safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid));
+		return safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid, controlArgs));
 	}
 
 	generic<class TControl> where TControl : _Control

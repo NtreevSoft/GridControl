@@ -93,7 +93,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
         void service_ComponentChanged(object sender, ComponentChangedEventArgs e)
         {
-            int qwer = 0;
+            
         }
 
         protected override string GetDisplayText(object value)

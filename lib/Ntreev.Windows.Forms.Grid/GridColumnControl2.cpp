@@ -47,6 +47,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_viewControl = safe_cast<TView>(System::Activator::CreateInstance(TView::typeid, controlArgs));
 		NativeRef->m_bCustomItemRender = true;
 	}
+
+	generic<class TEditing, class TView> where TEditing : _Control where TView : _Control
+	TEditing ColumnControl<TEditing, TView>::CreateControlInstance(... cli::array<object^>^ controlArgs)
+	{
+		if(controlArgs == nullptr)
+			return safe_cast<TEditing>(System::Activator::CreateInstance(TEditing::typeid));
+		return safe_cast<TEditing>(System::Activator::CreateInstance(TEditing::typeid, controlArgs));
+	}
+
+	generic<class TEditing, class TView> where TEditing : _Control where TView : _Control
+	TView ColumnControl<TEditing, TView>::CreateViewInstance()
+	{
+		return safe_cast<TView>(System::Activator::CreateInstance(TView::typeid));
+	}
 	
 	generic<class TEditing, class TView> where TEditing : _Control where TView : _Control
 	void ColumnControl<TEditing, TView>::PaintValue(_Graphics^ graphics, _Rectangle renderRect, _Rectangle /*clipRect*/, IStyle^ style, object^ value)

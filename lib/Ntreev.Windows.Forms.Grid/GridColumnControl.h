@@ -138,6 +138,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	
 	protected: // methods
 		/// <summary>
+		/// 사용할 컨트롤의 인스턴스를 생성합니다.
+		/// </summary>
+		/// <param name="controlArgs">인스턴스 생성시 필요한 인자들입니다. 인자가 필요없다면 null이 설정됩니다.</param>
+		virtual TControl					CreateControlInstance(... cli::array<object^>^ controlArgs);
+
+		/// <summary>
 		/// 셀을 그릴때 호출됩니다.
 		/// </summary>
 		/// <param name="graphics">그리는데 필요한 개체입니다.</param>

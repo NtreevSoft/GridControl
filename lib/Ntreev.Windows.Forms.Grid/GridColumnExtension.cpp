@@ -262,8 +262,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 	ColumnFlagControl::ColumnFlagControl()
 	{
-		this->EditingControl->EditOK += gcnew _EventHandler(this, &ColumnFlagControl::EditingControl_EditOK);
-		this->EditingControl->EditCanceled += gcnew _EventHandler(this, &ColumnFlagControl::EditingControl_EditCanceled);
+		FlagControl^ flagControl = dynamic_cast<FlagControl^>(this->EditingControl);
+		flagControl->EditOK += gcnew _EventHandler(this, &ColumnFlagControl::EditingControl_EditOK);
+		flagControl->EditCanceled += gcnew _EventHandler(this, &ColumnFlagControl::EditingControl_EditCanceled);
 	}
 
 	_Size ColumnFlagControl::GetPreferredSize(_Size proposedSize)
@@ -271,23 +272,31 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		return _Size(proposedSize.Width, this->EditingControl->Height);
 	}
 
-	object^ ColumnFlagControl::GetEditingValue(FlagControl^ control)
+	System::Windows::Forms::UserControl^ ColumnFlagControl::CreateControlInstance(... cli::array<object^>^ /*controlArgs*/)
 	{
-		return System::Enum::ToObject(this->DataType, control->Value);
+		return gcnew FlagControl();
 	}
 
-	void ColumnFlagControl::SetEditingValue(FlagControl^ control, object^ value)
+	object^ ColumnFlagControl::GetEditingValue(System::Windows::Forms::UserControl^ control)
 	{
+		FlagControl^ flagControl = dynamic_cast<FlagControl^>(control);
+		return System::Enum::ToObject(this->DataType, flagControl->Value);
+	}
+
+	void ColumnFlagControl::SetEditingValue(System::Windows::Forms::UserControl^ control, object^ value)
+	{
+		FlagControl^ flagControl = dynamic_cast<FlagControl^>(control);
 		if (value == nullptr)
-			control->Value = 0;
+			flagControl->Value = 0;
 		else
-			control->Value = (int)value;
+			flagControl->Value = (int)value;
 	}
 
 	void ColumnFlagControl::OnAttaching(AttachEventArgs^ e)
 	{
-		this->EditingControl->FlagType = this->DataType;
-		ColumnDropDown<FlagControl^>::OnAttaching(e);
+		FlagControl^ flagControl = dynamic_cast<FlagControl^>(this->EditingControl);
+		flagControl->FlagType = this->DataType;
+		ColumnDropDown<System::Windows::Forms::UserControl^>::OnAttaching(e);
 	}
 
 	void ColumnFlagControl::EditingControl_EditOK(object^ /*sender*/, _EventArgs^ /*e*/)

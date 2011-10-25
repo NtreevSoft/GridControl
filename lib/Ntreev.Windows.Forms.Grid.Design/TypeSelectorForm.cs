@@ -110,6 +110,11 @@ namespace Ntreev.Windows.Forms.Grid.Design
             }
         }
 
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+        }
+
         private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Node.Tag != null)
@@ -129,11 +134,5 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
             this.DialogResult = DialogResult.OK;
         }
-
-        private void toolStripButton2_LocationChanged(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }

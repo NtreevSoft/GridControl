@@ -685,9 +685,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 		else
 		{
-			m_pColumn->m_fnColumnBackgroundRender	= NULL;
-			m_pColumn->m_fnColumnContentsRender		= NULL;
-			m_pColumn->m_pColumnRenderData			= NULL;
+			m_pColumn->m_fnColumnBackgroundRender	= nullptr;
+			m_pColumn->m_fnColumnContentsRender		= nullptr;
+			m_pColumn->m_pColumnRenderData			= nullptr;
 		}
 	}
 

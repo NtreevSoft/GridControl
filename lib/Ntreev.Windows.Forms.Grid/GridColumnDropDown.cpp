@@ -30,7 +30,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	ColumnDropDown<TControl>::ColumnDropDown()
 	{
 		m_sizable	= false;
-		m_control	= safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid));
+		m_control	= CreateControlInstance(nullptr);
 		OnControlCreated(m_control);
 	}
 
@@ -38,7 +38,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	ColumnDropDown<TControl>::ColumnDropDown(... cli::array<object^>^ controlArgs)
 	{
 		Sizable		= false;
-		m_control	= safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid, controlArgs));
+		m_control	= CreateControlInstance(controlArgs);
 		OnControlCreated(m_control);
 	}
 
@@ -46,6 +46,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	_Size ColumnDropDown<TControl>::GetPreferredSize(_Size proposedSize)
 	{
 		return _Size(proposedSize.Width, EditingControl->Size.Height);
+	}
+
+	generic<class TControl> where TControl : _Control
+	TControl ColumnDropDown<TControl>::CreateControlInstance(... cli::array<object^>^ controlArgs)
+	{
+		if(controlArgs == nullptr)
+			return safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid));
+		return safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid, controlArgs));
 	}
 
 	generic<class TControl> where TControl : _Control

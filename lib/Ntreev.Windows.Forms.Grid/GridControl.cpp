@@ -760,7 +760,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			this->CurrencyManagerChanged(this, e);
 
 			m_insertionRow->SetDefaultValue();
-			UpdateGridRect();
 		}
 	}
 
@@ -782,9 +781,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 	}
 
-	void GridControl::currencyManager_BindingComplete(object^ sender, System::Windows::Forms::BindingCompleteEventArgs^ e)
+	void GridControl::currencyManager_BindingComplete(object^ /*sender*/, System::Windows::Forms::BindingCompleteEventArgs^ /*e*/)
 	{
-		int qwer=0;
+		
 	}
 
 	void GridControl::RemoveRow(Row^ row)

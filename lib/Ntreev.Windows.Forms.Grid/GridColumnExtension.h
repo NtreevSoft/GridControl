@@ -208,7 +208,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	/// <summary>
 	/// 열거형을 비트 필드 형태의 편집을 지원하는 Column개체를 나타냅니다.
 	/// </summary>
-	public ref class ColumnFlagControl : ColumnDropDown<FlagControl^>
+	public ref class ColumnFlagControl : ColumnDropDown<System::Windows::Forms::UserControl^>
 	{
 	public:
 		/// <summary>
@@ -226,18 +226,24 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 	protected:
 		/// <summary>
+		/// 사용할 컨트롤의 인스턴스를 생성합니다.
+		/// </summary>
+		/// <param name="controlArgs">인스턴스 생성시 필요한 인자들입니다. 인자가 필요없다면 null이 설정됩니다.</param>
+		virtual System::Windows::Forms::UserControl^ CreateControlInstance(... cli::array<object^>^ controlArgs) override;
+
+		/// <summary>
 		/// 컨트롤에서 셀에 적용할 값을 가져올때 호출됩니다.
 		/// </summary>
 		/// <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
 		/// <returns>셀에 적용할 값의 <see cref="System::Object"/>입니다.</returns>
-        virtual object^ GetEditingValue(FlagControl^ control) override;
+        virtual object^ GetEditingValue(System::Windows::Forms::UserControl^ control) override;
 
 		/// <summary>
 		/// 셀의 값을 컨트롤에 적용할때 호출됩니다.
 		/// </summary>
 		/// <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
 		/// <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
-        virtual void SetEditingValue(FlagControl^ control, object^ value) override;
+        virtual void SetEditingValue(System::Windows::Forms::UserControl^ control, object^ value) override;
 
 		/// <summary>
 		/// <see cref="Attaching"/>이벤트를 발생시킵니다.

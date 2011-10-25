@@ -178,7 +178,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 	}
 
-	void RowCollection::currencyManager_CurrentChanged(object^ sender, System::EventArgs^ e)
+	void RowCollection::currencyManager_CurrentChanged(object^ /*sender*/, System::EventArgs^ /*e*/)
 	{
 		if(m_manager->Position < 0)
 			return;
@@ -195,7 +195,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 	}
 
-	void RowCollection::gridControl_CurrencyManagerChanging(object^ /*sender*/, CurrencyManagerChangingEventArgs^ e)
+	void RowCollection::gridControl_CurrencyManagerChanging(object^ /*sender*/, CurrencyManagerChangingEventArgs^ /*e*/)
 	{
 
 	}
@@ -217,7 +217,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		for each(object^ item in m_manager->List)
 		{
 			Bind(item, componentIndex++);
-			this->GridControl->Refresh();
 		}
 
 		m_manager->ListChanged += m_listChangedEventHandler;

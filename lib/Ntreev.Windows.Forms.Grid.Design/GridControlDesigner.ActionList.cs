@@ -154,9 +154,4 @@ namespace Ntreev.Windows.Forms.Grid.Design
             }
         }
     }
-    class ContextMenu : Behavior
-    {
-
-    }
-
 }

@@ -30,7 +30,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	/// </summary>
 	[System::ComponentModel::ToolboxItem(false)]
 	[System::ComponentModel::DesignTimeVisible(false)]
-	public ref class FlagControl : public System::Windows::Forms::UserControl
+	ref class FlagControl : public System::Windows::Forms::UserControl
 	{
 	public:
 		/// <summary>
