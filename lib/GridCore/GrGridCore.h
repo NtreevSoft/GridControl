@@ -127,6 +127,9 @@ public:
 	void 					Invalidate();
 	void 					Invalidate(int x, int y, int width, int height);
 	void 					Invalidate(const GrRect& rect);
+	void					LockInvalidate();
+	void					UnlockInvalidate();
+	void					ResetInvalidate();
 
 	_GrEvent				Created;
 	_GrEvent				Cleared;
@@ -222,5 +225,4 @@ private:
 
 	int						m_nAttachedCount;
 	int						m_nCreatedCell;	friend class GrCell;
-	
 };

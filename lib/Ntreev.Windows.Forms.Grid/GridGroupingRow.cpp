@@ -40,7 +40,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void GroupingRow::Text::set(string^ text)
 	{
 		m_pGroupingList->SetText(ToNativeString::Convert(text));
-		Invalidate();
 	}
 
 	bool GroupingRow::IsVisible::get()
@@ -51,6 +50,5 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void GroupingRow::IsVisible::set(bool value)
 	{
 		m_pGroupingList->SetVisible(value);
-		Invalidate();
 	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

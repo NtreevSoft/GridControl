@@ -251,6 +251,8 @@ protected:
 	void						SetTextBoundChanged();
 	void						SetTextAlignChanged();
 
+	void						Invalidate(bool thisOnly = true);
+
 public:
 	void*						Tag;
 
@@ -719,7 +721,7 @@ private:
 	friend class GrGridCore;
 };
 
-class IDataRow abstract: public GrRow
+class IDataRow abstract : public GrRow
 {
 public: 
 	IDataRow();

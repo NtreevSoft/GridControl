@@ -50,22 +50,105 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	class NativeInvaliator : public GrGridInvalidator
 	{
 	public:
+		enum RectType
+		{
+			RectType_Empty = 0,
+			RectType_Custom,
+			RectType_Full,
+		};
+	public:
 		NativeInvaliator(gcroot<_GridControl^> pGrid) : m_pGrid(pGrid)
-		{ 
-			
+		{
+			m_rectType = RectType_Empty;
+			m_lockRef = 0;
 		}
 
 		void Invalidate()
 		{
-			m_pGrid->Invalidate(false);
+			if(m_rectType == RectType_Full)
+				return;
+
+			if(m_lockRef == 0)
+			{
+#ifdef _DEBUG
+				System::Console::Write("full : ");
+#endif
+				m_pGrid->Invalidate(false);
+			}
+			m_rectType = RectType_Full;
 		}
 
 		void Invalidate(int x, int y, int width, int height)
 		{
-			m_pGrid->Invalidate(_Rectangle(x, y, width, height), false);
+			switch(m_rectType)
+			{
+			case RectType_Full:
+				return;
+			case RectType_Custom:
+				{
+					m_rect.left = std::min(x, m_rect.left);
+					m_rect.top = std::min(y, m_rect.top);
+					m_rect.right = std::max(x + width, m_rect.right);
+					m_rect.bottom = std::max(y + height, m_rect.bottom);
+				}
+				break;
+			case RectType_Empty:
+				{
+					m_rect = GrRect(GrPoint(x, y), GrSize(width, height));
+				}
+				break;
+			}
+
+			if(m_lockRef == 0)
+			{
+#ifdef _DEBUG
+				System::Console::Write("custom : ");
+#endif
+				m_pGrid->Invalidate(m_rect, false);
+			}
+
+			m_rectType = RectType_Custom;
 		}
 
+		void Lock()
+		{
+			m_lockRef++;
+		}
+
+		void Unlock()
+		{
+			m_lockRef--;
+			if(m_lockRef < 0)
+				throw gcnew System::Exception("Invalidator의 잠금해제 횟수가 잠금 횟수보다 큽니다.");
+
+			if(m_rectType == RectType_Custom)
+			{
+#ifdef _DEBUG
+				System::Console::Write("custom by unlock : ");
+#endif
+				m_pGrid->Invalidate(m_rect, false);
+			}
+			else 
+			{
+#ifdef _DEBUG
+				System::Console::Write("full by unlock : ");
+#endif
+				m_pGrid->Invalidate(false);
+			}
+		}
+
+		void Reset()
+		{
+			if(m_lockRef != 0)
+				throw gcnew System::Exception("Invalidator가 잠긴 상태입니다.");
+			m_rectType = RectType_Empty;
+		}
+
+	private:
 		gcroot<_GridControl^> m_pGrid;
+		RectType m_rectType;
+		int m_lockRef;
+		GrRect m_rect;
 	};
 
 	class NativeEvent : GrObject
@@ -132,6 +215,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_pDataRowList		= m_pGridCore->GetDataRowList();
 		m_pInsertionRow		= m_pGridCore->GetInsertionRow();
 
+		m_pGridCore->SetDisplayRect(this->DisplayRectangle);
 		m_pGridCore->SetFont(this->Font);
 
 #ifdef _TIME_TEST
@@ -227,6 +311,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		return true;
 	}
+
+#ifdef _DEBUG
+	void GridControl::OnInvalidated(System::Windows::Forms::InvalidateEventArgs^ e)
+	{
+		UserControl::OnInvalidated(e);
+		System::Console::WriteLine(e->InvalidRect);
+	}
+#endif
 
 	void GridControl::OnGotFocus(_EventArgs^ e)
 	{
@@ -494,7 +586,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void GridControl::UpdateGridRect()
 	{
-		m_pGridCore->SetDisplayRect(DisplayRectangle);
+		//m_pGridCore->SetDisplayRect(DisplayRectangle);
 
 		if(m_pGridCore->Update() == true)
 		{
@@ -535,7 +627,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		m_states->ChangeDefaultState();
 		UserControl::OnSizeChanged(e);
-		this->Invalidate(false);
+		m_pGridCore->SetDisplayRect(this->DisplayRectangle);
 	}
 
 	void GridControl::OnClientSizeChanged(_EventArgs^ e)
@@ -623,7 +715,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	string^ GridControl::DataMember::get()
 	{
-		if(m_manager == nullptr)
+		if(m_dataSource == nullptr)
 			return string::Empty;
 		return m_dataMember;
 	}
@@ -1163,6 +1255,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_dataSource	= nullptr;
 		m_dataMember	= string::Empty;
 		m_manager		= nullptr;
+
 		OnCurrencyManagerChanged(gcnew CurrencyManagerChangedEventArgs(m_defaultManager));
 	}
 
@@ -1572,6 +1665,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void GridControl::InvokeScroll(System::Windows::Forms::ScrollEventArgs^ e)
 	{
 		OnScroll(e);
+		m_pGridCore->Invalidate();
 	}
 
 	void GridControl::InvokeCellDoubleClicked(Cell^ cell)

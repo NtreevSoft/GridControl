@@ -69,7 +69,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			//m_errorCell			= nullptr;
 		}
 		System::Diagnostics::Debug::WriteLine(string::Format("The Elapsed event was raised at {0}", e->SignalTime));
-		Invalidate();
 	}
 
 	void ErrorDescriptor::gridControl_Cleared(object^ /*sender*/, ClearEventArgs^ /*e*/)

@@ -41,7 +41,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void CaptionRow::Text::set(string^ text)
 	{
 		m_pCaption->SetText(ToNativeString::Convert(text));
-		Invalidate();
 	}
 
 	_StringAlignment CaptionRow::Alignment::get()
@@ -74,7 +73,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void CaptionRow::IsVisible::set(bool value)
 	{
 		m_pCaption->SetVisible(value);
-		Invalidate();
 	}
 
 	CaptionRow^ CaptionRow::FromNative(GrCaption* pCaption)
@@ -95,7 +93,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			value > m_pCaption->GetMaxHeight() )
 			throw gcnew System::ArgumentOutOfRangeException("value");
 		m_pCaption->SetHeight(value);
-		Invalidate();
 	}
 
 	int CaptionRow::MinHeight::get()
@@ -109,7 +106,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			value > m_pCaption->GetMaxHeight() )
 			throw gcnew System::ArgumentOutOfRangeException("value");
 		m_pCaption->SetMinHeight(value);
-		Invalidate();
 	}
 
 	int CaptionRow::MaxHeight::get()
@@ -123,7 +119,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			value < m_pCaption->GetMinHeight())
 			throw gcnew System::ArgumentOutOfRangeException("value");
 		m_pCaption->SetMaxHeight(value);
-		Invalidate();
 	}
 
 	bool CaptionRow::ShouldSerializeHeight()

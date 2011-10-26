@@ -62,21 +62,4 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			m_pFocuser		= nullptr;
 		}
 	}
-
-	void GridObject::Invalidate()
-	{
-		if(m_gridControl == nullptr)
-			return;
-		m_gridControl->Invalidate(false);
-	}
-
-	void GridObject::Invalidate(_Rectangle rect)
-	{
-		m_gridControl->Invalidate(rect, false);
-	}
-
-	void GridObject::Invalidate(int left, int top, int right, int bottom)
-	{
-		m_gridControl->Invalidate(_Rectangle::FromLTRB(left, top, right, bottom), false);
-	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -114,7 +114,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		item->GridControl = nullptr;
 		m_pColumnList->RemoveColumn(item->NativeRef);
-		Invalidate();
 	}
 
 	int ColumnCollection::IndexOf(_Column^ item)

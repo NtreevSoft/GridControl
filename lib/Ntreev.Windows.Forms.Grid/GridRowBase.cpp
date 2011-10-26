@@ -44,7 +44,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			value > m_pDataRow->GetMaxHeight() )
 			throw gcnew System::ArgumentOutOfRangeException("value");
 		m_pDataRow->SetHeight(value);
-		Invalidate();
 	}
 
 	int RowBase::MinHeight::get()
@@ -58,7 +57,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			value > m_pDataRow->GetMaxHeight() )
 			throw gcnew System::ArgumentOutOfRangeException("value");
 		m_pDataRow->SetMinHeight(value);
-		Invalidate();
 	}
 
 	int RowBase::MaxHeight::get()
@@ -72,7 +70,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			value < m_pDataRow->GetMinHeight())
 			throw gcnew System::ArgumentOutOfRangeException("value");
 		m_pDataRow->SetMaxHeight(value);
-		Invalidate();
 	}
 
 	bool RowBase::IsVisible::get()

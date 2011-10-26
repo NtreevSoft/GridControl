@@ -277,11 +277,16 @@ GrColumn* GrColumnList::HitTest(int x) const
 
 void GrColumnList::SetFitChanged()
 {
+	if(m_bFitChanged == true)
+		return;
 	m_bFitChanged = true;
+	m_pGridCore->Invalidate();
 }
 
 void GrColumnList::SetVisibleChanged()
 {
+	if(m_bVisibleChanged == true)
+		return;
 	m_bVisibleChanged = true;
 	m_pGridCore->Invalidate();
 }
@@ -557,6 +562,15 @@ void GrColumnList::NotifyWidthChanged(GrColumn* pColumn)
 {
 	GrColumnEventArgs e(pColumn);
 	OnColumnWidthChanged(&e);
+
+	if(pColumn->GetDisplayIndex() != INVALID_INDEX)
+	{
+		GrRect rtDisplay = pColumn->GetDisplayRect();
+		const GrRect* pDisplayRect = m_pGridCore->GetDisplayRect();
+		rtDisplay.bottom = pDisplayRect->bottom;
+		rtDisplay.right = pDisplayRect->right;
+		m_pGridCore->Invalidate(rtDisplay);
+	}
 }
 
 void GrColumnList::NotifyFrozenChanged(GrColumn* pColumn)
@@ -669,6 +683,7 @@ void GrCell::SetPadding(GrPadding padding)
 {
 	m_padding = padding;
 	SetTextBoundChanged();
+	Invalidate();
 }
 
 GrRect GrCell::GetRect() const
@@ -705,6 +720,8 @@ GrSize GrCell::GetSize() const
 
 uint GrCell::GetTextLineCount() const
 {
+	if(m_strText.size() == 0)
+		return 0;
 	if(GetTextMulitiline() == false)
 		return 1;
 	return m_vecTextLine.size();
@@ -963,6 +980,17 @@ void GrCell::SetTextAlignChanged()
 		m_pTextUpdater->AddTextAlign(this);
 }
 
+void GrCell::Invalidate(bool thisOnly)
+{
+	if(m_pGridCore == NULL || GetDisplayable() == false)
+		return;
+
+	if(thisOnly == true)
+		m_pGridCore->Invalidate(GetDisplayRect());
+	else
+		m_pGridCore->Invalidate();
+}
+
 void GrCell::OnTextChanged()
 {
 	if(GetTextWordWrap() == true && m_pGridCore->GetAutoFitRow() == true)
@@ -1074,6 +1102,7 @@ void GrCell::SetFont(GrFont* pFont)
 		return;
 	m_pFont = pFont;
 	SetTextBoundChanged();
+	m_pGridCore->Invalidate();
 }
 
 uint GrCell::GetID() const
@@ -1081,17 +1110,19 @@ uint GrCell::GetID() const
 	return m_nID;
 }
 
-void	 GrCell::SetBackColor(GrColor color)
+void GrCell::SetBackColor(GrColor color)
 {
 	m_backColor = color;
+	Invalidate();
 }
 
-void	 GrCell::SetForeColor(GrColor color)
-{
+void GrCell::SetForeColor(GrColor color)
+{ 
 	m_foreColor = color;
+	Invalidate();
 }
 
-bool	 GrCell::GetMouseOvered() const
+bool GrCell::GetMouseOvered() const
 {
 	if(m_pGridCore == NULL)
 		return false;
@@ -1105,7 +1136,7 @@ GrMouseOverState GrCell::GetMouseOverState() const
 	return m_pGridCore->GetMouseOverState();
 }
 
-bool	 GrCell::GetMousePressed() const
+bool GrCell::GetMousePressed() const
 {
 	if(m_pGridCore == NULL)
 		return false;
@@ -2101,10 +2132,13 @@ bool GrColumn::CanBeGrouped() const
 
 void GrColumn::SetWidth(int width) 
 { 
-	m_nWidth = width;
+	width = std::max(width, m_nMinWidth);
+	width = std::min(width, m_nMaxWidth);
 
-	m_nWidth = std::max(m_nWidth, m_nMinWidth);
-	m_nWidth = std::min(m_nWidth, m_nMaxWidth);
+	if(m_nWidth == width)
+		return;
+
+	m_nWidth = width;
 
 	if(m_nIndex != INVALID_INDEX)
 		m_pColumnList->NotifyWidthChanged(this);
@@ -2712,6 +2746,9 @@ void GrRow::SetY(int y)
 
 void GrRow::SetHeight(int height)
 {
+	if(m_nHeight == height)
+		return;
+
 	m_nHeight = height;
 	OnHeightChanged();
 
@@ -2780,6 +2817,8 @@ void GrRow::AdjustHeight()
 void GrRow::SetMinHeight(int height)
 {
 	m_nMinHeight = height;
+	if(m_pGridCore != NULL)
+		m_pGridCore->Invalidate();
 }
 
 int GrRow::GetMinHeight() const
@@ -2790,6 +2829,8 @@ int GrRow::GetMinHeight() const
 void GrRow::SetMaxHeight(int height)
 {
 	m_nMaxHeight = height;
+	if(m_pGridCore != NULL)
+		m_pGridCore->Invalidate();
 }
 
 int GrRow::GetMaxHeight() const
@@ -3106,10 +3147,13 @@ GrColor GrDataRow::GetRenderingBackColor() const
 	GrColor backColor = GrColor::White;
 
 	if(GetFullSelected() == true)
+	{
 		backColor = backColor * 0.9f;
-
+	}
 	else if(GetSelected() == true || GetSelecting() == true)
+	{
 		backColor = backColor * 0.9f;
+	}
 
 	if(HasFocused() == true)
 	{
@@ -3131,7 +3175,6 @@ void GrDataRow::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const
 {
 	GrRect rtRender = GetDisplayRect();
 	GrStyle* pStyle	= m_pGridCore->GetStyle();
-	GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
 
 	GrFlag	renderStyle = ToRenderStyle();
 	GrColor	foreColor	= GrColor::Black;
@@ -3142,7 +3185,7 @@ void GrDataRow::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const
 	else
 		pRenderer->DrawHeader(renderStyle, &rtRender, backColor);
 
-	if(pDataRowList->GetRowNumberVisible() == true)
+	if(m_pDataRowList->GetRowNumberVisible() == true)
 	{
 		if(GetClipped() == true)
 			RenderText(pRenderer, foreColor, &rtRender, pClipping);
@@ -3156,7 +3199,7 @@ void GrDataRow::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const
 		rtRender.right	= CellStart();
 		if(GetRowType() == GrRowType_InsertionRow)
 			pRenderer->DrawCell(0, GrColor::White, &rtRender);
-		else if(GetVisibleIndex() == pDataRowList->GetVisibleRowCount() - 1)
+		else if(GetVisibleIndex() == m_pDataRowList->GetVisibleRowCount() - 1)
 			pRenderer->DrawCell(0, GrColor::White, &rtRender);
 		else
 			pRenderer->DrawCell(GRRS_NO_BOTTOM_LINE, GrColor::White, &rtRender);
@@ -3471,6 +3514,8 @@ void GrCaption::SetVisible(bool b)
 	m_bVisible = b;
 	GrHeaderRow* pHeaderList = dynamic_cast<GrHeaderRow*>(GetParent());
 	pHeaderList->SetVisibleChanged();
+	if(m_pGridCore != NULL)
+		m_pGridCore->Invalidate();
 }
 
 bool GrCaption::GetVisible() const
@@ -5067,12 +5112,14 @@ void GrGroupingInfo::OnGridCoreAttached()
 	GrCell::OnGridCoreAttached();
 	SetText(m_pColumn->GetText());
 	m_pGroupingList = m_pGridCore->GetGroupingList();
-	m_pGroupingList->NotifyGroupingChanged(this);
+	if(GetGrouped() == true)
+		m_pGroupingList->NotifyGroupingChanged(this);
 }
 
 void GrGroupingInfo::OnGridCoreDetached()
 {
-	m_pGroupingList->NotifyGroupingChanged(this);
+	if(GetGrouped() == true)
+		m_pGroupingList->NotifyGroupingChanged(this);
 	m_pGroupingList = NULL;
 	GrCell::OnGridCoreDetached();
 }

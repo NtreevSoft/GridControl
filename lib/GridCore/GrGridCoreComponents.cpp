@@ -570,6 +570,7 @@ void GrItemSelector::SelectAll()
 		dataRows.insert(pDataRow);
 	}
 	SelectDataRows(&dataRows, GrSelectionType_Add);
+	m_pGridCore->Invalidate();
 }
 
 void GrItemSelector::ClearSelection()

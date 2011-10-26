@@ -130,7 +130,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void Row::IsVisible::set(bool value)
 	{
 		m_pDataRow->SetVisible(value);
-		Invalidate();
 	}
 
 	bool Row::IsReadOnly::get()
@@ -283,7 +282,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void Row::CellBackColor::set(_Color value)
 	{
 		m_pDataRow->SetItemBackColor(value);
-		Invalidate();
 	}
 
 	_Color Row::CellForeColor::get()
@@ -294,7 +292,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void Row::CellForeColor::set(_Color value)
 	{
 		m_pDataRow->SetItemForeColor(value);
-		Invalidate();
 	}
 
 	bool Row::ShouldSerializeCellForeColor()

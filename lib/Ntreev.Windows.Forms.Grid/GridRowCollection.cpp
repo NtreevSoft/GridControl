@@ -401,8 +401,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		RowRemovedEventArgs eRemoved(0);
 		GridControl->InvokeRowRemoved(%eRemoved);
-		Invalidate();
-		
 
 		return true;
 	}

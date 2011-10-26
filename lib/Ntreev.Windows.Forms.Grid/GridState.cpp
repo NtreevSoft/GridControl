@@ -356,6 +356,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	Normal::Normal(_GridControl^ gridControl)
 		: StateBase(gridControl)
 	{
+		gridControl->CurrencyManagerChanged += gcnew CurrencyManagerChangedEventHandler(this, &Normal::gridControl_CurrencyManagerChanged);
+	}
+
+	void Normal::gridControl_CurrencyManagerChanged(object^ /*sender*/, CurrencyManagerChangedEventArgs^ /*e*/)
+	{
+		m_pCell = nullptr;
 	}
 
 	void Normal::OnBegin(GrCell* /*pCell*/, object^ /*data*/, IStateChangeService^ /*service*/)
@@ -440,7 +446,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	{
 		GridCore->SetMousePressed(pCell);
 		Selector->SelectAll();
-		Invalidate();
 	}
 
 	void RootPressing::OnEnd(IStateChangeService^ /*service*/)
@@ -530,7 +535,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 		if(column->ColumnPainter != nullptr)
 		{
-			this->Invalidate(column->DisplayRectangle);
+			GridCore->Invalidate(column->DisplayRectangle);
 		}
 	}
 
@@ -659,7 +664,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			break;
 		}
 
-		Invalidate();
+		GridCore->Invalidate();
 	}
 
 	void ColumnPressing::OnMouseDragEnd(bool cancel, HitTest /*hitTest*/)
@@ -689,7 +694,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 				}
 				break;
 			}
-			Invalidate();
+			GridCore->Invalidate();
 		}
 		m_targetType = TargetType::Unknown;
 		m_cursor = nullptr;
@@ -721,7 +726,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 		if(column->ColumnPainter != nullptr)
 		{
-			this->Invalidate(column->DisplayRectangle);
+			GridCore->Invalidate(column->DisplayRectangle);
 		}
 
 		m_timer->Stop();
@@ -792,7 +797,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	void ColumnPressing::timer_Elapsed(System::Object^ /*sender*/, System::Timers::ElapsedEventArgs^ /*e*/)
 	{
 		m_timer->DoScroll();
-		Invalidate(); 
+		GridCore->Invalidate();
 	}
 
 	ColumnPressing::SelectionTimer2::SelectionTimer2(_GridControl^ gridControl) : Private::SelectionTimer(gridControl)
@@ -893,7 +898,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			int x1, x2;
 			x1 = System::Math::Min(nOldX, m_resizingLocation) - 1;
 			x2 = System::Math::Max(nOldX, m_resizingLocation) + 1;
-			Invalidate(x1, GridControl->DisplayRectangle.Top, x2, GridControl->DisplayRectangle.Bottom);
+			GridCore->Invalidate(x1, GridControl->DisplayRectangle.Top, x2, GridControl->DisplayRectangle.Bottom);
 		}
 	}
 
@@ -901,7 +906,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	{
 		if(cancel == true)
 		{
-			Invalidate();
+			GridCore->Invalidate();
 			return;
 		}
 
@@ -930,11 +935,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 				m_pColumn->SetWidth(nNewWidth);
 				x = m_pColumn->GetDisplayX();
 			}
-			Invalidate(x, GridControl->DisplayRectangle.Top, GridControl->DisplayRectangle.Right, GridControl->DisplayRectangle.Bottom);
+			GridCore->Invalidate(x, GridControl->DisplayRectangle.Top, GridControl->DisplayRectangle.Right, GridControl->DisplayRectangle.Bottom);
 		}
 		else
 		{
-			Invalidate();
+			GridCore->Invalidate();
 		}
 	}
 
@@ -958,7 +963,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		{
 			m_pColumn->SetFit();
 		}
-		Invalidate();
+		GridCore->Invalidate();
 	}
 
 	ColumnSplitterMoving::ColumnSplitterMoving(_GridControl^ gridControl)
@@ -987,7 +992,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	void ColumnSplitterMoving::OnMouseDragBegin(_Point /*location*/)
 	{
 		m_location = m_pColumnSplitter->GetDisplayPosition().x;
-		Invalidate();
+		GridCore->Invalidate();
 	}
 
 	void ColumnSplitterMoving::OnMouseDragMove(_Point location, HitTest /*hitTest*/)
@@ -1031,8 +1036,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 		if(oldLocation != m_location)
 		{
-			Invalidate(oldLocation - 2, GridControl->DisplayRectangle.Top, oldLocation + DEF_SPLITTER_SIZE + 2, GridControl->DisplayRectangle.Bottom);
-			Invalidate(m_location - 2, GridControl->DisplayRectangle.Top, m_location + DEF_SPLITTER_SIZE + 2, GridControl->DisplayRectangle.Bottom);
+			GridCore->Invalidate(oldLocation - 2, GridControl->DisplayRectangle.Top, oldLocation + DEF_SPLITTER_SIZE + 2, GridControl->DisplayRectangle.Bottom);
+			GridCore->Invalidate(m_location - 2, GridControl->DisplayRectangle.Top, m_location + DEF_SPLITTER_SIZE + 2, GridControl->DisplayRectangle.Bottom);
 		}
 	}
 
@@ -1040,7 +1045,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	{
 		if(cancel == true)
 		{
-			Invalidate(m_location - 2, GridControl->DisplayRectangle.Top, m_location + DEF_SPLITTER_SIZE + 2, GridControl->DisplayRectangle.Bottom);
+			GridCore->Invalidate(m_location - 2, GridControl->DisplayRectangle.Top, m_location + DEF_SPLITTER_SIZE + 2, GridControl->DisplayRectangle.Bottom);
 			return;
 		}
 
@@ -1061,7 +1066,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			}
 		}
 
-		Invalidate();
+		GridCore->Invalidate();
 		//Invalidate(pColumnList->, GridControl->DisplayRectangle.Top, m_location + DEF_SPLITTER_SIZE + 2, GridControl->DisplayRectangle.Bottom);
 	}
 
@@ -1207,7 +1212,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	void ItemPressing::timer_Elapsed(System::Object^ /*sender*/, System::Timers::ElapsedEventArgs^ /*e*/)
 	{
 		if(m_timer->DoScroll() == true)
-			Invalidate(); 
+			GridCore->Invalidate(); 
 	}
 
 	ItemPressing::FindSelection::FindSelection(_GridControl^ gridControl, _Point location)
@@ -1643,7 +1648,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		m_pItem = dynamic_cast<GrItem*>(hitTest.pHittedCell);
 		Focuser->Set(m_pItem);
 		GridCore->SetMousePressed(m_pItem);
-		Invalidate();
+		GridCore->Invalidate();
 	}
 
 	void ItemButtonPressing::OnMouseUp(_Point /*location*/, HitTest /*hitTest*/, IStateChangeService^ service)
@@ -1652,7 +1657,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		service->Reference = m_pItem;
 		service->Data = gcnew EditingReason();
 		GridCore->SetMouseUnpressed();
-		Invalidate();
+		GridCore->Invalidate();
 	}
 
 
@@ -1681,7 +1686,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	void GroupingExpandPressing::OnMouseUp(_Point /*location*/, HitTest /*hitTest*/, IStateChangeService^ /*service*/)
 	{
 		m_pGroupingRow->Expand(!m_pGroupingRow->IsExpanded());
-		Invalidate();
+		GridCore->Invalidate();
 	}
 
 	GroupingCellPressing::GroupingCellPressing(_GridControl^ gridControl)
@@ -1742,20 +1747,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 				break;
 			}
 		}
-		Invalidate();
+		GridCore->Invalidate();
 	}
 
 	void GroupingCellPressing::OnMouseUp(_Point /*location*/, HitTest /*hitTest*/, IStateChangeService^ /*service*/)
 	{
 		GridCore->SetMouseUnpressed();
-		Invalidate();
+		GridCore->Invalidate();
 	}
 
 	void GroupingCellPressing::OnMouseDoubleClick(_Point /*location*/, HitTest /*hitTest*/, IStateChangeService^ /*service*/)
 	{
 		GrGroupingRow* pGroupingRow = (GrGroupingRow*)m_pGroupingCell->GetRow();
 		pGroupingRow->Expand(!pGroupingRow->IsExpanded());
-		Invalidate();
+		GridCore->Invalidate();
 	}
 
 	GroupingInfoPressing::GroupingInfoPressing(_GridControl^ gridControl) 
@@ -1863,7 +1868,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			m_cursor = Cursors::Remove;
 			break;
 		}
-		Invalidate();
+		GridCore->Invalidate();
 	}
 
 	void GroupingInfoPressing::OnMouseUp(_Point location, HitTest /*hitTest*/, IStateChangeService^ /*service*/)
@@ -1878,7 +1883,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		}
 
 		GridCore->SetMouseUnpressed();
-		Invalidate();
+		GridCore->Invalidate();
 	}
 
 	void GroupingInfoPressing::OnMouseDragEnd(bool cancel, HitTest /*hitTest*/)
@@ -2097,7 +2102,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		{
 			m_pRow->SetFit();
 		}
-		Invalidate();
+		GridCore->Invalidate();
 	}
 
 	void RowResizing::OnPaintAdornments(_Graphics^ g, _Rectangle% displayRectangle)
@@ -2114,10 +2119,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 		if(oldY != m_resizingLocation)
 		{
-			int y1, y2;
-			y1 = System::Math::Min(oldY, m_resizingLocation) - 1;
-			y2 = System::Math::Max(oldY, m_resizingLocation) + 1;
-			Invalidate(GridControl->DisplayRectangle.Left, y1, GridControl->DisplayRectangle.Right, y2);
+			GridCore->Invalidate();
 		}
 	}
 
@@ -2147,17 +2149,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 				if(y == int::MaxValue)
 					y = 0;
-				Invalidate(GridControl->DisplayRectangle.Left, y, GridControl->DisplayRectangle.Right, GridControl->DisplayRectangle.Bottom);
+				GridCore->Invalidate(GridControl->DisplayRectangle.Left, y, GridControl->DisplayRectangle.Right, GridControl->DisplayRectangle.Bottom);
 			}
 			else
 			{
 				m_pRow->SetHeight(nNewHeight);
-				Invalidate(GridControl->DisplayRectangle.Left, m_pRow->GetY(), GridControl->DisplayRectangle.Right, GridControl->DisplayRectangle.Bottom);
+				GridCore->Invalidate(GridControl->DisplayRectangle.Left, m_pRow->GetY(), GridControl->DisplayRectangle.Right, GridControl->DisplayRectangle.Bottom);
 			}
 		}
 		else
 		{
-			Invalidate();
+			GridCore->Invalidate();
 		}
 	}
 } /*namespace GridState*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

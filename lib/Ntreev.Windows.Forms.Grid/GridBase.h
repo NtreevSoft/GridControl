@@ -68,20 +68,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #endif
 		property _GridControl^ GridControl 
 		{
-
 			virtual _GridControl^ get() sealed { return m_gridControl; }
 		internal:
 			void set(_GridControl^ value);
 		}
 
 	internal: // methods
-		void Invalidate();
-
-		//void InvalidateCell(const GrCell* pCell);
-
-		void Invalidate(_Rectangle rectangle);
-
-		void Invalidate(int left, int top, int right, int bottom);
 
 	internal: // properties
 		property GrGridCore* GridCore

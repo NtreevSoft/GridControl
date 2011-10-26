@@ -365,7 +365,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			throw gcnew System::ArgumentOutOfRangeException("width", "width는 0보다 커야 합니다.");
 		
 		m_pColumn->SetWidth(width);
-		Invalidate(this);
 	}
 
 	int Column::MinWidth::get()
@@ -406,7 +405,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void Column::IsVisible::set(bool value)
 	{
 		m_pColumn->SetVisible(value);
-		Invalidate();
 	}
 
 	bool Column::IsMovable::get()
@@ -530,7 +528,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void Column::SortType::set(_SortType value)
 	{
 		m_pColumn->SetSortType((GrSort::Type)value);
-		Invalidate();
 	}
 
 	System::Collections::IComparer^ Column::SortComparer::get()
@@ -590,7 +587,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void Column::CellAlignment::set(_StringAlignment value)
 	{
 		m_pColumn->SetItemHorzAlign((GrHorzAlign)value);
-		Invalidate();
 	}
 
 	_StringAlignment Column::CellLineAlignment::get()
@@ -602,7 +598,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void Column::CellLineAlignment::set(_StringAlignment value)
 	{
 		m_pColumn->SetItemVertAlign((GrVertAlign)value);
-		Invalidate();
 	}
 
 	bool Column::IsSelected::get()

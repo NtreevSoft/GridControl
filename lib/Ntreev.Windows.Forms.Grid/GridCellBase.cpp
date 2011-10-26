@@ -48,7 +48,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void CellBase::BackColor::set(_Color color)
 	{
 		m_pCell->SetBackColor(color);
-		Invalidate(this);
 	}
 
 	_Color CellBase::ForeColor::get()
@@ -59,7 +58,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void CellBase::ForeColor::set(_Color color)
 	{
 		m_pCell->SetForeColor(color);
-		Invalidate(this);
 	}
 
 	_Font^ CellBase::Font::get()
@@ -72,7 +70,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		GrFont* pFont = GridCore->GetFont(font->ToHfont().ToPointer());
 		m_pCell->SetFont(pFont);
-		Invalidate(this);
 	}
 
 	bool CellBase::IsDisplayable::get()
@@ -83,13 +80,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void CellBase::ResetBackColor()
 	{
 		m_pCell->SetBackColor(GrColor::Empty);
-		Invalidate(this);
 	}
 
 	void CellBase::ResetForeColor()
 	{
 		m_pCell->SetForeColor(GrColor::Empty);
-		Invalidate(this);
 	}
 
 	bool CellBase::ShouldSerializeForeColor()

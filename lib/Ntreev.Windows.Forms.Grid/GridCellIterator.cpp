@@ -87,7 +87,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		Focuser->Set(pFocused);
 
 		HorizontalScroll->DoScroll(_ScrollEventType::First);
-		Invalidate();
 	}
 
 	void CellIterator::LastCell(_SelectionRange range)
@@ -125,7 +124,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		Focuser->Set(pFocused);
 
 		HorizontalScroll->DoScroll(_ScrollEventType::Last);
-		Invalidate();
 	}
 
 	void CellIterator::PageUp(_SelectionRange range)
@@ -350,7 +348,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		Focuser->Set(pFocused);
 
 		HorizontalScroll->EnsureVisible(pColumn);
-		Invalidate();
 	}
 
 	void CellIterator::MoveRight(_SelectionRange range)
@@ -393,7 +390,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		Focuser->Set(pFocused);
 
 		HorizontalScroll->EnsureVisible(pColumn);
-		Invalidate();
 	}
 
 	
@@ -438,7 +434,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			break;
 		}
 		Selector->SetSelectionGroup(pDataRow);
-		Invalidate();
 	}
 
 	void CellIterator::SelectMulti(IDataRow* pBegin, IDataRow* pEnd)
@@ -497,7 +492,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			}
 			break;
 		}
-		Invalidate();
 	}
 
 	void CellIterator::gridControl_OnFocusedCellChanged(object^ /*sender*/, CellEventArgs^ e)

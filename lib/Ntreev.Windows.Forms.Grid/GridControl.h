@@ -1838,6 +1838,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 컨트롤이 선택되면 true이고, 그렇지 않으면 false입니다.
 		/// </returns>
 		virtual bool ProcessTabKey(bool forward) override;
+
+#ifdef _DEBUG
+		virtual void OnInvalidated(System::Windows::Forms::InvalidateEventArgs^ e) override;
+#endif
 		
 	private: // methods
 		void SetNativeEvent(bool attached);

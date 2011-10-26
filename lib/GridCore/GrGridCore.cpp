@@ -32,6 +32,9 @@ class GrDefaultInvalidator : public GrGridInvalidator
 public:
 	void Invalidate() {};
 	void Invalidate(int /*x*/, int /*y*/, int /*width*/, int /*height*/) {};
+	void Lock() {};
+	void Unlock() {};
+	void Reset() {};
 
 };
 
@@ -472,6 +475,7 @@ GrRect GrGridCore::GetDisplayableRect() const
 void GrGridCore::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const
 {
 	m_pRootRow->Render(pRenderer, pClipping);
+	GetInvalidator()->Reset();
 }
 
 bool GrGridCore::CanBeGrouped() const
@@ -522,6 +526,21 @@ void GrGridCore::Invalidate(int x, int y, int width, int height)
 void GrGridCore::Invalidate(const GrRect& rect)
 {
 	GetInvalidator()->Invalidate(rect);	
+}
+
+void GrGridCore::LockInvalidate()
+{
+	GetInvalidator()->Lock();
+}
+
+void GrGridCore::UnlockInvalidate()
+{
+	GetInvalidator()->Unlock();
+}
+
+void GrGridCore::ResetInvalidate()
+{
+	GetInvalidator()->Reset();
 }
 
 void GrGridCore::ShowClippedText(bool bShow)

@@ -138,7 +138,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		_ScrollEventArgs se(scrollEventType, oldValue, newValue, ScrollOrientation);
 		m_scrollProperties->Value = newValue;
 		GridControl->InvokeScroll(%se);
-		Invalidate();
 	}
 
 	bool ScrollProperty::DoScroll(int value)

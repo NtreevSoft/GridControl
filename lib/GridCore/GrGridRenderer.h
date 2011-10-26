@@ -87,6 +87,10 @@ public:
 	virtual void Invalidate() = 0;
 	virtual void Invalidate(int x, int y, int width, int height) = 0;
 
+	virtual void Lock() = 0;
+	virtual void Unlock() = 0;
+	virtual void Reset() = 0;
+
 	void Invalidate(const GrRect& rect) { Invalidate(rect.left, rect.top, rect.GetWidth(), rect.GetHeight()); }
 };
 

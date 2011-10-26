@@ -224,6 +224,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		}
 
 	private:
+		void gridControl_CurrencyManagerChanged(object^ sender, CurrencyManagerChangedEventArgs^ e);
+
+	private:
 		GrCell* m_pCell;
 	};
 
