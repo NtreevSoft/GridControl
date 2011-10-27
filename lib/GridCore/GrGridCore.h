@@ -161,6 +161,8 @@ private:
 	void					focusSetter_FocusChanging(GrObject* pSender, GrEventArgs* e);
 	void					focusSetter_FocusChanged(GrObject* pSender, GrEventArgs* e);
 
+	void					columnList_ColumnInserted(GrObject* pSender, GrColumnEventArgs* e);
+	void					columnList_ColumnRemoved(GrObject* pSender, GrColumnEventArgs* e);
 	void					columnList_ColumnWidthChanged(GrObject* pSender, GrColumnEventArgs* e);
 	void					columnList_ColumnWordwrapChanged(GrObject* pSender, GrColumnEventArgs* e);
 	void					columnList_ColumnHorzAlignChanged(GrObject* pSender, GrColumnEventArgs* e);

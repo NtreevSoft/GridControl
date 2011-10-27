@@ -51,66 +51,250 @@ typedef unsigned char	byte;
 #define DEF_LEADING			5
 
 #ifdef _MANAGED
-#define Thow_Exception(_message) throw gcnew System::Exception(_message)
+#define _Exception(_message) gcnew System::Exception(_message)
 #else
-#define Thow_Exception(_message) throw new std::exception(_message)
+#define _Exception(_message) new std::exception(_message)
 #endif
 
 #ifdef _MANAGED
-#define Thow_Exception_(_type, _message) throw gcnew System::_type(_message)
+#define _Exception_(_type, _message) gcnew System::_type(_message)
 #else
-#define Thow_Exception_(_type, _message) throw new std::exception(_message)
+#define _Exception_(_type, _message) new std::exception(_message)
 #endif
 
-#define for_stl_const(_type, _var, _itor) for(_type::const_iterator _itor = (_var).begin() ; _itor != (_var).end() ; _itor++)
-#define for_stl(type, var, itor) for(type::iterator itor = (var).begin() ; itor != (var).end() ; itor++)
-#define for_stl_const_ptr(type, var_ptr, itor) for(type::const_iterator itor = var_ptr->begin() ; itor != var_ptr->end() ; itor++)
-#define for_stl_ptr(type, var_ptr, itor) for(type::iterator itor = var_ptr->begin() ; itor != var_ptr->end() ; itor++)
-
-#define for_stl_const_reverse(type, var, itor) for(type::const_reverse_iterator itor = (var).rbegin() ; itor != (var).rend() ; itor++)
-#define for_stl_reverse(type, var, itor) for(type::reverse_iterator itor = (var).rbegin() ; itor != (var).rend() ; itor++)
-#define for_stl_const_reverse_ptr(type, var_ptr, itor) for(type::const_reverse_iterator itor = var_ptr->rbegin() ; itor != var_ptr->rend() ; itor++)
-#define for_stl_reverse_ptr(type, var_ptr, itor) for(type::reverse_iterator itor = var_ptr->rbegin() ; itor != var_ptr->rend() ; itor++)
-
-#define for_stl_map(key, type, var, itor) for(map<key, type>::iterator itor = (var).begin() ; itor != (var).end() ; itor++)
-#define for_stl_map_const(key, type, var, itor) for(map<key, type>::const_iterator itor = (var).begin() ; itor != (var).end() ; itor++)
-#define for_stl_map_ptr(key, type, var_ptr, itor) for(map<key, type>::iterator itor = var_ptr->begin() ; itor != var_ptr->end() ; itor++)
-#define for_stl_map_const_ptr(key, type, var_ptr, itor) for(map<key, type>::const_iterator itor = var_ptr->begin() ; itor != var_ptr->end() ; itor++)
-
 template<typename T>
-class Iterator 
+class GrEnumerator 
 {
 public:
-	Iterator(const T& container)
-		: m_container(container)
+	typedef typename T::value_type	ValueType;
+	typedef typename T::size_type	SizeType;
+	typedef typename T::iterator	IteratorType;
+
+public:
+	GrEnumerator(T& container)
+		: m_container(&container), m_index((SizeType)-1), m_iterator(m_container->begin())
 	{
-		m_iterator = m_container.begin();
+		
 	}
 
-	typedef typename T::value_type ValueType;
-
-	operator ValueType () const
+	ValueType& GetValue()
 	{
-		return *m_iterator;
+		return m_value;
 	}
 
-	bool IsEnd() const
+	operator ValueType& ()
 	{
-		return m_iterator != m_container.end();
+		return m_value;
 	}
 
-	void Next()
+	ValueType& operator ->()
 	{
+		return m_value;
+	}
+
+	bool Next()
+	{
+		if(m_iterator == m_container->end())
+			return false;
+		m_value = *m_iterator;
 		m_iterator++;
+		m_index++;
+		return true;
+	}
+
+	SizeType GetIndex() const
+	{
+		return m_index;
 	}
 
 private:
-	const T& m_container;
-	typename T::const_iterator m_iterator;
+	T*				m_container;
+	IteratorType	m_iterator;
+	ValueType		m_value;
+	SizeType		m_index;
 };
 
-#define for_each_stl(_container_type, _container_instance, _value_name) \
-	for(Iterator< _container_type > _value_name(_container_instance) ; _value_name.IsEnd() == false ; _value_name.Next() )
+template<typename T>
+class GrEnumerator_c
+{
+public:
+	typedef typename T::value_type		ValueType;
+	typedef typename T::size_type		SizeType;
+	typedef typename T::const_iterator	IteratorType;
+
+public:
+	GrEnumerator_c(const T& container)
+		: m_container(&container), m_index((SizeType)-1), m_iterator(m_container->begin())
+	{
+		
+	}
+
+	const ValueType& GetValue() const
+	{
+		return m_value;
+	}
+
+	operator const ValueType& () const
+	{
+		return m_value;
+	}
+
+	const ValueType& operator ->() const
+	{
+		return m_value;
+	}
+
+	bool Next()
+	{
+		if(m_iterator == m_container->end())
+			return false;
+		m_value = *m_iterator;
+		m_iterator++;
+		m_index++;
+		return true;
+	}
+
+	SizeType GetIndex() const
+	{
+		return m_index;
+	}
+
+private:
+	const T*		m_container;
+	IteratorType	m_iterator;
+	ValueType		m_value;
+	SizeType		m_index;
+};
+
+template<typename T, typename U>
+class GrEnumerator< std::map<T, U> >
+{
+public:
+	typedef typename std::map<T, U>				ContainerType;
+	typedef typename ContainerType::key_type	KeyType;
+	typedef typename ContainerType::mapped_type	ValueType;
+	typedef typename ContainerType::size_type	SizeType;
+	typedef typename ContainerType::iterator	IteratorType;
+
+public:
+	GrEnumerator(ContainerType& container)
+		: m_container(&container), m_index((SizeType)-1), m_iterator(m_container->begin())
+	{
+		
+	}
+
+	operator ValueType& ()
+	{
+		return (*m_value).second;
+	}
+
+	ValueType& operator ->() 
+	{
+		return (*m_value).second;
+	}
+
+	bool Next()
+	{
+		if(m_iterator == m_container->end())
+			return false;
+		m_value = m_iterator;
+		m_iterator++;
+		m_index++;
+		return true;
+	}
+
+	KeyType& GetKey() const
+	{
+		return (*m_value).first;
+	}
+
+	ValueType& GetValue() const
+	{
+		return (*m_value).second;
+	}
+
+	SizeType GetIndex() const
+	{
+		return m_index;
+	}
+
+private:
+	ContainerType*	m_container;
+	IteratorType	m_value;
+	IteratorType	m_iterator;
+	SizeType		m_index;
+};
+
+template<typename T, typename U>
+class GrEnumerator_c< std::map<T, U> >
+{
+public:
+	typedef typename std::map<T, U>					ContainerType;
+	typedef typename ContainerType::key_type		KeyType;
+	typedef typename ContainerType::mapped_type		ValueType;
+	typedef typename ContainerType::size_type		SizeType;
+	typedef typename ContainerType::const_iterator	IteratorType;
+
+public:
+	GrEnumerator_c(const ContainerType& container)
+		: m_container(&container), m_index((SizeType)-1), m_iterator(m_container->begin())
+	{
+		
+	}
+
+	operator const ValueType& ()
+	{
+		return (*m_value).second;
+	}
+
+	const ValueType& operator ->() 
+	{
+		return (*m_value).second;
+	}
+
+	bool Next()
+	{
+		if(m_iterator == m_container->end())
+			return false;
+		m_value = m_iterator;
+		m_iterator++;
+		m_index++;
+		return true;
+	}
+
+	const KeyType& GetKey() const
+	{
+		return (*m_value).first;
+	}
+
+	const ValueType& GetValue() const
+	{
+		return (*m_value).Second;
+	}
+
+	SizeType GetIndex() const
+	{
+		return m_index;
+	}
+
+private:
+	const ContainerType*	m_container;
+	IteratorType	m_value;
+	IteratorType	m_iterator;
+	SizeType		m_index;
+};
+
+#define for_each(_container_type, _container_instance, _value_name) \
+	for(GrEnumerator< _container_type > _value_name(_container_instance) ;  _value_name.Next() == true ;  )
+
+#define for_each_const(_container_type, _container_instance, _value_name) \
+	for(GrEnumerator_c< _container_type > _value_name(_container_instance) ;  _value_name.Next() == true ;  )
+
+#define for_each_map(_key_type, _value_type, _container_instance, _value_name) \
+	for(GrEnumerator< std::map<_key_type, _value_type> > _value_name(_container_instance) ;  _value_name.Next() == true ;  )
+
+#define for_each_map_const(_key_type, _value_type, _container_instance, _value_name) \
+	for(GrEnumerator_c< std::map<_key_type, _value_type> > _value_name(_container_instance) ;  _value_name.Next() == true ;  )
 
 class GrState
 {

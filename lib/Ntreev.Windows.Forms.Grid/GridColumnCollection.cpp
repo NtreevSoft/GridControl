@@ -256,9 +256,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		m_pColumnList->Update(true);
 
-		for_stl_const(std::vector<GrColumn*>, groupings, itor)
+		for_each(std::vector<GrColumn*>, groupings, value)
 		{
-			std::vector<GrColumn*>::value_type value = *itor;
 			value->SetGrouped(false);
 		}
 
@@ -271,9 +270,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 				m_pColumnList->AddColumn(column->NativeRef);
 		}
 
-		for_stl_const(std::vector<GrColumn*>, groupings, itor)
+		for_each(std::vector<GrColumn*>, groupings, value)
 		{
-			std::vector<GrColumn*>::value_type value = *itor;
 			if(value->GetIndex() == INVALID_INDEX)
 				continue;
 			value->SetGrouped(true);

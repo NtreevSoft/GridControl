@@ -165,7 +165,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(pColumn->NeedToEnsure() == false)
 			return;
 		
-		uint nVisibleIndex = pColumn->GetScrollableIndex();
+		uint nVisibleIndex = pColumn->GetUnfrozenIndex();
 
 		uint nNewValue;
 		if(nVisibleIndex < (uint)Value)
@@ -246,13 +246,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		//m_scrollProperties->Visible = nMinWidth > nDisplayWidth ? true : false;
 		int nDisplayWidth = GridControl->DisplayRectangle.Width - pColumnList->GetUnfrozenX();
 
-		uint nScrollableCount = pColumnList->GetUnfrozenColumnCount();
+		uint nUnfrozenCount = pColumnList->GetUnfrozenColumnCount();
 
 		//if(nDisplayWidth > 0 && m_scrollProperties->Visible == true)
 		{
 			int nCountPerPage = 0;
 			int nTempWidth = nDisplayWidth;
-			for(int i=nScrollableCount-1 ; i>=0 ; i--)
+			for(int i=nUnfrozenCount-1 ; i>=0 ; i--)
 			{
 				const GrColumn* pCol = pColumnList->GetUnfrozenColumn(i);
 				int nColWidth = pCol->GetWidth();
@@ -268,11 +268,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			}
 			nCountPerPage = System::Math::Max(1, nCountPerPage);
 
-			int nLargeChange = (int)((float)nScrollableCount * (float)nDisplayWidth / (float)nMinWidth);
+			int nLargeChange = (int)((float)nUnfrozenCount * (float)nDisplayWidth / (float)nMinWidth);
 			nLargeChange = System::Math::Max(1, nLargeChange);
 
 			m_scrollProperties->Minimum = 0;
-			m_scrollProperties->Maximum = nScrollableCount - nCountPerPage + nLargeChange - 1;
+			m_scrollProperties->Maximum = nUnfrozenCount - nCountPerPage + nLargeChange - 1;
 			m_scrollProperties->LargeChange = nLargeChange;
 		}
 	}

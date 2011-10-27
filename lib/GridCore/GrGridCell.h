@@ -387,6 +387,7 @@ typedef bool (*FuncComparer)(GrGridCore* pGridCore, const GrDataRow* pRow1, cons
 
 class GrColumn : public GrCell
 {
+	typedef GrEventBase<GrEventArgs, GrColumn> _GrEvent;
 public:
 	GrColumn();
 
@@ -408,7 +409,7 @@ public:
 	uint						GetDisplayIndex() const;
 	uint						GetVisibleIndex() const;
 	uint						GetFrozenIndex() const;
-	uint						GetScrollableIndex() const;
+	uint						GetUnfrozenIndex() const;
 	uint						GetIndex() const;
 	uint						GetColumnID() const;
 
@@ -507,6 +508,10 @@ public:
 	void						RenderTooltip(GrGridRenderer* pRenderer, GrPoint ptStart) const;
 	void						RenderTextEllipsis(GrGridRenderer* pRenderer, GrColor foreColor, GrRect* pDisplayRect) const;
 
+public:
+	_GrEvent					GroupingChanged;	
+
+
 protected:
 	virtual void				OnGridCoreAttached();
 	virtual void				OnGridCoreDetached();
@@ -562,6 +567,7 @@ private:
 	bool						m_bSelected;
 	bool						m_bFullSelected;
 	bool						m_bFitting;
+	bool						m_bGrouped;
 
 	uint						m_nDisplayIndex;
 	uint						m_nVisibleIndex;
@@ -1107,6 +1113,7 @@ public:
 	_GrColumnEvent				ColumnHorzAlignChanged;
 	_GrColumnEvent				ColumnVertAlignChanged;
 	_GrColumnEvent				ColumnPaddingChanged;
+	_GrColumnEvent				ColumnGroupingChanged;
 
 protected:
 	virtual void				OnPositionUpdated(GrPoint pt);
@@ -1124,6 +1131,7 @@ protected:
 	virtual void 				OnColumnHorzAlignChanged(GrColumnEventArgs* e);
 	virtual void 				OnColumnVertAlignChanged(GrColumnEventArgs* e);
 	virtual void 				OnColumnPaddingChanged(GrColumnEventArgs* e);
+	virtual void				OnColumnGroupingChanged(GrColumnEventArgs* e);
 
 	void						BuildVisibleColumnList();
 
@@ -1131,6 +1139,8 @@ private:
 	void						groupingList_Changed(GrObject* pSender, GrEventArgs* e);
 	void						gridCore_FocusChanged(GrObject* pSender, GrEventArgs* e);
 	void						gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
+
+	void						column_GroupingChanged(GrObject* pSender, GrEventArgs* e);
 
 private:
 	bool						IsColumnSelecting(GrColumn* pColumn) const;
@@ -1355,8 +1365,6 @@ public:
 	GrGroupingInfo*				GetGrouping(uint nLevel) const;
 	GrGroupingInfo*				GetGrouping(GrColumn* pColumn) const;
 
-	void						ChangeGroupingInfo(GrGroupingInfo* pGroupingInfo, GrGroupingInfo* pWhere);
-
 	void						ExpandGrouping(uint nLevel, bool bExpand);
 	void						SetGroupingSortState(uint nLevel, GrSort::Type sortType);
 
@@ -1369,7 +1377,7 @@ public:
 	_GrGroupingEvent			Expanded;
 	_GrGroupingEvent			SortChanged;
 
-	void						NotifyGroupingChanged(GrGroupingInfo* pGroupingInfo);
+	
 	void						NotifyExpanded(GrGroupingInfo* pGroupingInfo);
 	void						NotifySortChanged(GrGroupingInfo* pGroupingInfo);
 
@@ -1383,7 +1391,17 @@ protected:
 
 private:
 	void						gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
+	void						gridCore_Created(GrObject* pSender, GrEventArgs* e);
 
+	void						columnList_ColumnInserted(GrObject* pSender, GrColumnEventArgs* e);
+	void						columnList_ColumnRemoved(GrObject* pSender, GrColumnEventArgs* e);
+	void						columnList_ColumnGroupingChanged(GrObject* pSender, GrColumnEventArgs* e);
+
+	void						groupingInfo_LevelChanged(GrObject* pSender, GrEventArgs* e);
+
+	void						ResetGroupingLevel();
+	void						AddGrouping(GrGroupingInfo* pGroupingInfo);
+	void						RemoveGrouping(GrGroupingInfo* pGroupingInfo);
 private:
 	_Groupings					m_vecGroupings;
 	bool						m_bEnableGrouping;
@@ -1392,6 +1410,7 @@ private:
 class GrGroupingInfo : public GrCell
 {
 	typedef std::map<uint, GrGroupingRow*> _MapGroupingRows;
+	typedef GrEventBase<GrEventArgs, GrGroupingInfo> _GrEvent;
 public:
 	GrGroupingInfo(GrColumn* pColumn);
 
@@ -1407,6 +1426,9 @@ public:
 	GrSort::Type				GetSortType() const;
 
 	uint						GetGroupingLevel() const;
+	void						SetGroupingLevel(uint level);
+
+	void						SetText();
 
 public: 
 	virtual	GrCellType			GetCellType() const { return GrCellType_GroupingInfo; }
@@ -1428,12 +1450,16 @@ public:
 	virtual const GrRow*		GetRow() const { return m_pGroupingList; }
 	virtual	GrRow*				GetRow() { return m_pGroupingList; }
 
+public:
+	_GrEvent					LevelChanged;
+
 protected:
 	virtual void				OnGridCoreAttached();
 	virtual void				OnGridCoreDetached();
 
 private:
 	void						SetPosition(GrPoint pt);
+	void						SetGroupingLevelCore(uint level);
 
 private:
 	GrGroupingList*				m_pGroupingList;
@@ -1444,7 +1470,7 @@ private:
 	GrSort::Type				m_sortType;
 
 	_MapGroupingRows			m_mapGroupingRows;
-	uint						m_nGroupingLevel;
+	uint						m_nLevel;
 
 	friend class GrGroupingList;
 };

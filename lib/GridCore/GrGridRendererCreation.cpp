@@ -47,6 +47,6 @@ GrGridRenderer* GrGridRendererCreator(void* pWindowHandle)
 #elif __GRAPHIC_DEVICE == _GD_DIRECT3D
 	return new GrGridRendererDirect3D(pWindowHandle);
 #else
-	throw new std::exception();
+	throw _Exception("");
 #endif
 }

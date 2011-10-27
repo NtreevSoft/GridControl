@@ -156,10 +156,9 @@ void GrTextUtil::DoMultilineWordWrap(std::vector<GrLineDesc>* pLines, const std:
 	int pos=0;
 	GrLineDesc cl;
 	memset(&cl, 0, sizeof(GrLineDesc));
-	for_stl_const(WordList, words, itor)
+	for_each(WordList, words, itor)
 	{
-		WordList::value_type value = *itor;
-
+		WordList::value_type& value = itor.GetValue();
 		if(cl.nWidth + value.validWidth > nCellWidth || strText.at(value.pos) == L'\n')
 		{
 			pLines->push_back(cl);

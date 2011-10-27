@@ -59,7 +59,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 			uint nFrozenColumnCount		= pColumnList->GetFrozenColumnCount();
 
-			uint nIndex = pColumn->GetScrollableIndex();
+			uint nIndex = pColumn->GetUnfrozenIndex();
 			if(nIndex == 0 && nFrozenColumnCount > 0)
 			{
 				pColumn = pColumnList->GetFrozenColumn(0);

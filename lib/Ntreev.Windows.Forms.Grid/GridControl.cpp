@@ -586,7 +586,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void GridControl::UpdateGridRect()
 	{
-		//m_pGridCore->SetDisplayRect(DisplayRectangle);
+		m_pGridCore->SetDisplayRect(this->DisplayRectangle);
 
 		if(m_pGridCore->Update() == true)
 		{
@@ -627,7 +627,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		m_states->ChangeDefaultState();
 		UserControl::OnSizeChanged(e);
-		m_pGridCore->SetDisplayRect(this->DisplayRectangle);
 	}
 
 	void GridControl::OnClientSizeChanged(_EventArgs^ e)
@@ -853,6 +852,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 			m_insertionRow->SetDefaultValue();
 		}
+		m_pGridCore->Invalidate();
 	}
 
 	void GridControl::currencyManager_ListChanged(object^ /*sender*/, System::ComponentModel::ListChangedEventArgs^ e)

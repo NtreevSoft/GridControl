@@ -313,15 +313,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 				{
 					m_defaultValue = attr->Value;
 				}
-				else if(DataType->IsEnum == true)
+				else if(value->PropertyType->IsEnum == true)
 				{
 					System::Array^ values = System::Enum::GetValues(DataType);
 					if(values->Length > 0)
 						m_defaultValue = values->GetValue(0);
 				}
-				else if(DataType->IsValueType == true)
+				else if(value->PropertyType->IsValueType == true)
 				{
-					m_defaultValue = System::Activator::CreateInstance(DataType);
+					m_defaultValue = System::Activator::CreateInstance(value->PropertyType);
 				}
 			}
 
@@ -557,8 +557,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	object^ Column::DefaultValue::get()
 	{
-		if(m_defaultValue == nullptr)
-			return nullptr;
+		if(m_defaultValue == nullptr || m_defaultValue == System::DBNull::Value)
+			return m_defaultValue;
 
 		if(m_defaultValue->GetType() == this->DataType)
 			return m_defaultValue;

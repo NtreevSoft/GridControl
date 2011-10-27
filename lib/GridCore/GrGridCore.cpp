@@ -159,7 +159,7 @@ void GrGridCore::OnFontChanged()
 
 void SignalFunc(int /*sigNum*/)
 {
-	throw new std::exception();
+	throw _Exception("");
 }
 
 GrGridCore::GrGridCore(void)
@@ -244,6 +244,8 @@ GrGridCore::GrGridCore(void)
 	m_pRootRow->AddChild(m_pDataRowList);
 
 	m_pGroupingList->Changed.Add(this, &GrGridCore::groupingList_Changed);
+	m_pColumnList->ColumnInserted.Add(this, &GrGridCore::columnList_ColumnInserted);
+	m_pColumnList->ColumnRemoved.Add(this, &GrGridCore::columnList_ColumnRemoved);
 	m_pColumnList->ColumnWidthChanged.Add(this, &GrGridCore::columnList_ColumnWidthChanged);
 	m_pColumnList->ColumnWordwrapChanged.Add(this, &GrGridCore::columnList_ColumnWordwrapChanged);
 	m_pColumnList->ColumnHorzAlignChanged.Add(this, &GrGridCore::columnList_ColumnHorzAlignChanged);
@@ -275,7 +277,7 @@ GrGridCore::~GrGridCore(void)
 	delete m_pDefaultInvalidator;
 
 	if(m_nCreatedCell != 0)
-		throw new std::exception("Some obejcts are not deleted");
+		throw _Exception("Some obejcts are not deleted");
 }
 
 void GrGridCore::Reserve(uint nColumnCount, uint nRowCount)
@@ -546,6 +548,20 @@ void GrGridCore::ResetInvalidate()
 void GrGridCore::ShowClippedText(bool bShow)
 {
 	m_bShowClippedText = bShow;
+}
+
+void GrGridCore::columnList_ColumnInserted(GrObject* /*pSender*/, GrColumnEventArgs* /*e*/)
+{
+	m_bNeedToColumnClipping = true;
+	m_pTextUpdater->AddTextBound(m_pCaption);
+	m_pTextUpdater->AddTextBound(m_pGroupingList);
+}
+
+void GrGridCore::columnList_ColumnRemoved(GrObject* /*pSender*/, GrColumnEventArgs* /*e*/)
+{
+	m_bNeedToColumnClipping = true;
+	m_pTextUpdater->AddTextBound(m_pCaption);
+	m_pTextUpdater->AddTextBound(m_pGroupingList);
 }
 
 void GrGridCore::columnList_ColumnHorzAlignChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)

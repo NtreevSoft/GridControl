@@ -170,9 +170,9 @@ GrFontManager::GrFontManager()
 
 GrFontManager::~GrFontManager()
 {
-	for_stl(_MapFontCaches, m_mapFontCache, itor)
+	for_each(_MapFontCaches, m_mapFontCache, value)
 	{
-		delete (*itor).second;
+		delete value.GetValue();
 	}
 }
 

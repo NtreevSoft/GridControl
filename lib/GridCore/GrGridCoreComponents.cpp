@@ -261,13 +261,11 @@ bool GrHitTester::Test(GrRect rtSelection, GrItems* pTested) const
 	if(dataColumns.size() == 0 || dataRows.size() == 0)
 		return false;
 
-	for_stl_const(GrDataRows, dataRows, itor)
+	for_each(GrDataRows, dataRows, dataRow)
 	{
-		GrDataRow* pDataRow = *itor;
-		for_stl_const(GrColumns, dataColumns, itor_)
+		for_each(GrColumns, dataColumns, column)
 		{
-			GrColumn* pColumn = *itor_;
-			pTested->insert(pDataRow->GetItem(pColumn));
+			pTested->insert(dataRow->GetItem(column));
 		}
 	}
 	return true;
@@ -310,7 +308,7 @@ void GrItemSelector::OnGridCoreAttached()
 void GrItemSelector::SelectItem(GrItem* pItem, GrSelectionType selectType)
 {
 	if(pItem == NULL)
-		throw new std::exception("item is null");
+		throw _Exception("item is null");
 
 	GrItems items;
 	items.insert(pItem);
@@ -337,31 +335,31 @@ void GrItemSelector::SelectItems(const GrItems* pItems, GrSelectionType selectTy
 					inserter(difference, difference.begin())
 					);
 
-				for_stl_const(GrItems, difference, itor)
+				for_each(GrItems, difference, value)
 				{
-					DoDeselect(*itor);
+					DoDeselect(value);
 				}
 			}
 
-			for_stl_const_ptr(GrItems, pItems, itor)
+			for_each_const(GrItems, *pItems, value)
 			{
-				DoSelect(*itor);
+				DoSelect(value);
 			}
 		}
 		break;
 	case GrSelectionType_Add:
 		{
-			for_stl_const_ptr(GrItems, pItems, itor)
+			for_each_const(GrItems, *pItems, value)
 			{
-				DoSelect(*itor);
+				DoSelect(value);
 			}
 		}
 		break;
 	case GrSelectionType_Remove:
 		{
-			for_stl_const_ptr(GrItems, pItems, itor)
+			for_each_const(GrItems, *pItems, value)
 			{
-				DoDeselect(*itor);
+				DoDeselect(value);
 			}
 		}
 		break;
@@ -444,9 +442,8 @@ void GrItemSelector::SelectDataRows(const GrDataRows* pDataRows, GrSelectionType
 	GrColumnList* pColumnList = m_pGridCore->GetColumnList();
 
 	GrItems items;
-	for_stl_const_ptr(GrDataRows, pDataRows, itor)
+	for_each_const(GrDataRows, *pDataRows, value)
 	{
-		GrDataRows::value_type value = *itor;
 		for(uint i=0 ; i<pColumnList->GetVisibleColumnCount() ; i++)
 		{
 			GrColumn* pColumn = pColumnList->GetVisibleColumn(i);
@@ -460,7 +457,7 @@ void GrItemSelector::SelectDataRows(const GrDataRows* pDataRows, GrSelectionType
 void GrItemSelector::SelectDataRows(GrDataRow* pFrom, GrDataRow* pTo, GrSelectionType selectType)
 {
 	if(pFrom->GetSelectionGroup() != pTo->GetSelectionGroup())
-		throw new std::exception();
+		throw _Exception("");
 
 	GrIndexRange indexRange(pFrom->GetVisibleDataRowIndex(), pTo->GetVisibleDataRowIndex());
 
@@ -478,7 +475,7 @@ void GrItemSelector::SelectDataRows(GrDataRow* pFrom, GrDataRow* pTo, GrSelectio
 void GrItemSelector::SelectDataRows(IDataRow* pFrom, IDataRow* pTo, GrSelectionType selectType)
 {
 	if(pFrom->GetSelectionGroup() != pTo->GetSelectionGroup())
-		throw new std::exception();
+		throw _Exception("");
 
 	GrIndexRange indexRange(pFrom->GetVisibleIndex(), pTo->GetVisibleIndex());
 
@@ -514,9 +511,8 @@ void GrItemSelector::SelectColumns(const GrColumns* pColumns, GrSelectionType se
 {
 	GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
 	GrItems items;
-	for_stl_const_ptr(GrColumns, pColumns, itor)
+	for_each_const(GrColumns, *pColumns, value)
 	{
-		GrColumns::value_type value = *itor;
 		for(uint i=0 ; i<pDataRowList->GetVisibleDataRowCount() ; i++)
 		{
 			GrDataRow* pDataRow = pDataRowList->GetVisibleDataRow(i);
@@ -578,9 +574,9 @@ void GrItemSelector::ClearSelection()
 	BeginSelection();
 
 	GrItems items = m_selectedItems;
-	for_stl_const(GrItems, items, itor)
+	for_each(GrItems, items, value)
 	{
-		DoDeselect(*itor);
+		DoDeselect(value);
 	}
 	m_selectedItems.clear();
 	m_selectedColumns.clear();
@@ -961,7 +957,7 @@ IDataRow* GrItemSelector::GetRowAnchor() const
 		GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
 		uint nVisibleRowCount = pDataRowList->GetVisibleRowCount();
 		if(nVisibleRowCount == 0)
-			throw new std::exception();
+			throw _Exception("");
 
 		return pDataRowList->GetVisibleRow(0);
 	}
@@ -1109,10 +1105,8 @@ void GrTextUpdater::RemoveTextAlign(GrCell* pCell)
 void GrTextUpdater::UpdateTextBound()
 {
 	//uint nSize = m_vecTextBounds.size();
-	for_stl_const(GrCells, m_vecTextBounds, itor)
+	for_each(GrCells, m_vecTextBounds, value)
 	{
-		GrCells::value_type value = *itor;
-
 		value->ComputeTextBound();
 		value->m_bTextBound = false;
 		
@@ -1127,9 +1121,8 @@ void GrTextUpdater::UpdateTextBound()
 
 void GrTextUpdater::UpdateTextAlign()
 {
-	for_stl_const(GrCells, m_vecTextAligns, itor)
+	for_each(GrCells, m_vecTextAligns, value)
 	{
-		GrCells::value_type value = *itor;
 		value->AlignText();
 		value->m_bTextAlign = false;
 	}

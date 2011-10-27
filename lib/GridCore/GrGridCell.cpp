@@ -90,15 +90,13 @@ void GrColumnList::OnGridCoreAttached()
 
 GrColumnList::~GrColumnList()
 {
-	for_stl_const(_Columns, m_vecColumns, itor)
+	for_each(_Columns, m_vecColumns, value)
 	{
-		_Columns::value_type value = *itor; 
 		delete value;
 	}
 
-	for_stl_const(_Columns, m_vecColumnsRemoved, itor)
+	for_each(_Columns, m_vecColumnsRemoved, value)
 	{
-		_Columns::value_type value = *itor;
 		delete value;
 	}
 
@@ -135,7 +133,7 @@ void GrColumnList::AddColumn(GrColumn* pColumn)
 void GrColumnList::InsertColumn(GrColumn* pColumn, uint nIndex)
 {
 	if(pColumn->GetIndex() != INVALID_INDEX)
-		throw new std::exception("이미 등록되어 있습니다");
+		throw _Exception("이미 등록되어 있습니다");
 
 	if(pColumn->GetColumnID() == INVALID_INDEX)
 	{
@@ -163,6 +161,8 @@ void GrColumnList::InsertColumn(GrColumn* pColumn, uint nIndex)
 	GrColumnEventArgs e(pColumn);
 	OnColumnInserted(&e);
 
+	pColumn->GroupingChanged.Add(this, &GrColumnList::column_GroupingChanged);
+
 	m_pGridCore->Invalidate();
 }
 
@@ -185,6 +185,8 @@ void GrColumnList::RemoveColumn(GrColumn* pColumn)
 	m_pGridCore->DetachObject(pColumn);
 
 	SetVisibleChanged();
+
+	pColumn->GroupingChanged.Remove(this, &GrColumnList::column_GroupingChanged);
 
 	GrColumnEventArgs e(pColumn);
 	OnColumnRemoved(&e);
@@ -301,9 +303,8 @@ void GrColumnList::Clip(const GrRect* pDisplayRect, uint nVisibleStart)
 	GrRect rtDisplay	= *pDisplayRect;
 	int nDisplayX		= GetDisplayX() + GetWidth() + m_pGridCore->GetGroupingMargin();
 
-	for_stl(_Columns, m_vecDisplayableColumns, itor)
+	for_each(_Columns, m_vecDisplayableColumns, value)
 	{
-		_Columns::value_type value = *itor;
 		value->SetDisplayable(false);
 	}
 	m_vecDisplayableColumns.clear();
@@ -357,7 +358,7 @@ uint GrColumnList::ClipFrom(const GrRect* pDisplayRect, uint nVisibleFrom) const
 {
 	GrColumn* pColumn = GetUnfrozenColumn(nVisibleFrom);
 	if(pColumn == NULL)
-		throw std::exception("잘못된 인덱스");
+		throw _Exception("잘못된 인덱스");
 
 	int x = pColumn->GetX() + (pDisplayRect->GetWidth() - m_nUnfrozenX);
 
@@ -365,7 +366,7 @@ uint GrColumnList::ClipFrom(const GrRect* pDisplayRect, uint nVisibleFrom) const
 	if(pLastColumn == NULL)
 		return GrUtil::LastIndex(GetUnfrozenColumnCount());
 
-	return pLastColumn->GetScrollableIndex();
+	return pLastColumn->GetUnfrozenIndex();
 }
 
 uint GrColumnList::ClipTo(uint nVisibleTo) const
@@ -417,39 +418,36 @@ bool GrColumnList::MoveToFrozen(GrColumn* pColumn, GrColumn* pWhere)
 	if(pColumn == pWhere)
 		return false;
 
-	_Columns vecFrozens, vecScrollables;
+	_Columns vecFrozens, vecUnfrozens;
 	vecFrozens.reserve(GetColumnCount());
-	vecScrollables.reserve(GetColumnCount());
+	vecUnfrozens.reserve(GetColumnCount());
 
-	for_stl_const(_Columns, m_vecColumns, itor)
+	for_each(_Columns, m_vecColumns, value)
 	{
-		_Columns::value_type value = *itor;
 		if(value == pColumn)
 			continue;
 		if(value->GetFrozen() == true)
 			vecFrozens.push_back(value);
 		else
-			vecScrollables.push_back(value);
+			vecUnfrozens.push_back(value);
 	}
 
 	sort(vecFrozens.begin(), vecFrozens.end(), SortColumn());
-	sort(vecScrollables.begin(), vecScrollables.end(), SortColumn());
+	sort(vecUnfrozens.begin(), vecUnfrozens.end(), SortColumn());
 
 	_Columns::iterator itorWhere = std::find(vecFrozens.begin(), vecFrozens.end(), pWhere);
 	vecFrozens.insert(itorWhere, pColumn);
 	pColumn->m_bFrozen = true;
 
 	int nPriority = 0;
-	for_stl_const(_Columns, vecFrozens, itor)
+	for_each(_Columns, vecFrozens, value)
 	{
-		_Columns::value_type value = *itor;
 		value->SetPriority(nPriority);
 		nPriority++;
 	}
 
-	for_stl_const(_Columns, vecScrollables, itor)
+	for_each(_Columns, vecUnfrozens, value)
 	{
-		_Columns::value_type value = *itor;
 		value->SetPriority(nPriority);
 		nPriority++;
 	}
@@ -467,39 +465,36 @@ bool GrColumnList::MoveToUnfrozen(GrColumn* pColumn, GrColumn* pWhere)
 	if(pColumn == pWhere)
 		return false;
 
-	_Columns vecFrozens, vecScrollables;
+	_Columns vecFrozens, vecUnfrozens;
 	vecFrozens.reserve(GetColumnCount());
-	vecScrollables.reserve(GetColumnCount());
+	vecUnfrozens.reserve(GetColumnCount());
 
-	for_stl_const(_Columns, m_vecColumns, itor)
+	for_each(_Columns, m_vecColumns, value)
 	{
-		_Columns::value_type value = *itor;
 		if(value == pColumn)
 			continue;
 		if(value->GetFrozen() == true)
 			vecFrozens.push_back(value);
 		else
-			vecScrollables.push_back(value);
+			vecUnfrozens.push_back(value);
 	}
 
 	sort(vecFrozens.begin(), vecFrozens.end(), SortColumn());
-	sort(vecScrollables.begin(), vecScrollables.end(), SortColumn());
+	sort(vecUnfrozens.begin(), vecUnfrozens.end(), SortColumn());
 
-	_Columns::iterator itorWhere = std::find(vecScrollables.begin(), vecScrollables.end(), pWhere);
-	vecScrollables.insert(itorWhere, pColumn);
+	_Columns::iterator itorWhere = std::find(vecUnfrozens.begin(), vecUnfrozens.end(), pWhere);
+	vecUnfrozens.insert(itorWhere, pColumn);
 	pColumn->m_bFrozen = false;
 
 	int nPriority = 0;
-	for_stl_const(_Columns, vecFrozens, itor)
+	for_each(_Columns, vecFrozens, value)
 	{
-		_Columns::value_type value = *itor;
 		value->SetPriority(nPriority);
 		nPriority++;
 	}
 
-	for_stl_const(_Columns, vecScrollables, itor)
+	for_each(_Columns, vecUnfrozens, value)
 	{
-		_Columns::value_type value = *itor;
 		value->SetPriority(nPriority);
 		nPriority++;
 	}
@@ -507,6 +502,12 @@ bool GrColumnList::MoveToUnfrozen(GrColumn* pColumn, GrColumn* pWhere)
 	SetVisibleChanged();
 
 	return true;
+}
+
+void GrColumnList::column_GroupingChanged(GrObject* pSender, GrEventArgs* /*e*/)
+{
+	GrColumnEventArgs ce((GrColumn*)pSender);
+	OnColumnGroupingChanged(&ce);
 }
 
 void GrColumnList::groupingList_Changed(GrObject* /*pSender*/, GrEventArgs* /*e*/)
@@ -530,15 +531,13 @@ void GrColumnList::gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 	if(m_pColumnSplitter->GetVisible() == true)
 		m_nDisplayableRight += m_pColumnSplitter->GetWidth();
 
-	for_stl_const(_Columns, m_vecColumns, itor)
+	for_each(_Columns, m_vecColumns, value)
 	{
-		_Columns::value_type value = *itor;
 		delete value;
 	}
 
-	for_stl_const(_Columns, m_vecColumnsRemoved, itor)
+	for_each(_Columns, m_vecColumnsRemoved, value)
 	{
-		_Columns::value_type value = *itor;
 		value->SetColumnID(INVALID_INDEX);
 	}
 	//m_vecColumnsRemoved.clear();
@@ -1102,7 +1101,7 @@ void GrCell::SetFont(GrFont* pFont)
 		return;
 	m_pFont = pFont;
 	SetTextBoundChanged();
-	m_pGridCore->Invalidate();
+	Invalidate();
 }
 
 uint GrCell::GetID() const
@@ -1820,6 +1819,7 @@ GrColumn::GrColumn()
 	m_bFitting			= false;
 	m_bDisplayable		= false;
 	m_bClipped			= false;
+	m_bGrouped			= false;
 
 	m_nVisibleIndex		= INVALID_INDEX;
 	m_nDisplayIndex		= INVALID_INDEX;
@@ -1960,12 +1960,16 @@ void GrColumn::SetPriority(int nPriority)
 
 bool GrColumn::GetGrouped() const
 {
-	return m_pGroupingInfo->GetGrouped();
+	return m_bGrouped;
 }
 
 void GrColumn::SetGrouped(bool b)
 {
-	m_pGroupingInfo->SetGrouped(b);
+	if(m_bGrouped == b)
+		return;
+
+	m_bGrouped = b;
+	GroupingChanged(this, &GrEventArgs::Empty);
 }
 
 GrGroupingInfo* GrColumn::GetGroupingInfo() const
@@ -2011,7 +2015,7 @@ uint GrColumn::GetFrozenIndex() const
 	return m_nVisibleIndex;
 }
 
-uint GrColumn::GetScrollableIndex() const
+uint GrColumn::GetUnfrozenIndex() const
 {
 	assert(m_bFrozen == false);
 	return m_nVisibleIndex - m_pGridCore->GetColumnList()->GetFrozenColumnCount();
@@ -2564,9 +2568,8 @@ void GrColumnList::BuildVisibleColumnList()
 	m_vecDisplayableColumns.reserve(GetColumnCount());
 
 	m_nFrozenCount = 0;
-	for_stl_const(_Columns, m_vecColumns, itor)
+	for_each(_Columns, m_vecColumns, value)
 	{
-		_Columns::value_type value = *itor;
 		value->SetDisplayable(false);
 		value->SetDisplayIndex(INVALID_INDEX);
 		value->SetClipped(false);
@@ -2579,9 +2582,8 @@ void GrColumnList::BuildVisibleColumnList()
 	sort(m_vecVisibleColumns.begin(), m_vecVisibleColumns.end(), SortColumn());
 
 	uint nIndex = 0;
-	for_stl_const(_Columns, m_vecVisibleColumns, itor)
+	for_each(_Columns, m_vecVisibleColumns, value)
 	{
-		_Columns::value_type value = *itor;
 		if(value->GetFrozen() == true)
 			m_nFrozenCount++;
 		value->SetVisibleIndex(nIndex++);
@@ -2592,9 +2594,8 @@ void GrColumnList::BuildVisibleColumnList()
 
 void GrColumnList::AdjustColumnWidth()
 {
-	for_stl_const(_Columns, m_vecColumns, itor)
+	for_each(_Columns, m_vecColumns, value)
 	{
-		_Columns::value_type value = *itor;
 		value->AdjustWidth();
 	}
 	m_pGridCore->SetWidthChanged();
@@ -2604,9 +2605,8 @@ void GrColumnList::OnPositionUpdated(GrPoint /*pt*/)
 {
 	m_mapColumnByPosition.clear();
 
-	for_stl_const(_Columns, m_vecVisibleColumns, itor)
+	for_each(_Columns, m_vecVisibleColumns, value)
 	{
-		_Columns::value_type value = *itor;
 		int nKey = value->GetX() + value->GetWidth() - 1;
 		m_mapColumnByPosition.insert(_MapColumnPos::value_type(nKey, value));
 	}	
@@ -2687,6 +2687,11 @@ void GrColumnList::OnColumnVertAlignChanged(GrColumnEventArgs* e)
 void GrColumnList::OnColumnPaddingChanged(GrColumnEventArgs* e)
 {
 	ColumnPaddingChanged(this, e);
+}
+
+void GrColumnList::OnColumnGroupingChanged(GrColumnEventArgs* e)
+{
+	ColumnGroupingChanged(this, e);
 }
 
 uint GrColumnList::GetVisibleColumnCount() const
@@ -3047,9 +3052,8 @@ void GrDataRow::OnGridCoreAttached()
 {
 	IDataRow::OnGridCoreAttached();
 	
-	for_stl_const(_Items, m_vecItems, itor)
+	for_each(_Items, m_vecItems, value)
 	{
-		_Items::value_type value = *itor;
 		m_pGridCore->AttachObject(value);
 	}
 }
@@ -3061,9 +3065,8 @@ void GrDataRow::OnGridCoreDetached()
 		pFocuser->Set(IFocusable::Null);
 	SetSelected(false);
 
-	for_stl_const(_Items, m_vecItems, itor)
+	for_each(_Items, m_vecItems, value)
 	{
-		_Items::value_type value = *itor;
 		m_pGridCore->DetachObject(value);
 	}
 
@@ -3072,9 +3075,8 @@ void GrDataRow::OnGridCoreDetached()
 
 void GrDataRow::ClearItem()
 {
-	for_stl_const(_Items, m_vecItems, itor)
+	for_each(_Items, m_vecItems, value)
 	{
-		_Items::value_type value = *itor;
 		delete value;
 	}
 	m_vecItems.clear();
@@ -3281,7 +3283,7 @@ void IDataRow::SetDisplayY(int y)
 int IDataRow::GetDisplayY() const
 {
 	if(m_pDataRowList == NULL)
-		throw std::exception("GridCore에 붙지 않았음");
+		throw _Exception("GridCore에 붙지 않았음");
 
 	if(m_nDisplayY == INT_MIN)
 		return GrRow::GetDisplayY();
@@ -3333,7 +3335,7 @@ bool IDataRow::GetClipped() const
 bool IDataRow::NeedToEnsure() const
 {
 	if(GetVisible() == false)
-		throw new std::exception();
+		throw _Exception("");
 	if(m_bDisplayable == false || m_bClipped == true)
 		return true;
 	return false;
@@ -3588,29 +3590,6 @@ uint GrGroupingList::GetGroupingCount() const
 	return m_vecGroupings.size();
 }
 
-void GrGroupingList::ChangeGroupingInfo(GrGroupingInfo* pGroupingInfo, GrGroupingInfo* pWhere)
-{
-	assert(pGroupingInfo);
-	if(pGroupingInfo == pWhere)
-		return;
-	_Groupings::iterator itor = remove(m_vecGroupings.begin(), m_vecGroupings.end(), pGroupingInfo);
-	m_vecGroupings.erase(itor);
-
-	if(pWhere)
-		itor = find(m_vecGroupings.begin(), m_vecGroupings.end(), pWhere);
-	else
-		itor = m_vecGroupings.end();
-
-	m_vecGroupings.insert(itor, pGroupingInfo);
-
-	for(uint i=0 ; i<m_vecGroupings.size() ; i++)
-	{
-		m_vecGroupings[i]->m_nGroupingLevel = i;
-	}
-
-	Changed.Raise(this, &GrEventArgs::Empty);
-}
-
 GrGroupingInfo* GrGroupingList::GetGrouping(uint nLevel) const
 {
 	return m_vecGroupings[nLevel];
@@ -3655,34 +3634,65 @@ void GrGroupingList::EnableGrouping(bool b)
 	Changed(this, &GrEventArgs::Empty);
 }
 
-void GrGroupingList::NotifyGroupingChanged(GrGroupingInfo* pGroupingInfo)
+void GrGroupingList::ResetGroupingLevel()
+{
+	for_each(_Groupings, m_vecGroupings, value)
+	{
+		value->SetGroupingLevelCore(value.GetIndex());
+	}
+}
+
+void GrGroupingList::AddGrouping(GrGroupingInfo* pGroupingInfo)
 {
 	_Groupings::iterator itor = find(m_vecGroupings.begin(), m_vecGroupings.end(), pGroupingInfo);
 
-	if(pGroupingInfo->GetGrouped() == true)
-	{
-		if(itor == m_vecGroupings.end())
-		{
-			m_vecGroupings.push_back(pGroupingInfo);
-		}
-	}
+	if(itor != m_vecGroupings.end())
+		throw _Exception("이미 Grouping이 되어 있습니다.");
+
+	uint level = pGroupingInfo->GetGroupingLevel();
+	if(level > m_vecGroupings.size())
+		m_vecGroupings.push_back(pGroupingInfo);
 	else
-	{
-		if(itor != m_vecGroupings.end())
-		{
-			(*itor)->m_nGroupingLevel = INVALID_INDEX;
-			m_vecGroupings.erase(itor);
-		}
-	}
+		m_vecGroupings.insert(m_vecGroupings.begin() + level, pGroupingInfo);
+	pGroupingInfo->SetText();
+	pGroupingInfo->LevelChanged.Add(this, &GrGroupingList::groupingInfo_LevelChanged);
 
-	uint index = 0;
-	for_stl(_Groupings, m_vecGroupings, itor)
-	{
-		_Groupings::value_type value = *itor;
-		value->m_nGroupingLevel = index++;
-	}
-
+	ResetGroupingLevel();
 	ComputeLayout();
+	Changed.Raise(this, &GrEventArgs::Empty);
+}
+
+void GrGroupingList::RemoveGrouping(GrGroupingInfo* pGroupingInfo)
+{
+	_Groupings::iterator itor = find(m_vecGroupings.begin(), m_vecGroupings.end(), pGroupingInfo);
+
+	if(itor == m_vecGroupings.end())
+		throw _Exception("Grouping이 되어 있지 않은데 해제하려고 합니다.");
+
+	pGroupingInfo->LevelChanged.Remove(this, &GrGroupingList::groupingInfo_LevelChanged);
+	(*itor)->SetGroupingLevelCore(INVALID_INDEX);
+	m_vecGroupings.erase(itor);
+
+	ResetGroupingLevel();
+	ComputeLayout();
+	Changed.Raise(this, &GrEventArgs::Empty);
+}
+
+void GrGroupingList::groupingInfo_LevelChanged(GrObject* pSender, GrEventArgs* /*e*/)
+{
+	GrGroupingInfo* pGroupingInfo = (GrGroupingInfo*)pSender;
+	_Groupings::iterator itor = std::find(m_vecGroupings.begin(), m_vecGroupings.end(), pGroupingInfo);
+	*itor = NULL;
+
+	uint nWhere = std::min(pGroupingInfo->GetGroupingLevel(), m_vecGroupings.size());
+
+	m_vecGroupings.insert(m_vecGroupings.begin() + nWhere, pGroupingInfo);
+	m_vecGroupings.erase(std::find(m_vecGroupings.begin(), m_vecGroupings.end(), (GrGroupingInfo*)NULL));
+	
+	for_each(_Groupings, m_vecGroupings, value)
+	{
+		value->SetGroupingLevelCore(value.GetIndex());
+	}
 
 	Changed.Raise(this, &GrEventArgs::Empty);
 }
@@ -3736,6 +3746,7 @@ void GrGroupingList::OnGridCoreAttached()
 {
 	GrRow::OnGridCoreAttached();
 	m_pGridCore->Cleared.Add(this, &GrGroupingList::gridCore_Cleared);
+	m_pGridCore->Created.Add(this, &GrGroupingList::gridCore_Created);
 }
 
 void GrGroupingList::gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
@@ -3744,14 +3755,46 @@ void GrGroupingList::gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 	ComputeLayout();
 }
 
+void GrGroupingList::gridCore_Created(GrObject* /*pSender*/, GrEventArgs* /*e*/)
+{
+	GrColumnList* pColumnList = m_pGridCore->GetColumnList();
+	pColumnList->ColumnGroupingChanged.Add(this, &GrGroupingList::columnList_ColumnGroupingChanged);
+	pColumnList->ColumnInserted.Add(this, &GrGroupingList::columnList_ColumnInserted);
+	pColumnList->ColumnRemoved.Add(this, &GrGroupingList::columnList_ColumnRemoved);
+}
+
+void GrGroupingList::columnList_ColumnInserted(GrObject* /*pSender*/, GrColumnEventArgs* e)
+{
+	GrColumn* pColumn = e->GetColumn();
+	if(pColumn->GetGrouped() == false)
+		return;
+	AddGrouping(pColumn->GetGroupingInfo());
+}
+
+void GrGroupingList::columnList_ColumnRemoved(GrObject* /*pSender*/, GrColumnEventArgs* e)
+{
+	GrColumn* pColumn = e->GetColumn();
+	if(pColumn->GetGrouped() == false)
+		return;
+	RemoveGrouping(pColumn->GetGroupingInfo());
+}
+
+void GrGroupingList::columnList_ColumnGroupingChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
+{
+	GrColumn* pColumn = e->GetColumn();
+	if(pColumn->GetGrouped() == true)
+		AddGrouping(pColumn->GetGroupingInfo());
+	else
+		RemoveGrouping(pColumn->GetGroupingInfo());
+}
+
 void GrGroupingList::OnUpdatePositionRow(int y, GrUpdateDesc* pUpdateDesc)
 {
 	GrRow::OnUpdatePositionRow(y, pUpdateDesc);
 	GrPoint pt;
 	pt.y = GetY() + 10;
-	for_stl_const(_Groupings, m_vecGroupings, itor)
+	for_each(_Groupings, m_vecGroupings, value)
 	{
-		_Groupings::value_type value = *itor;
 		pt.x = value->GetX();
 		value->SetPosition(pt);
 	}
@@ -3766,9 +3809,8 @@ void GrGroupingList::OnUpdatePositionCell(int x, GrUpdateDesc* pUpdateDesc)
 
 	pt.x += 10;
 	pt.y += 10;
-	for_stl_const(_Groupings, m_vecGroupings, itor)
+	for_each(_Groupings, m_vecGroupings, value)
 	{
-		_Groupings::value_type value = *itor;
 		value->SetPosition(pt);
 		pt.x += value->GetWidth() + 10;
 	}
@@ -3795,10 +3837,9 @@ void GrGroupingList::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) 
 
 	pRenderer->DrawCell(renderStyle, backColor, &rtRender);
 
-	for_stl_const(_Groupings, m_vecGroupings, itor)
+	for_each_const(_Groupings, m_vecGroupings, value)
 	{
-		GrGroupingInfo* pGroupingInfo = *itor;
-		pGroupingInfo->Render(pRenderer, pClipping);
+		value->Render(pRenderer, pClipping);
 	}
 
 	RenderText(pRenderer, foreColor, &rtRender, pClipping);
@@ -3841,9 +3882,8 @@ void GrRow::ReserveChild(uint reserve)
 
 void GrRow::ClearChild()
 {
-	for_stl_const(GrRowArray, m_vecChilds, itor)
+	for_each(GrRowArray, m_vecChilds, value)
 	{
-		GrRowArray::value_type value = *itor;
 		value->m_pParent = NULL;
 		value->m_nHierarchyLevel = 0;
 	}
@@ -3963,9 +4003,8 @@ void GrDataRowFinder::Build(const _DataRows* pRows)
 {
 	m_rows.clear();
 
-	for_stl_const_ptr(_DataRows, pRows, itor)
+	for_each_const(_DataRows, *pRows, value)
 	{
-		_DataRows::value_type value = *itor;
 		int nKey = value->GetY() + value->GetHeight() - 1;
 		m_rows.insert(_Type::value_type(nKey, value));
 	}
@@ -4018,15 +4057,13 @@ void GrDataRowList::OnGridCoreAttached()
 	m_pGridCore->Cleared.Add(this, &GrDataRowList::gridCore_Cleared);
 	m_pGridCore->Created.Add(this, &GrDataRowList::gridCore_Created);
 
-	for_stl_const(_DataRows, m_vecDataRows, itor)
+	for_each(_DataRows, m_vecDataRows, value)
 	{
-		_DataRows::value_type value = *itor;
 		m_pGridCore->AttachObject(value);
 	}
 
-	for_stl_const(_GroupingRows, m_vecGroupingRows, itor)
+	for_each(_GroupingRows, m_vecGroupingRows, value)
 	{
-		_GroupingRows::value_type value = *itor;
 		m_pGridCore->AttachObject(value);
 	}
 	
@@ -4173,9 +4210,8 @@ void GrDataRowList::BuildChildRowList()
 	ClearChild();
 
 	ReserveChild(m_vecDataRows.size());
-	for_stl_const(_DataRows, m_vecDataRows, itor)
+	for_each(_DataRows, m_vecDataRows, value)
 	{
-		_DataRows::value_type value = *itor;
 		AddChild(value);
 	}
 
@@ -4202,9 +4238,8 @@ void GrDataRowList::BuildChildRowList()
 
 void GrDataRowList::AdjustRowHeight()
 {
-	for_stl_const(_IDataRows, m_vecVisibleRows, itor)
+	for_each(_IDataRows, m_vecVisibleRows, value)
 	{
-		_IDataRows::value_type value = *itor;
 		value->AdjustHeight();
 	}
 	m_pInsertionRow->AdjustHeight();
@@ -4231,10 +4266,8 @@ void GrDataRowList::SetListChanged()
 
 void GrDataRowList::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const
 {
-	for_stl_const(_IDataRows, m_vecDisplayableRows, itor)
+	for_each_const(_IDataRows, m_vecDisplayableRows, value)
 	{
-		_IDataRows::value_type value = *itor;
-
 		int y = value->GetDisplayY();
 		int b = y + value->GetHeight() ;
 		if(y >= pClipping->bottom || b < pClipping->top)
@@ -4276,9 +4309,8 @@ void GrDataRowList::groupingList_Changed(GrObject* /*pSender*/, GrEventArgs* /*e
 void GrDataRowList::groupingList_Expanded(GrObject* /*pSender*/, GrGroupingEventArgs* e)
 {
 	GrColumn* pColumn = e->m_pGroupingInfo->GetColumn();
-	for_stl_const(_GroupingRows, m_vecGroupingRows, itor)
+	for_each(_GroupingRows, m_vecGroupingRows, value)
 	{
-		_GroupingRows::value_type value = *itor;
 		if(value->GetColumn() == pColumn)
 			value->Expand(e->m_pGroupingInfo->GetExpanded());
 	}
@@ -4298,9 +4330,9 @@ void GrDataRowList::groupingList_SortChanged(GrObject* /*pSender*/, GrGroupingEv
 			setParent.insert(pGroupingRow->GetParent());
 	}
 
-	for_stl_const(GrRows, setParent, itor)
+	for_each(GrRows, setParent, value)
 	{
-		(*itor)->Sort(e->m_pGroupingInfo->GetSortType());
+		value->Sort(e->m_pGroupingInfo->GetSortType());
 	}
 	SetVisibleChanged();
 }
@@ -4350,15 +4382,13 @@ void GrDataRowList::columnList_ColumnInserted(GrObject* /*pSender*/, GrColumnEve
 	}
 
 	m_pInsertionRow->AddItem(pColumn);
-	for_stl_const(_DataRows, m_vecDataRows, itor)
+	for_each(_DataRows, m_vecDataRows, value)
 	{
-		_DataRows::value_type value = *itor;
 		value->AddItem(pColumn);
 	}
 
-	for_stl_const(_DataRows, m_vecDataRowsRemoved, itor)
+	for_each(_DataRows, m_vecDataRowsRemoved, value)
 	{
-		_DataRows::value_type value = *itor;
 		value->AddItem(pColumn);
 	}
 }
@@ -4368,9 +4398,8 @@ void GrDataRowList::columnList_ColumnRemoved(GrObject* /*pSender*/, GrColumnEven
 	GrItem* pItem = m_pInsertionRow->GetItem(e->GetColumn());
 	m_pGridCore->DetachObject(pItem);
 
-	for_stl_const(_DataRows, m_vecDataRows, itor)
+	for_each(_DataRows, m_vecDataRows, value)
 	{
-		_DataRows::value_type value = *itor;
 		pItem = value->GetItem(e->GetColumn());
 		m_pGridCore->DetachObject(pItem);
 	}
@@ -4393,10 +4422,9 @@ void GrDataRowList::BuildVisibleRowList()
 	m_vecVisibleDataRows.clear();
 	m_vecVisibleDataRows.reserve(vecVisibles.size());
 
-	for_stl_const(GrRowArray, vecVisibles, itor)
+	for_each(GrRowArray, vecVisibles, value)
 	{
-		GrRowArray::value_type value = *itor;
-		IDataRow* pDataRowBase = dynamic_cast<IDataRow*>(value);
+		IDataRow* pDataRowBase = dynamic_cast<IDataRow*>(value.GetValue());
 		if(pDataRowBase == NULL)
 			continue;
 		GrDataRow* pDataRow = dynamic_cast<GrDataRow*>(pDataRowBase);
@@ -4409,9 +4437,8 @@ void GrDataRowList::BuildVisibleRowList()
 		m_vecVisibleRows.push_back(pDataRowBase);
 	}
 
-	for_stl_const(_IDataRows, m_vecDisplayableRows, itor)
+	for_each(_IDataRows, m_vecDisplayableRows, value)
 	{
-		_IDataRows::value_type value = *itor;
 		value->SetDisplayable(false);
 		value->SetDisplayIndex(INVALID_INDEX);
 		value->SetClipped(false);
@@ -4447,7 +4474,7 @@ GrDataRow* GrDataRowList::GetVisibleDataRow(uint nIndex) const
 	if(nIndex == INSERTION_ROW)
 		return m_pInsertionRow;
 	if(nIndex >= m_vecVisibleDataRows.size())
-		throw new std::exception("잘못된 인덱스");
+		throw _Exception("잘못된 인덱스");
 	return m_vecVisibleDataRows[nIndex];
 }
 
@@ -4472,7 +4499,7 @@ IDataRow* GrDataRowList::GetVisibleRow(uint nIndex) const
 	if(nIndex == INSERTION_ROW)
 		return m_pGridCore->GetInsertionRow();
 	if(nIndex >= m_vecVisibleRows.size())
-		throw new std::exception("잘못된 인덱스");
+		throw _Exception("잘못된 인덱스");
 	return m_vecVisibleRows[nIndex];
 }
 
@@ -4484,15 +4511,14 @@ void GrDataRowList::AddDataRow(GrDataRow* pDataRow)
 void GrDataRowList::InsertDataRow(GrDataRow* pDataRow, uint nIndex)
 {
 	if(pDataRow->GetDataRowIndex() != INVALID_INDEX || pDataRow == m_pInsertionRow)
-		throw new std::exception("이미 등록되어 있습니다");
+		throw _Exception("이미 등록되어 있습니다");
 
 	if(pDataRow->GetDataRowID() == INVALID_INDEX)
 	{
 		pDataRow->SetDataRowID(m_nDataRowID++);
 		pDataRow->Reserve(m_vecColumns.size());
-		for_stl_const(_Columns, m_vecColumns, itor)
+		for_each(_Columns, m_vecColumns, value)
 		{
-			_Columns::value_type value = *itor;
 			pDataRow->AddItem(value);
 		}
 	}
@@ -4578,9 +4604,8 @@ GrDataRow* GrDataRowList::GetDataRow(uint nIndex) const
 
 void GrDataRowList::ClearDataRow()
 {
-	for_stl(_DataRows, m_vecDataRows, itor)
+	for_each(_DataRows, m_vecDataRows, value)
 	{
-		_DataRows::value_type value = *itor;
 		value->SetDataRowIndex(INVALID_INDEX);
 	}
 
@@ -4595,9 +4620,8 @@ void GrDataRowList::OnPositionUpdated(GrPoint /*pt*/)
 {
 	m_mapRowByPosition.clear();
 
-	for_stl_const(_IDataRows, m_vecVisibleRows, itor)
+	for_each(_IDataRows, m_vecVisibleRows, value)
 	{
-		_IDataRows::value_type value = *itor;
 		int nKey = value->GetY() + value->GetHeight() - 1;
 		m_mapRowByPosition.insert(_MapDataRowPos::value_type(nKey, value));
 	}	
@@ -4607,21 +4631,18 @@ void GrDataRowList::OnPositionUpdated(GrPoint /*pt*/)
 
 void GrDataRowList::DeleteObjects()
 {
-	for_stl_const(_DataRows, m_vecDataRows, itor)
+	for_each(_DataRows, m_vecDataRows, value)
 	{
-		GrDataRow* pDataRow = *itor;
-		delete pDataRow;
-	}
-
-	for_stl_const(_DataRows, m_vecDataRowsRemoved, itor)
-	{
-		_DataRows::value_type value = *itor;
 		delete value;
 	}
 
-	for_stl_const(_GroupingRows, m_vecGroupingRows, itor)
+	for_each(_DataRows, m_vecDataRowsRemoved, value)
 	{
-		_GroupingRows::value_type value = *itor;
+		delete value;
+	}
+
+	for_each(_GroupingRows, m_vecGroupingRows, value)
+	{
 		delete value;
 	}
 
@@ -4707,9 +4728,8 @@ void GrDataRowList::Clip(const GrRect* pDisplayRect, uint nVisibleStart)
 {
 	int nDisplayY = GetDisplayY();
 
-	for_stl(_IDataRows, m_vecDisplayableRows, itor)
+	for_each(_IDataRows, m_vecDisplayableRows, value)
 	{
-		_IDataRows::value_type value = *itor;
 		value->SetDisplayable(false);
 		value->SetDisplayIndex(INVALID_INDEX);
 		value->SetClipped(false);
@@ -4750,7 +4770,7 @@ uint GrDataRowList::ClipFrom(const GrRect* pDisplayRect, uint nVisibleFrom) cons
 {
 	IDataRow* pDataRow = GetVisibleRow(nVisibleFrom);
 	if(pDataRow == NULL)
-		throw std::exception("잘못된 인덱스");
+		throw _Exception("잘못된 인덱스");
 
 	int y = pDataRow->GetY() + (pDisplayRect->GetHeight() - GetY());
 
@@ -4791,9 +4811,8 @@ void GrDataRowList::SetZeroBasedRowIndex(bool b)
 	m_bZeroBasedRowIndex = b;
 	
 	uint nIndex = 0;
-	for_stl_const(_DataRows, m_vecDataRows, itor)
+	for_each(_DataRows, m_vecDataRows, value)
 	{
-		_DataRows::value_type value = *itor;
 		value->SetDataRowIndex(nIndex);
 	}
 
@@ -5103,44 +5122,30 @@ GrGroupingInfo::GrGroupingInfo(GrColumn* pColumn)
 	m_pt.y = 0;
 	m_bGrouped	= false;
 	m_bExpanded = true;
-	m_sortType = GrSort::Up;
-	m_nGroupingLevel = INVALID_INDEX;
+	m_sortType	= GrSort::Up;
+	m_nLevel	= INVALID_INDEX;
 }
 
 void GrGroupingInfo::OnGridCoreAttached()
 {
 	GrCell::OnGridCoreAttached();
-	SetText(m_pColumn->GetText());
 	m_pGroupingList = m_pGridCore->GetGroupingList();
-	if(GetGrouped() == true)
-		m_pGroupingList->NotifyGroupingChanged(this);
 }
 
 void GrGroupingInfo::OnGridCoreDetached()
 {
-	if(GetGrouped() == true)
-		m_pGroupingList->NotifyGroupingChanged(this);
 	m_pGroupingList = NULL;
 	GrCell::OnGridCoreDetached();
 }
 
-void GrGroupingInfo::SetGrouped(bool b)
-{
-	if(m_bGrouped == b)
-		return;
-
-	m_bGrouped = b;
-	SetText(m_pColumn->GetText());
-
-	if(m_pGroupingList != NULL)
-	{
-		m_pGroupingList->NotifyGroupingChanged(this);
-	}
-}
-
 bool GrGroupingInfo::GetGrouped() const
 {
-	return m_bGrouped;
+	return m_pColumn->GetGrouped();
+}
+
+void GrGroupingInfo::SetGrouped(bool b)
+{
+	m_pColumn->SetGrouped(b);
 }
 
 void GrGroupingInfo::SetExpanded(bool b)
@@ -5171,7 +5176,27 @@ void GrGroupingInfo::SetSortType(GrSort::Type sortType)
 
 uint GrGroupingInfo::GetGroupingLevel() const
 {
-	return m_nGroupingLevel;
+	return m_nLevel;
+}
+
+void GrGroupingInfo::SetGroupingLevel(uint level)
+{
+	if(m_nLevel == level)
+		return;
+
+	m_nLevel = level;
+	if(GetGrouped() == true)
+		LevelChanged(this, &GrEventArgs::Empty);
+}
+
+void GrGroupingInfo::SetGroupingLevelCore(uint level)
+{
+	m_nLevel = level;
+}
+
+void GrGroupingInfo::SetText()
+{
+	GrCell::SetText(m_pColumn->GetText());
 }
 
 int GrGroupingInfo::GetX() const
@@ -5326,9 +5351,8 @@ void GrHeaderRow::SetFitChanged()
 
 void GrHeaderRow::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const
 {
-	for_stl_const(_Rows, m_vecVisibleRows, itor)
+	for_each_const(_Rows, m_vecVisibleRows, value)
 	{
-		_Rows::value_type value = *itor;
 		value->Render(pRenderer, pClipping);
 	}
 }

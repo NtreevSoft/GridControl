@@ -596,15 +596,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 					{
 						uint targetIndex;
 						if(hitTest.localPoint.X < pTarget->GetWidth() / 2)
-							targetIndex = pTarget->GetScrollableIndex();
+							targetIndex = pTarget->GetUnfrozenIndex();
 						else
-							targetIndex = pTarget->GetScrollableIndex() + 1;
+							targetIndex = pTarget->GetUnfrozenIndex() + 1;
 
 						if(m_pColumn->GetFrozen() == true)
 						{
 							m_targetType = TargetType::Unfrozen;
 						}
-						else if(targetIndex != m_pColumn->GetScrollableIndex() + 1 && targetIndex != m_pColumn->GetScrollableIndex()) 
+						else if(targetIndex != m_pColumn->GetUnfrozenIndex() + 1 && targetIndex != m_pColumn->GetUnfrozenIndex()) 
 						{
 							m_targetType = TargetType::Unfrozen;
 						}
@@ -685,12 +685,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 				break;
 			case TargetType::GroupingList:
 				{
-					GrGroupingList* pGroupingList = GridCore->GetGroupingList();
-					m_pColumn->SetGrouped(true);
 					if(m_targetCell != nullptr)
 					{
-						pGroupingList->ChangeGroupingInfo(m_pColumn->GetGroupingInfo(), (GrGroupingInfo*)m_targetCell);
+						GrGroupingInfo* pTargetGroupingInfo = (GrGroupingInfo*)m_targetCell;
+						GrGroupingInfo* pGroupingInfo = m_pColumn->GetGroupingInfo();
+						pGroupingInfo->SetGroupingLevel(pTargetGroupingInfo->GetGroupingLevel());
 					}
+					m_pColumn->SetGrouped(true);
 				}
 				break;
 			}
@@ -1900,12 +1901,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			break;
 		case TargetType::Grouping:
 			{
-				GrGroupingList* pGroupingList = GridCore->GetGroupingList();
-				uint toInsert = m_where;
-				GrGroupingInfo* pWhere = nullptr;
-				if(toInsert < pGroupingList->GetGroupingCount())
-					pWhere = pGroupingList->GetGrouping(toInsert);
-				GridCore->GetGroupingList()->ChangeGroupingInfo(m_pGroupingInfo, pWhere);
+				m_pGroupingInfo->SetGroupingLevel(m_where);
+				//GrGroupingList* pGroupingList = GridCore->GetGroupingList();
+				//uint toInsert = m_where;
+				//GrGroupingInfo* pWhere = nullptr;
+				//if(toInsert < pGroupingList->GetGroupingCount())
+				//	pWhere = pGroupingList->GetGrouping(toInsert);
+				//GridCore->GetGroupingList()->ChangeGroupingInfo(m_pGroupingInfo, pWhere);
 			}
 			break;
 		}

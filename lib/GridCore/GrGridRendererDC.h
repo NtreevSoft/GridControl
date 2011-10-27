@@ -123,8 +123,6 @@ public:
 
 private:
 
-
-
 public:
 	int		m_nCharWidth[0xffff];
 	int		m_nFontHeight;
