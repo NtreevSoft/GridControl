@@ -91,6 +91,8 @@ public:
 	virtual void Unlock() = 0;
 	virtual void Reset() = 0;
 
+	virtual bool IsInvalidated() const = 0;
+
 	void Invalidate(const GrRect& rect) { Invalidate(rect.left, rect.top, rect.GetWidth(), rect.GetHeight()); }
 };
 

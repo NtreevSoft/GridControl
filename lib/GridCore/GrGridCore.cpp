@@ -27,6 +27,24 @@
 #include "GrGridInternal.h"
 #include <assert.h>
 
+class SortUpdatable
+{
+public:
+	bool operator () (const GrUpdatable* p1, const GrUpdatable* p2)
+	{
+		return p1->GetUpdatePriority() < p2->GetUpdatePriority();
+	}
+};
+
+class SortClippable
+{
+public:
+	bool operator () (const GrClippable* p1, const GrClippable* p2)
+	{
+		return p1->GetClipPriority() < p2->GetClipPriority();
+	}
+};
+
 class GrDefaultInvalidator : public GrGridInvalidator
 {
 public:
@@ -35,6 +53,7 @@ public:
 	void Lock() {};
 	void Unlock() {};
 	void Reset() {};
+	bool IsInvalidated() const { return true; }
 
 };
 
@@ -174,11 +193,6 @@ GrGridCore::GrGridCore(void)
 
 	m_rtDisplay.DoEmpty();
 
-	m_nVScrollValue			= 0;
-	m_nHScrollValue			= 0;
-
-	m_bNeedToColumnClipping = false;
-	m_bNeedToRowClipping	= false;
 	m_bMarginVisible		= false;
 	m_bUpdating				= false;
 
@@ -390,29 +404,23 @@ bool GrGridCore::Update()
 
 	m_bUpdating = true;
 
-	m_pHeaderList->Update();
 	m_pTextUpdater->UpdateTextBound();
-	m_pDataRowList->Update();
-	m_pColumnList->Update();
-	m_pTextUpdater->UpdateTextAlign();
+
+	for_each(_Updatables, m_vecUpdatables, value)
+	{
+		value->Update(false);
+	}
 
 	ulong dwRowUpdate = 0;
-	if(m_bWidthChanged == true)
-	{
-		dwRowUpdate |= GrRowUpdate_Cell;
-		m_bNeedToColumnClipping = true;
-		m_bWidthChanged = false;
-	}
 
 	if(m_bHeightChanged == true)
 	{
 		dwRowUpdate |= GrRowUpdate_Row;
-		m_bNeedToRowClipping = true;
 		m_bHeightChanged = false;
 	}
 
-	if(dwRowUpdate)
-		m_pRootRow->UpdatePosition(GrPoint::Empty, (GrRowUpdate)dwRowUpdate);
+	m_pTextUpdater->UpdateTextBound();
+	m_pTextUpdater->UpdateTextAlign();
 
 	m_bUpdating = false;
 	return dwRowUpdate != 0;
@@ -425,40 +433,15 @@ const GrRect* GrGridCore::GetDisplayRect() const
 
 void GrGridCore::Clip(uint nStartCol, uint nStartRow)
 {
-	if(m_bNeedToRowClipping == true || m_nVScrollValue != nStartRow)
+	for_each(_Clippables, m_vecClippables, value)
 	{
-		m_pDataRowList->Clip(&m_rtDisplay, nStartRow);
+		if(value->NeedToClip(&m_rtDisplay, nStartCol, nStartRow) == true)
+			value->Clip(&m_rtDisplay, nStartCol, nStartRow);
 	}
-
-	if(m_bNeedToColumnClipping == true || m_nHScrollValue != nStartCol)
-	{
-		m_pColumnList->Clip(&m_rtDisplay, nStartCol);
-		//m_pTextUpdater->AddTextBound(m_pCaption);
-		//m_pTextUpdater->AddTextBound(m_pGroupingList);
-	}
-
-	m_nHScrollValue = nStartCol;
-	m_nVScrollValue = nStartRow;
-
-
-	m_bNeedToColumnClipping = false;
-	m_bNeedToRowClipping	= false;
 }
 
 void GrGridCore::SetDisplayRect(GrRect rtDisplay)
 {
-	if(m_rtDisplay.GetWidth() != rtDisplay.GetWidth())
-		m_bNeedToColumnClipping = true;
-
-	if(m_rtDisplay.GetHeight() != rtDisplay.GetHeight())
-		m_bNeedToRowClipping	= true;
-
-	if(m_bNeedToColumnClipping == true || m_bNeedToRowClipping == true)
-	{
-		m_pTextUpdater->AddTextBound(m_pCaption);
-		m_pTextUpdater->AddTextBound(m_pGroupingList);
-	}
-
 	m_rtDisplay = rtDisplay;
 }
 
@@ -545,6 +528,11 @@ void GrGridCore::ResetInvalidate()
 	GetInvalidator()->Reset();
 }
 
+bool GrGridCore::IsInvalidated() const
+{
+	return GetInvalidator()->IsInvalidated();
+}
+
 void GrGridCore::ShowClippedText(bool bShow)
 {
 	m_bShowClippedText = bShow;
@@ -552,14 +540,12 @@ void GrGridCore::ShowClippedText(bool bShow)
 
 void GrGridCore::columnList_ColumnInserted(GrObject* /*pSender*/, GrColumnEventArgs* /*e*/)
 {
-	m_bNeedToColumnClipping = true;
 	m_pTextUpdater->AddTextBound(m_pCaption);
 	m_pTextUpdater->AddTextBound(m_pGroupingList);
 }
 
 void GrGridCore::columnList_ColumnRemoved(GrObject* /*pSender*/, GrColumnEventArgs* /*e*/)
 {
-	m_bNeedToColumnClipping = true;
 	m_pTextUpdater->AddTextBound(m_pCaption);
 	m_pTextUpdater->AddTextBound(m_pGroupingList);
 }
@@ -649,6 +635,7 @@ void GrGridCore::AttachObject(GrObject* pObject)
 		return;
 	pObject->m_pGridCore = this;
 	pObject->OnGridCoreAttached();
+
 	m_nAttachedCount++;
 }
 
@@ -659,6 +646,40 @@ void GrGridCore::DetachObject(GrObject* pObject)
 	pObject->OnGridCoreDetached();
 	pObject->m_pGridCore = NULL;
 	m_nAttachedCount--;
+}
+
+void GrGridCore::AddUpdatable(GrUpdatable* pUpdatable)
+{
+	_Updatables::iterator itor = std::find(m_vecUpdatables.begin(), m_vecUpdatables.end(), pUpdatable);
+	if(itor != m_vecUpdatables.end())
+		throw _Exception("이미 업데이트 객체가 등록되어 있습니다.");
+	m_vecUpdatables.push_back(pUpdatable);
+	std::sort(m_vecUpdatables.begin(), m_vecUpdatables.end(), SortUpdatable());
+}
+
+void GrGridCore::RemoveUpdatable(GrUpdatable* pUpdatable)
+{
+	_Updatables::iterator itor = std::find(m_vecUpdatables.begin(), m_vecUpdatables.end(), pUpdatable);
+	if(itor == m_vecUpdatables.end())
+		throw _Exception("없는 업데이트 객체를 제거하려 했습니다.");
+	m_vecUpdatables.erase(itor);
+}
+
+void GrGridCore::AddClippable(GrClippable* pClippable)
+{
+	_Clippables::iterator itor = std::find(m_vecClippables.begin(), m_vecClippables.end(), pClippable);
+	if(itor != m_vecClippables.end())
+		throw _Exception("이미 클립 객체가 등록되어 있습니다.");
+	m_vecClippables.push_back(pClippable);
+	std::sort(m_vecClippables.begin(), m_vecClippables.end(), SortClippable());
+}
+
+void GrGridCore::RemoveClippable(GrClippable* pClippable)
+{
+	_Clippables::iterator itor = std::find(m_vecClippables.begin(), m_vecClippables.end(), pClippable);
+	if(itor == m_vecClippables.end())
+		throw _Exception("없는 클립 객체를 제거하려 했습니다.");
+	m_vecClippables.erase(itor);
 }
 
 void GrGridCore::groupingList_Changed(GrObject* /*pSender*/, GrEventArgs* /*e*/)

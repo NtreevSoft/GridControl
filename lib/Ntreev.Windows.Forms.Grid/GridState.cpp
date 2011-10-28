@@ -896,10 +896,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 		if(nOldX != m_resizingLocation)
 		{
-			int x1, x2;
-			x1 = System::Math::Min(nOldX, m_resizingLocation) - 1;
-			x2 = System::Math::Max(nOldX, m_resizingLocation) + 1;
-			GridCore->Invalidate(x1, GridControl->DisplayRectangle.Top, x2, GridControl->DisplayRectangle.Bottom);
+			GridCore->Invalidate();
 		}
 	}
 

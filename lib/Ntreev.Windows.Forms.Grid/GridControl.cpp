@@ -144,6 +144,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			m_rectType = RectType_Empty;
 		}
 
+		bool IsInvalidated() const 
+		{
+			return m_rectType != RectType_Empty; 
+		}
+
 	private:
 		gcroot<_GridControl^> m_pGrid;
 		RectType m_rectType;

@@ -238,7 +238,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			return;
 
 		GrColumnList* pColumnList = GridCore->GetColumnList();
-		int nMinWidth = pColumnList->GetBound()->right - pColumnList->GetUnfrozenX();
+		int nMinWidth = pColumnList->GetBound().right - pColumnList->GetUnfrozenX();
 
 		//_Rectangle displayRectangle = GridControl->DisplayRectangle;
 
@@ -283,7 +283,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		bool visible = false;
 		if(pColumnList->GetUnfrozenColumnCount() != 0)
 		{
-			visible = m_pColumnList->GetBound()->right > GridControl->DisplayRectangle.Width ? true : false;
+			visible = m_pColumnList->GetBound().right > GridControl->DisplayRectangle.Width ? true : false;
 		}
 
 		m_scrollProperties->Visible = visible;
@@ -397,7 +397,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			return;
 
 		GrDataRowList* pDataRowList = GridCore->GetDataRowList();
-		GrRect rtRow = *pDataRowList->GetBound();
+		GrRect rtRow = pDataRowList->GetBound();
 
 
 
@@ -436,8 +436,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		bool visible = false;
 		if(m_pDataRowList->GetVisibleRowCount() != 0)
 		{
-			const GrRect* pBound = m_pDataRowList->GetBound();
-			visible = pBound->bottom > GridControl->DisplayRectangle.Bottom ? true : false;
+			const GrRect pBound = m_pDataRowList->GetBound();
+			visible = pBound.bottom > GridControl->DisplayRectangle.Bottom ? true : false;
 		}
 
 		m_scrollProperties->Visible = visible;

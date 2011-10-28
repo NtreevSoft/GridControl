@@ -44,6 +44,8 @@ class GrGridCore : public GrObject
 	typedef GrEventBase<GrEventArgs, GrGridCore>		_GrEvent;
 	typedef GrEventBase<GrColumnEventArgs, GrGridCore>	_GrColumnEvent;
 	typedef GrEventBase<GrRowEventArgs, GrGridCore>		_GrRowEvent;
+	typedef std::vector<GrUpdatable*>					_Updatables;
+	typedef std::vector<GrClippable*>					_Clippables;
 
 public:
 	GrGridCore(void);
@@ -130,6 +132,7 @@ public:
 	void					LockInvalidate();
 	void					UnlockInvalidate();
 	void					ResetInvalidate();
+	bool					IsInvalidated() const;
 
 	_GrEvent				Created;
 	_GrEvent				Cleared;
@@ -149,6 +152,11 @@ public:
 
 	void					AttachObject(GrObject* pObject);
 	void					DetachObject(GrObject* pObject);
+
+	void					AddUpdatable(GrUpdatable* pUpdatable);
+	void					RemoveUpdatable(GrUpdatable* pUpdatable);
+	void					AddClippable(GrClippable* pClippable);
+	void					RemoveClippable(GrClippable* pClippable);
 
 protected:
 	virtual void			OnCreated(GrEventArgs* e);
@@ -185,8 +193,6 @@ private:
 	GrGridInvalidator*		m_pDefaultInvalidator;
 
 	GrRect					m_rtDisplay;
-	uint					m_nVScrollValue;
-	uint					m_nHScrollValue;
 
 	int						m_nGroupingMargin;
 
@@ -203,8 +209,6 @@ private:
 	uint					m_nReservedColumn;
 	uint					m_nReservedRow;
 
-	bool					m_bNeedToColumnClipping;
-	bool					m_bNeedToRowClipping;
 	bool					m_bMarginVisible;
 	
 	bool					m_bWidthChanged;
@@ -224,6 +228,9 @@ private:
 	GrFont*					m_pFont;
 	GrStyle*				m_pStyle;
 	GrStyle*				m_pDefaultStyle;
+
+	_Updatables				m_vecUpdatables;
+	_Clippables				m_vecClippables;
 
 	int						m_nAttachedCount;
 	int						m_nCreatedCell;	friend class GrCell;

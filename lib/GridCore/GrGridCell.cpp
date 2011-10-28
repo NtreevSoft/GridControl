@@ -70,6 +70,8 @@ GrColumnList::GrColumnList()
 
 	m_bVisibleChanged		= false;
 	m_bFitChanged			= false;
+	m_bWidthChanged			= false;
+	m_nClippedIndex			= INVALID_INDEX;
 
 	SetResizable(false);
 }
@@ -86,6 +88,9 @@ void GrColumnList::OnGridCoreAttached()
 	pFocuser->FocusChanged.Add(this, &GrColumnList::gridCore_FocusChanged);
 
 	m_pGridCore->Cleared.Add(this, &GrColumnList::gridCore_Cleared);
+
+	m_pGridCore->AddUpdatable(this);
+	m_pGridCore->AddClippable(this);
 }
 
 GrColumnList::~GrColumnList()
@@ -116,13 +121,20 @@ void GrColumnList::Update(bool force)
 	if(m_bFitChanged == true)
 		AdjustColumnWidth();
 
+	if(m_bWidthChanged == true)
+		RepositionColumnList();	
+
 	m_bVisibleChanged	= false;
 	m_bFitChanged		= false;
+	m_bWidthChanged		= false;
 }
 
 void GrColumnList::Reserve(uint reserve)
 {
 	m_vecColumns.reserve(reserve);
+	m_vecVisibleColumns.reserve(reserve);
+	m_vecDisplayableColumns.reserve(reserve);
+	m_vecColumnsRemoved.reserve(reserve);
 }
 
 void GrColumnList::AddColumn(GrColumn* pColumn)
@@ -144,8 +156,6 @@ void GrColumnList::InsertColumn(GrColumn* pColumn, uint nIndex)
 	if(itor != m_vecColumnsRemoved.end())
 		m_vecColumnsRemoved.erase(itor);
 
-	m_pGridCore->AttachObject(pColumn);
-
 	itor = m_vecColumns.insert(m_vecColumns.begin() + nIndex, pColumn);
 	nIndex = std::min(nIndex, m_vecColumns.size());
 	for( ; itor != m_vecColumns.end() ; itor++)
@@ -153,17 +163,16 @@ void GrColumnList::InsertColumn(GrColumn* pColumn, uint nIndex)
 		(*itor)->SetIndex(nIndex++);
 	}
 
+	m_pGridCore->AttachObject(pColumn);
+
 	if(m_vecVisibleColumns.size() == 0)
 		pColumn->SetPriority(m_vecColumns.size());
-
-	SetVisibleChanged();
 
 	GrColumnEventArgs e(pColumn);
 	OnColumnInserted(&e);
 
 	pColumn->GroupingChanged.Add(this, &GrColumnList::column_GroupingChanged);
-
-	m_pGridCore->Invalidate();
+	assert(m_pGridCore->IsInvalidated() == true);
 }
 
 void GrColumnList::RemoveColumn(GrColumn* pColumn)
@@ -177,20 +186,18 @@ void GrColumnList::RemoveColumn(GrColumn* pColumn)
 		nIndex++;
 	}
 
+	m_pGridCore->DetachObject(pColumn);
+
 	pColumn->SetIndex(INVALID_INDEX);
 
 	m_vecColumns.erase(itor);
 	m_vecColumnsRemoved.push_back(pColumn);
 
-	m_pGridCore->DetachObject(pColumn);
-
-	SetVisibleChanged();
-
 	pColumn->GroupingChanged.Remove(this, &GrColumnList::column_GroupingChanged);
-
 	GrColumnEventArgs e(pColumn);
 	OnColumnRemoved(&e);
-	m_pGridCore->Invalidate();
+
+	assert(m_pGridCore->IsInvalidated() == true);
 }
 
 uint GrColumnList::GetCellCount() const
@@ -214,6 +221,11 @@ const GrCell* GrColumnList::GetCell(uint nIndex) const
 	else if(nIndex == m_vecColumns.size() + 1)
 		return m_pColumnSplitter;
 	return m_vecColumns[nIndex - 1];
+}
+
+GrRect GrColumnList::GetBound() const
+{
+	return GrRect(GetX(), GetY(), GetX() + m_nBoundWidth, GetY() + GetHeight());
 }
 
 uint GrColumnList::GetColumnCount() const
@@ -298,7 +310,14 @@ GrColumn* GrColumnList::GetFirstSortColumn() const
 	return m_pSortColumn;
 }
 
-void GrColumnList::Clip(const GrRect* pDisplayRect, uint nVisibleStart)
+bool GrColumnList::NeedToClip(const GrRect* pDisplayRect, uint horizontal, uint vertical) const
+{
+	if(m_nClippedIndex == horizontal && pDisplayRect->GetWidth() == m_nClippedWidth)
+		return false;
+	return true;
+}
+
+void GrColumnList::Clip(const GrRect* pDisplayRect, uint horizontal, uint vertical)
 {
 	GrRect rtDisplay	= *pDisplayRect;
 	int nDisplayX		= GetDisplayX() + GetWidth() + m_pGridCore->GetGroupingMargin();
@@ -315,9 +334,12 @@ void GrColumnList::Clip(const GrRect* pDisplayRect, uint nVisibleStart)
 		pColumn->SetDisplayX(nDisplayX);
 		pColumn->SetDisplayable(true);
 		pColumn->SetDisplayIndex(m_vecDisplayableColumns.size());
-		m_vecDisplayableColumns.push_back(pColumn);
-		nDisplayX += pColumn->GetWidth();
 		pColumn->SetClipped(false);
+
+		int width = pColumn->GetWidth();
+		nDisplayX += width;
+
+		m_vecDisplayableColumns.push_back(pColumn);
 	}
 
 	m_pColumnSplitter->m_nDisplayX = nDisplayX;
@@ -325,8 +347,7 @@ void GrColumnList::Clip(const GrRect* pDisplayRect, uint nVisibleStart)
 	if(m_pColumnSplitter->GetVisible() == true)
 		nDisplayX += m_pColumnSplitter->GetWidth();
 
-	
-	for(uint i=m_nFrozenCount+nVisibleStart ; i<GetVisibleColumnCount() ; i++)
+	for(uint i=m_nFrozenCount+horizontal ; i<GetVisibleColumnCount() ; i++)
 	{
 		GrColumn* pColumn = GetVisibleColumn(i);
 
@@ -337,16 +358,21 @@ void GrColumnList::Clip(const GrRect* pDisplayRect, uint nVisibleStart)
 		pColumn->SetDisplayable(true);
 		pColumn->SetDisplayIndex(m_vecDisplayableColumns.size());
 
-		if(nDisplayX + pColumn->GetWidth() >= rtDisplay.right)
+		int width = pColumn->GetWidth();
+
+		if(nDisplayX + width >= rtDisplay.right)
 			pColumn->SetClipped(true);
 		else
 			pColumn->SetClipped(false);
 
 		m_vecDisplayableColumns.push_back(pColumn);
-		nDisplayX += pColumn->GetWidth();
+		nDisplayX += width;
 	}
 
 	m_nDisplayableRight = std::min(pDisplayRect->right, nDisplayX);
+
+	m_nClippedIndex = horizontal;
+	m_nClippedWidth = pDisplayRect->GetWidth();
 }
 
 uint GrColumnList::ClipFrom(uint nVisibleFrom) const
@@ -514,6 +540,9 @@ void GrColumnList::groupingList_Changed(GrObject* /*pSender*/, GrEventArgs* /*e*
 {
 	GrGroupingList* pGroupingList = m_pGridCore->GetGroupingList();
 	m_nGroupingCount = pGroupingList->GetGroupingCount();
+	m_bWidthChanged = true;
+
+	assert(m_pGridCore->IsInvalidated() == true);
 }
 
 void GrColumnList::gridCore_FocusChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
@@ -564,12 +593,9 @@ void GrColumnList::NotifyWidthChanged(GrColumn* pColumn)
 
 	if(pColumn->GetDisplayIndex() != INVALID_INDEX)
 	{
-		GrRect rtDisplay = pColumn->GetDisplayRect();
-		const GrRect* pDisplayRect = m_pGridCore->GetDisplayRect();
-		rtDisplay.bottom = pDisplayRect->bottom;
-		rtDisplay.right = pDisplayRect->right;
-		m_pGridCore->Invalidate(rtDisplay);
+		m_pGridCore->Invalidate();
 	}
+	m_bWidthChanged = true;
 }
 
 void GrColumnList::NotifyFrozenChanged(GrColumn* pColumn)
@@ -719,17 +745,11 @@ GrSize GrCell::GetSize() const
 
 uint GrCell::GetTextLineCount() const
 {
-	if(m_strText.size() == 0)
-		return 0;
-	if(GetTextMulitiline() == false)
-		return 1;
 	return m_vecTextLine.size();
 }
 
 const GrLineDesc* GrCell::GetTextLine(uint nIndex) const
 {
-	if(GetTextMulitiline() == false)
-		return &m_textLine;
 	return &(m_vecTextLine[nIndex]);
 }
 
@@ -822,34 +842,38 @@ void GrCell::ComputeTextBound()
 
 		if(GetTextMulitiline() == false)
 		{
-			GrTextUtil::SingleLine(&m_textLine, m_strText, pFont);
+			GrLineDesc textLine;
+			GrTextUtil::SingleLine(&textLine, m_strText, pFont);
+			m_vecTextLine.push_back(textLine);
 		}
 		else
 		{
 			GrTextUtil::MultiLine(&m_vecTextLine, m_strText, nCellWidth, pFont, GetTextWordWrap());
 		}
 
-		m_nTextLineHeight = pFont->GetHeight();
-
-		for(uint i=0 ; i<GetTextLineCount() ; i++)
+		for_each(std::vector<GrLineDesc>, m_vecTextLine, value)
 		{
-			const GrLineDesc* pLineDesc = GetTextLine(i);
-			nMaxWidth	= std::max(nMaxWidth, pLineDesc->nWidth);
+			const GrLineDesc& lineDesc = value;
+			nMaxWidth = std::max(nMaxWidth, lineDesc.nWidth);
 		}
 	}
 
-	nMaxWidth	+= (padding.left + padding.right);
-	nMaxHeight = GetTextLineCount() * m_nTextLineHeight + padding.top + padding.bottom;
+	m_nTextLineHeight = pFont->GetHeight();
+
+	nMaxWidth += (padding.left + padding.right);
+	nMaxHeight = padding.top + padding.bottom;
+
+	if(m_vecTextLine.size() == 0)
+		nMaxHeight += m_nTextLineHeight;
+	else
+		nMaxHeight += m_vecTextLine.size() * m_nTextLineHeight;
 
 	if(nMaxWidth > GetWidth() || nMaxHeight > GetHeight())
 		AddFlag(GRCF_TEXT_CLIPPED);
 	else
 		RemoveFlag(GRCF_TEXT_CLIPPED);
 	
-	m_rtTextBound.left	= 0;
-	m_rtTextBound.top	= 0;
-	m_rtTextBound.right = nMaxWidth;
-	m_rtTextBound.bottom= nMaxHeight;
+	m_rtTextBound = GrRect(0, 0, nMaxWidth, nMaxHeight);
 	OnTextBoundChanged(&m_rtTextBound, &rtOldTextBound);
 }
 
@@ -1794,12 +1818,28 @@ IFocusable* GrDataRow::GetFocusable(GrColumn* pColumn) const
 	return GetItem(pColumn);
 }
 
-void GrDataRow::OnUpdatePositionCell(int /*x*/, GrUpdateDesc* pUpdateDesc)
+int GrDataRow::GetFitHeight() const
 {
-	const GrRect* pColumnBound = m_pGridCore->GetColumnList()->GetBound();
+	int height = IDataRow::GetFitHeight();
 
-	pUpdateDesc->nMin	= pColumnBound->left;
-	pUpdateDesc->nMax	= pColumnBound->right;
+	for_each_const(_Items, m_vecItems, value)
+	{
+		int nItemHeight = value->GetTextBound()->GetHeight() + DEF_LEADING;
+		height = std::max(height, nItemHeight);
+	}
+	return height;
+}
+
+void GrDataRow::OnHeightAdjusted()
+{
+	IDataRow::OnHeightAdjusted();
+	if(m_pTextUpdater == NULL)
+		return;
+	for_each(_Items, m_vecItems, value)
+	{
+		m_pTextUpdater->AddTextAlign(value);
+	}
+	m_pGridCore->Invalidate();
 }
 
 GrColumn::GrColumn()
@@ -2564,9 +2604,6 @@ void GrColumnList::BuildVisibleColumnList()
 	m_vecVisibleColumns.clear();
 	m_vecDisplayableColumns.clear();
 
-	m_vecVisibleColumns.reserve(GetColumnCount());
-	m_vecDisplayableColumns.reserve(GetColumnCount());
-
 	m_nFrozenCount = 0;
 	for_each(_Columns, m_vecColumns, value)
 	{
@@ -2581,15 +2618,15 @@ void GrColumnList::BuildVisibleColumnList()
 
 	sort(m_vecVisibleColumns.begin(), m_vecVisibleColumns.end(), SortColumn());
 
-	uint nIndex = 0;
 	for_each(_Columns, m_vecVisibleColumns, value)
 	{
 		if(value->GetFrozen() == true)
 			m_nFrozenCount++;
-		value->SetVisibleIndex(nIndex++);
+		uint nIndex = value.GetIndex();
+		value->SetVisibleIndex(nIndex);
 	}
 
-	m_pGridCore->SetWidthChanged();
+	m_bWidthChanged = true;
 }
 
 void GrColumnList::AdjustColumnWidth()
@@ -2598,24 +2635,12 @@ void GrColumnList::AdjustColumnWidth()
 	{
 		value->AdjustWidth();
 	}
-	m_pGridCore->SetWidthChanged();
+	m_bWidthChanged = true;
 }
 
-void GrColumnList::OnPositionUpdated(GrPoint /*pt*/)
+void GrColumnList::RepositionColumnList()
 {
-	m_mapColumnByPosition.clear();
-
-	for_each(_Columns, m_vecVisibleColumns, value)
-	{
-		int nKey = value->GetX() + value->GetWidth() - 1;
-		m_mapColumnByPosition.insert(_MapColumnPos::value_type(nKey, value));
-	}	
-}
-
-void GrColumnList::OnUpdatePositionCell(int x, GrUpdateDesc* pUpdateDesc)
-{
-	GrRow::OnUpdatePositionCell(x, pUpdateDesc);
-	x = CellStart();
+	int x = GetX() + GetWidth() + m_pGridCore->GetGroupingMargin();
 
 	for(uint i=0 ; i<GetFrozenColumnCount() ; i++)
 	{
@@ -2636,16 +2661,27 @@ void GrColumnList::OnUpdatePositionCell(int x, GrUpdateDesc* pUpdateDesc)
 		x += pColumn->GetWidth();
 	}
 
-	pUpdateDesc->nMax = std::max(pUpdateDesc->nMax, x);
+	m_nBoundWidth = x - GetX();
+
+	m_mapColumnByPosition.clear();
+	for_each(_Columns, m_vecVisibleColumns, value)
+	{
+		int nKey = value->GetX() + value->GetWidth() - 1;
+		m_mapColumnByPosition.insert(_MapColumnPos::value_type(nKey, value));
+	}	
+
+	m_nClippedIndex = INVALID_INDEX;
 }
 
 void GrColumnList::OnColumnInserted(GrColumnEventArgs* e)
 {
+	SetVisibleChanged();
 	ColumnInserted(this, e);
 }
 
 void GrColumnList::OnColumnRemoved(GrColumnEventArgs* e)
 {
+	SetVisibleChanged();
 	ColumnRemoved(this, e);
 }
 
@@ -2800,22 +2836,12 @@ void GrRow::AdjustHeight()
 		return;
 
 	int nHeight = GetFitHeight();
-	for(uint i=0 ; i<GetCellCount() ; i++)
-	{
-		GrCell* pCell = GetCell(i);
-		int nCellHeight = pCell->GetTextBound()->GetHeight() + DEF_LEADING;
-		nHeight = std::max(nHeight, nCellHeight);
-	}
 
-	if(m_nHeight != nHeight && m_pTextUpdater != NULL)
+	if(m_nHeight != nHeight)
 	{
-		for(uint i=0 ; i<GetCellCount() ; i++)
-		{
-			GrCell* pCell = GetCell(i);
-			m_pTextUpdater->AddTextAlign(pCell);
-		}
+		SetHeight(nHeight);
+		OnHeightAdjusted();
 	}
-	m_nHeight = nHeight;
 	m_bFitting = false;
 }
 
@@ -2971,70 +2997,6 @@ void GrRow::GetVisibleList(GrRowArray* pVisible) const
 		const GrRow* pChild = GetChild(i);
 		pChild->GetVisibleList(pVisible);
 	}
-}
-
-GrPoint GrRow::UpdatePosition(GrPoint pt, GrRowUpdate updateType)
-{
-	if(updateType & GrRowUpdate_Cell)
-	{
-		GrUpdateDesc updateDesc;
-		OnUpdatePositionCell(pt.x, &updateDesc);
-		m_rtBound.left	= updateDesc.nMin;
-		m_rtBound.right = updateDesc.nMax;
-	}
-
-	if(updateType & GrRowUpdate_Row)
-	{
-		GrUpdateDesc updateDesc;
-		OnUpdatePositionRow(pt.y, &updateDesc);
-		m_rtBound.top	 = updateDesc.nMin;
-		m_rtBound.bottom = updateDesc.nMax;
-		pt.y = updateDesc.nMax;
-	}
-
-	for(uint i=0 ; i<GetChildCount() ; i++)
-	{
-		GrRow* pChild = GetChild(i);
-		if(pChild->GetVisible() == false)
-			continue;
-		pt	= pChild->UpdatePosition(pt, updateType);
-
-		const GrRect* pChildBound = pChild->GetBound();
-		if(updateType & GrRowUpdate_Cell)
-		{
-			m_rtBound.left		= std::min(pChildBound->left,	m_rtBound.left);
-			m_rtBound.right		= std::max(pChildBound->right,	m_rtBound.right);
-		}
-
-		if(updateType & GrRowUpdate_Row)
-		{
-			m_rtBound.top		= std::min(pChildBound->top,	m_rtBound.top);
-			m_rtBound.bottom	= std::max(pChildBound->bottom,	m_rtBound.bottom);
-		}
-	}
-
-	OnPositionUpdated(pt);
-
-	return pt;
-}
-
-void GrRow::OnHeightChanged()
-{
-
-}
-
-void GrRow::OnUpdatePositionCell(int x, GrUpdateDesc* pUpdateDesc)
-{
-	pUpdateDesc->nMin = x;
-	pUpdateDesc->nMax = x + GetWidth();
-}
-
-void GrRow::OnUpdatePositionRow(int y, GrUpdateDesc* pUpdateDesc)
-{
-	SetY(y);
-
-	pUpdateDesc->nMin = y;
-	pUpdateDesc->nMax = y + GetHeight();
 }
 
 GrDataRow::GrDataRow()
@@ -3372,6 +3334,12 @@ void IDataRow::OnGridCoreAttached()
 	m_pDataRowList = m_pGridCore->GetDataRowList();
 }
 
+void IDataRow::OnHeightChanged()
+{
+	if(m_pDataRowList != NULL)
+		m_pDataRowList->SetHeightChanged();
+}
+
 bool IDataRow::HasFocused() const
 {
 	GrFocuser* pFocuser = m_pGridCore->GetFocuser();
@@ -3531,6 +3499,20 @@ void GrCaption::OnFitted()
 	m_pGridCore->GetHeaderList()->SetFitChanged();
 }
 
+void GrCaption::OnTextChanged()
+{
+	GrRow::OnTextChanged();
+	Invalidate(false);
+}
+
+void GrCaption::OnHeightChanged()
+{
+	GrRow::OnHeightChanged();
+	GrHeaderRow* pHeaderRow = dynamic_cast<GrHeaderRow*>(GetParent());
+	if(pHeaderRow != NULL)
+		pHeaderRow->SetHeightChanged();
+}
+
 void GrCaption::SetTextHorzAlign(GrHorzAlign align)
 {
 	if(m_horzAlign == align)
@@ -3574,8 +3556,10 @@ GrGroupingList::GrGroupingList()
 	AddFlag(GRCF_SYSTEM_OBJCT);
 	SetText(L"그룹핑할 컬럼을 이쪽으로 드래그하여 옮기세요");
 	ComputeLayout();
-	m_bEnableGrouping = true;
-	m_bVisible = true;
+	m_bEnableGrouping	= true;
+	m_bVisible			= true;
+	m_bGroupingChanged	= false;
+	m_nUpdatedY			= -1;
 }
 
 GrGroupingList::~GrGroupingList()
@@ -3634,6 +3618,27 @@ void GrGroupingList::EnableGrouping(bool b)
 	Changed(this, &GrEventArgs::Empty);
 }
 
+void GrGroupingList::Update(bool force)
+{
+	if(m_bGroupingChanged == true || m_nUpdatedY != GetY())
+	{
+		GrPoint pt;
+		pt.x = GetX();
+		pt.y = GetY();
+
+		pt.x += 10;
+		pt.y += 10;
+		for_each(_Groupings, m_vecGroupings, value)
+		{
+			value->SetPosition(pt);
+			pt.x += value->GetWidth() + 10;
+		}
+	}
+
+	m_nUpdatedY = GetY();
+	m_bGroupingChanged = false;
+}
+
 void GrGroupingList::ResetGroupingLevel()
 {
 	for_each(_Groupings, m_vecGroupings, value)
@@ -3659,6 +3664,8 @@ void GrGroupingList::AddGrouping(GrGroupingInfo* pGroupingInfo)
 
 	ResetGroupingLevel();
 	ComputeLayout();
+	m_pGridCore->Invalidate();
+	m_bGroupingChanged = true;
 	Changed.Raise(this, &GrEventArgs::Empty);
 }
 
@@ -3675,6 +3682,8 @@ void GrGroupingList::RemoveGrouping(GrGroupingInfo* pGroupingInfo)
 
 	ResetGroupingLevel();
 	ComputeLayout();
+	m_pGridCore->Invalidate();
+	m_bGroupingChanged = true;
 	Changed.Raise(this, &GrEventArgs::Empty);
 }
 
@@ -3742,11 +3751,21 @@ const GrCell* GrGroupingList::GetCell(uint nIndex) const
 	return GetGrouping(nIndex);
 }
 
+void GrGroupingList::OnHeightChanged()
+{
+	GrRow::OnHeightChanged();
+	GrHeaderRow* pHeaderRow = dynamic_cast<GrHeaderRow*>(GetParent());
+	if(pHeaderRow != NULL)
+		pHeaderRow->SetHeightChanged();
+}
+
 void GrGroupingList::OnGridCoreAttached()
 {
 	GrRow::OnGridCoreAttached();
 	m_pGridCore->Cleared.Add(this, &GrGroupingList::gridCore_Cleared);
 	m_pGridCore->Created.Add(this, &GrGroupingList::gridCore_Created);
+
+	m_pGridCore->AddUpdatable(this);
 }
 
 void GrGroupingList::gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
@@ -3786,34 +3805,6 @@ void GrGroupingList::columnList_ColumnGroupingChanged(GrObject* /*pSender*/, GrC
 		AddGrouping(pColumn->GetGroupingInfo());
 	else
 		RemoveGrouping(pColumn->GetGroupingInfo());
-}
-
-void GrGroupingList::OnUpdatePositionRow(int y, GrUpdateDesc* pUpdateDesc)
-{
-	GrRow::OnUpdatePositionRow(y, pUpdateDesc);
-	GrPoint pt;
-	pt.y = GetY() + 10;
-	for_each(_Groupings, m_vecGroupings, value)
-	{
-		pt.x = value->GetX();
-		value->SetPosition(pt);
-	}
-}
-
-void GrGroupingList::OnUpdatePositionCell(int x, GrUpdateDesc* pUpdateDesc)
-{
-	GrRow::OnUpdatePositionCell(x, pUpdateDesc);
-	GrPoint pt;
-	pt.x = GetX();
-	pt.y = GetY();
-
-	pt.x += 10;
-	pt.y += 10;
-	for_each(_Groupings, m_vecGroupings, value)
-	{
-		value->SetPosition(pt);
-		pt.x += value->GetWidth() + 10;
-	}
 }
 
 void GrGroupingList::OnFitted()
@@ -3904,7 +3895,6 @@ void GrGroupingRow::Expand(bool bExpand)
 {
 	if(m_bExpanded == bExpand)
 		return;
-
 	if(m_pDataRowList != NULL)
 		m_pDataRowList->SetVisibleChanged();
 	m_bExpanded = bExpand;
@@ -3917,6 +3907,7 @@ bool GrGroupingRow::IsExpanded() const
 
 void GrGroupingRow::OnHeightChanged()
 {
+	IDataRow::OnHeightChanged();
 	SetTextAlignChanged();
 }
 
@@ -3979,6 +3970,14 @@ void GrInsertionRow::OnGridCoreAttached()
 
 	GrColumnList* pColumnList = m_pGridCore->GetColumnList();
 	SetY(pColumnList->GetHeight());
+}
+
+void GrInsertionRow::OnHeightChanged()
+{
+	GrRow::OnHeightChanged();
+	GrHeaderRow* pHeaderRow = dynamic_cast<GrHeaderRow*>(GetParent());
+	if(pHeaderRow != NULL)
+		pHeaderRow->SetHeightChanged();
 }
 
 void GrInsertionRow::SetVisible(bool b)
@@ -4071,6 +4070,9 @@ void GrDataRowList::OnGridCoreAttached()
 
 	m_pInsertionRow->SetVisibleDataRowIndex(INSERTION_ROW);
 	m_pInsertionRow->SetVisibleIndex(INSERTION_ROW);
+
+	m_pGridCore->AddUpdatable(this);
+	m_pGridCore->AddClippable(this);
 }
 
 GrGroupingRow* GrDataRowList::CreateGroupingRow(GrRow* pParent, GrColumn* pColumn, const wchar_t* strText)
@@ -4264,6 +4266,11 @@ void GrDataRowList::SetListChanged()
 	m_bListChanged = true;
 }
 
+void GrDataRowList::SetHeightChanged()
+{
+	m_bHeightChanged = true;
+}
+
 void GrDataRowList::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const
 {
 	for_each_const(_IDataRows, m_vecDisplayableRows, value)
@@ -4450,18 +4457,50 @@ void GrDataRowList::BuildVisibleRowList()
 	VisibleChanged(this, &GrEventArgs::Empty);
 }
 
+void GrDataRowList::RepositionVisibleRowList()
+{
+	int y = GetY();
+	for_each(_IDataRows, m_vecVisibleRows, value)
+	{
+		value->SetY(y);
+		y += value->GetHeight();
+	}
+
+	m_mapRowByPosition.clear();
+
+	for_each(_IDataRows, m_vecVisibleRows, value)
+	{
+		int nKey = value->GetY() + value->GetHeight() - 1;
+		m_mapRowByPosition.insert(_MapDataRowPos::value_type(nKey, value));
+	}	
+
+	m_rowFinder.Build(&m_vecVisibleRows);
+}
+
 void GrDataRowList::Update(bool force)
 {
+	GrHeaderRow* pHeaderRow = m_pGridCore->GetHeaderList();
+	int bottom = pHeaderRow->GetBound().bottom;
+	if(GetY() != bottom)
+	{
+		SetY(bottom);
+		m_bHeightChanged = true;
+	}
+
 	if(m_bListChanged == true || force == true)
 		BuildChildRowList();
 	if(m_bVisibleChanged == true || force == true)
 		BuildVisibleRowList();
 	if(m_bFitChanged == true || force == true)
 		AdjustRowHeight();
+	if(m_bHeightChanged == true)
+		RepositionVisibleRowList();
+	
 
 	m_bListChanged		= false;
 	m_bVisibleChanged	= false;
 	m_bFitChanged		= false;
+	m_bHeightChanged	= false;
 }
 
 uint GrDataRowList::GetVisibleDataRowCount() const
@@ -4616,19 +4655,6 @@ void GrDataRowList::ClearDataRow()
 	m_rowFinder.Build(&m_vecVisibleRows);
 }
 
-void GrDataRowList::OnPositionUpdated(GrPoint /*pt*/)
-{
-	m_mapRowByPosition.clear();
-
-	for_each(_IDataRows, m_vecVisibleRows, value)
-	{
-		int nKey = value->GetY() + value->GetHeight() - 1;
-		m_mapRowByPosition.insert(_MapDataRowPos::value_type(nKey, value));
-	}	
-
-	m_rowFinder.Build(&m_vecVisibleRows);
-}
-
 void GrDataRowList::DeleteObjects()
 {
 	for_each(_DataRows, m_vecDataRows, value)
@@ -4724,7 +4750,12 @@ IDataRow* GrDataRowList::HitTest(int y) const
 	return pDataRow;
 }
 
-void GrDataRowList::Clip(const GrRect* pDisplayRect, uint nVisibleStart)
+bool GrDataRowList::NeedToClip(const GrRect* pDisplayRect, uint horizontal, uint vertical) const
+{
+	return true;
+}
+
+void GrDataRowList::Clip(const GrRect* pDisplayRect, uint horizontal, uint vertical)
 {
 	int nDisplayY = GetDisplayY();
 
@@ -4737,7 +4768,7 @@ void GrDataRowList::Clip(const GrRect* pDisplayRect, uint nVisibleStart)
 	m_vecDisplayableRows.clear();
 
 	uint nDisplayIndex = 0;
-	for(uint i=nVisibleStart ; i<GetVisibleRowCount() ; i++)
+	for(uint i=vertical ; i<GetVisibleRowCount() ; i++)
 	{
 		IDataRow* pIDataRow = GetVisibleRow(i);
 
@@ -5301,16 +5332,21 @@ GrHeaderRow::GrHeaderRow()
 	AddFlag(GRCF_SYSTEM_OBJCT);
 	m_bVisibleChanged	= true;
 	m_bFitChanged		= false;
+	m_bHeightChanged	= false;
 }
 
-void GrHeaderRow::Update()
+void GrHeaderRow::Update(bool /*force*/)
 {
 	if(m_bVisibleChanged == true)
 		BuildVisibleList();
 
 	if(m_bFitChanged == true)
 		AdjustRowHeight();
+
+	if(m_bHeightChanged == true)
+		RepositionVisibleList();
 	
+	m_bHeightChanged	= false;
 	m_bVisibleChanged	= false;
 	m_bFitChanged		= false;
 }
@@ -5325,7 +5361,7 @@ void GrHeaderRow::BuildVisibleList()
 		if(pChild->GetVisible() == true)
 			m_vecVisibleRows.push_back(pChild);
 	}
-	m_pGridCore->SetHeightChanged();
+	m_bHeightChanged = true;
 }
 
 void GrHeaderRow::AdjustRowHeight()
@@ -5338,6 +5374,18 @@ void GrHeaderRow::AdjustRowHeight()
 	m_pGridCore->SetHeightChanged();
 }
 
+void GrHeaderRow::RepositionVisibleList()
+{
+	int y = GetY();
+	for_each(_Rows, m_vecVisibleRows, value)
+	{
+		value->SetY(y);
+		y += value->GetHeight();
+	}
+	m_nHeight = y - GetY();
+}
+	
+
 void GrHeaderRow::SetVisibleChanged()
 {
 	m_bVisibleChanged = true;
@@ -5349,12 +5397,29 @@ void GrHeaderRow::SetFitChanged()
 	m_bFitChanged = true;
 }
 
+void GrHeaderRow::SetHeightChanged()
+{
+	m_bHeightChanged = true;
+}
+
 void GrHeaderRow::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const
 {
 	for_each_const(_Rows, m_vecVisibleRows, value)
 	{
 		value->Render(pRenderer, pClipping);
 	}
+}
+
+GrRect GrHeaderRow::GetBound() const
+{
+	GrColumnList* pColumnList = m_pGridCore->GetColumnList();
+	return GrRect(GetX(), GetY(), pColumnList->GetBound().right, GetY() + m_nHeight);
+}
+
+void GrHeaderRow::OnGridCoreAttached()
+{
+	GrRow::OnGridCoreAttached();
+	m_pGridCore->AddUpdatable(this);
 }
 
 bool GrSortFunc::SortRowsDown(GrGridCore* pGridCore, const GrRow* pRow1, const GrRow* pRow2, void* dwUserData)
