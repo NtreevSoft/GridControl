@@ -74,9 +74,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void RowCollection::Bind(object^ component, int componentIndex)
 	{
-		if(this[component] != nullptr)
-			return;
-
 		if(GridControl->InvokeRowInserting(component) == false)
 			return;
 

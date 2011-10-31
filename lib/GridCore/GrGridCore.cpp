@@ -27,24 +27,6 @@
 #include "GrGridInternal.h"
 #include <assert.h>
 
-class SortUpdatable
-{
-public:
-	bool operator () (const GrUpdatable* p1, const GrUpdatable* p2)
-	{
-		return p1->GetUpdatePriority() < p2->GetUpdatePriority();
-	}
-};
-
-class SortClippable
-{
-public:
-	bool operator () (const GrClippable* p1, const GrClippable* p2)
-	{
-		return p1->GetClipPriority() < p2->GetClipPriority();
-	}
-};
-
 class GrDefaultInvalidator : public GrGridInvalidator
 {
 public:
@@ -196,9 +178,6 @@ GrGridCore::GrGridCore(void)
 	m_bMarginVisible		= false;
 	m_bUpdating				= false;
 
-	m_bWidthChanged			= false;
-	m_bHeightChanged		= false;
-
 	m_bShowClippedText		= true;
 
 	m_bAutoFitColumn		= false;
@@ -225,7 +204,6 @@ GrGridCore::GrGridCore(void)
 	m_pMouseOverer	= new GrMouseOverer();
 	m_pMousePresser	= new GrMousePresser();
 	m_pRootRow		= new GrRootRow();
-	m_pHeaderList	= new GrHeaderRow();
 	m_pCaption		= new GrCaption();
 	m_pGroupingList	= new GrGroupingList();
 	m_pColumnList	= new GrColumnList();
@@ -240,7 +218,6 @@ GrGridCore::GrGridCore(void)
 	AttachObject(m_pMouseOverer);
 	AttachObject(m_pMousePresser);
 	AttachObject(m_pRootRow);
-	AttachObject(m_pHeaderList);
 	AttachObject(m_pCaption);
 	AttachObject(m_pGroupingList);
 	AttachObject(m_pColumnList);
@@ -248,13 +225,11 @@ GrGridCore::GrGridCore(void)
 	AttachObject(m_pInsertionRow);
 	AttachObject(m_pSplitterRow);
 
-	m_pHeaderList->AddChild(m_pCaption);
-	m_pHeaderList->AddChild(m_pGroupingList);
-	m_pHeaderList->AddChild(m_pColumnList);
-	m_pHeaderList->AddChild(m_pInsertionRow);
-	m_pHeaderList->AddChild(m_pSplitterRow);
-
-	m_pRootRow->AddChild(m_pHeaderList);
+	m_pRootRow->AddChild(m_pCaption);
+	m_pRootRow->AddChild(m_pGroupingList);
+	m_pRootRow->AddChild(m_pColumnList);
+	m_pRootRow->AddChild(m_pInsertionRow);
+	m_pRootRow->AddChild(m_pSplitterRow);
 	m_pRootRow->AddChild(m_pDataRowList);
 
 	m_pGroupingList->Changed.Add(this, &GrGridCore::groupingList_Changed);
@@ -283,7 +258,6 @@ GrGridCore::~GrGridCore(void)
 	delete m_pColumnList;
 	delete m_pGroupingList;
 	delete m_pCaption;
-	delete m_pHeaderList;
 	delete m_pRootRow;
 
 	delete m_pStyle;
@@ -380,23 +354,6 @@ void GrGridCore::SetRowHighlightType(GrRowHighlightType type)
 	m_rowHighlightType = type;
 }
 
-void GrGridCore::SetWidthChanged()
-{
-	m_bWidthChanged = true;
-	m_pTextUpdater->AddTextBound(m_pCaption);
-	m_pTextUpdater->AddTextBound(m_pGroupingList);
-}
-
-void GrGridCore::SetHeightChanged()
-{
-	m_bHeightChanged = true;
-}
-
-bool GrGridCore::ShouldUpdate() const
-{
-	return m_bWidthChanged || m_bHeightChanged;
-}
-
 bool GrGridCore::Update()
 {
 	if(m_bUpdating == true)
@@ -406,24 +363,13 @@ bool GrGridCore::Update()
 
 	m_pTextUpdater->UpdateTextBound();
 
-	for_each(_Updatables, m_vecUpdatables, value)
-	{
-		value->Update(false);
-	}
-
-	ulong dwRowUpdate = 0;
-
-	if(m_bHeightChanged == true)
-	{
-		dwRowUpdate |= GrRowUpdate_Row;
-		m_bHeightChanged = false;
-	}
+	m_pRootRow->Update(false);
 
 	m_pTextUpdater->UpdateTextBound();
 	m_pTextUpdater->UpdateTextAlign();
 
 	m_bUpdating = false;
-	return dwRowUpdate != 0;
+	return true;
 }
 
 const GrRect* GrGridCore::GetDisplayRect() const
@@ -433,11 +379,7 @@ const GrRect* GrGridCore::GetDisplayRect() const
 
 void GrGridCore::Clip(uint nStartCol, uint nStartRow)
 {
-	for_each(_Clippables, m_vecClippables, value)
-	{
-		if(value->NeedToClip(&m_rtDisplay, nStartCol, nStartRow) == true)
-			value->Clip(&m_rtDisplay, nStartCol, nStartRow);
-	}
+	m_pRootRow->Clip(&m_rtDisplay, nStartCol, nStartRow);
 }
 
 void GrGridCore::SetDisplayRect(GrRect rtDisplay)
@@ -471,7 +413,7 @@ bool GrGridCore::CanBeGrouped() const
 void GrGridCore::EnableGrouping(bool b) const
 {
 	m_pGroupingList->EnableGrouping(b);
-	m_pHeaderList->SetVisibleChanged();
+	m_pRootRow->SetVisibleChanged();
 }
 
 int GrGridCore::GetGroupingMargin() const
@@ -568,7 +510,6 @@ void GrGridCore::columnList_ColumnWidthChanged(GrObject* /*pSender*/, GrColumnEv
 		return;
 	GrColumn* pColumn = e->GetColumn();
 	m_pTextUpdater->AddTextBound(pColumn);
-	SetWidthChanged();
 }
 
 void GrGridCore::columnList_ColumnWordwrapChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
@@ -577,7 +518,6 @@ void GrGridCore::columnList_ColumnWordwrapChanged(GrObject* /*pSender*/, GrColum
 		return;
 	GrColumn* pColumn = e->GetColumn();
 	m_pTextUpdater->AddTextBound(pColumn);
-	SetWidthChanged();
 }
 
 void GrGridCore::columnList_ColumnPaddingChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
@@ -648,40 +588,6 @@ void GrGridCore::DetachObject(GrObject* pObject)
 	m_nAttachedCount--;
 }
 
-void GrGridCore::AddUpdatable(GrUpdatable* pUpdatable)
-{
-	_Updatables::iterator itor = std::find(m_vecUpdatables.begin(), m_vecUpdatables.end(), pUpdatable);
-	if(itor != m_vecUpdatables.end())
-		throw _Exception("이미 업데이트 객체가 등록되어 있습니다.");
-	m_vecUpdatables.push_back(pUpdatable);
-	std::sort(m_vecUpdatables.begin(), m_vecUpdatables.end(), SortUpdatable());
-}
-
-void GrGridCore::RemoveUpdatable(GrUpdatable* pUpdatable)
-{
-	_Updatables::iterator itor = std::find(m_vecUpdatables.begin(), m_vecUpdatables.end(), pUpdatable);
-	if(itor == m_vecUpdatables.end())
-		throw _Exception("없는 업데이트 객체를 제거하려 했습니다.");
-	m_vecUpdatables.erase(itor);
-}
-
-void GrGridCore::AddClippable(GrClippable* pClippable)
-{
-	_Clippables::iterator itor = std::find(m_vecClippables.begin(), m_vecClippables.end(), pClippable);
-	if(itor != m_vecClippables.end())
-		throw _Exception("이미 클립 객체가 등록되어 있습니다.");
-	m_vecClippables.push_back(pClippable);
-	std::sort(m_vecClippables.begin(), m_vecClippables.end(), SortClippable());
-}
-
-void GrGridCore::RemoveClippable(GrClippable* pClippable)
-{
-	_Clippables::iterator itor = std::find(m_vecClippables.begin(), m_vecClippables.end(), pClippable);
-	if(itor == m_vecClippables.end())
-		throw _Exception("없는 클립 객체를 제거하려 했습니다.");
-	m_vecClippables.erase(itor);
-}
-
 void GrGridCore::groupingList_Changed(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 {
 	uint nGroupingCount = m_pGroupingList->GetGroupingCount();
@@ -689,18 +595,12 @@ void GrGridCore::groupingList_Changed(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 		m_nGroupingMargin = 0;
 	else
 		m_nGroupingMargin = (nGroupingCount + 1) * DEF_GROUP_WIDTH;
-
-	SetWidthChanged();
-	SetHeightChanged();
 }
 
 void GrGridCore::OnCreated(GrEventArgs* e)
 {
-	SetWidthChanged();
-	SetHeightChanged();
-	Update();
-
 	Created(this, e);
+	Update();
 }
 
 void GrGridCore::OnCleared(GrEventArgs* e)

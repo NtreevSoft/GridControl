@@ -126,7 +126,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	object^ Cell::ValidateValue(object^ value)
 	{
-		if(value == nullptr)
+		if(value == nullptr || value == System::DBNull::Value)
 			return value;
 
 		_Type^ dataType = this->Column->DataType;

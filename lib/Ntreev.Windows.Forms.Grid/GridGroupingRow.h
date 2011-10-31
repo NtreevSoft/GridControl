@@ -27,17 +27,17 @@
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
 	/// <summary>
-	/// ������ ǥ���ϴ� ��ü�Դϴ�.
+	/// 제목을 표시하는 개체입니다.
 	/// </summary>
 	[System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
 	public ref class GroupingRow : CellBase
 	{
 	public: // methods
 		/// <summary>
-		/// ���� <see cref="System:Object"/>�� ��Ÿ���� <see cref="System::String"/>�� ��ȯ�մϴ�.
+		/// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>을 반환합니다.
 		/// </summary>
 		/// <returns>
-		/// ���� <see cref="System:Object"/>�� ��Ÿ���� <see cref="System::String"/>�Դϴ�.
+		/// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
 		virtual string^ ToString() override
 		{
@@ -46,10 +46,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	public: // properties
 		/// <summary>
-		/// ������ �������ų� �����մϴ�.
+		/// 제목을 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// ������ ��Ÿ���� ���ڿ��Դϴ�.
+		/// 제목을 나타내는 문자열입니다.
 		/// </returns>
 		[_Category("Layout")]
 		property string^ Text
@@ -59,10 +59,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// ������ ǥ�� ���θ� �������ų� �����մϴ�.
+		/// 제목의 표시 여부를 가져오거나 설정합니다.
 		/// </summary>
 		/// <returns>
-		/// ������ ǥ�õǸ� true��, �׷��� ������ false�� ��ȯ�մϴ�.
+		/// 제목이 표시되면 true를, 그렇지 않으면 false를 반환합니다.
 		/// </returns>
 		[_Category("Appearance"), _DefaultValue(true)]
 		property bool IsVisible

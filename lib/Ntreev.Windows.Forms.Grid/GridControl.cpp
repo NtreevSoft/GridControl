@@ -1206,11 +1206,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void GridControl::EnsureVisible(Cell^ cell)
 	{
 		GrItem* pItem = cell->NativeRef;
-		if(pItem->NeedToEnsure() == false)
+		if(pItem->ShouldEnsureVisible() == false)
 			return;
 
-		if(m_pGridCore->ShouldUpdate())
-			UpdateGridRect();
+		UpdateGridRect();
 
 		HorizontalScroll->EnsureVisible(cell->Column);
 		VerticalScroll->EnsureVisible(cell->Row);

@@ -44,8 +44,6 @@ class GrGridCore : public GrObject
 	typedef GrEventBase<GrEventArgs, GrGridCore>		_GrEvent;
 	typedef GrEventBase<GrColumnEventArgs, GrGridCore>	_GrColumnEvent;
 	typedef GrEventBase<GrRowEventArgs, GrGridCore>		_GrRowEvent;
-	typedef std::vector<GrUpdatable*>					_Updatables;
-	typedef std::vector<GrClippable*>					_Clippables;
 
 public:
 	GrGridCore(void);
@@ -82,17 +80,15 @@ public:
 	GrRowHighlightType		GetRowHighlightType() const;
 	void					SetRowHighlightType(GrRowHighlightType type);
 
-	bool					ShouldUpdate() const;
 	bool					Update();
 
-	GrRow*					GetRoot() const { return (GrRow*)m_pRootRow; }
+	GrRootRow*				GetRoot() const { return m_pRootRow; }
 
 	GrDataRowList*			GetDataRowList() const { return m_pDataRowList; }
 	GrColumnList*			GetColumnList() const { return m_pColumnList; }
 	GrInsertionRow*			GetInsertionRow() const { return m_pInsertionRow; }
 	GrCaption*				GetCaptionRow() const { return m_pCaption; }
 	GrGroupingList*			GetGroupingList() const { return m_pGroupingList; }
-	GrHeaderRow*			GetHeaderList() const { return m_pHeaderList; }
 	GrItemSelector*			GetItemSelector() const { return m_pItemSelector; }
 	GrFocuser*				GetFocuser() const { return m_pFocuser; }
 	GrTextUpdater*			GetTextUpdater() const { return m_pTextUpdater; }
@@ -113,9 +109,6 @@ public:
 
 	void					Clip(uint nStartCol, uint nStartRow);
 	void					Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const;	
-
-	void					SetWidthChanged();
-	void					SetHeightChanged();
 
 	bool					IsGrouped() const;
 	bool					IsUpdating() const { return m_bUpdating; }
@@ -153,11 +146,6 @@ public:
 	void					AttachObject(GrObject* pObject);
 	void					DetachObject(GrObject* pObject);
 
-	void					AddUpdatable(GrUpdatable* pUpdatable);
-	void					RemoveUpdatable(GrUpdatable* pUpdatable);
-	void					AddClippable(GrClippable* pClippable);
-	void					RemoveClippable(GrClippable* pClippable);
-
 protected:
 	virtual void			OnCreated(GrEventArgs* e);
 	virtual void			OnCleared(GrEventArgs* e);
@@ -180,8 +168,7 @@ private:
 	void					groupingList_Changed(GrObject* pSender, GrEventArgs* e);
 
 private:
-	GrRow*					m_pRootRow;
-	GrHeaderRow*			m_pHeaderList;
+	GrRootRow*				m_pRootRow;
 	GrCaption*				m_pCaption;
 	GrGroupingList*			m_pGroupingList;
 	GrColumnList*			m_pColumnList;
@@ -210,9 +197,7 @@ private:
 	uint					m_nReservedRow;
 
 	bool					m_bMarginVisible;
-	
-	bool					m_bWidthChanged;
-	bool					m_bHeightChanged;
+
 
 	bool					m_bAutoFitColumn;
 	bool					m_bAutoFitRow;
@@ -228,9 +213,6 @@ private:
 	GrFont*					m_pFont;
 	GrStyle*				m_pStyle;
 	GrStyle*				m_pDefaultStyle;
-
-	_Updatables				m_vecUpdatables;
-	_Clippables				m_vecClippables;
 
 	int						m_nAttachedCount;
 	int						m_nCreatedCell;	friend class GrCell;

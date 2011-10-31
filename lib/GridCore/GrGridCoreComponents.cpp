@@ -232,28 +232,23 @@ void GrHitTester::OnGridCoreAttached()
 bool GrHitTester::Test(GrPoint pt, GrHitTest* pHitTest) const
 {
 	GrRow* pRootRow = m_pGridCore->GetRoot();
-	const GrCell* pCell = pRootRow->HitTest(pt);
+	GrCell* pCell = pRootRow->HitTest(pt);
 
-	if(pCell)
+	if(pCell != NULL)
 	{
-		pHitTest->pHitted		= const_cast<GrCell*>(pCell);
+		pHitTest->pHitted		= pCell;
 		pHitTest->ptLocal		= pt - pCell->GetPosition();
 		pHitTest->rtRect		= pCell->GetRect();
 
-		pHitTest->rtRect.left 	= pCell->GetX();
-		pHitTest->rtRect.top  	= pCell->GetY();
-		pHitTest->rtRect.right  = pCell->GetX() + pCell->GetWidth();
-		pHitTest->rtRect.bottom = pCell->GetY() + pCell->GetHeight();
 		return true;
 	}	
-
 	return false;
 }
 
 bool GrHitTester::Test(GrRect rtSelection, GrItems* pTested) const
 {
 	GrColumns	dataColumns;
-	GrDataRows		dataRows;
+	GrDataRows	dataRows;
 
 	m_pColumnList->HitTest(rtSelection, &dataColumns);
 	m_pDataRowList->HitTest(rtSelection.top, rtSelection.bottom, &dataRows);
@@ -274,16 +269,15 @@ bool GrHitTester::Test(GrRect rtSelection, GrItems* pTested) const
 bool GrHitTester::DisplayTest(GrPoint pt, GrHitTest* pHitTest) const
 {
 	GrRow* pRootRow = m_pGridCore->GetRoot();
-	const GrCell* pCell = pRootRow->HitDisplayTest(pt);
+	GrCell* pCell = pRootRow->HitDisplayTest(pt);
 
-	if(pCell)
+	if(pCell != NULL)
 	{
-		pHitTest->pHitted	= const_cast<GrCell*>(pCell);
+		pHitTest->pHitted	= pCell;
 		pHitTest->ptLocal	= pt - pCell->GetDisplayPosition();
 		pHitTest->rtRect	= pCell->GetDisplayRect();
 		return true;
 	}	
-
 	return false;
 }
 

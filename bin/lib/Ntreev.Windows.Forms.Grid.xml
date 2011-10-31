@@ -2857,31 +2857,31 @@ CheckBox를 지원하는 Column개체를 나타냅니다.
         </member>
         <member name="P:Ntreev.Windows.Forms.Grid.GroupingRow.IsVisible">
             <summary>
-������ ǥ�� ���θ� �������ų� �����մϴ�.
+제목의 표시 여부를 가져오거나 설정합니다.
 </summary>
             <returns>
-������ ǥ�õǸ� true��, �׷��� ������ false�� ��ȯ�մϴ�.
+제목이 표시되면 true를, 그렇지 않으면 false를 반환합니다.
 </returns>
         </member>
         <member name="P:Ntreev.Windows.Forms.Grid.GroupingRow.Text">
             <summary>
-������ �������ų� �����մϴ�.
+제목을 가져오거나 설정합니다.
 </summary>
             <returns>
-������ ��Ÿ���� ���ڿ��Դϴ�.
+제목을 나타내는 문자열입니다.
 </returns>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.GroupingRow.ToString">
             <summary>
-���� <see cref="T:System.Object" />�� ��Ÿ���� <see cref="T:System.String" />�� ��ȯ�մϴ�.
+현재 <see cref="T:System.Object" />를 나타내는 <see cref="T:System.String" />을 반환합니다.
 </summary>
             <returns>
-���� <see cref="T:System.Object" />�� ��Ÿ���� <see cref="T:System.String" />�Դϴ�.
+현재 <see cref="T:System.Object" />를 나타내는 <see cref="T:System.String" />입니다.
 </returns>
         </member>
         <member name="T:Ntreev.Windows.Forms.Grid.GroupingRow">
             <summary>
-������ ǥ���ϴ� ��ü�Դϴ�.
+제목을 표시하는 개체입니다.
 </summary>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.Private.ColumnDropDownForm.Dispose">

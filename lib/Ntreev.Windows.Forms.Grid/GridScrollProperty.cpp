@@ -162,7 +162,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void HScrollProperty::EnsureVisible(GrColumn* pColumn)
 	{
-		if(pColumn->NeedToEnsure() == false)
+		if(pColumn->ShouldEnsureVisible() == false)
 			return;
 		
 		uint nVisibleIndex = pColumn->GetUnfrozenIndex();
@@ -320,7 +320,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void VScrollProperty::EnsureVisible(IDataRow* pDataRow)
 	{
-		if(pDataRow->NeedToEnsure() == false)
+		if(pDataRow->ShouldEnsureVisible() == false)
 			return;
 
 		if(pDataRow->GetHeight() > GridControl->DataRectangle.Height)

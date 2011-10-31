@@ -63,7 +63,7 @@ typedef unsigned char	byte;
 #endif
 
 template<typename T>
-class GrEnumerator 
+class GrEnumerator
 {
 public:
 	typedef typename T::value_type	ValueType;
