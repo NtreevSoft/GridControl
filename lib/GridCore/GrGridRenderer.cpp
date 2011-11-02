@@ -25,7 +25,6 @@
 #include "GrGridRenderer.h"
 #include <windows.h>
 
-
 GrFontManager::_MapFontCaches GrFontManager::m_mapFontCache;
 GrFont* GrFontManager::m_pDefaultFont = NULL;
 
@@ -134,16 +133,14 @@ System::Drawing::Font^ GrFontManager::ToManagedFont(GrFont* pFont)
 		return nullptr;
 	if(pFont == m_pDefaultFont)
 		return System::Windows::Forms::Control::DefaultFont;
-	System::IntPtr ptr(pFont->GetFont());
+	System::IntPtr ptr(pFont->GetFontHandle());
 	System::Drawing::Font^ font = System::Drawing::Font::FromHfont(ptr);
 	System::Drawing::Font^ font1 = gcnew System::Drawing::Font(font->FontFamily, font->SizeInPoints, font->Style, System::Windows::Forms::Control::DefaultFont->Unit, font->GdiCharSet);
 	return font1;
-	
-	//return gcnew System::Drawing::Font(font->
 }
 #endif
 
-GrGridRenderer::GrGridRenderer(void* /*hWnd*/)
+GrGridRenderer::GrGridRenderer(void* /*pWindowHandle*/)
 {
 
 }
@@ -153,12 +150,7 @@ GrGridRenderer::~GrGridRenderer()
 
 }
 
-GrFont::GrFont(void* /*hFont*/)
-{
-
-}
-
-GrFont::~GrFont()
+GrFont::GrFont(void* /*pFontHandle*/)
 {
 
 }
@@ -179,23 +171,19 @@ GrFontManager::~GrFontManager()
 GrFont* GrFontManager::GetDefaultFont()
 {
 	if(m_pDefaultFont == NULL)
-#ifdef _MANAGED
-		m_pDefaultFont = FromManagedFont(System::Windows::Forms::Control::DefaultFont);
-#else
-		m_pDefaultFont = GetFontDesc((void*)GetStockObject(SYSTEM_FIXED_FONT));
-#endif
+		m_pDefaultFont = GrFontCreator(NULL);
 	return m_pDefaultFont;
 }
 
-GrFont* GrFontManager::GetFontDesc(void* hFont)
+GrFont* GrFontManager::GetFontDesc(void* pFontHandle)
 {
-	std::wstring strFontName = GetFontName(hFont);
+	std::wstring strFontName = GrFontHandleToKey(pFontHandle);
 	_MapFontCaches::const_iterator itor = m_mapFontCache.find(strFontName);
 
 	GrFont* pFontDesc = NULL;
 	if(itor == m_mapFontCache.end())
 	{
-		pFontDesc = GrFontCreator(hFont);
+		pFontDesc = GrFontCreator(pFontHandle);
 		m_mapFontCache.insert(_MapFontCaches::value_type(strFontName, pFontDesc));
 	}
 	else
@@ -203,18 +191,4 @@ GrFont* GrFontManager::GetFontDesc(void* hFont)
 		pFontDesc = (*itor).second;
 	}
 	return pFontDesc;
-}
-
-std::wstring GrFontManager::GetFontName(void* hFont)
-{
-	LOGFONTW logfont;
-	GetObjectW(hFont, sizeof(logfont), &logfont);
-
-	wchar_t strFileName[MAX_PATH];
-	wsprintf(strFileName, L"%s%d%d%d%d%d%d%d%d%d%d%d%d%d.data", logfont.lfFaceName,
-		logfont.lfCharSet, logfont.lfClipPrecision, logfont.lfEscapement, logfont.lfHeight,
-		logfont.lfItalic, logfont.lfOrientation, logfont.lfOutPrecision, logfont.lfPitchAndFamily,
-		logfont.lfQuality, logfont.lfStrikeOut, logfont.lfUnderline, logfont.lfWeight, logfont.lfWidth);
-
-	return std::wstring(strFileName);
 }

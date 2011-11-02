@@ -64,7 +64,7 @@ void GrTextUtil::SingleLine(GrLineDesc* pLine, const std::wstring& strText, cons
 		wchar_t s = *itor;
 		if(s != L'\n')
 		{
-			int nCharWidth = pFont->GetWidth(s);
+			int nCharWidth = pFont->GetCharacterWidth(s);
 			pLine->nWidth += nCharWidth;
 		}
 		itor++;
@@ -90,7 +90,7 @@ void GrTextUtil::DoMultiline(std::vector<GrLineDesc>* pLines, const std::wstring
 	while(pos != strText.length())
 	{
 		wchar_t s = strText.at(pos);
-		int nCharWidth = pFont->GetWidth(s);
+		int nCharWidth = pFont->GetCharacterWidth(s);
 		if(s == L'\n')
 		{
 			pLines->push_back(cl);
@@ -121,7 +121,7 @@ void GrTextUtil::WordWrap(WordList* pWordList, const std::wstring& strText, cons
 	while(pos != strText.length())
 	{
 		wchar_t s = strText.at(pos);
-		int width = pFont->GetWidth(s);
+		int width = pFont->GetCharacterWidth(s);
 
 		if((wordBreak == true && s != L' ') || wd.width + width > nCellWidth || s > 0xff || s == L'\n')
 		{

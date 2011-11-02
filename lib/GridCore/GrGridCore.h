@@ -31,14 +31,6 @@ class GrItemSelector;
 class GrFocuser;
 class GrHitTester;
 
-struct GrHitTestRange
-{
-	uint		nStartVisibleRow;
-	uint		nEndVisibleRow;
-	uint		nStartVisibleCol;
-	uint		nEndVisibleCol;
-};
-
 class GrGridCore : public GrObject
 {
 	typedef GrEventBase<GrEventArgs, GrGridCore>		_GrEvent;

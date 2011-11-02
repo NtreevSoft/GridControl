@@ -25,7 +25,6 @@
 #include "GrGridBase.h"
 #include "GrGridType.h"
 #include "GrGridEvent.h"
-//#include "GrGridInternal.h"
 
 #ifdef _MANAGED
 #include <vcclr.h>
@@ -296,7 +295,7 @@ public:
 	GrItem(GrColumn* pColumn, GrDataRow* pDataRow);
 
 	GrRect						GetControlRect() const;
-	GrState::Type				GetControlState() const;
+	GrState						GetControlState() const;
 	GrDataRow*					GetDataRow() const;
 	GrColumn*					GetColumn() const;
 	bool						GetSelected() const;
@@ -472,10 +471,10 @@ public:
 	bool						GetClippedTextVisible() const;
 	void						SetClippedTextVisible(bool b);
 
-	void						SetSortType(GrSort::Type sortType);
-	GrSort::Type				GetSortType() const;
-	void						SetSortComparer(GrSort::Type sortType, FuncComparer comparer);
-	FuncComparer				GetSortComparer(GrSort::Type sortType) const;
+	void						SetSortType(GrSort sortType);
+	GrSort						GetSortType() const;
+	void						SetSortComparer(GrSort sortType, FuncComparer comparer);
+	FuncComparer				GetSortComparer(GrSort sortType) const;
 
 
 	virtual	GrCellType			GetCellType() const { return GrCellType_Column; }
@@ -589,8 +588,8 @@ private:
 
 	GrGroupingInfo*				m_pGroupingInfo;
 
-	GrSort::Type				m_sortType;
-	FuncComparer				m_comparer[GrSort::Count];
+	GrSort						m_sortType;
+	FuncComparer				m_comparer[GrSort_Count];
 
 	std::wstring				m_strTooltip;
 	std::wstring				m_strTextLineSource;
@@ -676,7 +675,7 @@ public:
 	virtual GrRect				GetDisplayBound() const { return GetDisplayRect(); }
 	virtual GrPadding			GetPadding(bool /*inherited*/) const { return GrPadding::Default; }
 
-	virtual void				Sort(GrSort::Type sortType);
+	virtual void				Sort(GrSort sortType);
 	virtual void				Sort(FuncSortRow fnSort, void* dwUserData);
 
 	void						AddChild(GrRow* pRow);
@@ -814,7 +813,7 @@ public:
 	virtual IFocusable*			GetFocusable(GrColumn* pColumn) const = 0;
 	virtual uint				GetSelectionGroup() const { return 0; }
 	virtual bool				GetFullSelected() const { return false; }
-	virtual int					GetWidth() const sealed;
+	virtual int					GetWidth() const;
 
 #ifdef _MANAGED
 public:
@@ -1414,7 +1413,7 @@ public:
 	GrGroupingInfo*				GetGrouping(uint nLevel) const;
 
 	void						ExpandGrouping(uint nLevel, bool bExpand);
-	void						SetGroupingSortState(uint nLevel, GrSort::Type sortType);
+	void						SetGroupingSortState(uint nLevel, GrSort sortType);
 
 	void						SetVisible(bool b);
 
@@ -1485,8 +1484,8 @@ public:
 	void						SetExpanded(bool b);
 	bool						GetExpanded() const;
 
-	void						SetSortType(GrSort::Type sortType);
-	GrSort::Type				GetSortType() const;
+	void						SetSortType(GrSort sortType);
+	GrSort						GetSortType() const;
 
 	uint						GetGroupingLevel() const;
 	void						SetGroupingLevel(uint level);
@@ -1530,7 +1529,7 @@ private:
 	GrPoint						m_pt;
 	bool						m_bExpanded;
 	bool						m_bGrouped;
-	GrSort::Type				m_sortType;
+	GrSort						m_sortType;
 
 	_MapGroupingRows			m_mapGroupingRows;
 	uint						m_nLevel;

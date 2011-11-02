@@ -30,21 +30,11 @@
 #include <string>
 #include <algorithm>
 
-#pragma warning(disable:4201) // warning C4201: 비표준 확장이 사용됨 : 구조체/공용 구조체의 이름이 없습니다.
-#pragma warning(disable:4481) // warning C4481: 비표준 확장이 사용되었습니다. 'sealed' 지정자를 재정의합니다.
-
 typedef unsigned int	uint;
 typedef unsigned long	ulong;
 typedef unsigned char	byte;
 
-#define SPLITTER_ROW_START	(ETC_ROW)
-#define MAX_SPLITTER_ROW	(1000)
-#define SPLITTER_ROW_END	(ETC_ROW - MAX_SPLITTER_ROW)
-
-#define GROUPING_ROW_START	(SPLITTER_ROW_END)
-
 #define DEF_GROUP_WIDTH		15
-#define DEF_MARGIN			1
 #define DEF_CONTROL_WIDTH	17
 #define DEF_SPLITTER_SIZE	5
 
@@ -68,10 +58,10 @@ class GrEnumerator
 public:
 	typedef typename T::value_type	ValueType;
 	typedef typename T::size_type	SizeType;
-	typedef typename T::iterator	IteratorType;
+	typedef typename T::const_iterator	IteratorType;
 
 public:
-	GrEnumerator(T& container)
+	GrEnumerator(const T& container)
 		: m_container(&container), m_index((SizeType)-1), m_iterator(m_container->begin())
 	{
 		
@@ -88,58 +78,6 @@ public:
 	}
 
 	ValueType& operator ->()
-	{
-		return m_value;
-	}
-
-	bool Next()
-	{
-		if(m_iterator == m_container->end())
-			return false;
-		m_value = *m_iterator;
-		m_iterator++;
-		m_index++;
-		return true;
-	}
-
-	SizeType GetIndex() const
-	{
-		return m_index;
-	}
-
-private:
-	T*				m_container;
-	IteratorType	m_iterator;
-	ValueType		m_value;
-	SizeType		m_index;
-};
-
-template<typename T>
-class GrEnumerator_c
-{
-public:
-	typedef typename T::value_type		ValueType;
-	typedef typename T::size_type		SizeType;
-	typedef typename T::const_iterator	IteratorType;
-
-public:
-	GrEnumerator_c(const T& container)
-		: m_container(&container), m_index((SizeType)-1), m_iterator(m_container->begin())
-	{
-		
-	}
-
-	const ValueType& GetValue() const
-	{
-		return m_value;
-	}
-
-	operator const ValueType& () const
-	{
-		return m_value;
-	}
-
-	const ValueType& operator ->() const
 	{
 		return m_value;
 	}
@@ -225,89 +163,20 @@ private:
 	SizeType		m_index;
 };
 
-template<typename T, typename U>
-class GrEnumerator_c< std::map<T, U> >
-{
-public:
-	typedef typename std::map<T, U>					ContainerType;
-	typedef typename ContainerType::key_type		KeyType;
-	typedef typename ContainerType::mapped_type		ValueType;
-	typedef typename ContainerType::size_type		SizeType;
-	typedef typename ContainerType::const_iterator	IteratorType;
-
-public:
-	GrEnumerator_c(const ContainerType& container)
-		: m_container(&container), m_index((SizeType)-1), m_iterator(m_container->begin())
-	{
-		
-	}
-
-	operator const ValueType& ()
-	{
-		return (*m_value).second;
-	}
-
-	const ValueType& operator ->() 
-	{
-		return (*m_value).second;
-	}
-
-	bool Next()
-	{
-		if(m_iterator == m_container->end())
-			return false;
-		m_value = m_iterator;
-		m_iterator++;
-		m_index++;
-		return true;
-	}
-
-	const KeyType& GetKey() const
-	{
-		return (*m_value).first;
-	}
-
-	const ValueType& GetValue() const
-	{
-		return (*m_value).Second;
-	}
-
-	SizeType GetIndex() const
-	{
-		return m_index;
-	}
-
-private:
-	const ContainerType*	m_container;
-	IteratorType	m_value;
-	IteratorType	m_iterator;
-	SizeType		m_index;
-};
-
 #define for_each(_container_type, _container_instance, _value_name) \
-	for(GrEnumerator< _container_type > _value_name(_container_instance) ;  _value_name.Next() == true ;  )
-
-#define for_each_const(_container_type, _container_instance, _value_name) \
-	for(GrEnumerator_c< _container_type > _value_name(_container_instance) ;  _value_name.Next() == true ;  )
+	for(GrEnumerator< _container_type > _value_name(_container_instance) ; _value_name.Next() == true ; )
 
 #define for_each_map(_key_type, _value_type, _container_instance, _value_name) \
-	for(GrEnumerator< std::map<_key_type, _value_type> > _value_name(_container_instance) ;  _value_name.Next() == true ;  )
+	for(GrEnumerator< std::map<_key_type, _value_type> > _value_name(_container_instance) ; _value_name.Next() == true ; )
 
-#define for_each_map_const(_key_type, _value_type, _container_instance, _value_name) \
-	for(GrEnumerator_c< std::map<_key_type, _value_type> > _value_name(_container_instance) ;  _value_name.Next() == true ;  )
-
-class GrState
+enum GrState
 {
-public:
-	enum Type
-	{
-		Normal,
-		MouseOver,
-		Pressed,
-		Selected,
+	GrState_Normal,
+	GrState_MouseOver,
+	GrState_Pressed,
+	GrState_Selected,
 
-		Count,
-	};
+	GrState_Count,
 }; 
 
 enum GrCellType
@@ -344,72 +213,23 @@ enum GrRowType
 	GrRowType_Count,
 };
 
-class GrSort
+enum GrSort
 {
-public:
-	enum Type
-	{
-		None,
-		Up,
-		Down,
+	GrSort_None,
+	GrSort_Up,
+	GrSort_Down,
 
-		Count,
-	};
+	GrSort_Count,
 };
-
-typedef unsigned int GrColID;
-typedef unsigned int GrRowID;
 
 class GrColumn;
 class GrDataRow;
 typedef std::set<GrColumn*>			GrColumns;
 typedef std::set<GrDataRow*>		GrDataRows;
 
-struct GrID
+struct GrPoint
 {
-public:
-	bool operator < (const GrID& id) const
-	{
-		if(id0 == id.id0)
-			return id1 < id.id1;
-		return id0 < id.id0;
-	}
-
-	uint	id0;
-	uint	id1;
-};
-
-//class GrCellID
-//{
-//public:
-//	GrCellID() {}
-//	GrCellID(uint c, uint r) : col(c), row(r) {}
-//
-//	bool operator < (const GrCellID& n) const;
-//	bool operator == (const GrCellID& n) const;
-//	bool operator != (const GrCellID& n) const;
-//
-//	GrColID		GetColumnID() const { return col; }
-//	void		SetColumnID(GrColID columnID) { col = columnID; }
-//	GrRowID		GetRowID() const { return row; }
-//	void		SetRowID(GrRowID rowID) { row = rowID; }
-//
-//	GrColID		col;
-//	GrRowID		row;
-//
-//#ifdef _MANAGED1
-//	typedef Ntreev::Windows::Forms::Grid::CellID _CellID;
-//	GrCellID(_CellID Index);
-//	operator _CellID ();
-//	operator _CellID () const;
-//	void operator = (_CellID Index);
-//#endif
-//};
-
-class GrPoint
-{
-public:
-	GrPoint(){}
+	GrPoint() {}
 	GrPoint(int x, int y) : x(x), y(y) {}
 
 	void operator += (const GrPoint& pt) { x += pt.x; y -= pt.y; }
@@ -431,12 +251,11 @@ public:
 	int x;
 	int y;
 
-	static const GrPoint	Empty;
+	static const GrPoint Empty;
 };
 
-class GrSize
+struct GrSize
 {
-public:
 	GrSize() {}
 	GrSize(int w, int h) : width(w), height(h) {}
 
@@ -447,12 +266,11 @@ public:
 	int width;
 	int height;
 
-	static const GrSize		Empty;
+	static const GrSize Empty;
 };
 
-class GrRect
+struct GrRect
 {
-public:
 	GrRect();
 	GrRect(int l, int t, int r, int b);
 	GrRect(GrPoint pt, GrSize sz);
@@ -500,12 +318,11 @@ public:
 
 	int left, top, right, bottom;
 
-	static const GrRect			Empty;
+	static const GrRect Empty;
 };
 
-class GrPadding
+struct GrPadding
 {
-public:
 	GrPadding();
 	GrPadding(int l, int t, int r, int b);
 
@@ -532,9 +349,16 @@ public:
 	static const GrPadding		Default;
 };
 
-class GrColor
+struct GrColor
 {
-public:
+	struct GrColorByte
+	{
+		byte		b;
+		byte		g;
+		byte		r;
+		byte		a;
+	};
+
 	GrColor();
 	GrColor(int clr);
 	GrColor(int a, int r, int g, int b);
@@ -553,14 +377,8 @@ public:
 
 	union
 	{
-		struct 
-		{
-			byte		b;
-			byte		g;
-			byte		r;
-			byte		a;
-		};
-		int	value;
+		GrColorByte bytes;
+		int			value;
 	};
 
 	ulong		ToRGB() const;
@@ -718,7 +536,7 @@ public:
 	static const GrColor YellowGreen;
 };
 
-class GrFlag
+struct GrFlag
 {
 public:
 	GrFlag();
@@ -767,7 +585,7 @@ enum GrRowHighlightType
 };
 
 template<typename T, T V>
-class GrRange
+struct GrRange
 {
 public:
 	typename typedef T value_type;

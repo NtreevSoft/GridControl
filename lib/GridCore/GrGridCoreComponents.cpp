@@ -335,7 +335,7 @@ void GrItemSelector::SelectItems(const GrItems* pItems, GrSelectionType selectTy
 				}
 			}
 
-			for_each_const(GrItems, *pItems, value)
+			for_each(GrItems, *pItems, value)
 			{
 				DoSelect(value);
 			}
@@ -343,7 +343,7 @@ void GrItemSelector::SelectItems(const GrItems* pItems, GrSelectionType selectTy
 		break;
 	case GrSelectionType_Add:
 		{
-			for_each_const(GrItems, *pItems, value)
+			for_each(GrItems, *pItems, value)
 			{
 				DoSelect(value);
 			}
@@ -351,7 +351,7 @@ void GrItemSelector::SelectItems(const GrItems* pItems, GrSelectionType selectTy
 		break;
 	case GrSelectionType_Remove:
 		{
-			for_each_const(GrItems, *pItems, value)
+			for_each(GrItems, *pItems, value)
 			{
 				DoDeselect(value);
 			}
@@ -436,7 +436,7 @@ void GrItemSelector::SelectDataRows(const GrDataRows* pDataRows, GrSelectionType
 	GrColumnList* pColumnList = m_pGridCore->GetColumnList();
 
 	GrItems items;
-	for_each_const(GrDataRows, *pDataRows, value)
+	for_each(GrDataRows, *pDataRows, value)
 	{
 		for(uint i=0 ; i<pColumnList->GetVisibleColumnCount() ; i++)
 		{
@@ -505,7 +505,7 @@ void GrItemSelector::SelectColumns(const GrColumns* pColumns, GrSelectionType se
 {
 	GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
 	GrItems items;
-	for_each_const(GrColumns, *pColumns, value)
+	for_each(GrColumns, *pColumns, value)
 	{
 		for(uint i=0 ; i<pDataRowList->GetVisibleDataRowCount() ; i++)
 		{

@@ -63,7 +63,7 @@ GrRect::GrRect(GrPoint pt1, GrPoint pt2)
 	bottom = top  + abs(pt1.y - pt2.y);
 }
 
-void	GrRect::operator += (const GrRect& rt)
+void GrRect::operator += (const GrRect& rt)
 {
 	left	= std::min(left, rt.left);
 	top		= std::min(top, rt.top);
@@ -71,14 +71,14 @@ void	GrRect::operator += (const GrRect& rt)
 	bottom	= std::max(bottom, rt.bottom);
 }
 
-bool	GrRect::operator == (const GrRect& rt) const
+bool GrRect::operator == (const GrRect& rt) const
 {
 	if(left != rt.left || top != rt.top || right != rt.right || bottom != rt.bottom)
 		return false;
 	return true;
 }
 
-bool	GrRect::operator != (const GrRect& rt) const
+bool GrRect::operator != (const GrRect& rt) const
 {
 	if(left != rt.left || top != rt.top || right != rt.right || bottom != rt.bottom)
 		return true;
@@ -96,38 +96,38 @@ GrRect GrRect::operator - (const GrPoint& p) const
 	return GrRect(this->left - p.x, this->top - p.y, this->right - p.x, this->bottom - p.y);
 }
 
-bool	GrRect::IsIn(GrPoint pt) const
+bool GrRect::IsIn(GrPoint pt) const
 {
 	if(pt.x < left || pt.y < top || pt.x >= right || pt.y >= bottom)
 		return false;
 	return true;
 }
 
-bool	GrRect::IsIn(const GrRect* pRect) const
+bool GrRect::IsIn(const GrRect* pRect) const
 {
 	if(pRect->left < left || pRect->top < top || pRect->right >= right || pRect->bottom >= bottom)
 		return false;
 	return true;
 }
 
-bool	GrRect::IsEmpty() const
+bool GrRect::IsEmpty() const
 {
 	if(left != 0 || top != 0 || right != 0 || bottom != 0)
 		return false;
 	return true;
 }
 
-int		GrRect::GetWidth() const
+int GrRect::GetWidth() const
 {
 	return right - left;
 }
 
-int		GrRect::GetHeight() const
+int GrRect::GetHeight() const
 {
 	return bottom - top;
 }
 
-GrSize	GrRect::GetSize() const
+GrSize GrRect::GetSize() const
 {
 	GrSize sz;
 	sz.width  = GetWidth();
@@ -135,7 +135,7 @@ GrSize	GrRect::GetSize() const
 	return sz;
 }
 
-void	GrRect::SetSize(GrSize size)
+void GrRect::SetSize(GrSize size)
 {
 	right	= left + size.width;
 	bottom	= top  + size.height;
@@ -152,7 +152,7 @@ void GrRect::SetLocation(GrPoint pt)
 	top  = pt.y;
 }
 
-void	GrRect::Offset(int x, int y)
+void GrRect::Offset(int x, int y)
 {
 	left	+= x;
 	top		+= y;
@@ -160,12 +160,12 @@ void	GrRect::Offset(int x, int y)
 	bottom	+= y;
 }
 
-void	GrRect::Offset(GrPoint pt)
+void GrRect::Offset(GrPoint pt)
 {
 	Offset(pt.x, pt.y);
 }
 
-void	GrRect::Expand(int left, int top, int right, int bottom)
+void GrRect::Expand(int left, int top, int right, int bottom)
 {
 	this->left	 -= left;
 	this->top	 -= top;
@@ -173,12 +173,12 @@ void	GrRect::Expand(int left, int top, int right, int bottom)
 	this->bottom += bottom;
 }
 
-void	GrRect::Expand(GrRect rtExpand)
+void GrRect::Expand(GrRect rtExpand)
 {
 	Expand(rtExpand.left, rtExpand.top, rtExpand.right, rtExpand.bottom);
 }
 
-void	GrRect::Contract(int left, int top, int right, int bottom)
+void GrRect::Contract(int left, int top, int right, int bottom)
 {
 	this->left	 += left;
 	this->top	 += top;
@@ -186,12 +186,12 @@ void	GrRect::Contract(int left, int top, int right, int bottom)
 	this->bottom -= bottom;
 }
 
-void	GrRect::Contract(GrRect rtContract)
+void GrRect::Contract(GrRect rtContract)
 {
 	Contract(rtContract.left, rtContract.top, rtContract.right, rtContract.bottom);
 }
 
-void	GrRect::DoEmpty()
+void GrRect::DoEmpty()
 {
 	*this = Empty;
 }
@@ -225,13 +225,14 @@ GrRect::GrRect(System::Drawing::RectangleF% rt) : left((int)rt.Left), top((int)r
 
 }
 
-bool	GrRect::IsIn(System::Drawing::Point% pt) const
+bool GrRect::IsIn(System::Drawing::Point% pt) const
 {
 	if(pt.X < left || pt.Y < top || pt.X >= right || pt.Y >= bottom)
 		return false;
 	return true;
 }
-void	GrRect::operator = (System::Drawing::Rectangle% rt)
+
+void GrRect::operator = (System::Drawing::Rectangle% rt)
 {
 	left = rt.Left; top = rt.Top; right = rt.Right; bottom = rt.Bottom; 
 }
@@ -471,27 +472,27 @@ GrColor::GrColor() : value(0)
 
 GrColor::GrColor(int clr)
 {
-	a = 0xff;
-	r = GetRValue(clr);
-	g = GetGValue(clr);
-	b = GetBValue(clr);
+	this->bytes.a = 0xff;
+	this->bytes.r = GetRValue(clr);
+	this->bytes.g = GetGValue(clr);
+	this->bytes.b = GetBValue(clr);
 }
 
 GrColor::GrColor(int a, int r, int g, int b)
 {
 	const int maxValue = (int)0xff;
-	this->a = (byte)std::min(a, maxValue);
-	this->r = (byte)std::min(r, maxValue);
-	this->g = (byte)std::min(g, maxValue);
-	this->b = (byte)std::min(b, maxValue);
+	this->bytes.a = (byte)std::min(a, maxValue);
+	this->bytes.r = (byte)std::min(r, maxValue);
+	this->bytes.g = (byte)std::min(g, maxValue);
+	this->bytes.b = (byte)std::min(b, maxValue);
 }
 GrColor::GrColor(int r, int g, int b)
 {
 	const int maxValue = (int)0xff;
-	this->a = maxValue;
-	this->r = (byte)std::min(r, maxValue);
-	this->g = (byte)std::min(g, maxValue);
-	this->b = (byte)std::min(b, maxValue);
+	this->bytes.a = maxValue;
+	this->bytes.r = (byte)std::min(r, maxValue);
+	this->bytes.g = (byte)std::min(g, maxValue);
+	this->bytes.b = (byte)std::min(b, maxValue);
 }
 
 void GrColor::operator *= (float f)
@@ -537,72 +538,72 @@ bool GrColor::operator == (const GrColor& color) const
 
 float GrColor::A() const
 {
-	return (float)a / 255.0f;
+	return (float)bytes.a / 255.0f;
 }
 
 float GrColor::R() const
 {
-	return (float)r / 255.0f;
+	return (float)bytes.r / 255.0f;
 }
 
 float GrColor::G() const
 {
-	return (float)g / 255.0f;
+	return (float)bytes.g / 255.0f;
 }
 
 float GrColor::B() const
 {
-	return (float)b / 255.0f;
+	return (float)bytes.b / 255.0f;
 }
 
 void GrColor::A(float value)
 {
 	value *= 255.0f;
-	a = value > 255.0f ? 0xff : (byte)value;
+	bytes.a = value > 255.0f ? 0xff : (byte)value;
 }
 
 void GrColor::R(float value)
 {
 	value *= 255.0f;
-	r = value > 255.0f ? 0xff : (byte)value;
+	bytes.r = value > 255.0f ? 0xff : (byte)value;
 }
 
 void GrColor::G(float value)
 {
 	value *= 255.0f;
-	g = value > 255.0f ? 0xff : (byte)value;
+	bytes.g = value > 255.0f ? 0xff : (byte)value;
 }
 
 void GrColor::B(float value)
 {
 	value *= 255.0f;
-	b = value > 255.0f ? 0xff : (byte)value;
+	bytes.b = value > 255.0f ? 0xff : (byte)value;
 }
 
 #ifdef _MANAGED
 GrColor::GrColor(System::Drawing::Color Color)
 {
-	a = Color.A;
-	r = Color.R;
-	g = Color.G;
-	b = Color.B;
+	bytes.a = Color.A;
+	bytes.r = Color.R;
+	bytes.g = Color.G;
+	bytes.b = Color.B;
 }
 
 GrColor::operator System::Drawing::Color ()
 {
-	return System::Drawing::Color::FromArgb(a,r,g,b);
+	return System::Drawing::Color::FromArgb(bytes.a, bytes.r, bytes.g, bytes.b);
 }
 
 GrColor::operator System::Drawing::Color () const
 {
-	return System::Drawing::Color::FromArgb(a,r,g,b);
+	return System::Drawing::Color::FromArgb(bytes.a, bytes.r, bytes.g, bytes.b);
 }
 #endif
 
 #define RGB(r,g,b)          ((uintptr_t)(((byte)(r)|((unsigned short)((byte)(g))<<8))|(((uintptr_t)(byte)(b))<<16)))
 ulong GrColor::ToRGB() const
 {
-	return RGB(r,g,b);
+	return RGB(bytes.r, bytes.g, bytes.b);
 }
 
 GrFlag::GrFlag() : m_flag(0)
@@ -619,7 +620,7 @@ GrFlag::operator ulong() const
 	return m_flag;
 }
 
-ulong		GrFlag::Add(ulong flag, ulong mask)
+ulong GrFlag::Add(ulong flag, ulong mask)
 {
 	flag &= mask;
 	ulong returnFlag = flag & ~m_flag;
@@ -627,7 +628,7 @@ ulong		GrFlag::Add(ulong flag, ulong mask)
 	return returnFlag;
 }
 
-ulong		GrFlag::Remove(ulong flag, ulong mask) 
+ulong GrFlag::Remove(ulong flag, ulong mask) 
 {
 	flag &= mask;
 	ulong returnFlag = flag & m_flag;
@@ -635,40 +636,40 @@ ulong		GrFlag::Remove(ulong flag, ulong mask)
 	return returnFlag;
 }
 
-void		GrFlag::Clear()
+void GrFlag::Clear()
 {
 	m_flag = 0; 
 }
-bool		GrFlag::Has(ulong flag, ulong mask) const
+bool GrFlag::Has(ulong flag, ulong mask) const
 {
 	flag &= mask;
 	return m_flag & flag ? true : false; 
 }
-ulong		GrFlag::Get(ulong mask) const
+ulong GrFlag::Get(ulong mask) const
 {
 	return m_flag & mask; 
 }
 
-ulong		GrFlag::operator += (ulong flag)
+ulong GrFlag::operator += (ulong flag)
 {
 	return Add(flag);
 }
-ulong		GrFlag::operator -= (ulong flag)
+ulong GrFlag::operator -= (ulong flag)
 {
 	return Remove(flag);
 }
 
-void		GrFlag::operator = (ulong flag)
+void GrFlag::operator = (ulong flag)
 {
 	m_flag = flag;
 }
 
-ulong		GrFlag::operator + (ulong flag) const
+ulong GrFlag::operator + (ulong flag) const
 {
 	return m_flag | flag;
 }
 
-ulong		GrFlag::operator - (ulong flag) const
+ulong GrFlag::operator - (ulong flag) const
 {
 	return m_flag & ~flag;
 }

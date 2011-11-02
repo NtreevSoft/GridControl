@@ -161,13 +161,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	_Color CellBase::RenderingBackColor::get()
 	{
 		GrColor clr = m_pCell->GetRenderingBackColor();
-		return _Color::FromArgb(255, clr.r, clr.g, clr.b);
+		return _Color::FromArgb(255, clr.bytes.r, clr.bytes.g, clr.bytes.b);
 	}
 
 	_Color CellBase::RenderingForeColor::get()
 	{
 		GrColor clr = m_pCell->GetRenderingForeColor();
-		return _Color::FromArgb(255, clr.r, clr.g, clr.b);
+		return _Color::FromArgb(255, clr.bytes.r, clr.bytes.g, clr.bytes.b);
 	}
 
 	_Rectangle CellBase::ClientRectangle::get()

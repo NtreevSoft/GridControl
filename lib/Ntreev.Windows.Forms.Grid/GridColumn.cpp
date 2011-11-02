@@ -58,25 +58,25 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		bool OnColumnBackGroundPaint(GrGridRenderer* pRenderer, const GrColumn* /*pColumn*/, GrRect renderRect)
 		{
-			System::IntPtr hdc(pRenderer->GetDC());
+			System::IntPtr hdc(pRenderer->GetGraphicDevice());
 			_Graphics^ g = _Graphics::FromHdc(hdc);
 			Column^ column = m_column;
 			ColumnPainter^ columnPainter = column->ColumnPainter;
 			bool b = columnPainter->PaintBackground(g, renderRect, column, column);
 			delete g;
-			pRenderer->ReleaseDC(hdc.ToPointer());
+			pRenderer->ReleaseGraphicDevice(hdc.ToPointer());
 			return b;
 		}
 
 		bool OnColumnContentsPaint(GrGridRenderer* pRenderer, const GrColumn* /*pColumn*/, GrRect renderRect)
 		{
-			System::IntPtr hdc(pRenderer->GetDC());
+			System::IntPtr hdc(pRenderer->GetGraphicDevice());
 			_Graphics^ g = _Graphics::FromHdc(hdc);
 			Column^ column = m_column;
 			ColumnPainter^ columnPainter = column->ColumnPainter;
 			bool b = columnPainter->PaintContents(g, renderRect, column, column);
 			delete g;
-			pRenderer->ReleaseDC(hdc.ToPointer());
+			pRenderer->ReleaseGraphicDevice(hdc.ToPointer());
 			return b;
 		}
 
@@ -176,8 +176,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	Column::Column() : m_pColumn(new GrColumn()), CellBase(m_pColumn)
 	{
-		m_pColumn->SetSortComparer(GrSort::Up, RowComparerUp);
-		m_pColumn->SetSortComparer(GrSort::Down, RowComparerDown);
+		m_pColumn->SetSortComparer(GrSort_Up, RowComparerUp);
+		m_pColumn->SetSortComparer(GrSort_Down, RowComparerDown);
 
 		m_pCustomRender	= new CustomRender(this);
 		m_pColumn->ManagedRef = this;
@@ -527,7 +527,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void Column::SortType::set(_SortType value)
 	{
-		m_pColumn->SetSortType((GrSort::Type)value);
+		m_pColumn->SetSortType((GrSort)value);
 	}
 
 	System::Collections::IComparer^ Column::SortComparer::get()

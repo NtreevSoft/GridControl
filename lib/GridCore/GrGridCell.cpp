@@ -34,7 +34,6 @@ uint GrCell::m_snID = 0;
 
 GrEventArgs GrEventArgs::Empty;
 
-
 int GrRow::DefaultHeight = 21;
 int	GrRow::DefaultMinHeight = 0;
 int	GrRow::DefaultMaxHeight = 10000;
@@ -661,7 +660,7 @@ GrCell* GrColumnList::HitDisplayTest(const GrPoint& pt) const
 	if(pHitted == NULL)
 		return NULL;
 	
-	for_each_const(_Columns, m_vecDisplayableColumns, value)
+	for_each(_Columns, m_vecDisplayableColumns, value)
 	{
 		int x = value->GetDisplayX();
 		if(pt.x >= x && pt.x < x + value->GetWidth())
@@ -1606,18 +1605,18 @@ GrFont* GrItem::GetFont(bool inherited) const
 	return m_pGridCore->GetFont();
 }
 
-GrState::Type GrItem::GetControlState() const
+GrState GrItem::GetControlState() const
 {
 	if(GetMouseOvered() == false)
-		return GrState::Normal;
+		return GrState_Normal;
 	if(m_pGridCore->GetMouseOverState() == GrMouseOverState_Control)
 	{
 		if(GetMousePressed() == true)
-			return GrState::Pressed;
+			return GrState_Pressed;
 		else 
-			return GrState::MouseOver;
+			return GrState_MouseOver;
 	}
-	return GrState::Normal;
+	return GrState_Normal;
 }
 
 void GrItem::OnTextChanged()
@@ -1701,7 +1700,7 @@ void GrItem::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const
 
 GrItem* GrDataRow::GetItem(const GrColumn* pColumn) const
 {
-	GrColID columnID = pColumn->GetColumnID();
+	uint columnID = pColumn->GetColumnID();
 	assert(columnID < m_vecItems.size());
 	return m_vecItems[columnID];
 }
@@ -1843,7 +1842,7 @@ int GrDataRow::GetFitHeight() const
 {
 	int height = IDataRow::GetFitHeight();
 
-	for_each_const(_Items, m_vecItems, value)
+	for_each(_Items, m_vecItems, value)
 	{
 		int nItemHeight = value->GetTextBound()->GetHeight() + DEF_LEADING;
 		height = std::max(height, nItemHeight);
@@ -1960,10 +1959,10 @@ GrColumn::GrColumn()
 
 	m_pGroupingInfo		= NULL;
 
-	m_sortType			= GrSort::None;
-	m_comparer[GrSort::None]	= 0;
-	m_comparer[GrSort::Up]		= 0;
-	m_comparer[GrSort::Down]	= 0;
+	m_sortType			= GrSort_None;
+	m_comparer[GrSort_None]	= 0;
+	m_comparer[GrSort_Up]	= 0;
+	m_comparer[GrSort_Down]	= 0;
 
 	m_bCustomItemRender			= false;
 
@@ -2194,7 +2193,7 @@ void GrColumn::SetClippedTextVisible(bool b)
 	m_bClippedTextVisible = b;
 }
 
-void GrColumn::SetSortType(GrSort::Type sortType)
+void GrColumn::SetSortType(GrSort sortType)
 {
 	if(m_bCanBeSorted == false)
 		return;
@@ -2205,21 +2204,21 @@ void GrColumn::SetSortType(GrSort::Type sortType)
 		m_pColumnList->NotifySortTypeChanged(this);
 }
 
-GrSort::Type GrColumn::GetSortType() const
+GrSort GrColumn::GetSortType() const
 {
 	if(m_pColumnList == NULL)
-		return GrSort::None;
+		return GrSort_None;
 	if(m_pColumnList->GetFirstSortColumn() != this)
-		return GrSort::None;
+		return GrSort_None;
 	return m_sortType;
 }
 
-void GrColumn::SetSortComparer(GrSort::Type sortType, FuncComparer comparer)
+void GrColumn::SetSortComparer(GrSort sortType, FuncComparer comparer)
 {
 	m_comparer[(int)sortType] = comparer;
 }
 
-FuncComparer GrColumn::GetSortComparer(GrSort::Type sortType) const
+FuncComparer GrColumn::GetSortComparer(GrSort sortType) const
 {
 	return m_comparer[(int)sortType];
 }
@@ -2619,9 +2618,9 @@ void GrColumn::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const
 	{
 		GrColor foreColor   = GetRenderingForeColor();
 
-		GrSort::Type sortType = GetSortType();
+		GrSort sortType = GetSortType();
 		GrRect rtText = rtRender;
-		if(sortType != GrSort::None)
+		if(sortType != GrSort_None)
 		{
 			GrRect rtSort;
 			rtSort.right	= rtRender.right - 6;
@@ -2950,17 +2949,17 @@ GrRow::GrRow()
 	m_bFitting			= false;
 }
 
-void GrRow::Sort(GrSort::Type sortType)
+void GrRow::Sort(GrSort sortType)
 {
 	switch(sortType)
 	{
-	case GrSort::Up:
+	case GrSort_Up:
 		Sort(GrSortFunc::SortRowsUp, 0);
 		break;
-	case GrSort::Down:
+	case GrSort_Down:
 		Sort(GrSortFunc::SortRowsDown, 0);
 		break;
-	case GrSort::None:
+	case GrSort_None:
 		Sort(GrSortFunc::SortRowsNone, 0);
 		break;
 	}
@@ -3086,7 +3085,7 @@ GrDataRow::~GrDataRow()
 
 void GrDataRow::AddItem(GrColumn* pColumn)
 {
-	GrColID columnID = pColumn->GetColumnID();
+	uint columnID = pColumn->GetColumnID();
 	GrItem* pItem = NULL;
 	if(columnID >= m_vecItems.size())
 	{
@@ -3438,9 +3437,9 @@ void GrGroupingRow::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) c
 
 	if(pFocuser->GetFocusedRow() == this)
 	{
-		color.r = (byte)((float)color.r * 0.75f);
-		color.g = (byte)((float)color.g * 0.75f);
-		color.b = (byte)((float)color.b * 0.75f);
+		color.bytes.r = (byte)((float)color.bytes.r * 0.75f);
+		color.bytes.g = (byte)((float)color.bytes.g * 0.75f);
+		color.bytes.b = (byte)((float)color.bytes.b * 0.75f);
 	}
 
 
@@ -3620,7 +3619,7 @@ void GrGroupingList::ExpandGrouping(uint nLevel, bool /*bExpand*/)
 	pGroupingInfo->SetExpanded(true);
 }
 
-void GrGroupingList::SetGroupingSortState(uint nLevel, GrSort::Type sortType)
+void GrGroupingList::SetGroupingSortState(uint nLevel, GrSort sortType)
 {
 	GrGroupingInfo* pGroupingInfo = m_vecGroupings[nLevel];
 	pGroupingInfo->SetSortType(sortType);
@@ -3632,7 +3631,7 @@ GrCell* GrGroupingList::HitTest(const GrPoint& pt) const
 	if(pt.y < y || pt.y >= y + GetHeight())
 		return NULL;
 
-	for_each_const(_Groupings, m_vecGroupings, value)
+	for_each(_Groupings, m_vecGroupings, value)
 	{
 		GrRect rect = value->GetRect();
 		if(rect.IsIn(pt) == true)
@@ -3648,7 +3647,7 @@ GrCell* GrGroupingList::HitDisplayTest(const GrPoint& pt) const
 	if(pt.y < y || pt.y >= y + GetHeight())
 		return NULL;
 
-	for_each_const(_Groupings, m_vecGroupings, value)
+	for_each(_Groupings, m_vecGroupings, value)
 	{
 		GrRect rect = value->GetDisplayRect();
 		if(rect.IsIn(pt) == true)
@@ -3720,7 +3719,7 @@ bool GrGroupingList::ShouldUpdate() const
 	return m_bGroupingChanged == true;
 }
 
-void GrGroupingList::Update(bool force)
+void GrGroupingList::Update(bool /*force*/)
 {
 	if(m_bGroupingChanged == true)
 		RepositionGrouping();
@@ -3872,7 +3871,7 @@ void GrGroupingList::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) 
 
 	pRenderer->DrawCell(renderStyle, backColor, &rtRender);
 
-	for_each_const(_Groupings, m_vecGroupings, value)
+	for_each(_Groupings, m_vecGroupings, value)
 	{
 		value->Render(pRenderer, pClipping);
 	}
@@ -4165,7 +4164,7 @@ void GrDataRowList::BuildGrouping(GrRow* pParent, uint nGroupingLevel)
 	FuncSortRow fnSort;
 	switch(pColumn->GetGroupingInfo()->GetSortType())
 	{
-	case GrSort::Up:
+	case GrSort_Up:
 		fnSort = GrSortFunc::SortDataRowSortUp;
 		break;
 	default:
@@ -4247,7 +4246,7 @@ void GrDataRowList::BuildChildRowList()
 		if(pColumn)
 			Sort(pColumn);
 		else
-			GrRow::Sort(GrSort::None);
+			GrRow::Sort(GrSort_None);
 	}
 	else
 	{
@@ -4295,7 +4294,7 @@ void GrDataRowList::SetHeightChanged()
 
 void GrDataRowList::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const
 {
-	for_each_const(_IDataRows, m_vecDisplayableRows, value)
+	for_each(_IDataRows, m_vecDisplayableRows, value)
 	{
 		int y = value->GetDisplayY();
 		int b = y + value->GetHeight() ;
@@ -4777,14 +4776,14 @@ GrRect GrDataRowList::GetDisplayBound() const
 	return GrRect(GetDisplayX(), GetDisplayY(), pRootRow->GetDisplayBound().right, m_nDisplayableBottom);
 }
 
-bool GrDataRowList::ShouldClip(const GrRect* pDisplayRect, uint horizontal, uint vertical) const
+bool GrDataRowList::ShouldClip(const GrRect* pDisplayRect, uint /*horizontal*/, uint vertical) const
 {
 	if(m_nClippedIndex == vertical && pDisplayRect->GetHeight() == m_nClippedHeight)
 		return false;
 	return true;
 }
 
-void GrDataRowList::Clip(const GrRect* pDisplayRect, uint horizontal, uint vertical)
+void GrDataRowList::Clip(const GrRect* pDisplayRect, uint /*horizontal*/, uint vertical)
 {
 	int nDisplayY = GetDisplayY();
 
@@ -4877,8 +4876,8 @@ void GrDataRowList::SetZeroBasedRowIndex(bool b)
 	{
 		value->SetDataRowIndex(nIndex);
 	}
-
 }
+
 bool GrDataRowList::GetZeroBasedRowIndex() const
 {
 	return m_bZeroBasedRowIndex;
@@ -4914,11 +4913,11 @@ void GrDataRowList::Sort(GrColumn* pColumn)
 	{
 		switch(pColumn->GetSortType())
 		{
-		case GrSort::Up:
+		case GrSort_Up:
 				
 			fnSort = GrSortFunc::SortDataRowSortUp;
 			break;
-		case GrSort::Down:
+		case GrSort_Down:
 			fnSort = GrSortFunc::SortDataRowSortDown;
 			break;
 		default:
@@ -4962,7 +4961,7 @@ GrCell* GrDataRowList::HitDisplayTest(const GrPoint& pt) const
 	if(pHitted == NULL)
 		return NULL;
 
-	for_each_const(_IDataRows, m_vecDisplayableRows, value)
+	for_each(_IDataRows, m_vecDisplayableRows, value)
 	{
 		GrCell* pSubHitted = value->HitDisplayTest(pt);
 		if(pSubHitted != NULL)
@@ -5178,7 +5177,7 @@ GrGroupingInfo::GrGroupingInfo(GrColumn* pColumn)
 	m_pt.y = 0;
 	m_bGrouped	= false;
 	m_bExpanded = true;
-	m_sortType	= GrSort::Up;
+	m_sortType	= GrSort_Up;
 	m_nLevel	= INVALID_INDEX;
 }
 
@@ -5217,16 +5216,16 @@ bool GrGroupingInfo::GetExpanded() const
 	return m_bExpanded;
 }
 
-GrSort::Type GrGroupingInfo::GetSortType() const
+GrSort GrGroupingInfo::GetSortType() const
 {
 	return m_sortType;
 }
 
-void GrGroupingInfo::SetSortType(GrSort::Type sortType)
+void GrGroupingInfo::SetSortType(GrSort sortType)
 {
 	if(m_pGroupingList->CanBeGrouped() == false)
 		return;
-	m_sortType = (sortType == GrSort::Up) ? GrSort::Up : GrSort::Down;
+	m_sortType = (sortType == GrSort_Up) ? GrSort_Up : GrSort_Down;
 	m_pGroupingList->NotifySortChanged(this);
 }
 
@@ -5451,7 +5450,7 @@ GrPoint GrRootRow::GetDisplayPosition() const
 
 void GrRootRow::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const
 {
-	for_each_const(_Rows, m_vecVisibleRows, value)
+	for_each(_Rows, m_vecVisibleRows, value)
 	{
 		value->Render(pRenderer, pClipping);
 	}
@@ -5463,7 +5462,7 @@ GrCell* GrRootRow::HitTest(const GrPoint& pt) const
 	if(pHitted == NULL)
 		return NULL;
 
-	for_each_const(_Rows, m_vecVisibleRows, value)
+	for_each(_Rows, m_vecVisibleRows, value)
 	{
 		GrCell* pSubHitted = value->HitTest(pt);
 		if(pSubHitted != NULL)
@@ -5479,7 +5478,7 @@ GrCell* GrRootRow::HitDisplayTest(const GrPoint& pt) const
 	if(pHitted == NULL)
 		return NULL;
 
-	for_each_const(_Rows, m_vecVisibleRows, value)
+	for_each(_Rows, m_vecVisibleRows, value)
 	{
 		GrCell* pSubHitted = value->HitDisplayTest(pt);
 		if(pSubHitted != NULL)

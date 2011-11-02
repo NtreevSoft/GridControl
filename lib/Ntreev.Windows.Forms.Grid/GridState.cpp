@@ -715,8 +715,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		{
 			if(EnableSorting(location) == true)
 			{
-				int n = ((int)m_pColumn->GetSortType() + 1) % (int)GrSort::Count;
-				GrSort::Type sortType = (GrSort::Type)n;
+				int n = ((int)m_pColumn->GetSortType() + 1) % (int)GrSort_Count;
+				GrSort sortType = (GrSort)n;
 
 				m_pColumn->SetSortType(sortType);
 				GridControl->Refresh();
@@ -1873,11 +1873,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	{
 		if(m_location == location)
 		{
-			GrSort::Type sortType = m_pGroupingInfo->GetSortType();
-			if(sortType == GrSort::Up)
-				m_pGroupingInfo->SetSortType(GrSort::Down);
+			GrSort sortType = m_pGroupingInfo->GetSortType();
+			if(sortType == GrSort_Up)
+				m_pGroupingInfo->SetSortType(GrSort_Down);
 			else
-				m_pGroupingInfo->SetSortType(GrSort::Up);
+				m_pGroupingInfo->SetSortType(GrSort_Up);
 		}
 
 		GridCore->SetMouseUnpressed();

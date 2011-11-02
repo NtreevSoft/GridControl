@@ -384,7 +384,10 @@ void GrGridCore::Clip(uint nStartCol, uint nStartRow)
 
 void GrGridCore::SetDisplayRect(GrRect rtDisplay)
 {
+	if(m_rtDisplay == rtDisplay)
+		return;
 	m_rtDisplay = rtDisplay;
+	Invalidate();
 }
 
 GrRect GrGridCore::GetDisplayableRect() const

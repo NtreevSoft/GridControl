@@ -41,7 +41,7 @@
 GrGridRenderer* GrGridRendererCreator(void* pWindowHandle)
 {
 #if __GRAPHIC_DEVICE == _GD_DC
-	return new GrGridRendererDC(pWindowHandle);
+	return new DeviceContext::GrGridRendererDC(pWindowHandle);
 #elif __GRAPHIC_DEVICE == _GD_DIRECT2D
 	return new GrGridRendererDirect2D(pWindowHandle);
 #elif __GRAPHIC_DEVICE == _GD_DIRECT3D

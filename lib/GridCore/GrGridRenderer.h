@@ -99,7 +99,7 @@ public:
 class GrGridRenderer
 {
 public:
-	GrGridRenderer(void* hWnd);
+	GrGridRenderer(void* pWindowHandle);
 	virtual ~GrGridRenderer();
 
 	virtual bool			DoubleBuffered() const = 0;
@@ -110,7 +110,7 @@ public:
 	virtual void			DrawDropDown(const GrRect* pRenderRect, int nState) = 0;
 	virtual void			DrawModal(const GrRect* pRenderRect, int nState) = 0;
 	virtual void			DrawTreeGlyph(const GrRect* pRenderRect, bool bOpened = true) = 0;
-	virtual void			DrawSortGlyph(const GrRect* pRenderRect, GrSort::Type sortType) = 0;
+	virtual void			DrawSortGlyph(const GrRect* pRenderRect, GrSort sortType) = 0;
 
 	virtual void			DrawHeader(GrFlag renderStyle, const GrRect* pRenderRect, GrColor color = GrColor::White, const GrRect* pClipping = NULL) = 0;
 	virtual void			DrawCell(GrFlag renderStyle, GrColor color, const GrRect* pRenderRect, const GrRect* pClipping = NULL) = 0;
@@ -129,22 +129,21 @@ public:
 	virtual void			OnEndRender() = 0;
 	virtual void			SetTransform(GrPoint pt) = 0;
 
-	virtual void*			GetDC() = 0;
-	virtual void			ReleaseDC(void* dc) = 0;
+	virtual void*			GetGraphicDevice() = 0;
+	virtual void			ReleaseGraphicDevice(void* dc) = 0;
 };
 
 class GrFont
 {
 public:
-	GrFont(void* hFont);
-	virtual ~GrFont();
+	GrFont(void* pFontHandle);
 
-	virtual int						GetWidth(wchar_t w) const = 0;
-	virtual int						GetHeight() const = 0;
-	virtual int						GetStringWidth(const wchar_t* str) const = 0;
-	virtual void*					GetFont() const = 0;
+	virtual int				GetCharacterWidth(wchar_t w) const = 0;
+	virtual int				GetHeight() const = 0;
+	virtual int				GetStringWidth(const wchar_t* str) const = 0;
+	virtual void*			GetFontHandle() const = 0;
+	virtual std::wstring	GetFontName() const = 0;
 
-	std::wstring					m_strFontName;
 #ifdef _MANAGED
 	virtual System::Drawing::Font^	ToManaged() const = 0;
 #endif
@@ -157,10 +156,8 @@ public:
 	GrFontManager();
 	~GrFontManager();
 
-	static std::wstring				GetFontName(void* hFont);
-
-	static GrFont*					GetFontDesc(void* hFont);
-	static GrFont*					GetDefaultFont();
+	static GrFont*			GetFontDesc(void* pFontHandle);
+	static GrFont*			GetDefaultFont();
 
 #ifdef _MANAGED
 	static GrFont*					FromManagedFont(System::Drawing::Font^ font);
@@ -168,9 +165,10 @@ public:
 #endif
 
 private:
-	static _MapFontCaches			m_mapFontCache;
-	static GrFont*					m_pDefaultFont;
+	static _MapFontCaches	m_mapFontCache;
+	static GrFont*			m_pDefaultFont;
 };
 
+std::wstring		GrFontHandleToKey(void* pFontHandle);
 GrFont*				GrFontCreator(void* pFontHandle);
 GrGridRenderer*		GrGridRendererCreator(void* pWindowHandle);
