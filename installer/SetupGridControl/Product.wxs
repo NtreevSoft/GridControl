@@ -7,7 +7,7 @@
 <?define ProductRegistry = "Software\NtreevSoft\GridControl" ?>
 
 <!--<?define AssemblyVersion = "1.0.4245.31717" ?>-->
-<?define AssemblyVersion = "1.0.4261.29948" ?>
+<?define AssemblyVersion = "1.1.4324.22060" ?>
 <?define AssemblyName = "Ntreev.Windows.Forms.Grid, Version=$(var.AssemblyVersion), Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca, processorArchitecture=MSIL" ?>
 <!--<?define AssemblyPath = "..\..\bin\lib\$(var.AssemblyVersion)\" ?>-->
 <?define AssemblyPath = "..\..\bin\lib\" ?>

@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0.4300.26762
+// Ntreev Grid for .Net 1.1.4324.22060
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -231,7 +231,7 @@ void GrHitTester::OnGridCoreAttached()
 
 bool GrHitTester::Test(GrPoint pt, GrHitTest* pHitTest) const
 {
-	GrRow* pRootRow = m_pGridCore->GetRoot();
+	GrRow* pRootRow = m_pGridCore->GetRootRow();
 	GrCell* pCell = pRootRow->HitTest(pt);
 
 	if(pCell != NULL)
@@ -268,7 +268,7 @@ bool GrHitTester::Test(GrRect rtSelection, GrItems* pTested) const
 
 bool GrHitTester::DisplayTest(GrPoint pt, GrHitTest* pHitTest) const
 {
-	GrRow* pRootRow = m_pGridCore->GetRoot();
+	GrRow* pRootRow = m_pGridCore->GetRootRow();
 	GrCell* pCell = pRootRow->HitDisplayTest(pt);
 
 	if(pCell != NULL)

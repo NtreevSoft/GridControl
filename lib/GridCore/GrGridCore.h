@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0.4300.26762
+// Ntreev Grid for .Net 1.1.4324.22060
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -74,7 +74,7 @@ public:
 
 	bool					Update();
 
-	GrRootRow*				GetRoot() const { return m_pRootRow; }
+	GrRootRow*				GetRootRow() const { return m_pRootRow; }
 
 	GrDataRowList*			GetDataRowList() const { return m_pDataRowList; }
 	GrColumnList*			GetColumnList() const { return m_pColumnList; }

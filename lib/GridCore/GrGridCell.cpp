@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0.4300.26762
+// Ntreev Grid for .Net 1.1.4324.22060
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -3534,7 +3534,7 @@ void GrCaption::SetVisible(bool b)
 
 	if(m_pGridCore != NULL)
 		return;
-	m_pGridCore->GetRoot()->SetVisibleChanged();
+	m_pGridCore->GetRootRow()->SetVisibleChanged();
 	m_pGridCore->Invalidate();
 }
 
@@ -4772,7 +4772,7 @@ GrRect GrDataRowList::GetBound() const
 
 GrRect GrDataRowList::GetDisplayBound() const
 {
-	GrRootRow* pRootRow = m_pGridCore->GetRoot();
+	GrRootRow* pRootRow = m_pGridCore->GetRootRow();
 	return GrRect(GetDisplayX(), GetDisplayY(), pRootRow->GetDisplayBound().right, m_nDisplayableBottom);
 }
 
@@ -5608,7 +5608,7 @@ void GrUpdatableRow::OnFitted()
 
 	if(m_pGridCore == NULL)
 		return;
-	m_pGridCore->GetRoot()->SetFitChanged();
+	m_pGridCore->GetRootRow()->SetFitChanged();
 }
 
 void GrUpdatableRow::OnHeightChanged()
@@ -5617,6 +5617,6 @@ void GrUpdatableRow::OnHeightChanged()
 
 	if(m_pGridCore == NULL)
 		return;
-	m_pGridCore->GetRoot()->SetHeightChanged();
+	m_pGridCore->GetRootRow()->SetHeightChanged();
 	m_pGridCore->Invalidate();
 }

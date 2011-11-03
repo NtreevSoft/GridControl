@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0.4300.26762
+// Ntreev Grid for .Net 1.1.4324.22060
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -315,7 +315,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 				}
 				else if(value->PropertyType->IsEnum == true)
 				{
-					System::Array^ values = System::Enum::GetValues(DataType);
+					System::Array^ values = System::Enum::GetValues(value->PropertyType);
 					if(values->Length > 0)
 						m_defaultValue = values->GetValue(0);
 				}

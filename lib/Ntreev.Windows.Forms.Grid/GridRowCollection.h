@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.0.4300.26762
+// Ntreev Grid for .Net 1.1.4324.22060
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -30,8 +30,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	/// <summary>
 	/// 행의 컬렉션을 나타냅니다.
 	/// </summary>
-	[System::ComponentModel::Editor("Ntreev.Windows.Forms.Grid.Design.RowCollectionEditor, Ntreev.Windows.Forms.Grid.Design, Version=1.0.4300.26762, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
-	[System::ComponentModel::Design::Serialization::DesignerSerializer("Ntreev.Windows.Forms.Grid.Design.RowCollectionCodeDomSerializer, Ntreev.Windows.Forms.Grid.Design, Version=1.0.4300.26762, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", "System.ComponentModel.Design.Serialization.CodeDomSerializer")]
+	[System::ComponentModel::Editor("Ntreev.Windows.Forms.Grid.Design.RowCollectionEditor, Ntreev.Windows.Forms.Grid.Design, Version=1.1.4324.22060, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
+	[System::ComponentModel::Design::Serialization::DesignerSerializer("Ntreev.Windows.Forms.Grid.Design.RowCollectionCodeDomSerializer, Ntreev.Windows.Forms.Grid.Design, Version=1.1.4324.22060, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", "System.ComponentModel.Design.Serialization.CodeDomSerializer")]
 	public ref class RowCollection : System::Collections::Generic::IList<Row^>, System::Collections::IList, GridObject
 	{
 		ref class Enumerator : System::Collections::Generic::IEnumerator<Row^>
