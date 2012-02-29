@@ -37,11 +37,13 @@ namespace Ntreev.Windows.Forms.Grid.Design
             readonly ListBox listBox = new ListBox();
 
             IWindowsFormsEditorService editorService;
+            IServiceProvider provider;
             Type selectedType = null;
 
-            public TypeSelectorCore(IWindowsFormsEditorService editorService, Type baseType)
+            public TypeSelectorCore(IWindowsFormsEditorService editorService, IServiceProvider provider, Type baseType)
             {
                 this.editorService = editorService;
+                this.provider = provider;
                 this.selectedType = baseType;
                 this.listBox.BorderStyle = BorderStyle.None;
 
@@ -72,7 +74,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
             {
                 if (this.listBox.SelectedItem.ToString() == "Etc...")
                 {
-                    TypeSelectorForm assembliesForm = new TypeSelectorForm();
+                    TypeSelectorForm assembliesForm = TypeSelectorForm.FromVSProject(this.provider);
                     if (assembliesForm.ShowDialog() == DialogResult.OK)
                     {
                         this.selectedType = assembliesForm.SelectedType;
@@ -91,7 +93,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
             IWindowsFormsEditorService editorService = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
             if (editorService != null)
             {
-                TypeSelectorCore typeSelector = new TypeSelectorCore(editorService, value as Type);
+                TypeSelectorCore typeSelector = new TypeSelectorCore(editorService, provider, value as Type);
                 typeSelector.DropDownControl();
                 return typeSelector.SelectedType;
             }

@@ -28,27 +28,30 @@
 #include "GridColumn.h"
 #include "GridCollection.h"
 #include "GridColumnCollection.h"
+#include "GridErrorDescriptor.h"
 
 #include "GrGridCell.h"
 #include "GrGridCore.h"
-#include "GrGridRenderer.h"
+#include "GrGridPainter.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	Row::Row(_GridControl^ gridControl) : m_pDataRow(new GrDataRow()), RowBase(gridControl, m_pDataRow)
+	Row::Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+        : m_pDataRow(new GrDataRow()), RowBase(gridControl, m_pDataRow), m_errorDescription(System::String::Empty)
 	{
 		m_pDataRow->ManagedRef = this;
-		m_cellCollection = gcnew CellCollection(this);
+		m_cells = gcnew CellCollection(this);
 		m_componentIndex = -1;
 	}
 
-	Row::Row(_GridControl^ gridControl, GrDataRow* pDataRow) : m_pDataRow(pDataRow), RowBase(gridControl, m_pDataRow)
+	Row::Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pDataRow) 
+        : m_pDataRow(pDataRow), RowBase(gridControl, m_pDataRow), m_errorDescription(System::String::Empty)
 	{
 		m_pDataRow->ManagedRef = this;
-		m_cellCollection = gcnew CellCollection(this);
+		m_cells = gcnew CellCollection(this);
 	}
 
-	void Row::Component::set(object^ value)
+	void Row::Component::set(System::Object^ value)
 	{
 		m_component = value;
 		if(m_component != nullptr)
@@ -64,7 +67,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void Row::RefreshCells()
 	{
-		for each(_Column^ item in GridControl->Columns)
+		for each(Column^ item in GridControl->Columns)
 		{
 			NewCell(item);
 		}
@@ -78,10 +81,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			cell = gcnew Cell(GridControl, pItem);
 	}
 
-	string^ Row::ToString()
+	System::String^ Row::ToString()
 	{
 		return this->Index.ToString();
-		//string^ text = gcnew string(m_pDataRow->GetText());
+		//System::String^ text = gcnew System::String(m_pDataRow->GetText());
 		//text += " : ";
 		//text += this->Cells->ToString();
 		//return text;
@@ -89,12 +92,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	CellCollection^ Row::Cells::get()
 	{
-		return m_cellCollection;
+		return m_cells;
+	}
+
+    CellTagCollection^ Row::CellTags::get()
+	{
+        if(m_cellTags == nullptr)
+        {
+            m_cellTags = gcnew CellTagCollection(this);
+        }
+		return m_cellTags;
 	}
 
 	int Row::CellCount::get()
 	{
-		return m_cellCollection->Count;
+		return m_cells->Count;
 	}
 
 	uint Row::RowID::get()
@@ -102,25 +114,30 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return m_pDataRow->GetDataRowID();	
 	}
 
-	Cell^ Row::default::get(int index)
+	System::Object^ Row::default::get(int index)
 	{
-		return m_cellCollection[index];
+        return m_cells[index]->Value;
 	}
 
-	Cell^ Row::default::get(string^ columnName)
+	System::Object^ Row::default::get(System::String^ columnName)
 	{
-		return m_cellCollection[columnName];
+		return m_cells[columnName]->Value;
 	}
 
-	Cell^ Row::default::get(Column^ column)
+    void Row::default::set(System::String^ columnName, System::Object^ value)
+    {
+        m_cells[columnName]->Value = value;
+    }
+
+	System::Object^ Row::default::get(Column^ column)
 	{
-		return m_cellCollection[column];
+		return m_cells[column]->Value;
 	}
 
-	Cell^ Row::default::get(GrColumn* pColumn)
-	{
-		return m_cellCollection[pColumn];
-	}
+    void Row::default::set(Column^ column, System::Object^ value)
+    {
+        m_cells[column]->Value = value;
+    }
 
 	bool Row::IsVisible::get()
 	{
@@ -169,9 +186,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			throw gcnew System::Exception();
 	}
 
+    void Row::AddErrorCell()
+    {
+        m_errorCell++;
+    }
+     
+    void Row::RemoveErrorCell()
+    {
+        m_errorCell--;
+		if(m_errorCell < 0)
+			throw gcnew System::Exception();
+    }
+
 	Row^ Row::FromNative(const GrDataRow* pDataRow)
 	{
-		object^ ref = pDataRow->ManagedRef;
+		System::Object^ ref = pDataRow->ManagedRef;
 		return safe_cast<Row^>(ref);
 	}
 
@@ -202,7 +231,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			if(m_editedCount == 0)
 				return;
 
-			for each(Cell^ cell in m_cellCollection)
+			for each(Cell^ cell in m_cells)
 			{
 				cell->CancelEdit();
 			}
@@ -224,7 +253,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			if(m_editedCount == 0)
 				return;
 
-			for each(Cell^ cell in m_cellCollection)
+			for each(Cell^ cell in m_cells)
 			{
 				cell->ApplyEdit();
 			}
@@ -239,14 +268,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 	}
 	
-	void Row::EnsureVisible()
+	void Row::BringIntoView()
 	{
 		if(m_pDataRow->GetDisplayable() == true)
 			return;
-		GridControl->EnsureVisible(this);
+		GridControl->BringIntoView(this);
 	}
 
-	void Row::Select(_SelectionType selectionType)
+	void Row::Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType)
 	{
 		Selector->SelectItems(m_pDataRow, (GrSelectionType)selectionType);
 	}
@@ -260,36 +289,65 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		if(this->Cells->Count > 0)
 		{
-			this[0]->Focus();
+            this->Cells[0]->Focus();
 		}
 	}
 
 	void Row::ResetCellBackColor()
 	{
-		CellBackColor = _Color::Empty;
+		CellBackColor = System::Drawing::Color::Empty;
 	}
 
 	void Row::ResetCellForeColor()
 	{
-		CellForeColor = _Color::Empty;
+		CellForeColor = System::Drawing::Color::Empty;
 	}
 
-	_Color Row::CellBackColor::get()
+	System::Drawing::Color Row::CellBackColor::get()
 	{
 		return m_pDataRow->GetItemBackColor();
 	}
 
-	void Row::CellBackColor::set(_Color value)
+	void Row::CellBackColor::set(System::Drawing::Color value)
 	{
 		m_pDataRow->SetItemBackColor(value);
 	}
 
-	_Color Row::CellForeColor::get()
+	System::Drawing::Color Row::CellForeColor::get()
 	{
 		return m_pDataRow->GetItemForeColor();
 	}
 
-	void Row::CellForeColor::set(_Color value)
+    System::String^ Row::ErrorDescription::get()
+    {
+        return m_errorDescription;       
+    }
+
+    void Row::ErrorDescription::set(System::String^ value)
+    {
+        if(value == nullptr)
+            value = System::String::Empty;
+
+        if(m_errorDescription == value)
+            return;
+
+        m_errorDescription = value;
+        if(m_errorDescription == System::String::Empty)
+        {
+            GridControl->ErrorDescriptor->Remove(this);
+        }
+        else
+        {
+            GridControl->ErrorDescriptor->Add(this);
+        }
+    }
+
+    bool Row::HasErrorCell::get()
+    {
+        return m_errorCell > 0;
+    }
+
+	void Row::CellForeColor::set(System::Drawing::Color value)
 	{
 		m_pDataRow->SetItemForeColor(value);
 	}
@@ -309,7 +367,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return m_pDataRow->GetItemFont() != nullptr;
 	}
 
-	InsertionRow::InsertionRow(_GridControl^ gridControl, GrInsertionRow* pInsertionRow)
+	InsertionRow::InsertionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrInsertionRow* pInsertionRow)
 		: Row(gridControl, pInsertionRow)
 	{
 		

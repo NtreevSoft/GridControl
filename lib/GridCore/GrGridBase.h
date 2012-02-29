@@ -23,7 +23,6 @@
 
 #pragma once
 
-#define _SECURE_SCL 0
 #include "GrGridType.h"
 
 class GrGridCore;
@@ -31,16 +30,17 @@ class GrGridCore;
 class GrObject
 {
 public:
-	GrObject() : m_pGridCore(0) {}
+    GrObject() : m_pGridCore(0) {}
+    virtual ~GrObject() {}
 
-	bool IsGridCoreAttached() const { return m_pGridCore != NULL; }
-
-protected:
-	virtual void				OnGridCoreAttached() {};
-	virtual void				OnGridCoreDetached() {};
+    bool IsGridCoreAttached() const { return m_pGridCore != NULL; }
 
 protected:
-	GrGridCore*					m_pGridCore;
+    virtual void OnGridCoreAttached() {};
+    virtual void OnGridCoreDetached() {};
 
-	friend class GrGridCore;
+protected:
+    GrGridCore*    m_pGridCore;
+
+    friend class GrGridCore;
 };

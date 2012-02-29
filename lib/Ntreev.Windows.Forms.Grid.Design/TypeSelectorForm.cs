@@ -30,12 +30,50 @@ using System.Windows.Forms;
 using System.Reflection;
 using System.Windows.Forms.Design;
 using System.ComponentModel.Design;
+using EnvDTE;
+using VSLangProj;
 
 namespace Ntreev.Windows.Forms.Grid.Design
 {
     public partial class TypeSelectorForm : Form
     {
         Type type = null;
+
+        static public TypeSelectorForm FromVSProject(IServiceProvider provider)
+        {
+            //IDesignerHost designerHost = provider.GetService(typeof(IDesignerHost)) as IDesignerHost;
+            //IReferenceService refService = provider.GetService(typeof(IReferenceService)) as IReferenceService;
+            ITypeResolutionService resService = provider.GetService(typeof(ITypeResolutionService)) as ITypeResolutionService;
+            DTE dte = provider.GetService(typeof(DTE)) as DTE;
+
+            if (dte.ActiveWindow.Project.Object is VSProject)
+            {
+                VSProject vsproj = dte.ActiveWindow.Project.Object as VSProject;
+
+                List<Assembly> assemblies = new List<Assembly>();
+
+                try
+                {
+                    Assembly projectAseembly = Assembly.Load(dte.ActiveWindow.Project.Name);
+                    if (projectAseembly != null)
+                        assemblies.Add(projectAseembly);
+                }
+                catch (Exception)
+                {
+                }
+
+                for (int i = 1; i <= vsproj.References.Count; i++)
+                {
+                    Reference reference = vsproj.References.Item(i);
+                    Assembly assembly = resService.GetAssembly(new AssemblyName(reference.Name));
+                    assemblies.Add(assembly);
+                }
+
+                return new TypeSelectorForm(assemblies.ToArray());
+            }
+            return null;
+        }
+
 
         public TypeSelectorForm()
             :this(null)

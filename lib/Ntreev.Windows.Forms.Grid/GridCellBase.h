@@ -24,16 +24,176 @@
 #pragma once
 #include "GridBase.h"
 #include "GridStyle.h"
-#include "GridStyleProvider.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	typedef System::Drawing::StringAlignment	_StringAlignment;
+    [System::FlagsAttribute]
+    public enum class CellState : int
+    {
+        Normal = 0,
+        Focused = 1,
+        Hot = 2,
+        Selected = 4,
+        Pressed = 8,
+
+        All = 0x0000000f,
+    };
+
+    /// <summary>
+	/// 개체의 스타일 속성을 정의합니다.
+	/// </summary>
+	public interface class ICellBase
+	{
+		/// <summary>
+		/// 개체의 전경색을 가져옵니다.
+		/// </summary>
+		/// <returns>
+		/// 전경색을 나타내는 <see cref="System::Drawing::Color"/>입니다.
+		/// </returns>
+		property System::Drawing::Color ForeColor
+		{
+			System::Drawing::Color get();
+		}
+
+		/// <summary>
+		/// 개체의 배경색을 가져옵니다.
+		/// </summary>
+		/// <returns>
+		/// 배경색을 나타내는 <see cref="System::Drawing::Color"/>입니다.
+		/// </returns>
+		property System::Drawing::Color BackColor
+		{
+			System::Drawing::Color get();
+		}
+
+		/// <summary>
+		/// 개체의 글꼴을 가져옵니다.
+		/// </summary>
+		/// <returns>
+		/// 글꼴색을 나타내는 <see cref="System::Drawing::Font"/>입니다.
+		/// </returns>
+		property System::Drawing::Font^ Font
+		{
+			System::Drawing::Font^ get();
+		}
+
+        property System::Drawing::Color PaintingForeColor
+        {
+            System::Drawing::Color get();
+        }
+
+        property System::Drawing::Color PaintingBackColor
+        {
+            System::Drawing::Color get();
+        }
+
+        property System::Drawing::Rectangle Bounds
+        {
+            System::Drawing::Rectangle get();
+        }
+
+        property int X
+        {
+            int get();
+        }
+
+        property int Y
+        {
+            int get();
+        }
+
+        property int Width
+        {
+            int get();
+        }
+    
+        property int Height
+        {
+            int get();
+        }
+
+        property System::Drawing::Point Location
+        {
+            System::Drawing::Point get();
+        }
+
+        property System::Drawing::Size Size
+        {
+            System::Drawing::Size get();
+        }
+
+        property int Left
+        {
+            int get();
+        }
+
+        property int Top
+        {
+            int get();
+        }
+
+        property int Right
+        {
+            int get();
+        }
+
+        property int Bottom
+        {
+            int get();
+        }
+
+        property System::Drawing::Rectangle ClientRectangle
+        {
+            System::Drawing::Rectangle get();
+        }
+
+        property System::Windows::Forms::Padding Padding
+        {
+            System::Windows::Forms::Padding get();
+        }
+
+        property bool Multiline
+        {
+            bool get();
+        }
+
+        property bool WordWrap
+        {
+            bool get();
+        }
+
+        /// <summary>
+		/// 셀의 수평 정렬방식을 가져오거나 설정합니다.
+		/// </summary>
+		/// <returns>
+		/// 수평 정렬방식을 나타내는 <see cref="System::Drawing::StringAlignment"/>입니다.
+		/// </returns>
+		property System::Drawing::StringAlignment Alignment
+		{
+			System::Drawing::StringAlignment get(); 
+		}
+
+		/// <summary>
+		/// 셀의 수직 정렬방식을 가져오거나 설정합니다.
+		/// </summary>
+		/// <returns>
+		/// 수직 정렬방식을 나타내는 <see cref="System::Drawing::StringAlignment"/>입니다.
+		/// </returns>
+		property System::Drawing::StringAlignment LineAlignment
+		{
+			System::Drawing::StringAlignment get();
+		}
+
+        property CellState State
+        {
+            CellState get();
+        }
+	};
 
 	/// <summary>
 	/// 셀을 표시하기 위한 기본 방법을 제공합니다.
 	/// </summary>
-	public ref class CellBase abstract : GridObject, IStyle//, System::Runtime::Serialization::ISerializable
+	public ref class CellBase abstract : GridObject, ICellBase
 	{
 	public: // methods
 		/// <summary>
@@ -70,12 +230,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <remarks>
 		/// 일반적으로 문자열의 색상을 나타냅니다.
 		/// </remarks>
-		[_Description("셀의 전경색을 가져오거나 설정합니다.")]
-		[_Category("Appearance")]
-		property _Color ForeColor
+		[System::ComponentModel::DescriptionAttribute("셀의 전경색을 가져오거나 설정합니다.")]
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		property System::Drawing::Color ForeColor
 		{
-			virtual _Color get();
-			void set(_Color);
+			virtual System::Drawing::Color get();
+			void set(System::Drawing::Color);
 		}
 
 		/// <summary>
@@ -84,12 +244,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		///	셀의 배경색을 나타내는 <see cref="System::Drawing::Color"/>입니다. 기본값은 <see cref="Design::Style::CellBackColor"/> 속성의 값입니다.
 		/// </returns>
-		[_Description("셀의 배경색을 가져오거나 설정합니다.")]
-		[_Category("Appearance")]
-		property _Color BackColor
+		[System::ComponentModel::DescriptionAttribute("셀의 배경색을 가져오거나 설정합니다.")]
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		property System::Drawing::Color BackColor
 		{
-			virtual _Color get();
-			void set(_Color);
+			virtual System::Drawing::Color get();
+			void set(System::Drawing::Color);
 		}
 
 		/// <summary>
@@ -98,11 +258,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		///	셀의 글꼴을 나타내는 <see cref="System::Drawing::Font"/>입니다. 기본값은 <see cref="Design::Style::CellFont"/> 속성의 값입니다.
 		/// </returns>
-		[_Category("Appearance"), System::ComponentModel::AmbientValue((string^)nullptr)]
-		property _Font^ Font
+		[System::ComponentModel::CategoryAttribute("Appearance"), System::ComponentModel::AmbientValue((System::String^)nullptr)]
+		property System::Drawing::Font^ Font
 		{ 
-			virtual _Font^ get();
-			void set(_Font^);
+			virtual System::Drawing::Font^ get();
+			void set(System::Drawing::Font^);
 		}
 
 		/// <summary>
@@ -112,9 +272,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 화면상에 표시되고 있다면 true를 반환하고, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
 #ifdef _DEBUG
-		[_Category("Debug")]
+		[System::ComponentModel::CategoryAttribute("Debug")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
 		property bool IsDisplayable
 		{ 
@@ -128,8 +288,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 셀에 대한 데이터가 들어 있는 <see cref="System::Object"/>입니다. 기본값은 null입니다.
 		/// </returns>
 		[System::ComponentModel::TypeConverter(System::ComponentModel::StringConverter::typeid)]
-		[_Category("Data"), _DefaultValue((string^)nullptr)]
-		virtual property object^ Tag;
+		[System::ComponentModel::CategoryAttribute("Data"), System::ComponentModel::DefaultValueAttribute((System::String^)nullptr)]
+		virtual property System::Object^ Tag;
 
 		
 		/// <summary>
@@ -142,14 +302,66 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 화면에 표시되는 영역을 나타내는 <see cref="System::Drawing::Rectangle"/>입니다.
 		/// </returns>
 #ifdef _DEBUG
-		[_Category("Debug")]
+		[System::ComponentModel::CategoryAttribute("Debug")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
-		property _Rectangle DisplayRectangle
+		property System::Drawing::Rectangle Bounds
 		{
-			_Rectangle get(); 
+			virtual System::Drawing::Rectangle get() sealed;
 		}
+
+        property int X
+        {
+            virtual int get();
+        }
+
+        property int Y
+        {
+            virtual int get();
+        }
+
+    private:
+        property int Width_ICellBase
+        {
+            virtual int get() sealed = ICellBase::Width::get;
+        }
+    public:
+
+        property int Height
+        {
+            virtual int get();
+        }
+
+        property System::Drawing::Point Location
+        {
+            virtual System::Drawing::Point get();
+        }
+
+        property System::Drawing::Size Size
+        {
+            virtual System::Drawing::Size get();
+        }
+
+        property int Left
+        {
+            virtual int get();
+        }
+
+        property int Top
+        {
+            virtual int get();
+        }
+
+        property int Right
+        {
+            virtual int get();
+        }
+
+        property int Bottom
+        {
+            virtual int get();
+        }
 
 		/// <summary>
 		/// 화면에 표시되고 있는 셀의 안쪽 영역을 가져옵니다.
@@ -161,13 +373,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 화면에 표시되는 안쪽 영역을 나타내는 <see cref="System::Drawing::Rectangle"/>입니다.
 		/// </returns>
 #ifdef _DEBUG
-		[_Category("Debug")]
+		[System::ComponentModel::CategoryAttribute("Debug")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
-		property _Rectangle ClientRectangle
+		property System::Drawing::Rectangle ClientRectangle
 		{
-			_Rectangle get(); 
+			virtual System::Drawing::Rectangle get() sealed;
 		}
 
 		/// <summary>
@@ -176,90 +388,75 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		///	셀의 내부 간격 특성을 나타내는 <see cref="System::Windows::Forms::Padding"/>입니다.
 		/// </returns>
-		[_Description("셀의 안쪽 여백을 가져오거나 설정합니다.")]
-		[_Category("Layout")]
-		property _Padding Padding 
+		[System::ComponentModel::DescriptionAttribute("셀의 안쪽 여백을 가져오거나 설정합니다.")]
+		[System::ComponentModel::CategoryAttribute("Layout")]
+		property System::Windows::Forms::Padding Padding 
 		{
-			_Padding get();
-			void set(_Padding);
+			virtual System::Windows::Forms::Padding get();
+			virtual void set(System::Windows::Forms::Padding);
 		}
 
 	public: // events
 		/// <summary>
 		/// <see cref="ForeColor"/> 속성 값이 변경되면 발생합니다.
 		/// </summary>
-		[_Description("전경색이 변경되면 발생합니다.")]
-		event _EventHandler^		ForeColorChanged
+		[System::ComponentModel::DescriptionAttribute("전경색이 변경되면 발생합니다.")]
+		event System::EventHandler^		ForeColorChanged
 		{
-			void add(_EventHandler^ p);
-			void remove(_EventHandler^ p);
+			void add(System::EventHandler^ p);
+			void remove(System::EventHandler^ p);
 		private:
-			void raise(object^ sender, _EventArgs^ e);
+			void raise(System::Object^ sender, System::EventArgs^ e);
 		}
 
 		/// <summary>
 		/// <see cref="BackColor"/> 속성 값이 변경되면 발생합니다.
 		/// </summary>
-		[_Description("배경색이 변경되면 발생합니다.")]
-		event _EventHandler^		BackColorChanged
+		[System::ComponentModel::DescriptionAttribute("배경색이 변경되면 발생합니다.")]
+		event System::EventHandler^		BackColorChanged
 		{
-			void add(_EventHandler^ p);
-			void remove(_EventHandler^ p);
+			void add(System::EventHandler^ p);
+			void remove(System::EventHandler^ p);
 		private:
-			void raise(object^ sender, _EventArgs^ e);
+			void raise(System::Object^ sender, System::EventArgs^ e);
 		}
 
 		/// <summary>
 		/// <see cref="Font"/> 속성 값이 변경되면 발생합니다.
 		/// </summary>
-		[_Description("글꼴이 변경되면 발생합니다.")]
-		event _EventHandler^		FontChanged
+		[System::ComponentModel::DescriptionAttribute("글꼴이 변경되면 발생합니다.")]
+		event System::EventHandler^		FontChanged
 		{
-			void add(_EventHandler^ p);
-			void remove(_EventHandler^ p);
+			void add(System::EventHandler^ p);
+			void remove(System::EventHandler^ p);
 		private:
-			void raise(object^ sender, _EventArgs^ e);
+			void raise(System::Object^ sender, System::EventArgs^ e);
 		}
 
 	internal: // methods
-		CellBase(_GridControl^ gridControl, GrCell* pCell);
+		CellBase(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrCell* pCell);
 
 		CellBase(GrCell* pCell);
 
 	internal: // properties
-		property _Color RenderingForeColor
+		property System::Drawing::Color DisplayForeColor
 		{
-			_Color get();
+			System::Drawing::Color get();
 		}
 
-		property _Color RenderingBackColor
+		property System::Drawing::Color DisplayBackColor
 		{
-			_Color get();
+			System::Drawing::Color get();
 		}
 
 	protected: // methods
-		///// <summary>
-		///// 대상 개체를 serialize하는 데 필요한 데이터로 <see cref="System::Runtime::Serialization::SerializationInfo"/>를 채웁니다.
-		///// </summary>
-		///// <param name="info">
-		///// 데이터로 채울 <see cref="System::Runtime::Serialization::SerializationInfo"/>입니다.
-		///// </param>
-		///// <param name="context">
-		///// 이 serialization에 대한 대상입니다(<see cref="System::Runtime::Serialization::StreamingContext"/> 참조).
-		///// </param>
-		///// <exception cref="System::Security::SecurityException">
-		///// 호출자에게 필요한 권한이 없는 경우
-		///// </exception>
-		//virtual void GetObjectData(System::Runtime::Serialization::SerializationInfo^ info, System::Runtime::Serialization::StreamingContext context) sealed 
-		//	= System::Runtime::Serialization::ISerializable::GetObjectData;
-    
 		/// <summary>
 		/// <see cref="ForeColorChanged"/> 이벤트를 발생시킵니다.
 		/// </summary>
 		/// <param name="e">
 		/// 이벤트 데이터가 들어 있는 <see cref="System::EventArgs"/>입니다.
 		/// </param>
-		virtual void OnForeColorChanged(_EventArgs^ e);
+		virtual void OnForeColorChanged(System::EventArgs^ e);
 
 		/// <summary>
 		/// <see cref="BackColorChanged"/> 이벤트를 발생시킵니다.
@@ -267,7 +464,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <param name="e">
 		/// 이벤트 데이터가 들어 있는 <see cref="System::EventArgs"/>입니다.
 		/// </param>
-		virtual void OnBackColorChanged(_EventArgs^ e);
+		virtual void OnBackColorChanged(System::EventArgs^ e);
 
 		/// <summary>
 		/// <see cref="FontChanged"/> 이벤트를 발생시킵니다.
@@ -275,16 +472,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <param name="e">
 		/// 이벤트 데이터가 들어 있는 <see cref="System::EventArgs"/>입니다.
 		/// </param>
-		virtual void OnFontChanged(_EventArgs^ e);
-
-		/// <summary>
-		/// 셀의 영역을 무효화하고 컨트롤을 다시 그립니다.
-		/// </summary>
-		/// <param name="cellBase">
-		/// 무효화 할 영역을 포함하는 <see cref="CellBase"/>의 인스턴스 입니다.
-		/// </param>
-		/// <exception cref="System::ArgumentNullException">매개 변수 <paramref name="cellBase"/>의 값이 null일때</exception>
-		void Invalidate(CellBase^ cellBase);
+		virtual void OnFontChanged(System::EventArgs^ e);
 
 	private: // methods
 		bool ShouldSerializeForeColor();
@@ -294,10 +482,59 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		void ResetPadding();
 
+    private: // properties
+        property System::Drawing::Color PaintingForeColor_ICellBase
+        {
+            virtual System::Drawing::Color get() sealed = ICellBase::PaintingForeColor::get;
+        }
+
+        property System::Drawing::Color PaintingBackColor_ICellBase
+        {
+            virtual System::Drawing::Color get() sealed = ICellBase::PaintingBackColor::get;
+        }
+
+        property bool Multiline_ICellBase
+        {
+            virtual bool get() sealed = ICellBase::Multiline::get;
+        }
+
+        property bool WordWrap_ICellBase
+        {
+            virtual bool get() sealed = ICellBase::WordWrap::get;
+        }
+
+		property System::Drawing::StringAlignment Alignment_ICellBase
+		{
+			virtual System::Drawing::StringAlignment get() sealed = ICellBase::Alignment::get;
+		}
+
+		property System::Drawing::StringAlignment LineAlignment_ICellBase
+		{
+            virtual System::Drawing::StringAlignment get() sealed = ICellBase::LineAlignment::get;
+		}
+
+        property CellState State_ICellBase
+        {
+            virtual CellState get() sealed = ICellBase::State::get;
+        }
+
 	private: // variables
 		GrCell*						m_pCell;
-		_EventHandler^				m_eventForeColorChanged;
-		_EventHandler^				m_eventBackColorChanged;
-		_EventHandler^				m_eventFontChanged;
+		System::EventHandler^				m_eventForeColorChanged;
+		System::EventHandler^				m_eventBackColorChanged;
+		System::EventHandler^				m_eventFontChanged;
 	};
+
+    public interface class ICell : ICellBase
+    {
+        property System::Object^ Value
+        {
+            System::Object^ get();
+        }
+
+        property System::Object^ Tag
+        {
+            System::Object^ get();
+        }
+    };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

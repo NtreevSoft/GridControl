@@ -30,20 +30,20 @@
 #include <commctrl.h>
 #pragma comment(lib, "comctl32.lib")
 
-namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Private
+namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	ToolTip::ToolTip(_GridControl^ gridControl) : GridObject(gridControl)
+	ToolTipItem::ToolTipItem()
 	{
 		m_created = false;
 		InitCommonControls();
 	}
 
-	void ToolTip::Show(string^ text)
+    void ToolTipItem::Show(System::String^ text, System::IntPtr handle)
 	{
 		static TOOLINFO ti;
 		if(m_created == false)
 		{
-			HWND hwndParent = (HWND)GridControl->Handle.ToPointer();
+			HWND hwndParent = (HWND)handle.ToPointer();
 			HWND hTooltip = CreateWindowEx(NULL, TOOLTIPS_CLASS, NULL,
 				WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP | TTS_BALLOON,
 				CW_USEDEFAULT, CW_USEDEFAULT,
@@ -78,46 +78,38 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		delete [] strTooltip;
 	}
 
-	void ToolTip::Hide()
+	void ToolTipItem::Hide()
 	{
 		::SendMessage((HWND)m_tooltip, TTM_ACTIVATE, (WPARAM)FALSE, 0);
 	}
 
-	GridTooltip::GridTooltip(_GridControl^ gridControl, int count) : Rotator<Private::ToolTip^>(gridControl)
+	ToolTip::ToolTip(GridControl^ gridControl, int count)
+        : m_gridControl(gridControl)
 	{
 		for(int i=0 ; i<count ; i++)
 		{
-			Private::ToolTip^ toolTip		= gcnew Private::ToolTip(gridControl);
-			//toolTip->IsBalloon		= true;
-			//toolTip->UseFading		= false;
-			//toolTip->AutomaticDelay	= 100;
-			//toolTip->InitialDelay	= 0;
-			//toolTip->ReshowDelay	= 0;
-			Add(toolTip);
+			m_toolTips.Add(gcnew ToolTipItem());
 		}
 		m_showed = false;
 	}
 
-	void GridTooltip::Hide()
+	void ToolTip::Hide()
 	{
 		if(m_showed == false)
 			return;
-		Private::ToolTip^ previous = Previous;
+		ToolTipItem^ previous = m_toolTips.Previous;
 		previous->Hide();
 		m_showed = false;
-		//previous->RemoveAll();
-		//previous->Active = false;
-		//Debug::WriteLine("Hide tooltip : {0}", Previous->ToolTipTitle);
 	}
 
-	void GridTooltip::Show(string^ text)
+	void ToolTip::Show(System::String^ text)
 	{
 		if(m_showed == true)
 			return;
-		Private::ToolTip^ current = Current;
-		current->Show(text);
-		MoveNext();
+		ToolTipItem^ current = m_toolTips.Current;
+        current->Show(text, m_gridControl->Handle);
+		m_toolTips.MoveNext();
 		m_showed = true;
 		//Debug::WriteLine("Show tooltip : {0}", text);
 	}
-} /*namespace Private*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
+} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

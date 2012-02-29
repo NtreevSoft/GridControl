@@ -23,7 +23,7 @@
 
 #pragma once
 
-namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Private
+namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
 
 	/// <summary>
@@ -124,4 +124,4 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 				 this->DialogResult = System::Windows::Forms::DialogResult::OK;
 			 }
 	};
-} /*namespace Private*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
+} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

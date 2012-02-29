@@ -25,71 +25,132 @@
 #include "GridErrorDescriptor.h"
 #include "GridControl.h"
 #include "GridCell.h"
+#include "GridResource.h"
 
-namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Private
+namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	ErrorDescriptor::ErrorDescriptor(_GridControl^ gridControl) : GridObject(gridControl)
-	{
-		m_cells				= gcnew _CellsList;
-		m_errorTimer		= gcnew _Timer();
-		m_errorTimer->Elapsed += gcnew _ElapsedEventHandler(this, &ErrorDescriptor::errorTimer_Elapsed);
-		m_errorCount		= 0;
+    ErrorDescriptor::ErrorDescriptor(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+        : GridObject(gridControl)
+    {
+        m_cells = gcnew System::Collections::Generic::List<Cell^>();
+        m_rows = gcnew System::Collections::Generic::List<Row^>();
+        m_timer = gcnew System::Timers::Timer();
+        m_timer->Elapsed += gcnew System::Timers::ElapsedEventHandler(this, &ErrorDescriptor::errorTimer_Elapsed);
+        m_timer->Interval = 300;
+        m_errorCount  = 0;
 
-		m_changed			= false;
+        GridControl->Cleared += gcnew ClearEventHandler(this, &ErrorDescriptor::gridControl_Cleared);
+        GridControl->VisibleChanged += gcnew System::EventHandler(this, &ErrorDescriptor::gridControl_VisibleChanged);
+    }
 
-		GridControl->Cleared += gcnew ClearEventHandler(this, &ErrorDescriptor::gridControl_Cleared);
-	}
+    void ErrorDescriptor::Add(Cell^ cell)
+    {
+        m_cells->Add(cell);
+        m_errorCount = 0;
 
-	void ErrorDescriptor::Add(Cell^ cell)
-	{
-		m_cells->Add(cell);
-		m_changed = true;
+        if(GridControl->Visible == true)
+        {
+            m_timer->Start();
+        }
+    }
 
-		m_changed		= false;
-		m_errorTimer->Start();
-		m_errorTimer->Interval = 300;
-		m_errorCount	= 0;
-	}
-	
-	void ErrorDescriptor::Remove(Cell^ cell)
-	{
-		m_cells->Remove(cell);
-		if(m_cells->Count == 0)
-			m_errorCount = 0;
-	}
+    void ErrorDescriptor::Remove(Cell^ cell)
+    {
+        m_cells->Remove(cell);
+        if(m_cells->Count == 0)
+            m_errorCount = 0;
+    }
 
-	void ErrorDescriptor::errorTimer_Elapsed(object^ /*sender*/, _ElapsedEventArgs^  e)
-	{
-		m_errorCount++;
-		if(m_errorCount > 8)
-		{
-			m_errorTimer->Stop();
-			m_changed = false;
-			m_errorCount = 0;
-			//m_errorCell			= nullptr;
-		}
-		System::Diagnostics::Debug::WriteLine(string::Format("The Elapsed event was raised at {0}", e->SignalTime));
-	}
+    void ErrorDescriptor::Add(Row^ row)
+    {
+        m_rows->Add(row);
+        m_errorCount = 0;
 
-	void ErrorDescriptor::gridControl_Cleared(object^ /*sender*/, ClearEventArgs^ /*e*/)
-	{
-		m_cells->Clear();
-	}
+        if(GridControl->Visible == true)
+        {
+            m_timer->Start();
+        }
+    }
 
-	void ErrorDescriptor::Paint(_Graphics^ g)
-	{
-		if(m_errorCount % 2 != 0)
-			return;
+    void ErrorDescriptor::Remove(Row^ row)
+    {
+        m_rows->Remove(row);
+        if(m_rows->Count == 0)
+            m_errorCount = 0;
+    }
 
-		for each(Cell^ cell in m_cells)
-		{
-			if(cell->IsDisplayed)
-			{
-				System::Drawing::Pen^ pen = gcnew System::Drawing::Pen(_Color::Firebrick);
-				pen->Width = 2;
-				pen->Alignment = System::Drawing::Drawing2D::PenAlignment::Inset;
-				g->DrawRectangle(pen, cell->DisplayRectangle);
-			}
-		}
-	}
-} /*namespace Private*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
+    void ErrorDescriptor::errorTimer_Elapsed(System::Object^ /*sender*/, System::Timers::ElapsedEventArgs^ /*e*/)
+    {
+        m_errorCount++;
+        if(m_errorCount > 8)
+        {
+            m_timer->Stop();
+            m_errorCount = 0;
+        }
+        GridControl->Invalidate();
+        //System::Diagnostics::Debug::WriteLine(System::String::Format("The Elapsed event was raised at {0}", e->SignalTime));
+    }
+
+    void ErrorDescriptor::gridControl_Cleared(System::Object^ /*sender*/, ClearEventArgs^ /*e*/)
+    {
+        m_cells->Clear();
+        m_rows->Clear();
+        m_timer->Stop();
+        m_errorCount = 0;
+    }
+
+    void ErrorDescriptor::gridControl_VisibleChanged(System::Object^ /*sender*/, System::EventArgs^ /*e*/)
+    {
+        if(GridControl->Visible == false)
+        {
+            m_timer->Stop();
+            m_errorCount = 0;
+        }
+        else
+        {
+            if(m_cells->Count > 0 || m_rows->Count > 0)
+            {
+                m_timer->Start();
+            }
+        }
+    }
+
+    void ErrorDescriptor::Paint(System::Drawing::Graphics^ g)
+    {
+        if(m_errorCount % 2 != 0)
+            return;
+
+        System::Drawing::Bitmap^ errorBitmap = Properties::Resources::Error;
+        System::Drawing::Pen^ pen = gcnew System::Drawing::Pen(System::Drawing::Color::Firebrick, 2);
+        pen->Alignment = System::Drawing::Drawing2D::PenAlignment::Inset;
+        for each(Cell^ cell in m_cells)
+        {
+            if(cell->IsDisplayable == false)
+                continue;
+
+            System::Drawing::Rectangle bounds = cell->Bounds;
+            bounds.Width--;
+            bounds.Height--;
+            g->DrawRectangle(pen, bounds);
+
+            g->DrawImage(errorBitmap, bounds.Left + 3, bounds.Top + 3, errorBitmap->Width, errorBitmap->Height);
+        }
+
+        for each(Row^ row in m_rows)
+        {
+            if(row->IsDisplayable == false)
+                continue;
+
+            System::Drawing::Rectangle bounds = row->Bounds;
+            bounds.Width = GridCore->GetColumnList()->GetBounds().GetWidth();
+            bounds.Height--;
+            g->DrawRectangle(pen, bounds);
+
+            bounds = row->Bounds;
+
+            g->DrawImage(errorBitmap, bounds.Left + 3, bounds.Top + 3, errorBitmap->Width, errorBitmap->Height);
+            
+        }
+        delete pen;
+    }
+} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

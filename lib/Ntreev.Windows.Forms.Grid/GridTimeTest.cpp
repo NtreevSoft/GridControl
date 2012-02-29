@@ -26,14 +26,14 @@
 
 #include "GridTimeTest.h"
 
-namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Private
+namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
 	GridTimeTest::GridTimeTest()
 	{
 		GridTimeTest::GridTimeTest("");
 	}
 
-	GridTimeTest::GridTimeTest(string^ text)
+	GridTimeTest::GridTimeTest(System::String^ text)
 	{
 		m_name = text;
 		m_firstTime = m_oldTime = _DateTime::Now;
@@ -50,7 +50,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		ReportAbs(m_name + " 끝");
 	}
 
-	void GridTimeTest::Report(string^ text)
+	void GridTimeTest::Report(System::String^ text)
 	{
 		_DateTime time = _DateTime::Now;
 		_TimeSpan span = time.Subtract(m_oldTime);
@@ -59,12 +59,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		Debug::WriteLine("{0} : {1}", text, span);
 	}
 
-	void GridTimeTest::Report(string^ format, ... cli::array<object^>^ values)
+	void GridTimeTest::Report(System::String^ format, ... cli::array<System::Object^>^ values)
 	{
-		Report(string::Format(format, values));
+		Report(System::String::Format(format, values));
 	}
 
-	void GridTimeTest::ReportAbs(string^ text)
+	void GridTimeTest::ReportAbs(System::String^ text)
 	{
 		_DateTime time = _DateTime::Now;
 		_TimeSpan span = time.Subtract(m_firstTime);
@@ -72,11 +72,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		Debug::WriteLine("{0} : 총시간 {1}", text, span);
 	}
 
-	void GridTimeTest::ReportAbs(string^ format, ... cli::array<object^>^ values)
+	void GridTimeTest::ReportAbs(System::String^ format, ... cli::array<System::Object^>^ values)
 	{
-		ReportAbs(string::Format(format, values));
+		ReportAbs(System::String::Format(format, values));
 	}
 
-} /*namespace Private*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
+} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
 
 #endif _TIME_TEST

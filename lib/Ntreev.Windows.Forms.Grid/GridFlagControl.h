@@ -22,8 +22,9 @@
 
 
 #pragma once
+#include "GridTypeEditor.h"
 
-namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Columns
+namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design
 {
 	/// <summary>
 	/// 열거형을 비트 필드 형태를 나타내는 사용자 정의 컨트롤입니다.
@@ -36,56 +37,33 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		/// <summary>
 		/// <see cref="FlagControl"/>클래스의 새 인스턴스를 초기화합니다.
 		/// </summary>
-		FlagControl()
-		{
-			InitializeComponent();
-		}
+		FlagControl();
+
+        FlagControl(IEditorService^ editorService, System::Type^ flagType);
 
 	public:
 		/// <summary>
 		/// 열거형 비트 필드 형태의 값을 가져오거나 설정합니다.
 		/// </summary>
-		property int Value
+		property System::Object^ Value
 		{
-			int get();
-			void set(int value);
+			System::Object^ get();
+            void set(System::Object^);
 		}
-
-		/// <summary>
-		/// 열거형 비트 필드 형태의 타입을 설정합니다.
-		/// </summary>
-		property _Type^ FlagType
-		{
-			void set(_Type^ value);
-		}
-
-	public:
-		event System::EventHandler^ EditOK;
-
-		event System::EventHandler^ EditCanceled;
 
 	protected:
-		~FlagControl()
-		{
-			if (components)
-			{
-				delete components;
-			}
-		}
 
 		virtual bool ProcessCmdKey(System::Windows::Forms::Message% msg, System::Windows::Forms::Keys keyData) override;
 
 	private:
-		_Type^			m_flagType;
-		int				m_oldValue;
+		System::Type^			m_flagType;
+        IEditorService^ m_editorService;
+        System::Object^ m_value;
 
 	private: 
 		System::Windows::Forms::Button^  buttonOk;
 		System::Windows::Forms::Button^  buttonCancel;
 
-	private:
-
-		System::ComponentModel::Container ^components;
 
 #pragma region Windows Form Designer generated code
 
@@ -131,7 +109,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		}
 #pragma endregion
 	private: 
-		System::Void buttonOk_Click(System::Object^ sender, System::EventArgs^ e) ;
-		System::Void buttonCancel_Click(System::Object^ sender, System::EventArgs^ e) ;
+		System::Void buttonOk_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void buttonCancel_Click(System::Object^ sender, System::EventArgs^ e);
+        
+        void InitializeCheckBox();
+
+        void UpdateValue();
+
 	};
-} /*namespace Columns*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
+} /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

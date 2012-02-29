@@ -23,21 +23,22 @@
 
 #include "StdAfx.h"
 #include "GridGroupingRow.h"
+#include "GridUtil.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	GroupingRow::GroupingRow(_GridControl^ gridControl, GrGroupingList* pGroupingList) 
+	GroupingRow::GroupingRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrGroupingList* pGroupingList) 
 		: CellBase(gridControl, pGroupingList) , m_pGroupingList(pGroupingList)
 	{
-		
+		this->Text = "그룹핑할 컬럼을 이쪽으로 드래그하여 옮기세요";
 	}
 
-	string^ GroupingRow::Text::get()
+	System::String^ GroupingRow::Text::get()
 	{
-		return gcnew string(m_pGroupingList->GetText());
+		return gcnew System::String(m_pGroupingList->GetText());
 	}
 
-	void GroupingRow::Text::set(string^ text)
+	void GroupingRow::Text::set(System::String^ text)
 	{
 		m_pGroupingList->SetText(ToNativeString::Convert(text));
 	}
@@ -50,5 +51,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void GroupingRow::IsVisible::set(bool value)
 	{
 		m_pGroupingList->SetVisible(value);
+	}
+
+    bool GroupingRow::ShouldSerializeText()
+	{
+		return this->Text != "그룹핑할 컬럼을 이쪽으로 드래그하여 옮기세요";
 	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

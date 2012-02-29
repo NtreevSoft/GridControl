@@ -21,238 +21,382 @@
 //=====================================================================================================================
 
 
-#include "StdAfx.h"
 #include "GrGridType.h"
 
-#define LOBYTE(w)           ((byte)(((uintptr_t)(w)) & 0xff))
+#define LOBYTE(w)           ((byte)(((unsigned int)(w)) & 0xff))
 #define GetRValue(rgb)      (LOBYTE(rgb))
 #define GetGValue(rgb)      (LOBYTE(((unsigned short)(rgb)) >> 8))
 #define GetBValue(rgb)      (LOBYTE((rgb)>>16))
 
-const GrPoint	GrPoint::Empty(0, 0);
-const GrSize	GrSize::Empty(0, 0);
+const GrPoint GrPoint::Empty;
+const GrSize  GrSize::Empty;
 
-const GrPadding GrPadding::Empty(0,0,0,0);
-const GrPadding GrPadding::Default(5,2,5,2);
-const GrRect GrRect::Empty(0, 0, 0, 0);
+const GrPadding GrPadding::Empty;
+const GrPadding GrPadding::Default(3,3,3,3);
+const GrRect GrRect::Empty;
 
-GrRect::GrRect()
-	: left(0), top(0), right(0), bottom(0)
-{
-	
-}
+GrHitTest GrHitTest::Empty;
 
-GrRect::GrRect(int l, int t, int r, int b) : left(l), top(t), right(r), bottom(b)
+GrPoint::GrPoint() : x(0), y(y)
 {
 
 }
 
-GrRect::GrRect(GrPoint pt, GrSize sz)
+GrPoint::GrPoint(int x, int y) : x(x), y(y) 
 {
-	left	= pt.x;
-	top		= pt.y;
-	right	= left + sz.width;
-	bottom	= top  + sz.height;
+
 }
 
-GrRect::GrRect(GrPoint pt1, GrPoint pt2)
+bool GrPoint::operator == (const GrPoint& point) const
 {
-	left   = pt1.x < pt2.x ? pt1.x : pt2.x;
-	top    = pt1.y < pt2.y ? pt1.y : pt2.y;
-	right  = left + abs(pt1.x - pt2.x);
-	bottom = top  + abs(pt1.y - pt2.y);
+    return (x == point.x && y == point.y) ? true : false;
 }
 
-void GrRect::operator += (const GrRect& rt)
+bool GrPoint::operator != (const GrPoint& point) const
 {
-	left	= std::min(left, rt.left);
-	top		= std::min(top, rt.top);
-	right	= std::max(right, rt.right);
-	bottom	= std::max(bottom, rt.bottom);
+    return (x != point.x || y != point.y) ? true : false; 
 }
 
-bool GrRect::operator == (const GrRect& rt) const
+void GrPoint::operator += (const GrPoint& point)
 {
-	if(left != rt.left || top != rt.top || right != rt.right || bottom != rt.bottom)
-		return false;
-	return true;
+    x += point.x; 
+    y -= point.y; 
 }
 
-bool GrRect::operator != (const GrRect& rt) const
+void GrPoint::operator -= (const GrPoint& point)
 {
-	if(left != rt.left || top != rt.top || right != rt.right || bottom != rt.bottom)
-		return true;
-	return false;
+    x += point.x; y -= point.y; 
+}
+
+GrPoint GrPoint::operator + (const GrPoint& point)
+{
+    return GrPoint(x + point.x, y + point.y); 
+}
+
+GrPoint GrPoint::operator - (const GrPoint& point)
+{
+    return GrPoint(x - point.x, y - point.y); 
+}
+
+GrPoint GrPoint::operator + (const GrPoint& point) const
+{
+    return GrPoint(x + point.x, y + point.y); 
+}
+
+GrPoint GrPoint::operator - (const GrPoint& point) const
+{
+    return GrPoint(x - point.x, y - point.y); 
+}
+
+GrPoint GrPoint::operator - () const
+{
+    return GrPoint(-x, -y); 
+}
+
+GrPoint GrPoint::operator + () const
+{
+    return GrPoint(x, y); 
+}
+
+#ifdef _MANAGED
+GrPoint::GrPoint(System::Drawing::Point point) : x(point.X), y(point.Y)
+{
+
+}
+
+void GrPoint::operator = (System::Drawing::Point point)
+{
+    x = point.X;
+    y = point.Y; 
+}
+
+GrPoint::operator System::Drawing::Point ()
+{
+    return System::Drawing::Point(x, y); 
+}
+
+GrPoint::operator System::Drawing::Point () const
+{
+    return  System::Drawing::Point(x, y); 
+}
+#endif
+
+GrSize::GrSize() : width(0), height(0) 
+{
+
+}
+
+GrSize::GrSize(int width, int height) : width(width), height(height)
+{
+
+}
+
+#ifdef _MANAGED
+GrSize::GrSize(System::Drawing::Size size) : width(size.Width), height(size.Height)
+{
+
+}
+
+void GrSize::operator = (System::Drawing::Size size)
+{
+    width  = size.Width;
+    height = size.Height; 
+}
+
+GrSize::operator System::Drawing::Size ()
+{
+    return System::Drawing::Size(width, height); 
+}
+
+GrSize::operator System::Drawing::Size () const
+{
+    return System::Drawing::Size(width, height); 
+}
+#endif
+
+GrRect::GrRect() : left(0), top(0), right(0), bottom(0)
+{
+
+}
+
+GrRect::GrRect(int left, int top, int right, int bottom) : left(left), top(top), right(right), bottom(bottom)
+{
+
+}
+
+GrRect::GrRect(const GrPoint& location, const GrSize& size)
+{
+    left   = location.x;
+    top    = location.y;
+    right  = left + size.width;
+    bottom = top  + size.height;
+}
+
+GrRect::GrRect(const GrPoint& pt1, const GrPoint& pt2)
+{
+    left   = pt1.x < pt2.x ? pt1.x : pt2.x;
+    top    = pt1.y < pt2.y ? pt1.y : pt2.y;
+    right  = left + abs(pt1.x - pt2.x);
+    bottom = top  + abs(pt1.y - pt2.y);
+}
+
+void GrRect::operator += (const GrRect& rect)
+{
+    left   = std::min(left, rect.left);
+    top    = std::min(top, rect.top);
+    right  = std::max(right, rect.right);
+    bottom = std::max(bottom, rect.bottom);
+}
+
+bool GrRect::operator == (const GrRect& rect) const
+{
+    if(left != rect.left || top != rect.top || right != rect.right || bottom != rect.bottom)
+        return false;
+    return true;
+}
+
+bool GrRect::operator != (const GrRect& rect) const
+{
+    if(left != rect.left || top != rect.top || right != rect.right || bottom != rect.bottom)
+        return true;
+    return false;
 }
 
 
-GrRect GrRect::operator + (const GrPoint& p) const
+GrRect GrRect::operator + (const GrPoint& point) const
 {
-	return GrRect(this->left + p.x, this->top + p.y, this->right + p.x, this->bottom + p.y);
+    return GrRect(this->left + point.x, this->top + point.y, this->right + point.x, this->bottom + point.y);
 }
 
-GrRect GrRect::operator - (const GrPoint& p) const
+GrRect GrRect::operator - (const GrPoint& point) const
 {
-	return GrRect(this->left - p.x, this->top - p.y, this->right - p.x, this->bottom - p.y);
+    return GrRect(this->left - point.x, this->top - point.y, this->right - point.x, this->bottom - point.y);
 }
 
-bool GrRect::IsIn(GrPoint pt) const
+GrRect GrRect::operator + (const GrPadding& padding) const
 {
-	if(pt.x < left || pt.y < top || pt.x >= right || pt.y >= bottom)
-		return false;
-	return true;
+    return GrRect(this->left + padding.left, this->top + padding.top, this->right - padding.right, this->bottom - padding.bottom);
 }
 
-bool GrRect::IsIn(const GrRect* pRect) const
+GrRect GrRect::operator - (const GrPadding& padding) const
 {
-	if(pRect->left < left || pRect->top < top || pRect->right >= right || pRect->bottom >= bottom)
-		return false;
-	return true;
+    return GrRect(this->left - padding.left, this->top - padding.top, this->right + padding.right, this->bottom + padding.bottom);
+}
+
+void GrRect::operator += (const GrPadding& padding)
+{
+    this->left   += padding.left;
+    this->top    += padding.top;
+    this->right  -= padding.right;
+    this->bottom -= padding.bottom;
+}
+
+void GrRect::operator -= (const GrPadding& padding)
+{
+    this->left   -= padding.left;
+    this->top    -= padding.top;
+    this->right  += padding.right;
+    this->bottom += padding.bottom;
+}
+
+bool GrRect::Contains(const GrPoint& location) const
+{
+    if(location.x < left || location.y < top || location.x >= right || location.y >= bottom)
+        return false;
+    return true;
+}
+
+bool GrRect::Contains(const GrRect& rect) const
+{
+    if(rect.left < left || rect.top < top || rect.right >= right || rect.bottom >= bottom)
+        return false;
+    return true;
 }
 
 bool GrRect::IsEmpty() const
 {
-	if(left != 0 || top != 0 || right != 0 || bottom != 0)
-		return false;
-	return true;
+    if(left != 0 || top != 0 || right != 0 || bottom != 0)
+        return false;
+    return true;
 }
 
 int GrRect::GetWidth() const
 {
-	return right - left;
+    return right - left;
 }
 
 int GrRect::GetHeight() const
 {
-	return bottom - top;
+    return bottom - top;
 }
 
 GrSize GrRect::GetSize() const
 {
-	GrSize sz;
-	sz.width  = GetWidth();
-	sz.height = GetHeight();
-	return sz;
+    GrSize size;
+    size.width  = GetWidth();
+    size.height = GetHeight();
+    return size;
 }
 
-void GrRect::SetSize(GrSize size)
+void GrRect::SetSize(int width, int height)
 {
-	right	= left + size.width;
-	bottom	= top  + size.height;
+    right   = left + width;
+    bottom  = top  + height;
+}
+
+void GrRect::SetSize(const GrSize& size)
+{
+    SetSize(size.width, size.height);
 }
 
 GrPoint GrRect::GetLocation() const
 {
-	return GrPoint(left, top);
+    return GrPoint(left, top);
 }
 
-void GrRect::SetLocation(GrPoint pt)
+void GrRect::SetLocation(int x, int y)
 {
-	left = pt.x;
-	top  = pt.y;
+    const GrSize size = GetSize();
+    left   = x;
+    top    = y;
+    right  = left + size.width;
+    bottom = top  + size.height;
+}
+
+void GrRect::SetLocation(const GrPoint& location)
+{
+    SetLocation(location.x, location.y);
 }
 
 void GrRect::Offset(int x, int y)
 {
-	left	+= x;
-	top		+= y;
-	right	+= x;
-	bottom	+= y;
+    left    += x;
+    top     += y;
+    right   += x;
+    bottom  += y;
 }
 
-void GrRect::Offset(GrPoint pt)
+void GrRect::Offset(const GrPoint& offset)
 {
-	Offset(pt.x, pt.y);
+    Offset(offset.x, offset.y);
 }
 
 void GrRect::Expand(int left, int top, int right, int bottom)
 {
-	this->left	 -= left;
-	this->top	 -= top;
-	this->right	 += right;
-	this->bottom += bottom;
+    this->left   -= left;
+    this->top    -= top;
+    this->right  += right;
+    this->bottom += bottom;
 }
 
-void GrRect::Expand(GrRect rtExpand)
+void GrRect::Expand(const GrPadding& padding)
 {
-	Expand(rtExpand.left, rtExpand.top, rtExpand.right, rtExpand.bottom);
+    Expand(padding.left, padding.top, padding.right, padding.bottom);
 }
 
 void GrRect::Contract(int left, int top, int right, int bottom)
 {
-	this->left	 += left;
-	this->top	 += top;
-	this->right	 -= right;
-	this->bottom -= bottom;
+    this->left   += left;
+    this->top    += top;
+    this->right  -= right;
+    this->bottom -= bottom;
 }
 
-void GrRect::Contract(GrRect rtContract)
+void GrRect::Contract(const GrPadding& padding)
 {
-	Contract(rtContract.left, rtContract.top, rtContract.right, rtContract.bottom);
+    Contract(padding.left, padding.top, padding.right, padding.bottom);
 }
 
 void GrRect::DoEmpty()
 {
-	*this = Empty;
+    *this = Empty;
 }
 
 GrPoint GrRect::GetCenter() const
 {
-	return GrPoint((left & right) + ((left ^ right) >> 1), (top & bottom) + ((top ^ bottom) >> 1));
-	//return GrPoint((left + right)/2, (top + bottom)/2);
+    return GrPoint((left & right) + ((left ^ right) >> 1), (top & bottom) + ((top ^ bottom) >> 1));
 }
-
-#if 0
-GrRect::operator RECT () 
-{ 
-	RECT rt; rt.left = left; rt.top = top; rt.right = right; rt.bottom = bottom; return rt; 
-}
-
-GrRect::operator RECT () const  
-{ 
-	RECT rt; rt.left = left; rt.top = top; rt.right = right; rt.bottom = bottom; return rt; 
-}
-#endif
 
 #ifdef _MANAGED
-GrRect::GrRect(System::Drawing::Rectangle% rt) : left(rt.Left), top(rt.Top), right(rt.Right), bottom(rt.Bottom)
+GrRect::GrRect(System::Drawing::Rectangle% rect) : left(rect.Left), top(rect.Top), right(rect.Right), bottom(rect.Bottom)
 {
 
 }
 
-GrRect::GrRect(System::Drawing::RectangleF% rt) : left((int)rt.Left), top((int)rt.Top), right((int)rt.Right), bottom((int)rt.Bottom)
+GrRect::GrRect(System::Drawing::RectangleF% rect) : left((int)rect.Left), top((int)rect.Top), right((int)rect.Right), bottom((int)rect.Bottom)
 {
 
 }
 
-bool GrRect::IsIn(System::Drawing::Point% pt) const
+bool GrRect::Contains(System::Drawing::Point% location) const
 {
-	if(pt.X < left || pt.Y < top || pt.X >= right || pt.Y >= bottom)
-		return false;
-	return true;
+    if(location.X < left || location.Y < top || location.X >= right || location.Y >= bottom)
+        return false;
+    return true;
 }
 
-void GrRect::operator = (System::Drawing::Rectangle% rt)
+void GrRect::operator = (System::Drawing::Rectangle% rect)
 {
-	left = rt.Left; top = rt.Top; right = rt.Right; bottom = rt.Bottom; 
+    left   = rect.Left;
+    top    = rect.Top;
+    right  = rect.Right;
+    bottom = rect.Bottom; 
 }
 
 GrRect::operator System::Drawing::Rectangle ()
 {
-	return System::Drawing::Rectangle::FromLTRB(left, top, right, bottom); 
+    return System::Drawing::Rectangle::FromLTRB(left, top, right, bottom); 
 }
 GrRect::operator System::Drawing::Rectangle () const 
 { 
-	return System::Drawing::Rectangle::FromLTRB(left, top, right, bottom); 
+    return System::Drawing::Rectangle::FromLTRB(left, top, right, bottom); 
 }
 #endif
 
 GrPadding::GrPadding()
+: left(0), top(0), right(0), bottom(0)
 {
-	this->left = 0;
-	this->top = 0;
-	this->right = 0;
-	this->bottom = 0;
+    
 }
 
 GrPadding::GrPadding(int l, int t, int r, int b)
@@ -263,36 +407,36 @@ GrPadding::GrPadding(int l, int t, int r, int b)
 
 int GrPadding::GetHorizontal() const
 {
-	return left + right;
+    return left + right;
 }
 
 int GrPadding::GetVertical() const
 {
-	return top + bottom;
+    return top + bottom;
 }
 
 GrPadding::operator GrRect()
 {
-	return GrRect(left, top, right, bottom);
+    return GrRect(left, top, right, bottom);
 }
 
 GrPadding::operator GrRect() const
 {
-	return GrRect(left, top, right, bottom);
+    return GrRect(left, top, right, bottom);
 }
 
 bool GrPadding::operator == (const GrPadding& padding) const
 {
-	if(left != padding.left || top != padding.top || right != padding.right || bottom != padding.bottom)
-		return false;
-	return true;
+    if(left != padding.left || top != padding.top || right != padding.right || bottom != padding.bottom)
+        return false;
+    return true;
 }
 
 bool GrPadding::operator != (const GrPadding& padding) const
 {
-	if(left != padding.left || top != padding.top || right != padding.right || bottom != padding.bottom)
-		return true;
-	return false;
+    if(left != padding.left || top != padding.top || right != padding.right || bottom != padding.bottom)
+        return true;
+    return false;
 }
 
 #ifdef _MANAGED
@@ -304,20 +448,20 @@ GrPadding::GrPadding(System::Windows::Forms::Padding% padding)
 
 GrPadding::operator System::Windows::Forms::Padding ()
 {
-	return System::Windows::Forms::Padding(left, top, right, bottom);
+    return System::Windows::Forms::Padding(left, top, right, bottom);
 }
 
 GrPadding::operator System::Windows::Forms::Padding () const
 {
-	return System::Windows::Forms::Padding(left, top, right, bottom);
+    return System::Windows::Forms::Padding(left, top, right, bottom);
 }
 
 void GrPadding::operator = (System::Windows::Forms::Padding% padding)
 {
-	left	= padding.Left;
-	top		= padding.Top;
-	right	= padding.Right;
-	bottom	= padding.Bottom;
+    left   = padding.Left;
+    top    = padding.Top;
+    right  = padding.Right;
+    bottom = padding.Bottom;
 }
 #endif
 
@@ -467,144 +611,138 @@ const GrColor GrColor::YellowGreen(255, 154, 205, 50);
 
 GrColor::GrColor() : value(0)
 {
-	//RGB(255,255,255)
+    //RGB(255,255,255)
 }
 
-GrColor::GrColor(int clr)
+GrColor::GrColor(int argb)
 {
-	this->bytes.a = 0xff;
-	this->bytes.r = GetRValue(clr);
-	this->bytes.g = GetGValue(clr);
-	this->bytes.b = GetBValue(clr);
+    this->a = 0xff;
+    this->r = GetRValue(argb);
+    this->g = GetGValue(argb);
+    this->b = GetBValue(argb);
 }
 
 GrColor::GrColor(int a, int r, int g, int b)
 {
-	const int maxValue = (int)0xff;
-	this->bytes.a = (byte)std::min(a, maxValue);
-	this->bytes.r = (byte)std::min(r, maxValue);
-	this->bytes.g = (byte)std::min(g, maxValue);
-	this->bytes.b = (byte)std::min(b, maxValue);
+    const int maxValue = (int)0xff;
+    this->a = (byte)std::min(a, maxValue);
+    this->r = (byte)std::min(r, maxValue);
+    this->g = (byte)std::min(g, maxValue);
+    this->b = (byte)std::min(b, maxValue);
 }
 GrColor::GrColor(int r, int g, int b)
 {
-	const int maxValue = (int)0xff;
-	this->bytes.a = maxValue;
-	this->bytes.r = (byte)std::min(r, maxValue);
-	this->bytes.g = (byte)std::min(g, maxValue);
-	this->bytes.b = (byte)std::min(b, maxValue);
+    const int maxValue = (int)0xff;
+    this->a = maxValue;
+    this->r = (byte)std::min(r, maxValue);
+    this->g = (byte)std::min(g, maxValue);
+    this->b = (byte)std::min(b, maxValue);
 }
 
 void GrColor::operator *= (float f)
 {
-	f = std::max(0.0f, f);
+    f = std::max(0.0f, f);
 
-	A(A() * f);
-	R(R() * f);
-	G(G() * f);
-	B(B() * f);
+    A(A() * f);
+    R(R() * f);
+    G(G() * f);
+    B(B() * f);
 }
 
 GrColor GrColor::operator * (float f) const
 {
-	GrColor clr;
-	clr.A(A() * f);
-	clr.R(R() * f);
-	clr.G(G() * f);
-	clr.B(B() * f);
+    GrColor clr;
+    clr.A(A() * f);
+    clr.R(R() * f);
+    clr.G(G() * f);
+    clr.B(B() * f);
 
-	return clr;
+    return clr;
 }
 
 GrColor GrColor::operator * (const GrColor& color) const
 {
-	GrColor clr;
-	clr.A(A() * color.A());
-	clr.R(R() * color.R());
-	clr.G(G() * color.G());
-	clr.B(B() * color.B());
-	return clr;
+    GrColor clr;
+    clr.A(A() * color.A());
+    clr.R(R() * color.R());
+    clr.G(G() * color.G());
+    clr.B(B() * color.B());
+    return clr;
 }
 
 bool GrColor::operator != (const GrColor& color) const
 {
-	return this->value != color.value;
+    return this->value != color.value;
 }
 
 bool GrColor::operator == (const GrColor& color) const
 {
-	return this->value == color.value;
+    return this->value == color.value;
 }
 
 float GrColor::A() const
 {
-	return (float)bytes.a / 255.0f;
+    return (float)a / 255.0f;
 }
 
 float GrColor::R() const
 {
-	return (float)bytes.r / 255.0f;
+    return (float)r / 255.0f;
 }
 
 float GrColor::G() const
 {
-	return (float)bytes.g / 255.0f;
+    return (float)g / 255.0f;
 }
 
 float GrColor::B() const
 {
-	return (float)bytes.b / 255.0f;
+    return (float)b / 255.0f;
 }
 
 void GrColor::A(float value)
 {
-	value *= 255.0f;
-	bytes.a = value > 255.0f ? 0xff : (byte)value;
+    value *= 255.0f;
+    a = value > 255.0f ? 0xff : (byte)value;
 }
 
 void GrColor::R(float value)
 {
-	value *= 255.0f;
-	bytes.r = value > 255.0f ? 0xff : (byte)value;
+    value *= 255.0f;
+    r = value > 255.0f ? 0xff : (byte)value;
 }
 
 void GrColor::G(float value)
 {
-	value *= 255.0f;
-	bytes.g = value > 255.0f ? 0xff : (byte)value;
+    value *= 255.0f;
+    g = value > 255.0f ? 0xff : (byte)value;
 }
 
 void GrColor::B(float value)
 {
-	value *= 255.0f;
-	bytes.b = value > 255.0f ? 0xff : (byte)value;
+    value *= 255.0f;
+    b = value > 255.0f ? 0xff : (byte)value;
 }
 
 #ifdef _MANAGED
-GrColor::GrColor(System::Drawing::Color Color)
+GrColor::GrColor(System::Drawing::Color color)
 {
-	bytes.a = Color.A;
-	bytes.r = Color.R;
-	bytes.g = Color.G;
-	bytes.b = Color.B;
+    a = color.A;
+    r = color.R;
+    g = color.G;
+    b = color.B;
 }
 
 GrColor::operator System::Drawing::Color ()
 {
-	return System::Drawing::Color::FromArgb(bytes.a, bytes.r, bytes.g, bytes.b);
+    return System::Drawing::Color::FromArgb(a, r, g, b);
 }
 
 GrColor::operator System::Drawing::Color () const
 {
-	return System::Drawing::Color::FromArgb(bytes.a, bytes.r, bytes.g, bytes.b);
+    return System::Drawing::Color::FromArgb(a, r, g, b);
 }
 #endif
-
-#define RGB(r,g,b)          ((uintptr_t)(((byte)(r)|((unsigned short)((byte)(g))<<8))|(((uintptr_t)(byte)(b))<<16)))
-ulong GrColor::ToRGB() const
-{
-	return RGB(bytes.r, bytes.g, bytes.b);
-}
 
 GrFlag::GrFlag() : m_flag(0)
 {
@@ -617,59 +755,68 @@ GrFlag::GrFlag(ulong flag) : m_flag(flag)
 }
 GrFlag::operator ulong() const
 {
-	return m_flag;
+    return m_flag;
 }
 
 ulong GrFlag::Add(ulong flag, ulong mask)
 {
-	flag &= mask;
-	ulong returnFlag = flag & ~m_flag;
-	m_flag |= flag; 
-	return returnFlag;
+    flag &= mask;
+    ulong returnFlag = flag & ~m_flag;
+    m_flag |= flag; 
+    return returnFlag;
 }
 
 ulong GrFlag::Remove(ulong flag, ulong mask) 
 {
-	flag &= mask;
-	ulong returnFlag = flag & m_flag;
-	m_flag &= ~flag; 
-	return returnFlag;
+    flag &= mask;
+    ulong returnFlag = flag & m_flag;
+    m_flag &= ~flag; 
+    return returnFlag;
 }
 
 void GrFlag::Clear()
 {
-	m_flag = 0; 
+    m_flag = 0; 
 }
+
 bool GrFlag::Has(ulong flag, ulong mask) const
 {
-	flag &= mask;
-	return m_flag & flag ? true : false; 
+    flag &= mask;
+    return m_flag & flag ? true : false; 
 }
+
 ulong GrFlag::Get(ulong mask) const
 {
-	return m_flag & mask; 
+    return m_flag & mask; 
 }
 
 ulong GrFlag::operator += (ulong flag)
 {
-	return Add(flag);
+    return Add(flag);
 }
+
 ulong GrFlag::operator -= (ulong flag)
 {
-	return Remove(flag);
+    return Remove(flag);
 }
 
 void GrFlag::operator = (ulong flag)
 {
-	m_flag = flag;
+    m_flag = flag;
 }
 
 ulong GrFlag::operator + (ulong flag) const
 {
-	return m_flag | flag;
+    return m_flag | flag;
 }
 
 ulong GrFlag::operator - (ulong flag) const
 {
-	return m_flag & ~flag;
+    return m_flag & ~flag;
+}
+
+GrHitTest::GrHitTest()
+{
+    pHitted  = NULL;
+    localHit = GrPoint::Empty;
 }

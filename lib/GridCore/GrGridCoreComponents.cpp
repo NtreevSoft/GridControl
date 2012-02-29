@@ -21,9 +21,9 @@
 //=====================================================================================================================
 
 
-#include "StdAfx.h"
 #include "GrGridCoreComponents.h"
 #include "GrGridCore.h"
+#include "GrGridStateManager.h"
 #include <assert.h>
 
 #if _MSC_VER >= 1600
@@ -32,964 +32,773 @@
 
 GrFocuser::GrFocuser()
 {
-	ResetVariables();
+    ResetVariables();
 }
 
 void GrFocuser::OnGridCoreAttached()
 {
-	GrObject::OnGridCoreAttached();
+    GrObject::OnGridCoreAttached();
 
-	m_pGridCore->Cleared.Add(this, &GrFocuser::gridCore_Cleared);
-	m_pGridCore->Created.Add(this, &GrFocuser::gridCore_Created);
+    m_pGridCore->Cleared.Add(this, &GrFocuser::gridCore_Cleared);
+    m_pGridCore->Created.Add(this, &GrFocuser::gridCore_Created);
 }
 
 GrDataRow* GrFocuser::GetFocusableDataRow() const
 {
-	IDataRow* pDataRow = GetFocusedRow();
+    IDataRow* pDataRow = GetFocusedRow();
 
-	if(pDataRow == NULL)
-	{
-		GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
-		if(pDataRowList->GetVisibleDataRowCount() == 0)
-			return NULL;
-		pDataRow = pDataRowList->GetVisibleDataRow(0);
-	}
+    if(pDataRow == NULL)
+    {
+        GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
+        if(pDataRowList->GetVisibleDataRowCount() == 0)
+            return NULL;
+        pDataRow = pDataRowList->GetVisibleDataRow(0);
+    }
 
-	return dynamic_cast<GrDataRow*>(pDataRow);
+    return dynamic_cast<GrDataRow*>(pDataRow);
 }
 
 GrColumn* GrFocuser::GetFocusableColumn() const
 {
-	GrColumn* pColumn = GetFocusedColumn();
+    GrColumn* pColumn = GetFocusedColumn();
 
-	if(pColumn == NULL)
-	{
-		pColumn = m_pLastFocusedColumn;
-	}
+    if(pColumn == NULL)
+    {
+        pColumn = m_pLastFocusedColumn;
+    }
 
-	if(pColumn == NULL)
-	{
-		GrColumnList* pColumnList = m_pGridCore->GetColumnList();
-		if(pColumnList->GetVisibleColumnCount() == 0)
-			return NULL;
-		pColumn = pColumnList->GetVisibleColumn(0);
-	}
+    if(pColumn == NULL)
+    {
+        GrColumnList* pColumnList = m_pGridCore->GetColumnList();
+        if(pColumnList->GetVisibleColumnCount() == 0)
+            return NULL;
+        pColumn = pColumnList->GetVisibleColumn(0);
+    }
 
-	return pColumn;
+    return pColumn;
 }
 
 void GrFocuser::Set(GrColumn* pColumn)
 {
-	GrDataRow* pDataRow = GetFocusableDataRow();
-	if(pDataRow == NULL)
-		return;
+    GrDataRow* pDataRow = GetFocusableDataRow();
+    if(pDataRow == NULL)
+        return;
 
-	GrItem* pItem = pDataRow->GetItem(pColumn);
-	Set(pItem);
+    GrItem* pItem = pDataRow->GetItem(pColumn);
+    Set(pItem);
 }
 
 void GrFocuser::Set(IDataRow* pDataRow)
 {
-	GrColumn* pColumn = GetFocusableColumn();
-	IFocusable* pFocusable = NULL;
-	if(pColumn)
-		pFocusable = pDataRow->GetFocusable(pColumn);
-	Set(pFocusable);
+    GrColumn* pColumn = GetFocusableColumn();
+    IFocusable* pFocusable = NULL;
+    if(pColumn)
+        pFocusable = pDataRow->GetFocusable(pColumn);
+    Set(pFocusable);
 }
 
 void GrFocuser::Set(IFocusable* pFocusable)
 {
-	if(m_pFocus == pFocusable)
-		return;
+    if(m_pFocus == pFocusable)
+        return;
 
-	OnFocusChanging(&GrEventArgs::Empty);
+    GrFocusChangeArgs e(pFocusable);
+    OnFocusChanging(&e);
 
-	if(pFocusable)
-	{
-		m_pFocus = pFocusable;
-		m_pLastFocusedRow = pFocusable->GetIDataRow();
-	}
-	else
-	{
-		m_pFocus		= NULL;
-	}
+    if(pFocusable)
+    {
+        m_pFocus = pFocusable;
+        m_pLastFocusedRow = pFocusable->GetDataRow();
+    }
+    else
+    {
+        m_pFocus = NULL;
+    }
 
-	OnFocusChanged(&GrEventArgs::Empty);
+    OnFocusChanged(&e);
 }
 
 GrColumn* GrFocuser::GetLastFocusedColumn() const
 {
-	return m_pLastFocusedColumn;
+    return m_pLastFocusedColumn;
 }
 
 IDataRow* GrFocuser::GetLastFocusedRow() const
 {
-	return m_pLastFocusedRow;
+    return m_pLastFocusedRow;
 }
 
 GrColumn* GrFocuser::GetFocusedColumn() const
 {
-	if(m_pFocusItem == NULL)
-		return NULL;
-	return m_pFocusItem->GetColumn();
+    if(m_pFocusItem == NULL)
+        return NULL;
+    return m_pFocusItem->GetColumn();
 }
 
 IDataRow* GrFocuser::GetFocusedRow() const
 {
-	if(m_pFocus == NULL)
-		return NULL;
-	return m_pFocus->GetIDataRow();
+    if(m_pFocus == NULL)
+        return NULL;
+    return m_pFocus->GetDataRow();
 }
 
 IFocusable* GrFocuser::Get() const
 {
-	if(m_pFocusing != NULL)
-		return m_pFocusing;
-	return m_pFocus;
+    IFocusable* pFocusing = GetFocusing();
+    if(pFocusing != NULL)
+        return pFocusing;
+    return m_pFocus;
 }
 
 bool GrFocuser::Has() const
 {
-	return m_pFocus != NULL ? true : false;
+    return m_pFocus != NULL ? true : false;
 }
 
 GrItem* GrFocuser::GetItem() const
 {
-	return dynamic_cast<GrItem*>(Get());
+    return dynamic_cast<GrItem*>(Get());
 }
 
-void GrFocuser::SetFocusing(IFocusable* pFocusable)
+IFocusable* GrFocuser::GetFocusing() const
 {
-	m_pFocusing = pFocusable;
-	m_pGridCore->Invalidate();
+    return NULL;
 }
 
-void GrFocuser::OnFocusChanging(GrEventArgs* e)
+void GrFocuser::Invalidate(IFocusable* pFocusable)
 {
-	FocusChanging(this, e);
+    if(pFocusable == NULL)
+        return;
+
+    GrRect rect;
+    IDataRow* pDataRow = pFocusable->GetDataRow();
+    if(m_pGridCore->GetRowHighlight() == true || m_pGridCore->GetFullRowSelect() == true)
+    {
+        rect = pDataRow->GetRect();
+        rect.right = m_pGridCore->GetDisplayRect().right;
+        rect.Expand(2, 2, 2, 2);
+    }
+    else
+    {
+        rect = pFocusable->GetDisplayRect();
+        m_pGridCore->Invalidate(pDataRow->GetRect());
+    }
+    m_pGridCore->Invalidate(rect);
 }
 
-void GrFocuser::OnFocusChanged(GrEventArgs* e)
+void GrFocuser::OnFocusChanging(GrFocusChangeArgs* e)
 {
-	FocusChanged(this, e);
+    FocusChanging(this, e);
+    Invalidate(m_pFocus);
+}
 
-	GrItem* pItem = dynamic_cast<GrItem*>(m_pFocus);
-	if(pItem != NULL)
-	{
-		m_pLastFocusedColumn = pItem->GetColumn();
-		m_pLastFocusedItem = pItem;
-	}
+void GrFocuser::OnFocusChanged(GrFocusChangeArgs* e)
+{
+    FocusChanged(this, e);
 
-	GrCell* pCell = dynamic_cast<GrCell*>(m_pFocus);
-	if(pCell != NULL)
-	{
-		m_pGridCore->Invalidate();
-	}
+    GrItem* pItem = dynamic_cast<GrItem*>(m_pFocus);
+    if(pItem != NULL)
+    {
+        m_pLastFocusedColumn = pItem->GetColumn();
+        m_pLastFocusedItem = pItem;
+    }
+
+    Invalidate(e->GetFocusable());
 }
 
 void GrFocuser::gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 {
-	ResetVariables();
+    ResetVariables();
 }
 
 void GrFocuser::gridCore_Created(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 {
-	GrItemSelector* pSelector = m_pGridCore->GetItemSelector();
-	pSelector->SelectingEnd.Add(this, &GrFocuser::itemSelector_SelectingEnd);
-}
 
-void GrFocuser::itemSelector_SelectingEnd(GrObject* /*pSender*/, GrEventArgs* /*e*/)
-{
-	if(m_pFocusing != NULL)
-	{
-		Set(m_pFocusing);
-		m_pFocusing = NULL;
-	}
 }
 
 void GrFocuser::ResetVariables()
 {
-	m_pFocus = NULL;
-	m_pFocusItem = NULL;
+    m_pFocus        = NULL;
+    m_pFocusItem    = NULL;
 
-	m_pLastFocusedItem = NULL;
-	m_pLastFocusedColumn = NULL;
-	m_pLastFocusedRow = NULL;
-	m_pFocusing = NULL;
-}
-
-GrHitTester::GrHitTester()
-{
-	
-}
-
-void GrHitTester::OnGridCoreAttached()
-{
-	GrObject::OnGridCoreAttached();
-	m_pGridCore->Created.Add(this, &GrHitTester::gridCore_Created);
-}
-
-bool GrHitTester::Test(GrPoint pt, GrHitTest* pHitTest) const
-{
-	GrRow* pRootRow = m_pGridCore->GetRootRow();
-	GrCell* pCell = pRootRow->HitTest(pt);
-
-	if(pCell != NULL)
-	{
-		pHitTest->pHitted		= pCell;
-		pHitTest->ptLocal		= pt - pCell->GetPosition();
-		pHitTest->rtRect		= pCell->GetRect();
-
-		return true;
-	}	
-	return false;
-}
-
-bool GrHitTester::Test(GrRect rtSelection, GrItems* pTested) const
-{
-	GrColumns	dataColumns;
-	GrDataRows	dataRows;
-
-	m_pColumnList->HitTest(rtSelection, &dataColumns);
-	m_pDataRowList->HitTest(rtSelection.top, rtSelection.bottom, &dataRows);
-
-	if(dataColumns.size() == 0 || dataRows.size() == 0)
-		return false;
-
-	for_each(GrDataRows, dataRows, dataRow)
-	{
-		for_each(GrColumns, dataColumns, column)
-		{
-			pTested->insert(dataRow->GetItem(column));
-		}
-	}
-	return true;
-}
-
-bool GrHitTester::DisplayTest(GrPoint pt, GrHitTest* pHitTest) const
-{
-	GrRow* pRootRow = m_pGridCore->GetRootRow();
-	GrCell* pCell = pRootRow->HitDisplayTest(pt);
-
-	if(pCell != NULL)
-	{
-		pHitTest->pHitted	= pCell;
-		pHitTest->ptLocal	= pt - pCell->GetDisplayPosition();
-		pHitTest->rtRect	= pCell->GetDisplayRect();
-		return true;
-	}	
-	return false;
-}
-
-void GrHitTester::gridCore_Created(GrObject* /*pSender*/, GrEventArgs* /*e*/)
-{
-	m_pColumnList	= m_pGridCore->GetColumnList();
-	m_pDataRowList	  = m_pGridCore->GetDataRowList();
+    m_pLastFocusedItem   = NULL;
+    m_pLastFocusedColumn = NULL;
+    m_pLastFocusedRow    = NULL;
 }
 
 GrItemSelector::GrItemSelector()
 {
-	ResetVariables();
+    ResetVariables();
 }
 
 void GrItemSelector::OnGridCoreAttached()
 {
-	GrObject::OnGridCoreAttached();
-	m_pGridCore->Cleared.Add(this, &GrItemSelector::gridCore_Cleared);
-	m_pGridCore->Created.Add(this, &GrItemSelector::gridCore_Created);
+    GrObject::OnGridCoreAttached();
+    m_pGridCore->Cleared.Add(this, &GrItemSelector::gridCore_Cleared);
+    m_pGridCore->Created.Add(this, &GrItemSelector::gridCore_Created);
 }
 
 void GrItemSelector::SelectItem(GrItem* pItem, GrSelectionType selectType)
 {
-	if(pItem == NULL)
-		throw _Exception("item is null");
+    if(pItem == NULL)
+        throw _Exception("item is null");
 
-	GrItems items;
-	items.insert(pItem);
+    GrItems items;
+    items.insert(pItem);
 
-	if(selectType == GrSelectionType_Normal)
-		SetSelectionGroup(pItem);
-	SelectItems(&items, selectType);
+    if(selectType == GrSelectionType_Normal)
+        SetSelectionGroup(pItem);
+    SelectItems(&items, selectType);
 }
 
 void GrItemSelector::SelectItems(const GrItems* pItems, GrSelectionType selectType)
 {
-	BeginSelection();
-	switch(selectType)
-	{
-	case GrSelectionType_Normal:
-		{
-			GrItems difference;
+    if(m_pGridCore->GetMultiSelect() == false)
+        return;
 
-			if(m_selectedItems.size() > 0)
-			{
-				set_difference(
-					m_selectedItems.begin(), m_selectedItems.end(), 
-					pItems->begin(), pItems->end(), 
-					inserter(difference, difference.begin())
-					);
+    BeginSelection();
+    switch(selectType)
+    {
+    case GrSelectionType_Normal:
+        {
+            GrItems difference;
 
-				for_each(GrItems, difference, value)
-				{
-					DoDeselect(value);
-				}
-			}
+            if(m_selectedItems.size() > 0)
+            {
+                set_difference(
+                    m_selectedItems.begin(), m_selectedItems.end(), 
+                    pItems->begin(), pItems->end(), 
+                    inserter(difference, difference.begin())
+                    );
 
-			for_each(GrItems, *pItems, value)
-			{
-				DoSelect(value);
-			}
-		}
-		break;
-	case GrSelectionType_Add:
-		{
-			for_each(GrItems, *pItems, value)
-			{
-				DoSelect(value);
-			}
-		}
-		break;
-	case GrSelectionType_Remove:
-		{
-			for_each(GrItems, *pItems, value)
-			{
-				DoDeselect(value);
-			}
-		}
-		break;
-	}
-	EndSelection();
-}
+                for_each(GrItems, difference, value)
+                {
+                    DoDeselect(value);
+                }
+            }
 
-void GrItemSelector::SelectItems(GrRect rtGlobal, GrSelectionType selectType)
-{
-	GrItems items;
-	m_pHitTester->Test(rtGlobal, &items);
-	SelectItems(&items, selectType);
+            for_each(GrItems, *pItems, value)
+            {
+                DoSelect(value);
+            }
+        }
+        break;
+    case GrSelectionType_Add:
+        {
+            for_each(GrItems, *pItems, value)
+            {
+                DoSelect(value);
+            }
+        }
+        break;
+    case GrSelectionType_Remove:
+        {
+            for_each(GrItems, *pItems, value)
+            {
+                DoDeselect(value);
+            }
+        }
+        break;
+    }
+    EndSelection();
 }
 
 void GrItemSelector::SelectItems(GrItem* pBegin, GrItem* pEnd, GrSelectionType selectType)
 {
-	GrColumnList* pColumnList = m_pGridCore->GetColumnList();
-	GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
-	GrItems items;
+    GrColumnList* pColumnList = m_pGridCore->GetColumnList();
+    GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
+    GrItems items;
 
-	uint nBeginColumn, nEndColumn, nBeginRow, nEndRow;
+    uint beginColumn, endColumn, beginRow, endRow;
 
-	nBeginColumn = pBegin->GetColumn()->GetVisibleIndex();
-	nEndColumn = pEnd->GetColumn()->GetVisibleIndex();
+    beginColumn = pBegin->GetColumn()->GetVisibleIndex();
+    endColumn   = pEnd->GetColumn()->GetVisibleIndex();
 
-	nBeginRow = pBegin->GetDataRow()->GetVisibleDataRowIndex();
-	nEndRow = pEnd->GetDataRow()->GetVisibleDataRowIndex();
+    beginRow = pBegin->GetDataRow()->GetVisibleDataRowIndex();
+    endRow   = pEnd->GetDataRow()->GetVisibleDataRowIndex();
 
-	if(nBeginColumn > nEndColumn)
-	{
-		uint nTemp = nBeginColumn;
-		nBeginColumn = nEndColumn;
-		nEndColumn = nTemp;
-	}
+    if(beginColumn > endColumn)
+    {
+        std::swap(beginColumn, endColumn);
+    }
 
-	if(nBeginRow > nEndRow)
-	{
-		uint nTemp = nBeginRow;
-		nBeginRow = nEndRow;
-		nEndRow = nTemp;
-	}
+    if(beginRow > endRow)
+    {
+        std::swap(beginRow, endRow);
+    }
 
-	for(uint i=nBeginRow ; i<=nEndRow ; i++)
-	{
-		GrDataRow* pDataRow = pDataRowList->GetVisibleDataRow(i);
-		for(uint j=nBeginColumn ; j<=nEndColumn ; j++)
-		{
-			GrColumn* pColumn = pColumnList->GetVisibleColumn(j);
-			GrItem* pItem = pDataRow->GetItem(pColumn);
-			items.insert(pItem);
-		}
-	}
-	SelectItems(&items, selectType);
+    for(uint i=beginRow ; i<=endRow ; i++)
+    {
+        GrDataRow* pDataRow = pDataRowList->GetVisibleDataRow(i);
+        for(uint j=beginColumn ; j<=endColumn ; j++)
+        {
+            GrColumn* pColumn = pColumnList->GetVisibleColumn(j);
+            GrItem*   pItem   = pDataRow->GetItem(pColumn);
+            items.insert(pItem);
+        }
+    }
+    SelectItems(&items, selectType);
 }
 
 void GrItemSelector::SelectItems(GrIndexRange visibleColumnIndex, GrIndexRange visibleRowIndex, GrSelectionType selectType)
 {
-	GrColumnList* pColumnList = m_pGridCore->GetColumnList();
-	GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
+    GrColumnList*  pColumnList  = m_pGridCore->GetColumnList();
+    GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
 
-	GrItems items;
-	for(GrIndexRange::value_type y = visibleRowIndex.GetMinValue() ; y < visibleRowIndex.GetMaxValue() ; y++)
-	{
-		GrDataRow* pDataRow = dynamic_cast<GrDataRow*>(pDataRowList->GetVisibleRow(y));
-		if(pDataRow == NULL)
-			continue;
+    GrItems items;
+    for(uint y = visibleRowIndex.GetMinValue() ; y < visibleRowIndex.GetMaxValue() ; y++)
+    {
+        GrDataRow* pDataRow = dynamic_cast<GrDataRow*>(pDataRowList->GetVisibleRow(y));
+        if(pDataRow == NULL)
+            continue;
 
-		for(GrIndexRange::value_type x = visibleColumnIndex.GetMinValue() ; x < visibleColumnIndex.GetMaxValue() ; x++)
-		{
-			GrColumn* pColumn = pColumnList->GetVisibleColumn(x);
-			GrItem* pItem = pDataRow->GetItem(pColumn);
-			items.insert(pItem);
-		}
-	}
-	SelectItems(&items, selectType);
+        for(uint x = visibleColumnIndex.GetMinValue() ; x < visibleColumnIndex.GetMaxValue() ; x++)
+        {
+            GrColumn* pColumn = pColumnList->GetVisibleColumn(x);
+            GrItem* pItem = pDataRow->GetItem(pColumn);
+            items.insert(pItem);
+        }
+    }
+    SelectItems(&items, selectType);
 }
 
 void GrItemSelector::SelectDataRows(const GrDataRows* pDataRows, GrSelectionType selectType)
 {
-	GrColumnList* pColumnList = m_pGridCore->GetColumnList();
+    GrColumnList* pColumnList = m_pGridCore->GetColumnList();
 
-	GrItems items;
-	for_each(GrDataRows, *pDataRows, value)
-	{
-		for(uint i=0 ; i<pColumnList->GetVisibleColumnCount() ; i++)
-		{
-			GrColumn* pColumn = pColumnList->GetVisibleColumn(i);
-			GrItem* pItem = value->GetItem(pColumn);
-			items.insert(pItem);
-		}
-	}
-	SelectItems(&items, selectType);
+    GrItems items;
+    for_each(GrDataRows, *pDataRows, value)
+    {
+        for(uint i=0 ; i<pColumnList->GetVisibleColumnCount() ; i++)
+        {
+            GrColumn* pColumn = pColumnList->GetVisibleColumn(i);
+            GrItem* pItem = value->GetItem(pColumn);
+            items.insert(pItem);
+        }
+    }
+    SelectItems(&items, selectType);
 }
 
 void GrItemSelector::SelectDataRows(GrDataRow* pFrom, GrDataRow* pTo, GrSelectionType selectType)
 {
-	if(pFrom->GetSelectionGroup() != pTo->GetSelectionGroup())
-		throw _Exception("");
+    if(pFrom->GetSelectionGroup() != pTo->GetSelectionGroup())
+        throw _Exception("");
 
-	GrIndexRange indexRange(pFrom->GetVisibleDataRowIndex(), pTo->GetVisibleDataRowIndex());
+    GrIndexRange indexRange(pFrom->GetVisibleDataRowIndex(), pTo->GetVisibleDataRowIndex());
 
-	GrDataRows dataRows;
-	GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
-	for(uint i=indexRange.GetMinValue() ; i<=indexRange.GetMaxValue() ; i++)
-	{
-		GrDataRow* pDataRow = pDataRowList->GetVisibleDataRow(i);
-		dataRows.insert(pDataRow);
-	}
+    GrDataRows dataRows;
+    GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
+    for(uint i=indexRange.GetMinValue() ; i<=indexRange.GetMaxValue() ; i++)
+    {
+        GrDataRow* pDataRow = pDataRowList->GetVisibleDataRow(i);
+        dataRows.insert(pDataRow);
+    }
 
-	SelectDataRows(&dataRows, selectType);
+    SelectDataRows(&dataRows, selectType);
 }
 
 void GrItemSelector::SelectDataRows(IDataRow* pFrom, IDataRow* pTo, GrSelectionType selectType)
 {
-	if(pFrom->GetSelectionGroup() != pTo->GetSelectionGroup())
-		throw _Exception("");
+    if(pFrom->GetSelectionGroup() != pTo->GetSelectionGroup())
+        throw _Exception("");
 
-	GrIndexRange indexRange(pFrom->GetVisibleIndex(), pTo->GetVisibleIndex());
+    GrIndexRange indexRange(pFrom->GetVisibleIndex(), pTo->GetVisibleIndex());
 
-	GrDataRows dataRows;
-	GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
-	for(uint i=indexRange.GetMinValue() ; i<=indexRange.GetMaxValue() ; i++)
-	{
-		GrDataRow* pDataRow = dynamic_cast<GrDataRow*>(pDataRowList->GetVisibleRow(i));
-		if(pDataRow != NULL)
-			dataRows.insert(pDataRow);
-	}
+    GrDataRows dataRows;
+    GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
+    for(uint i=indexRange.GetMinValue() ; i<=indexRange.GetMaxValue() ; i++)
+    {
+        GrDataRow* pDataRow = dynamic_cast<GrDataRow*>(pDataRowList->GetVisibleRow(i));
+        if(pDataRow != NULL)
+            dataRows.insert(pDataRow);
+    }
 
-	SelectDataRows(&dataRows, selectType);
-}
-
-void GrItemSelector::SelectDataRows(GrRect rtSelection, GrSelectionType selectType)
-{
-	GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
-	GrDataRows dataRows;
-	pDataRowList->HitTest(rtSelection.top, rtSelection.bottom, &dataRows);
-	SelectDataRows(&dataRows, selectType);
+    SelectDataRows(&dataRows, selectType);
 }
 
 void GrItemSelector::SelectItems(GrDataRow* pDataRow, GrSelectionType selectType)
 {
-	GrDataRows dataRows;
-	if(pDataRow)
-		dataRows.insert(pDataRow);
-	SelectDataRows(&dataRows, selectType);
+    GrDataRows dataRows;
+    if(pDataRow)
+        dataRows.insert(pDataRow);
+    SelectDataRows(&dataRows, selectType);
 }
 
 void GrItemSelector::SelectColumns(const GrColumns* pColumns, GrSelectionType selectType)
 {
-	GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
-	GrItems items;
-	for_each(GrColumns, *pColumns, value)
-	{
-		for(uint i=0 ; i<pDataRowList->GetVisibleDataRowCount() ; i++)
-		{
-			GrDataRow* pDataRow = pDataRowList->GetVisibleDataRow(i);
-			GrItem* pItem = pDataRow->GetItem(value);
-			items.insert(pItem);
-		}				
-	}
+    GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
+    GrItems items;
+    for_each(GrColumns, *pColumns, value)
+    {
+        for(uint i=0 ; i<pDataRowList->GetVisibleDataRowCount() ; i++)
+        {
+            GrDataRow* pDataRow = pDataRowList->GetVisibleDataRow(i);
+            GrItem* pItem = pDataRow->GetItem(value);
+            items.insert(pItem);
+        }                
+    }
 
-	SelectItems(&items, selectType);
+    SelectItems(&items, selectType);
 }
 
 void GrItemSelector::SelectColumns(GrColumn* pFrom, GrColumn* pTo, GrSelectionType selectType)
 {
-	GrIndexRange indexRange(pFrom->GetVisibleIndex(), pTo->GetVisibleIndex());
+    GrIndexRange indexRange(pFrom->GetVisibleIndex(), pTo->GetVisibleIndex());
 
-	GrColumns dataRows;
-	GrColumnList* pColumnList = m_pGridCore->GetColumnList();
-	for(uint i=indexRange.GetMinValue() ; i<=indexRange.GetMaxValue() ; i++)
-	{
-		GrColumn* pColumn = dynamic_cast<GrColumn*>(pColumnList->GetVisibleColumn(i));
-		if(pColumn != NULL)
-			dataRows.insert(pColumn);
-	}
+    GrColumns dataRows;
+    GrColumnList* pColumnList = m_pGridCore->GetColumnList();
+    for(uint i=indexRange.GetMinValue() ; i<=indexRange.GetMaxValue() ; i++)
+    {
+        GrColumn* pColumn = dynamic_cast<GrColumn*>(pColumnList->GetVisibleColumn(i));
+        if(pColumn != NULL)
+            dataRows.insert(pColumn);
+    }
 
-	SelectColumns(&dataRows, selectType);
-}
-
-void GrItemSelector::SelectColumns(GrRect rtSelection, GrSelectionType selectType)
-{
-	GrColumnList* pColumnList = m_pGridCore->GetColumnList();
-	GrColumns dataColumns;
-	pColumnList->HitTest(rtSelection, &dataColumns);
-	SelectColumns(&dataColumns, selectType);
+    SelectColumns(&dataRows, selectType);
 }
 
 void GrItemSelector::SelectItems(GrColumn* pColumn, GrSelectionType selectType)
 {
-	GrColumns dataColumns;
-	if(pColumn)
-		dataColumns.insert(pColumn);
-	SelectColumns(&dataColumns, selectType);
+    GrColumns dataColumns;
+    if(pColumn)
+        dataColumns.insert(pColumn);
+    SelectColumns(&dataColumns, selectType);
 }
 
 void GrItemSelector::SelectAll()
 {
-	GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
-	GrDataRows dataRows;
-	for(uint i=0 ; i<pDataRowList->GetDataRowCount() ; i++)
-	{
-		GrDataRow* pDataRow = pDataRowList->GetDataRow(i);
-		dataRows.insert(pDataRow);
-	}
-	SelectDataRows(&dataRows, GrSelectionType_Add);
-	m_pGridCore->Invalidate();
+    GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
+    GrDataRows dataRows;
+    for(uint i=0 ; i<pDataRowList->GetDataRowCount() ; i++)
+    {
+        GrDataRow* pDataRow = pDataRowList->GetDataRow(i);
+        dataRows.insert(pDataRow);
+    }
+    SelectDataRows(&dataRows, GrSelectionType_Add);
+    m_pGridCore->Invalidate();
 }
 
 void GrItemSelector::ClearSelection()
 {
-	BeginSelection();
-
-	GrItems items = m_selectedItems;
-	for_each(GrItems, items, value)
-	{
-		DoDeselect(value);
-	}
-	m_selectedItems.clear();
-	m_selectedColumns.clear();
-	m_selectedRows.clear();
-	EndSelection();
+    BeginSelection();
+    GrItems items = m_selectedItems;
+    for_each(GrItems, items, value)
+    {
+        DoDeselect(value);
+    }
+    m_selectedItems.clear();
+    m_selectedColumns.clear();
+    m_selectedRows.clear();
+    EndSelection();
 }
 
 void GrItemSelector::ResetVariables()
 {
-	m_selectedItems.clear();
-	m_selectedColumns.clear();
-	m_selectedRows.clear();
+    m_selectedItems.clear();
+    m_selectedColumns.clear();
+    m_selectedRows.clear();
 
-	m_bSelectionLock = false;
-	m_bSelecting = false;
-	m_nSelectionGroup = 0;
+    m_selectionLock  = false;
+    m_selecting      = false;
+    m_selectionGroup = 0;
 
-	m_pAnchorColumn = NULL;
-	m_pAnchorDataRow = NULL;
+    m_pAnchorColumn  = NULL;
+    m_pAnchorDataRow = NULL;
 }
 
 
 const GrSelectedColumns* GrItemSelector::GetSelectedColumns() const
 {
-	return &m_externalSelectedColumns;
+    return &m_externalSelectedColumns;
 }
 
 const GrSelectedRows* GrItemSelector::GetSelectedRows() const
 {
-	return &m_externalSelectedRows;
+    return &m_externalSelectedRows;
 }
 
 void GrItemSelector::LockSelectionUpdate()
 {
-	if(m_bSelectionLock == true)
-		throw "already locked";
+    if(m_selectionLock == true)
+        throw "already locked";
 
-	BeginSelection();
-	m_bSelectionLock = true;
+    BeginSelection();
+    m_selectionLock = true;
 }
 
 void GrItemSelector::UnlockSelectionUpdate()
 {
-	if(m_bSelectionLock == false)
-		throw "did not locked";
-	m_bSelectionLock = false;
-	EndSelection();
+    if(m_selectionLock == false)
+        throw "did not locked";
+    m_selectionLock = false;
+    EndSelection();
 }
 
 bool GrItemSelector::CanSelect(IDataRow* pDataRow) const
 {
-	return pDataRow->GetSelectionGroup() == m_nSelectionGroup ? true : false;
+    return pDataRow->GetSelectionGroup() == m_selectionGroup ? true : false;
 }
 
 bool GrItemSelector::CanSelect(GrItem* pItem) const
 {
-	return CanSelect(pItem->GetDataRow());
+    return CanSelect(pItem->GetDataRow());
 }
 
-void GrItemSelector::SetSelectionGroup(uint nSelectionGroup)
+void GrItemSelector::SetSelectionGroup(uint selectionGroup)
 {
-	m_nSelectionGroup = nSelectionGroup;
+    m_selectionGroup = selectionGroup;
 }
 
 void GrItemSelector::SetSelectionGroup(IDataRow* pDataRow)
 {
-	SetSelectionGroup(pDataRow->GetSelectionGroup());
+    SetSelectionGroup(pDataRow->GetSelectionGroup());
 }
 
 void GrItemSelector::SetSelectionGroup(GrItem* pItem)
 {
-	SetSelectionGroup(pItem->GetDataRow());
+    SetSelectionGroup(pItem->GetDataRow());
 }
 
 void GrItemSelector::OnSelectionChanged(GrEventArgs* e)
 {
-	SelectionChanged.Raise(this, e);
+    SelectionChanged.Raise(this, e);
 }
 
 void GrItemSelector::OnSelectedColumnsChanged(GrEventArgs* e)
 {
-	GrSelectedColumns& selections = m_externalSelectedColumns;
-	selections.clear();
-	selections.reserve(m_selectedColumns.size());
-	selections.insert(selections.begin(), m_selectedColumns.begin(), m_selectedColumns.end());
-	SortSelections<GrColumn> pr;
-	std::sort(selections.begin(), selections.end(), pr);
-	SelectedColumnsChanged.Raise(this, e);
+    GrSelectedColumns& selections = m_externalSelectedColumns;
+    selections.clear();
+    selections.reserve(m_selectedColumns.size());
+    selections.insert(selections.begin(), m_selectedColumns.begin(), m_selectedColumns.end());
+    SortSelections<GrColumn> pr;
+    std::sort(selections.begin(), selections.end(), pr);
+    SelectedColumnsChanged.Raise(this, e);
 }
 
 void GrItemSelector::OnSelectedRowsChanged(GrEventArgs* e)
 {
-	GrSelectedRows& selections = m_externalSelectedRows;
-	selections.clear();
-	selections.reserve(m_selectedRows.size());
-	selections.insert(selections.begin(), m_selectedRows.begin(), m_selectedRows.end());
-	SortSelections<GrDataRow> pr;
-	std::sort(selections.begin(), selections.end(), pr);
-	SelectedRowsChanged.Raise(this, e);
-}
-
-void GrItemSelector::OnSelectingBegin(GrEventArgs* e)
-{
-	SelectingBegin(this, e);
-}
-
-void GrItemSelector::OnSelectingEnd(GrEventArgs* e)
-{
-	SelectingEnd(this, e);
+    GrSelectedRows& selections = m_externalSelectedRows;
+    selections.clear();
+    selections.reserve(m_selectedRows.size());
+    selections.insert(selections.begin(), m_selectedRows.begin(), m_selectedRows.end());
+    SortSelections<GrDataRow> pr;
+    std::sort(selections.begin(), selections.end(), pr);
+    SelectedRowsChanged.Raise(this, e);
 }
 
 void GrItemSelector::DoSelect(GrItem* pItem)
 {
-	if(pItem->m_bSelected == true)
-		return;
+    if(pItem->m_selected == true)
+        return;
 
-	GrColumn* pColumn = pItem->GetColumn();
-	GrDataRow* pDataRow = pItem->GetDataRow();
-	if(pDataRow->GetSelectionGroup() != m_nSelectionGroup)
-		return;
+    GrColumn* pColumn = pItem->GetColumn();
+    GrDataRow* pDataRow = pItem->GetDataRow();
+    if(pDataRow->GetSelectionGroup() != m_selectionGroup)
+        return;
 
-	pItem->m_bSelected = true;
+    pItem->m_selected = true;
 
-	pColumn->m_nSelectedCells++;
-	pDataRow->m_nSelectedCells++;
-	if(pColumn->m_nSelectedCells > 0)
-		m_selectedColumns.insert(pColumn);
-#pragma message (__FILE__ "(" STRING(__LINE__) "): insertion Row Select에 대한 점검")
-	if(pDataRow->m_nSelectedCells > 0 && pDataRow->GetRowType() != GrRowType_InsertionRow)
-		m_selectedRows.insert(pDataRow);
-	m_selectedItems.insert(pItem);
+    pColumn->m_selectedCells++;
+    pDataRow->m_selectedCells++;
+    if(pColumn->m_selectedCells > 0)
+    {
+        m_selectedColumns.insert(pColumn);
+        if(pColumn->GetDisplayable() == true)
+            AddInvalidatedRectangle(pColumn->GetRect());
+    }
+    if(pDataRow->m_selectedCells > 0 && pDataRow->GetRowType() != GrRowType_InsertionRow)
+    {
+        m_selectedRows.insert(pDataRow);
+        if(pDataRow->GetDisplayable() == true)
+            AddInvalidatedRectangle(pDataRow->GetRect());
+    }
+    m_selectedItems.insert(pItem);
 
-	if(pItem->GetDisplayable() == true)
-		AddInvalidatedRectangle(pItem->GetDisplayRect());
+    if(pItem->GetDisplayable() == true)
+        AddInvalidatedRectangle(pItem->GetDisplayRect());
 }
 
 void GrItemSelector::DoDeselect(GrItem* pItem)
 {
-	if(pItem->m_bSelected == false)
-		return;
+    if(pItem->m_selected == false)
+        return;
 
-	GrColumn*   pColumn = pItem->GetColumn();
-	GrDataRow*	pDataRow = pItem->GetDataRow();
+    GrColumn*  pColumn  = pItem->GetColumn();
+    GrDataRow* pDataRow = pItem->GetDataRow();
 
-	pItem->m_bSelected = false;
+    pItem->m_selected = false;
 
-	pColumn->m_nSelectedCells--;
-	pDataRow->m_nSelectedCells--;
-	if(pColumn->m_nSelectedCells == 0)
-		m_selectedColumns.erase(pColumn);
-	if(pDataRow->m_nSelectedCells == 0)
-		m_selectedRows.erase(pDataRow);
-	m_selectedItems.erase(pItem);
+    pColumn->m_selectedCells--;
+    pDataRow->m_selectedCells--;
+    if(pColumn->m_selectedCells == 0)
+    {
+        m_selectedColumns.erase(pColumn);
+        if(pColumn->GetDisplayable() == true)
+            AddInvalidatedRectangle(pColumn->GetRect());
+    }
+    if(pDataRow->m_selectedCells == 0)
+    {
+        m_selectedRows.erase(pDataRow);
+        if(pDataRow->GetDisplayable() == true)
+            AddInvalidatedRectangle(pDataRow->GetRect());
+    }
+    m_selectedItems.erase(pItem);
 
-	if(pItem->GetDisplayable() == true)
-		AddInvalidatedRectangle(pItem->GetDisplayRect());
+    if(pItem->GetDisplayable() == true)
+        AddInvalidatedRectangle(pItem->GetDisplayRect());
 }
 
 void GrItemSelector::BeginSelection()
 {
-	if(m_bSelectionLock == true)
-		return;
-	m_oldSelectedColumns = m_selectedColumns;
-	m_oldSelectedRows	 = m_selectedRows;
-	m_oldSelectedItems	 = m_selectedItems;
+    if(m_selectionLock == true)
+        return;
+    m_oldSelectedColumns = m_selectedColumns;
+    m_oldSelectedRows    = m_selectedRows;
+    m_oldSelectedItems   = m_selectedItems;
 
-	m_invalidate.DoEmpty();
+    m_invalidate.DoEmpty();
 }
 
 void GrItemSelector::EndSelection()
 {
-	if(m_bSelectionLock == true)
-		return;
+    if(m_selectionLock == true)
+        return;
 
-	if(m_oldSelectedColumns != m_selectedColumns)
-	{
-		OnSelectedColumnsChanged(&GrEventArgs::Empty);
-	}
+    if(m_oldSelectedColumns != m_selectedColumns)
+    {
+        OnSelectedColumnsChanged(&GrEventArgs::Empty);
+    }
 
-	if(m_oldSelectedRows != m_selectedRows)
-	{
-		OnSelectedRowsChanged(&GrEventArgs::Empty);
-	}
+    if(m_oldSelectedRows != m_selectedRows)
+    {
+        OnSelectedRowsChanged(&GrEventArgs::Empty);
+    }
 
-	if(m_oldSelectedItems != m_selectedItems)
-	{
-		OnSelectionChanged(&GrEventArgs::Empty);
-	}
+    if(m_oldSelectedItems != m_selectedItems)
+    {
+        OnSelectionChanged(&GrEventArgs::Empty);
+    }
 
-	m_pGridCore->Invalidate(m_invalidate);
+    m_pGridCore->Invalidate(m_invalidate);
 }
 
 void GrItemSelector::AddInvalidatedRectangle(const GrRect& rect)
 {
-	if(m_invalidate.IsEmpty() == true)
-	{
-		m_invalidate = rect;
-	}
-	else
-	{
-		m_invalidate.left = std::min(m_invalidate.left, rect.left);
-		m_invalidate.top = std::min(m_invalidate.top, rect.top);
-		m_invalidate.right = std::max(m_invalidate.right, rect.right);
-		m_invalidate.bottom = std::max(m_invalidate.bottom, rect.bottom);
-	}
+    if(m_invalidate.IsEmpty() == true)
+    {
+        m_invalidate = rect;
+    }
+    else
+    {
+        m_invalidate.left   = std::min(m_invalidate.left, rect.left);
+        m_invalidate.top    = std::min(m_invalidate.top, rect.top);
+        m_invalidate.right  = std::max(m_invalidate.right, rect.right);
+        m_invalidate.bottom = std::max(m_invalidate.bottom, rect.bottom);
+    }
 }
 
 void GrItemSelector::gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 {
-	ResetVariables();
+    ResetVariables();
 }
 
 void GrItemSelector::gridCore_Created(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 {
-	m_pHitTester = m_pGridCore->GetHitTester();
-
-	GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
-	pDataRowList->VisibleChanged.Add(this, &GrItemSelector::dataRowList_RowVisibleChanged);
+    GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
+    pDataRowList->VisibleChanged.Add(this, &GrItemSelector::dataRowList_RowVisibleChanged);
 }
 
 void GrItemSelector::dataRowList_RowVisibleChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 {
-	OnSelectedRowsChanged(&GrEventArgs::Empty);
-}
-
-void GrItemSelector::BeginSelecting()
-{
-	if(m_bSelecting == true)
-		EndSelecting(GrSelectionType_Normal);
-
-	m_bSelecting = true;
-	OnSelectingBegin(&GrEventArgs::Empty);
-}
-
-void GrItemSelector::Selecting(GrIndexRange visibleColumnIndex, GrIndexRange visibleRowIndex)
-{
-	if(m_bSelecting == false)
-		return;
-	m_pGridCore->Invalidate();
-	SetColumnSelectingRange(visibleColumnIndex);
-	SetRowSelectingRange(visibleRowIndex);
-}
-
-void GrItemSelector::SetColumnSelectingRange(GrIndexRange range)
-{
-	m_columnSelecting = range;
-}
-
-void GrItemSelector::SetRowSelectingRange(GrIndexRange range)
-{
-	m_rowSelecting = range;
-}
-
-void GrItemSelector::Selecting(GrRect rtSelection)
-{
-	if(m_bSelecting == false)
-		return;
-
-	m_pGridCore->Invalidate();
-	GrIndexRange range;
-	GrColumnList* pColumnList = m_pGridCore->GetColumnList();
-	GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
-	GrInsertionRow* pInsertionRow = m_pGridCore->GetInsertionRow();
-
-	if(pColumnList->HitTest(rtSelection.left, rtSelection.right, &range) == true)
-		SetColumnSelectingRange(range);
-	else
-		SetColumnSelectingRange(GrIndexRange::Empty);
-
-	if(GetRowAnchor() == pInsertionRow)
-	{
-		SetRowSelectingRange(GrIndexRange(INSERTION_ROW, INSERTION_ROW+1));
-	}
-	else
-	{
-		if(pDataRowList->HitTest(rtSelection.top, rtSelection.bottom, &range) == true)
-			SetRowSelectingRange(range);
-		else
-			SetRowSelectingRange(GrIndexRange::Empty);
-	}
-}
-
-void GrItemSelector::EndSelecting(GrSelectionType selectionType)
-{
-	if(m_bSelecting == false)
-		return;
-
-	GrItems items;
-	GrColumnList* pColumnList = m_pGridCore->GetColumnList();
-	GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
-
-	for(uint y=m_rowSelecting.GetMinValue() ; y<m_rowSelecting.GetMaxValue() ; y++)
-	{
-		GrDataRow* pDataRow = dynamic_cast<GrDataRow*>(pDataRowList->GetVisibleRow(y));
-		if(pDataRow == NULL)
-			continue;
-		for(uint x=m_columnSelecting.GetMinValue() ; x<m_columnSelecting.GetMaxValue() ; x++)
-		{
-			GrColumn* pColumn = pColumnList->GetVisibleColumn(x);
-			GrItem* pItem = pDataRow->GetItem(pColumn);
-			assert(pItem);
-			items.insert(pItem);
-		}
-	}
-
-	SelectItems(&items, selectionType);
-
-	m_columnSelecting = GrIndexRange::Empty;
-	m_rowSelecting = GrIndexRange::Empty;
-
-	m_bSelecting = false;
-	OnSelectingEnd(&GrEventArgs::Empty);
-}
-
-bool GrItemSelector::IsSelecting() const
-{
-	return m_bSelecting;
-}
-
-bool GrItemSelector::IsSelecting(const GrColumn* pColumn) const
-{
-	if(m_bSelecting == false)
-		return false;
-	return m_columnSelecting.IsIn(pColumn->GetVisibleIndex());
-}
-
-bool GrItemSelector::IsSelecting(const GrDataRow* pDataRow) const
-{
-	if(m_bSelecting == false)
-		return false;
-	return m_rowSelecting.IsIn(pDataRow->GetVisibleIndex());
+    OnSelectedRowsChanged(&GrEventArgs::Empty);
 }
 
 void GrItemSelector::SetAnchor(GrItem* pItem)
 {
-	SetColumnAnchor(pItem);
-	SetRowAnchor(pItem);
+    SetColumnAnchor(pItem);
+    SetRowAnchor(pItem);
 }
 
 void GrItemSelector::SetColumnAnchor(GrItem* pItem)
 {
-	SetColumnAnchor(pItem->GetColumn());
+    SetColumnAnchor(pItem->GetColumn());
 }
 
 void GrItemSelector::SetColumnAnchor(GrColumn* pColumn)
 {
-	m_pAnchorColumn = pColumn;
+    m_pAnchorColumn = pColumn;
 }
 
 void GrItemSelector::SetRowAnchor(GrItem* pItem)
 {
-	SetRowAnchor(pItem->GetDataRow());
+    SetRowAnchor(pItem->GetDataRow());
 }
 
 void GrItemSelector::SetRowAnchor(IDataRow* pDataRow)
 {
-	m_pAnchorDataRow = pDataRow;
+    m_pAnchorDataRow = pDataRow;
 }
 
 GrColumn* GrItemSelector::GetColumnAnchor() const
 {
-	if(m_pAnchorColumn == NULL)
-	{
-		GrColumnList* pColumnList = m_pGridCore->GetColumnList();
-		uint nVisibleColumnCount = pColumnList->GetVisibleColumnCount();
-		if(nVisibleColumnCount == 0)
-			return NULL;
+    if(m_pAnchorColumn == NULL)
+    {
+        GrColumnList* pColumnList = m_pGridCore->GetColumnList();
+        uint visibleColumnCount = pColumnList->GetVisibleColumnCount();
+        if(visibleColumnCount == 0)
+            return NULL;
 
-		return pColumnList->GetVisibleColumn(0);
-	}
-	return m_pAnchorColumn;
+        return pColumnList->GetVisibleColumn(0);
+    }
+    return m_pAnchorColumn;
 }
 
 IDataRow* GrItemSelector::GetRowAnchor() const
 {
-	if(m_pAnchorDataRow == NULL)
-	{
-		GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
-		uint nVisibleRowCount = pDataRowList->GetVisibleRowCount();
-		if(nVisibleRowCount == 0)
-			throw _Exception("");
+    if(m_pAnchorDataRow == NULL)
+    {
+        GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
+        uint visibleRowCount = pDataRowList->GetVisibleRowCount();
+        if(visibleRowCount == 0)
+            throw _Exception("");
 
-		return pDataRowList->GetVisibleRow(0);
-	}
-	return m_pAnchorDataRow;
+        return pDataRowList->GetVisibleRow(0);
+    }
+    return m_pAnchorDataRow;
 }
 
 GrIndexRange GrItemSelector::GetColumnSelections(GrItem* pItem) const
 {
-	return GetColumnSelections(pItem->GetColumn());
+    return GetColumnSelections(pItem->GetColumn());
 }
 
 GrIndexRange GrItemSelector::GetColumnSelections(GrColumn* pColumn) const
 {
-	GrIndexRange range(m_pAnchorColumn->GetVisibleIndex(), pColumn->GetVisibleIndex());
-	range.SetMaxValue(range.GetMaxValue() + 1);
-	return range;
+    GrIndexRange range(m_pAnchorColumn->GetVisibleIndex(), pColumn->GetVisibleIndex());
+    range.SetMaxValue(range.GetMaxValue() + 1);
+    return range;
 }
 
 GrIndexRange GrItemSelector::GetRowSelections(GrItem* pItem) const
 {
-	return GetRowSelections(pItem->GetDataRow());
+    return GetRowSelections(pItem->GetDataRow());
 }
 
 GrIndexRange GrItemSelector::GetRowSelections(IDataRow* pDataRow) const
 {
-	if(pDataRow->GetSelectionGroup() != m_pAnchorDataRow->GetSelectionGroup())
-		return GrIndexRange::Empty;
+    if(pDataRow->GetSelectionGroup() != m_pAnchorDataRow->GetSelectionGroup())
+        return GrIndexRange::Empty;
 
-	GrIndexRange range(m_pAnchorDataRow->GetVisibleIndex(), pDataRow->GetVisibleIndex());
-	range.SetMaxValue(range.GetMaxValue() + 1);
-	return range;
+    GrIndexRange range(m_pAnchorDataRow->GetVisibleIndex(), pDataRow->GetVisibleIndex());
+    range.SetMaxValue(range.GetMaxValue() + 1);
+    return range;
 }
 
 GrTextUpdater::GrTextUpdater()
 {
-	m_nBaseCapacity = 50;
-	m_vecTextBounds.reserve(m_nBaseCapacity);
-	m_vecTextAligns.reserve(m_nBaseCapacity);
+    m_nBaseCapacity = 50;
+    m_vecTextBounds.reserve(m_nBaseCapacity);
+    m_vecTextAligns.reserve(m_nBaseCapacity);
 }
 
 GrTextUpdater::~GrTextUpdater()
@@ -999,126 +808,722 @@ GrTextUpdater::~GrTextUpdater()
 
 void GrTextUpdater::OnGridCoreAttached()
 {
-	m_pGridCore->Cleared.Add(this, &GrTextUpdater::gridCore_Cleared);
-	m_pGridCore->CapacityChanged.Add(this, &GrTextUpdater::gridCore_CapacityChanged);
+    m_pGridCore->Cleared.Add(this, &GrTextUpdater::gridCore_Cleared);
+    m_pGridCore->CapacityChanged.Add(this, &GrTextUpdater::gridCore_CapacityChanged);
 }
 
 void GrTextUpdater::gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 {
-	UpdateTextBound();
-	UpdateTextAlign();
+    UpdateTextBounds();
+    UpdateTextAlign();
 }
 
 void GrTextUpdater::gridCore_CapacityChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 {
-	uint nCapacity = m_pGridCore->GetReservedColumn() * m_pGridCore->GetReservedRow() + m_nBaseCapacity;
-	m_vecTextBounds.reserve(nCapacity);
-	m_vecTextAligns.reserve(nCapacity);
+    uint capacity = m_pGridCore->GetReservedColumn() * m_pGridCore->GetReservedRow() + m_nBaseCapacity;
+    m_vecTextBounds.reserve(capacity);
+    m_vecTextAligns.reserve(capacity);
 }
 
-void GrTextUpdater::AddTextBound(GrCell* pCell)
+void GrTextUpdater::AddTextBounds(GrCell* pCell)
 {
-	if(pCell->m_bTextBound == true)
-		return;
+    if(pCell->m_textBoundsChanged == true)
+        return;
 #ifdef _DEBUG
-	if(m_vecTextBounds.capacity() == m_vecTextBounds.size())
+    if(m_vecTextBounds.capacity() == m_vecTextBounds.size())
 #ifdef _MANAGED
-		System::Console::WriteLine("용량 늘려 {0}", (int)m_vecTextBounds.capacity());
+        System::Console::WriteLine("용량 늘려 {0}", (int)m_vecTextBounds.capacity());
 #else
-		wprintf(L"용량 늘려 %d", (int)m_vecTextBounds.capacity());
+        wprintf(L"용량 늘려 %d", (int)m_vecTextBounds.capacity());
 #endif
 #endif
-	m_vecTextBounds.push_back(pCell);
-	pCell->m_bTextBound = true;
+    m_vecTextBounds.push_back(pCell);
+    pCell->m_textBoundsChanged = true;
 }
 
-void GrTextUpdater::AddTextBound(GrColumn* pColumn)
+void GrTextUpdater::AddTextBounds(GrColumn* pColumn)
 {
-	GrInsertionRow* pInsertionRow = m_pGridCore->GetInsertionRow();
-	GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
-	AddTextBound((GrCell*)pColumn);
+    GrInsertionRow* pInsertionRow = m_pGridCore->GetInsertionRow();
+    GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
+    AddTextBounds((GrCell*)pColumn);
 
+    GrItem* pItem = pInsertionRow->GetItem(pColumn);
+    AddTextBounds(pItem);
 
-	GrItem* pItem = pInsertionRow->GetItem(pColumn);
-	AddTextBound(pItem);
-
-	for(uint i=0 ; i<pDataRowList->GetDataRowCount() ; i++)
-	{
-		GrDataRow* pDataRow = pDataRowList->GetDataRow(i);
-		pItem = pDataRow->GetItem(pColumn);
-		AddTextBound(pItem);
-	}
+    for(uint i=0 ; i<pDataRowList->GetDataRowCount() ; i++)
+    {
+        GrDataRow* pDataRow = pDataRowList->GetDataRow(i);
+        pItem = pDataRow->GetItem(pColumn);
+        AddTextBounds(pItem);
+    }
 }
 
 void GrTextUpdater::AddTextAlign(GrCell* pCell)
 {
-	if(pCell->m_bTextAlign == true)
-		return;
-	m_vecTextAligns.push_back(pCell);
-	pCell->m_bTextAlign = true;
+    if(pCell->m_textAlignChanged == true)
+        return;
+    m_vecTextAligns.push_back(pCell);
+    pCell->m_textAlignChanged = true;
 }
 
 void GrTextUpdater::AddTextAlign(GrColumn* pColumn)
 {
-	GrInsertionRow* pInsertionRow = m_pGridCore->GetInsertionRow();
-	GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
-	AddTextAlign((GrCell*)pColumn);
+    GrInsertionRow* pInsertionRow = m_pGridCore->GetInsertionRow();
+    GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
+    AddTextAlign((GrCell*)pColumn);
 
 
-	GrItem* pItem = pInsertionRow->GetItem(pColumn);
-	AddTextAlign(pItem);
+    GrItem* pItem = pInsertionRow->GetItem(pColumn);
+    AddTextAlign(pItem);
 
-	for(uint i=0 ; i<pDataRowList->GetDataRowCount() ; i++)
-	{
-		GrDataRow* pDataRow = pDataRowList->GetDataRow(i);
-		pItem = pDataRow->GetItem(pColumn);
-		AddTextAlign(pItem);
-	}
+    for(uint i=0 ; i<pDataRowList->GetDataRowCount() ; i++)
+    {
+        GrDataRow* pDataRow = pDataRowList->GetDataRow(i);
+        pItem = pDataRow->GetItem(pColumn);
+        AddTextAlign(pItem);
+    }
 }
 
-void GrTextUpdater::RemoveTextBound(GrCell* pCell)
+void GrTextUpdater::RemoveTextBounds(GrCell* pCell)
 {
-	GrCells::iterator itor = std::find(m_vecTextBounds.begin(), m_vecTextBounds.end(), pCell);
-	if(itor != m_vecTextBounds.end())
-	{
-		pCell->m_bTextBound = false;
-		m_vecTextBounds.erase(itor);
-	}
+    GrCells::iterator itor = std::find(m_vecTextBounds.begin(), m_vecTextBounds.end(), pCell);
+    if(itor != m_vecTextBounds.end())
+    {
+        pCell->m_textBoundsChanged = false;
+        m_vecTextBounds.erase(itor);
+    }
 }
 
 void GrTextUpdater::RemoveTextAlign(GrCell* pCell)
 {
-	GrCells::iterator itor = std::find(m_vecTextAligns.begin(), m_vecTextAligns.end(), pCell);
-	if(itor != m_vecTextAligns.end())
-	{
-		pCell->m_bTextAlign = false;
-		m_vecTextAligns.erase(itor);
-	}
+    GrCells::iterator itor = std::find(m_vecTextAligns.begin(), m_vecTextAligns.end(), pCell);
+    if(itor != m_vecTextAligns.end())
+    {
+        pCell->m_textAlignChanged = false;
+        m_vecTextAligns.erase(itor);
+    }
 }
 
-void GrTextUpdater::UpdateTextBound()
+void GrTextUpdater::UpdateTextBounds()
 {
-	//uint nSize = m_vecTextBounds.size();
-	for_each(GrCells, m_vecTextBounds, value)
-	{
-		value->ComputeTextBound();
-		value->m_bTextBound = false;
-		
-		if(value->m_bTextAlign == false)
-		{
-			m_vecTextAligns.push_back(value);
-			value->m_bTextAlign = true;
-		}
-	}
-	m_vecTextBounds.clear();
+    for_each(GrCells, m_vecTextBounds, value)
+    {
+        value->ComputeTextBounds();
+        value->m_textBoundsChanged = false;
+
+        if(value->m_textAlignChanged == false)
+        {
+            m_vecTextAligns.push_back(value);
+            value->m_textAlignChanged = true;
+        }
+    }
+    m_vecTextBounds.clear();
 }
 
 void GrTextUpdater::UpdateTextAlign()
 {
-	for_each(GrCells, m_vecTextAligns, value)
-	{
-		value->AlignText();
-		value->m_bTextAlign = false;
-	}
-	m_vecTextAligns.clear();
+    for_each(GrCells, m_vecTextAligns, value)
+    {
+        value->AlignText();
+        value->m_textAlignChanged = false;
+    }
+    m_vecTextAligns.clear();
+}
+
+GrFocusMover::GrFocusMover()
+{
+
+}
+
+void GrFocusMover::OnGridCoreAttached()
+{
+    GrObject::OnGridCoreAttached();
+    m_pGridCore->Created.Add(this, &GrFocusMover::gridCore_Created);
+}
+
+void GrFocusMover::gridCore_Created(GrObject* /*pSender*/, GrEventArgs* /*e*/)
+{
+    m_pDataRowList = m_pGridCore->GetDataRowList();    
+    m_pColumnList  = m_pGridCore->GetColumnList();
+    m_pHorzScroll  = m_pGridCore->GetHorzScroll();
+    m_pVertScroll  = m_pGridCore->GetVertScroll();
+    m_pFocuser     = m_pGridCore->GetFocuser();
+    m_pItemSelector= m_pGridCore->GetItemSelector();
+    m_pGridWindow  = m_pGridCore->GetGridWindow();
+
+    m_pFocuser->FocusChanged.Add(this, &GrFocusMover::focuser_FocusChanged);
+}
+
+void GrFocusMover::focuser_FocusChanged(GrObject* /*pSender*/, GrFocusChangeArgs* /*e*/)
+{
+    GrItem* pItem = m_pFocuser->GetItem();
+    if(pItem != NULL)
+    {
+        m_pLastDataColumn = pItem->GetColumn();
+    }
+}
+
+void GrFocusMover::FirstCell(GrSelectionRange range)
+{
+    GrItem* pFocused = m_pFocuser->GetItem();
+    if(pFocused == NULL)
+        return;
+
+    GrColumn*  pColumn  = pFocused->GetColumn();
+    GrDataRow* pDataRow = pFocused->GetDataRow();
+
+    GrColumnList* m_pColumnList = pColumn->GetColumnList();
+
+    if(pColumn->GetFrozen() == true)
+    {
+        uint index = pColumn->GetFrozenIndex();
+        if(index == 0)
+            return;
+
+        index = index - 1;
+        pColumn = m_pColumnList->GetFrozenColumn(0);
+    }
+    else
+    {
+        uint frozenColumnCount = m_pColumnList->GetFrozenColumnCount();
+
+        uint index = pColumn->GetUnfrozenIndex();
+        if(index == 0 && frozenColumnCount > 0)
+        {
+            pColumn = m_pColumnList->GetFrozenColumn(0);
+        }
+        else
+        {
+            pColumn = m_pColumnList->GetUnfrozenColumn(0);
+        }
+    }
+
+    pFocused = pDataRow->GetItem(pColumn);
+
+    if(range == GrSelectionRange_One)
+    {
+        m_pItemSelector->SetColumnAnchor(pColumn);
+        m_pItemSelector->SelectItem(pFocused, m_pGridWindow->GetSelectionType());
+    }
+    else
+    {
+        m_pItemSelector->SelectItems(
+            m_pItemSelector->GetColumnSelections(pFocused), 
+            m_pItemSelector->GetRowSelections(pFocused),
+            m_pGridWindow->GetSelectionType());
+    }
+    m_pFocuser->Set(pFocused);
+    DoHorzScroll(GrScrollEventType_First);
+    BringIntoView(pColumn);
+}
+
+void GrFocusMover::LastCell(GrSelectionRange range)
+{
+    GrItem* pFocused = m_pFocuser->GetItem();
+    if(pFocused == NULL)
+        return;
+
+    GrColumn*  pColumn  = pFocused->GetColumn();
+    GrDataRow* pDataRow = pFocused->GetDataRow();
+
+    GrColumnList* m_pColumnList = pColumn->GetColumnList();
+
+    uint visibleColumnCount = m_pColumnList->GetVisibleColumnCount();
+    uint index = visibleColumnCount - 1;
+
+    if(index == pColumn->GetVisibleIndex())
+        return;
+
+    pColumn = m_pColumnList->GetVisibleColumn(index);
+    pFocused = pDataRow->GetItem(pColumn);
+
+    if(range == GrSelectionRange_One)
+    {
+        m_pItemSelector->SelectItem(pFocused, m_pGridWindow->GetSelectionType());
+        m_pItemSelector->SetAnchor(pFocused);
+    }
+    else
+    {
+        m_pItemSelector->SelectItems(
+            m_pItemSelector->GetColumnSelections(pFocused), 
+            m_pItemSelector->GetRowSelections(pFocused),
+            m_pGridWindow->GetSelectionType());
+    }
+    m_pFocuser->Set(pFocused);
+
+    DoHorzScroll(GrScrollEventType_Last);
+    BringIntoView(pColumn);
+}
+
+void GrFocusMover::PageUp(GrSelectionRange range)
+{
+    IFocusable* pFocused = m_pFocuser->Get();
+    if(pFocused == NULL)
+        return;
+    if(m_pDataRowList->GetVisibleRowCount() == 0)
+        return;
+
+    IDataRow* pDataRow = pFocused->GetDataRow();
+    uint index = pDataRow->GetVisibleIndex();
+
+    switch(index)
+    {
+    case 0:
+        if(m_pGridCore->GetInsertionRowVisible() == true)
+            index = INSERTION_ROW;
+        else
+            return;
+        break;
+    case INSERTION_ROW:
+        return;
+    default:
+        index = m_pDataRowList->ClipTo(index);
+        break;
+    }
+
+    IDataRow* pNewDataRow = m_pDataRowList->GetVisibleRow(index);
+
+    if(range == GrSelectionRange_One)
+        SelectOne(pNewDataRow);
+    else
+        SelectMulti(pDataRow, pNewDataRow);
+
+    if(pDataRow->GetDisplayable() == true)
+        DoVertScroll(GrScrollEventType_LargeDecrement);
+    else
+        BringIntoView(pNewDataRow);
+}
+
+void GrFocusMover::PageDown(GrSelectionRange range)
+{
+    IFocusable* pFocused = m_pFocuser->Get();
+    if(pFocused == NULL)
+        return;
+    if(m_pDataRowList->GetVisibleRowCount() == 0)
+        return;
+
+    IDataRow* pDataRow = pFocused->GetDataRow();
+    uint index = pDataRow->GetVisibleIndex();
+    uint newIndex;
+
+    if(index == INSERTION_ROW)
+        newIndex = 0;
+    else
+        newIndex = m_pDataRowList->ClipFrom(index);
+
+    if(newIndex == index)
+    {
+        if(newIndex + 1 != m_pDataRowList->GetVisibleRowCount())
+            newIndex++;
+    }
+
+    IDataRow* pNewDataRow = m_pDataRowList->GetVisibleRow(newIndex);
+
+    if(range == GrSelectionRange_One)
+        SelectOne(pNewDataRow);
+    else
+        SelectMulti(pDataRow, pNewDataRow);
+
+    if(pDataRow != m_pGridCore->GetInsertionRow() && pDataRow->GetDisplayable() == true)
+        DoVertScroll(GrScrollEventType_LargeIncrement);
+    else
+        BringIntoView(pNewDataRow);
+}
+
+void GrFocusMover::FirstRow(GrSelectionRange range)
+{
+    IFocusable* pFocused = m_pFocuser->Get();
+    if(pFocused == NULL)
+        return;
+    if(m_pDataRowList->GetVisibleRowCount() == 0)
+        return;
+
+    IDataRow* pDataRow = pFocused->GetDataRow();
+    uint newIndex = 0;
+
+    IDataRow* pNewDataRow = m_pDataRowList->GetVisibleRow(newIndex);
+
+    if(range == GrSelectionRange_One)
+        SelectOne(pNewDataRow);
+    else
+        SelectMulti(pDataRow, pNewDataRow);
+
+    DoVertScroll(GrScrollEventType_First);
+}
+
+void GrFocusMover::LastRow(GrSelectionRange range)
+{
+    IFocusable* pFocused = m_pFocuser->Get();
+    if(pFocused == NULL)
+        return;
+    if(m_pDataRowList->GetVisibleRowCount() == 0)
+        return;
+
+    IDataRow* pDataRow = pFocused->GetDataRow();
+    uint newIndex = m_pDataRowList->GetVisibleRowCount() - 1;
+
+    IDataRow* pNewDataRow = m_pDataRowList->GetVisibleRow(newIndex);
+
+    if(range == GrSelectionRange_One)
+        SelectOne(pNewDataRow);
+    else
+        SelectMulti(pDataRow, pNewDataRow);
+
+    DoVertScroll(GrScrollEventType_Last);
+}
+
+void GrFocusMover::MoveUp(GrSelectionRange range)
+{
+    IFocusable* pFocused = m_pFocuser->Get();
+    if(pFocused == IFocusable::Null)
+        return;
+    if(m_pDataRowList->GetVisibleRowCount() == 0)
+        return;
+
+    IDataRow* pDataRow = pFocused->GetDataRow();
+    uint index = pDataRow->GetVisibleIndex();
+
+    switch(index)
+    {
+    case 0:
+        if(m_pGridCore->GetInsertionRowVisible() == true)
+            index = INSERTION_ROW;
+        else
+            return;
+        break;
+    case INSERTION_ROW:
+        return;
+    default:
+        index = index - 1;
+        break;
+    }
+
+    IDataRow* pNewDataRow = m_pDataRowList->GetVisibleRow(index);
+
+    if(range == GrSelectionRange_One)
+        SelectOne(pNewDataRow);
+    else
+        SelectMulti(pDataRow, pNewDataRow);
+
+    BringIntoView(pNewDataRow);
+}
+
+void GrFocusMover::MoveDown(GrSelectionRange range)
+{
+    IFocusable* pFocused = m_pFocuser->Get();
+    if(pFocused == IFocusable::Null)
+        return;
+
+    if(m_pDataRowList->GetVisibleRowCount() == 0)
+        return;
+
+    IDataRow* pDataRow = pFocused->GetDataRow();
+    uint index = pDataRow->GetVisibleIndex();
+    uint lastIndex = m_pDataRowList->GetVisibleRowCount() - 1;
+
+    if(index == lastIndex)
+        return;
+    else if(index == INSERTION_ROW)
+        index = 0;
+    else
+        index = index + 1;
+
+    IDataRow* pNewDataRow = m_pDataRowList->GetVisibleRow(index);
+
+    if(range == GrSelectionRange_One)
+        SelectOne(pNewDataRow);
+    else
+        SelectMulti(pDataRow, pNewDataRow);
+
+    BringIntoView(pNewDataRow);
+}
+
+void GrFocusMover::MoveLeft(GrSelectionRange range)
+{
+    GrItem* pFocused = m_pFocuser->GetItem();
+    if(pFocused == NULL)
+        return;
+
+    GrColumn*  pColumn  = pFocused->GetColumn();
+    GrDataRow* pDataRow = pFocused->GetDataRow();
+
+    GrColumnList* m_pColumnList = pColumn->GetColumnList();
+
+    uint index = pColumn->GetVisibleIndex();
+    if(index != 0)
+        index = index - 1;
+
+    if(index == pColumn->GetVisibleIndex())
+        return;
+
+    pColumn = m_pColumnList->GetVisibleColumn(index);
+    pFocused = pDataRow->GetItem(pColumn);
+
+    if(range == GrSelectionRange_One)
+    {
+        if(m_pGridCore->GetFullRowSelect() == true)
+            m_pItemSelector->SelectItems(pDataRow, GrSelectionType_Normal);
+        else
+            m_pItemSelector->SelectItem(pFocused, GrSelectionType_Normal);
+        m_pItemSelector->SetAnchor(pFocused);
+    }
+    else
+    {
+        m_pItemSelector->SelectItems(
+            m_pItemSelector->GetColumnSelections(pFocused), 
+            m_pItemSelector->GetRowSelections(pFocused),
+            m_pGridWindow->GetSelectionType());
+    }
+    m_pFocuser->Set(pFocused);
+
+    BringIntoView(pColumn);
+}
+
+void GrFocusMover::MoveRight(GrSelectionRange range)
+{
+    GrItem* pFocused = m_pFocuser->GetItem();
+    if(pFocused == NULL)
+        return;
+
+    GrColumn*  pColumn  = pFocused->GetColumn();
+    GrDataRow* pDataRow = pFocused->GetDataRow();
+
+    GrColumnList* m_pColumnList = pColumn->GetColumnList();
+
+    uint visibleColumnCount = m_pColumnList->GetVisibleColumnCount();
+    uint index = pColumn->GetVisibleIndex() + 1;
+    if(index >= visibleColumnCount)
+        index = visibleColumnCount - 1;
+
+    if(index == pColumn->GetVisibleIndex())
+        return;
+
+    pColumn = m_pColumnList->GetVisibleColumn(index);
+    pFocused = pDataRow->GetItem(pColumn);
+
+    if(range == GrSelectionRange_One)
+    {
+        if(m_pGridCore->GetFullRowSelect() == true)
+            m_pItemSelector->SelectItems(pDataRow, GrSelectionType_Normal);
+        else
+            m_pItemSelector->SelectItem(pFocused, GrSelectionType_Normal);
+        m_pItemSelector->SetAnchor(pFocused);
+    }
+    else
+    {
+        m_pItemSelector->SelectItems(
+            m_pItemSelector->GetColumnSelections(pFocused), 
+            m_pItemSelector->GetRowSelections(pFocused),
+            m_pGridWindow->GetSelectionType());
+    }
+    m_pFocuser->Set(pFocused);
+
+    BringIntoView(pColumn);
+}
+
+
+void GrFocusMover::SelectOne(IDataRow* pDataRow)
+{
+    switch(pDataRow->GetRowType())
+    {
+    case GrRowType_InsertionRow:
+    case GrRowType_DataRow:
+        {
+            GrDataRow* pRow = dynamic_cast<GrDataRow*>(pDataRow);
+            GrItem* pOldFocusItem = m_pFocuser->GetItem();
+            GrItem* pFocusItem;
+
+            GrColumn* pColumn;
+
+            if(pOldFocusItem != NULL)
+                pColumn = pOldFocusItem->GetColumn();
+            else
+                pColumn = m_pItemSelector->GetColumnAnchor();
+
+            if(pColumn == NULL)
+            {
+                GrColumnList* m_pColumnList = m_pGridCore->GetColumnList();
+                pColumn = m_pColumnList->GetVisibleColumn(0);
+            }
+            pFocusItem = pRow->GetItem(pColumn);
+
+            if(m_pGridCore->GetFullRowSelect() == true)
+                m_pItemSelector->SelectItems(pRow, GrSelectionType_Normal);
+            else
+                m_pItemSelector->SelectItem(pFocusItem, GrSelectionType_Normal);
+            m_pItemSelector->SetAnchor(pFocusItem);
+            m_pFocuser->Set(pFocusItem);
+        }
+        break;
+    default:
+        {
+            m_pItemSelector->ClearSelection();
+            m_pFocuser->Set(pDataRow->GetFocusable(NULL));
+        }
+        break;
+    }
+    m_pItemSelector->SetSelectionGroup(pDataRow);
+}
+
+void GrFocusMover::SelectMulti(IDataRow* pBegin, IDataRow* pEnd)
+{
+    if(pBegin->GetRowType() == GrRowType_InsertionRow || pEnd->GetRowType() == GrRowType_InsertionRow)
+        return;
+
+    GrIndexRange columnRange(m_pItemSelector->GetColumnAnchor()->GetVisibleIndex(), m_pLastDataColumn->GetVisibleIndex());
+    GrIndexRange rowRange;
+
+    IDataRow* pRowAnchor = m_pItemSelector->GetRowAnchor();
+    if(pRowAnchor->GetRowType() == GrRowType_InsertionRow)
+    {
+        m_pItemSelector->SetRowAnchor(pBegin);
+        rowRange = GrIndexRange(pBegin->GetVisibleIndex(), pEnd->GetVisibleIndex());
+    }
+    else
+    {
+        rowRange = GrIndexRange(pRowAnchor->GetVisibleIndex(), pEnd->GetVisibleIndex());
+    }
+
+    columnRange.SetMaxValue(columnRange.GetMaxValue() + 1);
+    rowRange.SetMaxValue(rowRange.GetMaxValue() + 1);
+
+    m_pItemSelector->SelectItems(columnRange, rowRange, m_pGridWindow->GetSelectionType());
+
+    switch(pEnd->GetRowType())
+    {
+    case GrRowType_DataRow:
+        {
+            GrDataRow* pRow = dynamic_cast<GrDataRow*>(pEnd);
+            GrItem* pOldFocusItem = m_pFocuser->GetItem();
+            GrItem* pFocusItem;
+
+            GrColumn* pColumn;
+
+            if(pOldFocusItem != NULL)
+                pColumn = pOldFocusItem->GetColumn();
+            else
+                pColumn = m_pLastDataColumn;
+
+            if(pColumn == NULL)
+            {
+                GrColumnList* m_pColumnList = m_pGridCore->GetColumnList();
+                pColumn = m_pColumnList->GetVisibleColumn(0);
+            }
+            pFocusItem = pRow->GetItem(pColumn);
+
+            m_pFocuser->Set(pFocusItem);
+        }
+        break;
+    default:
+        {
+            m_pFocuser->Set(pEnd->GetFocusable(0));
+        }
+        break;
+    }
+}
+
+void GrFocusMover::BringIntoView(IDataRow* pDataRow)
+{
+    m_pDataRowList->BringIntoView(pDataRow);
+}
+
+void GrFocusMover::BringIntoView(GrColumn* pColumn)
+{
+    m_pColumnList->BringIntoView(pColumn);
+}
+
+bool GrFocusMover::DoHorzScroll(GrScrollEventType type)
+{
+    GrColumnList* m_pColumnList = m_pGridCore->GetColumnList();
+
+    int value = m_pHorzScroll->GetValue();
+    switch(type)
+    {
+    case GrScrollEventType_First:
+        value = m_pHorzScroll->GetMinimum();
+        break;
+    case GrScrollEventType_SmallDecrement:
+        value -= m_pHorzScroll->GetSmallChange();
+        break;
+    case GrScrollEventType_LargeDecrement:
+        {
+            int oldValue = value;
+            value = (int)m_pColumnList->ClipTo((uint)value);
+            if(value == oldValue)
+            {
+                if(value != 0)
+                    value--;
+            }
+        }
+        break;
+    case GrScrollEventType_LargeIncrement:
+        {
+            int oldValue = value;
+            value = (int)m_pColumnList->ClipFrom((uint)value);
+            if(value == oldValue)
+            {
+                if((uint)value + 1 != m_pColumnList->GetVisibleColumnCount())
+                    value++;
+            }
+        }
+        break;
+    case GrScrollEventType_SmallIncrement:
+        value += m_pHorzScroll->GetSmallChange();
+        break;
+    case GrScrollEventType_Last:
+        value = m_pHorzScroll->ValidateValue(m_pHorzScroll->GetMaximum());
+        break;
+    default:
+        throw _Exception("");
+    }
+
+    return m_pHorzScroll->DoScroll(value);
+}
+
+bool GrFocusMover::DoVertScroll(GrScrollEventType type)
+{
+    GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
+
+    int value = m_pVertScroll->GetValue();
+    switch(type)
+    {
+    case GrScrollEventType_First:
+        value = m_pVertScroll->GetMinimum();
+        break;
+    case GrScrollEventType_SmallDecrement:
+        value -= m_pVertScroll->GetSmallChange();
+        break;
+    case GrScrollEventType_LargeDecrement:
+        {
+            int oldValue = value;
+            value = (int)pDataRowList->ClipTo((uint)value);
+            if(value == oldValue)
+            {
+                if(value != 0)
+                    value--;
+            }
+        }
+        break;
+    case GrScrollEventType_LargeIncrement:
+        {
+            int oldValue = value;
+            value = (int)pDataRowList->ClipFrom((uint)value);
+            if(value == oldValue)
+            {
+                if((uint)value + 1 != pDataRowList->GetVisibleRowCount())
+                    value++;
+            }
+        }
+        break;
+    case GrScrollEventType_SmallIncrement:
+        value += m_pVertScroll->GetSmallChange();
+        break;
+    case GrScrollEventType_Last:
+        value = m_pVertScroll->ValidateValue(m_pVertScroll->GetMaximum());
+        break;
+    default:
+        throw _Exception("");
+    }
+
+    return m_pVertScroll->DoScroll(value);
 }

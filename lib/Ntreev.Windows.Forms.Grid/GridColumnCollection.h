@@ -24,6 +24,7 @@
 #pragma once
 #include "GridBase.h"
 #include "GridCollection.h"
+#include "GridEvent.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -31,9 +32,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	/// 열의 컬렉션을 나타냅니다.
 	/// </summary>
 	[System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.ColumnCollectionEditor, Ntreev.Windows.Forms.Grid.Design, Version=1.1.4324.22060, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
-	public ref class ColumnCollection : System::Collections::Generic::IEnumerable<_Column^>, System::Collections::IList, GridObject 
+	public ref class ColumnCollection : System::Collections::Generic::IEnumerable<Column^>, System::Collections::IList, GridObject 
 	{
-		ref class Enumerator : System::Collections::Generic::IEnumerator<_Column^>
+		ref class Enumerator : System::Collections::Generic::IEnumerator<Column^>
 		{
 		public:
 			Enumerator(GrColumnList* pColumnList);
@@ -47,9 +48,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			}
 
 		private:
-			property object^ Current2
+			property System::Object^ Current2
 			{
-				virtual object^ get() sealed = System::Collections::IEnumerator::Current::get { return Current; }
+				virtual System::Object^ get() sealed = System::Collections::IEnumerator::Current::get { return Current; }
 			}
 
 		private:
@@ -60,16 +61,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		ref class ServiceProvider : System::IServiceProvider
 		{
 		public:
-			ServiceProvider(_GridControl^ gridControl)
-				: m_gridControl(gridControl)
-			{
-
-			}
-
-			virtual object^ GetService(_Type^ serviceType) { return m_gridControl->GetInternalService(serviceType); }
+			ServiceProvider(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
+			virtual System::Object^ GetService(System::Type^ serviceType);
 
 		private:
-			_GridControl^ m_gridControl;
+			Ntreev::Windows::Forms::Grid::GridControl^ m_gridControl;
 		};
 
 	public:	// methods
@@ -79,7 +75,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
-		virtual	string^ ToString() override
+		virtual	System::String^ ToString() override
 		{
 			return this->Count.ToString();
 		}
@@ -100,7 +96,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <exception cref="System::ArgumentException">
 		/// 추가할 열이 이미 존재하거나, 같은 이름을 가진 열이 컬렉션에 이미 존재하는 경우
 		/// </exception>
-		void Add(_Column^ item);
+		void Add(Column^ item);
 
 		/// <summary>
 		/// 컬렉션에 여러개의 새로운 열을 추가합니다.
@@ -114,7 +110,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <exception cref="System::ArgumentException">
 		/// 추가할 열이 이미 존재하거나, 같은 이름을 가진 열이 컬렉션에 이미 존재하는 경우
 		/// </exception>
-		void AddRange(cli::array<_Column^>^ values);
+		void AddRange(cli::array<Column^>^ values);
 
 		/// <summary>
 		/// 새로운 열의 인스턴스를 생성하고 컬렉션에 추가합니다.
@@ -122,7 +118,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 새로 생성된 <see cref="Column"/>의 인스턴스입니다.
 		/// </returns>
-		_Column^ AddNew();
+		Column^ Add();
 
 		/// <summary>
 		/// 새로운 열의 인스턴스를 생성하고 컬렉션에 추가합니다.
@@ -136,7 +132,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 새로 생성된 <see cref="Column"/>의 인스턴스입니다.
 		/// </returns>
-		_Column^ AddNew(string^ name);
+		Column^ Add(System::String^ name);
 
 		/// <summary>
 		/// 새로운 열의 인스턴스를 생성하고 컬렉션에 추가합니다.
@@ -153,7 +149,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 새로 생성된 <see cref="Column"/>의 인스턴스입니다.
 		/// </returns>
-		_Column^ AddNew(string^ name, _Type^ type);
+		Column^ Add(System::String^ name, System::Type^ type);
 
 		/// <summary>
 		/// 컬렉션에 새로운 열을 삽입합니다.
@@ -174,7 +170,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <exception cref="System::ArgumentException">
 		/// 추가할 열이 이미 존재하거나, 같은 이름을 가진 열이 컬렉션에 이미 존재하는 경우
 		/// </exception>
-		void Insert(int index, _Column^ item);
+		void Insert(int index, Column^ item);
 
 		/// <summary>
 		/// 새로운 열의 인스턴스를 생성하고 컬렉션에 삽입합니다.
@@ -188,7 +184,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 새로 생성된 <see cref="Column"/>의 인스턴스입니다.
 		/// </returns>
-		_Column^ InsertNew(int index);
+		Column^ Insert(int index);
 
 		/// <summary>
 		/// 새로운 열의 인스턴스를 생성하고 컬렉션에 삽입합니다.
@@ -208,7 +204,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 새로 생성된 <see cref="Column"/>의 인스턴스입니다.
 		/// </returns>
-		_Column^ InsertNew(int index, string^ name);
+		Column^ Insert(int index, System::String^ name);
 
 		/// <summary>
 		/// 새로운 열의 인스턴스를 생성하고 컬렉션에 삽입합니다.
@@ -231,7 +227,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 새로 생성된 <see cref="Column"/>의 인스턴스입니다.
 		/// </returns>
-		_Column^ InsertNew(int index, string^ name, _Type^ type);
+		Column^ Insert(int index, System::String^ name, System::Type^ type);
 
 		/// <summary>
 		/// 컬렉션에서 열을 제거합니다.
@@ -248,7 +244,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <exception cref="System::ArgumentException">
 		/// 이미 제거가 된 경우 또는 제거할 수 없는 열일 경우
 		/// </exception>
-		void Remove(_Column^ item);
+		void Remove(Column^ item);
 
 		/// <summary>
 		/// 컬렉션에서 지정된 위치의 열을 제거합니다.
@@ -276,7 +272,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 컬렉션에 포함되어 있지 않다면 -1을 반환합니다.
 		/// </returns>
-		int	IndexOf(_Column^ item);
+		int	IndexOf(Column^ item);
 
 		/// <summary>
 		/// 컬렉션에서 열이 포함되어 있는지 확인합니다.
@@ -287,7 +283,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 컬렉션에 포함되어있다면 true를, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
-		bool Contains(_Column^ item);
+		bool Contains(Column^ item);
 
 		/// <summary>
 		/// 컬렉션을 반복하는 열거자를 가져옵니다.
@@ -295,7 +291,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 열거자를 나타내는 <see cref="System::Collections::Generic::IEnumerator"/>입니다.
 		/// </returns>
-		virtual System::Collections::Generic::IEnumerator<_Column^>^ GetEnumerator()
+		virtual System::Collections::Generic::IEnumerator<Column^>^ GetEnumerator()
 		{
 			return gcnew Enumerator(m_pColumnList);
 		}
@@ -338,9 +334,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 같은 이름의 열이 없을 경우 null을 반환합니다.
 		/// </returns>
-		property Column^ default[string^]
+		property Column^ default[System::String^]
 		{
-			Column^ get(string^ columnName);
+			Column^ get(System::String^ columnName);
 		}
 
 	private: // methods
@@ -354,16 +350,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			this->RemoveAt(index);
 		}
 
-		virtual int Add_IList(object^ value) sealed = System::Collections::IList::Add
+		virtual int Add_IList(System::Object^ value) sealed = System::Collections::IList::Add
 		{
 			int count = this->Count;
-			Add((_Column^)value);
+			Add((Column^)value);
 			return count;
 		}
 
-		virtual bool Contains_IList(object^ value) sealed = System::Collections::IList::Contains
+		virtual bool Contains_IList(System::Object^ value) sealed = System::Collections::IList::Contains
 		{
-			return this->Contains((_Column^)value);
+			return this->Contains((Column^)value);
 		}
 
 		virtual void Clear_IList() sealed = System::Collections::IList::Clear
@@ -374,38 +370,38 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			}
 		}
 
-		virtual int IndexOf_IList(object^ value) sealed = System::Collections::IList::IndexOf
+		virtual int IndexOf_IList(System::Object^ value) sealed = System::Collections::IList::IndexOf
 		{
-			return this->IndexOf((_Column^)value);
+			return this->IndexOf((Column^)value);
 		}
 
-		virtual void Insert_IList(int index, object^ value) sealed = System::Collections::IList::Insert
+		virtual void Insert_IList(int index, System::Object^ value) sealed = System::Collections::IList::Insert
 		{
-			this->Insert(index, (_Column^)value);
+			this->Insert(index, (Column^)value);
 		}
 
-		virtual void Remove_IList(object^ value) sealed = System::Collections::IList::Remove
+		virtual void Remove_IList(System::Object^ value) sealed = System::Collections::IList::Remove
 		{
-			this->Remove((_Column^)value);
+			this->Remove((Column^)value);
 		}
 		
 		virtual void CopyTo_ICollection(System::Array^ array, int index) sealed = System::Collections::ICollection::CopyTo
         {
-            for each(_Column^ item in this)
+            for each(Column^ item in this)
             {
                 array->SetValue(item, index++);
             }
         }
 
 	private: // properties
-		property object^ default_IList[int]
+		property System::Object^ default_IList[int]
 		{
-			virtual object^ get(int index) sealed = System::Collections::IList::default::get
+			virtual System::Object^ get(int index) sealed = System::Collections::IList::default::get
 			{
 				return this[index];
 			}
 
-			virtual void set(int /*index*/, object^ /*value*/) sealed = System::Collections::IList::default::set
+			virtual void set(int /*index*/, System::Object^ /*value*/) sealed = System::Collections::IList::default::set
 			{
 				
 			}
@@ -426,9 +422,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			virtual bool get() sealed = System::Collections::ICollection::IsSynchronized::get { return true; }
         }
 
-        property object^ SyncRoot_ICollection
+        property System::Object^ SyncRoot_ICollection
         {
-			virtual object^ get() sealed = System::Collections::ICollection::SyncRoot::get { return this; }
+			virtual System::Object^ get() sealed = System::Collections::ICollection::SyncRoot::get { return this; }
         }
 
         property int Count_ICollection
@@ -439,11 +435,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		
 
 	internal: // methods
-		ColumnCollection(_GridControl^ gridControl);
+		ColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
 
 		void DeleteAll();
 
-		void SetItemsByDesigner(cli::array<object^>^ values);
+		void SetItemsByDesigner(cli::array<System::Object^>^ values);
 		
 	internal: // property
 		property Column^ default[GrColumn*] 
@@ -451,31 +447,29 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			Column^ get(GrColumn*); 
 		}
 
-		static _Column^ CreateColumnInstance(System::IServiceProvider^ serviceProvider, _Type^ dataType);
+		static Column^ CreateColumnInstance(System::IServiceProvider^ serviceProvider);
 
-		static _Column^ CreateColumnInstanceCore(System::IServiceProvider^ serviceProvider, _Type^ columnType);
+		static Column^ CreateColumnInstance(System::IServiceProvider^ serviceProvider, System::Type^ columnType);
 
 	private: // methods
 
-		_Column^ CreateColumnInstance(_PropertyDescriptor^ propertyDescriptor);
+		Column^ CreateColumnInstance();
 
-		_Column^ CreateColumnInstance(_Type^ dataType);
+		System::String^	NewColumnName();
 
-		string^	NewColumnName();
+		Column^ Bind(System::ComponentModel::PropertyDescriptor^ propertyDescriptor);
 
-		_Column^ Bind(_PropertyDescriptor^ propertyDescriptor);
+		void Unbind(Column^ column);
 
-		void Unbind(_Column^ column);
+		void currencyManager_ListChanged(System::Object^ sender, System::ComponentModel::ListChangedEventArgs^ e);
 
-		void currencyManager_ListChanged(object^ sender, System::ComponentModel::ListChangedEventArgs^ e);
+		void gridControl_CurrencyManagerChanging(System::Object^ sender, CurrencyManagerChangingEventArgs^ e);
 
-		void gridControl_CurrencyManagerChanging(object^ sender, CurrencyManagerChangingEventArgs^ e);
+		void gridControl_CurrencyManagerChanged(System::Object^ sender, CurrencyManagerChangedEventArgs^ e);
 
-		void gridControl_CurrencyManagerChanged(object^ sender, CurrencyManagerChangedEventArgs^ e);
+		void gridControl_Clearing(System::Object^ sender, ClearEventArgs^ e);
 
-		void gridControl_Clearing(object^ sender, ClearEventArgs^ e);
-
-		void gridControl_Cleared(object^ sender, ClearEventArgs^ e);
+		void gridControl_Cleared(System::Object^ sender, ClearEventArgs^ e);
 
 	private:
 		GrColumnList* m_pColumnList;
@@ -487,10 +481,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	/// <summary>
 	/// 선택된 열의 컬렉션을 나타냅니다.
 	/// </summary>
-	public ref class SelectedColumnCollection : System::Collections::Generic::IEnumerable<_Column^>, System::Collections::ICollection, GridObject
+	public ref class SelectedColumnCollection : System::Collections::Generic::IEnumerable<Column^>, System::Collections::ICollection, GridObject
 	{
 	private:
-		ref class Enumerator : System::Collections::Generic::IEnumerator<_Column^>
+		ref class Enumerator : System::Collections::Generic::IEnumerator<Column^>
 		{
 		public:
 			Enumerator(const GrSelectedColumns* selectedColumns);
@@ -504,9 +498,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			}
 
 		private:
-			property object^ Current2
+			property System::Object^ Current2
 			{
-				virtual object^ get() sealed = System::Collections::IEnumerator::Current::get { return Current; }
+				virtual System::Object^ get() sealed = System::Collections::IEnumerator::Current::get { return Current; }
 			}
 
 		private:
@@ -515,9 +509,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		};
 
 	public: // methods
-		void Add(_Column^ item);	
+		void Add(Column^ item);	
 		
-		bool Remove(_Column^ item);
+		bool Remove(Column^ item);
 		
 		void Clear();
 
@@ -538,13 +532,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 열거자를 나타내는 <see cref="System::Collections::Generic::IEnumerator"/>입니다.
 		/// </returns>
-		virtual System::Collections::Generic::IEnumerator<_Column^>^ GetEnumerator()
+		virtual System::Collections::Generic::IEnumerator<Column^>^ GetEnumerator()
 		{
 			return gcnew Enumerator(m_selectedColumns);
 		}
 
 	internal: // methods
-		SelectedColumnCollection(_GridControl^ gridControl, const GrSelectedColumns* selectedColumns);
+		SelectedColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, const GrSelectedColumns* selectedColumns);
 
 	private: // methods
 		virtual System::Collections::IEnumerator^ GetEnumerator2() sealed = System::Collections::IEnumerable::GetEnumerator
@@ -555,7 +549,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #pragma region ICollection 멤버
 		virtual void CopyTo(System::Array^ array, int index) sealed = System::Collections::ICollection::CopyTo
         {
-            for each(_Column^ item in this)
+            for each(Column^ item in this)
             {
                 array->SetValue(item, index++);
             }
@@ -566,9 +560,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			virtual bool get() sealed = System::Collections::ICollection::IsSynchronized::get { return true; }
         }
 
-        property object^ SyncRoot
+        property System::Object^ SyncRoot
         {
-			virtual object^ get() sealed = System::Collections::ICollection::SyncRoot::get { return this; }
+			virtual System::Object^ get() sealed = System::Collections::ICollection::SyncRoot::get { return this; }
         }
 
         property int Count2
@@ -584,10 +578,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	/// <summary>
 	/// 표시되는 열의 컬렉션을 나타냅니다.
 	/// </summary>
-	public ref class VisibleColumnCollection : System::Collections::Generic::IEnumerable<_Column^>, System::Collections::ICollection, GridObject
+	public ref class VisibleColumnCollection : System::Collections::Generic::IEnumerable<Column^>, System::Collections::ICollection, GridObject
 	{
 	private:
-		ref class Enumerator : System::Collections::Generic::IEnumerator<_Column^>
+		ref class Enumerator : System::Collections::Generic::IEnumerator<Column^>
 		{
 		public:
 			Enumerator(GrColumnList* pColumnList);
@@ -595,15 +589,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			virtual bool MoveNext();
 			virtual void Reset();
 
-			property _Column^ Current
+			property Column^ Current
 			{
-				virtual _Column^ get();
+				virtual Column^ get();
 			}
 
 		private:
-			property object^ Current2
+			property System::Object^ Current2
 			{
-				virtual object^ get() sealed = System::Collections::IEnumerator::Current::get { return Current; }
+				virtual System::Object^ get() sealed = System::Collections::IEnumerator::Current::get { return Current; }
 			}
 
 		private:
@@ -618,7 +612,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
-		virtual	string^ ToString() override
+		virtual	System::String^ ToString() override
 		{
 			return this->Count.ToString();
 		}
@@ -629,7 +623,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 열거자를 나타내는 <see cref="System::Collections::Generic::IEnumerator"/>입니다.
 		/// </returns>
-		virtual System::Collections::Generic::IEnumerator<_Column^>^ GetEnumerator() { return gcnew Enumerator(m_pColumnList); }
+		virtual System::Collections::Generic::IEnumerator<Column^>^ GetEnumerator() { return gcnew Enumerator(m_pColumnList); }
 
 	public: // properties
 		/// <summary>
@@ -661,7 +655,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 	internal: // methods
-		VisibleColumnCollection(_GridControl^ gridControl);
+		VisibleColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
 
 	private: // methods
 		virtual System::Collections::IEnumerator^ GetEnumerator2() sealed = System::Collections::IEnumerable::GetEnumerator
@@ -672,7 +666,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #pragma region ICollection 멤버
 		virtual void CopyTo(System::Array^ array, int index) sealed = System::Collections::ICollection::CopyTo
         {
-            for each(_Column^ item in this)
+            for each(Column^ item in this)
             {
                 array->SetValue(item, index++);
             }
@@ -683,9 +677,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			virtual bool get() sealed = System::Collections::ICollection::IsSynchronized::get { return true; }
         }
 
-        property object^ SyncRoot
+        property System::Object^ SyncRoot
         {
-			virtual object^ get() sealed = System::Collections::ICollection::SyncRoot::get { return this; }
+			virtual System::Object^ get() sealed = System::Collections::ICollection::SyncRoot::get { return this; }
         }
 
         property int Count2
@@ -701,22 +695,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	/// <summary>
 	/// 화면에 표시되는 열의 컬렉션을 나타냅니다.
 	/// </summary>
-	public ref class DisplayableColumnCollection : System::Collections::Generic::IEnumerable<_Column^>, System::Collections::ICollection, GridObject
+	public ref class DisplayableColumnCollection : System::Collections::Generic::IEnumerable<Column^>, System::Collections::ICollection, GridObject
 	{
 	private:
-		ref class Enumerator : System::Collections::Generic::IEnumerator<_Column^>
+		ref class Enumerator : System::Collections::Generic::IEnumerator<Column^>
 		{
 		public:
 			Enumerator(GrColumnList* pColumnList);
 			~Enumerator();
 			virtual bool MoveNext();
 			virtual void Reset();
-			property _Column^ Current { virtual _Column^ get(); }
+			property Column^ Current { virtual Column^ get(); }
 
 		private:
-			property object^ Current2
+			property System::Object^ Current2
 			{
-				virtual object^ get() sealed = System::Collections::IEnumerator::Current::get { return Current; }
+				virtual System::Object^ get() sealed = System::Collections::IEnumerator::Current::get { return Current; }
 			}
 
 		private:
@@ -731,7 +725,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
-		virtual	string^ ToString() override
+		virtual	System::String^ ToString() override
 		{
 			return this->Count.ToString();
 		}
@@ -742,7 +736,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 열거자를 나타내는 <see cref="System::Collections::Generic::IEnumerator"/>입니다.
 		/// </returns>
-		virtual System::Collections::Generic::IEnumerator<_Column^>^ GetEnumerator() { return gcnew Enumerator(m_pColumnList); }
+		virtual System::Collections::Generic::IEnumerator<Column^>^ GetEnumerator() { return gcnew Enumerator(m_pColumnList); }
 
 	public: // properties
 		/// <summary>
@@ -774,7 +768,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 	internal: // methods
-		DisplayableColumnCollection(_GridControl^ gridControl);
+		DisplayableColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
 
 	private: // methods
 		virtual System::Collections::IEnumerator^ GetEnumerator2() sealed = System::Collections::IEnumerable::GetEnumerator
@@ -785,7 +779,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #pragma region ICollection 멤버
 		virtual void CopyTo(System::Array^ array, int index) sealed = System::Collections::ICollection::CopyTo
         {
-            for each(_Column^ item in this)
+            for each(Column^ item in this)
             {
                 array->SetValue(item, index++);
             }
@@ -796,9 +790,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			virtual bool get() sealed = System::Collections::ICollection::IsSynchronized::get { return true; }
         }
 
-        property object^ SyncRoot
+        property System::Object^ SyncRoot
         {
-			virtual object^ get() sealed = System::Collections::ICollection::SyncRoot::get { return this; }
+			virtual System::Object^ get() sealed = System::Collections::ICollection::SyncRoot::get { return this; }
         }
 
         property int Count2
@@ -814,10 +808,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	/// <summary>
 	/// 스크롤 되지 않는 열의 컬렉션을 나타냅니다.
 	/// </summary>
-	public ref class FrozenColumnCollection : System::Collections::Generic::IEnumerable<_Column^>, System::Collections::ICollection, GridObject
+	public ref class FrozenColumnCollection : System::Collections::Generic::IEnumerable<Column^>, System::Collections::ICollection, GridObject
 	{
 	private:
-		ref class Enumerator : System::Collections::Generic::IEnumerator<_Column^>
+		ref class Enumerator : System::Collections::Generic::IEnumerator<Column^>
 		{
 		public:
 			Enumerator(GrColumnList* pColumnList);
@@ -825,15 +819,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			virtual bool MoveNext();
 			virtual void Reset();
 
-			property _Column^ Current
+			property Column^ Current
 			{
-				virtual _Column^ get();
+				virtual Column^ get();
 			}
 
 		private:
-			property object^ Current2
+			property System::Object^ Current2
 			{
-				virtual object^ get() sealed = System::Collections::IEnumerator::Current::get { return Current; }
+				virtual System::Object^ get() sealed = System::Collections::IEnumerator::Current::get { return Current; }
 			}
 
 		private:
@@ -848,7 +842,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
-		virtual	string^ ToString() override
+		virtual	System::String^ ToString() override
 		{
 			return this->Count.ToString();
 		}
@@ -859,7 +853,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 열거자를 나타내는 <see cref="System::Collections::Generic::IEnumerator"/>입니다.
 		/// </returns>
-		virtual System::Collections::Generic::IEnumerator<_Column^>^ GetEnumerator() { return gcnew Enumerator(m_pColumnList); }
+		virtual System::Collections::Generic::IEnumerator<Column^>^ GetEnumerator() { return gcnew Enumerator(m_pColumnList); }
 
 	public: // properties
 		/// <summary>
@@ -891,7 +885,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 	internal: // methods
-		FrozenColumnCollection(_GridControl^ gridControl);
+		FrozenColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
 
 	private: // methods
 		virtual System::Collections::IEnumerator^ GetEnumerator2() sealed = System::Collections::IEnumerable::GetEnumerator
@@ -902,7 +896,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #pragma region ICollection 멤버
 		virtual void CopyTo(System::Array^ array, int index) sealed = System::Collections::ICollection::CopyTo
         {
-            for each(_Column^ item in this)
+            for each(Column^ item in this)
             {
                 array->SetValue(item, index++);
             }
@@ -913,9 +907,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			virtual bool get() sealed = System::Collections::ICollection::IsSynchronized::get { return true; }
         }
 
-        property object^ SyncRoot
+        property System::Object^ SyncRoot
         {
-			virtual object^ get() sealed = System::Collections::ICollection::SyncRoot::get { return this; }
+			virtual System::Object^ get() sealed = System::Collections::ICollection::SyncRoot::get { return this; }
         }
 
         property int Count2
@@ -930,10 +924,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	/// <summary>
 	/// 스크롤 되는 열의 컬렉션을 나타냅니다.
 	/// </summary>
-	public ref class UnfrozenColumnCollection : System::Collections::Generic::IEnumerable<_Column^>, System::Collections::ICollection, GridObject
+	public ref class UnfrozenColumnCollection : System::Collections::Generic::IEnumerable<Column^>, System::Collections::ICollection, GridObject
 	{
 	private:
-		ref class Enumerator : System::Collections::Generic::IEnumerator<_Column^>
+		ref class Enumerator : System::Collections::Generic::IEnumerator<Column^>
 		{
 		public:
 			Enumerator(GrColumnList* pColumnList);
@@ -941,15 +935,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			virtual bool MoveNext();
 			virtual void Reset();
 
-			property _Column^ Current
+			property Column^ Current
 			{
-				virtual _Column^ get();
+				virtual Column^ get();
 			}
 
 		private:
-			property object^ Current2
+			property System::Object^ Current2
 			{
-				virtual object^ get() sealed = System::Collections::IEnumerator::Current::get { return Current; }
+				virtual System::Object^ get() sealed = System::Collections::IEnumerator::Current::get { return Current; }
 			}
 
 		private:
@@ -964,7 +958,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
-		virtual	string^ ToString() override
+		virtual	System::String^ ToString() override
 		{
 			return this->Count.ToString();
 		}
@@ -975,7 +969,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 열거자를 나타내는 <see cref="System::Collections::Generic::IEnumerator"/>입니다.
 		/// </returns>
-		virtual System::Collections::Generic::IEnumerator<_Column^>^ GetEnumerator() { return gcnew Enumerator(m_pColumnList); }
+		virtual System::Collections::Generic::IEnumerator<Column^>^ GetEnumerator() { return gcnew Enumerator(m_pColumnList); }
 
 	public: // properties
 		/// <summary>
@@ -1007,7 +1001,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 	internal: // methods
-		UnfrozenColumnCollection(_GridControl^ gridControl);
+		UnfrozenColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
 
 	private: // methods
 		virtual System::Collections::IEnumerator^ GetEnumerator2() sealed = System::Collections::IEnumerable::GetEnumerator
@@ -1018,7 +1012,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #pragma region ICollection 멤버
 		virtual void CopyTo(System::Array^ array, int index) sealed = System::Collections::ICollection::CopyTo
         {
-            for each(_Column^ item in this)
+            for each(Column^ item in this)
             {
                 array->SetValue(item, index++);
             }
@@ -1029,9 +1023,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			virtual bool get() sealed = System::Collections::ICollection::IsSynchronized::get { return true; }
         }
 
-        property object^ SyncRoot
+        property System::Object^ SyncRoot
         {
-			virtual object^ get() sealed = System::Collections::ICollection::SyncRoot::get { return this; }
+			virtual System::Object^ get() sealed = System::Collections::ICollection::SyncRoot::get { return this; }
         }
 
         property int Count2

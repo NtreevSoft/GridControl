@@ -19,7 +19,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\Default.vsprops"
+			InheritedPropertySheets="..\Default.vsprops"
 			CharacterSet="1"
 			ManagedExtensions="2"
 			WholeProgramOptimization="0"
@@ -42,12 +42,11 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../GridCore"
+				AdditionalIncludeDirectories="../GridCore;../GridRendererDC"
 				PreprocessorDefinitions="WIN32;_DEBUG;_STRONG_NAME"
 				RuntimeLibrary="3"
 				OpenMP="false"
 				UsePrecompiledHeader="2"
-				GenerateXMLDocumentationFiles="true"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -95,13 +94,13 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy &quot;$(TargetDir)$(TargetName).dll&quot; &quot;$(TargetDir)..\$(TargetName).dll&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(TargetDir)..\$(TargetName).pdb&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName).xml&quot; &quot;$(TargetDir)..\$(TargetName).xml&quot;&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(TargetDir)$(TargetName).dll&quot; &quot;$(TargetDir)..\$(TargetName).dll&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(TargetDir)..\$(TargetName).pdb&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\Default.vsprops"
+			InheritedPropertySheets="..\Default.vsprops"
 			CharacterSet="1"
 			ManagedExtensions="2"
 			WholeProgramOptimization="1"
@@ -124,7 +123,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="&#x0D;&#x0A;"
-				AdditionalIncludeDirectories="../GridCore"
+				AdditionalIncludeDirectories="../GridCore;../GridRendererDC"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -226,16 +225,6 @@
 				</File>
 			</File>
 			<File
-				RelativePath=".\ColumnUITypeEditorForm.h"
-				FileType="3"
-				>
-				<File
-					RelativePath=".\ColumnUITypeEditorForm.resx"
-					SubType="Designer"
-					>
-				</File>
-			</File>
-			<File
 				RelativePath=".\GridAttributes.h"
 				>
 			</File>
@@ -260,7 +249,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GridCellIterator.h"
+				RelativePath=".\GridCheckBox.h"
 				>
 			</File>
 			<File
@@ -286,16 +275,6 @@
 			<File
 				RelativePath=".\GridColumnDropDown.h"
 				>
-			</File>
-			<File
-				RelativePath=".\GridColumnDropDownForm.h"
-				FileType="3"
-				>
-				<File
-					RelativePath=".\GridColumnDropDownForm.resx"
-					SubType="Designer"
-					>
-				</File>
 			</File>
 			<File
 				RelativePath=".\GridColumnExtension.h"
@@ -345,6 +324,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GridListBox.h"
+				FileType="4"
+				>
+			</File>
+			<File
+				RelativePath=".\GridNativeClass.h"
+				>
+			</File>
+			<File
 				RelativePath=".\GridNativeCollection.h"
 				>
 			</File>
@@ -365,23 +353,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GridScrollProperty.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridSelectionTimer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridState.h"
-				>
-			</File>
-			<File
 				RelativePath=".\GridStyle.h"
 				>
 			</File>
 			<File
-				RelativePath=".\GridStyleProvider.h"
+				RelativePath=".\GridTextBox.h"
 				>
 			</File>
 			<File
@@ -395,6 +371,20 @@
 			<File
 				RelativePath=".\GridType.h"
 				>
+			</File>
+			<File
+				RelativePath=".\GridTypeEditor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridTypeEditorForm.h"
+				FileType="3"
+				>
+				<File
+					RelativePath=".\GridTypeEditorForm.resx"
+					SubType="Designer"
+					>
+				</File>
 			</File>
 			<File
 				RelativePath=".\GridUtil.h"
@@ -424,6 +414,10 @@
 			</File>
 			<File
 				RelativePath=".\bitmap2.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Error.png"
 				>
 			</File>
 			<File
@@ -482,10 +476,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ColumnUITypeEditorForm.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\GridAttributes.cpp"
 				>
 			</File>
@@ -510,7 +500,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GridCellIterator.cpp"
+				RelativePath=".\GridCheckBox.cpp"
 				>
 			</File>
 			<File
@@ -535,10 +525,6 @@
 			</File>
 			<File
 				RelativePath=".\GridColumnDropDown.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridColumnDropDownForm.cpp"
 				>
 			</File>
 			<File
@@ -574,6 +560,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GridListBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridNativeClass.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GridNativeCollection.cpp"
 				>
 			</File>
@@ -594,23 +588,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GridScrollProperty.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridSelectionTimer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridState.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\GridStyle.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\GridStyleProvider.cpp"
+				RelativePath=".\GridTextBox.cpp"
 				>
 			</File>
 			<File
@@ -623,6 +605,14 @@
 			</File>
 			<File
 				RelativePath=".\GridType.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridTypeEditor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridTypeEditorForm.cpp"
 				>
 			</File>
 			<File

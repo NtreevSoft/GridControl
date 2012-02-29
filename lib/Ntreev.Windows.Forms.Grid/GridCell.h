@@ -32,7 +32,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	/// 셀을 나타내는 개체입니다.
 	/// </summary>
 	[System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
-	public ref class Cell : CellBase
+	public ref class Cell : CellBase, ICell
 	{
 	public: // methods
 		/// <summary>
@@ -41,12 +41,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
-		virtual string^ ToString() override;
-
-		/// <summary>
-		/// 셀의 편집을 종료합니다.
-		/// </summary>
-		void LeaveEdit();
+		virtual System::String^ ToString() override;
 
 		/// <summary>
 		/// 변경된 셀의 값을 취소하고 이전값으로 되돌립니다.
@@ -78,7 +73,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 셀을 선택합니다.
 		/// </summary>
 		/// <param name="selectionType">셀을 선택하는 방법을 지정하는 <see cref="Ntreev::Windows::Forms::Grid::SelectionType"/>입니다.</param>
-		void Select(_SelectionType selectionType);
+		void Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType);
 
 		/// <summary>
 		/// 그리드 컨트롤에 대한 포커스 설정을 합니다.
@@ -91,65 +86,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <remarks>
 		/// 이미 화면내에 표시가 되었다면 아무 동작도 일어나지 않습니다.
 		/// </remarks>
-		void EnsureVisible();
+		void BringIntoView();
 
 	public: // properties
-		///// <summary>
-		///// 셀의 전경색을 가져오거나 설정합니다.
-		///// </summary>
-		///// <returns>
-		/////	셀의 전경색을 나타내는 <see cref="System::Drawing::Color"/>입니다. 기본값은 <see cref="Design::Style::CellForeColor"/> 속성의 값입니다.
-		///// </returns>
-		///// <remarks>
-		///// 일반적으로 문자열의 색상을 의미합니다.
-		///// <seealso cref="Ntreev::Windows::Forms::Grid::Row::CellForeColor"/>, 
-		///// <seealso cref="Ntreev::Windows::Forms::Grid::Column::CellForeColor"/>의 값을 상속 받을수 있습니다.
-		///// </remarks>
-		//property _Color ForeColor
-		//{
-		//	virtual _Color get() override;
-		//}
-
-		///// <summary>
-		///// 셀의 배경색을 가져오거나 설정합니다.
-		///// </summary>
-		///// <returns>
-		/////	셀의 배경색을 나타내는 <see cref="System::Drawing::Color"/>입니다. 기본값은 <see cref="Design::Style::CellBackColor"/> 속성의 값입니다.
-		///// </returns>
-		///// <remarks>
-		///// <seealso cref="Ntreev::Windows::Forms::Grid::Row::CellBackColor"/>, 
-		///// <seealso cref="Ntreev::Windows::Forms::Grid::Column::CellBackColor"/>의 값을 상속 받을수 있습니다.
-		///// </remarks>
-		//property _Color BackColor
-		//{
-		//	virtual _Color get()  override;
-		//}
-
-		///// <summary>
-		///// 셀의 글꼴을 가져오거나 설정합니다.
-		///// </summary>
-		///// <returns>
-		/////	셀의 글꼴을 나타내는 <see cref="System::Drawing::Font"/>입니다. 기본값은 <see cref="Design::Style::CellFont"/> 속성의 값입니다.
-		///// </returns>
-		//property _Font^ Font
-		//{ 
-		//	virtual _Font^ get()  override;
-		//}
-
 		/// <summary>
 		/// 셀의 값을 가져오거나 설정합니다.
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// 일반적으로 값의 데이터 타입은 이 셀을 소유한 열의 <see cref="Ntreev::Windows::Forms::Grid::Column::DataType"/>과 같은 형태 이어야만 합니다.
-		/// 만약 데이터 타입이 다를 경우 <see cref="Ntreev::Windows::Forms::Grid::Column::TypeConverter"/>를 사용하여 값의 변환이 가능한지 여부를 조사합니다.
+		/// 일반적으로 값의 데이터 타입은 이 셀을 소유한 열의 데이터 타입과 같은 형태 이어야만 합니다.
+        /// 만약 데이터 타입이 다를 경우 열에서 제공하는 <see cref="System::ComponentModel::TypeConverter"/>를 사용하여 값의 변환이 가능한지 여부를 조사합니다.
 		/// 값의 변환이 가능하다면 변환을 하여 값을 설정하게 되고 반대의 경우는 예외가 발생하게 됩니다.
 		/// </para>
 		/// <para>
-		/// 그 다음에는 <see cref="Ntreev::Windows::Forms::Grid::GridControl::ValueChanging"/>이벤트를 통해서 최종적으로 값의 설정 유무를 확인합니다.
-		/// </para>
-		/// <para>
-		/// 추가적으로 설정 값이 이전값과 위 설명한 모든 과정이 일어나지 않습니다.
+		/// 추가적으로 설정 값이 이전값과 같으면 위 설명한 모든 과정이 일어나지 않습니다.
 		/// </para>
 		/// </remarks>
 		/// <returns>
@@ -158,13 +108,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <exception cref="System::NotSupportedException">
 		/// 지원되지 않는 값이 설정 되었을때 발생합니다.
 		/// </exception>
-		[_Category("Data")]
-		[_Editor("Ntreev.Windows.Forms.Grid.Design.ValueEditor", System::Drawing::Design::UITypeEditor::typeid)]
+		[System::ComponentModel::CategoryAttribute("Data")]
+		[System::ComponentModel::Editor("Ntreev.Windows.Forms.Grid.Design.ValueEditor", System::Drawing::Design::UITypeEditor::typeid)]
 		[System::ComponentModel::TypeConverter(System::ComponentModel::StringConverter::typeid)]
-		property object^ Value
+		property System::Object^ Value
 		{
-			object^ get();
-			void set(object^);
+			System::Object^ get();
+			void set(System::Object^);
 		}
 
 		/// <summary>
@@ -174,13 +124,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 열을 나타내는 <see cref="Column"/>의 인스턴스입니다.
 		/// </returns>
 #ifdef _DEBUG
-		[_Category("Behavior")]
+		[System::ComponentModel::CategoryAttribute("Behavior")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
-		property _Column^ Column
+		property Ntreev::Windows::Forms::Grid::Column^ Column
 		{
-			_Column^ get();
+			Ntreev::Windows::Forms::Grid::Column^ get();
 		}
 
 		/// <summary>
@@ -190,9 +140,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 고유 아이디를 나타내는 <see cref="System::UInt32"/>형태의 정수값입니다.
 		/// </returns>
 #ifdef _DEBUG
-		[_Category("Behavior")]
+		[System::ComponentModel::CategoryAttribute("Behavior")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
 		property uint ColumnID
 		{
@@ -206,13 +156,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 행을 나타내는 <see cref="Row"/>의 인스턴스입니다.
 		/// </returns>
 #ifdef _DEBUG
-		[_Category("Behavior")]
+		[System::ComponentModel::CategoryAttribute("Behavior")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
-		property _Row^ Row
+		property Ntreev::Windows::Forms::Grid::Row^ Row
 		{
-			_Row^ get();
+			Ntreev::Windows::Forms::Grid::Row^ get();
 		}
 
 		/// <summary>
@@ -222,9 +172,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 고유 아이디를 나타내는 <see cref="System::UInt32"/>형태의 정수값입니다.
 		/// </returns>
 #ifdef _DEBUG
-		[_Category("Behavior")]
+		[System::ComponentModel::CategoryAttribute("Behavior")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
 		property uint RowID
 		{
@@ -241,9 +191,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 선택되어져 있다면 true를, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
 		/// <exception cref="System::InvalidOperationException">Cell.Row가 사용되지 않거나, 숨겨져 있을때 발생합니다.</exception>
-		[_Category("Behavior")]
-		[_DefaultValue(false)]
-		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+		[System::ComponentModel::CategoryAttribute("Behavior")]
+		[System::ComponentModel::DefaultValueAttribute(false)]
+		[System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
 		property bool IsSelected
 		{
 			bool get();
@@ -261,9 +211,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 포커스로 설정되었다면 true를, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
 		/// <exception cref="System::InvalidOperationException">Cell.Row가 사용되지 않거나, 숨겨져 있을때 발생합니다.</exception>
-		[_Category("Behavior")]
-		[_DefaultValue(false)]
-		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+		[System::ComponentModel::CategoryAttribute("Behavior")]
+		[System::ComponentModel::DefaultValueAttribute(false)]
+		[System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
 		property bool IsFocused
 		{
 			bool get();
@@ -277,33 +227,33 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 마우스 커서의 위치가 셀 영역 안에 있다면 true를, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
 #ifdef _DEBUG
-		[_Category("Debug")]
+		[System::ComponentModel::CategoryAttribute("Debug")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif		
 		property bool IsMouseOvered
 		{ 
 			bool get();
 		}
 
-		/// <summary>
-		/// 셀이 화면에 표시되고 있는지의 여부를 가져옵니다.
-		/// </summary>
-		/// <remarks>
-		/// 열 또는 행의 갯수가 많아 한 화면에 모두 표시하지 못할때 현재 화면에 표시되고 있는지를 확인할때 사용하는 속성입니다.
-		/// </remarks>
-		/// <returns>
-		/// 셀이 화면에 표시되고 있다면 true를, 그렇지 않다면 false를 반환합니다.
-		/// </returns>
-#ifdef _DEBUG
-		[_Category("Debug")]
-#else
-		[_Browsable(false)]
-#endif		
-		property bool IsDisplayed
-		{
-			bool get();
-		}
+//		/// <summary>
+//		/// 셀이 화면에 표시되고 있는지의 여부를 가져옵니다.
+//		/// </summary>
+//		/// <remarks>
+//		/// 열 또는 행의 갯수가 많아 한 화면에 모두 표시하지 못할때 현재 화면에 표시되고 있는지를 확인할때 사용하는 속성입니다.
+//		/// </remarks>
+//		/// <returns>
+//		/// 셀이 화면에 표시되고 있다면 true를, 그렇지 않다면 false를 반환합니다.
+//		/// </returns>
+//#ifdef _DEBUG
+//		[System::ComponentModel::CategoryAttribute("Debug")]
+//#else
+//		[System::ComponentModel::BrowsableAttribute(false)]
+//#endif		
+//		property bool IsDisplayable
+//		{
+//			bool get();
+//		}
 
 		/// <summary>
 		/// 읽기 전용인지에 대한 여부를 가져오거나 설정합니다.
@@ -314,8 +264,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 읽기 전용이라면 true를, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
-		[_Category("Behavior")]
-		[_DefaultValue(false)]
+		[System::ComponentModel::CategoryAttribute("Behavior")]
+		[System::ComponentModel::DefaultValueAttribute(false)]
 		property bool IsReadOnly
 		{
 			bool get();
@@ -329,9 +279,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 셀이 편집중이면 true를, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
 #ifdef _DEBUG
-		[_Category("Debug")]
+		[System::ComponentModel::CategoryAttribute("Debug")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
 		property bool IsBeingEdited
 		{
@@ -348,9 +298,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 셀의 값이 변경되었다면 true를, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
 #ifdef _DEBUG
-		[_Category("Debug")]
+		[System::ComponentModel::CategoryAttribute("Debug")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
 		property bool IsEdited
 		{
@@ -368,19 +318,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 셀의 잘못된 내용을 나타내는 문자열입니다.
 		/// </returns>
-		[_Category("Behavior")]
-		[_DefaultValue("")]
-		property string^ ErrorDescription
+		[System::ComponentModel::CategoryAttribute("Behavior")]
+		[System::ComponentModel::DefaultValueAttribute("")]
+		property System::String^ ErrorDescription
 		{
-			string^ get();
-			void set(string^);
+			System::String^ get();
+			void set(System::String^);
 		}
 
 		/// <summary>
 		/// 문자열이 출력되는 영역을 가져옵니다.
 		/// </summary>
 		/// <remarks>
-		/// 모든 문자열이 다 들어갈 수 있는 사각형의 영역을 나타냅니다. 이 값은 <see cref="DisplayRectangle"/>위치의 상대값입니다.
+		/// 모든 문자열이 다 들어갈 수 있는 사각형의 영역을 나타냅니다. 이 값은 <see cref="Bounds"/>위치의 상대값입니다.
 		/// </remarks>
 		/// <example>
 		/// 이 예제는 마우스 커서를 기준으로 셀을 검색한뒤 셀의 문자열 출력 영역을 검은색 테두리로 표시하는 코드입니다.
@@ -404,13 +354,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		///	문자열이 출력되는 영역을 나타내늗 <see cref="System::Drawing::Rectangle"/>입니다.
 		/// </returns>
 #ifdef _DEBUG
-		[_Category("Debug")]
+		[System::ComponentModel::CategoryAttribute("Debug")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
-		property _Rectangle TextBound
+		property System::Drawing::Rectangle TextBound
 		{
-			_Rectangle get();
+			System::Drawing::Rectangle get();
 		}
 
 		/// <summary>
@@ -419,13 +369,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		static Cell^ Null = nullptr;
 
 	internal: // methods
-		Cell(_GridControl^ gridControl, GrItem* pItem);
+		Cell(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrItem* pItem);
 
 		void UpdateNativeText();
 
-		void UpdateNativeText(object^ value);
+		void UpdateNativeText(System::Object^ value);
 
-		object^ ValidateValue(object^ value);
+		System::Object^ ValidateValue(System::Object^ value);
 
 		static Cell^ FromNative(GrItem* pItem);
 
@@ -440,30 +390,41 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			bool get(); 
 		}
 
-		virtual property object^ ValueCore
+		virtual property System::Object^ ValueCore
 		{
-			object^ get();
-			void set(object^);
+			System::Object^ get();
+			void set(System::Object^);
 		}
 
 	private: // methods
 		bool ShouldSerializeValue();
 
+    private: // properties
+        property System::Object^ Value_ICell
+        {
+            virtual System::Object^ get() sealed = ICell::Value::get;
+        }
+
+        property System::Object^ Tag_ICell
+        {
+            virtual System::Object^ get() sealed = ICell::Tag::get;
+        }
+
 	private: // variables
-		_Column^	m_column;
-		_Row^		m_row;
+		Ntreev::Windows::Forms::Grid::Column^	m_column;
+		Ntreev::Windows::Forms::Grid::Row^		m_row;
 
 		GrItem*		m_pItem;
-		object^		m_oldValue;
+		System::Object^		m_oldValue;
 
-		string^		m_errorDescription;
-		object^		m_value;
+		System::String^		m_errorDescription;
+		System::Object^		m_value;
 	};
 
 	private	ref class InsertionCell : Cell
 	{
 	internal: // methods
-		InsertionCell(_GridControl^ gridControl, GrItem* pItem, object^ defaultValue);
+		InsertionCell(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrItem* pItem, System::Object^ defaultValue);
 
 	public: // methods
 		/// <summary>
@@ -472,13 +433,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		void SetDefaultValue();
 	
 	internal: // properties
-		virtual property object^ ValueCore
+		virtual property System::Object^ ValueCore
 		{
-			object^ get() override;
-			void set(object^) override; 
+			System::Object^ get() override;
+			void set(System::Object^) override; 
 		}
 
 	private: // variables
-		object^		m_value;
+		System::Object^		m_value;
 	};
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

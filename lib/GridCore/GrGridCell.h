@@ -25,25 +25,18 @@
 #include "GrGridBase.h"
 #include "GrGridType.h"
 #include "GrGridEvent.h"
+#include <time.h>
 
 #ifdef _MANAGED
 #include <vcclr.h>
 #endif
 
-#define INVALID_INDEX		((uint)-1)
-#define INSERTION_ROW		((uint)-8)
+#define INVALID_INDEX   ((uint)-1)
+#define INSERTION_ROW   ((uint)-8)
 
-
-#define GRCF_HIDE_TEXT				0x00000020L
-#define GRCF_TEXT_CLIPPED			0x00000040L
-#define GRCF_CELL_CLIPPED			0x00000080L
-
-#define GRCF_SYSTEM_OBJCT			0x01000000L
-#define GRCF_TEXT_IS_NULL			0x02000000L
-
-#define UPDATEPRIORITY_DATAROWLIST	1
-#define UPDATEPRIORITY_COLUMNLIST	2
-#define UPDATEPRIORITY_GROUPINLIST	3
+#define UPDATEPRIORITY_DATAROWLIST  1
+#define UPDATEPRIORITY_COLUMNLIST   2
+#define UPDATEPRIORITY_GROUPINLIST  3
 
 
 class GrGridCore;
@@ -51,1494 +44,1534 @@ class GrRow;
 class GrDataRow;
 class GrColumn;
 class GrGroupingInfo;
-class GrGridRenderer;
+class GrGridPainter;
 
 class GrColumnList;
 class GrDataRowList;
 class GrGroupingRow;
 class GrColumnSplitter;
 class GrFont;
+class GrItem;
 
+class IDataRow;
+class IFocusable;
 
-typedef bool (*FuncSortRow)(GrGridCore* pGridCore, const GrRow* pRow1, const GrRow* pRow2, void* dwUserData);
+typedef bool (*FuncSortRow)(GrGridCore* pGridCore, const GrRow* pRow1, const GrRow* pRow2, void* userData);
 
 enum GrHorzAlign
 {
-	GrHorzAlign_Left,
-	GrHorzAlign_Center,
-	GrHorzAlign_Right,
+    GrHorzAlign_Left,
+    GrHorzAlign_Center,
+    GrHorzAlign_Right,
 
-	GrHorzAlign_Count,
+    GrHorzAlign_Count,
 };
 
 enum GrVertAlign
 {
-	GrVertAlign_Top,
-	GrVertAlign_Center,
-	GrVertAlign_Bottom,
+    GrVertAlign_Top,
+    GrVertAlign_Center,
+    GrVertAlign_Bottom,
 
-	GrVertAlign_Count,
+    GrVertAlign_Count,
 };
 
 enum GrMouseOverState
 {
-	GrMouseOverState_None,
-	GrMouseOverState_In,
-	GrMouseOverState_Control,
+    GrMouseOverState_None,
+    GrMouseOverState_In,
+    GrMouseOverState_Control,
 
-	GrMouseOverState_Count,
+    GrMouseOverState_Count,
 };
 
 enum GrItemTypeShow
 {
-	GrItemTypeShow_FocusedOnly,
-	GrItemTypeShow_SelectedOnly,
-	GrItemTypeShow_Always,
+    GrItemTypeShow_FocusedOnly,
+    GrItemTypeShow_SelectedOnly,
+    GrItemTypeShow_Always,
 
-	GrItemTypeShow_Count,
+    GrItemTypeShow_Count,
 };
 
 enum GrItemType
 {
-	GrItemType_Control,
-	GrItemType_DropDown,
-	GrItemType_Modal,
+    GrItemType_Control,
+    GrItemType_DropDown,
+    GrItemType_Modal,
 
-	GrItemType_Count,
+    GrItemType_Count,
+};
+
+enum GrClickEditing
+{
+    GrClickEditing_Default,
+    GrClickEditing_Click,
+    GrClickEditing_DoubleClick,
+    GrClickEditing_FocusedClick,
 };
 
 class GrSortFunc
 {
 public:
-	static bool SortRowsUp(GrGridCore* pGridCore, const GrRow* pRow1, const GrRow* pRow2, void* dwUserData);
-	static bool SortRowsDown(GrGridCore* pGridCore, const GrRow* pRow1, const GrRow* pRow2, void* dwUserData);
-	static bool SortRowsNone(GrGridCore* pGridCore, const GrRow* pRow1, const GrRow* pRow2, void* dwUserData);
-	static bool SortDataRowSortUp(GrGridCore* pGridCore, const GrRow* pRow1, const GrRow* pRow2, void* dwUserData);
-	static bool SortDataRowSortDown(GrGridCore* pGridCore, const GrRow* pRow1, const GrRow* pRow2, void* dwUserData);
-	static bool SortDataRowSortNone(GrGridCore* pGridCore, const GrRow* pRow1, const GrRow* pRow2, void* dwUserData);
+    static bool SortRowsUp(GrGridCore* pGridCore, const GrRow* pRow1, const GrRow* pRow2, void* userData);
+    static bool SortRowsDown(GrGridCore* pGridCore, const GrRow* pRow1, const GrRow* pRow2, void* userData);
+    static bool SortRowsNone(GrGridCore* pGridCore, const GrRow* pRow1, const GrRow* pRow2, void* userData);
+    static bool SortDataRowSortUp(GrGridCore* pGridCore, const GrRow* pRow1, const GrRow* pRow2, void* userData);
+    static bool SortDataRowSortDown(GrGridCore* pGridCore, const GrRow* pRow1, const GrRow* pRow2, void* userData);
+    static bool SortDataRowSortNone(GrGridCore* pGridCore, const GrRow* pRow1, const GrRow* pRow2, void* userData);
 };
 
-class GrRowEventArgs : public GrObject
+class GrColumnEventArgs : public GrEventArgs
 {
 public:
-};
+    GrColumnEventArgs(GrColumn* pColumn) 
+        : m_pColumn(pColumn) 
+    {
 
-class GrColumnEventArgs : public GrObject
-{
-public:
-	GrColumnEventArgs(GrColumn* pColumn) 
-		: m_pColumn(pColumn) 
-	{
+    }
 
-	}
-
-	GrColumn* GetColumn() const
-	{
-		return m_pColumn;
-	}
+    GrColumn* GetColumn() const
+    {
+        return m_pColumn;
+    }
 
 private:
-	GrColumn* m_pColumn;
+    GrColumn* m_pColumn;
+};
+
+class GrMouseEventArgs : public GrEventArgs
+{
+public:
+    GrMouseEventArgs(const GrPoint& location, GrKeys modifierKeys);
+    GrMouseEventArgs(const GrPoint& location, GrKeys modifierKeys, int delta);
+
+    const GrPoint&  GetLocation() const;
+    int             GetX() const;
+    int             GetY() const;
+    bool            GetControlKey() const;
+    bool            GetAltKey() const;
+    bool            GetShiftKey() const;
+    GrKeys          GetModifierKeys() const;
+    int             GetDelta() const;
+
+private:
+    GrPoint         m_location;
+    GrKeys          m_modifierKeys;
+    int             m_delta;
+};
+
+class GrColumnMouseEventArgs : public GrMouseEventArgs
+{
+public:
+    GrColumnMouseEventArgs(GrColumn* pColumn, const GrPoint& location, GrKeys modifierKeys);
+
+    GrColumn*       GetColumn() const;
+    bool            GetHandled() const;
+    void            SetHandled(bool value);
+
+private:
+    GrColumn*       m_pColumn;
+    bool            m_handled;
+};
+
+class GrCellMouseEventArgs : public GrMouseEventArgs
+{
+public:
+    GrCellMouseEventArgs(GrCell* pCell, const GrPoint& location, GrKeys modifierKeys);
+
+    GrCell*         GetCell() const;
+
+private:
+    GrCell*         m_pCell;
+};
+
+class GrItemMouseEventArgs : public GrMouseEventArgs
+{
+public:
+    GrItemMouseEventArgs(GrItem* pItem, const GrPoint& location, GrKeys modifierKeys);
+
+    GrItem*         GetItem() const;
+    bool            GetHandled() const;
+    void            SetHandled(bool value);
+
+private:
+    GrItem*         m_pItem;
+    bool            m_handled;
 };
 
 class GrGroupingEventArgs : public GrEventArgs
 {
 public:
-	GrGroupingEventArgs(GrGroupingInfo* pGroupingInfo) : m_pGroupingInfo(pGroupingInfo) {}
+    GrGroupingEventArgs(GrGroupingInfo* pGroupingInfo) : m_pGroupingInfo(pGroupingInfo) {}
 
-	GrGroupingInfo* m_pGroupingInfo;
+    GrGroupingInfo* m_pGroupingInfo;
 };
+
+class GrFocusChangeArgs : public GrEventArgs
+{
+public:
+    GrFocusChangeArgs(IFocusable* pFocusable);
+
+    IFocusable*     GetFocusable() const;
+
+private:
+    IFocusable*     m_pFocusable;
+};
+
 
 struct GrLineDesc
 {
-	int	nTextBegin;
-	int	nLength;
-	int	nWidth;
-	int	x;
-	int	y;
+    int    textBegin;
+    int    length;
+    int    width;
+    int    x;
+    int    y;
 };
+
+typedef std::vector<GrLineDesc> _TextLines;
 
 class GrCell : public GrObject
 {
 public:
-	GrCell();
-	virtual ~GrCell();
+    GrCell();
+    virtual ~GrCell();
 
-	virtual int					GetX() const = 0;
-	virtual int					GetY() const = 0;
-	virtual int					GetWidth() const = 0;
-	virtual int					GetHeight() const = 0;
+    virtual int         GetX() const = 0;
+    virtual int         GetY() const = 0;
+    virtual int         GetWidth() const = 0;
+    virtual int         GetHeight() const = 0;
+    virtual GrRow*      GetRow() const = 0;
 
-	virtual const GrRow*		GetRow() const = 0;
-	virtual	GrRow*				GetRow() = 0;
+    virtual GrCellType  GetCellType() const = 0;
+    virtual bool        GetVisible() const = 0;
+    virtual bool        GetDisplayable() const = 0;
+    virtual void        Paint(GrGridPainter* pPainter, const GrRect& clipRect) const = 0;
 
-	virtual GrMouseOverState	HitMouseOverTest(GrPoint pt) const = 0;
-	virtual	GrCellType			GetCellType() const = 0;
-	virtual bool				GetVisible() const = 0;
+    bool                Contains(const GrPoint& point) const;
+    bool                ContainsHorz(int x) const;
+    bool                ContainsVert(int y) const;
+    bool                GetMouseOvered() const;
+    bool                GetMousePressed() const;
+    int                 GetMouseOverState() const;
 
-	bool						IsIn(GrPoint pt) const;
-	bool						GetMouseOvered() const;
-	bool						GetMousePressed() const;
-	GrMouseOverState			GetMouseOverState() const;
+    GrRect              GetClientRect() const;
+    GrRect              GetRect() const;
+    GrPoint             GetLocation() const;
+    GrSize              GetSize() const;
+    uint                GetID() const;
+    int                 GetBottom() const { return GetY() + GetHeight(); }
+    int                 GetRight() const { return GetX() + GetWidth(); }
 
-	GrRect						GetClientRect() const;
-	GrRect						GetRect() const;
-	GrPoint						GetPosition() const;
-	GrSize						GetSize() const;
-	uint						GetID() const;
-	int							GetBottom() const { return GetY() + GetHeight(); }
-	int							GetRight() const { return GetX() + GetWidth(); }
+    void                SetFont(GrFont* pFont);
+    void                SetPadding(const GrPadding& padding);
 
-	void						SetPadding(GrPadding padding);
+    // text method
+    const wchar_t*      GetText() const;
+    void                SetText(const wchar_t* text);
+    uint                GetTextLineCount() const;
+    const GrLineDesc&   GetTextLine(uint index) const;
+    const GrRect&       GetTextBounds() const;
+    void                AlignText();
+    void                ComputeTextBounds();
+    bool                GetTextVisible() const;
+    bool                GetTextClipped() const;
+    void                SetTextVisible(bool b);
 
-	ulong						AddFlag(ulong dwAdd);
-	ulong						RemoveFlag(ulong dwRemove);
-	bool						HasFlag(ulong dwFlag) const;
-	ulong						GetFlag(ulong dwMask = 0xffffffff) const;
-	virtual	GrFlag				ToRenderStyle() const;
+    virtual GrFlag      ToPaintStyle() const;
+    void                DrawText(GrGridPainter* pPainter, GrColor foreColor, const GrRect& paintRect, const GrRect* pClipRect = NULL) const;
 
-	void						SetFont(GrFont* pFont);
+    virtual GrHorzAlign GetTextHorzAlign() const;
+    virtual GrVertAlign GetTextVertAlign() const;
+    virtual bool        GetTextWordWrap() const;
+    virtual bool        GetTextMulitiline() const { return false; }
 
-	// text method
-	const wchar_t*				GetText() const;
-	void						SetText(const wchar_t* strText);
-	virtual const wchar_t*		GetTextLineSource() const;
-	uint						GetTextLineCount() const;
-	const GrLineDesc*			GetTextLine(uint nIndex) const;
-	uint						GetTextLineHeight() const;
-	const GrRect*				GetTextBound() const;
-	void						AlignText();
-	void						ComputeTextBound();
-	bool						IsTextVisible() const;
-	bool						IsTextClipped() const;
+    virtual GrColor     GetPaintingForeColor() const;
+    virtual GrColor     GetPaintingBackColor() const;
+    virtual GrFont*     GetPaintingFont() const;
 
-	void						RenderText(GrGridRenderer* pRenderer, GrColor foreColor, const GrRect* pDisplayRect, const GrRect* pClipping = NULL) const;
+    virtual GrColor     GetForeColor(bool inherited = true) const;
+    virtual GrColor     GetBackColor(bool inherited = true) const;
+    virtual GrPadding   GetPadding(bool inherited = true) const;
+    virtual GrFont*     GetFont(bool inherited = true) const;
 
-	virtual GrHorzAlign			GetTextHorzAlign() const;
-	virtual GrVertAlign			GetTextVertAlign() const;
-	virtual bool				GetTextWordWrap() const;
-	virtual bool				GetTextMulitiline() const { return false; }
+    void                SetBackColor(const GrColor& color);
+    void                SetForeColor(const GrColor& color);
+    virtual int         HitMouseOverTest(const GrPoint& localLocation) const;
 
-	virtual GrColor				GetRenderingForeColor() const;
-	virtual GrColor				GetRenderingBackColor() const;
-	virtual GrFont*				GetRenderingFont() const;
-
-	virtual GrColor				GetForeColor(bool inherited = true) const;
-	virtual GrColor				GetBackColor(bool inherited = true) const;
-	virtual GrPadding			GetPadding(bool inherited = true) const;
-	virtual GrFont*				GetFont(bool inherited = true) const;
-
-	void						SetBackColor(GrColor color);
-	void						SetForeColor(GrColor color);
-
-	virtual GrRect				GetDisplayRect() const { return GrRect(GetDisplayPosition(), GetDisplaySize());}
-	virtual GrSize				GetDisplaySize() const { return GetSize(); }
-	virtual GrPoint				GetDisplayPosition() const = 0;
-	virtual bool				GetDisplayable() const = 0;
-	virtual void				Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const = 0;
-
-	GrGridCore*					GetGridCore() const { return m_pGridCore; }
+    GrGridCore*         GetGridCore() const { return m_pGridCore; }
 
 protected:
-	virtual void				OnTextChanged();
-	virtual void				OnTextBoundChanged(const GrRect* pCur, const GrRect* pOld);
+    virtual void        OnTextChanged();
+    virtual void        OnTextSizeChanged();
 
-	virtual void				OnGridCoreAttached();
-	virtual void				OnGridCoreDetached();
+    virtual void        OnGridCoreAttached();
+    virtual void        OnGridCoreDetached();
 
-	void						SetTextBoundChanged();
-	void						SetTextAlignChanged();
+    void                SetTextBoundsChanged();
+    void                SetTextAlignChanged();
 
-	void						Invalidate(bool thisOnly = true);
+    void                Invalidate(bool thisOnly = true);
 
 public:
-	void*						Tag;
+    void*               Tag;
 
 protected:
-	class GrTextUpdater*		m_pTextUpdater;
+    class GrTextUpdater* m_pTextUpdater;
 
 private:
-	std::wstring				m_strText;
-	ulong						m_dwFlag;
+    std::wstring        m_text;
 
-	std::vector<GrLineDesc>		m_vecTextLine;
-	int							m_nTextLineHeight;
-	GrRect						m_rtTextBound;
+    _TextLines          m_vecTextLine;
+    GrRect              m_textBounds;
 
-	GrColor						m_backColor;
-	GrColor						m_foreColor;
-	GrFont*						m_pFont;
+    GrColor             m_backColor;
+    GrColor             m_foreColor;
+    GrFont*             m_pFont;
 
-	GrPadding					m_padding;
-	uint						m_nID;
+    GrPadding           m_padding;
+    uint                m_id;
 
-	bool						m_bTextBound;
-	bool						m_bTextAlign;
+    bool                m_textBoundsChanged;
+    bool                m_textAlignChanged;
+    bool                m_textClipped;
+    bool                m_textVisible;
 
-	static	uint				m_snID;
-	friend class GrGridCore;
-	friend class GrTextUpdater;
-};
-
-class IDataRow;
-class IFocusable
-{
-public:
-	virtual IDataRow*			GetIDataRow() const = 0;
-
-	static IFocusable*			Null;
-};
-
-class GrItem : public GrCell, public IFocusable
-{
-public:
-	GrItem(GrColumn* pColumn, GrDataRow* pDataRow);
-
-	GrRect						GetControlRect() const;
-	GrState						GetControlState() const;
-	GrDataRow*					GetDataRow() const;
-	GrColumn*					GetColumn() const;
-	bool						GetSelected() const;
-	bool						GetFocused() const;
-	bool						IsItemSelecting() const;
-
-	void						SetReadOnly(bool b);
-	void						SetSelected(bool b);
-	void						SetFocused(bool b);
-
-	void						LockColor(bool b);
-
-	//bool						Compare(const GrItem* pItem) const;
-	bool						ShouldEnsureVisible() const;
-
-	virtual GrMouseOverState	HitMouseOverTest(GrPoint pt) const;
-
-	virtual bool				GetVisible() const;
-	virtual bool				GetReadOnly() const;
-	virtual GrHorzAlign			GetTextHorzAlign() const;
-	virtual GrVertAlign			GetTextVertAlign() const;
-	virtual bool				GetTextWordWrap() const;
-	virtual bool				GetTextMulitiline() const;
-
-	virtual int					GetX() const;
-	virtual int					GetY() const;
-	virtual int					GetWidth() const;
-	virtual int					GetHeight() const;
-	virtual	GrCellType			GetCellType() const { return GrCellType_Item; }
-
-	virtual GrPoint				GetDisplayPosition() const;
-	virtual bool				GetDisplayable() const;
-	virtual void				Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const;
-
-	virtual const GrRow*		GetRow() const;
-	virtual	GrRow*				GetRow();
-
-	virtual IDataRow*			GetIDataRow() const;
-	virtual IFocusable*			GetNextFocusable() const;
-	virtual IFocusable*			GetPrevFocusable() const;
-
-	virtual bool				GetClipped() const;
-
-	virtual GrFlag				ToRenderStyle() const;
-	virtual GrFont*				GetRenderingFont() const;
-	virtual GrColor				GetRenderingForeColor() const;
-	virtual GrColor				GetRenderingBackColor() const;
-
-	virtual GrColor				GetForeColor(bool inherited = true) const;
-	virtual GrColor				GetBackColor(bool inherited = true) const;
-	virtual GrPadding			GetPadding(bool inherited = true) const;
-	virtual GrFont*				GetFont(bool inherited = true) const;
-
-protected:
-	virtual void				OnTextChanged();
-	virtual void				OnTextBoundChanged(const GrRect* pCur, const GrRect* pOld);
-
-private:
-	void						DoSelected(bool b);
+    static uint         m_snID;
+    friend class GrGridCore;
+    friend class GrTextUpdater;
 
 #ifdef _MANAGED
 public:
-	gcroot<System::Object^> ManagedRef;
+    gcroot<System::Object^> ManagedRef;
 #endif
-
-private:
-	GrDataRow*					m_pDataRow;
-	GrColumn*					m_pColumn;
-
-	bool						m_bReadOnly;
-	bool						m_bSelected;
-	bool						m_bColorLocked;
-
-	friend class GrItemSelector;
 };
 
-typedef std::set<GrItem*>		GrItems;
-typedef std::vector<GrRow*>		GrRowArray;
-typedef std::set<GrRow*>		GrRows;
 
-typedef void (*FuncCustomRender)(GrGridRenderer* pRenderer, const GrItem* pItem, GrRect rtRender, void* dwUserData);
-typedef bool (*FuncColumnRender)(GrGridRenderer* pRenderer, const GrColumn* pColumn, GrRect rtRender, void* dwUserData);
+typedef std::vector<GrRow*> GrRowArray;
+
+typedef void (*FuncCustomPaint)(GrGridPainter* pPainter, const GrItem* pItem, const GrRect& paintRect, void* userData);
+typedef bool (*FuncColumnPaint)(GrGridPainter* pPainter, const GrColumn* pColumn, const GrRect& paintRect, void* userData);
 
 typedef bool (*FuncComparer)(GrGridCore* pGridCore, const GrDataRow* pRow1, const GrDataRow* pRow2, const GrColumn* pColumn);
 
 class GrColumn : public GrCell
 {
-	typedef GrEventBase<GrEventArgs, GrColumn> _GrEvent;
+    typedef GrEvent<GrEventArgs, GrColumn> _GrEvent;
 public:
-	GrColumn();
+    GrColumn();
 
-	GrColumnList*				GetColumnList() const;
+    GrColumnList*       GetColumnList() const;
 
-	GrItemType					GetItemType() const;
-	GrItemTypeShow				GetItemTypeShow() const;
-	GrHorzAlign					GetItemHorzAlign() const;
-	GrVertAlign					GetItemVertAlign() const;
-	bool						GetItemWordWrap() const;
-	bool						GetItemMultiline() const;
-	GrColor						GetItemForeColor() const;
-	GrColor						GetItemBackColor() const;
-	GrPadding					GetItemPadding() const;
-	GrFont*						GetItemFont() const;
+    GrItemType          GetItemType() const;
+    GrItemTypeShow      GetItemTypeShow() const;
+    GrHorzAlign         GetItemHorzAlign() const;
+    GrVertAlign         GetItemVertAlign() const;
+    bool                GetItemWordWrap() const;
+    bool                GetItemMultiline() const;
+    const GrColor&      GetItemForeColor() const;
+    const GrColor&      GetItemBackColor() const;
+    const GrPadding&    GetItemPadding() const;
+    GrFont*             GetItemFont() const;
+    int                 GetItemMinHeight() const;
+    GrClickEditing      GetItemClickEditing() const;
+    bool                GetItemTextVisible() const;
+    bool                GetItemIcon() const;
 
-	int							GetDisplayX() const { return m_nDisplayX; }
+    uint                GetDisplayIndex() const;
+    uint                GetVisibleIndex() const;
+    uint                GetFrozenIndex() const;
+    uint                GetUnfrozenIndex() const;
+    uint                GetIndex() const;
+    uint                GetColumnID() const;
 
-	uint						GetDisplayIndex() const;
-	uint						GetVisibleIndex() const;
-	uint						GetFrozenIndex() const;
-	uint						GetUnfrozenIndex() const;
-	uint						GetIndex() const;
-	uint						GetColumnID() const;
+    void                SetItemType(GrItemType type);
+    void                SetItemHorzAlign(GrHorzAlign horzAlign);
+    void                SetItemVertAlign(GrVertAlign vertAlign);
+    void                SetItemWordWrap(bool b);
+    void                SetItemMultiline(bool b);
+    void                SetItemForeColor(const GrColor& color);
+    void                SetItemBackColor(const GrColor& color);
+    void                SetItemPadding(const GrPadding& padding);
+    void                SetItemFont(GrFont* pFont);
+    void                SetItemMinHeight(int height);
+    void                SetItemClickEditing(GrClickEditing clickEditing);
+    void                SetItemTextVisible(bool b);
+    void                SetItemIcon(bool b);
 
-	void						SetItemType(GrItemType type);
-	void						SetItemHorzAlign(GrHorzAlign horzAlign);
-	void						SetItemVertAlign(GrVertAlign vertAlign);
-	void						SetItemWordWrap(bool b);
-	void						SetItemMultiline(bool b);
-	void						SetItemForeColor(GrColor color);
-	void						SetItemBackColor(GrColor color);
-	void						SetItemPadding(GrPadding padding);
-	void						SetItemFont(GrFont* pFont);
-	void						SetItemTextSeparator(std::wstring separator);
+    bool                GetMovable() const;
+    void                SetMovable(bool b);
+    bool                GetResizable() const;
+    void                SetResizable(bool b);
+    bool                GetFrozen() const;
+    void                SetFrozen(bool b);
 
-	bool						GetMovable() const;
-	void						SetMovable(bool b);
-	bool						GetResizable() const;
-	void						SetResizable(bool b);
-	bool						GetFrozen() const;
-	void						SetFrozen(bool b);
+    bool                GetReadOnly() const;
+    void                SetReadOnly(bool b);
 
-	bool						GetReadOnly() const;
-	void						SetReadOnly(bool b);
+    void                SetVisible(bool b);
+    void                SetMinWidth(int minWidth);
+    void                SetMaxWidth(int maxWidth);
+    int                 GetMinWidth() const;
+    int                 GetMaxWidth() const;
 
-	void						SetVisible(bool b);
-	void						SetMinWidth(int nMinWidth);
-	void						SetMaxWidth(int nMaxWidth);
-	int							GetMinWidth() const;
-	int							GetMaxWidth() const;
+    void                SetSelected(bool b);
+    bool                GetSelected() const;
+    bool                GetFullSelected() const;
+    bool                GetSelecting() const;
 
-	void						SetSelected(bool b);
-	bool						GetSelected() const;
-	bool						GetFullSelected() const;
-	bool						GetSelecting() const;
+    bool                HasFocused() const;
 
-	bool						HasFocused() const;
+    void                AdjustWidth();
+    void                SetFit();
 
-	void						AdjustWidth();
-	void						SetFit();
+    void                EnableSort(bool b = true);
+    bool                CanBeSort() const;
 
-	void						EnableSort(bool bEnable = true);
-	bool						CanBeSort() const;
+    void                EnableGrouping(bool b = true);
+    bool                CanBeGrouping() const;
 
-	void						EnableGrouping(bool bEnable = true);
-	bool						CanBeGrouped() const;
+    void                SetClipped(bool b);
+    bool                GetClipped() const;
 
-	void						SetClipped(bool b);
-	bool						GetClipped() const;
+    bool                ShouldBringIntoView() const;
 
-	bool						ShouldEnsureVisible() const;
+    void                SetWidth(int width);
 
-	void						SetWidth(int width);
+    void                SetTooltip(const wchar_t* tooltip);
+    const wchar_t*      GetTooltip() const;
 
-	void						SetTooltip(const wchar_t* strTooltip);
-	const wchar_t*				GetTooltip() const;
+    int                 GetPriority() const;
 
-	int							GetPriority() const;
+    bool                GetGrouped() const;
+    void                SetGrouped(bool b);
+    GrGroupingInfo*     GetGroupingInfo() const;
 
-	bool						GetGrouped() const;
-	void						SetGrouped(bool b);
-	GrGroupingInfo*				GetGroupingInfo() const;
-
-	bool						GetClippedTextVisible() const;
-	void						SetClippedTextVisible(bool b);
-
-	void						SetSortType(GrSort sortType);
-	GrSort						GetSortType() const;
-	void						SetSortComparer(GrSort sortType, FuncComparer comparer);
-	FuncComparer				GetSortComparer(GrSort sortType) const;
+    void                SetSortType(GrSort sortType);
+    GrSort              GetSortType() const;
+    void                SetSortComparer(GrSort sortType, FuncComparer comparer);
+    FuncComparer        GetSortComparer(GrSort sortType) const;
 
 
-	virtual	GrCellType			GetCellType() const { return GrCellType_Column; }
-	virtual int					GetX() const;
-	virtual int					GetY() const;
-	virtual int					GetWidth() const;
-	virtual int					GetHeight() const;
-	virtual GrMouseOverState	HitMouseOverTest(GrPoint pt) const;
+    virtual GrCellType  GetCellType() const { return GrCellType_Column; }
+    virtual int         GetX() const;
+    virtual int         GetY() const;
+    virtual int         GetWidth() const;
+    virtual int         GetHeight() const;
 
-	virtual bool				GetVisible() const;
+    virtual bool        GetVisible() const;
 
-	virtual GrHorzAlign			GetTextHorzAlign() const;
-	virtual GrVertAlign			GetTextVertAlign() const;
+    virtual GrHorzAlign GetTextHorzAlign() const;
+    virtual GrVertAlign GetTextVertAlign() const;
 
-	virtual bool				Focusable() const { return false; }
+    virtual GrRow*      GetRow() const;
 
-	virtual const wchar_t*		GetTextLineSource() const;
-
-	virtual GrRow*				GetRow();
-	virtual const GrRow*		GetRow() const;
-
-	virtual GrFlag				ToRenderStyle() const;
-	virtual GrColor				GetRenderingBackColor() const;
-	virtual GrPoint				GetDisplayPosition() const;
-	virtual bool				GetDisplayable() const;
-	virtual void				Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const;
-	void						RenderTooltip(GrGridRenderer* pRenderer, GrPoint ptStart) const;
-	void						RenderTextEllipsis(GrGridRenderer* pRenderer, GrColor foreColor, GrRect* pDisplayRect) const;
+    virtual GrFlag      ToPaintStyle() const;
+    virtual GrColor     GetPaintingBackColor() const;
+    virtual bool        GetDisplayable() const;
+    virtual void        Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
 
 public:
-	_GrEvent					GroupingChanged;	
+    _GrEvent            GroupingChanged;    
 
 
 protected:
-	virtual void				OnGridCoreAttached();
-	virtual void				OnGridCoreDetached();
+    virtual void        OnGridCoreAttached();
+    virtual void        OnGridCoreDetached();
 
-	virtual void				OnTextChanged();
-
-private:
-	virtual ~GrColumn();
-
-	void						SetPriority(int nPriority);
-
-	void						SetX(int x) { m_nX = x; };
-	void						SetDisplayX(int x) { m_nDisplayX = x; }
-	void						SetDisplayable(bool b);
-	void						SetDisplayIndex(uint nIndex);
-	void						SetVisibleIndex(uint nIndex);
-	void						SetIndex(uint nIndex);
-	void						SetColumnID(uint nIndex);
-
-public:
-	bool						m_bCustomItemRender;
-
-	FuncColumnRender			m_fnColumnBackgroundRender;
-	FuncColumnRender			m_fnColumnContentsRender;
-	void*						m_pColumnRenderData;
-
-#ifdef _MANAGED
-public:
-	gcroot<System::ComponentModel::IComponent^> ManagedRef;
-#endif
+    virtual void        OnTextChanged();
 
 private:
-	GrColumnList*				m_pColumnList;
+    virtual ~GrColumn();
 
-	int							m_nSelectedCells;	friend class GrItemSelector;
-	int							m_nPriority;
-	int							m_nX;
-	int							m_nWidth;
-	int							m_nDisplayX;
+    void                SetPriority(int priority);
 
-	int							m_nDefaultWidth;
-	int							m_nMinWidth;
-	int							m_nMaxWidth;
+    void                SetX(int x) { m_x = x; };
+    void                SetDisplayable(bool b);
+    void                SetDisplayIndex(uint index);
+    void                SetVisibleIndex(uint index);
+    void                SetIndex(uint index);
+    void                SetColumnID(uint index);
 
-	bool						m_bVisible;
-	bool						m_bReadOnly;
-	bool						m_bCanBeSorted;
-	bool						m_bCanBeGrouped;
-	bool						m_bMovable;
-	bool						m_bResizable;
-	bool						m_bFrozen;
-	bool						m_bClippedTextVisible;
-	bool						m_bSelected;
-	bool						m_bFullSelected;
-	bool						m_bFitting;
-	bool						m_bGrouped;
+public:
+    bool                m_customItemPaint;
 
-	uint						m_nDisplayIndex;
-	uint						m_nVisibleIndex;
-	uint						m_nSelectedIndex;
-	uint						m_nIndex;
-	uint						m_nColumnID;
+    FuncColumnPaint     m_fnColumnBackgroundPaint;
+    FuncColumnPaint     m_fnColumnContentsPaint;
+    void*               m_pColumnPaintData;
 
-	bool						m_bDisplayable;
-	bool						m_bClipped;
+private:
+    GrColumnList*       m_pColumnList;
 
-	GrItemType					m_itemType;
-	GrItemTypeShow				m_itemTypeShow;
-	GrHorzAlign					m_itemHorzAlign;
-	GrVertAlign					m_itemVertAlign;
-	bool						m_itemWordWrap;
-	bool						m_itemMultiline;
+    int                 m_selectedCells;    friend class GrItemSelector;
+    int                 m_priority;
+    int                 m_x;
+    int                 m_width;
 
-	GrColor						m_itemBackColor;
-	GrColor						m_itemForeColor;
-	GrPadding					m_itemPadding;
-	GrFont*						m_pItemFont;
+    int                 m_defaultWidth;
+    int                 m_minWidth;
+    int                 m_maxWidth;
 
-	GrGroupingInfo*				m_pGroupingInfo;
+    bool                m_visible;
+    bool                m_readOnly;
+    bool                m_canBeSorted;
+    bool                m_canBeGrouped;
+    bool                m_movable;
+    bool                m_resizable;
+    bool                m_frozen;
+    bool                m_selected;
+    bool                m_fullSelected;
+    bool                m_fitting;
+    bool                m_grouped;
 
-	GrSort						m_sortType;
-	FuncComparer				m_comparer[GrSort_Count];
+    uint                m_displayIndex;
+    uint                m_visibleIndex;
+    uint                m_selectedIndex;
+    uint                m_index;
+    uint                m_columnID;
 
-	std::wstring				m_strTooltip;
-	std::wstring				m_strTextLineSource;
+    bool                m_displayable;
+    bool                m_clipped;
 
-	friend class GrGroupingInfo;
-	friend class GrColumnList;
+    GrItemType          m_itemType;
+    GrItemTypeShow      m_itemTypeShow;
+    GrHorzAlign         m_itemHorzAlign;
+    GrVertAlign         m_itemVertAlign;
+    bool                m_itemWordWrap;
+    bool                m_itemMultiline;
+    GrColor             m_itemBackColor;
+    GrColor             m_itemForeColor;
+    GrPadding           m_itemPadding;
+    GrFont*             m_pItemFont;
+    int                 m_itemMinHeight;
+    GrClickEditing      m_itemClickEditing;
+    bool                m_itemTextVisible;
+    bool                m_itemIcon;
+
+    GrGroupingInfo*     m_pGroupingInfo;
+
+    GrSort              m_sortType;
+    FuncComparer        m_comparer[GrSort_Count];
+
+    std::wstring        m_tooltip;
+
+    friend class GrGroupingInfo;
+    friend class GrColumnList;
 };
-
-typedef std::set<GrColumn*>		GrColumns;
-
 
 enum GrRowUpdate 
 {
-	GrRowUpdate_Cell	= 1,
-	GrRowUpdate_Row		= 2,
-	GrRowUpdate_Both	= 3,
+    GrRowUpdate_Cell    = 1,
+    GrRowUpdate_Row     = 2,
+    GrRowUpdate_Both    = 3,
 };
 
-struct GrUpdateDesc
-{
-	int nMin;
-	int nMax;
-};
-
-class GrRow abstract : public GrCell
+class GrRow : public GrCell
 {
 public:
-	GrRow();
+    GrRow();
 
-	void						SetY(int y);
-	virtual int					GetY() const { return m_nY; }
+    void                SetY(int y);
+    virtual int         GetY() const;
 
-	void						SetHeight(int height);
-	virtual int					GetHeight() const;
+    void                SetHeight(int height);
+    virtual int         GetHeight() const;
 
-	void						SetResizable(bool b);
-	bool						GetResizable() const;
+    void                SetResizable(bool b);
+    bool                GetResizable() const;
 
-	void						AdjustHeight();
+    void                AdjustHeight();
 
-	void						SetMinHeight(int nMinHeight);
-	int							GetMinHeight() const;
+    virtual int         GetMinHeight() const;
 
-	void						SetMaxHeight(int nMaxHeight);
-	int							GetMaxHeight() const;
+    virtual GrRow*      GetRow() const { return const_cast<GrRow*>(this); }
+    virtual GrCellType  GetCellType() const { return GrCellType_Row; }
+    virtual int         GetX() const;
+    virtual bool        GetDisplayable() const { return true; }
+    virtual bool        GetVisible() const;
+    virtual GrHorzAlign GetTextHorzAlign() const;
+    virtual GrVertAlign GetTextVertAlign() const;
+    virtual GrRowType   GetRowType() const { return GrRowType_Dummy; }
 
-	virtual const GrRow*		GetRow() const { return this; }
-	virtual	GrRow*				GetRow() { return this; }
+    virtual bool        ShouldBringIntoView() const { return false; }
+    virtual GrCell*     HitTest(const GrPoint& location) const;
 
-	virtual	GrCellType			GetCellType() const { return GrCellType_Row; }
-	virtual int					GetX() const;
-	virtual int					GetDisplayX() const;
-	virtual int					GetDisplayY() const;
-	virtual GrMouseOverState	HitMouseOverTest(GrPoint /*pt*/) const { return GrMouseOverState_In; }
+    uint                GetChildCount() const;
+    GrRow*              GetChild(uint index) const;
+    GrRow*              GetParent() const;
+    uint                GetHierarchyLevel() const;
 
-	virtual GrPoint				GetDisplayPosition() const;
-	virtual bool				GetDisplayable() const { return true; }
-	virtual bool				ShouldEnsureVisible() const { return false; }
+    void                SetFit();
+    virtual void        Paint(GrGridPainter* /*pPainter*/, const GrRect& /*clipRect*/) const {};
 
-	virtual bool				GetVisible() const;
+    virtual void        GetVisibleList(GrRowArray* pVisible) const;
+    virtual GrRect      GetBounds() const { return GetRect(); }
+    virtual GrPadding   GetPadding(bool /*inherited*/) const { return GrPadding::Default; }
 
-	virtual GrHorzAlign			GetTextHorzAlign() const;
-	virtual GrVertAlign			GetTextVertAlign() const;
+    virtual void        Sort(GrSort sortType);
+    virtual void        Sort(FuncSortRow fnSort, void* userData);
 
-	virtual GrRowType			GetRowType() const { return GrRowType_Dummy; }
-
-	virtual GrCell*				HitTest(const GrPoint& pt) const;
-	virtual GrCell*				HitDisplayTest(const GrPoint& pt) const;
-
-	uint						GetChildCount() const;
-	GrRow*						GetChild(uint nIndex) const;
-	GrRow*						GetParent() const;
-	uint						GetHierarchyLevel() const;
-
-	void						SetFit();
-	virtual bool				GetFittable() const { return true; }
-	virtual int					GetFitHeight() const;
-
-	virtual void				Render(GrGridRenderer* /*pRenderer*/, const GrRect* /*pClipping*/) const {};
-
-	virtual void				GetVisibleList(GrRowArray* pVisible) const;
-	virtual GrRect				GetBound() const { return GetRect(); }
-	virtual GrRect				GetDisplayBound() const { return GetDisplayRect(); }
-	virtual GrPadding			GetPadding(bool /*inherited*/) const { return GrPadding::Default; }
-
-	virtual void				Sort(GrSort sortType);
-	virtual void				Sort(FuncSortRow fnSort, void* dwUserData);
-
-	void						AddChild(GrRow* pRow);
-	void						ReserveChild(uint reserve);
-	void						ClearChild();
+    void                AddChild(GrRow* pRow);
+    void                ReserveChild(uint reserve);
+    void                ClearChild();
 
 public:
-	static int		DefaultHeight;
-	static int		DefaultMinHeight;
-	static int		DefaultMaxHeight;
+    static int          DefaultHeight;
 
 protected:
-	virtual void				OnHeightChanged() {};
-	virtual void				OnYChanged() {};
-	virtual void				OnHeightAdjusted() {};
+    virtual void        OnTextSizeChanged();
+    virtual void        OnHeightChanged();
+    virtual void        OnYChanged() {};
+    virtual void        OnHeightAdjusted() {};
 
-	virtual void				OnFitted();
+    virtual void        OnFitted();
 
-	int							CellStart() const;
+    int                 CellStart() const;
+
+    void                InvalidateRow();
 
 protected:
-	bool						m_bVisible;
+    bool                m_visible;
 
 private:
-	GrRowArray					m_vecChilds;
-	GrRow*						m_pParent;
-	uint						m_nHierarchyLevel;
-	int							m_nY;
+    GrRowArray          m_vecChilds;
+    GrRow*              m_pParent;
+    uint                m_hierarchyLevel;
+    int                 m_y;
 
-	bool						m_bResizable;
+    bool                m_resizable;
 
-	int							m_nHeight;
-	int							m_nMinHeight;
-	int							m_nMaxHeight;
+    int                 m_height;
+    bool                m_fitting;
 
-	bool						m_bFitting;
+    friend class GrGridCore;
 
-	friend class GrGridCore;
+private:
+    class SortDesc
+    {
+    public:
+        SortDesc(GrGridCore* pGridCore, FuncSortRow fn, void* userData) : 
+          m_pGridCore(pGridCore), m_fn(fn), m_userData(userData) {}
+
+          bool operator () (const GrRow* pRow1, const GrRow* pRow2)
+          {
+              return (*m_fn)(m_pGridCore, pRow1, pRow2, m_userData);
+          }
+
+          GrGridCore*       m_pGridCore;
+          FuncSortRow       m_fn;
+          void*             m_userData;
+    };
 };
 
-class GrUpdatableRow abstract : public GrRow
+class IDataRow : public GrRow
 {
-public:
-	virtual bool	ShouldUpdate() const;
-	virtual void	Update(bool force);
-	virtual int		GetUpdatePriority() const;
+public: 
+    IDataRow();
 
-	virtual bool	ShouldClip(const GrRect* pDisplayRect, uint horizontal, uint vertical) const;
-	virtual void	Clip(const GrRect* pDisplayRect, uint horizontal, uint vertical);
-	virtual int		GetClipPriority() const;
+    virtual int         GetY() const;
+    virtual int         GetWidth() const;
+
+    virtual bool        GetDisplayable() const;
+    void                SetDisplayable(bool b);
+
+    void                SetVisibleIndex(uint index);
+    uint                GetVisibleIndex() const;
+
+    void                SetDisplayIndex(uint index);
+    uint                GetDisplayIndex() const;
+
+    void                SetClipped(bool b);
+    bool                GetClipped() const;
+
+    bool                ShouldBringIntoView() const;
+    bool                HasFocused() const;
+
+    virtual IFocusable* GetFocusable(GrColumn* pColumn) const = 0;
+    virtual uint        GetSelectionGroup() const { return 0; }
+    virtual bool        GetFullSelected() const { return false; }
 
 protected:
-	virtual void	OnFitted();
-	virtual void	OnHeightChanged();
+    virtual void        OnFitted();
+    virtual void        OnGridCoreAttached();
+    virtual void        OnHeightChanged();
+
+protected:
+    GrDataRowList*      m_pDataRowList;
+
+private:
+    bool                m_displayable;
+    bool                m_clipped;
+    uint                m_visibleIndex;
+    uint                m_displayIndex;
+};
+
+class GrDataRow : public IDataRow
+{
+protected:
+    typedef std::vector<GrItem*> _Items;
+public:
+    GrDataRow();
+    virtual ~GrDataRow();
+
+    GrItem*             GetItem(const GrColumn* pColumn) const;
+    GrItem*             GetItem(const GrItem* pOtherItem) const;
+
+    bool                GetReadOnly() const;
+    void                SetReadOnly(bool b = true);
+
+    void                SetSelected(bool b);
+    bool                GetSelected() const;
+    bool                GetSelecting() const;
+
+    uint                GetVisibleDataRowIndex() const;
+    uint                GetDataRowIndex() const;
+    uint                GetDataRowID() const;
+
+    GrColor             GetItemBackColor() const;
+    GrColor             GetItemForeColor() const;
+    GrFont*             GetItemFont() const;
+    void                SetItemBackColor(const GrColor& color);
+    void                SetItemForeColor(const GrColor& color);
+    void                SetItemFont(GrFont* pFont);
+
+    virtual bool        GetFullSelected() const;
+
+    virtual bool        GetVisible() const;
+    virtual void        SetVisible(bool b);
+
+    virtual GrRowType   GetRowType() const { return GrRowType_DataRow; }
+    virtual GrFlag      ToPaintStyle() const;
+    virtual GrColor     GetPaintingBackColor() const;
+    virtual void        Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
+
+    virtual IFocusable* GetFocusable(GrColumn* pColumn) const;
+    virtual int         GetMinHeight() const;
+
+    virtual GrCell*     HitTest(const GrPoint& location) const;
+
+protected:
+    virtual void        OnGridCoreAttached();
+    virtual void        OnGridCoreDetached();
+    virtual void        OnHeightAdjusted();
+
+private:
+    void                SetVisibleDataRowIndex(uint index);
+    void                SetDataRowIndex(uint index);
+    void                SetDataRowID(uint index);
+    void                AddItem(GrColumn* pColumn);
+    void                Reserve(uint count);
+    void                ClearItem();
+    void                SetFocusedItem(bool b);        // called by GrGridCore
+
+
+private:
+    _Items              m_vecItems;
+    bool                m_readOnly;
+
+    GrColor             m_itemBackColor;
+    GrColor             m_itemForeColor;
+    GrFont*             m_pItemFont;
+
+    uint                m_visibleDataRowIndex;
+    uint                m_dataRowIndex;
+    uint                m_dataRowID;
+
+private:    // friend variables;
+    uint                m_selectedCells;
+
+    friend class GrItemSelector;
+    friend class GrGridCore;
+    friend class GrDataRowList;
+};
+
+typedef std::set<GrDataRow*>    GrDataRows;
+
+class IFocusable
+{
+public:
+    virtual IDataRow*   GetDataRow() const = 0;
+    virtual GrRect      GetDisplayRect() const = 0;
+    virtual bool        GetDisplayable() const = 0;
+    virtual GrCellType  GetCellType() const = 0;
+
+    static IFocusable*  Null;
+};
+
+class GrItem : public GrCell, public IFocusable
+{
+public:
+    GrItem(GrColumn* pColumn, GrDataRow* pDataRow);
+
+    GrRect              GetControlRect() const;
+    bool                GetControlVisible() const;
+    GrControlState      GetControlState() const;
+    GrDataRow*          GetDataRow() const;
+    GrColumn*           GetColumn() const;
+    bool                GetSelected() const;
+    bool                GetFocused() const;
+    bool                IsItemSelecting() const;
+
+    void                SetReadOnly(bool b);
+    void                SetSelected(bool b);
+    void                SetFocused(bool b);
+
+    bool                ShouldBringIntoView() const;
+    int                 GetMinHeight() const;
+    void                BringIntoView();
+
+    virtual int         HitMouseOverTest(const GrPoint& localLocation) const;
+
+    virtual bool        GetVisible() const;
+    virtual bool        GetReadOnly() const;
+    virtual GrHorzAlign GetTextHorzAlign() const;
+    virtual GrVertAlign GetTextVertAlign() const;
+    virtual bool        GetTextWordWrap() const;
+    virtual bool        GetTextMulitiline() const;
+    virtual bool        GetClipped() const;
+
+    virtual int         GetX() const;
+    virtual int         GetY() const;
+    virtual int         GetWidth() const;
+    virtual int         GetHeight() const;
+    virtual GrCellType  GetCellType() const { return GrCellType_Item; }
+
+    virtual bool        GetDisplayable() const;
+    virtual void        Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
+
+    virtual GrRow*      GetRow() const;
+
+    virtual GrFlag      ToPaintStyle() const;
+    virtual GrFont*     GetPaintingFont() const;
+    virtual GrColor     GetPaintingForeColor() const;
+    virtual GrColor     GetPaintingBackColor() const;
+
+    virtual GrColor     GetForeColor(bool inherited = true) const;
+    virtual GrColor     GetBackColor(bool inherited = true) const;
+    virtual GrPadding   GetPadding(bool inherited = true) const;
+    virtual GrFont*     GetFont(bool inherited = true) const;
+
+    void                LockColor(bool b);
+
+protected:
+    virtual void        OnTextSizeChanged();
+
+private:
+    void                DoSelected(bool b);
+    virtual GrRect      GetDisplayRect() const { return GetRect(); }
+
+private:
+    GrDataRow*          m_pDataRow;
+    GrColumn*           m_pColumn;
+
+    bool                m_readOnly;
+    bool                m_selected;
+    bool                m_colorLocked;
+
+    friend class GrItemSelector;
+};
+
+typedef std::set<GrItem*> GrItems;
+
+class GrUpdatableRow : public GrRow
+{
+public:
+    virtual bool        ShouldUpdate() const;
+    virtual void        Update(bool force);
+    virtual int         GetUpdatePriority() const;
+
+    virtual bool        ShouldClip(const GrRect& displayRect, uint horizontal, uint vertical) const;
+    virtual void        Clip(const GrRect& displayRect, uint horizontal, uint vertical);
+    virtual int         GetClipPriority() const;
+
+protected:
+    virtual void        OnFitted();
+    virtual void        OnHeightChanged();
 };
 
 class GrRootRow : public GrRow
 {
-	typedef std::vector<GrRow*>	_Rows;
-	typedef std::vector<GrUpdatableRow*>	_Updatables;
+    typedef std::vector<GrRow*>    _Rows;
+    typedef std::vector<GrUpdatableRow*>    _Updatables;
 public:
-	GrRootRow();
+    GrRootRow();
 
-	void						SetVisibleChanged();
-	void						SetFitChanged();
-	void						SetHeightChanged();
+    void                SetVisibleChanged();
+    void                SetFitChanged();
+    void                SetHeightChanged();
 
-	bool						ShouldUpdate() const;
-	void						Update(bool force = false);
+    void                Update(bool force = false);
 
-	bool						ShouldClip() const;
-	void						Clip(const GrRect* pDisplayRect, uint horizontal, uint vertical);
-	
-	virtual int					GetWidth() const { return m_nWidth; }
-	virtual int					GetHeight() const { return m_nHeight; }
+    bool                ShouldClip() const;
+    void                Clip(const GrRect& displayRect, uint horizontal, uint vertical);
 
-	virtual GrSize				GetDisplaySize() const;
-	virtual GrPoint				GetDisplayPosition() const;
+    virtual int         GetX() const;
+    virtual int         GetY() const;
+    virtual int         GetWidth() const { return m_width; }
+    virtual int         GetHeight() const { return m_height; }
 
-	virtual void				Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const;
+    virtual GrRect      GetBounds() const { return m_bound; }
 
-	virtual GrCell*				HitTest(const GrPoint& pt) const;
-	virtual GrCell*				HitDisplayTest(const GrPoint& pt) const;
+    virtual void        Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
+    virtual GrCell*     HitTest(const GrPoint& location) const;
 
 protected:
-	virtual void				OnGridCoreAttached();
+    virtual void        OnGridCoreAttached();
 
 private:
-	void						BuildVisibleList();
-	void						AdjustRowHeight();
-	void						RepositionVisibleList();
+    void                BuildVisibleList();
+    void                AdjustRowHeight();
+    void                RepositionVisibleList();
 
-	void						gridCore_Created(GrObject* pSender, GrEventArgs* e);
+    void                gridCore_Created(GrObject* pSender, GrEventArgs* e);
 
 private:
-	_Rows						m_vecVisibleRows;
-	_Updatables					m_vecUpdatables;
-	_Updatables					m_vecClippables;
-	bool						m_bVisibleChanged;
-	bool						m_bFitChanged;
-	bool						m_bHeightChanged;
+    _Rows               m_vecVisibleRows;
+    _Updatables         m_vecUpdatables;
+    bool                m_visibleChanged;
+    bool                m_fitChanged;
+    bool                m_heightChanged;
 
-	int							m_nWidth;
-	int							m_nHeight;
+    int                 m_width;
+    int                 m_height;
 
-	GrRect						m_rtDisplayBound;
+    GrRect              m_bound;
+    GrColumnList*       m_pColumnList;
 
-	GrColumnList*				m_pColumnList;
+private:
+    class SortUpdatable
+    {
+    public:
+        bool operator () (const GrUpdatableRow* p1, const GrUpdatableRow* p2)
+        {
+            return p1->GetUpdatePriority() < p2->GetUpdatePriority();
+        }
+    };
 };
-
-class IDataRow abstract : public GrRow
-{
-public: 
-	IDataRow();
-
-	virtual bool				GetDisplayable() const;
-
-	void						SetDisplayable(bool b);
-
-	void						SetDisplayY(int y);
-	int							GetDisplayY() const;
-
-	void						SetVisibleIndex(uint nIndex);
-	uint						GetVisibleIndex() const;
-
-	void						SetDisplayIndex(uint nIndex);
-	uint						GetDisplayIndex() const;
-
-	void						SetClipped(bool b);
-	bool						GetClipped() const;
-
-	bool						ShouldEnsureVisible() const;
-	bool						HasFocused() const;
-
-	virtual IFocusable*			GetFocusable(GrColumn* pColumn) const = 0;
-	virtual uint				GetSelectionGroup() const { return 0; }
-	virtual bool				GetFullSelected() const { return false; }
-	virtual int					GetWidth() const;
-
-#ifdef _MANAGED
-public:
-	gcroot<System::Object^> ManagedRef;
-#endif
-
-protected:
-	virtual void				OnFitted();
-	virtual void				OnGridCoreAttached();
-	virtual void				OnHeightChanged();
-
-protected:
-	GrDataRowList*				m_pDataRowList;
-
-private:
-	int							m_nDisplayY;
-	bool						m_bDisplayable;
-	bool						m_bClipped;
-	uint						m_nVisibleIndex;
-	uint						m_nDisplayIndex;
-};
-
-class GrDataRow	: public IDataRow
-{
-protected:
-	typedef std::vector<GrItem*>	_Items;
-public:
-	GrDataRow();
-	virtual ~GrDataRow();
-
-	GrItem*						GetItem(const GrColumn* pColumn) const;
-	GrItem*						GetItem(const GrItem* pOtherItem) const;
-
-	bool						GetReadOnly() const;
-	void						SetReadOnly(bool b = true);
-
-	void						SetSelected(bool b);
-	bool						GetSelected() const;
-	bool						GetSelecting() const;
-
-	uint						GetVisibleDataRowIndex() const;
-	uint						GetDataRowIndex() const;
-	uint						GetDataRowID() const;
-
-	GrColor						GetItemBackColor() const;
-	GrColor						GetItemForeColor() const;
-	GrFont*						GetItemFont() const;
-	void 						SetItemBackColor(GrColor color);
-	void 						SetItemForeColor(GrColor color);
-	void						SetItemFont(GrFont* pFont);
-
-	virtual bool				GetFullSelected() const;
-
-	virtual bool				GetVisible() const;
-	virtual void				SetVisible(bool b);
-
-	virtual GrRowType			GetRowType() const { return GrRowType_DataRow; }
-	virtual GrFlag				ToRenderStyle() const;
-	virtual GrColor				GetRenderingBackColor() const;
-	virtual void				Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const;
-
-	virtual IFocusable*			GetFocusable(GrColumn* pColumn) const;
-	virtual int					GetFitHeight() const;
-
-	virtual GrCell*				HitTest(const GrPoint& pt) const;
-	virtual GrCell*				HitDisplayTest(const GrPoint& pt) const;
-
-protected:
-	virtual void				OnGridCoreAttached();
-	virtual void				OnGridCoreDetached();
-	virtual void				OnHeightAdjusted();
-
-private:
-	void						SetVisibleDataRowIndex(uint nIndex);
-	void						SetDataRowIndex(uint nIndex);
-	void						SetDataRowID(uint nIndex);
-	void						AddItem(GrColumn* pColumn);
-	void						Reserve(uint count);
-	void						ClearItem();
-	void						SetFocusedItem(bool b);		// called by GrGridCore
-	
-
-private:
-	_Items						m_vecItems;
-	bool						m_bReadOnly;
-
-	GrColor						m_itemBackColor;
-	GrColor						m_itemForeColor;
-	GrFont*						m_pItemFont;
-
-	uint						m_nVisibleDataRowIndex;
-	uint						m_nDataRowIndex;
-	uint						m_nDataRowID;
-
-private:	// friend variables;
-	uint						m_nSelectedCells;
-
-	friend class GrItemSelector;
-	friend class GrGridCore;
-	friend class GrDataRowList;
-};
-
-typedef std::set<GrDataRow*>		GrDataRows;
 
 class GrInsertionRow : public GrDataRow
 {
 public:
-	GrInsertionRow();
+    GrInsertionRow();
 
-	virtual GrRowType			GetRowType() const { return GrRowType_InsertionRow; }
-	virtual void				SetVisible(bool b);
+    virtual GrRowType   GetRowType() const { return GrRowType_InsertionRow; }
+    virtual void        SetVisible(bool b);
 
-	virtual uint				GetSelectionGroup() const { return 1; }
+    virtual uint        GetSelectionGroup() const { return 1; }
 
 protected:
-	virtual void				OnGridCoreAttached();
-	virtual void				OnHeightChanged();
+    virtual void        OnGridCoreAttached();
+    virtual void        OnHeightChanged();
 };
 
-class GrDataRowList	: public GrUpdatableRow
+class GrDataRowList : public GrUpdatableRow
 {
-	struct GrCache
-	{
-		int		nHeight;
-		bool	bExpanded;
-	};
+    struct GrCache
+    {
+        int     height;
+        bool    expanded;
+    };
 
-	typedef std::vector<GrColumn*>			_Columns;
-	typedef std::vector<GrDataRow*>			_DataRows;
-	typedef std::vector<IDataRow*>			_IDataRows;
-	typedef std::map<int, IDataRow*>		_MapDataRowPos;
-	typedef std::vector<GrGroupingRow*>		_GroupingRows;
-	typedef std::map<std::wstring, GrCache>	_MapCaches;
+    typedef std::vector<GrColumn*>          _Columns;
+    typedef std::vector<GrDataRow*>         _DataRows;
+    typedef std::vector<IDataRow*>          _IDataRows;
+    typedef std::vector<GrGroupingRow*>     _GroupingRows;
+    typedef std::map<std::wstring, GrCache> _MapCaches;
 
-	typedef GrEventBase<GrEventArgs, GrDataRowList> _GrEvent;
+    typedef GrEvent<GrEventArgs, GrDataRowList> _GrEvent;
 public:
-	GrDataRowList();
-	virtual ~GrDataRowList();
+    GrDataRowList();
+    virtual ~GrDataRowList();
 
-	void						Reserve(uint reserve);
+    void                Reserve(uint reserve);
 
-	void						AdjustRowHeight();
-	int							GetRowWidth() const;
-	void						SetRowWidth(int nWidth);
+    void                AdjustRowHeight();
+    int                 GetRowWidth() const;
+    void                SetRowWidth(int width);
 
-	uint						GetVisibleRowCount() const;
-	IDataRow*					GetVisibleRow(uint nIndex) const;
+    uint                GetVisibleRowCount() const;
+    IDataRow*           GetVisibleRow(uint index) const;
 
-	uint						GetVisibleDataRowCount() const;
-	GrDataRow*					GetVisibleDataRow(uint nIndex) const;
+    uint                GetVisibleDataRowCount() const;
+    GrDataRow*          GetVisibleDataRow(uint index) const;
 
-	GrDataRow*					NewDataRowFromInsertion();
+    GrDataRow*          NewDataRowFromInsertion();
 
-	void						AddDataRow(GrDataRow* pDataRow);
-	void						RemoveDataRow(GrDataRow* pDataRow);
-	void						InsertDataRow(GrDataRow* pDataRow, uint nIndex);
-	uint						GetDataRowCount() const;
-	GrDataRow*					GetDataRow(uint nIndex) const;
-	void						ClearDataRow();
+    void                AddDataRow(GrDataRow* pDataRow);
+    void                RemoveDataRow(GrDataRow* pDataRow);
+    void                InsertDataRow(GrDataRow* pDataRow, uint index);
+    uint                GetDataRowCount() const;
+    GrDataRow*          GetDataRow(uint index) const;
+    void                Clear();
 
-	uint						GetDisplayableRowCount() const;
-	IDataRow*					GetDisplayableRow(uint nIndex) const;
-	int							GetDisplayableBottom() const;
+    uint                GetDisplayableRowCount() const;
+    IDataRow*           GetDisplayableRow(uint index) const;
+    int                 GetDisplayableBottom() const;
 
-	uint						ClipFrom(uint nVisibleFrom) const;
-	uint						ClipFrom(const GrRect* pDisplayRect, uint nVisibleFrom) const;
-	uint						ClipTo(uint nVisibleTo) const;
-	uint						ClipTo(const GrRect* pDisplayRect, uint nVisibleTo) const;
-	void						HitTest(int y1, int y2, GrDataRows* pTested) const;
-	bool						HitTest(int y1, int y2, GrIndexRange* pRange) const;
-	IDataRow*					HitTest(int y) const;
+    uint                ClipFrom(uint visibleFrom) const;
+    uint                ClipFrom(const GrRect& displayRect, uint visibleFrom) const;
+    uint                ClipTo(uint visibleTo) const;
+    uint                ClipTo(const GrRect& displayRect, uint visibleTo) const;
+    IDataRow*           HitTest(int y) const;
+    GrIndexRange        HitTest(int y, IDataRow* pRowAnchor) const;
+    void                BringIntoView(IDataRow* pDataRow);
 
-	void						Sort(GrColumn* pColumn);
+    void                Sort(GrColumn* pColumn);
 
-	int							DisplayToGlobal(int y) const;
+    void                SetZeroBasedRowIndex(bool b);
+    bool                GetZeroBasedRowIndex() const;
 
-	void						SetZeroBasedRowIndex(bool b);
-	bool						GetZeroBasedRowIndex() const;
+    bool                GetRowNumberVisible() const;
+    void                SetRowNumberVisible(bool b);
 
-	bool						GetRowNumberVisible() const;
-	void						SetRowNumberVisible(bool b);
+    void                SetFitChanged();
+    void                SetVisibleChanged();
+    void                SetHeightChanged();
+    void                SetListChanged();
 
-	void						SetFitChanged();
-	void						SetVisibleChanged();
-	void						SetHeightChanged();
-	void						SetListChanged();
+    _GrEvent            VisibleChanged;
 
-	_GrEvent					VisibleChanged;
+    virtual GrRect      GetBounds() const;
+    virtual bool        ShouldClip(const GrRect& displayRect, uint horizontal, uint vertical) const;
+    virtual void        Clip(const GrRect& displayRect, uint horizontal, uint vertical);
+    virtual int         GetClipPriority() const { return 1; }
+    virtual bool        ShouldUpdate() const;
+    virtual void        Update(bool force = false);
+    virtual int         GetUpdatePriority() const { return UPDATEPRIORITY_DATAROWLIST; }
 
-	virtual GrRect				GetBound() const;
-	virtual GrRect				GetDisplayBound() const;
-	virtual bool				ShouldClip(const GrRect* pDisplayRect, uint horizontal, uint vertical) const;
-	virtual void				Clip(const GrRect* pDisplayRect, uint horizontal, uint vertical);
-	virtual int					GetClipPriority() const { return 1; }
-	virtual bool				ShouldUpdate() const;
-	virtual void				Update(bool force = false);
-	virtual int					GetUpdatePriority() const { return UPDATEPRIORITY_DATAROWLIST; }
-
-	virtual GrRowType			GetRowType() const { return GrRowType_DataRowList; }
-	virtual GrCell*				HitTest(const GrPoint& pt) const;
-	virtual GrCell*				HitDisplayTest(const GrPoint& pt) const;
-	virtual int					GetWidth() const { return 0; }
-	virtual int					GetHeight() const { return 0; }
-	virtual void				Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const;
+    virtual GrRowType   GetRowType() const { return GrRowType_DataRowList; }
+    virtual GrCell*     HitTest(const GrPoint& location) const;
+    virtual int         GetWidth() const { return 0; }
+    virtual int         GetHeight() const { return m_displayableHeight; }
+    virtual void        Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
 
 protected:
-	virtual void				OnGridCoreAttached();
-	virtual void				OnYChanged();
+    virtual void        OnGridCoreAttached();
+    virtual void        OnYChanged();
 
 private:
-	GrGroupingRow*				CreateGroupingRow(GrRow* pParent, GrColumn* pColumn, const wchar_t* strText);
-	void						BuildGrouping(GrRow* pParent, uint nGroupingLevel);
-	void						BuildChildRowList();
-	void						BuildVisibleRowList();
-	void						RepositionVisibleRowList();
-	void						BuildCache();
-	void						DeleteObjects();
+    GrGroupingRow*      CreateGroupingRow(GrRow* pParent, GrColumn* pColumn, const std::wstring& itemText);
+    void                BuildGrouping(GrRow* pParent, uint groupingLevel);
+    void                BuildChildRowList();
+    void                BuildVisibleRowList();
+    void                RepositionVisibleRowList();
+    void                BuildCache();
+    void                DeleteObjects();
+    void                UpdateVertScroll(const GrRect& displayRect);
 
-	void						groupingList_Changed(GrObject* pSender, GrEventArgs* e);
-	void						groupingList_Expanded(GrObject* pSender, GrGroupingEventArgs* e);
-	void						groupingList_SortChanged(GrObject* pSender, GrGroupingEventArgs* e);
-	void						gridCore_Created(GrObject* pSender, GrEventArgs* e);
-	void						gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
-	void						columnList_ColumnInserted(GrObject* pSender, GrColumnEventArgs* e);
-	void						columnList_ColumnRemoved(GrObject* pSender, GrColumnEventArgs* e);
-	void						focuser_FocusedChanged(GrObject* pSender, GrEventArgs* e);
+    void                groupingList_Changed(GrObject* pSender, GrEventArgs* e);
+    void                groupingList_Expanded(GrObject* pSender, GrGroupingEventArgs* e);
+    void                groupingList_SortChanged(GrObject* pSender, GrGroupingEventArgs* e);
+    void                gridCore_Created(GrObject* pSender, GrEventArgs* e);
+    void                gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
+    void                gridCore_FontChanged(GrObject* pSender, GrEventArgs* e);
+    void                columnList_ColumnInserted(GrObject* pSender, GrColumnEventArgs* e);
+    void                columnList_ColumnRemoved(GrObject* pSender, GrColumnEventArgs* e);
+    void                columnList_ColumnSortTypeChanged(GrObject* pSender, GrColumnEventArgs* e);
+    void                focuser_FocusedChanged(GrObject* pSender, GrFocusChangeArgs* e);
 
 private:
-	int							m_nRowWidth;
+    int                 m_rowWidth;
 
-	_DataRows					m_vecDataRowsRemoved;
-	_DataRows					m_vecDataRows;
-	_DataRows					m_vecVisibleDataRows;
-	_MapDataRowPos				m_mapRowByPosition;
-	_IDataRows					m_vecVisibleRows;
-	_IDataRows					m_vecDisplayableRows;
-	_GroupingRows				m_vecGroupingRows;
-	GrInsertionRow*				m_pInsertionRow;
+    _DataRows           m_vecDataRowsRemoved;
+    _DataRows           m_vecDataRows;
+    _DataRows           m_vecVisibleDataRows;
+    _IDataRows          m_vecVisibleRows;
+    _IDataRows          m_vecDisplayableRows;
+    _GroupingRows       m_vecGroupingRows;
+    GrInsertionRow*     m_pInsertionRow;
 
-	_MapCaches					m_mapCache;
-	_Columns					m_vecColumns;
+    _MapCaches          m_mapCache;
+    _Columns            m_vecColumns;
 
-	uint						m_nUsedGroupingRow;
-	uint						m_nGroupingCount;
-	uint						m_nDataRowID;
+    uint                m_usedGroupingRow;
+    uint                m_groupingCount;
+    uint                m_dataRowID;
 
-	int							m_nDisplayableBottom;
-	int							m_nVisibleBottom;
-	int							m_nVisibleHeight;
+    int                 m_displayableBottom;
+    int                 m_visibleBottom;
+    int                 m_visibleHeight;
+    int                 m_displayableHeight;
 
-	GrIndexRange				m_selectingRange;
-	GrDataRow*					m_pFocusedDataRow;
+    GrIndexRange        m_selectingRange;
+    GrDataRow*          m_pFocusedDataRow;
+    GrRect              m_bound;
 
-	bool						m_bVisibleRowNumber;
-	bool						m_bZeroBasedRowIndex;
+    bool                m_visibleRowNumber;
+    bool                m_zeroBasedRowIndex;
 
-	int							m_nClippedHeight;
-	uint						m_nClippedIndex;
+    int                 m_clippedHeight;
+    uint                m_clippedIndex;
 
-	// flags
-	bool						m_bListChanged;
-	bool						m_bVisibleChanged;
-	bool						m_bFitChanged;
-	bool						m_bHeightChanged;
+    // flags
+    bool                m_listChanged;
+    bool                m_visibleChanged;
+    bool                m_fitChanged;
+    bool                m_heightChanged;
 };
 
 class GrColumnList : public GrUpdatableRow
 {
-	typedef std::vector<GrColumn*>		_Columns;
-	typedef std::map<int, GrColumn*>	_MapColumnPos;
-	typedef GrEventBase<GrColumnEventArgs, GrColumnList> _GrColumnEvent;
+    typedef std::vector<GrColumn*>        _Columns;
+    typedef GrEvent<GrColumnEventArgs, GrColumnList> _GrColumnEvent;
+    typedef GrEvent<GrColumnMouseEventArgs, GrColumnList> _GrColumnMouseEvent;
+
 public:
-	GrColumnList();
-	virtual ~GrColumnList();
-	
-	void						Reserve(uint reserve);
+    GrColumnList();
+    virtual ~GrColumnList();
 
-	void						AddColumn(GrColumn* pColumn);
-	void						RemoveColumn(GrColumn* pColumn);
-	void						InsertColumn(GrColumn* pColumn, uint nIndex);
+    void                Reserve(uint reserve);
 
-	uint						GetColumnCount() const;
-	GrColumn*					GetColumn(uint index) const;
+    void                AddColumn(GrColumn* pColumn);
+    void                RemoveColumn(GrColumn* pColumn);
+    void                InsertColumn(GrColumn* pColumn, uint index);
 
-	void						AdjustColumnWidth();
+    uint                GetColumnCount() const;
+    GrColumn*           GetColumn(uint index) const;
 
-	uint						GetVisibleColumnCount() const;
-	GrColumn*					GetVisibleColumn(uint index) const;
-	int							GetVisibleRight() const;
+    void                AdjustColumnWidth();
 
-	uint						GetFrozenColumnCount() const;
-	GrColumn*					GetFrozenColumn(uint nIndex) const;
+    uint                GetVisibleColumnCount() const;
+    GrColumn*           GetVisibleColumn(uint index) const;
+    int                 GetVisibleRight() const;
 
-	uint						GetUnfrozenColumnCount() const;
-	GrColumn*					GetUnfrozenColumn(uint nIndex) const;
-	int							GetUnfrozenX() const { return m_nUnfrozenX; }
+    uint                GetFrozenColumnCount() const;
+    GrColumn*           GetFrozenColumn(uint index) const;
 
-	GrColumnSplitter*			GetColumnSplitter() const { return m_pColumnSplitter; }
+    uint                GetUnfrozenColumnCount() const;
+    GrColumn*           GetUnfrozenColumn(uint index) const;
+    int                 GetUnfrozenX() const { return m_unfrozenX; }
 
-	uint						GetDisplayableColumnCount() const;
-	GrColumn*					GetDisplayableColumn(uint index) const;
-	int							GetDisplayableRight() const;
+    GrColumnSplitter*   GetColumnSplitter() const { return m_pColumnSplitter; }
 
-	GrColumn*					GetFirstSortColumn() const;
+    uint                GetDisplayableColumnCount() const;
+    GrColumn*           GetDisplayableColumn(uint index) const;
 
-	int							DisplayToGlobal(int x) const;
+    GrColumn*           GetFirstSortColumn() const;
 
-	bool						MoveToFrozen(GrColumn* pColumn, GrColumn* pWhere);
-	bool						MoveToUnfrozen(GrColumn* pColumn, GrColumn* pWhere);
+    bool                MoveToFrozen(GrColumn* pColumn, GrColumn* pWhere);
+    bool                MoveToUnfrozen(GrColumn* pColumn, GrColumn* pWhere);
 
-	uint						ClipFrom(uint nVisibleFrom) const;
-	uint						ClipFrom(const GrRect* pDisplayRect, uint nVisibleFrom) const;
-	uint						ClipTo(uint nVisibleTo) const;
-	uint						ClipTo(const GrRect* pDisplayRect, uint nVisibleTo) const;
-	void						HitTest(GrRect rt, GrColumns* pTested) const;
-	bool						HitTest(int x1, int x2, GrIndexRange* pRange) const;
-	GrColumn*					HitTest(int x) const;
+    uint                ClipFrom(uint visibleFrom) const;
+    uint                ClipFrom(const GrRect& displayRect, uint visibleFrom) const;
+    uint                ClipTo(uint visibleTo) const;
+    uint                ClipTo(const GrRect& displayRect, uint visibleTo) const;
 
-	void						SetFitChanged();
-	void						SetVisibleChanged();
+    GrColumn*           HitTest(int x) const;
+    GrIndexRange        HitTest(int x, GrColumn* pColumnAnchor) const;
+    void                BringIntoView(GrColumn* pColumn);
 
-	virtual bool				ShouldClip(const GrRect* pDisplayRect, uint horizontal, uint vertical) const;
-	virtual void				Clip(const GrRect* pDisplayRect, uint horizontal, uint vertical);
-	virtual int					GetClipPriority() const { return 0; }
-	virtual bool				ShouldUpdate() const;
-	virtual void				Update(bool force = false);
-	virtual int					GetUpdatePriority() const { return UPDATEPRIORITY_COLUMNLIST; }
+    void                SetFitChanged();
+    void                SetVisibleChanged();
+    void                SetWidthChanged();
 
-	virtual GrCell*				HitTest(const GrPoint& pt) const;
-	virtual GrCell*				HitDisplayTest(const GrPoint& pt) const;
+    virtual bool        ShouldClip(const GrRect& displayRect, uint horizontal, uint vertical) const;
+    virtual void        Clip(const GrRect& displayRect, uint horizontal, uint vertical);
+    virtual int         GetClipPriority() const { return 0; }
+    virtual bool        ShouldUpdate() const;
+    virtual void        Update(bool force = false);
+    virtual int         GetUpdatePriority() const { return UPDATEPRIORITY_COLUMNLIST; }
 
-	virtual bool				GetDisplayable() const { return true; }
-	virtual void				Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const;
-	void						RenderSplitter(GrGridRenderer* pRenderer, const GrRect* pClipping) const;
+    virtual GrCell*     HitTest(const GrPoint& location) const;
 
-	virtual GrCellType			GetCellType() const { return GrCellType_Root; }
-	virtual int					GetWidth() const;
+    virtual bool        GetDisplayable() const { return true; }
+    virtual void        Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
+    void                PaintSplitter(GrGridPainter* pPainter, const GrRect& clipRect) const;
 
-	virtual bool				GetVisible() const { return true; }
-	virtual bool				GetReadOnly() const { return true; }
-	virtual GrItemType			GetItemType() const { return GrItemType_Control; }
-	virtual GrRowType			GetRowType() const { return GrRowType_ColumnList; }
+    virtual GrCellType  GetCellType() const { return GrCellType_Root; }
+    virtual int         GetWidth() const;
 
-	virtual bool				GetFittable() const { return false; }
-	virtual GrRect				GetBound() const;
-	virtual GrRect				GetDisplayBound() const;
+    virtual bool        GetVisible() const { return true; }
+    virtual bool        GetReadOnly() const { return true; }
+    virtual GrItemType  GetItemType() const { return GrItemType_Control; }
+    virtual GrRowType   GetRowType() const { return GrRowType_ColumnList; }
 
-	void						NotifySortTypeChanged(GrColumn* pColumn);
-	void 						NotifyWidthChanged(GrColumn* pColumn);
-	void 						NotifyFrozenChanged(GrColumn* pColumn);
-	void 						NotifyWordwrapChanged(GrColumn* pColumn);
-	void 						NotifyMultilineChanged(GrColumn* pColumn);
-	void 						NotifyHorzAlignChanged(GrColumn* pColumn);
-	void 						NotifyVertAlignChanged(GrColumn* pColumn);
-	void 						NotifyPaddingChanged(GrColumn* pColumn);
+    virtual int         GetMinHeight() const { return GetHeight(); }
+    virtual GrRect      GetBounds() const;
 
-	_GrColumnEvent				ColumnInserted;
-	_GrColumnEvent				ColumnRemoved;
-	_GrColumnEvent				ColumnSortTypeChanged;
-	_GrColumnEvent				ColumnFrozenChanged;
-	_GrColumnEvent				ColumnWidthChanged;
-	_GrColumnEvent				ColumnWordwrapChanged;
-	_GrColumnEvent				ColumnMultilineChanged;
-	_GrColumnEvent				ColumnHorzAlignChanged;
-	_GrColumnEvent				ColumnVertAlignChanged;
-	_GrColumnEvent				ColumnPaddingChanged;
-	_GrColumnEvent				ColumnGroupingChanged;
+    virtual void        Invoke(std::wstring eventName, GrEventArgs* e);
+
+    _GrColumnEvent      ColumnInserted;
+    _GrColumnEvent      ColumnRemoved;
+    _GrColumnEvent      ColumnSortTypeChanged;
+    _GrColumnEvent      ColumnFrozenChanged;
+    _GrColumnEvent      ColumnWidthChanged;
+    _GrColumnEvent      ColumnWordwrapChanged;
+    _GrColumnEvent      ColumnMultilineChanged;
+    _GrColumnEvent      ColumnHorzAlignChanged;
+    _GrColumnEvent      ColumnVertAlignChanged;
+    _GrColumnEvent      ColumnPaddingChanged;
+    _GrColumnEvent      ColumnGroupingChanged;
+
+    _GrColumnMouseEvent ColumnMouseMove;
+    _GrColumnMouseEvent ColumnMouseEnter;
+    _GrColumnMouseEvent ColumnMouseLeave;
+    _GrColumnMouseEvent ColumnMouseDown;
+    _GrColumnMouseEvent ColumnMouseUp;
 
 protected:
-	virtual void				OnGridCoreAttached();
+    virtual void        OnGridCoreAttached();
 
-	virtual void				OnColumnInserted(GrColumnEventArgs* e);
-	virtual void				OnColumnRemoved(GrColumnEventArgs* e);
+    virtual void        OnColumnInserted(GrColumnEventArgs* e);
+    virtual void        OnColumnRemoved(GrColumnEventArgs* e);
 
-	virtual void 				OnColumnSortTypeChanged(GrColumnEventArgs* e);
-	virtual void 				OnColumnFrozenChanged(GrColumnEventArgs* e);
-	virtual void 				OnColumnWidthChanged(GrColumnEventArgs* e);
-	virtual void 				OnColumnWordwrapChanged(GrColumnEventArgs* e);
-	virtual void 				OnColumnMultilineChanged(GrColumnEventArgs* e);
-	virtual void 				OnColumnHorzAlignChanged(GrColumnEventArgs* e);
-	virtual void 				OnColumnVertAlignChanged(GrColumnEventArgs* e);
-	virtual void 				OnColumnPaddingChanged(GrColumnEventArgs* e);
-	virtual void				OnColumnGroupingChanged(GrColumnEventArgs* e);
+    virtual void        OnColumnSortTypeChanged(GrColumnEventArgs* e);
+    virtual void        OnColumnFrozenChanged(GrColumnEventArgs* e);
+    virtual void        OnColumnWidthChanged(GrColumnEventArgs* e);
+    virtual void        OnColumnWordwrapChanged(GrColumnEventArgs* e);
+    virtual void        OnColumnMultilineChanged(GrColumnEventArgs* e);
+    virtual void        OnColumnHorzAlignChanged(GrColumnEventArgs* e);
+    virtual void        OnColumnVertAlignChanged(GrColumnEventArgs* e);
+    virtual void        OnColumnPaddingChanged(GrColumnEventArgs* e);
+    virtual void        OnColumnGroupingChanged(GrColumnEventArgs* e);
 
-	void						BuildVisibleColumnList();
-	void						RepositionColumnList();
+    virtual void        OnColumnMouseMove(GrColumnMouseEventArgs* e);
+    virtual void        OnColumnMouseEnter(GrColumnMouseEventArgs* e);
+    virtual void        OnColumnMouseLeave(GrColumnMouseEventArgs* e);
+    virtual void        OnColumnMouseDown(GrColumnMouseEventArgs* e);
+    virtual void        OnColumnMouseUp(GrColumnMouseEventArgs* e);
 
-private:
-	void						groupingList_Changed(GrObject* pSender, GrEventArgs* e);
-	void						gridCore_FocusChanged(GrObject* pSender, GrEventArgs* e);
-	void						gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
-
-	void						column_GroupingChanged(GrObject* pSender, GrEventArgs* e);
-
-private:
-	bool						IsColumnSelecting(GrColumn* pColumn) const;
+    void                BuildVisibleColumnList();
+    void                RepositionColumnList();
 
 private:
-	_Columns					m_vecColumns;
-	_Columns					m_vecColumnsRemoved;
-	_MapColumnPos				m_mapColumnByPosition;
-	_Columns					m_vecVisibleColumns;
-	_Columns					m_vecDisplayableColumns;
-	int							m_nColumnID;
+    void                groupingList_Changed(GrObject* pSender, GrEventArgs* e);
+    void                gridCore_FocusChanged(GrObject* pSender, GrFocusChangeArgs* e);
+    void                gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
+    void                gridCore_FontChanged(GrObject* pSender, GrEventArgs* e);
+    void                column_GroupingChanged(GrObject* pSender, GrEventArgs* e);
 
-	int							m_nUnfrozenX;			// global좌표 내에서 첫번째 ScrollbleColumn의 위치
-	int							m_nDisplayableRight;
-	int							m_nVisibleRight;
-	int							m_nBoundWidth;
+private:
+    bool                IsColumnSelecting(GrColumn* pColumn) const;
+    void                UpdateHorzScroll(const GrRect& displayRect);
 
-	uint						m_nFrozenCount;
-	uint						m_nGroupingCount;
+private:
+    _Columns            m_vecColumns;
+    _Columns            m_vecColumnsRemoved;
+    _Columns            m_vecVisibleColumns;
+    _Columns            m_vecDisplayableColumns;
+    int                 m_columnID;
 
-	GrIndexRange				m_selectingRange;
-	GrColumn*					m_pSortColumn;
-	GrColumnSplitter*			m_pColumnSplitter;
+    int                 m_unfrozenX;
+    int                 m_frozenRight;
+    int                 m_displayableRight;
+    int                 m_visibleRight;
+    int                 m_boundWidth;
 
-	int							m_nClippedWidth;
-	uint						m_nClippedIndex;
+    uint                m_frozenCount;
+    uint                m_groupingCount;
 
-	// flag
-	bool						m_bVisibleChanged;
-	bool						m_bFitChanged;
-	bool						m_bWidthChanged;
+    GrIndexRange        m_selectingRange;
+    GrColumn*           m_pSortColumn;
+    GrColumnSplitter*   m_pColumnSplitter;
+
+    int                 m_clippedWidth;
+    uint                m_clippedIndex;
+
+    // flag
+    bool                m_visibleChanged;
+    bool                m_fitChanged;
+    bool                m_widthChanged;
 };
 
 class GrColumnSplitter : public GrCell
 {
 public:
-	GrColumnSplitter(GrColumnList* pColumnList);
+    GrColumnSplitter(GrColumnList* pColumnList);
 
-	virtual	GrCellType			GetCellType() const { return GrCellType_Splitter; }
-	virtual int					GetX() const;
-	virtual int					GetY() const;
-	virtual int					GetWidth() const;
-	virtual int					GetHeight() const;
-	virtual bool				GetVisible() const;
+    virtual GrCellType  GetCellType() const { return GrCellType_Splitter; }
+    virtual int         GetX() const;
+    virtual int         GetY() const;
+    virtual int         GetWidth() const;
+    virtual int         GetHeight() const;
+    virtual bool        GetVisible() const;
 
-	virtual GrHorzAlign			GetTextHorzAlign() const { return GrHorzAlign_Left; }
-	virtual GrVertAlign			GetTextVertAlign() const { return GrVertAlign_Top; }
+    virtual GrHorzAlign GetTextHorzAlign() const { return GrHorzAlign_Left; }
+    virtual GrVertAlign GetTextVertAlign() const { return GrVertAlign_Top; }
 
-	virtual GrMouseOverState	HitMouseOverTest(GrPoint pt) const;
-	virtual GrPoint				GetDisplayPosition() const;
-	virtual bool				GetDisplayable() const;
-	virtual void				Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const;
+    virtual bool        GetDisplayable() const;
+    virtual void        Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
 
-	virtual const GrRow*		GetRow() const	{ return m_pColumnList; }
-	virtual	GrRow*				GetRow()		{ return m_pColumnList; }
+    virtual GrRow*      GetRow() const    { return m_pColumnList; }
 
-	void						SetVisible(bool b);
-
-	GrColumnList*				GetColumnList() const { return m_pColumnList; }
-
-protected:
+    void                SetVisible(bool b);
+    GrColumnList*       GetColumnList() const { return m_pColumnList; }
 
 private:
-	GrColumnList*				m_pColumnList;
-	int							m_nX;
-	int							m_nDisplayX;
-	bool						m_bVisible;
-	friend class GrColumnList;
+    void                SetX(int x) { m_x = x; }
+
+private:
+    GrColumnList*       m_pColumnList;
+    int                 m_x;
+    bool                m_visible;
+    friend class GrColumnList;
+
+public:
+    static const int DefaultSplitterWidth = 5;
 };
 
 class GrRowSplitter : public GrRow
 {
 public:
-	GrRowSplitter();
+    GrRowSplitter();
 
-	virtual GrRowType			GetRowType() const { return GrRowType_Splitter; }
-	virtual int					GetWidth() const;
-	virtual void				Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const;
-	virtual bool				GetFittable() const { return false; }
+    virtual GrRowType   GetRowType() const { return GrRowType_Splitter; }
+    virtual int         GetWidth() const;
+    virtual void        Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
+    virtual bool        GetVisible() const;
+    virtual int         GetMinHeight() const { return DefaultSplitterHeight; }
+    virtual bool        GetResizable() const { return false; }
 
-	virtual bool				GetVisible() const;
+public:
+    static const int DefaultSplitterHeight = 3;
 };
 
 class GrGroupingCell : public GrCell, public IFocusable
 {
 public:
-	GrGroupingCell(GrGroupingRow* pRow);
+    GrGroupingCell(GrGroupingRow* pRow);
 
-	virtual	GrCellType			GetCellType() const { return GrCellType_Grouping; }
-	virtual int					GetX() const;
-	virtual int					GetY() const;
-	virtual int					GetWidth() const;
-	virtual int					GetHeight() const;
-	virtual bool				GetVisible() const { return true; }
+    virtual GrCellType  GetCellType() const { return GrCellType_Grouping; }
+    virtual int         GetX() const;
+    virtual int         GetY() const;
+    virtual int         GetWidth() const;
+    virtual int         GetHeight() const;
+    virtual bool        GetVisible() const { return true; }
 
-	virtual GrHorzAlign			GetTextHorzAlign() const;
-	virtual GrVertAlign			GetTextVertAlign() const;
+    virtual GrHorzAlign GetTextHorzAlign() const;
+    virtual GrVertAlign GetTextVertAlign() const;
 
-	virtual GrMouseOverState	HitMouseOverTest(GrPoint pt) const;
-	virtual GrPoint				GetDisplayPosition() const;
-	virtual bool				GetDisplayable() const;
-	virtual void				Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const;
+    virtual int         HitMouseOverTest(const GrPoint& localLocation) const;
+    virtual bool        GetDisplayable() const;
+    virtual void        Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
 
-	virtual const GrRow*		GetRow() const;
-	virtual	GrRow*				GetRow();
-
-	virtual GrFlag				ToRenderStyle() const;
-	virtual bool				Focusable() const { return true; }
-
-	virtual IDataRow*			GetIDataRow() const;
-	virtual IFocusable*			GetNextFocusable() const;
-	virtual IFocusable*			GetPrevFocusable() const;
+    virtual GrRow*      GetRow() const;
+    virtual GrFlag      ToPaintStyle() const;
 
 private:
-	GrGroupingRow*				m_pRow;
+    virtual GrRect      GetDisplayRect() const { return GetRect(); }
+    virtual IDataRow*   GetDataRow() const;
+
+private:
+    GrGroupingRow*      m_pRow;
 };
 
 class GrGroupingRow : public IDataRow
 {
 public:
-	GrGroupingRow();
-	virtual ~GrGroupingRow();
+    GrGroupingRow();
+    virtual ~GrGroupingRow();
 
-	GrColumn*					GetColumn() const;
+    GrColumn*           GetColumn() const;
 
-	void						Expand(bool bExpand = true);
-	bool						IsExpanded() const;
+    void                Expand(bool b = true);
+    bool                IsExpanded() const;
 
-	GrGroupingCell*				GetLabel() const;
-	uint						GetGroupingLevel() const { return m_nGroupingLevel; }
+    GrGroupingCell*     GetLabel() const;
+    uint                GetGroupingLevel() const { return m_groupingLevel; }
 
-	virtual GrRowType			GetRowType() const { return GrRowType_GroupingRow; }
-	virtual void				Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const;
+    virtual GrRowType   GetRowType() const { return GrRowType_GroupingRow; }
+    virtual void        Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
 
-	virtual bool				GetVisible() const;
-	virtual IFocusable*			GetFocusable(GrColumn* pColumn) const;
+    virtual bool        GetVisible() const;
+    virtual IFocusable* GetFocusable(GrColumn* pColumn) const;
 
-	virtual GrCell*				HitTest(const GrPoint& pt) const;
-	virtual GrCell*				HitDisplayTest(const GrPoint& pt) const;
+    virtual GrCell*     HitTest(const GrPoint& location) const;
+
+    std::wstring        GetKey() const { return m_key; }
 
 protected:
-	virtual void				OnHeightChanged();
-	virtual void				OnUpdatePositionCell(int x, GrRect* pBound);
-	virtual void				OnGridCoreAttached();
+    virtual void        OnHeightChanged();
+    virtual void        OnUpdatePositionCell(int x, GrRect* pBounds);
+    virtual void        OnGridCoreAttached();
 
 private:
-	void						SetRefColumn(GrColumn* pColumn);		// called by GrDataRowList;
-	void						ProcessAfterGrouping();								// called by GrDataRowList;
-	friend class GrDataRowList;
+    void                SetReference(GrColumn* pColumn, const std::wstring& itemText);        // called by GrDataRowList;
+    void                ProcessAfterGrouping();                    // called by GrDataRowList;
+    friend class GrDataRowList;
 
 private:
-	bool						m_bExpanded;
-	uint						m_nGroupingLevel;
+    bool                m_expanded;
+    uint                m_groupingLevel;
 
-	GrColumn*					m_pColumn;
-	std::wstring				m_strKey;
+    GrColumn*           m_pColumn;
+    std::wstring        m_itemText;
+    std::wstring        m_key;
 private:
-	GrGroupingCell*				m_pLabel;
+    GrGroupingCell*     m_pLabel;
+
+#ifdef _MANAGED
+public:
+    gcroot<System::Object^> ManagedRef;
+#endif
 };
 
 class GrCaption : public GrUpdatableRow
 {
 public:
-	GrCaption();
+    GrCaption();
 
-	virtual GrHorzAlign			GetTextHorzAlign() const;
-	virtual GrVertAlign			GetTextVertAlign() const;
+    virtual GrHorzAlign GetTextHorzAlign() const;
+    virtual GrVertAlign GetTextVertAlign() const;
 
-	void						SetTextHorzAlign(GrHorzAlign align);
-	void						SetTextVertAlign(GrVertAlign align);
+    void                SetTextHorzAlign(GrHorzAlign align);
+    void                SetTextVertAlign(GrVertAlign align);
 
-	virtual GrRowType			GetRowType() const { return GrRowType_Caption; }
-	virtual int					GetWidth() const;
-	virtual void				Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const;
+    virtual GrRowType   GetRowType() const { return GrRowType_Caption; }
+    virtual int         GetWidth() const;
+    virtual void        Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
 
-	virtual bool				GetVisible() const;
-	void						SetVisible(bool b);
+    virtual bool        GetVisible() const;
+    void                SetVisible(bool b);
 
 protected:
-	virtual void				OnTextChanged();
+    virtual void        OnGridCoreAttached();
 
 private:
-	GrHorzAlign					m_horzAlign;
-	GrVertAlign					m_vertAlign;
+    void                gridCore_FontChanged(GrObject* pSender, GrEventArgs* e);
 
-	bool						m_bVisible;
+private:
+    GrHorzAlign         m_horzAlign;
+    GrVertAlign         m_vertAlign;
+
+    bool                m_visible;
 
 #ifdef _MANAGED
 public:
-	gcroot<System::Object^>		ManagedRef;
+    gcroot<System::Object^> ManagedRef;
 #endif
 };
 
 class GrGroupingList : public GrUpdatableRow
 {
-	typedef std::vector<GrGroupingInfo*>				_Groupings;
-	typedef GrEventBase<GrEventArgs, GrGroupingList>			_GrEvent;
-	typedef GrEventBase<GrGroupingEventArgs, GrGroupingList>	_GrGroupingEvent;
+    typedef std::vector<GrGroupingInfo*>                 _Groupings;
+    typedef GrEvent<GrEventArgs, GrGroupingList>         _GrEvent;
+    typedef GrEvent<GrGroupingEventArgs, GrGroupingList> _GrGroupingEvent;
 public:
-	GrGroupingList();
-	virtual ~GrGroupingList();
+    GrGroupingList();
+    virtual ~GrGroupingList();
 
-	uint						GetGroupingCount() const;
-	GrGroupingInfo*				GetGrouping(uint nLevel) const;
+    uint                GetGroupingCount() const;
+    GrGroupingInfo*     GetGrouping(uint level) const;
 
-	void						ExpandGrouping(uint nLevel, bool bExpand);
-	void						SetGroupingSortState(uint nLevel, GrSort sortType);
+    void                ExpandGrouping(uint level, bool expand);
+    void                SetGroupingSortState(uint level, GrSort sortType);
 
-	void						SetVisible(bool b);
+    void                SetVisible(bool b);
 
-	bool						CanBeGrouped() const;
-	void						EnableGrouping(bool b);
+    bool                CanBeGrouping() const;
+    void                EnableGrouping(bool b);
 
-	_GrEvent					Changed;
-	_GrGroupingEvent			Expanded;
-	_GrGroupingEvent			SortChanged;
+    void                NotifyExpanded(GrGroupingInfo* pGroupingInfo);
+    void                NotifySortChanged(GrGroupingInfo* pGroupingInfo);
 
-	void						NotifyExpanded(GrGroupingInfo* pGroupingInfo);
-	void						NotifySortChanged(GrGroupingInfo* pGroupingInfo);
+    virtual bool        ShouldUpdate() const;
+    virtual void        Update(bool force);
+    virtual int         GetUpdatePriority() const { return UPDATEPRIORITY_GROUPINLIST; }
 
-	virtual bool				ShouldUpdate() const;
-	virtual void				Update(bool force);
-	virtual int					GetUpdatePriority() const { return UPDATEPRIORITY_GROUPINLIST; }
+    virtual GrRowType   GetRowType() const { return GrRowType_GroupingList; }
+    virtual int         GetWidth() const;
+    virtual void        Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
 
-	virtual GrRowType			GetRowType() const { return GrRowType_GroupingList; }
-	virtual int					GetWidth() const;
-	virtual void				Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const;
+    virtual GrHorzAlign GetTextHorzAlign() const { return GrHorzAlign_Left; }
+    virtual bool        GetTextMultiline() const { return false; }
 
-	virtual GrHorzAlign			GetTextHorzAlign() const { return GrHorzAlign_Left; }
-	virtual bool				GetTextMultiline() const { return false; }
+    virtual bool        GetVisible() const;
+    virtual int         GetMinHeight() const;
 
-	virtual bool				GetVisible() const;
-	virtual int					GetFitHeight() const;
+    virtual GrCell*     HitTest(const GrPoint& location) const;
 
-	virtual GrCell*				HitTest(const GrPoint& pt) const;
-	virtual GrCell*				HitDisplayTest(const GrPoint& pt) const;
+    _GrEvent            Changed;
+    _GrGroupingEvent    Expanded;
+    _GrGroupingEvent    SortChanged;
 
 protected:
-	virtual void				OnGridCoreAttached();
-	virtual void				OnYChanged();
+    virtual void        OnGridCoreAttached();
+    virtual void        OnYChanged();
 
 private:
-	void						gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
-	void						gridCore_Created(GrObject* pSender, GrEventArgs* e);
+    void                gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
+    void                gridCore_Created(GrObject* pSender, GrEventArgs* e);
+    void                gridCore_FontChanged(GrObject* pSender, GrEventArgs* e);
 
-	void						columnList_ColumnInserted(GrObject* pSender, GrColumnEventArgs* e);
-	void						columnList_ColumnRemoved(GrObject* pSender, GrColumnEventArgs* e);
-	void						columnList_ColumnGroupingChanged(GrObject* pSender, GrColumnEventArgs* e);
+    void                columnList_ColumnInserted(GrObject* pSender, GrColumnEventArgs* e);
+    void                columnList_ColumnRemoved(GrObject* pSender, GrColumnEventArgs* e);
+    void                columnList_ColumnGroupingChanged(GrObject* pSender, GrColumnEventArgs* e);
 
-	void						groupingInfo_LevelChanged(GrObject* pSender, GrEventArgs* e);
+    void                groupingInfo_LevelChanged(GrObject* pSender, GrEventArgs* e);
 
-	void						ResetGroupingLevel();
-	void						AddGrouping(GrGroupingInfo* pGroupingInfo);
-	void						RemoveGrouping(GrGroupingInfo* pGroupingInfo);
-	void						RepositionGrouping();
+    void                ResetGroupingLevel();
+    void                AddGrouping(GrGroupingInfo* pGroupingInfo);
+    void                RemoveGrouping(GrGroupingInfo* pGroupingInfo);
+    void                RepositionGrouping();
 
 private:
-	_Groupings					m_vecGroupings;
-	bool						m_bEnableGrouping;
-	bool						m_bGroupingChanged;
+    _Groupings          m_vecGroupings;
+    bool                m_enableGrouping;
+    bool                m_groupingChanged;
 };
 
 class GrGroupingInfo : public GrCell
 {
-	typedef std::map<uint, GrGroupingRow*> _MapGroupingRows;
-	typedef GrEventBase<GrEventArgs, GrGroupingInfo> _GrEvent;
+    typedef std::map<uint, GrGroupingRow*> _MapGroupingRows;
+    typedef GrEvent<GrEventArgs, GrGroupingInfo> _GrEvent;
 public:
-	GrGroupingInfo(GrColumn* pColumn);
+    GrGroupingInfo(GrColumn* pColumn);
 
-	GrColumn*					GetColumn() const;
+    GrColumn*           GetColumn() const;
 
-	bool						GetGrouped() const;
-	void						SetGrouped(bool b);
+    bool                GetGrouped() const;
+    void                SetGrouped(bool b);
 
-	void						SetExpanded(bool b);
-	bool						GetExpanded() const;
+    void                SetExpanded(bool b);
+    bool                GetExpanded() const;
 
-	void						SetSortType(GrSort sortType);
-	GrSort						GetSortType() const;
+    void                SetSortType(GrSort sortType);
+    GrSort              GetSortType() const;
 
-	uint						GetGroupingLevel() const;
-	void						SetGroupingLevel(uint level);
+    uint                GetGroupingLevel() const;
+    void                SetGroupingLevel(uint level);
 
-	void						SetText();
+    void                SetText();
 
 public: 
-	virtual	GrCellType			GetCellType() const { return GrCellType_GroupingInfo; }
+    virtual GrCellType  GetCellType() const { return GrCellType_GroupingInfo; }
 
-	virtual int					GetX() const;
-	virtual int					GetY() const;
-	virtual int					GetWidth() const;
-	virtual int					GetHeight() const;
-	virtual bool				GetVisible() const { return true; }
+    virtual int         GetX() const;
+    virtual int         GetY() const;
+    virtual int         GetWidth() const;
+    virtual int         GetHeight() const;
+    virtual bool        GetVisible() const { return true; }
 
-	virtual GrHorzAlign			GetTextHorzAlign() const;
-	virtual GrVertAlign			GetTextVertAlign() const;
+    virtual GrHorzAlign GetTextHorzAlign() const;
+    virtual GrVertAlign GetTextVertAlign() const;
 
-	virtual GrMouseOverState	HitMouseOverTest(GrPoint pt) const;
-	virtual GrPoint				GetDisplayPosition() const;
-	virtual bool				GetDisplayable() const;
-	virtual void				Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const;
+    virtual bool        GetDisplayable() const;
+    virtual void        Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
 
-	virtual const GrRow*		GetRow() const { return m_pGroupingList; }
-	virtual	GrRow*				GetRow() { return m_pGroupingList; }
+    virtual GrRow*      GetRow() const { return m_pGroupingList; }
 
 public:
-	_GrEvent					LevelChanged;
+    _GrEvent            LevelChanged;
 
 protected:
-	virtual void				OnGridCoreAttached();
-	virtual void				OnGridCoreDetached();
+    virtual void        OnGridCoreAttached();
+    virtual void        OnGridCoreDetached();
 
 private:
-	void						SetPosition(GrPoint pt);
-	void						SetGroupingLevelCore(uint level);
+    void                SetPosition(GrPoint pt);
+    void                SetGroupingLevelCore(uint level);
 
 private:
-	GrGroupingList*				m_pGroupingList;
-	GrColumn*					m_pColumn;
-	GrPoint						m_pt;
-	bool						m_bExpanded;
-	bool						m_bGrouped;
-	GrSort						m_sortType;
+    GrGroupingList*     m_pGroupingList;
+    GrColumn*           m_pColumn;
+    GrPoint             m_pt;
+    bool                m_expanded;
+    bool                m_grouped;
+    GrSort              m_sortType;
 
-	_MapGroupingRows			m_mapGroupingRows;
-	uint						m_nLevel;
+    _MapGroupingRows    m_mapGroupingRows;
+    uint                m_level;
 
-	friend class GrGroupingList;
-};
-
-class SortRowNormal
-{
-public:
-	bool operator () (const GrRow* pRow1, const GrRow* pRow2);
+    friend class GrGroupingList;
 };

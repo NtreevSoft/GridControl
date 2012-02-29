@@ -32,6 +32,8 @@
 //#define WINVER 0x0501
 
 // c++/cli precompiled header
-#include "GridDef.h"
+#include "GridType.h"
+//#include "GridDef.h"
+//#include "GridResource.h"
+//#include "GridControl.h"
 #include "GridResource.h"
-#include "GridControl.h"

@@ -32,11 +32,78 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	Cell::Cell(_GridControl^ gridControl, GrItem* pItem)
-		: CellBase(gridControl, pItem), m_pItem(pItem)
+    ref class TypeDescriptorContextCore : System::ComponentModel::ITypeDescriptorContext
+    {
+    public:
+        TypeDescriptorContextCore(Ntreev::Windows::Forms::Grid::Cell^ cell)
+            : m_column(cell->Column), m_row(cell->Row)
+        {
+
+        }
+
+        virtual System::Object^ GetService(System::Type^ serviceType)
+        {
+            System::IServiceProvider^ serviceProvider = dynamic_cast<System::IServiceProvider^>(m_column);
+            if(serviceProvider != nullptr)
+            {
+                return serviceProvider->GetService(serviceType);
+            }
+
+            return nullptr;
+        }
+
+        virtual void OnComponentChanged()
+        {
+
+        }
+
+        virtual bool OnComponentChanging()
+        {
+            return false;
+        }
+
+    public:
+        property System::ComponentModel::IContainer^ Container
+        {
+            virtual System::ComponentModel::IContainer^ get()
+            {
+                System::ComponentModel::ISite^ site = dynamic_cast<System::ComponentModel::ISite^>(m_column);
+                if(site != nullptr)
+                {
+                    return site->Container;
+                }
+
+                return nullptr;
+            }
+        }
+
+        property System::Object^ Instance
+        {
+            virtual System::Object^ get()
+            {
+                return m_row;
+            }
+        }
+
+        property System::ComponentModel::PropertyDescriptor^ PropertyDescriptor
+        {
+            virtual System::ComponentModel::PropertyDescriptor^ get()
+            {
+                return m_column->PropertyDescriptor;
+            }
+        }
+
+
+    private:
+        Column^ m_column;
+        Row^ m_row;
+    };
+
+	Cell::Cell(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrItem* pItem)
+		: CellBase(gridControl, pItem), m_pItem(pItem), m_errorDescription(System::String::Empty)
 	{
-		m_column = _Column::FromNative(pItem->GetColumn());
-		m_row = _Row::FromNative(pItem->GetDataRow());
+		m_column = Ntreev::Windows::Forms::Grid::Column::FromNative(pItem->GetColumn());
+		m_row = Ntreev::Windows::Forms::Grid::Row::FromNative(pItem->GetDataRow());
 
 		m_pItem->ManagedRef = this;
 		
@@ -44,7 +111,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		UpdateNativeText();
 	}
 
-	_Column^ Cell::Column::get()
+	Ntreev::Windows::Forms::Grid::Column^ Cell::Column::get()
 	{
 		return m_column;
 	}
@@ -54,7 +121,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return m_column->ColumnID;
 	}
 
-	_Row^ Cell::Row::get()
+	Ntreev::Windows::Forms::Grid::Row^ Cell::Row::get()
 	{
 		return m_row;
 	}
@@ -64,16 +131,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return m_row->RowID;
 	}
 
-	object^ Cell::Value::get()
+	System::Object^ Cell::Value::get()
 	{
 		return ValueCore;
 	}
 
-	void Cell::Value::set(object^ value)
+	void Cell::Value::set(System::Object^ value)
 	{
-		object^ oldValue = this->Value;
+		System::Object^ oldValue = this->Value;
 
-		if(object::Equals(value, oldValue) == true)
+		if(System::Object::Equals(value, oldValue) == true)
 			return;
 
 		value = ValidateValue(value);
@@ -109,13 +176,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		UpdateNativeText(this->ValueCore);
 	}
 
-	void Cell::UpdateNativeText(object^ value)
+	void Cell::UpdateNativeText(System::Object^ value)
 	{
 		try
 		{
-			string^ text = string::Empty;
+            TypeDescriptorContextCore^ typeDescriptorContext = gcnew TypeDescriptorContextCore(this);
+			System::String^ text = System::String::Empty;
 			if(value != nullptr && value != System::DBNull::Value)
-				text = m_column->TypeConverter->ConvertToString(value);
+				text = m_column->TypeConverter->ConvertToString(typeDescriptorContext, value);
 			m_pItem->SetText(ToNativeString::Convert(text));
 		}
 		catch(System::Exception^)
@@ -124,33 +192,34 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 	}
 
-	object^ Cell::ValidateValue(object^ value)
+	System::Object^ Cell::ValidateValue(System::Object^ value)
 	{
 		if(value == nullptr || value == System::DBNull::Value)
 			return value;
 
-		_Type^ dataType = this->Column->DataType;
-		_Type^ valueType = value->GetType();
+		System::Type^ dataType = this->Column->DataType;
+		System::Type^ valueType = value->GetType();
 
 		if(dataType == valueType)
 			return value;
 
-		if(dataType == string::typeid)
+		if(dataType == System::String::typeid)
 			return value->ToString();
 
 		System::ComponentModel::TypeConverter^ typeConverter = this->Column->TypeConverter;
-		if(typeConverter->CanConvertFrom(valueType) == false)
+        TypeDescriptorContextCore^ typeDescriptorContext = gcnew TypeDescriptorContextCore(this);
+		if(typeConverter->CanConvertFrom(typeDescriptorContext, valueType) == false)
 		{
-			string^ reason = string::Format("{0}형식을 {1}으로 변환할 수 없습니다.", valueType, dataType);
+			System::String^ reason = System::String::Format("{0}형식을 {1}으로 변환할 수 없습니다.", valueType, dataType);
 			throw gcnew System::ArgumentException(reason);
 		}
 
-		return typeConverter->ConvertFrom(value);
+        return typeConverter->ConvertFrom(typeDescriptorContext, System::Windows::Forms::Application::CurrentCulture,  value);
 	}
 
 	Cell^ Cell::FromNative(GrItem* pItem)
 	{
-		object^ ref = pItem->ManagedRef;
+		System::Object^ ref = pItem->ManagedRef;
 		return safe_cast<Cell^>(ref);
 	}
 
@@ -175,7 +244,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return true;
 	}
 
-	void Cell::Select(_SelectionType selectionType)
+	void Cell::Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType)
 	{
 		Selector->SelectItem(m_pItem, (GrSelectionType)selectionType);
 	}
@@ -185,9 +254,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		Focuser->Set(m_pItem);
 	}
 
-	void Cell::EnsureVisible()
+	void Cell::BringIntoView()
 	{
-		GridControl->EnsureVisible(this);
+		GridControl->BringIntoView(this);
 	}
 
 	bool Cell::IsEdited::get()
@@ -228,11 +297,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return m_pItem->GetMouseOvered();
 	}
 
-	string^ Cell::ToString()
+	System::String^ Cell::ToString()
 	{
 		if(this->Value == nullptr)
-			return string::Empty;
-		return m_column->TypeConverter->ConvertToString(Value);
+			return System::String::Empty;
+        TypeDescriptorContextCore^ typeDescriptorContext = gcnew TypeDescriptorContextCore(this);
+		return m_column->TypeConverter->ConvertToString(typeDescriptorContext, Value);
 	}
 
 	bool Cell::IsReadOnly::get()
@@ -250,53 +320,54 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return GridControl->EditingCell == this;
 	}
 
-	void Cell::LeaveEdit()
-	{
-		GridControl->EndEditCell();
-	}
-
-	bool Cell::IsDisplayed::get()
-	{
-		return m_pItem->GetDisplayable();	
-	}
+	//bool Cell::IsDisplayable::get()
+	//{
+	//	return m_pItem->GetDisplayable();	
+	//}
 
 	bool Cell::IsSelecting::get()
 	{
 		return m_pItem->IsItemSelecting();
 	}
 
-	string^ Cell::ErrorDescription::get()
+	System::String^ Cell::ErrorDescription::get()
 	{
-		if(m_errorDescription == nullptr)
-			return string::Empty;
 		return m_errorDescription;
 	}
 
-	void Cell::ErrorDescription::set(string^ value)
+	void Cell::ErrorDescription::set(System::String^ value)
 	{
+        if(value == nullptr)
+            value = System::String::Empty;
+
+        if(m_errorDescription == value)
+            return;
+
 		m_errorDescription = value;
-		if(m_errorDescription == string::Empty)
+		if(m_errorDescription == System::String::Empty)
 		{
 			GridControl->ErrorDescriptor->Remove(this);
+            this->Row->RemoveErrorCell();
 		}
 		else
 		{
 			GridControl->ErrorDescriptor->Add(this);
+            this->Row->AddErrorCell();
 		}
 	}
 
-	object^	Cell::ValueCore::get()
+	System::Object^	Cell::ValueCore::get()
 	{
-		_PropertyDescriptor^ propertyDescriptor = Column->PropertyDescriptor;
+		System::ComponentModel::PropertyDescriptor^ propertyDescriptor = Column->PropertyDescriptor;
 		if(propertyDescriptor == nullptr)
 			return m_value;
-		object^ value = propertyDescriptor->GetValue(Row->Component);
+		System::Object^ value = propertyDescriptor->GetValue(Row->Component);
 		return this->Column->ConvertFromSource(value);
 	}
 
-	void Cell::ValueCore::set(object^ value)
+	void Cell::ValueCore::set(System::Object^ value)
 	{
-		_PropertyDescriptor^ propertyDescriptor = Column->PropertyDescriptor;
+		System::ComponentModel::PropertyDescriptor^ propertyDescriptor = Column->PropertyDescriptor;
 		if(propertyDescriptor == nullptr)
 		{
 			m_value = value;
@@ -304,13 +375,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		else if(propertyDescriptor->IsReadOnly == false)
 		{
 			value = this->Column->ConvertToSource(value);
-			propertyDescriptor->SetValue(Row->Component, value);
+            try
+            {
+			    propertyDescriptor->SetValue(Row->Component, value);
+            }
+            catch(System::Exception^)
+            {
+                propertyDescriptor->SetValue(Row->Component, System::DBNull::Value);
+            }
 		}
 	}
 
-	_Rectangle Cell::TextBound::get()
+	System::Drawing::Rectangle Cell::TextBound::get()
 	{
-		return *m_pItem->GetTextBound();
+		return m_pItem->GetTextBounds();
 	}
 
 	bool Cell::ShouldSerializeValue()
@@ -324,18 +402,28 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return true;
 	}
 
-	InsertionCell::InsertionCell(_GridControl^ gridControl, GrItem* pItem, object^ defaultValue)
+    System::Object^ Cell::Value_ICell::get()
+    {
+        return this->Value;
+    }
+
+    System::Object^ Cell::Tag_ICell::get()
+    {
+        return this->Tag;
+    }
+
+	InsertionCell::InsertionCell(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrItem* pItem, System::Object^ defaultValue)
 		: m_value(defaultValue), Cell(gridControl, pItem)
 	{
 		
 	}
 	
-	object^	InsertionCell::ValueCore::get()
+	System::Object^	InsertionCell::ValueCore::get()
 	{
 		return m_value;
 	}
 
-	void InsertionCell::ValueCore::set(object^ value)
+	void InsertionCell::ValueCore::set(System::Object^ value)
 	{
 		m_value = value;
 	}

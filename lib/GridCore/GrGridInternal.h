@@ -24,38 +24,157 @@
 #pragma once
 #include "GrGridType.h"
 #include "GrGridCell.h"
+#include "GrGridWindow.h"
+#include "GrGridCoreComponents.h"
 
-class GrUtil
-{
-public:
-	static uint			Sum(uint n1, int n2);
-	static uint			LastIndex(uint nCount);
-	static uint			MakeHash(const wchar_t* strText);
-};
+class GrFont;
 
 struct GrWordDesc
 {
-	int	pos;
-	int	length;
-	int	width;
-	int	validWidth;
+    int    pos;
+    int    length;
+    int    width;
+    int    validWidth;
 };
 
-typedef std::vector<GrWordDesc>		WordList;
-typedef std::vector<GrLineDesc>		LineList;
-
-class GrFont;
+typedef std::vector<GrWordDesc>        WordList;
 
 class GrTextUtil
 {
 public:
-	static void SingleLine(GrLineDesc* pLine, const std::wstring& strText, const GrFont* pFont);
-	static void MultiLine(std::vector<GrLineDesc>* pLines, const std::wstring& strText, int nCellWidth, const GrFont* pFont, bool bWordWrap);
+    static void         SingleLine(GrLineDesc* pLine, const std::wstring& cellText, const GrFont* pFont);
+    static void         MultiLine(_TextLines* pLines, const std::wstring& cellText, int cellWidth, const GrFont* pFont, bool wordWrap);
 
 private:
-	static void WordWrap(WordList* pWordList, const std::wstring& strText, const GrFont* pFont, int nCellWidth);
-	static void DoMultiline(std::vector<GrLineDesc>* pLines, const std::wstring& strText, const GrFont* pFont);
-	static void DoMultilineWordWrap(std::vector<GrLineDesc>* pLines, const std::wstring& strText, int nCellWidth, const GrFont* pFont);
+    static void         WordWrap(WordList* pWordList, const std::wstring& cellText, const GrFont* pFont, int cellWidth);
+    static void         DoMultiline(_TextLines* pLines, const std::wstring& cellText, const GrFont* pFont);
+    static void         DoMultilineWordWrap(_TextLines* pLines, const std::wstring& cellText, int cellWidth, const GrFont* pFont);
 
-	static WordList	m_sWordList;
+    static WordList     m_sWordList;
 };
+
+class GrSelectionTimer : public GrObject
+{
+    enum GrScrollSpeed
+    {
+        GrScrollSpeed_Normal,
+        GrScrollSpeed_Fast,
+        GrScrollSpeed_Fastest,
+    };
+
+    typedef GrEvent<GrElapsedEventArgs, GrSelectionTimer> _GrElpasedEvent;
+
+public:
+    GrSelectionTimer();
+    ~GrSelectionTimer();
+
+    bool                DoScroll();
+
+    void                Start();
+    void                Stop();
+    void                SetInterval(time_t interval);
+
+    _GrElpasedEvent     Elapsed;
+
+public:
+    void                SetMouseLocation(GrPoint location);
+
+    bool                GetHScrollEnabled() const;
+    void                SetHScrollEnabled(bool value);
+
+    bool                GetVScrollEnabled() const;
+    void                SetVScrollEnabled(bool value);
+
+    bool                GetScrollAcceleration() const;
+    void                SetScrollAcceleration(bool value);
+
+    bool                GetIntervalAcceleration() const;
+    void                SetIntervalAcceleration(bool value);
+
+    bool                CanHScroll() const;
+    bool                CanVScroll() const;
+
+    GrScroll*           GetHorzScroll() const;
+    GrScroll*           GetVertScroll() const;
+
+protected:
+    virtual GrRect      GetInsideRectangle() const;
+    virtual GrRect      GetOutsideRectangle() const;
+
+    virtual void        OnGridCoreAttached();
+
+private:
+    int                 ComputeSpeed(int pos, int length) const;
+    void                timer_Elapsed(GrObject* pSender, GrElapsedEventArgs* e);
+
+private:
+    bool                m_horzEnable;
+    bool                m_vertEnable;
+
+    bool                m_scrollAcceleration;
+    bool                m_intervalAcceleration;
+
+    int                 m_horzScroll;
+    int                 m_vertScroll;
+
+    GrTimer*            m_pTimer;
+    GrScroll*           m_pHorzScroll;
+    GrScroll*           m_pVertScroll;
+};
+
+class GrFocuserInternal : public GrFocuser
+{
+public:
+    GrFocuserInternal();
+
+    void                SetFocusing(IFocusable* pFocusable);
+
+protected:
+    virtual void        OnGridCoreAttached();
+    virtual IFocusable* GetFocusing() const;
+
+    virtual void        OnFocusChanging(GrFocusChangeArgs* e);
+
+private:
+    void                itemSelector_SelectingEnd(GrObject* pSender, GrEventArgs* e);
+    void                gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
+    void                gridCore_Created(GrObject* pSender, GrEventArgs* e);
+
+private:
+    IFocusable*         m_pFocusing;
+};
+
+class GrItemSelectorInternal : public GrItemSelector
+{
+    typedef GrEvent<GrEventArgs, GrItemSelectorInternal>    _GrEvent;
+public:
+    GrItemSelectorInternal();
+
+    void                BeginSelecting();
+    void                Selecting(GrIndexRange visibleColumnIndex, GrIndexRange visibleRowIndex);
+    void                EndSelecting(GrSelectionType selectionType);
+    bool                IsSelecting() const;
+    bool                IsSelecting(const GrColumn* pColumn) const;
+    bool                IsSelecting(const GrDataRow* pDataRow) const;
+
+    void                SetColumnSelectingRange(GrIndexRange range);
+    void                SetRowSelectingRange(GrIndexRange range);
+    GrRect              GetInvalidateRect(GrIndexRange visibleColumnRange, GrIndexRange visibleRowRange) const;
+
+    void                Select(IFocusable* pFocusable);
+    void                Selecting(IFocusable* pFocusable);
+
+public:
+    _GrEvent            SelectingBegin;
+    _GrEvent            SelectingEnd;
+
+protected:
+    virtual void        OnSelectingBegin(GrEventArgs* e);
+    virtual void        OnSelectingEnd(GrEventArgs* e);
+
+private:
+    bool                m_bSelecting;
+
+    GrIndexRange        m_columnSelecting;
+    GrIndexRange        m_rowSelecting;
+};    

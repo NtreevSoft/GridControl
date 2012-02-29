@@ -26,7 +26,7 @@
 //#include <vector>
 //#include <algorithm>
 
-namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Private
+namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
 	template<typename T, typename S>
 	class DefaultConverter
@@ -214,4 +214,4 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		_NativeType*			m_internal;
 		bool					m_attached;
 	};
-} /*namespace Private*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
+} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

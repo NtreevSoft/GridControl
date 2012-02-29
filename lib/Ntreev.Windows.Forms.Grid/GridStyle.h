@@ -22,102 +22,104 @@
 
 
 #pragma once
-#include "GridCollection.h"
 #include "GridNativeCollection.h"
 #include "GrGridType.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design
 {
-	class FontConverter
-	{
-	public:
-		static _Font^ StoT(GrFont* pFont);
-		static GrFont* TtoS(_Font^ font);
-	};
+    class FontConverter
+    {
+    public:
+        static System::Drawing::Font^ StoT(GrFont* pFont);
+        static GrFont* TtoS(System::Drawing::Font^ font);
+    };
 
-	[System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
-	public ref class Style : object
-	{
-		typedef Ntreev::Windows::Forms::Grid::Private::NativeCollection<_Color, GrColor>	_Colors;
-		typedef System::Collections::Generic::ICollection<_Color>	_Colors2;
+    [System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
+    public ref class Style
+    {
+        typedef Ntreev::Windows::Forms::Grid::NativeCollection<System::Drawing::Color, GrColor> _Colors;
+        typedef System::Collections::Generic::ICollection<System::Drawing::Color> _Colors2;
 
-		typedef Ntreev::Windows::Forms::Grid::Private::NativeCollection<_Font^, GrFont*, FontConverter>	_Fonts;
-		typedef System::Collections::Generic::ICollection<_Font^>	_Fonts2;
+        typedef Ntreev::Windows::Forms::Grid::NativeCollection<System::Drawing::Font^, GrFont*, FontConverter> _Fonts;
+        typedef System::Collections::Generic::ICollection<System::Drawing::Font^> _Fonts2;
 
-		//typedef System::Collections::Specialized::NotifyCollectionChangedEventArgs	_NotifyCollectionChangedEventArgs;
+        //typedef System::Collections::Specialized::NotifyCollectionChangedEventArgs _NotifyCollectionChangedEventArgs;
 
-	public:
-		Style();
+    public:
+        Style();
 
-		void					ResetRowCellForeColors();
-		void					ResetRowCellBackColors();
-		void					ResetRowCellFonts();
+        void ResetRowCellForeColors();
+        void ResetRowCellBackColors();
+        void ResetRowCellFonts();
 
-		void					ResetSelectedForeColor();
-		void					ResetSelectedBackColor();
+        void ResetSelectedForeColor();
+        void ResetSelectedBackColor();
 
-		void					ResetFocusedForeColor();
-		void					ResetFocusedBackColor();
+        void ResetFocusedForeColor();
+        void ResetFocusedBackColor();
 
-		void					ResetCellForeColor();
-		void					ResetCellBackColor();
-		void					ResetCellFont();
+        void ResetCellForeColor();
+        void ResetCellBackColor();
+        void ResetCellFont();
 
-		void					ResetRowHighlightForeColor();
-		void					ResetRowHighlightBackColor();
+        void ResetRowHighlightForeColor();
+        void ResetRowHighlightBackColor();
 
 
-		property _Color CellForeColor
-		{
-			_Color get();
-			void set(_Color);
-		}
+        property System::Drawing::Color CellForeColor
+        {
+            System::Drawing::Color get();
+            void set(System::Drawing::Color);
+        }
 
-		property _Color CellBackColor
-		{
-			_Color get();
-			void set(_Color);
-		}
+        property System::Drawing::Color CellBackColor
+        {
+            System::Drawing::Color get();
+            void set(System::Drawing::Color);
+        }
 
-		property _Font^ CellFont
-		{
-			_Font^ get();
-			void set(_Font^);
-		}
+        property System::Drawing::Font^ CellFont
+        {
+            System::Drawing::Font^ get();
+            void set(System::Drawing::Font^);
+        }
 
-		property _Color			SelectedForeColor	{ _Color get(); void set(_Color); }
-		property _Color			SelectedBackColor	{ _Color get(); void set(_Color); }
+        property System::Drawing::Color SelectedForeColor { System::Drawing::Color get(); void set(System::Drawing::Color); }
+        property System::Drawing::Color SelectedBackColor { System::Drawing::Color get(); void set(System::Drawing::Color); }
 
-		property _Color			FocusedForeColor	{ _Color get(); void set(_Color); }
-		property _Color			FocusedBackColor	{ _Color get(); void set(_Color); }
+        property System::Drawing::Color   FocusedForeColor { System::Drawing::Color get(); void set(System::Drawing::Color); }
+        property System::Drawing::Color   FocusedBackColor { System::Drawing::Color get(); void set(System::Drawing::Color); }
 
-		property _Color			RowHighlightForeColor{ _Color get(); void set(_Color); }
-		property _Color			RowHighlightBackColor{ _Color get(); void set(_Color); }
+        property System::Drawing::Color   RowHighlightForeColor{ System::Drawing::Color get(); void set(System::Drawing::Color); }
+        property System::Drawing::Color   RowHighlightBackColor{ System::Drawing::Color get(); void set(System::Drawing::Color); }
 
-		property _Colors2^		RowCellForeColors	{ _Colors2^	get(); }
-		property _Colors2^		RowCellBackColors	{ _Colors2^	get(); }
-		property _Fonts2^		RowCellFonts		{ _Fonts2^	get(); }
+        property _Colors2^  RowCellForeColors { _Colors2^ get(); }
+        property _Colors2^  RowCellBackColors { _Colors2^ get(); }
+        property _Fonts2^  RowCellFonts  { _Fonts2^ get(); }
 
-		property _Colors2^		GroupingBackColors	{ _Colors2^	get(); }
-		property _Colors2^		GroupingForeColors	{ _Colors2^	get(); }
-		property _Fonts2^		GroupingFonts		{ _Fonts2^	get(); }
+        property _Colors2^  GroupingBackColors { _Colors2^ get(); }
+        property _Colors2^  GroupingForeColors { _Colors2^ get(); }
+        property _Fonts2^  GroupingFonts  { _Fonts2^ get(); }
 
-	//private:
-	//	void					OnRowCellForeColorChanged(object^ /*sender*/, _NotifyCollectionChangedEventArgs^ e);
-	//	void					OnRowCellBackColorChanged(object^ /*sender*/, _NotifyCollectionChangedEventArgs^ e);
+        //private:
+        // void     OnRowCellForeColorChanged(System::Object^ /*sender*/, _NotifyCollectionChangedEventArgs^ e);
+        // void     OnRowCellBackColorChanged(System::Object^ /*sender*/, _NotifyCollectionChangedEventArgs^ e);
 
-	internal:
-		property GrStyle*		NativeStyle			{ GrStyle* get(); }
+    internal:
+        property GrStyle*  NativeStyle
+        {
+            GrStyle* get(); 
+        }
 
-	private:
-		_Colors^				m_rowCellForeColors;
-		_Colors^				m_rowCellBackColors;
-		_Fonts^					m_rowCellFonts;
+    private:
+        _Colors^    m_rowCellForeColors;
+        _Colors^    m_rowCellBackColors;
+        _Fonts^     m_rowCellFonts;
 
-		_Colors^				m_groupingForeColors;
-		_Colors^				m_groupingBackColors;
-		_Fonts^					m_groupingFonts;
+        _Colors^    m_groupingForeColors;
+        _Colors^    m_groupingBackColors;
+        _Fonts^     m_groupingFonts;
 
-		GrStyle*				m_pNativeStyle;
-	};
+        GrStyle*    m_pNativeStyle;
+    };
 } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -24,215 +24,285 @@
 #include "StdAfx.h"
 #include "GridCellBase.h"
 #include "GridControl.h"
+#include "GridNativeClass.h"
 
 #include <vcclr.h>
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	CellBase::CellBase(_GridControl^ gridControl, GrCell* pCell)
-		: GridObject(gridControl), m_pCell(pCell)
-	{
+    CellBase::CellBase(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrCell* pCell)
+        : GridObject(gridControl), m_pCell(pCell)
+    {
 
-	}
+    }
 
-	CellBase::CellBase(GrCell* pCell) : GridObject(), m_pCell(pCell)
-	{
+    CellBase::CellBase(GrCell* pCell) : GridObject(), m_pCell(pCell)
+    {
 
-	}
+    }
 
-	_Color CellBase::BackColor::get()
-	{
-		return m_pCell->GetBackColor();
-	}
+    System::Drawing::Color CellBase::BackColor::get()
+    {
+        return m_pCell->GetBackColor();
+    }
 
-	void CellBase::BackColor::set(_Color color)
-	{
-		m_pCell->SetBackColor(color);
-	}
+    void CellBase::BackColor::set(System::Drawing::Color color)
+    {
+        m_pCell->SetBackColor(color);
+    }
 
-	_Color CellBase::ForeColor::get()
-	{
-		return m_pCell->GetForeColor();
-	}
+    System::Drawing::Color CellBase::ForeColor::get()
+    {
+        return m_pCell->GetForeColor();
+    }
 
-	void CellBase::ForeColor::set(_Color color)
-	{
-		m_pCell->SetForeColor(color);
-	}
+    void CellBase::ForeColor::set(System::Drawing::Color color)
+    {
+        m_pCell->SetForeColor(color);
+    }
 
-	_Font^ CellBase::Font::get()
-	{
-		GrFont* pFont = (GrFont*)m_pCell->GetRenderingFont();
-		return GrFontManager::ToManagedFont(pFont);
-	}
+    System::Drawing::Font^ CellBase::Font::get()
+    {
+        GrFont* pFont = (GrFont*)m_pCell->GetPaintingFont();
+        return Native::WinFormFontManager::ToManagedFont(pFont);
+    }
 
-	void CellBase::Font::set(_Font^ font)
-	{
-		GrFont* pFont = GridCore->GetFont(font->ToHfont().ToPointer());
-		m_pCell->SetFont(pFont);
-	}
+    void CellBase::Font::set(System::Drawing::Font^ font)
+    {
+        GrFont* pFont = Native::WinFormFontManager::FromManagedFont(font);
+        m_pCell->SetFont(pFont);
+    }
 
-	bool CellBase::IsDisplayable::get()
-	{
-		return m_pCell->GetDisplayable();
-	}
+    bool CellBase::IsDisplayable::get()
+    {
+        return m_pCell->GetDisplayable();
+    }
 
-	void CellBase::ResetBackColor()
-	{
-		m_pCell->SetBackColor(GrColor::Empty);
-	}
+    void CellBase::ResetBackColor()
+    {
+        m_pCell->SetBackColor(GrColor::Empty);
+    }
 
-	void CellBase::ResetForeColor()
-	{
-		m_pCell->SetForeColor(GrColor::Empty);
-	}
+    void CellBase::ResetForeColor()
+    {
+        m_pCell->SetForeColor(GrColor::Empty);
+    }
 
-	bool CellBase::ShouldSerializeForeColor()
-	{
-		return m_pCell->GetForeColor(false) != GrColor::Empty;
-	}
+    bool CellBase::ShouldSerializeForeColor()
+    {
+        return m_pCell->GetForeColor(false) != GrColor::Empty;
+    }
 
-	bool CellBase::ShouldSerializeBackColor()
-	{
-		return m_pCell->GetBackColor(false) != GrColor::Empty;
-	}
+    bool CellBase::ShouldSerializeBackColor()
+    {
+        return m_pCell->GetBackColor(false) != GrColor::Empty;
+    }
 
-	bool CellBase::ShouldSerializeFont()
-	{
-		GrFont* pFont = m_pCell->GetFont(false);
-		if(pFont == nullptr)
-			return false;
-		return pFont != GrFontManager::GetDefaultFont();
-	}
+    bool CellBase::ShouldSerializeFont()
+    {
+        GrFont* pFont = m_pCell->GetFont(false);
+        if(pFont == nullptr)
+            return false;
+        return pFont != GridCore->GetGridWindow()->GetDefaultFont();
+    }
 
-	bool CellBase::ShouldSerializePadding()
-	{
-		return m_pCell->GetPadding() != GrPadding::Default;
-	}
+    bool CellBase::ShouldSerializePadding()
+    {
+        return m_pCell->GetPadding(false) != GrPadding::Default;
+    }
 
-	void CellBase::ResetPadding()
-	{
-		m_pCell->SetPadding(GrPadding::Default);
-		Invalidate(this);
-	}
+    void CellBase::ResetPadding()
+    {
+        m_pCell->SetPadding(GrPadding::Default);
+    }
 
-	void CellBase::ResetFont()
-	{
-		m_pCell->SetFont(NULL);
-		Invalidate(this);
-	}
+    void CellBase::ResetFont()
+    {
+        m_pCell->SetFont(NULL);
+    }
 
-	_Padding CellBase::Padding::get()
-	{
-		return m_pCell->GetPadding();
-	}
+    System::Windows::Forms::Padding CellBase::Padding::get()
+    {
+        return m_pCell->GetPadding();
+    }
 
-	void CellBase::Padding::set(_Padding value)
-	{
-		m_pCell->SetPadding(value);		
-		Invalidate(this);
-	}
+    void CellBase::Padding::set(System::Windows::Forms::Padding value)
+    {
+        m_pCell->SetPadding(value);		
+    }
 
-	void CellBase::OnBackColorChanged(_EventArgs^ e)
-	{
-		BackColorChanged(this, e);
-	}
+    void CellBase::OnBackColorChanged(System::EventArgs^ e)
+    {
+        BackColorChanged(this, e);
+    }
 
-	void CellBase::OnForeColorChanged(_EventArgs^ e)
-	{
-		ForeColorChanged(this, e);
-	}
+    void CellBase::OnForeColorChanged(System::EventArgs^ e)
+    {
+        ForeColorChanged(this, e);
+    }
 
-	void CellBase::OnFontChanged(_EventArgs^ e)
-	{
-		FontChanged(this, e);
-	}
+    void CellBase::OnFontChanged(System::EventArgs^ e)
+    {
+        FontChanged(this, e);
+    }
 
-	void CellBase::Invalidate(CellBase^ cellBase)
-	{
-		if(cellBase == nullptr)
-			throw gcnew System::ArgumentNullException("cellBase");
-		if(IsDisplayable == false)
-			return;
+    System::Drawing::Color CellBase::DisplayBackColor::get()
+    {
+        return m_pCell->GetPaintingBackColor();
+    }
 
-		GridControl->Invalidate(DisplayRectangle, false);
-	}
+    System::Drawing::Color CellBase::DisplayForeColor::get()
+    {
+        return m_pCell->GetPaintingForeColor();
+    }
 
-	_Color CellBase::RenderingBackColor::get()
-	{
-		GrColor clr = m_pCell->GetRenderingBackColor();
-		return _Color::FromArgb(255, clr.bytes.r, clr.bytes.g, clr.bytes.b);
-	}
+    System::Drawing::Rectangle CellBase::ClientRectangle::get()
+    {
+        return m_pCell->GetClientRect();
+    }
 
-	_Color CellBase::RenderingForeColor::get()
-	{
-		GrColor clr = m_pCell->GetRenderingForeColor();
-		return _Color::FromArgb(255, clr.bytes.r, clr.bytes.g, clr.bytes.b);
-	}
+    System::Drawing::Rectangle CellBase::Bounds::get()
+    {
+        return m_pCell->GetRect();
+    }
 
-	_Rectangle CellBase::ClientRectangle::get()
-	{
-		GrRect rtDisplayRect = m_pCell->GetDisplayRect();
-		rtDisplayRect.Contract(m_pCell->GetPadding());
-		return rtDisplayRect;
-	}
+    int CellBase::X::get()
+    {
+        return m_pCell->GetX();
+    }
 
-	_Rectangle CellBase::DisplayRectangle::get()
-	{
-		return m_pCell->GetDisplayRect();
-	}
+    int CellBase::Y::get()
+    {
+        return m_pCell->GetY();
+    }
 
-	void CellBase::ForeColorChanged::add(_EventHandler^ p)
-	{
-		m_eventForeColorChanged += p; 
-	}
+    int CellBase::Width_ICellBase::get()
+    {
+        return m_pCell->GetWidth();
+    }
 
-	void CellBase::ForeColorChanged::remove(_EventHandler^ p)
-	{
-		m_eventForeColorChanged -= p; 
-	}
+    int CellBase::Height::get()
+    {
+        return m_pCell->GetHeight();
+    }
 
-	void CellBase::ForeColorChanged::raise(object^ sender, _EventArgs^ e)
-	{
-		if(m_eventForeColorChanged != nullptr) 
-		{
-			m_eventForeColorChanged->Invoke(sender, e); 
-		} 
-	}
+    System::Drawing::Point CellBase::Location::get()
+    {
+        return m_pCell->GetLocation();
+    }
 
-	void CellBase::BackColorChanged::add(_EventHandler^ p)
-	{
-		m_eventBackColorChanged += p; 
-	}
+    System::Drawing::Size CellBase::Size::get()
+    {
+        return m_pCell->GetSize();
+    }
 
-	void CellBase::BackColorChanged::remove(_EventHandler^ p)
-	{
-		m_eventBackColorChanged -= p; 
-	}
+    int CellBase::Left::get()
+    {
+        return m_pCell->GetX();
+    }
 
-	void CellBase::BackColorChanged::raise(object^ sender, _EventArgs^ e)
-	{
-		if(m_eventBackColorChanged != nullptr) 
-		{
-			m_eventBackColorChanged->Invoke(sender, e); 
-		} 
-	}
+    int CellBase::Top::get()
+    {
+        return m_pCell->GetY();
+    }
 
-	void CellBase::FontChanged::add(_EventHandler^ p)
-	{
-		m_eventFontChanged += p; 
-	}
+    int CellBase::Right::get()
+    {
+        return m_pCell->GetRight();
+    }
 
-	void CellBase::FontChanged::remove(_EventHandler^ p)
-	{
-		m_eventFontChanged -= p; 
-	}
+    int CellBase::Bottom::get()
+    {
+        return m_pCell->GetBottom();
+    }
 
-	void CellBase::FontChanged::raise(object^ sender, _EventArgs^ e)
-	{
-		if(m_eventFontChanged != nullptr) 
-		{
-			m_eventFontChanged->Invoke(sender, e); 
-		} 
-	}
+    void CellBase::ForeColorChanged::add(System::EventHandler^ p)
+    {
+        m_eventForeColorChanged += p; 
+    }
+
+    void CellBase::ForeColorChanged::remove(System::EventHandler^ p)
+    {
+        m_eventForeColorChanged -= p; 
+    }
+
+    void CellBase::ForeColorChanged::raise(System::Object^ sender, System::EventArgs^ e)
+    {
+        if(m_eventForeColorChanged != nullptr) 
+        {
+            m_eventForeColorChanged->Invoke(sender, e); 
+        } 
+    }
+
+    void CellBase::BackColorChanged::add(System::EventHandler^ p)
+    {
+        m_eventBackColorChanged += p; 
+    }
+
+    void CellBase::BackColorChanged::remove(System::EventHandler^ p)
+    {
+        m_eventBackColorChanged -= p; 
+    }
+
+    void CellBase::BackColorChanged::raise(System::Object^ sender, System::EventArgs^ e)
+    {
+        if(m_eventBackColorChanged != nullptr) 
+        {
+            m_eventBackColorChanged->Invoke(sender, e); 
+        } 
+    }
+
+    void CellBase::FontChanged::add(System::EventHandler^ p)
+    {
+        m_eventFontChanged += p; 
+    }
+
+    void CellBase::FontChanged::remove(System::EventHandler^ p)
+    {
+        m_eventFontChanged -= p; 
+    }
+
+    void CellBase::FontChanged::raise(System::Object^ sender, System::EventArgs^ e)
+    {
+        if(m_eventFontChanged != nullptr) 
+        {
+            m_eventFontChanged->Invoke(sender, e); 
+        } 
+    }
+
+    System::Drawing::Color CellBase::PaintingForeColor_ICellBase::get()
+    {
+        return m_pCell->GetPaintingForeColor();
+    }
+
+    System::Drawing::Color CellBase::PaintingBackColor_ICellBase::get()
+    {
+        return m_pCell->GetPaintingBackColor();
+    }
+
+    bool CellBase::Multiline_ICellBase::get()
+    {
+        return m_pCell->GetTextMulitiline();
+    }
+
+    bool CellBase::WordWrap_ICellBase::get()
+    {
+        return m_pCell->GetTextWordWrap();
+    }
+
+    System::Drawing::StringAlignment CellBase::Alignment_ICellBase::get()
+    {
+        return (System::Drawing::StringAlignment)m_pCell->GetTextHorzAlign();
+    }
+
+    System::Drawing::StringAlignment CellBase::LineAlignment_ICellBase::get()
+    {
+        return (System::Drawing::StringAlignment)m_pCell->GetTextVertAlign();
+    }
+
+    CellState CellBase::State_ICellBase::get()
+    {
+        GrFlag flag = m_pCell->ToPaintStyle();
+        return (CellState)flag.Get((ulong)CellState::All);
+    }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

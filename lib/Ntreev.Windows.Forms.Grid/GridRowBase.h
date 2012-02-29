@@ -35,48 +35,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <exception cref="System::ArgumentOutOfRangeException">
 		/// 매개변수가 0보다 작을 경우
 		/// </exception>
-		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// 매개변수가 <see cref="MinHeight"/>보다 작거나 <see cref="MaxHeight"/>보다 클경우
-		/// </exception>
-		[_Description("열의 높이입니다.")]
-		[_Category("Layout")]
+		[System::ComponentModel::DescriptionAttribute("열의 높이입니다.")]
+		[System::ComponentModel::CategoryAttribute("Layout")]
 		property int Height
 		{
-			int get();
-			void set(int);
-		}
-
-		/// <summary>
-		/// 행의 최소높이를 가져오거나 설정합니다.
-		/// </summary>
-		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// 매개변수가 0보다 작을 경우
-		/// </exception>
-		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// 매개변수가 <see cref="MaxHeight"/>보다 클경우
-		/// </exception>
-		[_Description("열의 최소높이입니다.")]
-		[_Category("Layout")]
-		property int MinHeight
-		{
-			int get();
-			void set(int);
-		}
-
-		/// <summary>
-		/// 행의 최대높이를 가져오거나 설정합니다.
-		/// </summary>
-		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// 매개변수가 0보다 작을 경우
-		/// </exception>
-		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// 매개변수가 <see cref="MinHeight"/>보다 작을경우
-		/// </exception>
-		[_Description("열의 최대높이입니다.")]
-		[_Category("Layout")]
-		property int MaxHeight
-		{
-			int get();
 			void set(int);
 		}
 
@@ -86,13 +48,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 표시되고 있다면 true를 반환하고, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
-		[_Description("표시되고 있는지의 여부를 가져오거나 설정합니다.")]
-		[_Category("Appearance")]
-		[_DefaultValue(true)]
+		[System::ComponentModel::DescriptionAttribute("표시되고 있는지의 여부를 가져오거나 설정합니다.")]
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		[System::ComponentModel::DefaultValueAttribute(true)]
 		property bool IsVisible 
 		{
 			bool get();
-
 		}
 
 		/// <summary>
@@ -105,10 +66,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 표시 여부를 확인하기 위해서는 <see cref="IsVisible"/>를 확인하면 됩니다.
 		/// </remarks>
 #ifdef _DEBUG
-		[_Category("Debug")]
-		[_Description("표시되는 인덱스입니다.")]
+		[System::ComponentModel::CategoryAttribute("Debug")]
+		[System::ComponentModel::DescriptionAttribute("표시되는 인덱스입니다.")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
 		property uint VisibleIndex
 		{
@@ -125,10 +86,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 화면에 표시 여부를 확인하기 위해서는 <see cref="IsDisplayable"/>를 확인하면 됩니다.
 		/// </remarks>
 #ifdef _DEBUG
-		[_Category("Debug")]
-		[_Description("화면에 표시되는 인덱스입니다")]
+		[System::ComponentModel::CategoryAttribute("Debug")]
+		[System::ComponentModel::DescriptionAttribute("화면에 표시되는 인덱스입니다")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
 		property uint DisplayIndex
 		{
@@ -136,12 +97,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 	internal: // methods
-		RowBase(_GridControl^ gridControl, IDataRow* pDataRow);
+		RowBase(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, IDataRow* pDataRow);
 
 	private: // methods
 		bool ShouldSerializeHeight();
-		bool ShouldSerializeMinHeight();
-		bool ShouldSerializeMaxHeight();
 
 	private: // variables
 		IDataRow*		m_pDataRow;

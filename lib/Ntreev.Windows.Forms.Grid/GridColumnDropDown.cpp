@@ -26,93 +26,135 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	generic<class TControl> where TControl : _Control
-	ColumnDropDown<TControl>::ColumnDropDown()
-	{
-		m_sizable	= false;
-		m_control	= CreateControlInstance(nullptr);
-		OnControlCreated(m_control);
-	}
+    generic<class TControl> where TControl : System::Windows::Forms::Control
+        ColumnDropDown<TControl>::ColumnDropDown()
+    {
+        m_control = CreateControlInstance(nullptr);
+        OnControlCreated();
+    }
 
-	generic<class TControl> where TControl : _Control
-	ColumnDropDown<TControl>::ColumnDropDown(... cli::array<object^>^ controlArgs)
-	{
-		Sizable		= false;
-		m_control	= CreateControlInstance(controlArgs);
-		OnControlCreated(m_control);
-	}
+    generic<class TControl> where TControl : System::Windows::Forms::Control
+        ColumnDropDown<TControl>::ColumnDropDown(... cli::array<System::Object^>^ controlArgs)
+    {
+        m_control = CreateControlInstance(controlArgs);
+        OnControlCreated();
+    }
 
-	generic<class TControl> where TControl : _Control
-	_Size ColumnDropDown<TControl>::GetPreferredSize(_Size proposedSize)
-	{
-		return _Size(proposedSize.Width, EditingControl->Size.Height);
-	}
+    generic<class TControl> where TControl : System::Windows::Forms::Control
+        TControl ColumnDropDown<TControl>::CreateControlInstance(... cli::array<System::Object^>^ controlArgs)
+    {
+        if(controlArgs == nullptr)
+            return safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid));
+        return safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid, controlArgs));
+    }
 
-	generic<class TControl> where TControl : _Control
-	TControl ColumnDropDown<TControl>::CreateControlInstance(... cli::array<object^>^ controlArgs)
-	{
-		if(controlArgs == nullptr)
-			return safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid));
-		return safe_cast<TControl>(System::Activator::CreateInstance(TControl::typeid, controlArgs));
-	}
+    //generic<class TControl> where TControl : System::Windows::Forms::Control
+    //void ColumnDropDown<TControl>::OnAttaching(AttachEventArgs^ e)
+    //{
+    //	Control->Dock    = System::Windows::Forms::DockStyle::Fill;
+    //	Control->Visible	= true;
+    //	Attaching(this, e);
+    //}
 
-	generic<class TControl> where TControl : _Control
-	void ColumnDropDown<TControl>::OnAttaching(AttachEventArgs^ e)
-	{
-		EditingControl->Dock    = System::Windows::Forms::DockStyle::Fill;
-		EditingControl->Visible	= true;
-		Attaching(this, e);
-	}
+    //generic<class TControl> where TControl : System::Windows::Forms::Control
+    //void ColumnDropDown<TControl>::InvokeAttaching(EditingReason by, System::Object^ value)
+    //{
+    //	AttachEventArgs e(by, value);
+    //	OnAttaching(%e);
+    //}
 
-	generic<class TControl> where TControl : _Control
-	void ColumnDropDown<TControl>::InvokeAttaching(EditingReason^ by, object^ value)
-	{
-		AttachEventArgs e(by, value);
-		OnAttaching(%e);
-	}
+    //generic<class TControl> where TControl : System::Windows::Forms::Control
+    //void ColumnDropDown<TControl>::OnAttached(AttachEventArgs^ e)
+    //{
+    //	Attached(this, e);
+    //}
 
-	generic<class TControl> where TControl : _Control
-	void ColumnDropDown<TControl>::OnAttached(AttachEventArgs^ e)
-	{
-		Attached(this, e);
-	}
+    //generic<class TControl> where TControl : System::Windows::Forms::Control
+    //void ColumnDropDown<TControl>::InvokeAttached(EditingReason by, System::Object^ value)
+    //{
+    //	AttachEventArgs e(by, value);
+    //	OnAttached(%e);
+    //}
 
-	generic<class TControl> where TControl : _Control
-	void ColumnDropDown<TControl>::InvokeAttached(EditingReason^ by, object^ value)
-	{
-		AttachEventArgs e(by, value);
-		OnAttached(%e);
-	}
+    //generic<class TControl> where TControl : System::Windows::Forms::Control
+    //void ColumnDropDown<TControl>::OnDetaching(DetachEventArgs^ e)
+    //{
+    //	Detaching(this, e);
+    //}
 
-	generic<class TControl> where TControl : _Control
-	void ColumnDropDown<TControl>::OnDetaching(DetachEventArgs^ e)
-	{
-		Detaching(this, e);
-	}
+    //generic<class TControl> where TControl : System::Windows::Forms::Control
+    //void ColumnDropDown<TControl>::InvokeDetaching(bool modified, System::Object^ value)
+    //{
+    //	DetachEventArgs de(modified, value);
+    //	OnDetaching(%de);
+    //}
 
-	generic<class TControl> where TControl : _Control
-	void ColumnDropDown<TControl>::InvokeDetaching(bool modified, object^ value)
-	{
-		DetachEventArgs de(modified, value);
-		OnDetaching(%de);
-	}
+    //generic<class TControl> where TControl : System::Windows::Forms::Control
+    //void ColumnDropDown<TControl>::OnDetached(DetachEventArgs^ e)
+    //{
+    //	Detached(this, e);
+    //}
 
-	generic<class TControl> where TControl : _Control
-	void ColumnDropDown<TControl>::OnDetached(DetachEventArgs^ e)
-	{
-		Detached(this, e);
-	}
+    //generic<class TControl> where TControl : System::Windows::Forms::Control
+    //void ColumnDropDown<TControl>::InvokeDetached(bool modified, System::Object^ value)
+    //{
+    //	DetachEventArgs de(modified, value);
+    //	OnDetached(%de);
+    //}
 
-	generic<class TControl> where TControl : _Control
-	void ColumnDropDown<TControl>::InvokeDetached(bool modified, object^ value)
-	{
-		DetachEventArgs de(modified, value);
-		OnDetached(%de);
-	}
+    generic<class TControl> where TControl : System::Windows::Forms::Control
+        void ColumnDropDown<TControl>::OnControlCreated()
+    {
 
-	generic<class TControl> where TControl : _Control
-	void ColumnDropDown<TControl>::OnControlCreated(TControl /*control*/)
-	{
+    }
 
-	}
+    generic<class TControl> where TControl : System::Windows::Forms::Control
+        System::Object^ ColumnDropDown<TControl>::GetControlValue()
+    {
+        return nullptr;
+    }
+
+    generic<class TControl> where TControl : System::Windows::Forms::Control
+        void ColumnDropDown<TControl>::SetControlValue(System::Object^ /*value*/)
+    {
+
+    }
+
+    generic<class TControl> where TControl : System::Windows::Forms::Control
+        void ColumnDropDown<TControl>::SetControlLayout(ICell^ cell)
+    {
+        if(m_control->BackColor != cell->PaintingBackColor)
+            m_control->BackColor = cell->PaintingBackColor;
+        if(m_control->ForeColor != cell->PaintingForeColor)
+            m_control->ForeColor = cell->PaintingForeColor;
+        if(m_control->Font != cell->Font)
+            m_control->Font = cell->Font;
+    }
+
+    generic<class TControl> where TControl : System::Windows::Forms::Control
+        System::Object^ ColumnDropDown<TControl>::EditValue(Design::IEditorService^ editorService, ICell^ cell, System::Object^ value)
+    {
+        SetControlLayout(cell);
+        editorService->IsDropDownResizable = m_resizable;
+        SetControlValue(value);
+        m_editorService = editorService;
+        editorService->DropDownControl(m_control);
+        m_editorService = nullptr;
+        return GetControlValue();
+    }
+
+    generic<class TControl> where TControl : System::Windows::Forms::Control
+        Design::EditStyle ColumnDropDown<TControl>::GetEditStyle()
+    {
+        return Design::EditStyle::DropDown;
+    }
+
+    generic<class TControl> where TControl : System::Windows::Forms::Control
+        void ColumnDropDown<TControl>::CloseDropDown()
+    {
+        if(m_editorService == nullptr)
+            throw gcnew System::NotImplementedException();
+
+        m_editorService->Close();
+    }
 }/*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

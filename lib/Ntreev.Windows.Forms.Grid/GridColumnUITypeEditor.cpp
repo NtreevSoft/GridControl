@@ -28,134 +28,84 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Columns
 {
-	ref class InternalTypeDescriptorContext : System::ComponentModel::ITypeDescriptorContext
-	{
-	public:
-		InternalTypeDescriptorContext(object^ instance, _GridControl^ gridControl)
-			: m_instance(instance), m_gridControl(gridControl), m_propertyDescriptor(nullptr)
-		{
+    //ColumnUITypeEditor::ColumnUITypeEditor()
+    //{
 
-		}
+    //}
 
-		virtual void OnComponentChanged()
-		{
-			
-		}
+    //System::Drawing::Design::UITypeEditor^ ColumnUITypeEditor::UITypeEditor::get()
+    //{
+    //    using namespace System::ComponentModel;
+    //    using namespace System::Drawing::Design;
 
-		virtual bool OnComponentChanging()
-		{
-			return false;
-		}
+    //    if(m_typeEditor == nullptr)
+    //    {
+    //        m_typeEditor = (System::Drawing::Design::UITypeEditor^)TypeDescriptor::GetEditor(this->DataType, System::Drawing::Design::UITypeEditor::typeid);
+    //        
+    //        switch(m_typeEditor->GetEditStyle())
+    //        {
+    //        case UITypeEditorEditStyle::None:
+    //            m_pColumn->SetItemType(GrItemType_Control);
+    //            break;
+    //        case UITypeEditorEditStyle::DropDown:
+    //            m_pColumn->SetItemType(GrItemType_DropDown);
+    //            break;
+    //        case UITypeEditorEditStyle::Modal:
+    //            m_pColumn->SetItemType(GrItemType_Modal);
+    //            break;
+    //        }
+    //    }
 
-		property System::ComponentModel::IContainer^ Container
-		{
-			virtual System::ComponentModel::IContainer^ get()
-			{
-				return m_gridControl->Container;
-			}
-		}
+    //    return m_typeEditor;
+    //}
 
-		property object^ Instance
-		{
-			virtual object^ get()
-			{
-				return m_instance;
-			}
-		}
+    //bool ColumnUITypeEditor::PaintValueSupported::get()
+    //{
+    //    if(this->UITypeEditor == nullptr)
+    //        return false;
+    //    return UITypeEditor->GetPaintValueSupported();
+    //}
 
-		property _PropertyDescriptor^ PropertyDescriptor
-		{
-			virtual _PropertyDescriptor^ get()
-			{
-				return nullptr;
-			}
-		}
+    //void ColumnUITypeEditor::PaintValue(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle paintRect, System::Drawing::Rectangle clipRect, ICell^ /*style*/, System::Object^ value)
+    //{
+    //    UITypeEditor->PaintValue(gcnew System::Drawing::Design::PaintValueEventArgs(nullptr, value, graphics, clipRect));
+    //    clipRect.Width--;
+    //    clipRect.Height--;
+    //    graphics->DrawRectangle(System::Drawing::Pens::Black, clipRect);
+    //}
 
-		virtual object^ GetService(System::Type^ serviceType)
-		{
-			object^ service = m_gridControl->GetInternalService(serviceType);
-			return service;
-		}
+    //void ColumnUITypeEditor::OnEditValue(EditValueEventArgs^ e)
+    //{
+    //    using namespace System::ComponentModel;
+    //    using namespace System::Drawing::Design;
+    //    using namespace System::Windows::Forms;
 
-	private:
-		object^ m_instance;
-		_GridControl^ m_gridControl;
-		_PropertyDescriptor^ m_propertyDescriptor;
-	};
+    //    if(this->UITypeEditor == nullptr)
+    //        return;
 
-	ColumnUITypeEditor::ColumnUITypeEditor()
-	{
-		
-	}
+    //    Form^ owner = GridControl->FindForm();
+    //    while(owner->ParentForm != nullptr)
+    //        owner = owner->ParentForm;
 
-	System::Drawing::Design::UITypeEditor^ ColumnUITypeEditor::UITypeEditor::get()
-	{
-		using namespace System::ComponentModel;
+    //    if(dynamic_cast<IBindingList^>(e->Value) != nullptr)
+    //    {
+    //        IBindingList^ bindingList = dynamic_cast<IBindingList^>(e->Value);
 
-		if(m_typeEditor == nullptr)
-		{
-			m_typeEditor = (System::Drawing::Design::UITypeEditor^)TypeDescriptor::GetEditor(this->DataType, System::Drawing::Design::UITypeEditor::typeid);
-		}
+    //        Form form;
+    //        Ntreev::Windows::Forms::Grid::GridControl^ gridControl = gcnew Ntreev::Windows::Forms::Grid::GridControl();
+    //        gridControl->Dock = DockStyle::Fill;
+    //        gridControl->DataSource = bindingList;
 
-		return m_typeEditor;
-	}
+    //        form.Controls->Add(gridControl);
 
-	bool ColumnUITypeEditor::PaintValueSupported::get()
-	{
-		if(this->UITypeEditor == nullptr)
-			return false;
- 		return UITypeEditor->GetPaintValueSupported();
-	}
+    //        form.ShowDialog(owner);
+    //        e->CancelEdit = true;
+    //    }
+    //    else
+    //    {
 
-	void ColumnUITypeEditor::PaintValue(_Graphics^ graphics, _Rectangle renderRect, _Rectangle clipRect, IStyle^ /*style*/, object^ value)
-	{
-		UITypeEditor->PaintValue(gcnew System::Drawing::Design::PaintValueEventArgs(nullptr, value, graphics, clipRect));
-		renderRect.Width--;
-		renderRect.Height--;
-		graphics->DrawRectangle(System::Drawing::Pens::Black, renderRect);
-		//m_typeEditor->PaintValue(value, graphic, renderRect);
-	}
+    //    }
+    //    e->SuppressEditing = true;
+    //}
 
-	void ColumnUITypeEditor::OnEditValue(EditValueEventArgs^ e)
-	{
-		using namespace System::ComponentModel;
-		using namespace System::Drawing::Design;
-		using namespace System::Windows::Forms;
-
-		if(this->UITypeEditor == nullptr)
-			return;
-
-		Form^ owner = GridControl->FindForm();
-		while(owner->ParentForm != nullptr)
-			owner = owner->ParentForm;
-
-		if(dynamic_cast<IBindingList^>(e->Value) != nullptr)
-		{
-			IBindingList^ bindingList = dynamic_cast<IBindingList^>(e->Value);
-			
-			Form form;
-			_GridControl^ gridControl = gcnew _GridControl();
-			gridControl->Dock = DockStyle::Fill;
-			gridControl->DataSource = bindingList;
-
-			form.Controls->Add(gridControl);
-
-			form.ShowDialog(owner);
-			e->CancelEdit = true;
-		}
-		else
-		{
-			_Rectangle rect = GridControl->FocusedCell->DisplayRectangle;
-			_Point location(rect.Left, rect.Bottom);
-			location = GridControl->PointToScreen(location);
-
-
-			InternalTypeDescriptorContext^ typeDescriptorContext = gcnew InternalTypeDescriptorContext(GridControl->FocusedRow->Component, GridControl);
-			object^ value = UITypeEditor->EditValue(typeDescriptorContext, gcnew WindowsFormsEditorService(owner, location), e->Value);
-
-			if(object::Equals(value, e->Value) == false)
-				e->Value = value;
-		}
-		e->SuppressEditing = true;
-	}
 } /*namespace Columns*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

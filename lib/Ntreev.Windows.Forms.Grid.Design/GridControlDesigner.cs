@@ -28,11 +28,14 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using System.ComponentModel.Design.Serialization;
-using Ntreev.Windows.Forms.Grid.GridState;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms;
+
+//#if 0
+//using Ntreev.Windows.Forms.Grid.GridState;
+//#endif
 
 namespace Ntreev.Windows.Forms.Grid.Design
 {
@@ -129,8 +132,8 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 else
                     image = Properties.Resources.DataSource_Binding;
 
-                int x = item.DisplayRectangle.Left - image.Width / 3;
-                int y = item.DisplayRectangle.Top + image.Height / 3;
+                int x = item.Bounds.Left - image.Width / 3;
+                int y = item.Bounds.Top + image.Height / 3;
 
                 pe.Graphics.DrawImage(image, x, y);
             }
@@ -138,10 +141,10 @@ namespace Ntreev.Windows.Forms.Grid.Design
             if (this.selectionService.PrimarySelection is Column)
             {
                 Column column = this.selectionService.PrimarySelection as Column;
+
                 if (column.GridControl == gridControl && column.IsDisplayable == true)
                 {
-
-                    Rectangle rectancle = column.DisplayRectangle;
+                    Rectangle rectancle = column.Bounds;
                     rectancle.Width--;
                     rectancle.Height--;
                     pe.Graphics.DrawRectangle(Pens.Black, rectancle);
@@ -159,37 +162,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
                  return false;
             }
 
-            point = gridControl.PointToClient(point);
-
-            try
-            {
-                State state = gridControl.StateManager.GetHitTest(point);
-
-                switch (state)
-                {
-                    case State.ColumnPressing:
-                    case State.ColumnResizing:
-                    case State.ColumnSplitterMoving:
-                    case State.RowResizing:
-                    case State.GroupingInfoPressing:
-                    case State.GroupingCellPressing:
-                    case State.GroupingExpandPressing:
-                         return true;
-
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-
-            if (gridControl.DisplayRectangle.Contains(point) == false)
-            {
-                 return true;
-            }
-
-             return false;
+            return gridControl.DesignTimeHitTest(point);
         }
 
         protected override void Dispose(bool disposing)

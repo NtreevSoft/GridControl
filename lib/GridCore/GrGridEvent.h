@@ -25,113 +25,154 @@
 #include "GrGridBase.h"
 #include <set>
 
-template<typename ARG, class OWNER>
-class GrEventBase : public GrObject
+class IEventHandler
 {
-	class EventHandlerBase
-	{
-	public:
-		virtual size_t	obj() const = 0;
-		virtual size_t	func() const = 0;
+public:
+    virtual size_t    obj() const = 0;
+    virtual size_t    func() const = 0;
+    virtual size_t    size() const = 0;
 
-		virtual void	Raise(GrObject* pObject, void* args) const = 0;
-	};
+    virtual void    Raise(GrObject* pObject, void* args) const = 0;
+};
 
-	template<typename U, typename ARG>
-	class  GrEventHandlerBase : public EventHandlerBase
-	{
-	public:
-		typedef void (U::*MemberFunctionType)(GrObject*,ARG*);
+template<typename T, typename ARG>
+class  GrEventHandler : public IEventHandler
+{
+public:
+    typedef void (T::*Delegate)(GrObject*, ARG*);
 
-		GrEventHandlerBase(U *obj, void (U::*function)(GrObject*, ARG*))
-			: m_func(function), m_obj(obj)
-		{
+    GrEventHandler(T* obj, void (T::*dele)(GrObject*, ARG*))
+        : m_delegate(dele), m_obj(obj)
+    {
+        m_size = sizeof(*obj);
+    }
 
-		}
+    GrEventHandler(const GrEventHandler<T, ARG>& handler)
+        : m_delegate(handler.m_delegate), m_obj(handler.m_obj), m_size(handler.m_size)
+    {
+        
+    }
 
-		~GrEventHandlerBase()
-		{
+    virtual ~GrEventHandler()
+    {
 
-		}
+    }
 
-		virtual void Raise(GrObject* pObject, void* args) const
-		{
-			(m_obj->*m_func)(pObject, (ARG*)args);
-		}
+    virtual void Raise(GrObject* pObject, void* args) const
+    {
+        (m_obj->*m_delegate)(pObject, (ARG*)args);
+    }
 
-		virtual size_t obj() const { return (size_t)m_obj; }
-		virtual size_t func() const { return *(size_t*)&m_func; }
+    virtual size_t obj() const { return (size_t)m_obj; }
+    virtual size_t func() const { return *(size_t*)&m_delegate; }
+    virtual size_t size() const { return m_size; }
 
-	private:
-		MemberFunctionType	m_func;
-		U*					m_obj;
-	};
+private:
+    Delegate    m_delegate;
+    T*          m_obj;
+    size_t      m_size;
+};
 
-	struct eventless
-	{
-		bool operator () (const EventHandlerBase* b1, const EventHandlerBase* b2) const
-		{
-			if(b1->obj() == b2->obj())
-				return b1->func() < b2->func();
-			return b1->obj() < b2->obj();
-		}
-	};
-
-	typedef std::set< EventHandlerBase*, eventless > _Handlers;
+template<typename ARG, class OWNER>
+class GrEvent : public GrObject
+{
+    struct GrLess
+    {
+        bool operator () (const IEventHandler* b1, const IEventHandler* b2) const
+        {
+            if(b1->obj() == b2->obj())
+                return b1->size() < b2->size();
+            return b1->obj() < b2->obj();
+        }
+    };
+    typedef std::set< IEventHandler*, GrLess > _Handlers;
 
 public:
-	GrEventBase() {}
+    GrEvent()
+    {
+        
+    }
 
-	template<typename T>
-	void Add(T *obj, void (T::*function)(GrObject*, ARG*))
-	{
-		EventHandlerBase* newEvent = new GrEventHandlerBase<T, ARG>(obj, function);
-		std::pair< _Handlers::iterator, bool> p = m_setSubscribers.insert(newEvent);
-	}
+    virtual ~GrEvent()
+    {
+        typename _Handlers::iterator itor = m_handlers.begin();
+        while(itor != m_handlers.end())
+        {
+            delete (*itor);
+            itor++;
+        }
+    }
 
-	template<typename T>
-	void Remove(T *obj, void (T::*function)(GrObject*, ARG*))
-	{
-		EventHandlerBase* newEvent = new GrEventHandlerBase<T, ARG>(obj, function);
+    template<typename T>
+    void Add(T* obj, void (T::*function)(GrObject*, ARG*))
+    {
+        Add(GrEventHandler<T, ARG>(obj, function));
+    }
 
-		GrEventHandlerBase<T, ARG> dm1(obj, function);
-		GrEventHandlerBase<T, ARG> dm2 = dm1;
+    template<typename T>
+    void Add(GrEventHandler<T, ARG> handler)
+    {
+        GrEventHandler<T, ARG>* pEventHandler = new GrEventHandler<T, ARG>(handler);
+        std::pair< typename _Handlers::iterator, bool> p = m_handlers.insert(pEventHandler);
+        if(p.second == false)
+            throw new std::exception();
+    }
 
-		m_setSubscribers.erase(newEvent);
-	}
+    template<typename T>
+    void Remove(T *obj, void (T::*function)(GrObject*, ARG*))
+    {
+        Remove(GrEventHandler<T, ARG>(obj, function));
+    }
+
+    template<typename T>
+    void Remove(GrEventHandler<T, ARG> handler)
+    {
+        typename _Handlers::iterator itor = m_handlers.find(&handler);
+        if(itor == m_handlers.end())
+            throw new std::exception();
+        delete *itor;
+        m_handlers.erase(itor);
+    }
+
+#ifdef _MSC_VER
+private:
+#else
+public:
+#endif
+    void Raise(GrObject* pSender, ARG* e) const
+    {
+        typename _Handlers::const_iterator itor = m_handlers.begin();
+        while(itor != m_handlers.end())
+        {
+            const IEventHandler* subscriber = *itor;
+            subscriber->Raise(pSender, (void*)e);
+            itor++;
+        }
+    }
+
+    void operator () (GrObject* pSender, ARG* e) const
+    {
+        if(IsEmpty() == true)
+            return;
+        Raise(pSender, e);
+    }
+
+    bool IsEmpty() const
+    {
+        return m_handlers.size() == 0 ? true : false;
+    }
 
 private:
-	void Raise(GrObject* pSender, ARG* e) const
-	{
-		_Handlers::const_iterator itor = m_setSubscribers.begin();
-		while(itor != m_setSubscribers.end())
-		{
-			const EventHandlerBase* subscriber = *itor;
-			subscriber->Raise(pSender, (void*)e);
-			itor++;
-		}
-	}
+    _Handlers        m_handlers;
 
-	void operator () (GrObject* pSender, ARG* e) const
-	{
-		if(IsEmpty() == true)
-			return;
-		Raise(pSender, e);
-	}
+#ifdef _MSC_VER 
+    friend OWNER;
+#endif
 
-	bool IsEmpty() const
-	{
-		return m_setSubscribers.size() == 0 ? true : false;
-	}
-
-private:
-	_Handlers		m_setSubscribers;
-
-	friend OWNER;
 };
 
 class GrEventArgs : public GrObject
 {
 public:
-	static GrEventArgs Empty;
+    static GrEventArgs Empty;
 };

@@ -23,34 +23,30 @@
 
 #pragma once
 #include "GridBase.h"
+#include "GridEvent.h"
 
-namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Private
+namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	ref class ErrorDescriptor : GridObject
-	{
-	private:
-		typedef System::Timers::Timer						_Timer;
-		typedef System::Timers::ElapsedEventArgs			_ElapsedEventArgs;
-		typedef System::Timers::ElapsedEventHandler			_ElapsedEventHandler;
-		typedef System::Collections::Generic::List<Cell^>	_CellsList;
+    ref class ErrorDescriptor : GridObject
+    {
+    public:
+        ErrorDescriptor(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
 
-	public:
-		ErrorDescriptor(_GridControl^ gridControl);
+        void Paint(System::Drawing::Graphics^ g);
+        void Add(Cell^ cell);
+        void Remove(Cell^ cell);
+        void Add(Row^ row);
+        void Remove(Row^ row);
 
-		void							Paint(_Graphics^ g);
-		void							Add(Cell^ cell);
-		void							Remove(Cell^ cell);
+    private:
+        void errorTimer_Elapsed(System::Object^ sender, System::Timers::ElapsedEventArgs^  e);
+        void gridControl_Cleared(System::Object^ sender, ClearEventArgs^  e);
+        void gridControl_VisibleChanged(System::Object^ sender, System::EventArgs^ e);
 
-	private:
-		void							errorTimer_Elapsed(object^ sender, _ElapsedEventArgs^  e);
-		void							gridControl_Cleared(object^ sender, ClearEventArgs^  e);
-
-	private:
-		_CellsList^						m_cells;
-
-		_Timer^							m_errorTimer;
-		int								m_errorCount;
-
-		bool							m_changed;
-	};
-} /*namespace Private*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
+    private:
+        System::Collections::Generic::List<Cell^>^ m_cells;
+        System::Collections::Generic::List<Row^>^ m_rows;
+        System::Timers::Timer^ m_timer;
+        int m_errorCount;
+    };
+} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

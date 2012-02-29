@@ -21,657 +21,834 @@
 //=====================================================================================================================
 
 
-#include "StdAfx.h"
 #include "GrGridCore.h"
-#include "GrGridRenderer.h"
+#include "GrGridPainter.h"
 #include "GrGridInternal.h"
 #include <assert.h>
 
-class GrDefaultInvalidator : public GrGridInvalidator
-{
-public:
-	void Invalidate() {};
-	void Invalidate(int /*x*/, int /*y*/, int /*width*/, int /*height*/) {};
-	void Lock() {};
-	void Unlock() {};
-	void Reset() {};
-	bool IsInvalidated() const { return true; }
-
-};
+const GrClickEditing GrGridCore::DefaultClickEditing = GrClickEditing_FocusedClick;
 
 class GrMouseOverer : public GrObject
 {
 public:
-	GrMouseOverer()
-	{
-		m_pMouseOvered = NULL;
-	}
+    GrMouseOverer()
+    {
+        m_pMouseOvered = NULL;
+    }
 
-	bool SetMouseOver(GrCell* pCell, GrPoint ptLocalPos)
-	{
-		bool bSuccess = false;
-		if(m_pMouseOvered != pCell)
-			bSuccess = true;
+    bool SetMouseOver(GrCell* pCell, const GrPoint& localLocation)
+    {
+        bool success = false;
+        if(m_pMouseOvered != pCell)
+            success = true;
 
-		if(bSuccess == true)
-		{
-			if(m_pMouseOvered != NULL)
-				m_pGridCore->Invalidate(m_pMouseOvered->GetDisplayRect());
-			if(pCell != NULL)
-				m_pGridCore->Invalidate(pCell->GetDisplayRect());
-		}
+        if(success == true)
+        {
+            if(m_pMouseOvered != NULL)
+                m_pGridCore->Invalidate(m_pMouseOvered->GetRect());
+            if(pCell != NULL)
+                m_pGridCore->Invalidate(pCell->GetRect());
+        }
 
-		m_pMouseOvered = pCell;
+        m_pMouseOvered = pCell;
 
-		GrMouseOverState state;
-		if(m_pMouseOvered)
-			state = m_pMouseOvered->HitMouseOverTest(ptLocalPos);
-		else
-			state = GrMouseOverState_None;
+        int state;
+        if(m_pMouseOvered)
+            state = m_pMouseOvered->HitMouseOverTest(localLocation);
+        else
+            state = 0;
 
-		if(m_mouseOverState != state)
-			bSuccess = true;
-		m_mouseOverState = state;
-		return bSuccess;
-	}
+        if(m_mouseOverState != state)
+        {
+            success = true;
+            if(m_pMouseOvered != NULL)
+                m_pGridCore->Invalidate(m_pMouseOvered->GetRect());
+        }
+        m_mouseOverState = state;
+        return success;
+    }
 
-	GrCell* GetMouseOver() const
-	{
-		return m_pMouseOvered;
-	}
+    GrCell* GetMouseOver() const
+    {
+        return m_pMouseOvered;
+    }
 
-	GrMouseOverState GetMouseOverState() const
-	{
-		return m_mouseOverState;
-	}
+    int GetMouseOverState() const
+    {
+        return m_mouseOverState;
+    }
 
 protected:
-	virtual void OnGridCoreAttached()
-	{
-		GrObject::OnGridCoreAttached();
-		m_pGridCore->Cleared.Add(this, &GrMouseOverer::gridCore_Cleared);
-	}
+    virtual void OnGridCoreAttached()
+    {
+        GrObject::OnGridCoreAttached();
+        m_pGridCore->Cleared.Add(this, &GrMouseOverer::gridCore_Cleared);
+    }
 
 private:
-	void gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
-	{
-		m_pMouseOvered	 = NULL;
-		m_mouseOverState = GrMouseOverState_None;
-	}
+    void gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
+    {
+        m_pMouseOvered     = NULL;
+        m_mouseOverState = 0;
+    }
 
 private:
-	GrCell*					m_pMouseOvered;
-	GrMouseOverState		m_mouseOverState;
+    GrCell*        m_pMouseOvered;
+    int            m_mouseOverState;
 };
 
 class GrMousePresser : public GrObject
 {
 public:
-	GrMousePresser()
-	{
-		m_pMousePressed	 = NULL;
-	}
+    GrMousePresser()
+    {
+        m_pMousePressed     = NULL;
+    }
 
-	void SetMousePressed(GrCell* pCell)
-	{
-		if(m_pMousePressed != NULL)
-			m_pGridCore->Invalidate(m_pMousePressed->GetDisplayRect());
-		if(pCell != NULL)
-			m_pGridCore->Invalidate(pCell->GetDisplayRect());
+    void SetMousePress(GrCell* pCell)
+    {
+        if(m_pMousePressed != NULL)
+            m_pGridCore->Invalidate(m_pMousePressed->GetRect());
+        if(pCell != NULL)
+            m_pGridCore->Invalidate(pCell->GetRect());
 
-		m_pMousePressed = pCell;
-	}
+        m_pMousePressed = pCell;
+    }
 
-	void SetMouseUnpressed()
-	{
-		if(m_pMousePressed != NULL)
-			m_pGridCore->Invalidate(m_pMousePressed->GetDisplayRect());
-		m_pMousePressed = NULL;
-	}
+    void SetMouseUnpress()
+    {
+        if(m_pMousePressed != NULL)
+            m_pGridCore->Invalidate(m_pMousePressed->GetRect());
+        m_pMousePressed = NULL;
+    }
 
-	GrCell* GetMousePressed() const
-	{
-		return m_pMousePressed;
-	}
+    GrCell* GetMousePress() const
+    {
+        return m_pMousePressed;
+    }
 
 protected:
-	virtual void OnGridCoreAttached()
-	{
-		GrObject::OnGridCoreAttached();
-		m_pGridCore->Cleared.Add(this, &GrMousePresser::gridCore_Cleared);
-	}
+    virtual void OnGridCoreAttached()
+    {
+        GrObject::OnGridCoreAttached();
+        m_pGridCore->Cleared.Add(this, &GrMousePresser::gridCore_Cleared);
+    }
 
 private:
-	void gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
-	{
-		m_pMousePressed	 = NULL;
-	}
+    void gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
+    {
+        m_pMousePressed     = NULL;
+    }
 
 private:
-	GrCell*	m_pMousePressed;
+    GrCell*    m_pMousePressed;
 };
-
-void GrGridCore::OnFontChanged()
-{
-	int nDefHeight = (int)(m_pFont->GetHeight() / 0.56f);
-	m_pColumnList->SetHeight(nDefHeight);
-	m_pInsertionRow->SetHeight(nDefHeight);
-}
 
 void SignalFunc(int /*sigNum*/)
 {
-	throw _Exception("");
+    throw _Exception("");
 }
 
-GrGridCore::GrGridCore(void)
+GrGridCore::GrGridCore(GrGridWindow* pGridWindow) : m_pGridWindow(pGridWindow)
 {
-	m_pInvalidator			= NULL;
-	m_pDefaultInvalidator	= new GrDefaultInvalidator();
-	m_nCreatedCell			= 0;
-	m_nAttachedCount		= 0;
+    m_createdCell       = 0;
+    m_attachedCount     = 0;
 
-	m_nGroupingMargin		= 0;
-	m_dwFlag				= 0;
+    m_groupingMargin    = 0;
+    m_updating          = false;
 
-	m_rtDisplay.DoEmpty();
+    m_autoFitColumn      = false;
+    m_autoFitRow         = false;
+    m_columnSplitterWidth= 10;
+    m_rowSplitterHeight  = 3;
 
-	m_bMarginVisible		= false;
-	m_bUpdating				= false;
+    m_reservedColumn   = 0;
+    m_reservedRow      = 0;
 
-	m_bShowClippedText		= true;
+    m_fullRowSelect    = false;
+    m_selectionVisible = true;
+    m_rowHighlight     = false;
+    m_rowHighlightType = GrRowHighlightType_Fill;
+    m_columnMoving  = true;
+    m_columnSorting = true;
+    m_columnResizing= true;
+    m_columnFrozing = true;
+    m_readOnly      = false;
+    m_rowResizing   = true;
+    m_hideSelection = false;
+    m_multiSelect   = true;
+    m_rowVisible    = true;
+    m_clickEditing  = DefaultClickEditing;
+    
 
-	m_bAutoFitColumn		= false;
-	m_bAutoFitRow			= false;
-	m_nColumnSplitter		= 10;
-	m_nRowSplitter			= 3;
+    m_pFont         = NULL;
+    m_pDefaultStyle = new GrStyle();
+    m_pStyle        = NULL;
 
-	m_nReservedColumn		= 0;
-	m_nReservedRow			= 0;
+    m_pItemSelector = new GrItemSelectorInternal();
+    m_pFocuser      = new GrFocuserInternal();
+    m_pTextUpdater  = new GrTextUpdater();
+    m_pMouseOverer  = new GrMouseOverer();
+    m_pMousePresser = new GrMousePresser();
+    m_pRootRow      = new GrRootRow();
+    m_pCaption      = new GrCaption();
+    m_pGroupingList = new GrGroupingList();
+    m_pColumnList   = new GrColumnList();
+    m_pDataRowList  = new GrDataRowList();
+    m_pInsertionRow = new GrInsertionRow();
+    m_pSplitterRow  = new GrRowSplitter();
+    m_pFocusMover   = new GrFocusMover();
+    m_pStateManager = new GrStateManager();
 
-	m_bFullRowSelect		= false;
-	m_bSelectionVisible		= true;
-	m_bRowHighlight			= false;
-	m_rowHighlightType		= GrRowHighlightType_Fill;
+    m_pInvalidator  = m_pGridWindow->GetInvalidator();
 
-	m_pFont					= NULL;
-	m_pDefaultStyle			= new GrStyle;
-	m_pStyle				= NULL;
+    AttachObject(m_pItemSelector);
+    AttachObject(m_pFocuser);
+    AttachObject(m_pTextUpdater);
+    AttachObject(m_pMouseOverer);
+    AttachObject(m_pMousePresser);
+    AttachObject(m_pRootRow);
+    AttachObject(m_pCaption);
+    AttachObject(m_pGroupingList);
+    AttachObject(m_pColumnList);
+    AttachObject(m_pDataRowList);
+    AttachObject(m_pInsertionRow);
+    AttachObject(m_pSplitterRow);
+    AttachObject(m_pStateManager);
+    AttachObject(m_pGridWindow);
+    AttachObject(m_pFocusMover);
 
-	m_pItemSelector	= new GrItemSelector();
-	m_pFocuser		= new GrFocuser();
-	m_pHitTester	= new GrHitTester();
-	m_pTextUpdater	= new GrTextUpdater();
-	m_pMouseOverer	= new GrMouseOverer();
-	m_pMousePresser	= new GrMousePresser();
-	m_pRootRow		= new GrRootRow();
-	m_pCaption		= new GrCaption();
-	m_pGroupingList	= new GrGroupingList();
-	m_pColumnList	= new GrColumnList();
-	m_pDataRowList	= new GrDataRowList();
-	m_pInsertionRow = new GrInsertionRow();
-	m_pSplitterRow	= new GrRowSplitter();
+    m_pRootRow->AddChild(m_pCaption);
+    m_pRootRow->AddChild(m_pGroupingList);
+    m_pRootRow->AddChild(m_pColumnList);
+    m_pRootRow->AddChild(m_pInsertionRow);
+    m_pRootRow->AddChild(m_pSplitterRow);
+    m_pRootRow->AddChild(m_pDataRowList);
 
-	AttachObject(m_pItemSelector);
-	AttachObject(m_pFocuser);
-	AttachObject(m_pHitTester);
-	AttachObject(m_pTextUpdater);
-	AttachObject(m_pMouseOverer);
-	AttachObject(m_pMousePresser);
-	AttachObject(m_pRootRow);
-	AttachObject(m_pCaption);
-	AttachObject(m_pGroupingList);
-	AttachObject(m_pColumnList);
-	AttachObject(m_pDataRowList);
-	AttachObject(m_pInsertionRow);
-	AttachObject(m_pSplitterRow);
+    m_pGroupingList->Changed.Add(this, &GrGridCore::groupingList_Changed);
+    m_pColumnList->ColumnInserted.Add(this, &GrGridCore::columnList_ColumnInserted);
+    m_pColumnList->ColumnRemoved.Add(this, &GrGridCore::columnList_ColumnRemoved);
+    m_pColumnList->ColumnWidthChanged.Add(this, &GrGridCore::columnList_ColumnWidthChanged);
+    m_pColumnList->ColumnWordwrapChanged.Add(this, &GrGridCore::columnList_ColumnWordwrapChanged);
+    m_pColumnList->ColumnHorzAlignChanged.Add(this, &GrGridCore::columnList_ColumnHorzAlignChanged);
+    m_pColumnList->ColumnVertAlignChanged.Add(this, &GrGridCore::columnList_ColumnVertAlignChanged);
+    m_pColumnList->ColumnPaddingChanged.Add(this, &GrGridCore::columnList_ColumnPaddingChanged);
 
-	m_pRootRow->AddChild(m_pCaption);
-	m_pRootRow->AddChild(m_pGroupingList);
-	m_pRootRow->AddChild(m_pColumnList);
-	m_pRootRow->AddChild(m_pInsertionRow);
-	m_pRootRow->AddChild(m_pSplitterRow);
-	m_pRootRow->AddChild(m_pDataRowList);
+    m_pFocuser->FocusChanging.Add(this, &GrGridCore::focuser_FocusChanging);
 
-	m_pGroupingList->Changed.Add(this, &GrGridCore::groupingList_Changed);
-	m_pColumnList->ColumnInserted.Add(this, &GrGridCore::columnList_ColumnInserted);
-	m_pColumnList->ColumnRemoved.Add(this, &GrGridCore::columnList_ColumnRemoved);
-	m_pColumnList->ColumnWidthChanged.Add(this, &GrGridCore::columnList_ColumnWidthChanged);
-	m_pColumnList->ColumnWordwrapChanged.Add(this, &GrGridCore::columnList_ColumnWordwrapChanged);
-	m_pColumnList->ColumnHorzAlignChanged.Add(this, &GrGridCore::columnList_ColumnHorzAlignChanged);
-	m_pColumnList->ColumnVertAlignChanged.Add(this, &GrGridCore::columnList_ColumnVertAlignChanged);
-	m_pColumnList->ColumnPaddingChanged.Add(this, &GrGridCore::columnList_ColumnPaddingChanged);
-
-	OnCreated(&GrEventArgs::Empty);
+    this->Created(this, &GrEventArgs::Empty);
 }
 
-GrGridCore::~GrGridCore(void)
+GrGridCore::~GrGridCore()
 {
-	delete m_pMousePresser;
-	delete m_pMouseOverer;
-	delete m_pHitTester;
-	delete m_pFocuser;
-	delete m_pItemSelector;
+    delete m_pStateManager;
+    delete m_pFocusMover;
+    delete m_pSplitterRow;
+    delete m_pInsertionRow;
+    delete m_pDataRowList;
+    delete m_pColumnList;
+    delete m_pGroupingList;
+    delete m_pCaption;
+    delete m_pRootRow;
+    delete m_pMousePresser;
+    delete m_pMouseOverer;
+    delete m_pTextUpdater;
+    delete m_pFocuser;
+    delete m_pItemSelector;
 
-	delete m_pSplitterRow;
-	delete m_pInsertionRow;
-	delete m_pDataRowList;
-	delete m_pColumnList;
-	delete m_pGroupingList;
-	delete m_pCaption;
-	delete m_pRootRow;
+    delete m_pDefaultStyle;
+    delete m_pStyle;
 
-	delete m_pStyle;
-
-	delete m_pDefaultInvalidator;
-
-	if(m_nCreatedCell != 0)
-		throw _Exception("Some obejcts are not deleted");
+    if(m_createdCell != 0)
+        throw _Exception("Some obejcts are not deleted");
 }
 
-void GrGridCore::Reserve(uint nColumnCount, uint nRowCount)
+void GrGridCore::Reserve(uint columnCount, uint rowCount)
 {
-	m_nReservedColumn = nColumnCount + 2;
-	m_nReservedRow	  = nRowCount + 2;
+    m_reservedColumn = columnCount + 2;
+    m_reservedRow    = rowCount + 2;
 
-	m_pDataRowList->Reserve(m_nReservedRow);
-	m_pColumnList->Reserve(m_nReservedColumn);
+    m_pDataRowList->Reserve(m_reservedRow);
+    m_pColumnList->Reserve(m_reservedColumn);
 
-	OnCapacityChanged(&GrEventArgs::Empty);
+    OnCapacityChanged(&GrEventArgs::Empty);
 }
 
 uint GrGridCore::GetReservedColumn() const
 {
-	return m_nReservedColumn;
+    return m_reservedColumn;
 }
 
 uint GrGridCore::GetReservedRow() const
 {
-	return m_nReservedRow;
+    return m_reservedRow;
 }
 
-bool GrGridCore::SetMouseOver(GrCell* pCell, GrPoint ptLocalPos)
+bool GrGridCore::SetMouseOver(GrCell* pCell, const GrPoint& localLocation)
 {
-	return m_pMouseOverer->SetMouseOver(pCell, ptLocalPos);
+    return m_pMouseOverer->SetMouseOver(pCell, localLocation);
 }
 
 GrCell* GrGridCore::GetMouseOver() const
 {
-	return m_pMouseOverer->GetMouseOver();
+    return m_pMouseOverer->GetMouseOver();
 }
 
-GrMouseOverState GrGridCore::GetMouseOverState() const
+int GrGridCore::GetMouseOverState() const
 {
-	return m_pMouseOverer->GetMouseOverState();
+    return m_pMouseOverer->GetMouseOverState();
 }
 
-void GrGridCore::SetMousePressed(GrCell* pCell)
+void GrGridCore::SetMousePress(GrCell* pCell)
 {
-	m_pMousePresser->SetMousePressed(pCell);	
+    m_pMousePresser->SetMousePress(pCell);    
 }
 
-void GrGridCore::SetMouseUnpressed()
+void GrGridCore::SetMouseUnpress()
 {
-	m_pMousePresser->SetMouseUnpressed();	
+    m_pMousePresser->SetMouseUnpress();    
 }
 
-GrCell* GrGridCore::GetMousePressed() const
+GrCell* GrGridCore::GetMousePress() const
 {
-	return m_pMousePresser->GetMousePressed();
-}
-
-bool GrGridCore::GetMarginVisible() const
-{
-	return m_bMarginVisible;
-}
-
-void GrGridCore::SetMarginVisible(bool b)
-{
-	m_bMarginVisible = b;
+    return m_pMousePresser->GetMousePress();
 }
 
 bool GrGridCore::GetInsertionRowVisible() const
 {
-	return m_pInsertionRow->GetVisible();
+    return m_pInsertionRow->GetVisible();
+}
+
+void GrGridCore::SetInsertionRowVisible(bool b)
+{
+    m_pInsertionRow->SetVisible(b);
 }
 
 bool GrGridCore::GetRowHighlight() const
 {
-	return m_bRowHighlight;
+    return m_rowHighlight;
 }
 
 void GrGridCore::SetRowHighlight(bool b)
 {
-	m_bRowHighlight = b;
+    if(m_rowHighlight == b)
+        return;
+    m_rowHighlight = b;
+    Invalidate();
 }
 
 GrRowHighlightType GrGridCore::GetRowHighlightType() const
 {
-	return m_rowHighlightType;
+    return m_rowHighlightType;
 }
 
 void GrGridCore::SetRowHighlightType(GrRowHighlightType type)
 {
-	m_rowHighlightType = type;
+    if(m_rowHighlightType == type)
+        return;
+    m_rowHighlightType = type;
+    Invalidate();
 }
 
-bool GrGridCore::Update()
+bool GrGridCore::Update(bool force)
 {
-	if(m_bUpdating == true)
-		return 0;
+    if(m_updating == true)
+        return 0;
 
-	m_bUpdating = true;
+    m_updating = true;
 
-	m_pTextUpdater->UpdateTextBound();
+    m_pTextUpdater->UpdateTextBounds();
+    m_pRootRow->Update(force);
+    m_pTextUpdater->UpdateTextBounds();
+    m_pTextUpdater->UpdateTextAlign();
 
-	m_pRootRow->Update(false);
-
-	m_pTextUpdater->UpdateTextBound();
-	m_pTextUpdater->UpdateTextAlign();
-
-	m_bUpdating = false;
-	return true;
+    m_updating = false;
+    return true;
 }
 
-const GrRect* GrGridCore::GetDisplayRect() const
+const GrRect& GrGridCore::GetDisplayRect() const
 {
-	return &m_rtDisplay;
+    return m_displayRect;
 }
 
-void GrGridCore::Clip(uint nStartCol, uint nStartRow)
+void GrGridCore::SetDisplayRect(const GrRect& displayRect)
 {
-	m_pRootRow->Clip(&m_rtDisplay, nStartCol, nStartRow);
+    if(m_displayRect == displayRect)
+        return;
+    m_displayRect = displayRect;
+    m_pRootRow->SetHeightChanged();
+    m_pColumnList->SetWidthChanged();
+    Invalidate();
 }
 
-void GrGridCore::SetDisplayRect(GrRect rtDisplay)
+GrRect GrGridCore::GetBounds() const
 {
-	if(m_rtDisplay == rtDisplay)
-		return;
-	m_rtDisplay = rtDisplay;
-	Invalidate();
+    return m_pRootRow->GetBounds();
 }
 
-GrRect GrGridCore::GetDisplayableRect() const
+GrRect GrGridCore::GetDataRect() const
 {
-	GrRect rtDisplayable = m_rtDisplay;
-	if(GetMarginVisible() == false)
-	{
-		rtDisplayable.right = m_pColumnList->GetDisplayableRight();
-	}
-
-	rtDisplayable.bottom = m_pDataRowList->GetDisplayableBottom();
-	return rtDisplayable;
+    GrRect dataRect;
+    dataRect.left = m_pColumnList->GetUnfrozenX();
+    dataRect.top  = m_pDataRowList->GetY();
+    dataRect.right  = std::min(GetBounds().right, m_displayRect.right);
+    dataRect.bottom = std::min(GetBounds().bottom, m_displayRect.bottom);
+    return dataRect;
 }
 
-void GrGridCore::Render(GrGridRenderer* pRenderer, const GrRect* pClipping) const
+void GrGridCore::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
 {
-	m_pRootRow->Render(pRenderer, pClipping);
-	GetInvalidator()->Reset();
+    uint horz = GetHorzScroll()->GetVisible() == true ? GetHorzScroll()->GetValue() : GetHorzScroll()->GetMinimum();
+    uint vert = GetVertScroll()->GetVisible() == true ? GetVertScroll()->GetValue() : GetVertScroll()->GetMinimum();
+    m_pRootRow->Clip(m_displayRect, horz, vert);
+    m_pRootRow->Paint(pPainter, clipRect);
+    m_pStateManager->OnPaint(pPainter);
+    m_pInvalidator->Reset();
 }
 
-bool GrGridCore::CanBeGrouped() const
+bool GrGridCore::CanBeGrouping() const
 {
-	return m_pGroupingList->CanBeGrouped();
+    return m_pGroupingList->CanBeGrouping();
 }
 
 void GrGridCore::EnableGrouping(bool b) const
 {
-	m_pGroupingList->EnableGrouping(b);
-	m_pRootRow->SetVisibleChanged();
+    m_pGroupingList->EnableGrouping(b);
+    m_pRootRow->SetVisibleChanged();
+}
+
+bool GrGridCore::CanBeColumnMoving() const
+{
+    return m_columnMoving;
+}
+
+void GrGridCore::EnableColumnMoving(bool b)
+{
+    m_columnMoving = b;
+}
+
+bool GrGridCore::CanBeColumnSorting() const
+{
+    return m_columnSorting;
+}
+
+void GrGridCore::EnableColumnSorting(bool b)
+{
+    m_columnSorting = b;
+}
+
+bool GrGridCore::CanBeColumnResizing() const
+{
+    return m_columnResizing;
+}
+
+void GrGridCore::EnableColumnResizing(bool b)
+{
+    m_columnResizing = b;
+}
+
+bool GrGridCore::CanBeColumnFrozing() const
+{
+    return m_columnFrozing;
+}
+
+void GrGridCore::EnableColumnFrozing(bool b)
+{
+    m_columnFrozing = b;
+}
+
+bool GrGridCore::GetReadOnly() const
+{
+    return m_readOnly;
+}
+
+void GrGridCore::SetReadOnly(bool value)
+{
+    if(m_readOnly == value)
+        return;
+    m_readOnly = value;
+    Invalidate();
+}
+
+bool GrGridCore::CanBeRowResizing() const
+{
+    return m_rowResizing;
+}
+
+void GrGridCore::EnableRowResizing(bool b)
+{
+    m_rowResizing = b;
+}
+
+bool GrGridCore::GetHideSelection() const
+{
+    return m_hideSelection;
+}
+
+void GrGridCore::SetHideSelection(bool b)
+{
+    m_hideSelection = b;
+}
+
+bool GrGridCore::GetMultiSelect() const
+{
+    return m_multiSelect;
+}
+
+void GrGridCore::SetMultiSelect(bool b)
+{
+    m_multiSelect = b;
+}
+
+GrClickEditing GrGridCore::GetClickEditing() const
+{
+    return m_clickEditing;
+}
+
+void GrGridCore::SetClickEditing(GrClickEditing clickEditing)
+{
+    if(clickEditing == GrClickEditing_Default)
+        clickEditing = DefaultClickEditing;
+    m_clickEditing = clickEditing;
 }
 
 int GrGridCore::GetGroupingMargin() const
 {
-	return m_nGroupingMargin;
+    return m_groupingMargin;
 }
 
 bool GrGridCore::IsGrouped() const
 {
-	return m_pGroupingList->GetGroupingCount() > 0 ? true : false;
+    return m_pGroupingList->GetGroupingCount() > 0 ? true : false;
 }
 
 void GrGridCore::Clear()
 {
-	Update();
-
-	m_nGroupingMargin = 0;
-	m_rtDisplay.DoEmpty();
-
-	OnCleared(&GrEventArgs::Empty);
-
-	//int n = GrCell::m_snCreated;
-	//if(m_nInitialObjectCount != n)
-	//	throw new exception("Clear시 해제 되지 않은 개체가 있습니다");
+    Update(true);
+    m_groupingMargin = 0;
+    OnCleared(&GrEventArgs::Empty);
+    Update(true);
+    //int n = GrCell::m_snCreated;
+    //if(m_nInitialObjectCount != n)
+    //    throw new exception("Clear시 해제 되지 않은 개체가 있습니다");
 }
 
 void GrGridCore::Invalidate()
 {
-	GetInvalidator()->Invalidate();
+    m_pInvalidator->Invalidate();
 }
-	
+
 void GrGridCore::Invalidate(int x, int y, int width, int height)
 {
-	GetInvalidator()->Invalidate(x, y, width, height);
+    m_pInvalidator->Invalidate(x, y, width, height);
 }
 
 void GrGridCore::Invalidate(const GrRect& rect)
 {
-	GetInvalidator()->Invalidate(rect);	
+    m_pInvalidator->Invalidate(rect);    
 }
 
 void GrGridCore::LockInvalidate()
 {
-	GetInvalidator()->Lock();
+    m_pInvalidator->Lock();
 }
 
 void GrGridCore::UnlockInvalidate()
 {
-	GetInvalidator()->Unlock();
+    m_pInvalidator->Unlock();
 }
 
 void GrGridCore::ResetInvalidate()
 {
-	GetInvalidator()->Reset();
+    m_pInvalidator->Reset();
 }
 
 bool GrGridCore::IsInvalidated() const
 {
-	return GetInvalidator()->IsInvalidated();
+    return m_pInvalidator->IsInvalidated();
 }
 
-void GrGridCore::ShowClippedText(bool bShow)
+void GrGridCore::focuser_FocusChanging(GrObject* /*pSender*/, GrFocusChangeArgs* /*e*/)
 {
-	m_bShowClippedText = bShow;
+    if(m_pStateManager->GetGridState() == GrGridState_ItemEditing)
+        m_pStateManager->ChangeDefaultState();
 }
 
 void GrGridCore::columnList_ColumnInserted(GrObject* /*pSender*/, GrColumnEventArgs* /*e*/)
 {
-	m_pTextUpdater->AddTextBound(m_pCaption);
-	m_pTextUpdater->AddTextBound(m_pGroupingList);
+    m_pTextUpdater->AddTextBounds(m_pCaption);
+    m_pTextUpdater->AddTextBounds(m_pGroupingList);
 }
 
 void GrGridCore::columnList_ColumnRemoved(GrObject* /*pSender*/, GrColumnEventArgs* /*e*/)
 {
-	m_pTextUpdater->AddTextBound(m_pCaption);
-	m_pTextUpdater->AddTextBound(m_pGroupingList);
+    m_pTextUpdater->AddTextBounds(m_pCaption);
+    m_pTextUpdater->AddTextBounds(m_pGroupingList);
 }
 
 void GrGridCore::columnList_ColumnHorzAlignChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
 {
-	GrColumn* pColumn = e->GetColumn();
-	m_pTextUpdater->AddTextAlign(pColumn);
+    GrColumn* pColumn = e->GetColumn();
+    m_pTextUpdater->AddTextAlign(pColumn);
 }
 
 void GrGridCore::columnList_ColumnVertAlignChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
 {
-	GrColumn* pColumn = e->GetColumn();
-	m_pTextUpdater->AddTextAlign(pColumn);
+    GrColumn* pColumn = e->GetColumn();
+    m_pTextUpdater->AddTextAlign(pColumn);
 }
 
 void GrGridCore::columnList_ColumnWidthChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
 {
-	if(m_bUpdating == true)
-		return;
-	GrColumn* pColumn = e->GetColumn();
-	m_pTextUpdater->AddTextBound(pColumn);
+    if(m_updating == true)
+        return;
+    GrColumn* pColumn = e->GetColumn();
+    if(pColumn->GetItemWordWrap() == true)
+        m_pTextUpdater->AddTextBounds(pColumn);
 }
 
 void GrGridCore::columnList_ColumnWordwrapChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
 {
-	if(m_bUpdating == true)
-		return;
-	GrColumn* pColumn = e->GetColumn();
-	m_pTextUpdater->AddTextBound(pColumn);
+    if(m_updating == true)
+        return;
+    GrColumn* pColumn = e->GetColumn();
+    m_pTextUpdater->AddTextBounds(pColumn);
 }
 
 void GrGridCore::columnList_ColumnPaddingChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
 {
-	GrColumn* pColumn = e->GetColumn();
-	m_pTextUpdater->AddTextBound(pColumn);
-}
-
-void GrGridCore::SetFont(GrFont* pFont)
-{
-	if(m_pFont == pFont)
-		return;
-	m_pFont = pFont;
-	OnFontChanged();
-}
-
-#ifdef _MANAGED
-void GrGridCore::SetFont(System::Drawing::Font^ font)
-{
-	SetFont(GrFontManager::FromManagedFont(font));
-}
-#endif
-GrFont* GrGridCore::GetFont() const
-{
-	if(m_pFont == NULL)
-		return GetDefaultFont();
-	return m_pFont;
-}
-
-GrFont* GrGridCore::GetFont(void* hFont) const
-{
-	return GrFontManager::GetFontDesc(hFont);
-}
-
-GrFont* GrGridCore::GetDefaultFont() const
-{
-	return GrFontManager::GetDefaultFont();
+    GrColumn* pColumn = e->GetColumn();
+    if(pColumn->GetItemWordWrap() == true)
+        m_pTextUpdater->AddTextBounds(pColumn);
 }
 
 void GrGridCore::SetStyle(GrStyle* pStyle)
 {
-	m_pStyle = pStyle;
+    m_pStyle = pStyle;
 }
 
 GrStyle* GrGridCore::GetStyle() const
 {
-	if(m_pStyle == NULL)
-		return m_pDefaultStyle;
-	return m_pStyle;
+    if(m_pStyle == NULL)
+        return m_pDefaultStyle;
+    return m_pStyle;
 }
 
 void GrGridCore::AttachObject(GrObject* pObject)
 {
-	if(pObject->m_pGridCore != NULL)
-		return;
-	pObject->m_pGridCore = this;
-	pObject->OnGridCoreAttached();
+    if(pObject->m_pGridCore != NULL)
+        return;
+    pObject->m_pGridCore = this;
+    pObject->OnGridCoreAttached();
 
-	m_nAttachedCount++;
+    m_attachedCount++;
 }
 
 void GrGridCore::DetachObject(GrObject* pObject)
 {
-	if(pObject->m_pGridCore == NULL)
-		return;
-	pObject->OnGridCoreDetached();
-	pObject->m_pGridCore = NULL;
-	m_nAttachedCount--;
+    if(pObject->m_pGridCore == NULL)
+        return;
+    pObject->OnGridCoreDetached();
+    pObject->m_pGridCore = NULL;
+    m_attachedCount--;
+}
+
+void GrGridCore::EditItem(GrItem* pItem, GrEditingReason reason)
+{
+    static GrEditingReason temp;
+    temp = reason;
+
+    if(pItem->GetDisplayable() == false)
+    {
+        pItem->BringIntoView();
+    }
+    m_pStateManager->ChangeState(GrGridState_ItemEditing, pItem, &temp);
+}
+
+void GrGridCore::BringIntoView(GrItem* pItem)
+{
+    if(pItem == NULL)
+        return;
+
+    m_pColumnList->BringIntoView(pItem->GetColumn());
+    m_pDataRowList->BringIntoView(pItem->GetDataRow());
+}
+
+void GrGridCore::Invoke(std::wstring eventName, GrEventArgs* e)
+{
+    if(eventName.compare(L"EditValue") == 0)
+    {
+        OnEditValue((GrEditEventArgs*)e);
+    }
+    else if(eventName.compare(L"ItemMouseEnter") == 0)
+    {
+        OnItemMouseEnter((GrItemMouseEventArgs*)e);
+    }
+    else if(eventName.compare(L"ItemMouseMove") == 0)
+    {
+        OnItemMouseMove((GrItemMouseEventArgs*)e);
+    }
+    else if(eventName.compare(L"ItemMouseLeave") == 0)
+    {
+        OnItemMouseLeave((GrItemMouseEventArgs*)e);
+    }
+    else if(eventName.compare(L"ItemMouseClick") == 0)
+    {
+        OnItemMouseClick((GrItemMouseEventArgs*)e);
+    }
+    else if(eventName.compare(L"ItemMouseDoubleClick") == 0)
+    {
+        OnItemMouseDoubleClick((GrItemMouseEventArgs*)e);
+    }
+    else if(eventName.compare(L"close") == 0)
+    {
+        m_pStateManager->ChangeDefaultState();
+    }
+    else if(eventName.compare(L"FontChanged") == 0)
+    {
+        OnFontChanged(e);
+    }
+    else
+        throw _Exception("Not implemented event");
+}
+
+void GrGridCore::OnEditValue(GrEditEventArgs* e)
+{
+    m_pGridWindow->OnEditValue(e);
+}
+
+void GrGridCore::OnItemMouseEnter(GrItemMouseEventArgs* e)
+{
+    ItemMouseEnter(this, e);
+}
+
+void GrGridCore::OnItemMouseMove(GrItemMouseEventArgs* e)
+{
+    ItemMouseMove(this, e);
+}
+
+void GrGridCore::OnItemMouseLeave(GrItemMouseEventArgs* e)
+{
+    ItemMouseLeave(this, e);
+}
+
+void GrGridCore::OnItemMouseClick(GrItemMouseEventArgs* e)
+{
+    ItemMouseClick(this, e);
+}
+
+void GrGridCore::OnItemMouseDoubleClick(GrItemMouseEventArgs* e)
+{
+    ItemMouseDoubleClick(this, e);
+}
+
+void GrGridCore::OnFontChanged(GrEventArgs* e)
+{
+    FontChanged(this, e);
 }
 
 void GrGridCore::groupingList_Changed(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 {
-	uint nGroupingCount = m_pGroupingList->GetGroupingCount();
-	if(nGroupingCount == 0)
-		m_nGroupingMargin = 0;
-	else
-		m_nGroupingMargin = (nGroupingCount + 1) * DEF_GROUP_WIDTH;
-}
-
-void GrGridCore::OnCreated(GrEventArgs* e)
-{
-	Created(this, e);
-	Update();
+    uint groupingCount = m_pGroupingList->GetGroupingCount();
+    if(groupingCount == 0)
+        m_groupingMargin = 0;
+    else
+        m_groupingMargin = (groupingCount + 1) * DEF_GROUP_WIDTH;
 }
 
 void GrGridCore::OnCleared(GrEventArgs* e)
 {
-	Cleared(this, e);
+    Cleared(this, e);
 }
 
 void GrGridCore::OnCapacityChanged(GrEventArgs* e)
 {
-	CapacityChanged(this, e);
+    CapacityChanged(this, e);
 }
 
 void GrGridCore::SetAutoFitColumn(bool b)
 {
-	m_bAutoFitColumn = b;
+    m_autoFitColumn = b;
 }
 
 void GrGridCore::SetAutoFitRow(bool b)
 {
-	m_bAutoFitRow = b;
+    m_autoFitRow = b;
 }
 
 bool GrGridCore::GetAutoFitColumn() const
 {
-	return m_bAutoFitColumn;
+    return m_autoFitColumn;
 }
 
 bool GrGridCore::GetAutoFitRow() const
 {
-	return m_bAutoFitRow;
+    return m_autoFitRow;
 }
 
 void GrGridCore::SetColumnSplitter(int value)
 {
-	m_nColumnSplitter = value;
+    m_columnSplitterWidth = value;
 }
 
 void GrGridCore::SetRowSplitter(int value)
 {
-	m_nRowSplitter = value;
+    m_rowSplitterHeight = value;
 }
 
 int GrGridCore::GetColumnSplitter() const
 {
-	return m_nColumnSplitter;
+    return m_columnSplitterWidth;
 }
 
 int GrGridCore::GetRowSplitter() const
 {
-	return m_nRowSplitter;
+    return m_rowSplitterHeight;
 }
 
 bool GrGridCore::GetFullRowSelect() const
 {
-	return m_bFullRowSelect;
+    return m_fullRowSelect;
 }
 
 void GrGridCore::SetFullRowSelect(bool b)
 {
-	m_bFullRowSelect = b;
+    m_fullRowSelect = b;
 }
 
 bool GrGridCore::GetSelectionVisible() const
 {
-	return m_bSelectionVisible;
+    return m_selectionVisible;
 }
 
 void GrGridCore::SetSelectionVisible(bool b)
 {
-	m_bSelectionVisible = b;
+    m_selectionVisible = b;
+}
+
+bool GrGridCore::GetRowVisible() const
+{
+    return m_rowVisible;
+}
+
+void GrGridCore::SetRowVisible(bool b)
+{
+    if(m_rowVisible == b)
+        return;
+    m_rowVisible = b;
+    m_pColumnList->SetVisibleChanged();
+    Invalidate();
+}
+
+bool GrGridCore::HitTest(const GrPoint& location, GrHitTest* pHitTest) const
+{
+    GrCell* pCell = m_pRootRow->HitTest(location);
+
+    if(pCell != NULL)
+    {
+        pHitTest->pHitted  = pCell;
+        pHitTest->localHit = location - pCell->GetLocation();
+        return true;
+    }    
+    return false;
 }

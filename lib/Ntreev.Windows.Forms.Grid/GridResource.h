@@ -31,10 +31,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		{
 			m_resourceManager		= gcnew System::Resources::ResourceManager("GridControl.GridResource", System::Reflection::Assembly::GetExecutingAssembly());
 
-			m_rowEditing			= dynamic_cast<_Bitmap^>(m_resourceManager->GetObject("RowEditing"));
-			m_rowFocused			= dynamic_cast<_Bitmap^>(m_resourceManager->GetObject("RowFocused"));
-			m_insertionRow			= dynamic_cast<_Bitmap^>(m_resourceManager->GetObject("InsertionRow"));
-			m_insertionRowFocused	= dynamic_cast<_Bitmap^>(m_resourceManager->GetObject("InsertionRowFocused"));
+			m_rowEditing			= dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("RowEditing"));
+			m_rowFocused			= dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("RowFocused"));
+			m_insertionRow			= dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("InsertionRow"));
+			m_insertionRowFocused	= dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("InsertionRowFocused"));
+			m_errorBitmap			= dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("Error"));
 
 			m_defaultColumnName 	= m_resourceManager->GetString("DefaultColumnName");
 			m_defaultTooltip		= m_resourceManager->GetString("DefaultTooltip");
@@ -45,77 +46,83 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			m_height				= m_resourceManager->GetString("Height");
 		}
 	public:
-		static property _Bitmap^ RowEditing
+		static property System::Drawing::Bitmap^ RowEditing
 		{
-			_Bitmap^ get() { return m_rowEditing; } 
+			System::Drawing::Bitmap^ get() { return m_rowEditing; } 
 		}
 
-		static property _Bitmap^ RowFocused
+		static property System::Drawing::Bitmap^ RowFocused
 		{
-			_Bitmap^ get() { return m_rowFocused; } 
+			System::Drawing::Bitmap^ get() { return m_rowFocused; } 
 		}
 
-		static property _Bitmap^ InsertionRow
+		static property System::Drawing::Bitmap^ InsertionRow
 		{
-			_Bitmap^ get() { return m_insertionRow; } 
+			System::Drawing::Bitmap^ get() { return m_insertionRow; } 
 		}
 
-		static property _Bitmap^ InsertionRowFocused
+		static property System::Drawing::Bitmap^ InsertionRowFocused
 		{
-			_Bitmap^ get() { return m_insertionRowFocused; } 
+			System::Drawing::Bitmap^ get() { return m_insertionRowFocused; } 
 		}
 
-		static property string^	DefaultColumnName
+		static property System::Drawing::Bitmap^ Error
+		{
+			System::Drawing::Bitmap^ get() { return m_errorBitmap; }
+		}
+
+		static property System::String^	DefaultColumnName
 		{ 
-			string^ get() { return m_defaultColumnName; }
+			System::String^ get() { return m_defaultColumnName; }
 		}
 
-		static property string^ DefaultTooltip
+		static property System::String^ DefaultTooltip
 		{ 
-			string^ get() { return m_defaultTooltip; }
+			System::String^ get() { return m_defaultTooltip; }
 		}
 
-		static property string^ SetValueException
+		static property System::String^ SetValueException
 		{ 
-			string^ get() { return m_setValueException; }
+			System::String^ get() { return m_setValueException; }
 		}
 
-		static property string^ RemoveInsertionRowException
+		static property System::String^ RemoveInsertionRowException
 		{
-			string^ get() { return m_removeInsertionRowException; }
+			System::String^ get() { return m_removeInsertionRowException; }
 		}
 
-		static property string^ NoColumnException 
+		static property System::String^ NoColumnException 
 		{ 
-			string^ get() { return m_noColumnException; }
+			System::String^ get() { return m_noColumnException; }
 		}
 
-		static property string^ Width
+		static property System::String^ Width
 		{
-			string^ get() { return m_width; }
+			System::String^ get() { return m_width; }
 		}
 
-		static property string^ Height
+		static property System::String^ Height
 		{
-			string^ get() { return m_height; }
+			System::String^ get() { return m_height; }
 		}
 
 	private:
 		static System::Resources::ResourceManager^ m_resourceManager;
 
-		static _Bitmap^			m_rowEditing;
-		static _Bitmap^			m_rowFocused;
-		static _Bitmap^			m_insertionRow;
-		static _Bitmap^			m_insertionRowFocused;
+		static System::Drawing::Bitmap^			m_rowEditing;
+		static System::Drawing::Bitmap^			m_rowFocused;
+		static System::Drawing::Bitmap^			m_insertionRow;
+		static System::Drawing::Bitmap^			m_insertionRowFocused;
+		static System::Drawing::Bitmap^			m_errorBitmap;
 	
-		static string^			m_defaultColumnName;
-		static string^			m_defaultTooltip;
-		static string^			m_setValueException;
-		static string^			m_removeInsertionRowException;
-		static string^			m_noColumnException;
+		static System::String^			m_defaultColumnName;
+		static System::String^			m_defaultTooltip;
+		static System::String^			m_setValueException;
+		static System::String^			m_removeInsertionRowException;
+		static System::String^			m_noColumnException;
 
-		static string^			m_width;
-		static string^			m_height;
+		static System::String^			m_width;
+		static System::String^			m_height;
 	};
 } /*namespace Properties*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
 

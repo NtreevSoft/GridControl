@@ -39,7 +39,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
-		virtual string^ ToString() override
+		virtual System::String^ ToString() override
 		{
 			return Text; 
 		}
@@ -51,11 +51,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 제목을 나타내는 문자열입니다.
 		/// </returns>
-		[_Category("Layout")]
-		property string^ Text
+		[System::ComponentModel::CategoryAttribute("Layout")]
+		property System::String^ Text
 		{
-			string^ get();
-			void set(string^);
+			System::String^ get();
+			void set(System::String^);
 		}
 
 		/// <summary>
@@ -64,11 +64,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 수평 정렬방식을 나타내는 <see cref="System::Drawing::StringAlignment"/>입니다.
 		/// </returns>
-		[_Category("Layout"), _DefaultValue(_StringAlignment::Near)]
-		property _StringAlignment Alignment
+		[System::ComponentModel::CategoryAttribute("Layout"), System::ComponentModel::DefaultValueAttribute(System::Drawing::StringAlignment::Near)]
+		property System::Drawing::StringAlignment Alignment
 		{
-			_StringAlignment get(); 
-			void set(_StringAlignment);
+			System::Drawing::StringAlignment get(); 
+			void set(System::Drawing::StringAlignment);
 		}
 
 		/// <summary>
@@ -77,11 +77,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 수직 정렬방식을 나타내는 <see cref="System::Drawing::StringAlignment"/>입니다.
 		/// </returns>
-		[_Category("Layout"), _DefaultValue(_StringAlignment::Center)]
-		property _StringAlignment LineAlignment
+		[System::ComponentModel::CategoryAttribute("Layout"), System::ComponentModel::DefaultValueAttribute(System::Drawing::StringAlignment::Center)]
+		property System::Drawing::StringAlignment LineAlignment
 		{
-			_StringAlignment get();
-			void set(_StringAlignment);
+			System::Drawing::StringAlignment get();
+			void set(System::Drawing::StringAlignment);
 		}
 
 		/// <summary>
@@ -90,7 +90,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 제목이 표시되면 true를, 그렇지 않으면 false를 반환합니다.
 		/// </returns>
-		[_Category("Appearance"), _DefaultValue(true)]
+		[System::ComponentModel::CategoryAttribute("Appearance"), System::ComponentModel::DefaultValueAttribute(true)]
 		property bool IsVisible
 		{
 			bool get(); 
@@ -103,61 +103,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <exception cref="System::ArgumentOutOfRangeException">
 		/// 매개변수가 0보다 작을 경우
 		/// </exception>
-		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// 매개변수가 <see cref="MinHeight"/>보다 작거나 <see cref="MaxHeight"/>보다 클경우
-		/// </exception>
-		[_Description("제목의 높이입니다.")]
-		[_Category("Layout")]
+		[System::ComponentModel::DescriptionAttribute("제목의 높이입니다.")]
+		[System::ComponentModel::CategoryAttribute("Layout")]
 		property int Height
 		{
-			int get();
-			void set(int);
-		}
-
-		/// <summary>
-		/// 제목의 최소높이를 가져오거나 설정합니다.
-		/// </summary>
-		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// 매개변수가 0보다 작을 경우
-		/// </exception>
-		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// 매개변수가 <see cref="MaxHeight"/>보다 클경우
-		/// </exception>
-		[_Description("제목의 최소높이입니다.")]
-		[_Category("Layout")]
-		property int MinHeight
-		{
-			int get();
-			void set(int);
-		}
-
-		/// <summary>
-		/// 제목의 최대높이를 가져오거나 설정합니다.
-		/// </summary>
-		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// 매개변수가 0보다 작을 경우
-		/// </exception>
-		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// 매개변수가 <see cref="MinHeight"/>보다 작을경우
-		/// </exception>
-		[_Description("제목의 최대높이입니다.")]
-		[_Category("Layout")]
-		property int MaxHeight
-		{
-			int get();
 			void set(int);
 		}
 
 	internal: // methods
-		CaptionRow(_GridControl^ gridControl, GrCaption* pCaption);
+		CaptionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrCaption* pCaption);
 
 		static CaptionRow^ FromNative(GrCaption* pCaption);
 
 	private: // methods
 		bool ShouldSerializeHeight();
-		bool ShouldSerializeMinHeight();
-		bool ShouldSerializeMaxHeight();
-
+        bool ShouldSerializeText();
 
 	private: // variables
 		GrCaption*	m_pCaption;

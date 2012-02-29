@@ -24,50 +24,48 @@
 #include "StdAfx.h"
 #include "GridFlagControl.h"
 
-namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Columns
+namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design
 {
 	using namespace System;
 	using namespace System::Drawing;
 	using namespace System::Windows::Forms;
 
-	int FlagControl::Value::get()
+    FlagControl::FlagControl()
+    {
+        InitializeComponent();
+    }
+
+    FlagControl::FlagControl(IEditorService^ editorService, System::Type^ flagType)
+        : m_editorService(editorService), m_flagType(flagType)
+    {
+        InitializeComponent();
+        InitializeCheckBox();
+    }
+
+	System::Object^ FlagControl::Value::get()
 	{
-		int value = 0;
-		for each(Control^ item in this->Controls)
-		{
-			CheckBox^ checkBox = dynamic_cast<CheckBox^>(item);
-			if (checkBox == nullptr || checkBox->Checked == false)
-				continue;
-			value |= (int)item->Tag;
-		}
-		return value;
+        return m_value;
 	}
 
-	void FlagControl::Value::set(int value)
+    void FlagControl::Value::set(System::Object^ value)
 	{
-		m_oldValue = this->Value;
-
+        int enumValue = value != nullptr ? (int)value : 0;
 		for each (Control^ item in this->Controls)
 		{
 			CheckBox^ checkBox = dynamic_cast<CheckBox^>(item);
 			if (checkBox == nullptr)
 				continue;
 			int flag = (int)item->Tag;
-			checkBox->Checked = (value & flag) != 0 ? true : false;
+			checkBox->Checked = (enumValue & flag) != 0 ? true : false;
 		}
+        m_value = value;
 	}
 
-	void FlagControl::FlagType::set(_Type^ value)
+    void FlagControl::InitializeCheckBox()
 	{
-		if (value->IsEnum == false)
-			throw gcnew ArgumentException("Enum Type만 가능합니다.");
-
-		cli::array<object^>^ flagAttrs = value->GetCustomAttributes(FlagsAttribute::typeid, true);
+		cli::array<System::Object^>^ flagAttrs = m_flagType->GetCustomAttributes(FlagsAttribute::typeid, true);
 		if(flagAttrs->Length == 0)
 			throw gcnew ArgumentException("FlagsAttribute를 갖는 Enum Type만 가능합니다.");
-
-		if (m_flagType == value)
-			return;
 
 		this->SuspendLayout();
 
@@ -80,7 +78,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 		int y = this->Padding.Top;
 		int buttonHeight = this->Bottom - this->buttonOk->Top;
-		for each(object^ item in Enum::GetValues(value))
+		for each(System::Object^ item in Enum::GetValues(m_flagType))
 		{
 			CheckBox^ checkBox = gcnew CheckBox();
 			checkBox->Name = item->ToString();
@@ -96,27 +94,40 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 		this->Height = y + buttonHeight;
 		this->ResumeLayout(true);
-
-		m_flagType = value;
 	}
 
 	bool FlagControl::ProcessCmdKey(System::Windows::Forms::Message% msg, System::Windows::Forms::Keys keyData)
 	{
-		if (keyData == Keys::Enter || keyData == Keys::Escape)
+		if (keyData == Keys::Enter)
 		{
-			OnPreviewKeyDown(gcnew PreviewKeyDownEventArgs(keyData));
+            UpdateValue();
+			m_editorService->Close();
+            return true;
 		}
 		return UserControl::ProcessCmdKey(msg, keyData);
 	}
 
 	System::Void FlagControl::buttonOk_Click(System::Object^ /*sender*/, System::EventArgs^ /*e*/) 
 	{
-		this->EditOK(this, System::EventArgs::Empty);
+        UpdateValue();
+		m_editorService->Close();
 	}
 
 	System::Void FlagControl::buttonCancel_Click(System::Object^ /*sender*/, System::EventArgs^ /*e*/) 
 	{
-		this->Value = m_oldValue;
-		this->EditCanceled(this, System::EventArgs::Empty);
+        m_editorService->Close();
 	}
-} /*namespace Columns*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
+
+    void FlagControl::UpdateValue()
+    {
+        int value = 0;
+		for each(Control^ item in this->Controls)
+		{
+			CheckBox^ checkBox = dynamic_cast<CheckBox^>(item);
+			if (checkBox == nullptr || checkBox->Checked == false)
+				continue;
+			value |= (int)item->Tag;
+		}
+        m_value = System::Enum::ToObject(m_flagType, value);
+    }
+} /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

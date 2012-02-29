@@ -61,7 +61,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return Column::FromNative(pColumn);
 	}
 
-	ColumnCollection::ColumnCollection(_GridControl^ gridControl)
+    ColumnCollection::ServiceProvider::ServiceProvider(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+        : m_gridControl(gridControl)
+    {
+
+    }
+
+    System::Object^ ColumnCollection::ServiceProvider::GetService(System::Type^ serviceType)
+    {
+        return m_gridControl->GetInternalService(serviceType); 
+    }
+
+	ColumnCollection::ColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
 		: GridObject(gridControl)
 	{
 		m_pColumnList = GridCore->GetColumnList();
@@ -74,38 +85,38 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		gridControl->Cleared += gcnew ClearEventHandler(this, &ColumnCollection::gridControl_Cleared);
 	}
 
-	void ColumnCollection::Add(_Column^ item)
+	void ColumnCollection::Add(Column^ item)
 	{
 		Insert(Count, item);
 	}
 
-	void ColumnCollection::AddRange(cli::array<_Column^>^ values)
+	void ColumnCollection::AddRange(cli::array<Column^>^ values)
 	{
 		if(values == nullptr)
 			throw gcnew System::ArgumentNullException("values");
 
-		for each(_Column^ item in values)
+		for each(Column^ item in values)
 		{
 			Add(item);
 		}
 	}
 
-	_Column^ ColumnCollection::AddNew()
+	Column^ ColumnCollection::Add()
 	{
-		return InsertNew(this->Count);
+		return Insert(this->Count);
 	}
 
-	_Column^ ColumnCollection::AddNew(string^ name)
+	Column^ ColumnCollection::Add(System::String^ name)
 	{
-		return InsertNew(this->Count, name);
+		return Insert(this->Count, name);
 	}
 
-	_Column^ ColumnCollection::AddNew(string^ name, _Type^ type)
+	Column^ ColumnCollection::Add(System::String^ name, System::Type^ type)
 	{
-		return InsertNew(this->Count, name, type);
+		return Insert(this->Count, name, type);
 	}
 
-	void ColumnCollection::Remove(_Column^ item)
+	void ColumnCollection::Remove(Column^ item)
 	{
 		if(item == nullptr)
 			throw gcnew System::ArgumentNullException("item");
@@ -116,14 +127,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_pColumnList->RemoveColumn(item->NativeRef);
 	}
 
-	int ColumnCollection::IndexOf(_Column^ item)
+	int ColumnCollection::IndexOf(Column^ item)
 	{
 		if(item == nullptr)
 			throw gcnew System::ArgumentNullException("item");
 		return item->Index;
 	}
 
-	void ColumnCollection::Insert(int index, _Column^ item)
+	void ColumnCollection::Insert(int index, Column^ item)
 	{
 		if(index < 0 || index > this->Count)
 			throw gcnew System::ArgumentOutOfRangeException("index");
@@ -133,39 +144,38 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			throw gcnew System::ArgumentException("이미 추가된 항목입니다.");
 
 		if(this[item->ColumnName] != nullptr)
-			throw gcnew System::ArgumentException(string::Format("\"{0}\"의 이름을 가진 항목이 이미 있습니다.", item->ColumnName));
+			throw gcnew System::ArgumentException(System::String::Format("\"{0}\"의 이름을 가진 항목이 이미 있습니다.", item->ColumnName));
 
-		if(item->ColumnName == string::Empty)
+		if(item->ColumnName == System::String::Empty)
 			item->ColumnName = NewColumnName();
 
 		if(GridControl->InvokeColumnInserting(item) == false)
 			return;
 
 		item->GridControl = GridControl;
-
 		m_pColumnList->InsertColumn(item->NativeRef, index);
 
 		GridControl->InvokeColumnInserted(item);
 	}
 
-	_Column^ ColumnCollection::InsertNew(int index)
+	Column^ ColumnCollection::Insert(int index)
 	{
-		return InsertNew(index, NewColumnName());
+		return Insert(index, NewColumnName());
 	}
 
-	_Column^ ColumnCollection::InsertNew(int index, string^ name)
+	Column^ ColumnCollection::Insert(int index, System::String^ name)
 	{
-		return InsertNew(index, name, string::typeid);
+		return Insert(index, name, System::String::typeid);
 	}
 
-	_Column^ ColumnCollection::InsertNew(int index, string^ name, _Type^ type)
+	Column^ ColumnCollection::Insert(int index, System::String^ name, System::Type^ type)
 	{
-		if(name == nullptr || name == string::Empty)
+		if(name == nullptr || name == System::String::Empty)
 			name = NewColumnName();
 		if(type == nullptr)
-			type = string::typeid;
+			type = System::String::typeid;
 
-		_Column^ column = CreateColumnInstance(type);
+		Column^ column = CreateColumnInstance();
 		column->ColumnName = name;
 		column->DataType = type;
 		Insert(index, column);
@@ -178,26 +188,27 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		Remove(column);
 	}
 
-	bool ColumnCollection::Contains(_Column^ item)
+	bool ColumnCollection::Contains(Column^ item)
 	{
 		if(item == nullptr)
 			throw gcnew System::ArgumentNullException("item");
 		return item->Index >= 0;
 	}
 
-	_Column^ ColumnCollection::Bind(_PropertyDescriptor^ propertyDescriptor)
+	Column^ ColumnCollection::Bind(System::ComponentModel::PropertyDescriptor^ propertyDescriptor)
 	{
-		_Column^ existColumn = this[propertyDescriptor->Name];
-		ColumnBindingEventArgs e(propertyDescriptor, existColumn);
-		GridControl->InvokeColumnBinding(%e);
-		_Column^ column = e.BindingColumn;
+		Column^ existColumn = this[propertyDescriptor->Name];
+		Column^ column = GridControl->InvokeColumnBinding(propertyDescriptor, existColumn);
 		if(column == nullptr)
 		{
-			column = CreateColumnInstance(propertyDescriptor);
+			column = CreateColumnInstance();
 		}
 
 		if(existColumn == nullptr)
 			column->HasLifeline = true;
+
+        if(GridControl->InvokeColumnInserting(column) == false)
+			return nullptr;
 
 		if(column->GridControl == nullptr)
 		{
@@ -210,12 +221,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			column->PropertyDescriptor	= propertyDescriptor;
 		}
 
-		GridControl->InvokeColumnBinded(gcnew ColumnEventArgs(column));
+        GridControl->InvokeColumnInserted(column);
+		GridControl->InvokeColumnBinded(column);
 
 		return column;
 	}
 
-	void ColumnCollection::Unbind(_Column^ column)
+	void ColumnCollection::Unbind(Column^ column)
 	{
 		column->PropertyDescriptor = nullptr;
 
@@ -236,7 +248,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 	}
 
-	void ColumnCollection::SetItemsByDesigner(cli::array<object^>^ values)
+	void ColumnCollection::SetItemsByDesigner(cli::array<System::Object^>^ values)
 	{
 		GrGroupingList* pGroupingList = GridCore->GetGroupingList();
 		std::vector<GrColumn*> groupings;
@@ -261,7 +273,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			value->SetGrouped(false);
 		}
 
-		for each(object^ item in values)
+		for each(System::Object^ item in values)
 		{
 			Column^ column = dynamic_cast<Column^>(item);
 			if(column->ColumnID == INVALID_INDEX)
@@ -291,12 +303,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return m_pColumnList->GetColumnCount();
 	}
 
-	Column^ ColumnCollection::default::get(string^ columnName)
+	Column^ ColumnCollection::default::get(System::String^ columnName)
 	{
 		if(columnName == nullptr)
-			columnName = string::Empty;
+			columnName = System::String::Empty;
 
-		for each(_Column^ column in this)
+		for each(Column^ column in this)
 		{
 			if(column->ColumnName == columnName)
 				return column;
@@ -309,7 +321,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return Column::FromNative(pColumn);
 	}
 
-	_Column^ ColumnCollection::CreateColumnInstanceCore(System::IServiceProvider^ serviceProvider, _Type^ columnType)
+	Column^ ColumnCollection::CreateColumnInstance(System::IServiceProvider^ serviceProvider, System::Type^ columnType)
 	{
 		using namespace System::ComponentModel;
 		using namespace System::ComponentModel::Design;
@@ -321,105 +333,35 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 				return dynamic_cast<Column^>(designerHost->CreateComponent(columnType));
 			}
 		}
-
-		return dynamic_cast<_Column^>(TypeDescriptor::CreateInstance(serviceProvider, columnType, nullptr, nullptr));
+		return dynamic_cast<Column^>(TypeDescriptor::CreateInstance(serviceProvider, columnType, nullptr, nullptr));
 	}
 	
-	Column^	ColumnCollection::CreateColumnInstance(_PropertyDescriptor^ propertyDescriptor)
+	Column^	ColumnCollection::CreateColumnInstance()
 	{
-		System::Type^ dataType = propertyDescriptor->PropertyType;
-		Column^ column = nullptr;
-
-		object^ editor = propertyDescriptor->GetEditor(System::Drawing::Design::UITypeEditor::typeid);
-		if(propertyDescriptor->DesignTimeOnly == true)
-			editor = nullptr;
-
 		ServiceProvider^ serviceProvider = gcnew ServiceProvider(this->GridControl);
-
-		if(editor != nullptr)
-		{
-			column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnUITypeEditor::typeid);
-		}
-		else if(dataType == bool::typeid)
-		{
-			column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnCheckBox::typeid);
-		}
-		else if(dataType->IsEnum == true)
-		{
-			if(dataType->GetCustomAttributes(System::FlagsAttribute::typeid, true)->Length != 0)
-			{
-				column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnFlagControl::typeid);
-			}
-			else
-			{
-				column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnComboBox::typeid);
-			}
-		}
-		else
-		{
-			column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnTextBox::typeid);
-		}
-
-		return column;
+		return CreateColumnInstance(serviceProvider, Column::typeid);
 	}
 
-	_Column^ ColumnCollection::CreateColumnInstance(System::IServiceProvider^ serviceProvider, _Type^ dataType)
+	Column^ ColumnCollection::CreateColumnInstance(System::IServiceProvider^ serviceProvider)
 	{
-		using namespace System::ComponentModel;
-		Column^ column = nullptr;
-
-		object^ editor = TypeDescriptor::GetEditor(dataType, System::Drawing::Design::UITypeEditor::typeid);
-
-		if(editor != nullptr)
-		{
-			column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnUITypeEditor::typeid);
-		}
-		else if(dataType == bool::typeid)
-		{
-			column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnCheckBox::typeid);
-		}
-		else if(dataType->IsEnum == true)
-		{
-			if(dataType->GetCustomAttributes(System::FlagsAttribute::typeid, true)->Length != 0)
-			{
-				column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnFlagControl::typeid);
-			}
-			else
-			{
-				column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnComboBox::typeid);
-			}
-		}
-		else
-		{
-			column = CreateColumnInstanceCore(serviceProvider, Columns::ColumnTextBox::typeid);
-		}
-
-		if(column != nullptr)
-			column->DataType = dataType;
-
-		return column;
+        return CreateColumnInstance(serviceProvider, Column::typeid);
 	}
 
-	_Column^ ColumnCollection::CreateColumnInstance(_Type^ dataType)
-	{
-		return CreateColumnInstance(gcnew ServiceProvider(this->GridControl), dataType);
-	}
-
-	string^ ColumnCollection::NewColumnName()
+	System::String^ ColumnCollection::NewColumnName()
 	{
 		int columnIndex = 0;
 
-		string^ name;
+		System::String^ name;
 		do
 		{
-			name = string::Format("Column{0}", columnIndex++);
+			name = System::String::Format("Column{0}", columnIndex++);
 		}
 		while(this[name] != nullptr);
 
 		return name;
 	}
 
-	void ColumnCollection::currencyManager_ListChanged(object^ sender, System::ComponentModel::ListChangedEventArgs^ e)
+	void ColumnCollection::currencyManager_ListChanged(System::Object^ sender, System::ComponentModel::ListChangedEventArgs^ e)
 	{
 		using namespace System::ComponentModel;
 		using namespace System::ComponentModel::Design;
@@ -438,17 +380,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 				CurrencyManager^ currencyManager = dynamic_cast<CurrencyManager^>(sender);
 
-				List<_Column^>^ boundColumns = gcnew List<_Column^>();
+				List<Column^>^ boundColumns = gcnew List<Column^>();
 
-				for each(_Column^ item in this)
+				for each(Column^ item in this)
 				{
 					if(item->PropertyDescriptor != nullptr)
 						boundColumns->Add(item);
 				}
 
-				_PropertyDescriptor^ changedPropertyDescriptor = nullptr;
+				System::ComponentModel::PropertyDescriptor^ changedPropertyDescriptor = nullptr;
 
-				for each(_PropertyDescriptor^ item in currencyManager->GetItemProperties())
+				for each(System::ComponentModel::PropertyDescriptor^ item in currencyManager->GetItemProperties())
 				{
 					Column^ column = this[item->Name];
 					if(column != nullptr)
@@ -470,7 +412,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			break;
 		case System::ComponentModel::ListChangedType::PropertyDescriptorDeleted:
 			{
-				_Column^ column = this[e->PropertyDescriptor->Name];
+				Column^ column = this[e->PropertyDescriptor->Name];
 				System::Diagnostics::Debug::Assert(column != nullptr);
 				Unbind(column);
 			}
@@ -488,7 +430,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 	}
 
-	void ColumnCollection::gridControl_CurrencyManagerChanging(object^ /*sender*/, CurrencyManagerChangingEventArgs^ e)
+	void ColumnCollection::gridControl_CurrencyManagerChanging(System::Object^ /*sender*/, CurrencyManagerChangingEventArgs^ e)
 	{
 		System::Windows::Forms::CurrencyManager^ manager = e->CurrecnyManager;
 
@@ -498,9 +440,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(e->Cancel == true)
 			return;
 
-		for each(_PropertyDescriptor^ item in manager->GetItemProperties())
+		for each(System::ComponentModel::PropertyDescriptor^ item in manager->GetItemProperties())
 		{
-			_Column^ column = this[item->Name];
+			Column^ column = this[item->Name];
 			if(column == nullptr)
 				continue;
 
@@ -511,9 +453,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 				System::Text::StringBuilder^ builder = gcnew System::Text::StringBuilder();
 
-				builder->AppendLine(string::Format("{0} 은 연결될 데이터 소스와 데이터 타입이 다릅니다.", item->Name));
-				builder->AppendLine(string::Format("    GridControl : {0}", column->DataType));
-				builder->AppendLine(string::Format("    DataSource  : {0}", item->PropertyType));
+				builder->AppendLine(System::String::Format("{0} 은 연결될 데이터 소스와 데이터 타입이 다릅니다.", item->Name));
+				builder->AppendLine(System::String::Format("    GridControl : {0}", column->DataType));
+				builder->AppendLine(System::String::Format("    DataSource  : {0}", item->PropertyType));
 
 				e->Cancel = true;
 				e->CancelReason = builder->ToString();
@@ -524,7 +466,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 	}
 
-	void ColumnCollection::gridControl_CurrencyManagerChanged(object^ /*sender*/, CurrencyManagerChangedEventArgs^ e)
+	void ColumnCollection::gridControl_CurrencyManagerChanged(System::Object^ /*sender*/, CurrencyManagerChangedEventArgs^ e)
 	{
 		if(m_manager != nullptr)
 		{
@@ -536,7 +478,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(m_manager == nullptr)
 			return;
 
-		for each(_PropertyDescriptor^ item in m_manager->GetItemProperties())
+		for each(System::ComponentModel::PropertyDescriptor^ item in m_manager->GetItemProperties())
 		{
 			Bind(item);
 		}
@@ -544,19 +486,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_manager->ListChanged += m_listChangedEventHandler;
 	}
 
-	void ColumnCollection::gridControl_Clearing(object^ /*sender*/, ClearEventArgs^ e)
+	void ColumnCollection::gridControl_Clearing(System::Object^ /*sender*/, ClearEventArgs^ e)
 	{
 		if(e->DataSourceOnly == true)
 		{
 			m_tempBindableColumns = gcnew System::Collections::ArrayList();
 
-			for each(_Column^ item in this)
+			for each(Column^ item in this)
 			{
 				if(item->HasLifeline == false || item->PropertyDescriptor == nullptr)
 					m_tempBindableColumns->Add(item);
 			}
 
-			for each(_Column^ item in m_tempBindableColumns)
+			for each(Column^ item in m_tempBindableColumns)
 			{
 				this->Remove(item);
 			}
@@ -565,11 +507,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		DeleteAll();
 	}
 
-	void ColumnCollection::gridControl_Cleared(object^ /*sender*/, ClearEventArgs^ e)
+	void ColumnCollection::gridControl_Cleared(System::Object^ /*sender*/, ClearEventArgs^ e)
 	{
 		if(e->DataSourceOnly == true)
 		{
-			for each(_Column^ item in m_tempBindableColumns)
+			for each(Column^ item in m_tempBindableColumns)
 			{
 				this->Add(item);
 			}
@@ -600,26 +542,26 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_index = 0;
 	}
 
-	_Column^ SelectedColumnCollection::Enumerator::Current::get()
+	Column^ SelectedColumnCollection::Enumerator::Current::get()
 	{
 		const GrColumn* pColumn = (*m_selectedColumns)[m_index - 1];
 		return Column::FromNative(pColumn);
 	}
 
-	SelectedColumnCollection::SelectedColumnCollection(_GridControl^ gridControl, const GrSelectedColumns* selectedColumns) 
+	SelectedColumnCollection::SelectedColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, const GrSelectedColumns* selectedColumns) 
 		: GridObject(gridControl), m_selectedColumns(selectedColumns)
 	{
 	
 	}
 
-	void SelectedColumnCollection::Add(_Column^ item)
+	void SelectedColumnCollection::Add(Column^ item)
 	{
 		if(item->IsSelected == true)
 			return;
 		item->IsSelected = true;
 	}
 
-	bool SelectedColumnCollection::Remove(_Column^ item)
+	bool SelectedColumnCollection::Remove(Column^ item)
 	{
 		if(item->IsSelected == false)
 			return false;
@@ -633,7 +575,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	}
 
 
-	VisibleColumnCollection::VisibleColumnCollection(_GridControl^ gridControl)
+	VisibleColumnCollection::VisibleColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
 		: GridObject(gridControl)
 	{
 		m_pColumnList = GridCore->GetColumnList();
@@ -674,13 +616,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_index = 0;
 	}
 
-	_Column^ VisibleColumnCollection::Enumerator::Current::get()
+	Column^ VisibleColumnCollection::Enumerator::Current::get()
 	{
 		GrColumn* pColumn = m_pColumnList->GetVisibleColumn(m_index - 1);
-		return _Column::FromNative(pColumn);
+		return Column::FromNative(pColumn);
 	}
 
-	DisplayableColumnCollection::DisplayableColumnCollection(_GridControl^ gridControl)
+	DisplayableColumnCollection::DisplayableColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
 		: GridObject(gridControl)
 	{
 		m_pColumnList = GridCore->GetColumnList();
@@ -721,14 +663,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_index = 0;
 	}
 
-	_Column^ DisplayableColumnCollection::Enumerator::Current::get()
+	Column^ DisplayableColumnCollection::Enumerator::Current::get()
 	{
 		GrColumn* pColumn = m_pColumnList->GetDisplayableColumn(m_index - 1);
-		object^ ref = pColumn->ManagedRef;
-		return safe_cast<_Column^>(ref);
+		System::Object^ ref = pColumn->ManagedRef;
+		return safe_cast<Column^>(ref);
 	}
 
-	FrozenColumnCollection::FrozenColumnCollection(_GridControl^ gridControl)
+	FrozenColumnCollection::FrozenColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
 		: GridObject(gridControl)
 	{
 		m_pColumnList = GridCore->GetColumnList();
@@ -739,7 +681,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if((uint)index >= m_pColumnList->GetFrozenColumnCount())
 			throw gcnew System::ArgumentOutOfRangeException("index");
 		GrColumn* pColumn = m_pColumnList->GetFrozenColumn(index);
-		return _Column::FromNative(pColumn);
+		return Column::FromNative(pColumn);
 	}
 
 	int FrozenColumnCollection::Count::get()
@@ -769,14 +711,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_index = 0;
 	}
 
-	_Column^ FrozenColumnCollection::Enumerator::Current::get()
+	Column^ FrozenColumnCollection::Enumerator::Current::get()
 	{
 		GrColumn* pColumn = m_pColumnList->GetFrozenColumn(m_index - 1);
-		object^ ref = pColumn->ManagedRef;
-		return safe_cast<_Column^>(ref);
+		System::Object^ ref = pColumn->ManagedRef;
+		return safe_cast<Column^>(ref);
 	}
 
-	UnfrozenColumnCollection::UnfrozenColumnCollection(_GridControl^ gridControl)
+	UnfrozenColumnCollection::UnfrozenColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
 		: GridObject(gridControl)
 	{
 		m_pColumnList = GridCore->GetColumnList();
@@ -787,7 +729,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if((uint)index >= m_pColumnList->GetUnfrozenColumnCount())
 			throw gcnew System::ArgumentOutOfRangeException("index");
 		GrColumn* pColumn = m_pColumnList->GetUnfrozenColumn(index);
-		return _Column::FromNative(pColumn);
+		return Column::FromNative(pColumn);
 	}
 
 	int UnfrozenColumnCollection::Count::get()
@@ -817,9 +759,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_index = 0;
 	}
 
-	_Column^ UnfrozenColumnCollection::Enumerator::Current::get()
+	Column^ UnfrozenColumnCollection::Enumerator::Current::get()
 	{
 		GrColumn* pColumn = m_pColumnList->GetUnfrozenColumn(m_index - 1);
-		return _Column::FromNative(pColumn);
+		return Column::FromNative(pColumn);
 	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

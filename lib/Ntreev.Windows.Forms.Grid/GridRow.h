@@ -23,6 +23,7 @@
 
 #pragma once
 #include "GridRowBase.h"
+#include "GridCollection.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -39,7 +40,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
-		virtual	string^ ToString() override;
+		virtual	System::String^ ToString() override;
 
 		void BeginEdit();
 	
@@ -63,7 +64,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <summary>
 		/// 행을 화면에 표시되도록 스크롤을 조정합니다.
 		/// </summary>
-		void EnsureVisible();
+		void BringIntoView();
 
 		/// <summary>
 		/// 행을 선택합니다.
@@ -71,7 +72,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <param name="selectionType">
 		/// 행을 선택하기 위한 방법을 지정합니다.
 		/// </param>
-		void Select(_SelectionType selectionType);
+		void Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType);
 
 		/// <summary>
 		/// 포커스를 설정합니다.
@@ -106,33 +107,46 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <exception cref="System::ArgumentOutOfRangeException">
 		/// index가 0보다 작거나, <see cref="CellCount"/>보다 클 경우
 		/// </exception>
-		_Cell^ GetAt(int index)
+		Cell^ GetAt(int index)
 		{
-			return this[index];
+			return this->Cells[index];
 		}
 
 	public: // properties
 		/// <summary>
-		/// <see cref="Cells"/>의 컬랙션을 가져옵니다.
+		/// 셀의 컬렉션을 가져옵니다.
 		/// </summary>
 		/// <returns>
-		///	<see cref="Cells"/>이 들어있는 <see cref="CellCollection"/>입니다.
+		///	셀이 들어있는 <see cref="CellCollection"/>입니다.
 		/// </returns>
-		[_Description("셀들의 컬렉션입니다.")]
-		[_Category("Appearance")]
+		[System::ComponentModel::DescriptionAttribute("셀들의 컬렉션입니다.")]
+		[System::ComponentModel::CategoryAttribute("Appearance")]
 		property CellCollection^ Cells
 		{
 			CellCollection^ get();
+		}
+
+        /// <summary>
+		/// 셀태그의 컬렉션을 가져옵니다.
+		/// </summary>
+		/// <returns>
+		///	셀태그가 들어있는 <see cref="CellCollection"/>입니다.
+		/// </returns>
+		[System::ComponentModel::DescriptionAttribute("셀태그의 컬렉션입니다.")]
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		property CellTagCollection^ CellTags
+		{
+			CellTagCollection^ get();
 		}
 
 		/// <summary>
 		/// <see cref="Cells"/>의 갯수를 가져옵니다.
 		/// </summary>
 #ifdef _DEBUG
-		[_Category("Debug")]
-		[_Description("셀들의 갯수입니다.")]
+		[System::ComponentModel::CategoryAttribute("Debug")]
+		[System::ComponentModel::DescriptionAttribute("셀들의 갯수입니다.")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
 		property int CellCount
 		{
@@ -140,61 +154,66 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		/// <summary>
-		/// 지정한 인덱스에 있는 항목를 가져옵니다.
+		/// 지정한 인덱스에 필드값을 가져오거나 설정합니다.
 		/// </summary>
 		/// <param name="index">
-		/// 가져올 항목의 인덱스(0부터 시작)입니다.
+		/// 가져올 필드값의 해당하는 인덱스(0부터 시작)입니다.
 		/// </param>
 		/// <returns>
-		/// 지정한 인덱스의 항목입니다.
+		/// 필드의 값입니다.
 		/// </returns>
 		/// <exception cref="System::ArgumentOutOfRangeException">
 		/// index가 0보다 작거나, <see cref="CellCount"/>보다 클 경우
 		/// </exception>
-		property Cell^ default[int]
+		property System::Object^ default[int]
 		{
-			Cell^ get(int index); 
+			System::Object^ get(int index); 
 		}
 
 		/// <summary>
-		/// 열의 이름으로 항목를 가져옵니다.
+		/// 열의 이름으로 필드값을 가져오거나 설정합니다.
 		/// </summary>
 		/// <param name="columnName">
 		/// 찾을 셀을 소유한 열의 이름입니다.
 		/// </param>
+        /// <exception cref="System::ArgumentException">
+		/// 이름과 같은 열을 찾지 못하는 경우
+		/// </exception>
 		/// <returns>
-		/// 찾지 못하는 경우 null을 반환합니다.
+		/// 필드의 값입니다.
 		/// </returns>
-		property Cell^ default[string^]
+		property System::Object^ default[System::String^]
 		{
-			Cell^ get(string^ columnName); 
+			System::Object^ get(System::String^ columnName); 
+            void set(System::String^ columnName, System::Object^);
 		}
 
 		/// <summary>
-		/// 열의 인스턴스로 항목를 가져옵니다.
+		/// 열의 인스턴스로 필드값을 가져오거나 설정합니다.
 		/// </summary>
 		/// <param name="column">
 		/// 찾을 항목의 <see cref="Column"/>의 인스턴스 입니다.
 		/// </param>
 		/// <returns>
-		/// 찾지 못하는 경우 null을 반환합니다.
+		/// 필드의 값입니다.
 		/// </returns>
 		/// <exception cref="System::NullReferenceException">
 		/// 매개변수가 null일 경우
 		/// </exception>
-		property Cell^ default[Column^]
+		property System::Object^ default[Column^]
 		{
-			Cell^ get(Column^ column);
+			System::Object^ get(Column^ column);
+            void set(Column^ column, System::Object^);
 		}
 		
 		/// <summary>
 		/// 고유 아이디를 가져옵니다.
 		/// </summary>
 #ifdef _DEBUG
-		[_Category("Debug")]
-		[_Description("열의 고유 아이디입니다.")]
+		[System::ComponentModel::CategoryAttribute("Debug")]
+		[System::ComponentModel::DescriptionAttribute("열의 고유 아이디입니다.")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
 		property uint RowID
 		{
@@ -207,9 +226,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 표시되고 있다면 true를 반환하고, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
-		[_Description("표시되고 있는지의 여부를 가져오거나 설정합니다.")]
-		[_Category("Appearance")]
-		[_DefaultValue(true)]
+		[System::ComponentModel::DescriptionAttribute("표시되고 있는지의 여부를 가져오거나 설정합니다.")]
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		[System::ComponentModel::DefaultValueAttribute(true)]
 		property bool IsVisible 
 		{
 			virtual bool get() new;
@@ -225,9 +244,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <remarks>
 		/// 이 속성의 값이 true일 경우 Row에 포함되어있는 <see cref="Cells"/>들도 읽기 전용상태로 됩니다.
 		/// </remarks>
-		[_Description("읽기 전용인지에 대한 여부를 가져오거나 설정합니다.")]
-		[_Category("Appearance")]
-		[_DefaultValue(false)]
+		[System::ComponentModel::DescriptionAttribute("읽기 전용인지에 대한 여부를 가져오거나 설정합니다.")]
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		[System::ComponentModel::DefaultValueAttribute(false)]
 		property bool IsReadOnly
 		{
 			bool get();
@@ -247,10 +266,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <remarks>
 		/// 모든 셀이 선택되었는지를 확인하려면 <see cref="IsFullSelected"/>를 사용하십시오.
 		/// </remarks>
-		[_Description("선택되어 있는지의 여부를 가져오거나 설정합니다.")]
-		[_Category("Appearance")]
-		[_DefaultValue(false)]
-		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+		[System::ComponentModel::DescriptionAttribute("선택되어 있는지의 여부를 가져오거나 설정합니다.")]
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		[System::ComponentModel::DefaultValueAttribute(false)]
+		[System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
 		property bool IsSelected
 		{
 			bool get();
@@ -264,10 +283,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 현재의 행이 편집중이면 true를 반환하고, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
 #ifdef _DEBUG
-		[_Category("Debug")]
-		[_Description("소유하고 있는 셀의 대한 편집 여부를 가져옵니다.")]
+		[System::ComponentModel::CategoryAttribute("Debug")]
+		[System::ComponentModel::DescriptionAttribute("소유하고 있는 셀의 대한 편집 여부를 가져옵니다.")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
 		property bool IsBeingEdited
 		{
@@ -281,10 +300,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 소유하고 있는 <see cref="Cells"/>중 적어도 한개이상이 편집되었다면 true를 반환하고, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
 #ifdef _DEBUG
-		[_Category("Debug")]
-		[_Description("소유하고 있는 셀의 대한 편집 여부를 가져옵니다.")]
+		[System::ComponentModel::CategoryAttribute("Debug")]
+		[System::ComponentModel::DescriptionAttribute("소유하고 있는 셀의 대한 편집 여부를 가져옵니다.")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
 		property bool IsEdited
 		{
@@ -298,10 +317,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <see cref="Ntreev::Windows::Forms::Grid::GridControl"/>내에 포함되 있다면 인덱스(0부터 시작)를 반환하고, 그렇지 않다면 0xffffffff를 반환합니다.
 		/// </returns>
 #ifdef _DEBUG
-		[_Category("Debug")]
-		[_Description("컨트롤에 내에 Row 인덱스를 가져옵니다.")]
+		[System::ComponentModel::CategoryAttribute("Debug")]
+		[System::ComponentModel::DescriptionAttribute("컨트롤에 내에 Row 인덱스를 가져옵니다.")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
 		property int Index
 		{
@@ -315,10 +334,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// 소유하고 있는 모든 셀이 선택되었다면 true를 반환하고, 그렇지 않다면 false를 반환합니다.
 		/// </returns>
 #ifdef _DEBUG
-		[_Category("Debug")]
-		[_Description("소유하고 있는 모든 셀이 선택되었는지의 여부를 가져옵니다.")]
+		[System::ComponentModel::CategoryAttribute("Debug")]
+		[System::ComponentModel::DescriptionAttribute("소유하고 있는 모든 셀이 선택되었는지의 여부를 가져옵니다.")]
 #else
-		[_Browsable(false)]
+		[System::ComponentModel::BrowsableAttribute(false)]
 #endif
 		property bool IsFullSelected
 		{
@@ -331,12 +350,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		///	<see cref="Cells"/>의 전경색을 나타내는 <see cref="System::Drawing::Color"/>입니다.
 		/// </returns>
-		[_Description("셀들의 전경색입니다")]
-		[_Category("Appearance")]
-		property _Color CellForeColor
+		[System::ComponentModel::DescriptionAttribute("셀들의 전경색입니다")]
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		property System::Drawing::Color CellForeColor
 		{
-			_Color get();
-			void set(_Color);
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
 		}
 
 		/// <summary>
@@ -345,35 +364,49 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		///	<see cref="Cells"/>의 배경색을 나타내는 <see cref="System::Drawing::Color"/>입니다.
 		/// </returns>
-		[_Description("셀들의 배경색입니다")]
-		[_Category("Appearance")]
-		property _Color CellBackColor
+		[System::ComponentModel::DescriptionAttribute("셀들의 배경색입니다")]
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		property System::Drawing::Color CellBackColor
 		{
-			_Color get();
-			void set(_Color); 
+			System::Drawing::Color get();
+			void set(System::Drawing::Color); 
 		}
+
+        [System::ComponentModel::DefaultValueAttribute("")]
+        property System::String^ ErrorDescription
+        {
+            System::String^ get();
+            void set(System::String^);
+        }
+
+        property bool HasErrorCell
+        {
+            bool get();
+        }
 
 	public: // events
 	
 	internal: // methodss
-		Row(_GridControl^ gridControl);
+		Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
 
-		Row(_GridControl^ gridControl, GrDataRow* pDataRow);
+		Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pDataRow);
 
 		void AddEditedCell();
 		void RemoveEditedCell();
+        void AddErrorCell();
+        void RemoveErrorCell();
 
-		virtual void NewCell(_Column^ column);
+		virtual void NewCell(Column^ column);
 
 		void RefreshCells();
 
 		static Row^ FromNative(const GrDataRow* pDataRow);
 
 	internal: // properties
-		property object^ Component
+		property System::Object^ Component
 		{
-			object^ get()  { return m_component; }
-			void set(object^);
+			System::Object^ get()  { return m_component; }
+			void set(System::Object^);
 		}
 
 		property int ComponentIndex
@@ -387,23 +420,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			GrDataRow* get();
 		}
 
-		property Cell^ default[GrColumn*]
-		{
-			Cell^ get(GrColumn* pColumn);
-		}
-
 	private: // methods
 		bool ShouldSerializeCellForeColor();
 		bool ShouldSerializeCellBackColor();
 		bool ShouldSerializeCellFont();
 
 	private: // variables
-		CellCollection^				m_cellCollection;
-		GrDataRow*					m_pDataRow;
-		object^						m_component;
-		int							m_componentIndex;
-		int							m_editedCount;
-		bool						m_editing;
+		CellCollection^             m_cells;
+        CellTagCollection^          m_cellTags;
+		GrDataRow*                  m_pDataRow;
+		System::Object^             m_component;
+		int                         m_componentIndex;
+		int                         m_editedCount;
+        int                         m_errorCell;
+		bool                        m_editing;
+        System::String^             m_errorDescription;
 	};
 
 	/// <summary>
@@ -418,8 +449,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		void						SetDefaultValue();
 
 	internal: // methods
-		InsertionRow(_GridControl^ gridControl, GrInsertionRow* pInsertionRow);
-		virtual void NewCell(_Column^ column) override;
+		InsertionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrInsertionRow* pInsertionRow);
+		virtual void NewCell(Column^ column) override;
 
 	internal: // variables
 	};

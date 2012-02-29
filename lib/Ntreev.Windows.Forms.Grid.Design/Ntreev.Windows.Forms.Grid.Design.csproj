@@ -60,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColumnDesigner.cs" />
     <Compile Include="GridControlContainerFilterService.cs" />
     <Compile Include="GridControlDesigner.ActionList.cs">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -89,12 +90,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Ntreev.Windows.Forms.Grid\GridControl.vcproj">
-      <Project>{D4D0F372-7312-4B53-BCA9-EA27FD971B32}</Project>
-      <Name>Ntreev.Windows.Forms.Grid</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="GridControl.snk" />
@@ -130,6 +125,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>DesignSettings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ntreev.Windows.Forms.Grid\GridControl.vcproj">
+      <Project>{D4D0F372-7312-4B53-BCA9-EA27FD971B32}</Project>
+      <Name>Ntreev.Windows.Forms.Grid</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

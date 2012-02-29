@@ -23,17 +23,18 @@
 
 #include "StdAfx.h"
 #include "GridStyle.h"
+#include "GridNativeClass.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design
 {
-	_Font^ FontConverter::StoT(GrFont* pFont)
+	System::Drawing::Font^ FontConverter::StoT(GrFont* pFont)
 	{
-		return GrFontManager::ToManagedFont(pFont);
+		return Native::WinFormFontManager::ToManagedFont(pFont);
 	}
 
-	GrFont* FontConverter::TtoS(_Font^ font)
+	GrFont* FontConverter::TtoS(System::Drawing::Font^ font)
 	{
-		return GrFontManager::GetFontDesc(font->ToHfont().ToPointer());
+		return Native::WinFormFontManager::FromManagedFont(font);
 	}
 
 	Style::Style()
@@ -116,74 +117,74 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		m_pNativeStyle->RowHighlightBackColor = GrStyle::DefaultStyle.RowHighlightBackColor;
 	}
 
-	_Color Style::SelectedForeColor::get()
+	System::Drawing::Color Style::SelectedForeColor::get()
 	{
 		return m_pNativeStyle->SelectedForeColor;
 	}
 
-	void Style::SelectedForeColor::set(_Color value)
+	void Style::SelectedForeColor::set(System::Drawing::Color value)
 	{
 		m_pNativeStyle->SelectedForeColor = value;
 	}
 
-	_Color Style::SelectedBackColor::get()
+	System::Drawing::Color Style::SelectedBackColor::get()
 	{
 		return m_pNativeStyle->SelectedBackColor;
 	}
 
-	void Style::SelectedBackColor::set(_Color value)
+	void Style::SelectedBackColor::set(System::Drawing::Color value)
 	{
 		m_pNativeStyle->SelectedBackColor = value;
 	}
 
-	_Color Style::FocusedForeColor::get()
+	System::Drawing::Color Style::FocusedForeColor::get()
 	{
 		return m_pNativeStyle->FocusedForeColor;
 	}
 
-	void Style::FocusedForeColor::set(_Color value)
+	void Style::FocusedForeColor::set(System::Drawing::Color value)
 	{
 		m_pNativeStyle->FocusedForeColor = value;
 	}
 
-	_Color Style::FocusedBackColor::get()
+	System::Drawing::Color Style::FocusedBackColor::get()
 	{
 		return m_pNativeStyle->FocusedBackColor;
 	}
 
-	void Style::FocusedBackColor::set(_Color value)
+	void Style::FocusedBackColor::set(System::Drawing::Color value)
 	{
 		m_pNativeStyle->FocusedBackColor = value;
 	}
 
-	_Color Style::CellForeColor::get()
+	System::Drawing::Color Style::CellForeColor::get()
 	{
 		return m_pNativeStyle->GetCellForeColor();
 	}
 
-	void Style::CellForeColor::set(_Color value)
+	void Style::CellForeColor::set(System::Drawing::Color value)
 	{
 		m_pNativeStyle->CellForeColor = value;
 	}
 
-	_Color Style::CellBackColor::get()
+	System::Drawing::Color Style::CellBackColor::get()
 	{
 		return m_pNativeStyle->GetCellBackColor();
 	}
 
-	void Style::CellBackColor::set(_Color value)
+	void Style::CellBackColor::set(System::Drawing::Color value)
 	{
 		m_pNativeStyle->CellBackColor = value;
 	}
 
-	_Font^ Style::CellFont::get()
+	System::Drawing::Font^ Style::CellFont::get()
 	{
-		return GrFontManager::ToManagedFont(m_pNativeStyle->GetCellFont());
+		return Native::WinFormFontManager::ToManagedFont(m_pNativeStyle->GetCellFont());
 	}
 	
-	void Style::CellFont::set(_Font^ value)
+	void Style::CellFont::set(System::Drawing::Font^ value)
 	{
-		m_pNativeStyle->CellFont = GrFontManager::FromManagedFont(value);
+		m_pNativeStyle->CellFont = Native::WinFormFontManager::FromManagedFont(value);
 	}
 
 	Style::_Colors2^ Style::RowCellBackColors::get()
@@ -216,32 +217,32 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		return m_groupingFonts;
 	}
 
-	_Color Style::RowHighlightForeColor::get()
+	System::Drawing::Color Style::RowHighlightForeColor::get()
 	{
 		return m_pNativeStyle->RowHighlightForeColor;	
 	}
 	
-	void Style::RowHighlightForeColor::set(_Color value)
+	void Style::RowHighlightForeColor::set(System::Drawing::Color value)
 	{
 		m_pNativeStyle->RowHighlightForeColor = value;
 	}
 
-	_Color Style::RowHighlightBackColor::get()
+	System::Drawing::Color Style::RowHighlightBackColor::get()
 	{
 		return m_pNativeStyle->RowHighlightBackColor;	
 	}
 	
-	void Style::RowHighlightBackColor::set(_Color value)
+	void Style::RowHighlightBackColor::set(System::Drawing::Color value)
 	{
 		m_pNativeStyle->RowHighlightBackColor = value;
 	}
 
-	//void Style::OnRowCellForeColorChanged(object^ /*sender*/, _NotifyCollectionChangedEventArgs^ e)
+	//void Style::OnRowCellForeColorChanged(System::Object^ /*sender*/, _NotifyCollectionChangedEventArgs^ e)
 	//{
 	//	
 	//}
 
-	//void Style::OnRowCellBackColorChanged(object^ /*sender*/, _NotifyCollectionChangedEventArgs^ e)
+	//void Style::OnRowCellBackColorChanged(System::Object^ /*sender*/, _NotifyCollectionChangedEventArgs^ e)
 	//{
 
 	//}
@@ -252,19 +253,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		//m_pNativeStyle->RowItemForeColors.clear();
 		m_pNativeStyle->RowItemFonts.clear();
 
-		for each(_Color value in m_rowCellBackColors)
+		for each(System::Drawing::Color value in m_rowCellBackColors)
 		{
 		//	m_pNativeStyle->RowItemBackColors.push_back(value);
 		}
 
-		//for each(_Color value in m_rowCellForeColors)
+		//for each(System::Drawing::Color value in m_rowCellForeColors)
 		//{
 		//	m_pNativeStyle->RowItemForeColors.push_back(value);
 		//}
 
-		for each(_Font^ value in m_rowCellFonts)
+		for each(System::Drawing::Font^ value in m_rowCellFonts)
 		{
-			GrFont* pFont = GrFontManager::GetFontDesc(value->ToHfont().ToPointer());
+			GrFont* pFont = Native::WinFormFontManager::FromManagedFont(value);
 			m_pNativeStyle->RowItemFonts.push_back(pFont);
 		}
 		return m_pNativeStyle;

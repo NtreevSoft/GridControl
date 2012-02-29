@@ -29,87 +29,15 @@
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Columns
 {
 	/// <summary>
-	/// 문자열 형태의 편집을 지원하는 Column개체를 나타냅니다.
-	/// </summary>
-	public ref class ColumnTextBox : ColumnControl<System::Windows::Forms::TextBox^>, IEditByChar, IEditByIme
-	{
-	public: // methods
-		/// <summary>
-		/// <see cref="ColumnTextBox"/>클래스의 새 인스턴스를 초기화합니다.
-		/// </summary>
-		ColumnTextBox();
-
-	public: // properties
-		/// <summary>
-		/// 별도의 셀 렌더링 기능을 지원하는지에 대한 여부를 가져옵니다.
-		/// </summary>
-		/// <remarks>
-		/// <see cref="ColumnControl"/>클래스의 인스턴스 생성시 이 속성이 true이면 셀을 표시하기 위한 별도의 컨트롤을 생성합니다.
-		/// </remarks>
-		property bool PaintValueSupported
-		{
-			virtual bool get() override sealed { return false; }
-		}
-
-	protected: // methods
-		/// <summary>
-		/// 컨트롤에서 셀에 적용할 값을 가져올때 호출됩니다.
-		/// </summary>
-		/// <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
-		/// <returns>셀에 적용할 값의 <see cref="System::Object"/>입니다.</returns>
-		virtual object^ GetEditingValue(System::Windows::Forms::TextBox^ control) override;
-
-		/// <summary>
-		/// 셀의 값을 컨트롤에 적용할때 호출됩니다.
-		/// </summary>
-		/// <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
-		/// <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
-		virtual void SetEditingValue(System::Windows::Forms::TextBox^ control, object^ value) override;
-
-		/// <summary>
-		/// <see cref="Attaching"/>이벤트를 발생시킵니다.
-		/// </summary>
-		/// <param name="e">이벤트 데이터가 들어있는 <see cref="AttachEventArgs"/>입니다.</param>
-		virtual void OnAttaching(AttachEventArgs^ e) override;
-
-		/// <summary>
-		/// <see cref="Attached"/>이벤트를 발생시킵니다.
-		/// </summary>
-		/// <param name="e">이벤트 데이터가 들어있는 <see cref="AttachEventArgs"/>입니다.</param>
-		virtual void OnAttached(AttachEventArgs^ e) override;
-
-		/// <summary>
-		/// <see cref="Detaching"/>이벤트를 발생시킵니다.
-		/// </summary>
-		/// <param name="e">이벤트 데이터가 들어있는 <see cref="DetachEventArgs"/>입니다.</param>
-		virtual void OnDetaching(DetachEventArgs^ e) override;
-
-		/// <summary>
-		/// 컨트롤을 셀의 위치로 이동하고 셀의 크기로 조정할때 호출됩니다.
-		/// </summary>
-		/// <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
-		/// <param name="location">셀의 안쪽영역의 위치입니다.</param>
-		/// <param name="size">셀의 안쪽영역의 크기입니다.</param>
-		virtual void SetControlLayout(System::Windows::Forms::TextBox^ control, _Point location, _Size size) override;
-
-	private: // variables
-		void textBox_OnKeyPress(object^ sender, System::Windows::Forms::KeyPressEventArgs^ e);
-	};
-
-	/// <summary>
 	/// ComboBox형태의 컨트롤을 지원하는 Column개체를 나타냅니다.
 	/// </summary>
-	public ref class ColumnComboBox : ColumnDropDown<System::Windows::Forms::ListBox^>, IEditByKeyCode
+	public ref class ColumnComboBox : ColumnDropDown<System::Windows::Forms::ListBox^>
 	{
-	private:
-		typedef System::Windows::Forms::MouseEventArgs	_MouseEventArgs;
 	public: // methods
 		/// <summary>
 		/// <see cref="ColumnComboBox"/>클래스의 새 인스턴스를 초기화합니다.
 		/// </summary>
 		ColumnComboBox();
-
-		virtual _Size		GetPreferredSize(_Size proposedSize) override;
 
 	public: // properties
 		/// <summary>
@@ -118,19 +46,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		/// <param name="value">
 		/// <see cref="System::Array"/>같은 <see cref="System::Collections::IList"/> 인터페이스를 구현하는 개체입니다. 
 		/// </param>
-		[System::ComponentModel::Category("Data")]
-		[System::ComponentModel::RefreshProperties(System::ComponentModel::RefreshProperties::Repaint)]
-		[System::ComponentModel::AttributeProvider(System::ComponentModel::IListSource::typeid)]
-		[_DefaultValue((string^)nullptr)]
-		property object^ DataSource
+		[System::ComponentModel::CategoryAttribute("Data")]
+		[System::ComponentModel::RefreshPropertiesAttribute(System::ComponentModel::RefreshProperties::Repaint)]
+		[System::ComponentModel::AttributeProviderAttribute(System::ComponentModel::IListSource::typeid)]
+		[System::ComponentModel::DefaultValueAttribute((System::String^)nullptr)]
+		property System::Object^ DataSource
 		{
-			object^ get();
-			void set(object^); 
+			System::Object^ get();
+			void set(System::Object^); 
 		}
 
-		[System::ComponentModel::Category("Data")]
+		[System::ComponentModel::CategoryAttribute("Data")]
 		[System::ComponentModel::Editor("System.Windows.Forms.Design.ListControlStringCollectionEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", System::Drawing::Design::UITypeEditor::typeid)]
-		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Content)]
+		[System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
 		[System::ComponentModel::MergableProperty(false)]
 		property System::Windows::Forms::ListBox::ObjectCollection^ Items
 		{
@@ -153,23 +81,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		/// <summary>
 		/// 컨트롤에서 셀에 적용할 값을 가져올때 호출됩니다.
 		/// </summary>
-		/// <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
 		/// <returns>셀에 적용할 값의 <see cref="System::Object"/>입니다.</returns>
-		virtual object^ GetEditingValue(System::Windows::Forms::ListBox^ control) override;
+		virtual System::Object^ GetControlValue() override;
 
 		/// <summary>
 		/// 셀의 값을 컨트롤에 적용할때 호출됩니다.
 		/// </summary>
-		/// <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
 		/// <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
-		virtual void SetEditingValue(System::Windows::Forms::ListBox^ control, object^ value) override;
+		virtual void SetControlValue(System::Object^ value) override;
 
-		virtual void OnAttaching(AttachEventArgs^ e) override;
+        virtual void SetControlLayout(ICell^ cell) override;
 
 	private: // methods
-		virtual bool KeyTest(System::Windows::Forms::Keys key) sealed = IEditByKeyCode::KeyTest;
-		void listBox_OnMouseMove(object^ sender, System::Windows::Forms::MouseEventArgs^ e);
-		void listBox_OnMouseClick(object^ sender, System::Windows::Forms::MouseEventArgs^ e);
+		void listBox_OnMouseMove(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
+		void listBox_OnMouseClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
+        void listBox_OnVisibleChanged(System::Object^ sender, System::EventArgs^ e);
 
 		bool ShouldSerializeMaxDropDownItems();
 
@@ -180,81 +106,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		static int	DefaultMaxDropDownItems = 8;
 	private: // variables
 		int					m_nMaxDropDownItems;
-		_Size				m_size;
-	};
-
-	/// <summary>
-	/// Modal형식으로 경로 데이터를 편집할 수 있는 Column개체를 나타냅니다.
-	/// </summary>
-	public ref class ColumnPathSelector : ColumnModal
-	{
-	public: // methods
-		/// <summary>
-		/// <see cref="ColumnTextBox"/>클래스의 새 인스턴스를 초기화합니다.
-		/// </summary>
-		ColumnPathSelector();
-
-	protected: // methods
-		/// <summary>
-		/// 값이 편집될때 호출됩니다.
-		/// </summary>
-		/// <param name="e">값이 편집될때 필요한 데이터를 제공하는 <see cref="EditValueEventArgs"/>개체입니다.</param>
-		virtual void OnEditValue(EditValueEventArgs^ e) override;
-
-	private: // variables
-		System::Windows::Forms::FolderBrowserDialog^ m_folderBrowerDialog;
-	};
-
-	/// <summary>
-	/// 열거형을 비트 필드 형태의 편집을 지원하는 Column개체를 나타냅니다.
-	/// </summary>
-	public ref class ColumnFlagControl : ColumnDropDown<System::Windows::Forms::UserControl^>
-	{
-	public:
-		/// <summary>
-		/// <see cref="ColumnFlagControl"/>클래스의 새 인스턴스를 초기화합니다.
-		/// </summary>
-		ColumnFlagControl();
-
-	public:
-		/// <summary>
-		/// 컨트롤이 DropDown에 부착되기전에 원하는 컨트롤의 크기를 조사하기 위해 호출됩니다.
-		/// </summary>
-		/// <param name="proposedSize">편집되는 셀의 크기입니다.</param>
-		/// <returns>DropDown에 부착될 컨트롤의 크기입니다.</returns>
-		virtual _Size GetPreferredSize(_Size proposedSize) override;
-
-	protected:
-		/// <summary>
-		/// 사용할 컨트롤의 인스턴스를 생성합니다.
-		/// </summary>
-		/// <param name="controlArgs">인스턴스 생성시 필요한 인자들입니다. 인자가 필요없다면 null이 설정됩니다.</param>
-		virtual System::Windows::Forms::UserControl^ CreateControlInstance(... cli::array<object^>^ controlArgs) override;
-
-		/// <summary>
-		/// 컨트롤에서 셀에 적용할 값을 가져올때 호출됩니다.
-		/// </summary>
-		/// <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
-		/// <returns>셀에 적용할 값의 <see cref="System::Object"/>입니다.</returns>
-        virtual object^ GetEditingValue(System::Windows::Forms::UserControl^ control) override;
-
-		/// <summary>
-		/// 셀의 값을 컨트롤에 적용할때 호출됩니다.
-		/// </summary>
-		/// <param name="control">편집에 사용되는 컨트롤의 인스턴스입니다.</param>
-		/// <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
-        virtual void SetEditingValue(System::Windows::Forms::UserControl^ control, object^ value) override;
-
-		/// <summary>
-		/// <see cref="Attaching"/>이벤트를 발생시킵니다.
-		/// </summary>
-		/// <param name="e">이벤트 데이터가 들어있는 <see cref="AttachEventArgs"/>입니다.</param>
-		virtual void OnAttaching(AttachEventArgs^ e) override;
-
-	private:
-        void EditingControl_EditOK(object^ sender, _EventArgs^ e);
-
-        void EditingControl_EditCanceled(object^ sender, _EventArgs^ e);
+		System::Drawing::Size				m_size;
+        System::Object^             m_value;
+        System::Object^             m_dataSource;
 	};
 
 	Column^ CreateCheckBox();

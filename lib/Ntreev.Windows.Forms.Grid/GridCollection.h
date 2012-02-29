@@ -23,9 +23,13 @@
 
 #pragma once
 #include "GridBase.h"
+//#include "GridCell.h"
+//#include "GridColumn.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
+    ref class Column;
+    ref class Cell;
 	/// <summary>
 	/// 셀의 컬렉션을 나타냅니다.
 	/// </summary>
@@ -45,9 +49,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			}
 
 		private:
-			property object^ Current2
+			property System::Object^ Current2
 			{
-				virtual object^ get() sealed = System::Collections::IEnumerator::Current::get { return Current; }
+				virtual System::Object^ get() sealed = System::Collections::IEnumerator::Current::get { return Current; }
 			}
 
 		private:
@@ -63,7 +67,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
-		virtual	string^ ToString() override;
+		virtual	System::String^ ToString() override;
 
 	public:
 		/// <summary>
@@ -72,19 +76,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <param name="columnName">
 		/// 열의 이름입니다.
 		/// </param>
-		/// <returns>
-		/// 찾지 못하는 경우 null을 반환합니다.
-		/// </returns>
-		property Cell^ default[string^]
+		/// <exception cref="System::ArgumentException">
+		/// 열의 이름으로 셀을 찾지 못하는 경우
+		/// </exception>
+		property Cell^ default[System::String^]
 		{
-			Cell^ get(string^ columnName);
+			Cell^ get(System::String^ columnName);
 		}
 
 		/// <summary>
 		/// 열의 인스턴스로 셀을 가져옵니다.
 		/// </summary>
 		/// <param name="column">
-		/// 찾을 <see cref="Column"/>의 인스턴스입니다.
+		/// 찾을 <see cref="Ntreev::Windows::Forms::Grid::Column"/>의 인스턴스입니다.
 		/// </param>
 		/// <returns>
 		/// 찾지 못하는 경우 null을 반환합니다.
@@ -92,9 +96,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <exception cref="System::NullReferenceException">
 		/// 매개변수가 null일 경우
 		/// </exception>
-		property Cell^ default[_Column^]
+        /// <exception cref="System::ArgumentException">
+		/// 열의 인스턴스롤 셀을 찾지 못하는 경우
+		/// </exception>
+		property Cell^ default[Column^]
 		{
-			Cell^ get(_Column^ column);
+			Cell^ get(Column^ column);
 		}
 
 		/// <summary>
@@ -153,9 +160,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			virtual bool get() sealed = System::Collections::ICollection::IsSynchronized::get { return true; }
         }
 
-        property object^ SyncRoot
+        property System::Object^ SyncRoot
         {
-			virtual object^ get() sealed = System::Collections::ICollection::SyncRoot::get { return this; }
+			virtual System::Object^ get() sealed = System::Collections::ICollection::SyncRoot::get { return this; }
         }
 
         property int Count2
@@ -165,7 +172,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #pragma endregion
 
 	internal: // methods			
-		CellCollection(_Row^ row);
+		CellCollection(Row^ row);
 
 	internal:
 		property Cell^ default[GrColumn*]
@@ -174,7 +181,136 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 	private: // variables
-		_Row^						m_row;
+		Row^						m_row;
 		GrColumnList*				m_pColumnList;
 	};
+
+    public ref class CellTagCollection : System::Collections::IEnumerable, System::Collections::ICollection
+	{
+        ref class Enumerator : System::Collections::IEnumerator
+		{
+		public:
+			Enumerator(GrDataRow* pDataRow, GrColumnList* pColumnList);
+			~Enumerator();
+			virtual bool MoveNext();
+			virtual void Reset();
+
+			property System::Object^ Current
+			{
+				virtual System::Object^ get();
+			}
+
+		private:
+			uint			m_index;
+			GrDataRow*		m_pDataRow;
+			GrColumnList*	m_pColumnList;
+		};
+
+	public:
+		/// <summary>
+		/// 열의 이름으로 셀을 가져옵니다.
+		/// </summary>
+		/// <param name="columnName">
+		/// 열의 이름입니다.
+		/// </param>
+		/// <exception cref="System::ArgumentException">
+		/// 열의 이름으로 셀을 찾지 못하는 경우
+		/// </exception>
+		property System::Object^ default[System::String^]
+		{
+			System::Object^ get(System::String^ columnName);
+            void set(System::String^ columnName, System::Object^ value);
+		}
+
+		/// <summary>
+		/// 열의 인스턴스로 셀을 가져옵니다.
+		/// </summary>
+		/// <param name="column">
+		/// 찾을 <see cref="Ntreev::Windows::Forms::Grid::Column"/>의 인스턴스입니다.
+		/// </param>
+		/// <returns>
+		/// 찾지 못하는 경우 null을 반환합니다.
+		/// </returns>
+		/// <exception cref="System::NullReferenceException">
+		/// 매개변수가 null일 경우
+		/// </exception>
+        /// <exception cref="System::ArgumentException">
+		/// 열의 인스턴스롤 셀을 찾지 못하는 경우
+		/// </exception>
+		property System::Object^ default[Column^]
+		{
+			System::Object^ get(Column^ column);
+            void set(Column^ column, System::Object^ value);
+		}
+
+		/// <summary>
+		/// 지정한 인덱스에 있는 셀을 가져옵니다.
+		/// </summary>
+		/// <param name="index">
+		/// 가져올 셀의 인덱스(0부터 시작)입니다.
+		/// </param>
+		/// <returns>
+		/// 지정한 인덱스의 셀입니다.
+		/// </returns>
+		/// <exception cref="System::ArgumentOutOfRangeException">
+		/// 인덱스가 0보다 작거나, <see cref="Count"/>보다 클 경우
+		/// </exception>
+		property System::Object^ default[int]
+		{
+			System::Object^ get(int index);
+            void set(int index, System::Object^ value);
+		}
+
+		/// <summary>
+		/// 셀의 갯수를 가져옵니다.
+		/// </summary>
+		/// <returns>
+		/// 갯수를 나타내는 <see cref="System::Int32"/>의 정수값입니다.
+		/// </returns>
+		property int Count
+		{
+			int get();
+		}
+
+		/// <summary>
+		/// 컬렉션을 반복하는 열거자를 가져옵니다.
+        /// </summary>
+		/// <returns>
+		/// 열거자를 나타내는 <see cref="System::Collections::Generic::IEnumerator"/>입니다.
+		/// </returns>
+		virtual System::Collections::IEnumerator^ GetEnumerator();
+
+	private:
+#pragma region ICollection 멤버
+		virtual void CopyTo(System::Array^ array, int index) sealed = System::Collections::ICollection::CopyTo
+        {
+            for each(System::Object^ item in this)
+            {
+                array->SetValue(item, index++);
+            }
+        }
+
+        property bool IsSynchronized
+        {
+			virtual bool get() sealed = System::Collections::ICollection::IsSynchronized::get { return true; }
+        }
+
+        property System::Object^ SyncRoot
+        {
+			virtual System::Object^ get() sealed = System::Collections::ICollection::SyncRoot::get { return this; }
+        }
+
+        property int Count2
+        {
+			virtual int get() sealed = System::Collections::ICollection::Count::get { return this->Count; }
+        }
+#pragma endregion
+
+	internal: // methods			
+		CellTagCollection(Row^ row);
+
+	private: // variables
+		Row^						m_row;
+		GrColumnList*				m_pColumnList;
+    };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -25,7 +25,7 @@
 
 #ifdef _TIME_TEST
 
-namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Private
+namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
 	public ref class GridTimeTest
 	{
@@ -33,22 +33,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		typedef System::TimeSpan	_TimeSpan;
 	public:
 		GridTimeTest();
-		GridTimeTest(string^ text);
+		GridTimeTest(System::String^ text);
 		~GridTimeTest();
 		!GridTimeTest();
 
-		void				Report(string^ text);
-		void				Report(string^ format, ... cli::array<object^>^ values);
+		void				Report(System::String^ text);
+		void				Report(System::String^ format, ... cli::array<System::Object^>^ values);
 
-		void				ReportAbs(string^ text);
-		void				ReportAbs(string^ format, ... cli::array<object^>^ values);
+		void				ReportAbs(System::String^ text);
+		void				ReportAbs(System::String^ format, ... cli::array<System::Object^>^ values);
 
 	private:
 		_DateTime			m_firstTime;
 		_DateTime			m_oldTime;
-		string^			m_name;
+		System::String^			m_name;
 	};
 
-} /*namespace Private*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
+} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
 
 #endif _TIME_TEST

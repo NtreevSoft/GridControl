@@ -39,7 +39,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>입니다.
 		/// </returns>
-		virtual string^ ToString() override
+		virtual System::String^ ToString() override
 		{
 			return Text; 
 		}
@@ -51,11 +51,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 제목을 나타내는 문자열입니다.
 		/// </returns>
-		[_Category("Layout")]
-		property string^ Text
+		[System::ComponentModel::CategoryAttribute("Layout")]
+		property System::String^ Text
 		{
-			string^ get();
-			void set(string^);
+			System::String^ get();
+			void set(System::String^);
 		}
 
 		/// <summary>
@@ -64,7 +64,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <returns>
 		/// 제목이 표시되면 true를, 그렇지 않으면 false를 반환합니다.
 		/// </returns>
-		[_Category("Appearance"), _DefaultValue(true)]
+		[System::ComponentModel::CategoryAttribute("Appearance"), System::ComponentModel::DefaultValueAttribute(true)]
 		property bool IsVisible
 		{
 			bool get(); 
@@ -72,7 +72,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 	internal: // methods
-		GroupingRow(_GridControl^ gridControl, GrGroupingList* pGroupingList);
+		GroupingRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrGroupingList* pGroupingList);
+
+    private: // methods
+        bool ShouldSerializeText();
 
 	private: // variables
 		GrGroupingList* m_pGroupingList;

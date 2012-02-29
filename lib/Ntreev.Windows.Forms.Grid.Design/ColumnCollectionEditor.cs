@@ -88,7 +88,9 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 return CreateInstanceBySelectingColumn();
             }
 
-            return ColumnCollection.CreateColumnInstance(d, itemType);
+            Column column = ColumnCollection.CreateColumnInstance(d);
+            column.DataType = itemType;
+            return column;
         }
 
         void service_ComponentChanged(object sender, ComponentChangedEventArgs e)
@@ -128,8 +130,10 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 for (int i = 1; i <= vsproj.References.Count; i++)
                 {
                     Reference reference = vsproj.References.Item(i);
+                    
                     Assembly assembly = resService.GetAssembly(new AssemblyName(reference.Name));
-                    assemblies.Add(assembly);
+                    if(assembly != null)
+                        assemblies.Add(assembly);
                 }
 
                 TypeSelectorForm form = new TypeSelectorForm(assemblies.ToArray());
@@ -137,7 +141,9 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    return ColumnCollection.CreateColumnInstance(this.Context, form.SelectedType);
+                    Column column = ColumnCollection.CreateColumnInstance(this.Context);
+                    column.DataType = form.SelectedType;
+                    return column;
                 }
             }
 
@@ -171,7 +177,8 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 {
                     Reference reference = vsproj.References.Item(i);
                     Assembly assembly = resService.GetAssembly(new AssemblyName(reference.Name));
-                    assemblies.Add(assembly);
+                    if (assembly != null)
+                        assemblies.Add(assembly);
                 }
 
                 TypeSelectorForm form = new TypeSelectorForm(assemblies.ToArray(), typeof(Column));
@@ -179,7 +186,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    return ColumnCollection.CreateColumnInstanceCore(this.Context, form.SelectedType);
+                    return ColumnCollection.CreateColumnInstance(this.Context, form.SelectedType);
                 }
             }
 

@@ -175,4 +175,7 @@
   <data name="CannotRemove" xml:space="preserve">
     <value>삭제할 수 없는 항목입니다.</value>
   </data>
+  <data name="Error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Error.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
