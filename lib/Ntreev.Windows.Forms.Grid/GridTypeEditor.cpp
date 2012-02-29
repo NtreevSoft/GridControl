@@ -195,11 +195,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         {
             System::Drawing::Point pt = textBox->GetPositionFromCharIndex(0);
 
-             System::Drawing::Rectangle rect = cell->ClientRectangle;
-             rect.X = -pt.X;
-             rect.Y = 0;
-             rect.Width += pt.X;
-             textBox->Bounds = rect;
+            System::Drawing::Rectangle rect = cell->ClientRectangle;
+            rect.X = -pt.X;
+            rect.Y = 0;
+            rect.Width += pt.X;
+            textBox->Bounds = rect;
         }
 
         //if(textBox->Multiline

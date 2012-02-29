@@ -88,7 +88,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
                     Win32::API::PostMessage(m);
                     return true;
                 }
-            }				
+            }    
             break;
         }
 
@@ -149,8 +149,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         m_clientBounds.Offset(cell->Bounds.Location);
         m_clientBounds = m_gridControl->RectangleToScreen(m_clientBounds);
 
-		System::Drawing::Rectangle gs = GetClipScreenRect(m_gridControl);
-		
+        System::Drawing::Rectangle gs = GetClipScreenRect(m_gridControl);
+
 
         //if(m_clientBounds.Right >= gs.Right)
         //{
@@ -158,7 +158,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         //}
 
 
-		m_clientBounds = System::Drawing::Rectangle::Intersect(m_clientBounds, gs);
+        m_clientBounds = System::Drawing::Rectangle::Intersect(m_clientBounds, gs);
 
         Form^ owner = m_gridControl->FindForm();
         while(owner->ParentForm != nullptr)
@@ -193,29 +193,29 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         }
     }
 
-	System::Drawing::Rectangle TypeEditorForm::GetClipScreenRect(System::Windows::Forms::Control^ control)
-	{
-		//using namespace System::Windows::Forms;
-		//using namespace System::Drawing;
-		System::Windows::Forms::Control^ parent = control->Parent;
+    System::Drawing::Rectangle TypeEditorForm::GetClipScreenRect(System::Windows::Forms::Control^ control)
+    {
+        //using namespace System::Windows::Forms;
+        //using namespace System::Drawing;
+        System::Windows::Forms::Control^ parent = control->Parent;
 
-            if (parent == nullptr)
-            {
-                return control->RectangleToScreen(control->DisplayRectangle);
-            }
+        if (parent == nullptr)
+        {
+            return control->RectangleToScreen(control->DisplayRectangle);
+        }
 
-			System::Drawing::Rectangle s = control->RectangleToScreen(control->DisplayRectangle);
-//            s.Location = s.Location + (Size)control.Location;
-
-
-
-            System::Drawing::Rectangle e = GetClipScreenRect(parent);
+        System::Drawing::Rectangle s = control->RectangleToScreen(control->DisplayRectangle);
+        //            s.Location = s.Location + (Size)control.Location;
 
 
 
-			return System::Drawing::Rectangle::Intersect(e, s);
+        System::Drawing::Rectangle e = GetClipScreenRect(parent);
 
-	}
+
+
+        return System::Drawing::Rectangle::Intersect(e, s);
+
+    }
 
     void TypeEditorForm::OnSizeChanged(System::EventArgs^ e)
     {
@@ -263,7 +263,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         {
             m_mouseDownPoint = e->Location;
             m_mouseMovePoint = e->Location;
-            m_firstSize	= this->Size;
+            m_firstSize = this->Size;
             m_dragging  = true;
             this->Capture = true;
         }
@@ -386,7 +386,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             value.X = screenRect.Right - value.Width;
 
         this->Location = value.Location;
-        this->Size	   = value.Size;
+        this->Size    = value.Size;
     }
 
     //void TypeEditorForm::Show(IColumnDropDown^ column, Cell^ editingCell, System::Drawing::Rectangle rect)
@@ -405,7 +405,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     //    this->Sizable = column->Sizable;
 
     //    this->Controls->Add(control);
-    //    this->Rectangle	= System::Drawing::Rectangle(location, size);
+    //    this->Rectangle = System::Drawing::Rectangle(location, size);
 
     //    this->Owner = m_parentForm;
     //    this->ResumeLayout(false);

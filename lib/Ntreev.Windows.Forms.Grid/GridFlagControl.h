@@ -26,95 +26,95 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design
 {
-	/// <summary>
-	/// 열거형을 비트 필드 형태를 나타내는 사용자 정의 컨트롤입니다.
-	/// </summary>
-	[System::ComponentModel::ToolboxItem(false)]
-	[System::ComponentModel::DesignTimeVisible(false)]
-	ref class FlagControl : public System::Windows::Forms::UserControl
-	{
-	public:
-		/// <summary>
-		/// <see cref="FlagControl"/>클래스의 새 인스턴스를 초기화합니다.
-		/// </summary>
-		FlagControl();
+    /// <summary>
+    /// 열거형을 비트 필드 형태를 나타내는 사용자 정의 컨트롤입니다.
+    /// </summary>
+    [System::ComponentModel::ToolboxItem(false)]
+    [System::ComponentModel::DesignTimeVisible(false)]
+    ref class FlagControl : public System::Windows::Forms::UserControl
+    {
+    public:
+        /// <summary>
+        /// <see cref="FlagControl"/>클래스의 새 인스턴스를 초기화합니다.
+        /// </summary>
+        FlagControl();
 
         FlagControl(IEditorService^ editorService, System::Type^ flagType);
 
-	public:
-		/// <summary>
-		/// 열거형 비트 필드 형태의 값을 가져오거나 설정합니다.
-		/// </summary>
-		property System::Object^ Value
-		{
-			System::Object^ get();
+    public:
+        /// <summary>
+        /// 열거형 비트 필드 형태의 값을 가져오거나 설정합니다.
+        /// </summary>
+        property System::Object^ Value
+        {
+            System::Object^ get();
             void set(System::Object^);
-		}
+        }
 
-	protected:
+    protected:
 
-		virtual bool ProcessCmdKey(System::Windows::Forms::Message% msg, System::Windows::Forms::Keys keyData) override;
+        virtual bool ProcessCmdKey(System::Windows::Forms::Message% msg, System::Windows::Forms::Keys keyData) override;
 
-	private:
-		System::Type^			m_flagType;
+    private:
+        System::Type^   m_flagType;
         IEditorService^ m_editorService;
         System::Object^ m_value;
 
-	private: 
-		System::Windows::Forms::Button^  buttonOk;
-		System::Windows::Forms::Button^  buttonCancel;
+    private: 
+        System::Windows::Forms::Button^  buttonOk;
+        System::Windows::Forms::Button^  buttonCancel;
 
 
 #pragma region Windows Form Designer generated code
 
-		void InitializeComponent(void)
-		{
-			this->buttonOk = (gcnew System::Windows::Forms::Button());
-			this->buttonCancel = (gcnew System::Windows::Forms::Button());
-			this->SuspendLayout();
-			// 
-			// buttonOk
-			// 
-			this->buttonOk->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
-			this->buttonOk->Location = System::Drawing::Point(8, 163);
-			this->buttonOk->Name = L"buttonOk";
-			this->buttonOk->Size = System::Drawing::Size(55, 23);
-			this->buttonOk->TabIndex = 0;
-			this->buttonOk->Text = L"&Ok";
-			this->buttonOk->UseVisualStyleBackColor = true;
-			this->buttonOk->Click += gcnew System::EventHandler(this, &FlagControl::buttonOk_Click);
-			// 
-			// buttonCancel
-			// 
-			this->buttonCancel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
-			this->buttonCancel->Location = System::Drawing::Point(102, 163);
-			this->buttonCancel->Name = L"buttonCancel";
-			this->buttonCancel->Size = System::Drawing::Size(55, 23);
-			this->buttonCancel->TabIndex = 1;
-			this->buttonCancel->Text = L"&Cancle";
-			this->buttonCancel->UseVisualStyleBackColor = true;
-			this->buttonCancel->Click += gcnew System::EventHandler(this, &FlagControl::buttonCancel_Click);
-			// 
-			// FlagControl
-			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(7, 12);
-			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->Controls->Add(this->buttonCancel);
-			this->Controls->Add(this->buttonOk);
-			this->Name = L"FlagControl";
-			this->Padding = System::Windows::Forms::Padding(5);
-			this->Size = System::Drawing::Size(165, 194);
-			this->ResumeLayout(false);
+        void InitializeComponent(void)
+        {
+            this->buttonOk = (gcnew System::Windows::Forms::Button());
+            this->buttonCancel = (gcnew System::Windows::Forms::Button());
+            this->SuspendLayout();
+            // 
+            // buttonOk
+            // 
+            this->buttonOk->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
+            this->buttonOk->Location = System::Drawing::Point(8, 163);
+            this->buttonOk->Name = L"buttonOk";
+            this->buttonOk->Size = System::Drawing::Size(55, 23);
+            this->buttonOk->TabIndex = 0;
+            this->buttonOk->Text = L"&Ok";
+            this->buttonOk->UseVisualStyleBackColor = true;
+            this->buttonOk->Click += gcnew System::EventHandler(this, &FlagControl::buttonOk_Click);
+            // 
+            // buttonCancel
+            // 
+            this->buttonCancel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
+            this->buttonCancel->Location = System::Drawing::Point(102, 163);
+            this->buttonCancel->Name = L"buttonCancel";
+            this->buttonCancel->Size = System::Drawing::Size(55, 23);
+            this->buttonCancel->TabIndex = 1;
+            this->buttonCancel->Text = L"&Cancle";
+            this->buttonCancel->UseVisualStyleBackColor = true;
+            this->buttonCancel->Click += gcnew System::EventHandler(this, &FlagControl::buttonCancel_Click);
+            // 
+            // FlagControl
+            // 
+            this->AutoScaleDimensions = System::Drawing::SizeF(7, 12);
+            this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+            this->Controls->Add(this->buttonCancel);
+            this->Controls->Add(this->buttonOk);
+            this->Name = L"FlagControl";
+            this->Padding = System::Windows::Forms::Padding(5);
+            this->Size = System::Drawing::Size(165, 194);
+            this->ResumeLayout(false);
 
-		}
+        }
 #pragma endregion
-	private: 
-		System::Void buttonOk_Click(System::Object^ sender, System::EventArgs^ e);
-		System::Void buttonCancel_Click(System::Object^ sender, System::EventArgs^ e);
-        
+    private: 
+        System::Void buttonOk_Click(System::Object^ sender, System::EventArgs^ e);
+        System::Void buttonCancel_Click(System::Object^ sender, System::EventArgs^ e);
+
         void InitializeCheckBox();
 
         void UpdateValue();
 
-	};
+    };
 } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

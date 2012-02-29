@@ -229,7 +229,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         ///// </returns>
         //property bool IsBindable
         //{
-        //	bool get();
+        // bool get();
         //}
 
         /// <summary>
@@ -357,6 +357,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 열을 그릴수 있는 개체입니다.
     /// </summary>
+    [System::ComponentModel::ToolboxItem(true)]
+    [System::Drawing::ToolboxBitmap(ColumnPainter::typeid)]
     public ref class ColumnPainter abstract : System::ComponentModel::Component
     {
     public: // methods
@@ -400,8 +402,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void DrawSortArrow(System::Drawing::Graphics^ g, System::Drawing::Rectangle paintRect, SortType sortType);
 
     private: // variables
-        System::Windows::Forms::VisualStyles::VisualStyleRenderer^	m_sortedDownRenderer;
-        System::Windows::Forms::VisualStyles::VisualStyleRenderer^	m_sortedUpPainter;
+        System::Windows::Forms::VisualStyles::VisualStyleRenderer^ m_sortedDownRenderer;
+        System::Windows::Forms::VisualStyles::VisualStyleRenderer^ m_sortedUpPainter;
     };
 
     /// <summary>
@@ -425,7 +427,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>입니다.
         /// </returns>
-        virtual	System::String^ ToString() override;
+        virtual System::String^ ToString() override;
 
         /// <summary>
         /// 사용되지 않습니다.
@@ -767,7 +769,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 값의 비교를 위한 개체를 나타내는 <see cref="System::Collections::IComparer"/>입니다.
         /// </returns>
-        [System::ComponentModel::BrowsableAttribute(false), System::ComponentModel::DefaultValueAttribute((System::String^)nullptr)]
+        [System::ComponentModel::BrowsableAttribute(false)]
+        [System::ComponentModel::DefaultValueAttribute((System::String^)nullptr)]
         property System::Collections::IComparer^ SortComparer
         {
             System::Collections::IComparer^ get();
@@ -835,7 +838,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 열을 그릴수 있는 개체를 나타내는 <see cref="ColumnPainter"/>입니다.
         /// </returns>
-        [System::ComponentModel::BrowsableAttribute(false)]
+        [System::ComponentModel::DefaultValueAttribute((System::String^)nullptr)]
         [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
         property Ntreev::Windows::Forms::Grid::ColumnPainter^ ColumnPainter
         {
@@ -1092,25 +1095,25 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private: // variables
-        System::Type^						m_dataType;
+        System::Type^      m_dataType;
         System::ComponentModel::TypeConverter^ m_typeConverter;
-        System::String^						m_title;
-        System::String^						m_name;
-        System::String^						m_tooltip;
-        System::ComponentModel::PropertyDescriptor^		m_propertyDescriptor;
+        System::String^      m_title;
+        System::String^      m_name;
+        System::String^      m_tooltip;
+        System::ComponentModel::PropertyDescriptor^  m_propertyDescriptor;
         System::Collections::IComparer^ m_sortComparer;
 
-        System::Object^						m_defaultValue;
-        Ntreev::Windows::Forms::Grid::ColumnPainter^				m_columnPainter;
+        System::Object^      m_defaultValue;
+        Ntreev::Windows::Forms::Grid::ColumnPainter^    m_columnPainter;
 
-        class CustomPaint*			m_pCustomPaint;
+        class CustomPaint*   m_pCustomPaint;
 
-        System::EventHandler^				m_eventDisposed;
-        System::ComponentModel::ISite^	m_site;
+        System::EventHandler^    m_eventDisposed;
+        System::ComponentModel::ISite^ m_site;
 
         Design::TypeEditor^         m_typeEditor;
-        GrColumn*					m_pColumn;
+        GrColumn*     m_pColumn;
     };
 
-    
+
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

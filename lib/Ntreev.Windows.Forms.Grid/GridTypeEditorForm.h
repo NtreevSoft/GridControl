@@ -134,7 +134,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         void PreProcessEvent(System::Windows::Forms::Control^ control);
         void PostProcessEvent(System::Windows::Forms::Control^ control);
 
-		System::Drawing::Rectangle GetClipScreenRect(System::Windows::Forms::Control^ control);
+        System::Drawing::Rectangle GetClipScreenRect(System::Windows::Forms::Control^ control);
 
     private: // properties
         property System::ComponentModel::IContainer^ Container2
@@ -154,16 +154,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     private: // variables
         bool                    m_dragging;
-        bool					m_resizing;
-        bool					m_resizable;
-        bool					m_isin;
-        Form^			        m_parentForm;
-        Ntreev::Windows::Forms::Grid::GridControl^			m_gridControl;
+        bool     m_resizing;
+        bool     m_resizable;
+        bool     m_isin;
+        Form^           m_parentForm;
+        Ntreev::Windows::Forms::Grid::GridControl^   m_gridControl;
 
-        System::Drawing::Point			m_mouseDownPoint;
-        System::Drawing::Point			m_mouseMovePoint;
-        System::Drawing::Rectangle		m_resizableRect;
-        System::Drawing::Size			m_firstSize;
+        System::Drawing::Point   m_mouseDownPoint;
+        System::Drawing::Point   m_mouseMovePoint;
+        System::Drawing::Rectangle  m_resizableRect;
+        System::Drawing::Size   m_firstSize;
         System::Drawing::Rectangle      m_bounds;
         System::Drawing::Rectangle      m_clientBounds;
         System::Windows::Forms::Control^m_control;
@@ -171,7 +171,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         ICell^                  m_cell;
         EditingReason           m_reason;
 
-        System::Windows::Forms::VisualStyles::VisualStyleRenderer^	m_gripperRenderer;
+        System::Windows::Forms::VisualStyles::VisualStyleRenderer^ m_gripperRenderer;
         bool                    m_closed;
         bool                    m_defaultResult;
 
@@ -180,7 +180,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     private:
         ref class MessageFilter : System::Windows::Forms::NativeWindow, System::Windows::Forms::IMessageFilter
         {
-        public:	
+        public: 
             void Start(System::Windows::Forms::Form^ mainForm, TypeEditorForm^ dropDownForm);
             void Stop();
 

@@ -132,7 +132,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         GrEditingReason ToNative();
 
     private: // variables
-        Ntreev::Windows::Forms::Grid::Design::EditingReasonType	reasonType;
+        Ntreev::Windows::Forms::Grid::Design::EditingReasonType reasonType;
         System::Object^ data;
     };
 
@@ -285,7 +285,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     ref class BooleanTypeEditor : TypeEditor
     {
-        typedef System::Windows::Forms::VisualStyles::VisualStyleRenderer _VisualStyleRenderer;
     public:
         BooleanTypeEditor(System::Type^ dataType);
 
@@ -302,10 +301,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         }
 
     private:
-        _VisualStyleRenderer^ m_rendererChecked;
-        _VisualStyleRenderer^ m_rendererCheckedHot;
-		_VisualStyleRenderer^ m_rendererUnchecked;
-        _VisualStyleRenderer^ m_rendererUncheckedHot;
+        System::Windows::Forms::VisualStyles::VisualStyleRenderer^ m_rendererChecked;
+        System::Windows::Forms::VisualStyles::VisualStyleRenderer^ m_rendererCheckedHot;
+        System::Windows::Forms::VisualStyles::VisualStyleRenderer^ m_rendererUnchecked;
+        System::Windows::Forms::VisualStyles::VisualStyleRenderer^ m_rendererUncheckedHot;
     };
 
     ref class ListTypeEditor : TypeEditor

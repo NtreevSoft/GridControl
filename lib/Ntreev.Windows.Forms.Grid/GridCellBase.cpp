@@ -128,7 +128,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void CellBase::Padding::set(System::Windows::Forms::Padding value)
     {
-        m_pCell->SetPadding(value);		
+        m_pCell->SetPadding(value);  
     }
 
     void CellBase::OnBackColorChanged(System::EventArgs^ e)

@@ -33,620 +33,620 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	RowCollection::Enumerator::Enumerator(GrDataRowList* pDataRowList)
-		: m_pDataRowList(pDataRowList), m_index(0)
-	{
+    RowCollection::Enumerator::Enumerator(GrDataRowList* pDataRowList)
+        : m_pDataRowList(pDataRowList), m_index(0)
+    {
 
-	}
-	
-	RowCollection::Enumerator::~Enumerator()
-	{
+    }
 
-	}
+    RowCollection::Enumerator::~Enumerator()
+    {
 
-	bool RowCollection::Enumerator::MoveNext()
-	{
-		m_index++;
-		return m_index <= m_pDataRowList->GetDataRowCount();
-	}
-		
-	void RowCollection::Enumerator::Reset()
-	{
-		m_index = 0;
-	}
+    }
 
-	Row^ RowCollection::Enumerator::Current::get()
-	{
-		GrDataRow* pDataRow = m_pDataRowList->GetDataRow(m_index - 1);
-		return Row::FromNative(pDataRow);
-	}
+    bool RowCollection::Enumerator::MoveNext()
+    {
+        m_index++;
+        return m_index <= m_pDataRowList->GetDataRowCount();
+    }
 
-	RowCollection::RowCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl) 
-		: GridObject(gridControl)
-	{
-		m_pDataRowList = GridCore->GetDataRowList();
+    void RowCollection::Enumerator::Reset()
+    {
+        m_index = 0;
+    }
 
-		m_listChangedEventHandler = gcnew System::ComponentModel::ListChangedEventHandler(this, &RowCollection::currencyManager_ListChanged);
-		m_currentChangedEventHandler = gcnew System::EventHandler(this, &RowCollection::currencyManager_CurrentChanged);
-		
-		gridControl->CurrencyManagerChanging += gcnew CurrencyManagerChangingEventHandler(this, &RowCollection::gridControl_CurrencyManagerChanging);
-		gridControl->CurrencyManagerChanged += gcnew CurrencyManagerChangedEventHandler(this, &RowCollection::gridControl_CurrencyManagerChanged);
-	}
+    Row^ RowCollection::Enumerator::Current::get()
+    {
+        GrDataRow* pDataRow = m_pDataRowList->GetDataRow(m_index - 1);
+        return Row::FromNative(pDataRow);
+    }
 
-	void RowCollection::Bind(System::Object^ component, int componentIndex)
-	{
-		if(GridControl->InvokeRowInserting(component) == false)
-			return;
+    RowCollection::RowCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl) 
+        : GridObject(gridControl)
+    {
+        m_pDataRowList = GridCore->GetDataRowList();
 
-		Row^ row = gcnew Row(GridControl);
-		m_pDataRowList->AddDataRow(row->NativeRef);
-		row->Component = component;
-		row->ComponentIndex = componentIndex;
+        m_listChangedEventHandler = gcnew System::ComponentModel::ListChangedEventHandler(this, &RowCollection::currencyManager_ListChanged);
+        m_currentChangedEventHandler = gcnew System::EventHandler(this, &RowCollection::currencyManager_CurrentChanged);
 
-		GridControl->InvokeRowInserted(row);
-	}
+        gridControl->CurrencyManagerChanging += gcnew CurrencyManagerChangingEventHandler(this, &RowCollection::gridControl_CurrencyManagerChanging);
+        gridControl->CurrencyManagerChanged += gcnew CurrencyManagerChangedEventHandler(this, &RowCollection::gridControl_CurrencyManagerChanged);
+    }
 
-	void RowCollection::Unbind(int componentIndex)
-	{
-		for(int i = componentIndex + 1 ; i<this->Count ; i++)
-		{
-			this->GetAt(i)->ComponentIndex--;
-		}
+    void RowCollection::Bind(System::Object^ component, int componentIndex)
+    {
+        if(GridControl->InvokeRowInserting(component) == false)
+            return;
 
-		Row^ row = this->GetAt(componentIndex);
-		m_pDataRowList->RemoveDataRow(row->NativeRef);
-		GridControl->InvokeRowRemoved(gcnew RowRemovedEventArgs(componentIndex));
-	}
+        Row^ row = gcnew Row(GridControl);
+        m_pDataRowList->AddDataRow(row->NativeRef);
+        row->Component = component;
+        row->ComponentIndex = componentIndex;
 
-	void RowCollection::SetItemsByDesigner(cli::array<System::Object^>^ values)
-	{
-		using namespace System::Collections::Generic;
-		for each(System::Object^ item in values)
-		{
-			Row^ row = dynamic_cast<Row^>(item);
+        GridControl->InvokeRowInserted(row);
+    }
 
-			if(row->Index < 0)
-			{
-				Add(row);
-			}
-		}
-	}
+    void RowCollection::Unbind(int componentIndex)
+    {
+        for(int i = componentIndex + 1 ; i<this->Count ; i++)
+        {
+            this->GetAt(i)->ComponentIndex--;
+        }
 
-	bool RowCollection::Contains(Row^ item)
-	{
-		ArgumentTest(item);
-		return item->Index != INVALID_INDEX;
-	}
+        Row^ row = this->GetAt(componentIndex);
+        m_pDataRowList->RemoveDataRow(row->NativeRef);
+        GridControl->InvokeRowRemoved(gcnew RowRemovedEventArgs(componentIndex));
+    }
 
-	int RowCollection::IndexOf(Row^ item)
-	{
-		ArgumentTest(item);
-		return item->Index;
-	}
+    void RowCollection::SetItemsByDesigner(cli::array<System::Object^>^ values)
+    {
+        using namespace System::Collections::Generic;
+        for each(System::Object^ item in values)
+        {
+            Row^ row = dynamic_cast<Row^>(item);
 
-	void RowCollection::currencyManager_ListChanged(System::Object^ sender, System::ComponentModel::ListChangedEventArgs^ e)
-	{
-		switch(e->ListChangedType)
-		{
-		case System::ComponentModel::ListChangedType::ItemAdded:
-			{
-				int componentIndex = e->NewIndex;
-				Bind(m_manager->List[componentIndex], componentIndex);
-			}
-			break;
-		case System::ComponentModel::ListChangedType::ItemDeleted:
-			{
-				Unbind(e->NewIndex);
-			}
-			break;
-		case System::ComponentModel::ListChangedType::ItemChanged:
-			{
-				System::Object^ component = m_manager->List[e->NewIndex];
+            if(row->Index < 0)
+            {
+                Add(row);
+            }
+        }
+    }
 
-				Row^ row = this[component];
-				if(e->PropertyDescriptor == nullptr)
-				{
-					for each(Cell^ item in row->Cells)
-					{
-						item->UpdateNativeText();
-					}
-				}
-				else
-				{
-					row->Cells[e->PropertyDescriptor->Name]->UpdateNativeText();
-				}
-			}
-			break;
-		case System::ComponentModel::ListChangedType::ItemMoved:
-			{
-				
-			}
-			break;
-		case System::ComponentModel::ListChangedType::Reset:
-			{
-				m_pDataRowList->Clear();
-				for each(System::Object^ item in m_manager->List)
-				{
-					Bind(item, this->Count);
-				}
+    bool RowCollection::Contains(Row^ item)
+    {
+        ArgumentTest(item);
+        return item->Index != INVALID_INDEX;
+    }
 
-				currencyManager_CurrentChanged(sender, System::EventArgs::Empty);
-			}
-			break;
-		}
-	}
+    int RowCollection::IndexOf(Row^ item)
+    {
+        ArgumentTest(item);
+        return item->Index;
+    }
 
-	void RowCollection::currencyManager_CurrentChanged(System::Object^ /*sender*/, System::EventArgs^ /*e*/)
-	{
-		if(m_manager->Position < 0)
-			return;
+    void RowCollection::currencyManager_ListChanged(System::Object^ sender, System::ComponentModel::ListChangedEventArgs^ e)
+    {
+        switch(e->ListChangedType)
+        {
+        case System::ComponentModel::ListChangedType::ItemAdded:
+            {
+                int componentIndex = e->NewIndex;
+                Bind(m_manager->List[componentIndex], componentIndex);
+            }
+            break;
+        case System::ComponentModel::ListChangedType::ItemDeleted:
+            {
+                Unbind(e->NewIndex);
+            }
+            break;
+        case System::ComponentModel::ListChangedType::ItemChanged:
+            {
+                System::Object^ component = m_manager->List[e->NewIndex];
 
-		Row^ focusedRow = this->GridControl->FocusedRow;
-		if(focusedRow != nullptr && focusedRow->ComponentIndex == m_manager->Position)
-			return;
+                Row^ row = this[component];
+                if(e->PropertyDescriptor == nullptr)
+                {
+                    for each(Cell^ item in row->Cells)
+                    {
+                        item->UpdateNativeText();
+                    }
+                }
+                else
+                {
+                    row->Cells[e->PropertyDescriptor->Name]->UpdateNativeText();
+                }
+            }
+            break;
+        case System::ComponentModel::ListChangedType::ItemMoved:
+            {
 
-		Row^ row = this[m_manager->Current];
-		if(row != nullptr)
-		{
-			row->Focus();
-			row->BringIntoView();
-		}
-	}
+            }
+            break;
+        case System::ComponentModel::ListChangedType::Reset:
+            {
+                m_pDataRowList->Clear();
+                for each(System::Object^ item in m_manager->List)
+                {
+                    Bind(item, this->Count);
+                }
 
-	void RowCollection::gridControl_CurrencyManagerChanging(System::Object^ /*sender*/, CurrencyManagerChangingEventArgs^ /*e*/)
-	{
+                currencyManager_CurrentChanged(sender, System::EventArgs::Empty);
+            }
+            break;
+        }
+    }
 
-	}
+    void RowCollection::currencyManager_CurrentChanged(System::Object^ /*sender*/, System::EventArgs^ /*e*/)
+    {
+        if(m_manager->Position < 0)
+            return;
 
-	void RowCollection::gridControl_CurrencyManagerChanged(System::Object^ /*sender*/, CurrencyManagerChangedEventArgs^ e)
-	{
-		if(m_manager != nullptr)
-		{
-			m_manager->ListChanged -= m_listChangedEventHandler;
-			m_manager->CurrentChanged -= m_currentChangedEventHandler;
-		}
+        Row^ focusedRow = this->GridControl->FocusedRow;
+        if(focusedRow != nullptr && focusedRow->ComponentIndex == m_manager->Position)
+            return;
 
-		m_manager = e->CurrecnyManager;
+        Row^ row = this[m_manager->Current];
+        if(row != nullptr)
+        {
+            row->Focus();
+            row->BringIntoView();
+        }
+    }
 
-		if(m_manager == nullptr)
-			return;
+    void RowCollection::gridControl_CurrencyManagerChanging(System::Object^ /*sender*/, CurrencyManagerChangingEventArgs^ /*e*/)
+    {
 
-		int componentIndex = 0;
-		for each(System::Object^ item in m_manager->List)
-		{
-			Bind(item, componentIndex++);
-		}
+    }
 
-		m_manager->ListChanged += m_listChangedEventHandler;
-		m_manager->CurrentChanged += m_currentChangedEventHandler;
-	}
+    void RowCollection::gridControl_CurrencyManagerChanged(System::Object^ /*sender*/, CurrencyManagerChangedEventArgs^ e)
+    {
+        if(m_manager != nullptr)
+        {
+            m_manager->ListChanged -= m_listChangedEventHandler;
+            m_manager->CurrentChanged -= m_currentChangedEventHandler;
+        }
 
-	void RowCollection::ArgumentTest(Row^ item)
-	{
-		if(item == nullptr)
-			throw gcnew System::ArgumentNullException("item");
-		if(item == InsertionRow)
-			throw gcnew System::ArgumentException();
-	}
+        m_manager = e->CurrecnyManager;
 
-	void RowCollection::Clear()
-	{
-		ManagerEventDetach managerEventDeatch(this);
-		m_pDataRowList->Clear();
+        if(m_manager == nullptr)
+            return;
 
-		for(int i=m_manager->Count-1 ; i>=0 ; i--)
-			m_manager->RemoveAt(i);
-	}
+        int componentIndex = 0;
+        for each(System::Object^ item in m_manager->List)
+        {
+            Bind(item, componentIndex++);
+        }
 
-	void RowCollection::Insert(int index, Row^ item)
-	{
-		if(index < 0 || index > Count)
-			throw gcnew System::ArgumentOutOfRangeException("index");
-		if(item == nullptr)
-			throw gcnew System::ArgumentNullException("item");
-		if(item == InsertionRow)
-			throw gcnew System::ArgumentException();
-		if(item->Index != 0xffffffff)
-			throw gcnew System::ArgumentException();
+        m_manager->ListChanged += m_listChangedEventHandler;
+        m_manager->CurrentChanged += m_currentChangedEventHandler;
+    }
 
-		ManagerEventDetach managerEventDeatch(this);
-		
-		m_manager->AddNew();
-		System::Object^ component = m_manager->Current;
+    void RowCollection::ArgumentTest(Row^ item)
+    {
+        if(item == nullptr)
+            throw gcnew System::ArgumentNullException("item");
+        if(item == InsertionRow)
+            throw gcnew System::ArgumentException();
+    }
 
-		if(GridControl->InvokeRowInserting(component) == false)
-		{
-			m_manager->CancelCurrentEdit();
-		}
-		else
-		{
-			m_manager->EndCurrentEdit();
+    void RowCollection::Clear()
+    {
+        ManagerEventDetach managerEventDeatch(this);
+        m_pDataRowList->Clear();
 
-			m_pDataRowList->InsertDataRow(item->NativeRef, index);
-			item->Component = component;
-			item->ComponentIndex = m_manager->List->Count - 1;
+        for(int i=m_manager->Count-1 ; i>=0 ; i--)
+            m_manager->RemoveAt(i);
+    }
 
-			GridControl->InvokeRowInserted(item);
-		}
-	}
+    void RowCollection::Insert(int index, Row^ item)
+    {
+        if(index < 0 || index > Count)
+            throw gcnew System::ArgumentOutOfRangeException("index");
+        if(item == nullptr)
+            throw gcnew System::ArgumentNullException("item");
+        if(item == InsertionRow)
+            throw gcnew System::ArgumentException();
+        if(item->Index != 0xffffffff)
+            throw gcnew System::ArgumentException();
 
-	void RowCollection::RemoveAt(int index)
-	{
-		Row^ row = this[index];
-		Remove(row);
-	}
+        ManagerEventDetach managerEventDeatch(this);
+
+        m_manager->AddNew();
+        System::Object^ component = m_manager->Current;
+
+        if(GridControl->InvokeRowInserting(component) == false)
+        {
+            m_manager->CancelCurrentEdit();
+        }
+        else
+        {
+            m_manager->EndCurrentEdit();
+
+            m_pDataRowList->InsertDataRow(item->NativeRef, index);
+            item->Component = component;
+            item->ComponentIndex = m_manager->List->Count - 1;
+
+            GridControl->InvokeRowInserted(item);
+        }
+    }
+
+    void RowCollection::RemoveAt(int index)
+    {
+        Row^ row = this[index];
+        Remove(row);
+    }
 
 
-	Row^ RowCollection::default::get(int index)
-	{
-		if(index < 0 || index >= (int)m_pDataRowList->GetDataRowCount())
-			throw gcnew System::ArgumentOutOfRangeException("index");
+    Row^ RowCollection::default::get(int index)
+    {
+        if(index < 0 || index >= (int)m_pDataRowList->GetDataRowCount())
+            throw gcnew System::ArgumentOutOfRangeException("index");
 
-		GrDataRow* pDataRow = m_pDataRowList->GetDataRow((uint)index);
-		return Row::FromNative(pDataRow);
-	}
+        GrDataRow* pDataRow = m_pDataRowList->GetDataRow((uint)index);
+        return Row::FromNative(pDataRow);
+    }
 
-	Row^ RowCollection::AddNew()
-	{
-		try
-		{
-			Row^ row = gcnew Row(GridControl);
-			Insert(Count, row);
-			return row;
-		}
-		catch(System::Exception^ e)
-		{
-			throw e;
-		}
-	}
+    Row^ RowCollection::AddNew()
+    {
+        try
+        {
+            Row^ row = gcnew Row(GridControl);
+            Insert(Count, row);
+            return row;
+        }
+        catch(System::Exception^ e)
+        {
+            throw e;
+        }
+    }
 
-	cli::array<Row^>^ RowCollection::AddNew(int count)
-	{
-		if(count <= 0)
-			throw gcnew System::ArgumentOutOfRangeException("count", "생성 갯수는 0보다 커야 합니다.");
-		cli::array<Row^>^ rows = gcnew cli::array<Row^>(count);
+    cli::array<Row^>^ RowCollection::AddNew(int count)
+    {
+        if(count <= 0)
+            throw gcnew System::ArgumentOutOfRangeException("count", "생성 갯수는 0보다 커야 합니다.");
+        cli::array<Row^>^ rows = gcnew cli::array<Row^>(count);
 
-		for(int i=0 ; i<count ; i++)
-		{
-			rows[i] = AddNew();
-		}
-		return rows;
-	}
+        for(int i=0 ; i<count ; i++)
+        {
+            rows[i] = AddNew();
+        }
+        return rows;
+    }
 
-	Row^ RowCollection::AddNewFromInsertion()
-	{
-		ManagerEventDetach managerEventDeatch(this);
+    Row^ RowCollection::AddNewFromInsertion()
+    {
+        ManagerEventDetach managerEventDeatch(this);
 
-		try
-		{
-			m_manager->AddNew();
-		}
-		catch(System::Exception^ e)
-		{
-			throw e;
-		}
+        try
+        {
+            m_manager->AddNew();
+        }
+        catch(System::Exception^ e)
+        {
+            throw e;
+        }
 
-		Row^ row = gcnew Row(GridControl);
-		m_pDataRowList->AddDataRow(row->NativeRef);
-		row->Component = m_manager->Current;
-		row->ComponentIndex = m_manager->List->Count - 1;
-		row->IsVisible = false;
+        Row^ row = gcnew Row(GridControl);
+        m_pDataRowList->AddDataRow(row->NativeRef);
+        row->Component = m_manager->Current;
+        row->ComponentIndex = m_manager->List->Count - 1;
+        row->IsVisible = false;
 
-		for(int i=0 ; i<InsertionRow->CellCount ; i++)
-		{
+        for(int i=0 ; i<InsertionRow->CellCount ; i++)
+        {
             Cell^ sourceCell = InsertionRow->Cells[i];
-			Cell^ cell		 = row->Cells[i];
+            Cell^ cell   = row->Cells[i];
 
-			cell->Value		= sourceCell->Value;
-			cell->Tag		= sourceCell->Tag;
-		}
+            cell->Value  = sourceCell->Value;
+            cell->Tag  = sourceCell->Tag;
+        }
 
-		if(GridControl->InvokeInsertionRowInserting(row) == false)
-		{
-			m_manager->CancelCurrentEdit();	
-			m_pDataRowList->RemoveDataRow(row->NativeRef);
-			row->Component = nullptr;
-			row->ComponentIndex = -1;
-			return nullptr;
-		}
+        if(GridControl->InvokeInsertionRowInserting(row) == false)
+        {
+            m_manager->CancelCurrentEdit(); 
+            m_pDataRowList->RemoveDataRow(row->NativeRef);
+            row->Component = nullptr;
+            row->ComponentIndex = -1;
+            return nullptr;
+        }
 
-		try
-		{
-			m_manager->EndCurrentEdit();
-			row->IsVisible = true;
-			GridControl->InvokeInsertionRowInserted(row);
-		}
-		catch(System::Exception^ e)
-		{
-			m_manager->CancelCurrentEdit();
-			m_manager->Position = -1;
-			m_pDataRowList->RemoveDataRow(row->NativeRef);
-			row->Component = nullptr;
-			row->ComponentIndex = -1;
-			throw e;
-		}
-		finally
-		{
-			InsertionRow->SetDefaultValue();
-		}
-		
-		return row;
-	}
+        try
+        {
+            m_manager->EndCurrentEdit();
+            row->IsVisible = true;
+            GridControl->InvokeInsertionRowInserted(row);
+        }
+        catch(System::Exception^ e)
+        {
+            m_manager->CancelCurrentEdit();
+            m_manager->Position = -1;
+            m_pDataRowList->RemoveDataRow(row->NativeRef);
+            row->Component = nullptr;
+            row->ComponentIndex = -1;
+            throw e;
+        }
+        finally
+        {
+            InsertionRow->SetDefaultValue();
+        }
 
-	void RowCollection::Add(Row^ item)
-	{
-		Insert(Count, item);
-	}
+        return row;
+    }
 
-	bool RowCollection::Remove(Row^ item)
-	{
-		ArgumentTest(item);
+    void RowCollection::Add(Row^ item)
+    {
+        Insert(Count, item);
+    }
 
-		if(item->Index == INVALID_INDEX)
-			throw gcnew System::ArgumentException("이미 지워지거나 사용되지 않은 row입니다.");
+    bool RowCollection::Remove(Row^ item)
+    {
+        ArgumentTest(item);
 
-		ManagerEventDetach managerEventDeatch(this);
+        if(item->Index == INVALID_INDEX)
+            throw gcnew System::ArgumentException("이미 지워지거나 사용되지 않은 row입니다.");
 
-		if(GridControl->InvokeRowRemoving(item) == false)
-			return false;
+        ManagerEventDetach managerEventDeatch(this);
 
-		int index = m_manager->List->IndexOf(item->Component);
-		if(index < 0)
-			throw gcnew System::ArgumentException("이미 지워지거나 사용되지 않은 row입니다.");
+        if(GridControl->InvokeRowRemoving(item) == false)
+            return false;
 
-		m_manager->RemoveAt(index);
-		m_pDataRowList->RemoveDataRow(item->NativeRef);
+        int index = m_manager->List->IndexOf(item->Component);
+        if(index < 0)
+            throw gcnew System::ArgumentException("이미 지워지거나 사용되지 않은 row입니다.");
 
-		RowRemovedEventArgs eRemoved(0);
-		GridControl->InvokeRowRemoved(%eRemoved);
+        m_manager->RemoveAt(index);
+        m_pDataRowList->RemoveDataRow(item->NativeRef);
 
-		return true;
-	}
+        RowRemovedEventArgs eRemoved(0);
+        GridControl->InvokeRowRemoved(%eRemoved);
 
-	int RowCollection::Count::get()
-	{
-		return (int)m_pDataRowList->GetDataRowCount(); 
-	}
+        return true;
+    }
 
-	void RowCollection::Count::set(int value)
-	{
-		int count = this->Count;
+    int RowCollection::Count::get()
+    {
+        return (int)m_pDataRowList->GetDataRowCount(); 
+    }
 
-		if(value > count)
-		{
-			AddNew(value - count);
-		}
-		else if(value < count)
-		{
-			for(int i=count-1 ; i>=value ; i--)
-			{
-				this->RemoveAt(i);
-			}
-		}
-	}
+    void RowCollection::Count::set(int value)
+    {
+        int count = this->Count;
 
-	Ntreev::Windows::Forms::Grid::InsertionRow^ RowCollection::InsertionRow::get()
-	{
-		return GridControl->InsertionRow;
-	}
+        if(value > count)
+        {
+            AddNew(value - count);
+        }
+        else if(value < count)
+        {
+            for(int i=count-1 ; i>=value ; i--)
+            {
+                this->RemoveAt(i);
+            }
+        }
+    }
 
-	Row^ RowCollection::default::get(GrDataRow* pDataRow)
-	{
-		return Row::FromNative(pDataRow);
-	}
+    Ntreev::Windows::Forms::Grid::InsertionRow^ RowCollection::InsertionRow::get()
+    {
+        return GridControl->InsertionRow;
+    }
 
-	Row^ RowCollection::default::get(System::Object^ component)
-	{
-		for each(Row^ item in this)
-		{
-			if(item->Component == component)
-				return item;
-		}
-		return nullptr;
-	}
+    Row^ RowCollection::default::get(GrDataRow* pDataRow)
+    {
+        return Row::FromNative(pDataRow);
+    }
 
-	SelectedRowCollection::SelectedRowCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, const GrSelectedRows* selectedRows) 
-		: GridObject(gridControl), m_selectedRows(selectedRows)
-	{
-	
-	}
+    Row^ RowCollection::default::get(System::Object^ component)
+    {
+        for each(Row^ item in this)
+        {
+            if(item->Component == component)
+                return item;
+        }
+        return nullptr;
+    }
 
-	void SelectedRowCollection::Add(Row^ item)
-	{
+    SelectedRowCollection::SelectedRowCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, const GrSelectedRows* selectedRows) 
+        : GridObject(gridControl), m_selectedRows(selectedRows)
+    {
+
+    }
+
+    void SelectedRowCollection::Add(Row^ item)
+    {
         using namespace Ntreev::Windows::Forms::Grid::Properties;
 
-		if(item == nullptr)
-			throw gcnew System::ArgumentNullException("item");
+        if(item == nullptr)
+            throw gcnew System::ArgumentNullException("item");
 
-		if(item->Index == INSERTION_ROW)
-			throw gcnew System::Exception(Resources::RemoveInsertionRowException);
+        if(item->Index == INSERTION_ROW)
+            throw gcnew System::Exception(Resources::RemoveInsertionRowException);
 
-		if(item->Index == INVALID_INDEX)
-			throw gcnew System::ArgumentException("이미 지워지거나 사용되지 않은 row입니다.");
+        if(item->Index == INVALID_INDEX)
+            throw gcnew System::ArgumentException("이미 지워지거나 사용되지 않은 row입니다.");
 
-		if(item->IsSelected == true)
-			return;
-		item->IsSelected = true;
-	}
+        if(item->IsSelected == true)
+            return;
+        item->IsSelected = true;
+    }
 
-	void SelectedRowCollection::Add(Row^ row, Column^ focusColumn)
-	{
-		Add(row);
-		
-		GrDataRow*	pDataRow = row->NativeRef;
-		GrItem*		pItem = nullptr;
-		if(focusColumn == nullptr)
-		{
-			GrFocuser* pFocuser = GridCore->GetFocuser();
-			GrColumn* pLastFocusedColumn = pFocuser->GetLastFocusedColumn();
-			if(pLastFocusedColumn != nullptr)
-			{
-				pItem = pDataRow->GetItem(pLastFocusedColumn);
-			}
-			else
-			{
-				GrColumnList* pColumnList = GridCore->GetColumnList();
-				if(pColumnList->GetDisplayableColumnCount() != 0)
-				{
-					GrColumn* pColumn = pColumnList->GetDisplayableColumn(0);
-					pItem = pDataRow->GetItem(pColumn);
-				}
-			}
-		}
-		else
-		{
-			pItem = pDataRow->GetItem(focusColumn->NativeRef);
-		}
+    void SelectedRowCollection::Add(Row^ row, Column^ focusColumn)
+    {
+        Add(row);
 
-		Focuser->Set(pItem);
-	}
+        GrDataRow* pDataRow = row->NativeRef;
+        GrItem*  pItem = nullptr;
+        if(focusColumn == nullptr)
+        {
+            GrFocuser* pFocuser = GridCore->GetFocuser();
+            GrColumn* pLastFocusedColumn = pFocuser->GetLastFocusedColumn();
+            if(pLastFocusedColumn != nullptr)
+            {
+                pItem = pDataRow->GetItem(pLastFocusedColumn);
+            }
+            else
+            {
+                GrColumnList* pColumnList = GridCore->GetColumnList();
+                if(pColumnList->GetDisplayableColumnCount() != 0)
+                {
+                    GrColumn* pColumn = pColumnList->GetDisplayableColumn(0);
+                    pItem = pDataRow->GetItem(pColumn);
+                }
+            }
+        }
+        else
+        {
+            pItem = pDataRow->GetItem(focusColumn->NativeRef);
+        }
 
-	bool SelectedRowCollection::Remove(Row^ row)
-	{
-		if(row->IsSelected == false)
-			return false;
-		row->IsSelected = false;
-		return true;
-	}
+        Focuser->Set(pItem);
+    }
 
-	void SelectedRowCollection::Clear()
-	{
-		GridControl->ClearSelection();
-	}
+    bool SelectedRowCollection::Remove(Row^ row)
+    {
+        if(row->IsSelected == false)
+            return false;
+        row->IsSelected = false;
+        return true;
+    }
+
+    void SelectedRowCollection::Clear()
+    {
+        GridControl->ClearSelection();
+    }
 
 
-	SelectedRowCollection::Enumerator::Enumerator(const GrSelectedRows* selectedRows)
-		: m_selectedRows(selectedRows), m_index(0)
-	{
+    SelectedRowCollection::Enumerator::Enumerator(const GrSelectedRows* selectedRows)
+        : m_selectedRows(selectedRows), m_index(0)
+    {
 
-	}
+    }
 
-	SelectedRowCollection::Enumerator::~Enumerator()
-	{
+    SelectedRowCollection::Enumerator::~Enumerator()
+    {
 
-	}
+    }
 
-	bool SelectedRowCollection::Enumerator::MoveNext()
-	{
-		m_index++;
-		return m_index <= m_selectedRows->size();
-	}
+    bool SelectedRowCollection::Enumerator::MoveNext()
+    {
+        m_index++;
+        return m_index <= m_selectedRows->size();
+    }
 
-	void SelectedRowCollection::Enumerator::Reset()
-	{
-		m_index = 0;
-	}
+    void SelectedRowCollection::Enumerator::Reset()
+    {
+        m_index = 0;
+    }
 
-	Row^ SelectedRowCollection::Enumerator::Current::get()
-	{
-		const GrDataRow* pDataRow = m_selectedRows->at(m_index-1);
-		System::Object^ ref = pDataRow->ManagedRef;
-		return safe_cast<Row^>(ref);
-	}
+    Row^ SelectedRowCollection::Enumerator::Current::get()
+    {
+        const GrDataRow* pDataRow = m_selectedRows->at(m_index-1);
+        System::Object^ ref = pDataRow->ManagedRef;
+        return safe_cast<Row^>(ref);
+    }
 
-	Row^ SelectedRowCollection::default::get(int index)
-	{
-		const GrDataRow* pDataRow = m_selectedRows->at(index);
-		System::Object^ ref = pDataRow->ManagedRef;
-		return safe_cast<Row^>(ref);
-	}
+    Row^ SelectedRowCollection::default::get(int index)
+    {
+        const GrDataRow* pDataRow = m_selectedRows->at(index);
+        System::Object^ ref = pDataRow->ManagedRef;
+        return safe_cast<Row^>(ref);
+    }
 
-	VisibleRowCollection::VisibleRowCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
-		: GridObject(gridControl)
-	{
-		m_pDataRowList = GridCore->GetDataRowList();
-	}
-	
-	RowBase^ VisibleRowCollection::default::get(int index)
-	{
-		if((uint)index >= m_pDataRowList->GetVisibleRowCount())
-			throw gcnew System::ArgumentOutOfRangeException("index");
-		IDataRow* pDataRow = m_pDataRowList->GetVisibleRow(index);
-		System::Object^ ref = pDataRow->ManagedRef;
-		return safe_cast<RowBase^>(ref);
-	}
+    VisibleRowCollection::VisibleRowCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+        : GridObject(gridControl)
+    {
+        m_pDataRowList = GridCore->GetDataRowList();
+    }
 
-	int VisibleRowCollection::Count::get()
-	{
-		return m_pDataRowList->GetVisibleRowCount();
-	}
+    RowBase^ VisibleRowCollection::default::get(int index)
+    {
+        if((uint)index >= m_pDataRowList->GetVisibleRowCount())
+            throw gcnew System::ArgumentOutOfRangeException("index");
+        IDataRow* pDataRow = m_pDataRowList->GetVisibleRow(index);
+        System::Object^ ref = pDataRow->ManagedRef;
+        return safe_cast<RowBase^>(ref);
+    }
 
-	VisibleRowCollection::Enumerator::Enumerator(GrDataRowList* pDataRowList)
-		: m_pDataRowList(pDataRowList)
-	{
-		m_index = 0;
-	}
-			
-	VisibleRowCollection::Enumerator::~Enumerator()
-	{
+    int VisibleRowCollection::Count::get()
+    {
+        return m_pDataRowList->GetVisibleRowCount();
+    }
 
-	}
+    VisibleRowCollection::Enumerator::Enumerator(GrDataRowList* pDataRowList)
+        : m_pDataRowList(pDataRowList)
+    {
+        m_index = 0;
+    }
 
-	bool VisibleRowCollection::Enumerator::MoveNext()
-	{
-		m_index++;
-		return m_index <= m_pDataRowList->GetVisibleRowCount();
-	}
+    VisibleRowCollection::Enumerator::~Enumerator()
+    {
 
-	void VisibleRowCollection::Enumerator::Reset()
-	{
-		m_index = 0;
-	}
+    }
 
-	RowBase^ VisibleRowCollection::Enumerator::Current::get()
-	{
-		IDataRow* pDataRow = m_pDataRowList->GetVisibleRow(m_index - 1);
-		System::Object^ ref = pDataRow->ManagedRef;
-		return safe_cast<RowBase^>(ref);
-	}
+    bool VisibleRowCollection::Enumerator::MoveNext()
+    {
+        m_index++;
+        return m_index <= m_pDataRowList->GetVisibleRowCount();
+    }
 
-	DisplayableRowCollection::DisplayableRowCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
-		: GridObject(gridControl)
-	{
-		m_pDataRowList = GridCore->GetDataRowList();
-	}
-	
-	RowBase^ DisplayableRowCollection::default::get(int index)
-	{
-		if((uint)index >= m_pDataRowList->GetDisplayableRowCount())
-			throw gcnew System::ArgumentOutOfRangeException("index");
-		IDataRow* pDataRow = m_pDataRowList->GetDisplayableRow(index);
-		System::Object^ ref = pDataRow->ManagedRef;
-		return safe_cast<RowBase^>(ref);
-	}
+    void VisibleRowCollection::Enumerator::Reset()
+    {
+        m_index = 0;
+    }
 
-	int DisplayableRowCollection::Count::get()
-	{
-		return m_pDataRowList->GetDisplayableRowCount();
-	}
-		
+    RowBase^ VisibleRowCollection::Enumerator::Current::get()
+    {
+        IDataRow* pDataRow = m_pDataRowList->GetVisibleRow(m_index - 1);
+        System::Object^ ref = pDataRow->ManagedRef;
+        return safe_cast<RowBase^>(ref);
+    }
 
-	DisplayableRowCollection::Enumerator::Enumerator(GrDataRowList* pDataRowList)
-		: m_pDataRowList(pDataRowList)
-	{
-		m_index = 0;
-	}
-			
-	DisplayableRowCollection::Enumerator::~Enumerator()
-	{
+    DisplayableRowCollection::DisplayableRowCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+        : GridObject(gridControl)
+    {
+        m_pDataRowList = GridCore->GetDataRowList();
+    }
 
-	}
+    RowBase^ DisplayableRowCollection::default::get(int index)
+    {
+        if((uint)index >= m_pDataRowList->GetDisplayableRowCount())
+            throw gcnew System::ArgumentOutOfRangeException("index");
+        IDataRow* pDataRow = m_pDataRowList->GetDisplayableRow(index);
+        System::Object^ ref = pDataRow->ManagedRef;
+        return safe_cast<RowBase^>(ref);
+    }
 
-	bool DisplayableRowCollection::Enumerator::MoveNext()
-	{
-		m_index++;
-		return m_index <= m_pDataRowList->GetDisplayableRowCount();
-	}
+    int DisplayableRowCollection::Count::get()
+    {
+        return m_pDataRowList->GetDisplayableRowCount();
+    }
 
-	void DisplayableRowCollection::Enumerator::Reset()
-	{
-		m_index = 0;
-	}
 
-	RowBase^ DisplayableRowCollection::Enumerator::Current::get()
-	{
-		IDataRow* pDataRow = m_pDataRowList->GetDisplayableRow(m_index - 1);
-		System::Object^ ref = pDataRow->ManagedRef;
-		return safe_cast<RowBase^>(ref);
-	}
+    DisplayableRowCollection::Enumerator::Enumerator(GrDataRowList* pDataRowList)
+        : m_pDataRowList(pDataRowList)
+    {
+        m_index = 0;
+    }
+
+    DisplayableRowCollection::Enumerator::~Enumerator()
+    {
+
+    }
+
+    bool DisplayableRowCollection::Enumerator::MoveNext()
+    {
+        m_index++;
+        return m_index <= m_pDataRowList->GetDisplayableRowCount();
+    }
+
+    void DisplayableRowCollection::Enumerator::Reset()
+    {
+        m_index = 0;
+    }
+
+    RowBase^ DisplayableRowCollection::Enumerator::Current::get()
+    {
+        IDataRow* pDataRow = m_pDataRowList->GetDisplayableRow(m_index - 1);
+        System::Object^ ref = pDataRow->ManagedRef;
+        return safe_cast<RowBase^>(ref);
+    }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

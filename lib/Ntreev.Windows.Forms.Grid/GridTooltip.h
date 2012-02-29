@@ -22,7 +22,7 @@
 
 
 #pragma once
-#include "GridBase.h"
+#include "GridObject.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -69,7 +69,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         virtual void Show(System::String^ text);
 
     private:
-        bool	m_showed;
+        bool m_showed;
         GridControl^ m_gridControl;
 
         ref class ToolTipItemCollection : System::Collections::Generic::List<ToolTipItem^>
@@ -101,7 +101,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         private: // variables
             int m_previousIndex;
-            int	m_currentIndex;
+            int m_currentIndex;
         } m_toolTips;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

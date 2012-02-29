@@ -48,13 +48,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         }
 
-        static bool	ColumnBackgroundPaint(GrGridPainter* pPainter, const GrColumn* pColumn, const GrRect& paintRect, void* dwUserData)
+        static bool ColumnBackgroundPaint(GrGridPainter* pPainter, const GrColumn* pColumn, const GrRect& paintRect, void* dwUserData)
         {
             CustomPaint* pCustomPainter = (CustomPaint*)dwUserData;
             return pCustomPainter->OnColumnBackGroundPaint(pPainter, pColumn, paintRect);
         }
 
-        static bool	ColumnContentsPaint(GrGridPainter* pPainter, const GrColumn* pColumn, const GrRect& paintRect, void* dwUserData)
+        static bool ColumnContentsPaint(GrGridPainter* pPainter, const GrColumn* pColumn, const GrRect& paintRect, void* dwUserData)
         {
             CustomPaint* pCustomPainter = (CustomPaint*)dwUserData;
             return pCustomPainter->OnColumnContentsPaint(pPainter, pColumn, paintRect);
@@ -85,7 +85,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private:
-        gcroot<Column^>			m_column;
+        gcroot<Column^>   m_column;
     };
 
     ColumnPainter::ColumnPainter()
@@ -558,7 +558,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     Ntreev::Windows::Forms::Grid::SortType Column::SortType::get()
     {
-        return (Ntreev::Windows::Forms::Grid::SortType)m_pColumn->GetSortType();	
+        return (Ntreev::Windows::Forms::Grid::SortType)m_pColumn->GetSortType(); 
     }
 
     void Column::SortType::set(Ntreev::Windows::Forms::Grid::SortType value)
@@ -583,7 +583,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     int Column::DisplayIndex::get()
     {
-        return (int)m_pColumn->GetDisplayIndex();	
+        return (int)m_pColumn->GetDisplayIndex(); 
     }
 
     int Column::Index::get()
@@ -643,7 +643,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Column::IsFullSelected::get()
     {
-        return m_pColumn->GetFullSelected();	
+        return m_pColumn->GetFullSelected(); 
     }
 
     bool Column::IsGrouped::get()
@@ -705,15 +705,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_columnPainter = columnPainter;
         if(m_columnPainter)
         {
-            m_pColumn->m_fnColumnBackgroundPaint	= CustomPaint::ColumnBackgroundPaint;
-            m_pColumn->m_fnColumnContentsPaint		= CustomPaint::ColumnContentsPaint;
-            m_pColumn->m_pColumnPaintData			= (void*)m_pCustomPaint;
+            m_pColumn->m_fnColumnBackgroundPaint = CustomPaint::ColumnBackgroundPaint;
+            m_pColumn->m_fnColumnContentsPaint  = CustomPaint::ColumnContentsPaint;
+            m_pColumn->m_pColumnPaintData   = (void*)m_pCustomPaint;
         }
         else
         {
-            m_pColumn->m_fnColumnBackgroundPaint	= nullptr;
-            m_pColumn->m_fnColumnContentsPaint		= nullptr;
-            m_pColumn->m_pColumnPaintData			= nullptr;
+            m_pColumn->m_fnColumnBackgroundPaint = nullptr;
+            m_pColumn->m_fnColumnContentsPaint  = nullptr;
+            m_pColumn->m_pColumnPaintData   = nullptr;
         }
     }
 
@@ -870,7 +870,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     uint Column::ColumnID::get()
     {
-        return m_pColumn->GetColumnID();	
+        return m_pColumn->GetColumnID(); 
     }
 
     void Column::ValidateDefaultValue()

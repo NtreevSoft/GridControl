@@ -43,8 +43,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         typedef Ntreev::Windows::Forms::Grid::NativeCollection<System::Drawing::Font^, GrFont*, FontConverter> _Fonts;
         typedef System::Collections::Generic::ICollection<System::Drawing::Font^> _Fonts2;
 
-        //typedef System::Collections::Specialized::NotifyCollectionChangedEventArgs _NotifyCollectionChangedEventArgs;
-
     public:
         Style();
 

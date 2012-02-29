@@ -32,84 +32,84 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	ToolTipItem::ToolTipItem()
-	{
-		m_created = false;
-		InitCommonControls();
-	}
+    ToolTipItem::ToolTipItem()
+    {
+        m_created = false;
+        InitCommonControls();
+    }
 
     void ToolTipItem::Show(System::String^ text, System::IntPtr handle)
-	{
-		static TOOLINFO ti;
-		if(m_created == false)
-		{
-			HWND hwndParent = (HWND)handle.ToPointer();
-			HWND hTooltip = CreateWindowEx(NULL, TOOLTIPS_CLASS, NULL,
-				WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP | TTS_BALLOON,
-				CW_USEDEFAULT, CW_USEDEFAULT,
-				CW_USEDEFAULT, CW_USEDEFAULT,
-				hwndParent, NULL, NULL,
-				NULL);
+    {
+        static TOOLINFO ti;
+        if(m_created == false)
+        {
+            HWND hwndParent = (HWND)handle.ToPointer();
+            HWND hTooltip = CreateWindowEx(NULL, TOOLTIPS_CLASS, NULL,
+                WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP | TTS_BALLOON,
+                CW_USEDEFAULT, CW_USEDEFAULT,
+                CW_USEDEFAULT, CW_USEDEFAULT,
+                hwndParent, NULL, NULL,
+                NULL);
 
-			SetWindowPos(hTooltip, HWND_TOPMOST,0, 0, 0, 0,
-				SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
-
-
-			m_tooltip = (void*)hTooltip;
-			static wchar_t strText[] = L"wow";
+            SetWindowPos(hTooltip, HWND_TOPMOST,0, 0, 0, 0,
+                SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
 
 
-			ti.cbSize = sizeof(TOOLINFO);
-			ti.hwnd = hwndParent;
-			ti.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
-			ti.uId = (UINT_PTR)hwndParent;
-			ti.lpszText = strText;
-			::SendMessage((HWND)m_tooltip, TTM_ADDTOOL, 0, (LPARAM)&ti);
-			m_created = true;
-		}
+            m_tooltip = (void*)hTooltip;
+            static wchar_t strText[] = L"wow";
 
-		//ToNativeString nativeText(text);
-		wchar_t* strTooltip = new wchar_t[text->Length + 1];
-		wcscpy(strTooltip, ToNativeString::Convert(text));
-		ti.lpszText = strTooltip;
-		::SendMessage((HWND)m_tooltip, TTM_SETTOOLINFO, 0, (LPARAM)&ti);
 
-		::SendMessage((HWND)m_tooltip, TTM_ACTIVATE, (WPARAM)TRUE, 0);
-		delete [] strTooltip;
-	}
+            ti.cbSize = sizeof(TOOLINFO);
+            ti.hwnd = hwndParent;
+            ti.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
+            ti.uId = (UINT_PTR)hwndParent;
+            ti.lpszText = strText;
+            ::SendMessage((HWND)m_tooltip, TTM_ADDTOOL, 0, (LPARAM)&ti);
+            m_created = true;
+        }
 
-	void ToolTipItem::Hide()
-	{
-		::SendMessage((HWND)m_tooltip, TTM_ACTIVATE, (WPARAM)FALSE, 0);
-	}
+        //ToNativeString nativeText(text);
+        wchar_t* strTooltip = new wchar_t[text->Length + 1];
+        wcscpy(strTooltip, ToNativeString::Convert(text));
+        ti.lpszText = strTooltip;
+        ::SendMessage((HWND)m_tooltip, TTM_SETTOOLINFO, 0, (LPARAM)&ti);
 
-	ToolTip::ToolTip(GridControl^ gridControl, int count)
+        ::SendMessage((HWND)m_tooltip, TTM_ACTIVATE, (WPARAM)TRUE, 0);
+        delete [] strTooltip;
+    }
+
+    void ToolTipItem::Hide()
+    {
+        ::SendMessage((HWND)m_tooltip, TTM_ACTIVATE, (WPARAM)FALSE, 0);
+    }
+
+    ToolTip::ToolTip(GridControl^ gridControl, int count)
         : m_gridControl(gridControl)
-	{
-		for(int i=0 ; i<count ; i++)
-		{
-			m_toolTips.Add(gcnew ToolTipItem());
-		}
-		m_showed = false;
-	}
+    {
+        for(int i=0 ; i<count ; i++)
+        {
+            m_toolTips.Add(gcnew ToolTipItem());
+        }
+        m_showed = false;
+    }
 
-	void ToolTip::Hide()
-	{
-		if(m_showed == false)
-			return;
-		ToolTipItem^ previous = m_toolTips.Previous;
-		previous->Hide();
-		m_showed = false;
-	}
+    void ToolTip::Hide()
+    {
+        if(m_showed == false)
+            return;
+        ToolTipItem^ previous = m_toolTips.Previous;
+        previous->Hide();
+        m_showed = false;
+    }
 
-	void ToolTip::Show(System::String^ text)
-	{
-		if(m_showed == true)
-			return;
-		ToolTipItem^ current = m_toolTips.Current;
+    void ToolTip::Show(System::String^ text)
+    {
+        if(m_showed == true)
+            return;
+        ToolTipItem^ current = m_toolTips.Current;
         current->Show(text, m_gridControl->Handle);
-		m_toolTips.MoveNext();
-		m_showed = true;
-		//Debug::WriteLine("Show tooltip : {0}", text);
-	}
+        m_toolTips.MoveNext();
+        m_showed = true;
+        //Debug::WriteLine("Show tooltip : {0}", text);
+    }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

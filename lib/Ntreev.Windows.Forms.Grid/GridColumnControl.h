@@ -129,10 +129,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void gridControl_CellMouseMove(System::Object^ sender, CellMouseEventArgs^ e);
 
     private: // variables
-        TControl				m_control;
-        TControl				m_viewControl;
+        TControl    m_control;
+        TControl    m_viewControl;
 
-        IControlPainter^	    m_controlPainter;
+        IControlPainter^     m_controlPainter;
         Design::IEditorService^ m_editorService;
 
         System::Windows::Forms::Form^ m_form;

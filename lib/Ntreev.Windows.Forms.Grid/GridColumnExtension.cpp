@@ -30,28 +30,28 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Columns
 {
-	ColumnComboBox::ColumnComboBox()
-	{
-		using namespace System::Windows::Forms;
+    ColumnComboBox::ColumnComboBox()
+    {
+        using namespace System::Windows::Forms;
 
-		m_nMaxDropDownItems = DefaultMaxDropDownItems;
-		System::Windows::Forms::ListBox^ listBox = this->Control;
-        
-		listBox->BorderStyle = BorderStyle::None;
+        m_nMaxDropDownItems = DefaultMaxDropDownItems;
+        System::Windows::Forms::ListBox^ listBox = this->Control;
+
+        listBox->BorderStyle = BorderStyle::None;
         //listBox->IntegralHeight = false;
 
-		listBox->MouseMove   += gcnew MouseEventHandler(this, &ColumnComboBox::listBox_OnMouseMove);
-		listBox->MouseClick  += gcnew MouseEventHandler(this, &ColumnComboBox::listBox_OnMouseClick);
+        listBox->MouseMove   += gcnew MouseEventHandler(this, &ColumnComboBox::listBox_OnMouseMove);
+        listBox->MouseClick  += gcnew MouseEventHandler(this, &ColumnComboBox::listBox_OnMouseClick);
         listBox->VisibleChanged += gcnew System::EventHandler(this, &ColumnComboBox::listBox_OnVisibleChanged);
-	}
+    }
 
-	System::Object^ ColumnComboBox::DataSource::get()
-	{
-		return this->Control->DataSource;
-	}
+    System::Object^ ColumnComboBox::DataSource::get()
+    {
+        return this->Control->DataSource;
+    }
 
-	void ColumnComboBox::DataSource::set(System::Object^ value)
-	{
+    void ColumnComboBox::DataSource::set(System::Object^ value)
+    {
         using namespace System::Windows::Forms;
         BindingContext bindingContext;
         CurrencyManager^ manager = dynamic_cast<CurrencyManager^>(bindingContext[value]);
@@ -63,38 +63,38 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             this->Control->Items->Add(item);
         }
         this->Control->SelectedIndex = -1;
-  	}
+    }
 
-	System::Windows::Forms::ListBox::ObjectCollection^ ColumnComboBox::Items::get()
-	{
-		return this->Control->Items;
-	}
+    System::Windows::Forms::ListBox::ObjectCollection^ ColumnComboBox::Items::get()
+    {
+        return this->Control->Items;
+    }
 
-	void ColumnComboBox::MaxDropDownItems::set(int count)
-	{
+    void ColumnComboBox::MaxDropDownItems::set(int count)
+    {
         if(count < 1)
             throw gcnew System::ArgumentOutOfRangeException("count");
-		m_nMaxDropDownItems = count;
-	}
+        m_nMaxDropDownItems = count;
+    }
 
-	int ColumnComboBox::MaxDropDownItems::get()
-	{
-		return m_nMaxDropDownItems;
-	}
+    int ColumnComboBox::MaxDropDownItems::get()
+    {
+        return m_nMaxDropDownItems;
+    }
 
-	void ColumnComboBox::listBox_OnMouseMove(System::Object^ /*sender*/, System::Windows::Forms::MouseEventArgs^ e)
-	{
-		int selIndex = this->Control->IndexFromPoint(e->Location);
-		this->Control->SelectedIndex = selIndex;
-	}
+    void ColumnComboBox::listBox_OnMouseMove(System::Object^ /*sender*/, System::Windows::Forms::MouseEventArgs^ e)
+    {
+        int selIndex = this->Control->IndexFromPoint(e->Location);
+        this->Control->SelectedIndex = selIndex;
+    }
 
-	void ColumnComboBox::listBox_OnMouseClick(System::Object^ /*sender*/, System::Windows::Forms::MouseEventArgs^ /*e*/)
-	{
+    void ColumnComboBox::listBox_OnMouseClick(System::Object^ /*sender*/, System::Windows::Forms::MouseEventArgs^ /*e*/)
+    {
         System::Windows::Forms::ListBox^ control = this->Control;
         if(control->SelectedItem != nullptr)
             m_value = control->SelectedItem;
         CloseDropDown();
-	}
+    }
 
     void ColumnComboBox::listBox_OnVisibleChanged(System::Object^ /*sender*/, System::EventArgs^ /*e*/)
     {
@@ -104,19 +104,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             this->Control->SelectedItem = m_value;
     }
 
-	bool ColumnComboBox::ShouldSerializeMaxDropDownItems()
-	{
-		return m_nMaxDropDownItems != DefaultMaxDropDownItems;
-	}
+    bool ColumnComboBox::ShouldSerializeMaxDropDownItems()
+    {
+        return m_nMaxDropDownItems != DefaultMaxDropDownItems;
+    }
 
-	System::Object^ ColumnComboBox::GetControlValue()
-	{
-		return m_value;
-	}
+    System::Object^ ColumnComboBox::GetControlValue()
+    {
+        return m_value;
+    }
 
-	void ColumnComboBox::SetControlValue(System::Object^ value)
-	{
-		this->Control->SelectedItem = value;
+    void ColumnComboBox::SetControlValue(System::Object^ value)
+    {
+        this->Control->SelectedItem = value;
         m_value = value;
     }
 
@@ -126,7 +126,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         System::Windows::Forms::ListBox^ control = this->Control;
         ColumnDropDown::SetControlLayout(cell);
         delete control->CreateGraphics();
-        
+
         const int itemHeight = control->ItemHeight;
         int height = 0;
         const int itemCount = control->Items->Count;

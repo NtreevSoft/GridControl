@@ -26,6 +26,7 @@
 #include "GridEvent.h"
 #include "GridStyle.h"
 #include "GridNativeClass.h"
+#include "GridTypeEditor.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -204,7 +205,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property int ColumnSplitter
         {
             int get();
-            void set(int);	
+            void set(int); 
         }
 
         /// <summary>
@@ -231,7 +232,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("열의 너비를 자동적으로 조절할지에 대한 여부를 가져오거나 설정합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(false)]
-        property bool AutoFitColumn	
+        property bool AutoFitColumn 
         {
             bool get();
             void set(bool);
@@ -433,8 +434,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #endif
         property SelectedRowCollection^ SelectedRows
         {
-            SelectedRowCollection^	get();
-        }	
+            SelectedRowCollection^ get();
+        } 
 
         /// <summary>
         /// 포커스로 설정된 행을 가져옵니다.
@@ -448,7 +449,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property Row^ FocusedRow
         {
             Row^ get(); 
-        }	
+        } 
 
         /// <summary>
         /// 포커스를 지정할 셀을 가져오거나 설정합니다.
@@ -514,7 +515,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(true)]
         property bool EnableColumnResizing
         {
-            bool get();	
+            bool get(); 
             void set(bool);
         }
 
@@ -529,7 +530,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(true)]
         property bool EnableColumnFrozing
         {
-            bool get();	
+            bool get(); 
             void set(bool); 
         }
 
@@ -543,7 +544,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(true)]
         property bool EnableColumnSorting
         {
-            bool get();	
+            bool get(); 
             void set(bool); 
         }
 
@@ -557,7 +558,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(false)]
         property bool ReadOnly
         {
-            bool get();	
+            bool get(); 
             void set(bool);
         }
 
@@ -571,7 +572,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(true)]
         property bool EnableRowResizing
         {
-            bool get();	
+            bool get(); 
             void set(bool); 
         }
 
@@ -614,7 +615,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property bool IsRowNumberVisible
         {
             bool get();
-            void set(bool);	
+            void set(bool); 
         }
 
         /// <summary>
@@ -625,7 +626,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property bool IsRowHeaderVisible
         {
             bool get();
-            void set(bool);	
+            void set(bool); 
         }
 
         /// <summary>
@@ -633,7 +634,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("새로운 행을 추가하기위한 삽입행의 표시 여부를 설정합니다.")]
         [System::ComponentModel::CategoryAttribute("Appearance"), System::ComponentModel::DefaultValueAttribute(true)]
-        property bool						IsInsertionRowVisible	{ bool get();	void set(bool); }
+        property bool      IsInsertionRowVisible { bool get(); void set(bool); }
 
         /// <summary>
         /// 상단의 제목 표시 여부를 가져오거나 설정합니다.
@@ -642,7 +643,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::CategoryAttribute("Appearance"), System::ComponentModel::DefaultValueAttribute(true)]
         property bool IsCaptionRowVisible
         {
-            bool get();	
+            bool get(); 
             void set(bool);
         }
 
@@ -653,7 +654,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::CategoryAttribute("Appearance"), System::ComponentModel::DefaultValueAttribute(true)]
         property bool IsGroupingRowVisible
         {
-            bool get();	
+            bool get(); 
             void set(bool);
         }
 
@@ -664,7 +665,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::CategoryAttribute("Appearance"), System::ComponentModel::DefaultValueAttribute(true)]
         property bool IsFrozingSplitterVisible
         {
-            bool get();	
+            bool get(); 
             void set(bool);
         }
 
@@ -678,7 +679,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(false)]
         property bool FullRowSelect
         {
-            bool get();	
+            bool get(); 
             void set(bool); 
         }
 
@@ -692,7 +693,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(false)]
         property bool RowHighlight
         {
-            bool get();	void set(bool); 
+            bool get(); void set(bool); 
         }
 
         /// <summary>
@@ -870,7 +871,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("행이 삽입되기 전에 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Row")]
-        event RowInsertingEventHandler^	RowInserting
+        event RowInsertingEventHandler^ RowInserting
         {
             void add(RowInsertingEventHandler^ p) { m_eventRowInserting += p; }
             void remove(RowInsertingEventHandler^ p) { m_eventRowInserting -= p; }
@@ -1326,58 +1327,58 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     internal: // methods
-        bool					InvokeValueChanging(Cell^ cell, System::Object^ value, System::Object^ oldValue);
-        void					InvokeValueChanged(Cell^ cell);
-        bool					InvokeInsertionRowInserting(Row^ row);
-        void					InvokeInsertionRowInserted(Row^ row);
-        bool					InvokeRowInserting(System::Object^ component);
-        void					InvokeRowInserted(Row^ row);
-        bool					InvokeRowRemoving(Row^ row);
-        void					InvokeRowRemoved(RowRemovedEventArgs^ e);
-        bool					InvokeColumnInserting(Column^ column);
-        void					InvokeColumnInserted(Column^ column);
-        Column^					InvokeColumnBinding(System::ComponentModel::PropertyDescriptor^ propertyDescriptor, Column^ existColumn);
-        void					InvokeColumnBinded(Column^ column);
-        bool					InvokeColumnMouseDown(Column^ column, System::Drawing::Point clientLocation);
-        bool					InvokeColumnMouseUp(Column^ column, System::Drawing::Point clientLocation);
-        void					InvokeColumnMouseEnter(Column^ column, System::Drawing::Point clientLocation);
-        bool					InvokeColumnMouseMove(Column^ column, System::Drawing::Point clientLocation);
-        void					InvokeColumnMouseLeave(Column^ column);
-        void					InvokeColumnWidthChanged(Column^ column);
-        void					InvokeColumnFrozenChanged(Column^ column);
-        bool					InvokeBeginEdit(Cell^ cell);
-        void					InvokeEndEdit(CellEventArgs^ e);
-        void					InvokeScroll(System::Windows::Forms::ScrollEventArgs^ e);
-        bool					InvokeCellMouseMove(Cell^ cell, System::Drawing::Point clientLocation);
-        void					InvokeCellClick(Cell^ cell);
-        void					InvokeCellDoubleClick(Cell^ cell);
+        bool     InvokeValueChanging(Cell^ cell, System::Object^ value, System::Object^ oldValue);
+        void     InvokeValueChanged(Cell^ cell);
+        bool     InvokeInsertionRowInserting(Row^ row);
+        void     InvokeInsertionRowInserted(Row^ row);
+        bool     InvokeRowInserting(System::Object^ component);
+        void     InvokeRowInserted(Row^ row);
+        bool     InvokeRowRemoving(Row^ row);
+        void     InvokeRowRemoved(RowRemovedEventArgs^ e);
+        bool     InvokeColumnInserting(Column^ column);
+        void     InvokeColumnInserted(Column^ column);
+        Column^     InvokeColumnBinding(System::ComponentModel::PropertyDescriptor^ propertyDescriptor, Column^ existColumn);
+        void     InvokeColumnBinded(Column^ column);
+        bool     InvokeColumnMouseDown(Column^ column, System::Drawing::Point clientLocation);
+        bool     InvokeColumnMouseUp(Column^ column, System::Drawing::Point clientLocation);
+        void     InvokeColumnMouseEnter(Column^ column, System::Drawing::Point clientLocation);
+        bool     InvokeColumnMouseMove(Column^ column, System::Drawing::Point clientLocation);
+        void     InvokeColumnMouseLeave(Column^ column);
+        void     InvokeColumnWidthChanged(Column^ column);
+        void     InvokeColumnFrozenChanged(Column^ column);
+        bool     InvokeBeginEdit(Cell^ cell);
+        void     InvokeEndEdit(CellEventArgs^ e);
+        void     InvokeScroll(System::Windows::Forms::ScrollEventArgs^ e);
+        bool     InvokeCellMouseMove(Cell^ cell, System::Drawing::Point clientLocation);
+        void     InvokeCellClick(Cell^ cell);
+        void     InvokeCellDoubleClick(Cell^ cell);
 
-        System::Object^					GetInternalService(System::Type^ serviceType);
+        System::Object^     GetInternalService(System::Type^ serviceType);
 
-        void					InvokeFocusChanging();
-        void					InvokeFocusChanged();
-        void					InvokeSelectedRowsChanged();
-        void					InvokeSelectedColumnsChanged();
-        void					InvokeSelectionChanged();
+        void     InvokeFocusChanging();
+        void     InvokeFocusChanged();
+        void     InvokeSelectedRowsChanged();
+        void     InvokeSelectedColumnsChanged();
+        void     InvokeSelectionChanged();
 
-        void					OnStateBegin(System::EventArgs^ e);
-        void					OnStateEnd(System::EventArgs^ e);
+        void     OnStateBegin(System::EventArgs^ e);
+        void     OnStateEnd(System::EventArgs^ e);
 
-        bool					DesignTimeHitTest(System::Drawing::Point globalLocation);
+        bool     DesignTimeHitTest(System::Drawing::Point globalLocation);
 
     internal: // properties
         //property _State State
         //{
-        //	_State get();
+        // _State get();
         //internal: 
-        //	void set(_State);
+        // void set(_State);
         //}
 
         //property HitState HitState
         //{
-        //	_HitState get();
+        // _HitState get();
         //private: 
-        //	void set(_HitState); 
+        // void set(_HitState); 
         //}
 
         property GrGridCore* GridCore
@@ -1866,88 +1867,88 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     private: // properties
 
     private: // variables
-        //static	int						s_ref = 0;
+        //static int      s_ref = 0;
 
-        System::Object^							m_dataSource;
-        System::String^							m_dataMember;
+        System::Object^       m_dataSource;
+        System::String^       m_dataMember;
 
-        initonly ColumnCollection^				m_columnList;
-        initonly VisibleColumnCollection^		m_visibleColumnList;
-        initonly DisplayableColumnCollection^	m_displayableColumnList;
-        initonly FrozenColumnCollection^		m_frozenColumnList;
-        initonly UnfrozenColumnCollection^		m_unfrozenColumnList;
-        initonly RowCollection^					m_rowList;
-        initonly VisibleRowCollection^			m_visibleRowList;
-        initonly DisplayableRowCollection^		m_displayableRowList;
+        initonly ColumnCollection^    m_columnList;
+        initonly VisibleColumnCollection^  m_visibleColumnList;
+        initonly DisplayableColumnCollection^ m_displayableColumnList;
+        initonly FrozenColumnCollection^  m_frozenColumnList;
+        initonly UnfrozenColumnCollection^  m_unfrozenColumnList;
+        initonly RowCollection^     m_rowList;
+        initonly VisibleRowCollection^   m_visibleRowList;
+        initonly DisplayableRowCollection^  m_displayableRowList;
 
-        Design::Style^					m_style;
+        Design::Style^     m_style;
 
         Ntreev::Windows::Forms::Grid::CaptionRow^   m_captionRow;
         Ntreev::Windows::Forms::Grid::GroupingRow^  m_groupingRow;
         Ntreev::Windows::Forms::Grid::InsertionRow^ m_insertionRow;
-        Cell^							m_focusedCell;
+        Cell^       m_focusedCell;
 
-        initonly SelectedRowCollection^		m_selectedRows;
-        initonly SelectedColumnCollection^	m_selectedColumns;
+        initonly SelectedRowCollection^  m_selectedRows;
+        initonly SelectedColumnCollection^ m_selectedColumns;
 
-        Native::WinFormGridCore*		m_pGridCore;
-        Native::WinFormWindow*			m_pGridWindow;
-        GrColumnList*					m_pColumnList;
-        GrDataRowList*					m_pDataRowList;
-        GrDataRow*						m_pInsertionRow;
-        GrGridPainter*					m_pGridPainter;
+        Native::WinFormGridCore*  m_pGridCore;
+        Native::WinFormWindow*   m_pGridWindow;
+        GrColumnList*     m_pColumnList;
+        GrDataRowList*     m_pDataRowList;
+        GrDataRow*      m_pInsertionRow;
+        GrGridPainter*     m_pGridPainter;
 
-        Ntreev::Windows::Forms::Grid::ErrorDescriptor^		m_errorDescriptor;
-        IToolTip^						m_tooltips;
+        Ntreev::Windows::Forms::Grid::ErrorDescriptor^  m_errorDescriptor;
+        IToolTip^      m_tooltips;
         System::DateTime                m_buttonDownTime;
 
         // events
-        ValueChangingEventHandler^		m_eventValueChanging;
-        CellEventHandler^				m_eventValueChanged;
-        RowInsertingEventHandler^		m_eventRowInserting;
-        RowInsertedEventHandler^		m_eventRowInserted;
-        RowRemovingEventHandler^		m_eventRowRemoving;
-        RowRemovedEventHandler^			m_eventRowRemoved;
-        InsertionRowInsertingEventHandler^			m_eventInsertionRowInserting;
-        RowEventHandler^				m_eventInsertionRowInserted;
-        System::EventHandler^					m_eventSelectedColumnsChanged;
-        System::EventHandler^					m_eventSelectedRowsChanged;
-        System::EventHandler^					m_eventSelectionChanged;
-        System::EventHandler^					m_eventFocusedColumnChanged;
-        System::EventHandler^					m_eventFocusedRowChanged;
-        CellEventHandler^				m_eventFocusedCellChanged;
-        ColumnInsertingEventHandler^	m_eventColumnInserting;
-        ColumnEventHandler^				m_eventColumnInserted;
-        ColumnBindingEventHandler^		m_eventColumnBinding;
-        ColumnEventHandler^				m_eventColumnBinded;
-        ColumnEventHandler^				m_eventColumnWidthChanged;
-        ColumnEventHandler^				m_eventColumnFrozenChanged;
-        ColumnMouseEventHandler^		m_eventColumnMouseEnter;
-        ColumnMouseEventHandler^		m_eventColumnMouseLeave;
-        ColumnMouseEventHandler^		m_eventColumnMouseDown;
-        ColumnMouseEventHandler^		m_eventColumnMouseUp;
-        ColumnMouseEventHandler^		m_eventColumnMouseMove;
-        CellMouseEventHandler^			m_eventCellMouseMove;
-        CellEventHandler^				m_eventCellClick;
-        CellEventHandler^				m_eventCellDoubleClick;
-        BeginEditEventHandler^			m_eventBeginEdit;
-        CellEventHandler^				m_eventEndEdit;
-        ClearEventHandler^				m_eventClearing;
-        ClearEventHandler^				m_eventCleared;
-        System::EventHandler^					m_eventDataSourceChanged;
-        System::EventHandler^					m_eventDataMemberChanged;
-        System::EventHandler^					m_eventDataBindingComplete;
+        ValueChangingEventHandler^  m_eventValueChanging;
+        CellEventHandler^    m_eventValueChanged;
+        RowInsertingEventHandler^  m_eventRowInserting;
+        RowInsertedEventHandler^  m_eventRowInserted;
+        RowRemovingEventHandler^  m_eventRowRemoving;
+        RowRemovedEventHandler^   m_eventRowRemoved;
+        InsertionRowInsertingEventHandler^   m_eventInsertionRowInserting;
+        RowEventHandler^    m_eventInsertionRowInserted;
+        System::EventHandler^     m_eventSelectedColumnsChanged;
+        System::EventHandler^     m_eventSelectedRowsChanged;
+        System::EventHandler^     m_eventSelectionChanged;
+        System::EventHandler^     m_eventFocusedColumnChanged;
+        System::EventHandler^     m_eventFocusedRowChanged;
+        CellEventHandler^    m_eventFocusedCellChanged;
+        ColumnInsertingEventHandler^ m_eventColumnInserting;
+        ColumnEventHandler^    m_eventColumnInserted;
+        ColumnBindingEventHandler^  m_eventColumnBinding;
+        ColumnEventHandler^    m_eventColumnBinded;
+        ColumnEventHandler^    m_eventColumnWidthChanged;
+        ColumnEventHandler^    m_eventColumnFrozenChanged;
+        ColumnMouseEventHandler^  m_eventColumnMouseEnter;
+        ColumnMouseEventHandler^  m_eventColumnMouseLeave;
+        ColumnMouseEventHandler^  m_eventColumnMouseDown;
+        ColumnMouseEventHandler^  m_eventColumnMouseUp;
+        ColumnMouseEventHandler^  m_eventColumnMouseMove;
+        CellMouseEventHandler^   m_eventCellMouseMove;
+        CellEventHandler^    m_eventCellClick;
+        CellEventHandler^    m_eventCellDoubleClick;
+        BeginEditEventHandler^   m_eventBeginEdit;
+        CellEventHandler^    m_eventEndEdit;
+        ClearEventHandler^    m_eventClearing;
+        ClearEventHandler^    m_eventCleared;
+        System::EventHandler^     m_eventDataSourceChanged;
+        System::EventHandler^     m_eventDataMemberChanged;
+        System::EventHandler^     m_eventDataBindingComplete;
 
         CurrencyManagerChangingEventHandler^m_eventCurrencyManagerChanging;
-        CurrencyManagerChangedEventHandler^	m_eventCurrencyManagerChanged;
+        CurrencyManagerChangedEventHandler^ m_eventCurrencyManagerChanged;
 
-        System::EventHandler^					m_eventStateBegin;
-        System::EventHandler^					m_eventStateEnd;
+        System::EventHandler^     m_eventStateBegin;
+        System::EventHandler^     m_eventStateEnd;
 
-        System::Windows::Forms::CurrencyManager^				m_manager;
-        System::Windows::Forms::CurrencyManager^				m_defaultManager;
-        System::Data::DataTable^		m_defaultDataSource;
-        int								m_dataBindingRef;
+        System::Windows::Forms::CurrencyManager^    m_manager;
+        System::Windows::Forms::CurrencyManager^    m_defaultManager;
+        System::Data::DataTable^  m_defaultDataSource;
+        int        m_dataBindingRef;
 
         ref class DataBindingRef
         {

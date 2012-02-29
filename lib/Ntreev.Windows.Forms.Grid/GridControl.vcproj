@@ -229,10 +229,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GridBase.h"
-				>
-			</File>
-			<File
 				RelativePath=".\GridCaption.h"
 				>
 			</File>
@@ -242,10 +238,6 @@
 			</File>
 			<File
 				RelativePath=".\GridCellBase.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridCellCollection.h"
 				>
 			</File>
 			<File
@@ -281,10 +273,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GridColumnUITypeEditor.h"
-				>
-			</File>
-			<File
 				RelativePath=".\GridControl.h"
 				FileType="4"
 				>
@@ -293,10 +281,6 @@
 					SubType="Designer"
 					>
 				</File>
-			</File>
-			<File
-				RelativePath=".\GridDef.h"
-				>
 			</File>
 			<File
 				RelativePath=".\GridErrorDescriptor.h"
@@ -330,6 +314,10 @@
 			</File>
 			<File
 				RelativePath=".\GridNativeCollection.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GridObject.h"
 				>
 			</File>
 			<File
@@ -426,6 +414,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Ntreev.Windows.Forms.Grid.ColumnPainter.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\Ntreev.Windows.Forms.Grid.Cursors.Add.cur"
 				>
 			</File>
@@ -472,10 +464,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GridBase.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\GridCaption.cpp"
 				>
 			</File>
@@ -485,10 +473,6 @@
 			</File>
 			<File
 				RelativePath=".\GridCellBase.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridCellCollection.cpp"
 				>
 			</File>
 			<File
@@ -524,10 +508,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GridColumnUITypeEditor.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\GridControl.cpp"
 				>
 			</File>
@@ -557,6 +537,10 @@
 			</File>
 			<File
 				RelativePath=".\GridNativeCollection.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GridObject.cpp"
 				>
 			</File>
 			<File

@@ -236,26 +236,26 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         WM_XBUTTONUP = 0x020C,
     };
 
-	ref class API
-	{
-	public:
+    ref class API
+    {
+    public:
         static System::IntPtr   SendMessage(System::Windows::Forms::Message msg);
-		static System::IntPtr	SendMessage(System::IntPtr handle, WM message, System::IntPtr wParam, System::IntPtr lParam);
+        static System::IntPtr SendMessage(System::IntPtr handle, WM message, System::IntPtr wParam, System::IntPtr lParam);
         static System::IntPtr   PostMessage(System::Windows::Forms::Message msg);
-		static System::IntPtr	PostMessage(System::IntPtr handle, WM message, System::IntPtr wParam, System::IntPtr lParam);
+        static System::IntPtr PostMessage(System::IntPtr handle, WM message, System::IntPtr wParam, System::IntPtr lParam);
 
-        static int				HiWord(System::IntPtr param);
-		static int				LoWord(System::IntPtr param);
+        static int    HiWord(System::IntPtr param);
+        static int    LoWord(System::IntPtr param);
 
-		static System::IntPtr	MakeLParam(int l, int h);
+        static System::IntPtr MakeLParam(int l, int h);
 
-		static System::Char		ImmGetVirtualKey(System::IntPtr handle);
+        static System::Char  ImmGetVirtualKey(System::IntPtr handle);
 
-		static bool				ScrollWindow(System::IntPtr handle, int XAmount, int YAmount, System::Drawing::Rectangle^ rect, System::Drawing::Rectangle^ clipRect);
+        static bool    ScrollWindow(System::IntPtr handle, int XAmount, int YAmount, System::Drawing::Rectangle^ rect, System::Drawing::Rectangle^ clipRect);
         static bool             GetScrollTrackPosition(System::IntPtr handle, int scrollType, int* pValue);
 
-		static void				InvokeLButtonDownEvent(System::Drawing::Point location);
-        static void				InvokeLButtonUpEvent(System::Drawing::Point location);
+        static void    InvokeLButtonDownEvent(System::Drawing::Point location);
+        static void    InvokeLButtonUpEvent(System::Drawing::Point location);
         static void             keybd_event(int key);
         static void             DoEvents();
         static void             DoEventsModal(System::Windows::Forms::Form^ form);
@@ -275,22 +275,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         static void             SetLButtonState(bool b);
 
         static int              GetAsyncKeyState(int vKey);
-	};
+    };
 
     ref class ControlPainter : Ntreev::Windows::Forms::Grid::IControlPainter
-	{
-	public:
-		ControlPainter();
+    {
+    public:
+        ControlPainter();
 
-		virtual void BitBlt(System::IntPtr hdc, System::Windows::Forms::Control^ control, System::Drawing::Rectangle paintRect, System::Object^ value);
-		virtual void TransparentBlt(System::IntPtr hdc, System::Windows::Forms::Control^ control, System::Drawing::Rectangle paintRect, System::Object^ value);
+        virtual void BitBlt(System::IntPtr hdc, System::Windows::Forms::Control^ control, System::Drawing::Rectangle paintRect, System::Object^ value);
+        virtual void TransparentBlt(System::IntPtr hdc, System::Windows::Forms::Control^ control, System::Drawing::Rectangle paintRect, System::Object^ value);
 
-	private:
-		void*							m_dc;
-		int								m_width;
-		int								m_height;
+    private:
+        void*       m_dc;
+        int        m_width;
+        int        m_height;
 
-		void*							m_colorKeyBrush;
-		const uint						m_colorKey;
-	};
+        void*       m_colorKeyBrush;
+        const uint      m_colorKey;
+    };
 } /*namespace Win32*/} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

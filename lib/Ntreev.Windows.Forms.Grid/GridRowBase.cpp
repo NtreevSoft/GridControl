@@ -26,37 +26,37 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	RowBase::RowBase(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, IDataRow* pDataRow)
-		: CellBase(gridControl, pDataRow), m_pDataRow(pDataRow)
-	{
+    RowBase::RowBase(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, IDataRow* pDataRow)
+        : CellBase(gridControl, pDataRow), m_pDataRow(pDataRow)
+    {
 
-	}
+    }
 
-	void RowBase::Height::set(int value)
-	{
-		if(value < 0)
-			throw gcnew System::ArgumentOutOfRangeException("value");
-		m_pDataRow->SetHeight(value);
-	}
+    void RowBase::Height::set(int value)
+    {
+        if(value < 0)
+            throw gcnew System::ArgumentOutOfRangeException("value");
+        m_pDataRow->SetHeight(value);
+    }
 
-	bool RowBase::IsVisible::get()
-	{
-		return m_pDataRow->GetVisible();
-	}
+    bool RowBase::IsVisible::get()
+    {
+        return m_pDataRow->GetVisible();
+    }
 
-	uint RowBase::DisplayIndex::get()
-	{
-		return m_pDataRow->GetDisplayIndex();
-	}
+    uint RowBase::DisplayIndex::get()
+    {
+        return m_pDataRow->GetDisplayIndex();
+    }
 
-	uint RowBase::VisibleIndex::get()
-	{
-		return m_pDataRow->GetVisibleIndex();
-	}
+    uint RowBase::VisibleIndex::get()
+    {
+        return m_pDataRow->GetVisibleIndex();
+    }
 
-	bool RowBase::ShouldSerializeHeight()
-	{
-		return m_pDataRow->GetHeight() != GrRow::DefaultHeight;
-	}
+    bool RowBase::ShouldSerializeHeight()
+    {
+        return m_pDataRow->GetHeight() != GrRow::DefaultHeight;
+    }
 
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

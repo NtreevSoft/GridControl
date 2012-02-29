@@ -27,27 +27,25 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	public ref class GridTimeTest
-	{
-		typedef System::DateTime	_DateTime;
-		typedef System::TimeSpan	_TimeSpan;
-	public:
-		GridTimeTest();
-		GridTimeTest(System::String^ text);
-		~GridTimeTest();
-		!GridTimeTest();
+    public ref class GridTimeTest
+    {
+    public:
+        GridTimeTest();
+        GridTimeTest(System::String^ text);
+        ~GridTimeTest();
+        !GridTimeTest();
 
-		void				Report(System::String^ text);
-		void				Report(System::String^ format, ... cli::array<System::Object^>^ values);
+        void    Report(System::String^ text);
+        void    Report(System::String^ format, ... cli::array<System::Object^>^ values);
 
-		void				ReportAbs(System::String^ text);
-		void				ReportAbs(System::String^ format, ... cli::array<System::Object^>^ values);
+        void    ReportAbs(System::String^ text);
+        void    ReportAbs(System::String^ format, ... cli::array<System::Object^>^ values);
 
-	private:
-		_DateTime			m_firstTime;
-		_DateTime			m_oldTime;
-		System::String^			m_name;
-	};
+    private:
+        System::DateTime m_firstTime;
+        System::DateTime m_oldTime;
+        System::String^ m_name;
+    };
 
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
 

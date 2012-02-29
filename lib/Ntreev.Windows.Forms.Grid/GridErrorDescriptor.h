@@ -22,7 +22,7 @@
 
 
 #pragma once
-#include "GridBase.h"
+#include "GridObject.h"
 #include "GridEvent.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid

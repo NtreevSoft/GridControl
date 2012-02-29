@@ -31,9 +31,9 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	const wchar_t* ToNativeString::Convert(System::String^ text)
-	{
-		pin_ptr<const wchar_t> unmngStr = PtrToStringChars(text);
-		return unmngStr;
-	}
+    const wchar_t* ToNativeString::Convert(System::String^ text)
+    {
+        pin_ptr<const wchar_t> unmngStr = PtrToStringChars(text);
+        return unmngStr;
+    }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

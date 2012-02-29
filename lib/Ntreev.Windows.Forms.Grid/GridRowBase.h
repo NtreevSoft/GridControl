@@ -26,84 +26,84 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	public ref class RowBase : CellBase
-	{
-	public: // properties
-		/// <summary>
-		/// 행의 높이를 가져오거나 설정합니다.
-		/// </summary>
-		/// <exception cref="System::ArgumentOutOfRangeException">
-		/// 매개변수가 0보다 작을 경우
-		/// </exception>
-		[System::ComponentModel::DescriptionAttribute("열의 높이입니다.")]
-		[System::ComponentModel::CategoryAttribute("Layout")]
-		property int Height
-		{
-			void set(int);
-		}
+    public ref class RowBase : CellBase
+    {
+    public: // properties
+        /// <summary>
+        /// 행의 높이를 가져오거나 설정합니다.
+        /// </summary>
+        /// <exception cref="System::ArgumentOutOfRangeException">
+        /// 매개변수가 0보다 작을 경우
+        /// </exception>
+        [System::ComponentModel::DescriptionAttribute("열의 높이입니다.")]
+        [System::ComponentModel::CategoryAttribute("Layout")]
+        property int Height
+        {
+            void set(int);
+        }
 
-		/// <summary>
-		/// 표시되고 있는지의 여부를 가져오거나 설정합니다.
-		/// </summary>
-		/// <returns>
-		/// 표시되고 있다면 true를 반환하고, 그렇지 않다면 false를 반환합니다.
-		/// </returns>
-		[System::ComponentModel::DescriptionAttribute("표시되고 있는지의 여부를 가져오거나 설정합니다.")]
-		[System::ComponentModel::CategoryAttribute("Appearance")]
-		[System::ComponentModel::DefaultValueAttribute(true)]
-		property bool IsVisible 
-		{
-			bool get();
-		}
+        /// <summary>
+        /// 표시되고 있는지의 여부를 가져오거나 설정합니다.
+        /// </summary>
+        /// <returns>
+        /// 표시되고 있다면 true를 반환하고, 그렇지 않다면 false를 반환합니다.
+        /// </returns>
+        [System::ComponentModel::DescriptionAttribute("표시되고 있는지의 여부를 가져오거나 설정합니다.")]
+        [System::ComponentModel::CategoryAttribute("Appearance")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
+        property bool IsVisible 
+        {
+            bool get();
+        }
 
-		/// <summary>
-		/// 표시되는 인덱스를 가져옵니다.
-		/// </summary>
-		/// <returns>
-		/// 표시가 된다면 인덱스(0부터 시작)를 반환하고, 그렇지 않다면 0xffffffff를 반환합니다.
-		/// </returns>
-		/// <remarks>
-		/// 표시 여부를 확인하기 위해서는 <see cref="IsVisible"/>를 확인하면 됩니다.
-		/// </remarks>
+        /// <summary>
+        /// 표시되는 인덱스를 가져옵니다.
+        /// </summary>
+        /// <returns>
+        /// 표시가 된다면 인덱스(0부터 시작)를 반환하고, 그렇지 않다면 0xffffffff를 반환합니다.
+        /// </returns>
+        /// <remarks>
+        /// 표시 여부를 확인하기 위해서는 <see cref="IsVisible"/>를 확인하면 됩니다.
+        /// </remarks>
 #ifdef _DEBUG
-		[System::ComponentModel::CategoryAttribute("Debug")]
-		[System::ComponentModel::DescriptionAttribute("표시되는 인덱스입니다.")]
+        [System::ComponentModel::CategoryAttribute("Debug")]
+        [System::ComponentModel::DescriptionAttribute("표시되는 인덱스입니다.")]
 #else
-		[System::ComponentModel::BrowsableAttribute(false)]
+        [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-		property uint VisibleIndex
-		{
-			uint get(); 
-		}
+        property uint VisibleIndex
+        {
+            uint get(); 
+        }
 
-		/// <summary>
-		/// 화면에 표시되는 인덱스를 가져옵니다.
-		/// </summary>
-		/// <returns>
-		/// 화면에 표시가 된다면 인덱스(0부터 시작)를 반환하고, 그렇지 않다면 0xffffffff를 반환합니다.
-		/// </returns>
-		/// <remarks>
-		/// 화면에 표시 여부를 확인하기 위해서는 <see cref="IsDisplayable"/>를 확인하면 됩니다.
-		/// </remarks>
+        /// <summary>
+        /// 화면에 표시되는 인덱스를 가져옵니다.
+        /// </summary>
+        /// <returns>
+        /// 화면에 표시가 된다면 인덱스(0부터 시작)를 반환하고, 그렇지 않다면 0xffffffff를 반환합니다.
+        /// </returns>
+        /// <remarks>
+        /// 화면에 표시 여부를 확인하기 위해서는 <see cref="IsDisplayable"/>를 확인하면 됩니다.
+        /// </remarks>
 #ifdef _DEBUG
-		[System::ComponentModel::CategoryAttribute("Debug")]
-		[System::ComponentModel::DescriptionAttribute("화면에 표시되는 인덱스입니다")]
+        [System::ComponentModel::CategoryAttribute("Debug")]
+        [System::ComponentModel::DescriptionAttribute("화면에 표시되는 인덱스입니다")]
 #else
-		[System::ComponentModel::BrowsableAttribute(false)]
+        [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-		property uint DisplayIndex
-		{
-			uint get(); 
-		}
+        property uint DisplayIndex
+        {
+            uint get(); 
+        }
 
-	internal: // methods
-		RowBase(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, IDataRow* pDataRow);
+    internal: // methods
+        RowBase(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, IDataRow* pDataRow);
 
-	private: // methods
-		bool ShouldSerializeHeight();
+    private: // methods
+        bool ShouldSerializeHeight();
 
-	private: // variables
-		IDataRow*		m_pDataRow;
-	};
+    private: // variables
+        IDataRow*  m_pDataRow;
+    };
 
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

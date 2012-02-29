@@ -149,7 +149,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             bounds = row->Bounds;
 
             g->DrawImage(errorBitmap, bounds.Left + 3, bounds.Top + 3, errorBitmap->Width, errorBitmap->Height);
-            
+
         }
         delete pen;
     }

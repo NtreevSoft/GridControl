@@ -28,54 +28,54 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	GridTimeTest::GridTimeTest()
-	{
-		GridTimeTest::GridTimeTest("");
-	}
+    GridTimeTest::GridTimeTest()
+    {
+        GridTimeTest::GridTimeTest("");
+    }
 
-	GridTimeTest::GridTimeTest(System::String^ text)
-	{
-		m_name = text;
-		m_firstTime = m_oldTime = _DateTime::Now;
-		Debug::WriteLine("{0} 시작", m_name);
-	}
+    GridTimeTest::GridTimeTest(System::String^ text)
+    {
+        m_name = text;
+        m_firstTime = m_oldTime = System::DateTime::Now;
+        Debug::WriteLine("{0} 시작", m_name);
+    }
 
-	GridTimeTest::~GridTimeTest()
-	{
-		this->!GridTimeTest();
-	}
+    GridTimeTest::~GridTimeTest()
+    {
+        this->!GridTimeTest();
+    }
 
-	GridTimeTest::!GridTimeTest()
-	{
-		ReportAbs(m_name + " 끝");
-	}
+    GridTimeTest::!GridTimeTest()
+    {
+        ReportAbs(m_name + " 끝");
+    }
 
-	void GridTimeTest::Report(System::String^ text)
-	{
-		_DateTime time = _DateTime::Now;
-		_TimeSpan span = time.Subtract(m_oldTime);
-		m_oldTime = time;
+    void GridTimeTest::Report(System::String^ text)
+    {
+        System::DateTime time = System::DateTime::Now;
+        System::TimeSpan span = time.Subtract(m_oldTime);
+        m_oldTime = time;
 
-		Debug::WriteLine("{0} : {1}", text, span);
-	}
+        Debug::WriteLine("{0} : {1}", text, span);
+    }
 
-	void GridTimeTest::Report(System::String^ format, ... cli::array<System::Object^>^ values)
-	{
-		Report(System::String::Format(format, values));
-	}
+    void GridTimeTest::Report(System::String^ format, ... cli::array<System::Object^>^ values)
+    {
+        Report(System::String::Format(format, values));
+    }
 
-	void GridTimeTest::ReportAbs(System::String^ text)
-	{
-		_DateTime time = _DateTime::Now;
-		_TimeSpan span = time.Subtract(m_firstTime);
+    void GridTimeTest::ReportAbs(System::String^ text)
+    {
+        System::DateTime time = System::DateTime::Now;
+        System::TimeSpan span = time.Subtract(m_firstTime);
 
-		Debug::WriteLine("{0} : 총시간 {1}", text, span);
-	}
+        Debug::WriteLine("{0} : 총시간 {1}", text, span);
+    }
 
-	void GridTimeTest::ReportAbs(System::String^ format, ... cli::array<System::Object^>^ values)
-	{
-		ReportAbs(System::String::Format(format, values));
-	}
+    void GridTimeTest::ReportAbs(System::String^ format, ... cli::array<System::Object^>^ values)
+    {
+        ReportAbs(System::String::Format(format, values));
+    }
 
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
 

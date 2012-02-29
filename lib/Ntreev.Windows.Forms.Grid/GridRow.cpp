@@ -36,287 +36,287 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	Row::Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+    Row::Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
         : m_pDataRow(new GrDataRow()), RowBase(gridControl, m_pDataRow), m_errorDescription(System::String::Empty)
-	{
-		m_pDataRow->ManagedRef = this;
-		m_cells = gcnew CellCollection(this);
-		m_componentIndex = -1;
-	}
+    {
+        m_pDataRow->ManagedRef = this;
+        m_cells = gcnew CellCollection(this);
+        m_componentIndex = -1;
+    }
 
-	Row::Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pDataRow) 
+    Row::Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pDataRow) 
         : m_pDataRow(pDataRow), RowBase(gridControl, m_pDataRow), m_errorDescription(System::String::Empty)
-	{
-		m_pDataRow->ManagedRef = this;
-		m_cells = gcnew CellCollection(this);
-	}
+    {
+        m_pDataRow->ManagedRef = this;
+        m_cells = gcnew CellCollection(this);
+    }
 
-	void Row::Component::set(System::Object^ value)
-	{
-		m_component = value;
-		if(m_component != nullptr)
-		{
-			RefreshCells();
-		}
-	}
+    void Row::Component::set(System::Object^ value)
+    {
+        m_component = value;
+        if(m_component != nullptr)
+        {
+            RefreshCells();
+        }
+    }
 
-	GrDataRow* Row::NativeRef::get()
-	{
-		return m_pDataRow;
-	}
+    GrDataRow* Row::NativeRef::get()
+    {
+        return m_pDataRow;
+    }
 
-	void Row::RefreshCells()
-	{
-		for each(Column^ item in GridControl->Columns)
-		{
-			NewCell(item);
-		}
-	}
+    void Row::RefreshCells()
+    {
+        for each(Column^ item in GridControl->Columns)
+        {
+            NewCell(item);
+        }
+    }
 
-	void Row::NewCell(Column^ column)
-	{
-		GrItem* pItem = m_pDataRow->GetItem(column->NativeRef);
-		Cell^ cell = Cell::FromNative(pItem);
-		if(cell == nullptr)
-			cell = gcnew Cell(GridControl, pItem);
-	}
+    void Row::NewCell(Column^ column)
+    {
+        GrItem* pItem = m_pDataRow->GetItem(column->NativeRef);
+        Cell^ cell = Cell::FromNative(pItem);
+        if(cell == nullptr)
+            cell = gcnew Cell(GridControl, pItem);
+    }
 
-	System::String^ Row::ToString()
-	{
-		return this->Index.ToString();
-		//System::String^ text = gcnew System::String(m_pDataRow->GetText());
-		//text += " : ";
-		//text += this->Cells->ToString();
-		//return text;
-	}
+    System::String^ Row::ToString()
+    {
+        return this->Index.ToString();
+        //System::String^ text = gcnew System::String(m_pDataRow->GetText());
+        //text += " : ";
+        //text += this->Cells->ToString();
+        //return text;
+    }
 
-	CellCollection^ Row::Cells::get()
-	{
-		return m_cells;
-	}
+    CellCollection^ Row::Cells::get()
+    {
+        return m_cells;
+    }
 
     CellTagCollection^ Row::CellTags::get()
-	{
+    {
         if(m_cellTags == nullptr)
         {
             m_cellTags = gcnew CellTagCollection(this);
         }
-		return m_cellTags;
-	}
+        return m_cellTags;
+    }
 
-	int Row::CellCount::get()
-	{
-		return m_cells->Count;
-	}
+    int Row::CellCount::get()
+    {
+        return m_cells->Count;
+    }
 
-	uint Row::RowID::get()
-	{
-		return m_pDataRow->GetDataRowID();	
-	}
+    uint Row::RowID::get()
+    {
+        return m_pDataRow->GetDataRowID(); 
+    }
 
-	System::Object^ Row::default::get(int index)
-	{
+    System::Object^ Row::default::get(int index)
+    {
         return m_cells[index]->Value;
-	}
+    }
 
-	System::Object^ Row::default::get(System::String^ columnName)
-	{
-		return m_cells[columnName]->Value;
-	}
+    System::Object^ Row::default::get(System::String^ columnName)
+    {
+        return m_cells[columnName]->Value;
+    }
 
     void Row::default::set(System::String^ columnName, System::Object^ value)
     {
         m_cells[columnName]->Value = value;
     }
 
-	System::Object^ Row::default::get(Column^ column)
-	{
-		return m_cells[column]->Value;
-	}
+    System::Object^ Row::default::get(Column^ column)
+    {
+        return m_cells[column]->Value;
+    }
 
     void Row::default::set(Column^ column, System::Object^ value)
     {
         m_cells[column]->Value = value;
     }
 
-	bool Row::IsVisible::get()
-	{
-		return m_pDataRow->GetVisible();
-	}
+    bool Row::IsVisible::get()
+    {
+        return m_pDataRow->GetVisible();
+    }
 
-	void Row::IsVisible::set(bool value)
-	{
-		m_pDataRow->SetVisible(value);
-	}
+    void Row::IsVisible::set(bool value)
+    {
+        m_pDataRow->SetVisible(value);
+    }
 
-	bool Row::IsReadOnly::get()
-	{
-		return m_pDataRow->GetReadOnly();
-	}
+    bool Row::IsReadOnly::get()
+    {
+        return m_pDataRow->GetReadOnly();
+    }
 
-	void Row::IsReadOnly::set(bool value)
-	{
-		m_pDataRow->SetReadOnly(value);
-	}
-	
-	bool Row::IsSelected::get()
-	{
-		return m_pDataRow->GetSelected();
-	}
+    void Row::IsReadOnly::set(bool value)
+    {
+        m_pDataRow->SetReadOnly(value);
+    }
 
-	void Row::IsSelected::set(bool value)
-	{
-		m_pDataRow->SetSelected(value);
-	}
+    bool Row::IsSelected::get()
+    {
+        return m_pDataRow->GetSelected();
+    }
 
-	bool Row::IsFullSelected::get()
-	{
-		return m_pDataRow->GetFullSelected();
-	}
+    void Row::IsSelected::set(bool value)
+    {
+        m_pDataRow->SetSelected(value);
+    }
 
-	void Row::AddEditedCell()
-	{
-		m_editedCount++;
-	}
+    bool Row::IsFullSelected::get()
+    {
+        return m_pDataRow->GetFullSelected();
+    }
 
-	void Row::RemoveEditedCell()
-	{
-		m_editedCount--;
-		if(m_editedCount < 0)
-			throw gcnew System::Exception();
-	}
+    void Row::AddEditedCell()
+    {
+        m_editedCount++;
+    }
+
+    void Row::RemoveEditedCell()
+    {
+        m_editedCount--;
+        if(m_editedCount < 0)
+            throw gcnew System::Exception();
+    }
 
     void Row::AddErrorCell()
     {
         m_errorCell++;
     }
-     
+
     void Row::RemoveErrorCell()
     {
         m_errorCell--;
-		if(m_errorCell < 0)
-			throw gcnew System::Exception();
+        if(m_errorCell < 0)
+            throw gcnew System::Exception();
     }
 
-	Row^ Row::FromNative(const GrDataRow* pDataRow)
-	{
-		System::Object^ ref = pDataRow->ManagedRef;
-		return safe_cast<Row^>(ref);
-	}
+    Row^ Row::FromNative(const GrDataRow* pDataRow)
+    {
+        System::Object^ ref = pDataRow->ManagedRef;
+        return safe_cast<Row^>(ref);
+    }
 
-	bool Row::IsBeingEdited::get()
-	{
-		return m_editing;
-	}
+    bool Row::IsBeingEdited::get()
+    {
+        return m_editing;
+    }
 
-	bool Row::IsEdited::get()
-	{
-		return m_editedCount > 0 ? true : false;
-	}
+    bool Row::IsEdited::get()
+    {
+        return m_editedCount > 0 ? true : false;
+    }
 
-	int Row::Index::get()
-	{
-		return (int)m_pDataRow->GetDataRowIndex();
-	}
+    int Row::Index::get()
+    {
+        return (int)m_pDataRow->GetDataRowIndex();
+    }
 
-	void Row::BeginEdit()
-	{
-		m_editing = true;
-	}
+    void Row::BeginEdit()
+    {
+        m_editing = true;
+    }
 
-	void Row::CancelEdit()
-	{
-		try
-		{
-			if(m_editedCount == 0)
-				return;
+    void Row::CancelEdit()
+    {
+        try
+        {
+            if(m_editedCount == 0)
+                return;
 
-			for each(Cell^ cell in m_cells)
-			{
-				cell->CancelEdit();
-			}
+            for each(Cell^ cell in m_cells)
+            {
+                cell->CancelEdit();
+            }
 
-			if(m_editedCount < 0)
-				throw gcnew System::Exception("먼가 수상합니다.");
-		}
-		finally
-		{
-			m_editedCount = 0;
-			m_editing = false;
-		}
-	}
+            if(m_editedCount < 0)
+                throw gcnew System::Exception("먼가 수상합니다.");
+        }
+        finally
+        {
+            m_editedCount = 0;
+            m_editing = false;
+        }
+    }
 
-	void Row::ApplyEdit()
-	{
-		try
-		{
-			if(m_editedCount == 0)
-				return;
+    void Row::ApplyEdit()
+    {
+        try
+        {
+            if(m_editedCount == 0)
+                return;
 
-			for each(Cell^ cell in m_cells)
-			{
-				cell->ApplyEdit();
-			}
+            for each(Cell^ cell in m_cells)
+            {
+                cell->ApplyEdit();
+            }
 
-			if(m_editedCount < 0)
-				throw gcnew System::Exception("먼가 수상합니다.");
-		}
-		finally
-		{
-			m_editedCount = 0;
-			m_editing = false;
-		}
-	}
-	
-	void Row::BringIntoView()
-	{
-		if(m_pDataRow->GetDisplayable() == true)
-			return;
-		GridControl->BringIntoView(this);
-	}
+            if(m_editedCount < 0)
+                throw gcnew System::Exception("먼가 수상합니다.");
+        }
+        finally
+        {
+            m_editedCount = 0;
+            m_editing = false;
+        }
+    }
 
-	void Row::Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType)
-	{
-		Selector->SelectItems(m_pDataRow, (GrSelectionType)selectionType);
-	}
+    void Row::BringIntoView()
+    {
+        if(m_pDataRow->GetDisplayable() == true)
+            return;
+        GridControl->BringIntoView(this);
+    }
 
-	void Row::Focus()
-	{
-		Focuser->Set(m_pDataRow);
+    void Row::Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType)
+    {
+        Selector->SelectItems(m_pDataRow, (GrSelectionType)selectionType);
+    }
 
-		if(Focuser->Get() != nullptr)
-			return;
+    void Row::Focus()
+    {
+        Focuser->Set(m_pDataRow);
 
-		if(this->Cells->Count > 0)
-		{
+        if(Focuser->Get() != nullptr)
+            return;
+
+        if(this->Cells->Count > 0)
+        {
             this->Cells[0]->Focus();
-		}
-	}
+        }
+    }
 
-	void Row::ResetCellBackColor()
-	{
-		CellBackColor = System::Drawing::Color::Empty;
-	}
+    void Row::ResetCellBackColor()
+    {
+        CellBackColor = System::Drawing::Color::Empty;
+    }
 
-	void Row::ResetCellForeColor()
-	{
-		CellForeColor = System::Drawing::Color::Empty;
-	}
+    void Row::ResetCellForeColor()
+    {
+        CellForeColor = System::Drawing::Color::Empty;
+    }
 
-	System::Drawing::Color Row::CellBackColor::get()
-	{
-		return m_pDataRow->GetItemBackColor();
-	}
+    System::Drawing::Color Row::CellBackColor::get()
+    {
+        return m_pDataRow->GetItemBackColor();
+    }
 
-	void Row::CellBackColor::set(System::Drawing::Color value)
-	{
-		m_pDataRow->SetItemBackColor(value);
-	}
+    void Row::CellBackColor::set(System::Drawing::Color value)
+    {
+        m_pDataRow->SetItemBackColor(value);
+    }
 
-	System::Drawing::Color Row::CellForeColor::get()
-	{
-		return m_pDataRow->GetItemForeColor();
-	}
+    System::Drawing::Color Row::CellForeColor::get()
+    {
+        return m_pDataRow->GetItemForeColor();
+    }
 
     System::String^ Row::ErrorDescription::get()
     {
@@ -347,48 +347,48 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_errorCell > 0;
     }
 
-	void Row::CellForeColor::set(System::Drawing::Color value)
-	{
-		m_pDataRow->SetItemForeColor(value);
-	}
+    void Row::CellForeColor::set(System::Drawing::Color value)
+    {
+        m_pDataRow->SetItemForeColor(value);
+    }
 
-	bool Row::ShouldSerializeCellForeColor()
-	{
-		return m_pDataRow->GetItemForeColor() != GrColor::Empty;
-	}
+    bool Row::ShouldSerializeCellForeColor()
+    {
+        return m_pDataRow->GetItemForeColor() != GrColor::Empty;
+    }
 
-	bool Row::ShouldSerializeCellBackColor()
-	{
-		return m_pDataRow->GetItemBackColor() != GrColor::Empty;
-	}
-	
-	bool Row::ShouldSerializeCellFont()
-	{
-		return m_pDataRow->GetItemFont() != nullptr;
-	}
+    bool Row::ShouldSerializeCellBackColor()
+    {
+        return m_pDataRow->GetItemBackColor() != GrColor::Empty;
+    }
 
-	InsertionRow::InsertionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrInsertionRow* pInsertionRow)
-		: Row(gridControl, pInsertionRow)
-	{
-		
-	}
+    bool Row::ShouldSerializeCellFont()
+    {
+        return m_pDataRow->GetItemFont() != nullptr;
+    }
 
-	void InsertionRow::SetDefaultValue()
-	{
-		for each(InsertionCell^ cell in Cells)
-		{
-			cell->SetDefaultValue();
-		}
-		ApplyEdit();
-	}
+    InsertionRow::InsertionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrInsertionRow* pInsertionRow)
+        : Row(gridControl, pInsertionRow)
+    {
 
-	void InsertionRow::NewCell(Column^ column)
-	{
-		GrItem* pItem = NativeRef->GetItem(column->NativeRef);
-		Cell^ cell = Cell::FromNative(pItem);
-		if(cell == nullptr)
-		{
-			gcnew InsertionCell(GridControl, pItem, column->DefaultValue);
-		}
-	}
+    }
+
+    void InsertionRow::SetDefaultValue()
+    {
+        for each(InsertionCell^ cell in Cells)
+        {
+            cell->SetDefaultValue();
+        }
+        ApplyEdit();
+    }
+
+    void InsertionRow::NewCell(Column^ column)
+    {
+        GrItem* pItem = NativeRef->GetItem(column->NativeRef);
+        Cell^ cell = Cell::FromNative(pItem);
+        if(cell == nullptr)
+        {
+            gcnew InsertionCell(GridControl, pItem, column->DefaultValue);
+        }
+    }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

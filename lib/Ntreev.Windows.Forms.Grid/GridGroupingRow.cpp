@@ -27,34 +27,34 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	GroupingRow::GroupingRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrGroupingList* pGroupingList) 
-		: CellBase(gridControl, pGroupingList) , m_pGroupingList(pGroupingList)
-	{
-		this->Text = "그룹핑할 컬럼을 이쪽으로 드래그하여 옮기세요";
-	}
+    GroupingRow::GroupingRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrGroupingList* pGroupingList) 
+        : CellBase(gridControl, pGroupingList) , m_pGroupingList(pGroupingList)
+    {
+        this->Text = "그룹핑할 컬럼을 이쪽으로 드래그하여 옮기세요";
+    }
 
-	System::String^ GroupingRow::Text::get()
-	{
-		return gcnew System::String(m_pGroupingList->GetText());
-	}
+    System::String^ GroupingRow::Text::get()
+    {
+        return gcnew System::String(m_pGroupingList->GetText());
+    }
 
-	void GroupingRow::Text::set(System::String^ text)
-	{
-		m_pGroupingList->SetText(ToNativeString::Convert(text));
-	}
+    void GroupingRow::Text::set(System::String^ text)
+    {
+        m_pGroupingList->SetText(ToNativeString::Convert(text));
+    }
 
-	bool GroupingRow::IsVisible::get()
-	{
-		return m_pGroupingList->GetVisible();
-	}
+    bool GroupingRow::IsVisible::get()
+    {
+        return m_pGroupingList->GetVisible();
+    }
 
-	void GroupingRow::IsVisible::set(bool value)
-	{
-		m_pGroupingList->SetVisible(value);
-	}
+    void GroupingRow::IsVisible::set(bool value)
+    {
+        m_pGroupingList->SetVisible(value);
+    }
 
     bool GroupingRow::ShouldSerializeText()
-	{
-		return this->Text != "그룹핑할 컬럼을 이쪽으로 드래그하여 옮기세요";
-	}
+    {
+        return this->Text != "그룹핑할 컬럼을 이쪽으로 드래그하여 옮기세요";
+    }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -27,7 +27,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
                 m_editorService->Close();
                 e->SuppressKeyPress = true;
             }
-            
+
             break;
         }
     }

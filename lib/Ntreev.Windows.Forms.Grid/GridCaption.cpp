@@ -27,73 +27,73 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-	CaptionRow::CaptionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrCaption* pCaption) 
-		: CellBase(gridControl, pCaption) , m_pCaption(pCaption)
-	{
+    CaptionRow::CaptionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrCaption* pCaption) 
+        : CellBase(gridControl, pCaption) , m_pCaption(pCaption)
+    {
         this->Text = "제목";
-		m_pCaption->ManagedRef = this;
-	}
+        m_pCaption->ManagedRef = this;
+    }
 
-	System::String^ CaptionRow::Text::get()
-	{
-		return gcnew System::String(m_pCaption->GetText());
-	}
+    System::String^ CaptionRow::Text::get()
+    {
+        return gcnew System::String(m_pCaption->GetText());
+    }
 
-	void CaptionRow::Text::set(System::String^ text)
-	{
-		m_pCaption->SetText(ToNativeString::Convert(text));
-	}
+    void CaptionRow::Text::set(System::String^ text)
+    {
+        m_pCaption->SetText(ToNativeString::Convert(text));
+    }
 
-	System::Drawing::StringAlignment CaptionRow::Alignment::get()
-	{
-		return (System::Drawing::StringAlignment)m_pCaption->GetTextHorzAlign();
-	}
-	
-	void CaptionRow::Alignment::set(System::Drawing::StringAlignment value)
-	{
-		m_pCaption->SetTextHorzAlign((GrHorzAlign)value);
-	}
+    System::Drawing::StringAlignment CaptionRow::Alignment::get()
+    {
+        return (System::Drawing::StringAlignment)m_pCaption->GetTextHorzAlign();
+    }
 
-	System::Drawing::StringAlignment CaptionRow::LineAlignment::get()
-	{
-		return (System::Drawing::StringAlignment)m_pCaption->GetTextVertAlign();
-	}
-	
-	void CaptionRow::LineAlignment::set(System::Drawing::StringAlignment value)
-	{
-		m_pCaption->SetTextVertAlign((GrVertAlign)value);
-	}
+    void CaptionRow::Alignment::set(System::Drawing::StringAlignment value)
+    {
+        m_pCaption->SetTextHorzAlign((GrHorzAlign)value);
+    }
 
-	bool CaptionRow::IsVisible::get()
-	{
-		return m_pCaption->GetVisible();
-	}
+    System::Drawing::StringAlignment CaptionRow::LineAlignment::get()
+    {
+        return (System::Drawing::StringAlignment)m_pCaption->GetTextVertAlign();
+    }
 
-	void CaptionRow::IsVisible::set(bool value)
-	{
-		m_pCaption->SetVisible(value);
-	}
+    void CaptionRow::LineAlignment::set(System::Drawing::StringAlignment value)
+    {
+        m_pCaption->SetTextVertAlign((GrVertAlign)value);
+    }
 
-	CaptionRow^ CaptionRow::FromNative(GrCaption* pCaption)
-	{
-		System::Object^ ref = pCaption->ManagedRef;
-		return safe_cast<CaptionRow^>(ref);
-	}
+    bool CaptionRow::IsVisible::get()
+    {
+        return m_pCaption->GetVisible();
+    }
 
-	void CaptionRow::Height::set(int value)
-	{
-		if(value < 0)
-			throw gcnew System::ArgumentOutOfRangeException("value");
-		m_pCaption->SetHeight(value);
-	}
+    void CaptionRow::IsVisible::set(bool value)
+    {
+        m_pCaption->SetVisible(value);
+    }
 
-	bool CaptionRow::ShouldSerializeHeight()
-	{
-		return m_pCaption->GetHeight() != GrRow::DefaultHeight;
-	}
+    CaptionRow^ CaptionRow::FromNative(GrCaption* pCaption)
+    {
+        System::Object^ ref = pCaption->ManagedRef;
+        return safe_cast<CaptionRow^>(ref);
+    }
+
+    void CaptionRow::Height::set(int value)
+    {
+        if(value < 0)
+            throw gcnew System::ArgumentOutOfRangeException("value");
+        m_pCaption->SetHeight(value);
+    }
+
+    bool CaptionRow::ShouldSerializeHeight()
+    {
+        return m_pCaption->GetHeight() != GrRow::DefaultHeight;
+    }
 
     bool CaptionRow::ShouldSerializeText()
-	{
-		return this->Text != "제목";
-	}
+    {
+        return this->Text != "제목";
+    }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -209,13 +209,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::Drawing::Rectangle bounds(e->Cell->Bounds.Left + e->Cell->Padding.Left, 
             e->Cell->Bounds.Top + e->Cell->Padding.Top, 
             e->Cell->ClientRectangle.Width, e->Cell->ClientRectangle.Height);
-        
+
         m_form->Bounds = this->GridControl->RectangleToScreen(bounds);
 
         location = this->GridControl->PointToScreen(location);
         location = m_form->PointToClient(location);
-                
-       
+
+
         //SetControlLayout(m_viewControl, e->Cell);
         //SetControlValue(m_viewControl, e->Cell->Value);
 
@@ -233,7 +233,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         msg.LParam = System::IntPtr(1);
         Win32::API::SendMessage(msg);
 
-        
+
 
         //System::Drawing::Rectangle rect = Win32::API::GetWindowRect(m_viewControl->Handle);
         //System::Drawing::Point cur = System::Windows::Forms::Cursor::Position;
@@ -247,6 +247,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         e->Handled = true;
 
-            
+
     }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

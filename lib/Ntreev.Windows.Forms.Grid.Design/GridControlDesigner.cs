@@ -138,18 +138,39 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 pe.Graphics.DrawImage(image, x, y);
             }
 
-            if (this.selectionService.PrimarySelection is Column)
+
+            foreach (object item in this.selectionService.GetSelectedComponents())
             {
-                Column column = this.selectionService.PrimarySelection as Column;
+                Column column = item as Column;
+                if (column == null)
+                    continue;
 
                 if (column.GridControl == gridControl && column.IsDisplayable == true)
                 {
                     Rectangle rectancle = column.Bounds;
                     rectancle.Width--;
                     rectancle.Height--;
-                    pe.Graphics.DrawRectangle(Pens.Black, rectancle);
+
+                    rectancle.Inflate(1, 1);
+                    Pen pen = new Pen(Color.Black);
+                    pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+                    
+                    pe.Graphics.DrawRectangle(pen, rectancle);
                 }
             }
+
+            //if (this.selectionService.PrimarySelection is Column)
+            //{
+            //    Column column = this.selectionService.PrimarySelection as Column;
+
+            //    if (column.GridControl == gridControl && column.IsDisplayable == true)
+            //    {
+            //        Rectangle rectancle = column.Bounds;
+            //        rectancle.Width--;
+            //        rectancle.Height--;
+            //        pe.Graphics.DrawRectangle(Pens.Black, rectancle);
+            //    }
+            //}
 
             //pe.Graphics.DrawRectangle(System.Drawing.Pens.Red, new System.Drawing.Rectangle(0, 0, 50, 50));
         }

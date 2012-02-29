@@ -22,8 +22,8 @@
 
 
 #pragma once
-#include "GridBase.h"
 #include "GridCell.h"
+#include "GridRow.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -117,9 +117,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private: // variables
-        bool		m_cancel;
-        System::Object^		m_newValue;
-        System::Object^		m_oldValue;
+        bool  m_cancel;
+        System::Object^  m_newValue;
+        System::Object^  m_oldValue;
     };
 
     /// <summary>
@@ -159,7 +159,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         RowEventArgs() {}
 
     private: // variables
-        Ntreev::Windows::Forms::Grid::Row^		m_row;
+        Ntreev::Windows::Forms::Grid::Row^  m_row;
     };
 
     /// <summary>
@@ -195,7 +195,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private: // variables
-        bool		m_cancel;
+        bool  m_cancel;
     };
 
     /// <summary>
@@ -336,7 +336,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private: // variables
-        bool	m_cancel;
+        bool m_cancel;
     };
 
     /// <summary>
@@ -380,8 +380,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private: // variables
-        bool				m_newSelect;
-        uint				m_newIndex;
+        bool    m_newSelect;
+        uint    m_newIndex;
     };
 
     /// <summary>
@@ -478,7 +478,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private: // variables
-        Ntreev::Windows::Forms::Grid::Column^		m_column;
+        Ntreev::Windows::Forms::Grid::Column^  m_column;
     };
 
     /// <summary>
@@ -517,7 +517,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private: // variables
-        bool		m_cancel;
+        bool  m_cancel;
     };
 
     /// <summary>
@@ -552,7 +552,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         property int X
         { 
-            int	get() { return m_location.X; }		
+            int get() { return m_location.X; }  
         }
 
         /// <summary>
@@ -581,15 +581,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이 속성의 값이 true로 설정되었다면 각 이벤트에 해당하는 기본 작업이 취소됩니다.
         /// ColumnMouseDown일 경우 열의 셀 선택 기능이 취소 되며, ColumnMouseUp일 경우 Column정렬 기능이 취소됩니다.
         /// </remarks>
-        property bool Handled	
+        property bool Handled 
         {
             bool get() { return m_handled; }
-            void set(bool value) { m_handled = value; }	
+            void set(bool value) { m_handled = value; } 
         }
 
     private: // variables
-        System::Drawing::Point			m_location;
-        bool			m_handled;
+        System::Drawing::Point   m_location;
+        bool   m_handled;
     };
 
     /// <summary>
@@ -624,7 +624,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         property int X
         { 
-            int	get() { return m_location.X; }		
+            int get() { return m_location.X; }  
         }
 
         /// <summary>
@@ -653,15 +653,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이 속성의 값이 true로 설정되었다면 각 이벤트에 해당하는 기본 작업이 취소됩니다.
         /// CellMouseDown일 경우 열의 셀 선택 기능이 취소 되며, CellMouseUp일 경우 Cell정렬 기능이 취소됩니다.
         /// </remarks>
-        property bool Handled	
+        property bool Handled 
         {
             bool get() { return m_handled; }
-            void set(bool value) { m_handled = value; }	
+            void set(bool value) { m_handled = value; } 
         }
 
     private: // variables
-        System::Drawing::Point			m_location;
-        bool			m_handled;
+        System::Drawing::Point   m_location;
+        bool   m_handled;
     };
 
     /// <summary>
@@ -700,7 +700,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private: // variables
-        bool		m_cancel;
+        bool  m_cancel;
     };
 
     /// <summary>
@@ -738,7 +738,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private: // variables
-        bool		m_dataSourceOnly;
+        bool  m_dataSourceOnly;
     };
 
     /// <summary>

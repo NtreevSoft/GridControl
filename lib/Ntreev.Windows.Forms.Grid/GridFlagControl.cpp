@@ -26,9 +26,9 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design
 {
-	using namespace System;
-	using namespace System::Drawing;
-	using namespace System::Windows::Forms;
+    using namespace System;
+    using namespace System::Drawing;
+    using namespace System::Windows::Forms;
 
     FlagControl::FlagControl()
     {
@@ -42,92 +42,92 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         InitializeCheckBox();
     }
 
-	System::Object^ FlagControl::Value::get()
-	{
+    System::Object^ FlagControl::Value::get()
+    {
         return m_value;
-	}
+    }
 
     void FlagControl::Value::set(System::Object^ value)
-	{
+    {
         int enumValue = value != nullptr ? (int)value : 0;
-		for each (Control^ item in this->Controls)
-		{
-			CheckBox^ checkBox = dynamic_cast<CheckBox^>(item);
-			if (checkBox == nullptr)
-				continue;
-			int flag = (int)item->Tag;
-			checkBox->Checked = (enumValue & flag) != 0 ? true : false;
-		}
+        for each (Control^ item in this->Controls)
+        {
+            CheckBox^ checkBox = dynamic_cast<CheckBox^>(item);
+            if (checkBox == nullptr)
+                continue;
+            int flag = (int)item->Tag;
+            checkBox->Checked = (enumValue & flag) != 0 ? true : false;
+        }
         m_value = value;
-	}
+    }
 
     void FlagControl::InitializeCheckBox()
-	{
-		cli::array<System::Object^>^ flagAttrs = m_flagType->GetCustomAttributes(FlagsAttribute::typeid, true);
-		if(flagAttrs->Length == 0)
-			throw gcnew ArgumentException("FlagsAttribute를 갖는 Enum Type만 가능합니다.");
+    {
+        cli::array<System::Object^>^ flagAttrs = m_flagType->GetCustomAttributes(FlagsAttribute::typeid, true);
+        if(flagAttrs->Length == 0)
+            throw gcnew ArgumentException("FlagsAttribute를 갖는 Enum Type만 가능합니다.");
 
-		this->SuspendLayout();
+        this->SuspendLayout();
 
-		for (int i = this->Controls->Count-1; i >=0 ; i--)
-		{
-			CheckBox^ checkBox = dynamic_cast<CheckBox^>(this->Controls[i]);
-			if(checkBox != nullptr)
-				this->Controls->Remove(checkBox);
-		}
+        for (int i = this->Controls->Count-1; i >=0 ; i--)
+        {
+            CheckBox^ checkBox = dynamic_cast<CheckBox^>(this->Controls[i]);
+            if(checkBox != nullptr)
+                this->Controls->Remove(checkBox);
+        }
 
-		int y = this->Padding.Top;
-		int buttonHeight = this->Bottom - this->buttonOk->Top;
-		for each(System::Object^ item in Enum::GetValues(m_flagType))
-		{
-			CheckBox^ checkBox = gcnew CheckBox();
-			checkBox->Name = item->ToString();
-			checkBox->Text = item->ToString();
-			checkBox->Tag = item;
-			checkBox->AutoSize = true;
-			checkBox->Location = Point(this->Padding.Left, y);
+        int y = this->Padding.Top;
+        int buttonHeight = this->Bottom - this->buttonOk->Top;
+        for each(System::Object^ item in Enum::GetValues(m_flagType))
+        {
+            CheckBox^ checkBox = gcnew CheckBox();
+            checkBox->Name = item->ToString();
+            checkBox->Text = item->ToString();
+            checkBox->Tag = item;
+            checkBox->AutoSize = true;
+            checkBox->Location = Point(this->Padding.Left, y);
 
-			this->Controls->Add(checkBox);
+            this->Controls->Add(checkBox);
 
-			y += checkBox->Height + 1;
-		}
+            y += checkBox->Height + 1;
+        }
 
-		this->Height = y + buttonHeight;
-		this->ResumeLayout(true);
-	}
+        this->Height = y + buttonHeight;
+        this->ResumeLayout(true);
+    }
 
-	bool FlagControl::ProcessCmdKey(System::Windows::Forms::Message% msg, System::Windows::Forms::Keys keyData)
-	{
-		if (keyData == Keys::Enter)
-		{
+    bool FlagControl::ProcessCmdKey(System::Windows::Forms::Message% msg, System::Windows::Forms::Keys keyData)
+    {
+        if (keyData == Keys::Enter)
+        {
             UpdateValue();
-			m_editorService->Close();
+            m_editorService->Close();
             return true;
-		}
-		return UserControl::ProcessCmdKey(msg, keyData);
-	}
+        }
+        return UserControl::ProcessCmdKey(msg, keyData);
+    }
 
-	System::Void FlagControl::buttonOk_Click(System::Object^ /*sender*/, System::EventArgs^ /*e*/) 
-	{
+    System::Void FlagControl::buttonOk_Click(System::Object^ /*sender*/, System::EventArgs^ /*e*/) 
+    {
         UpdateValue();
-		m_editorService->Close();
-	}
-
-	System::Void FlagControl::buttonCancel_Click(System::Object^ /*sender*/, System::EventArgs^ /*e*/) 
-	{
         m_editorService->Close();
-	}
+    }
+
+    System::Void FlagControl::buttonCancel_Click(System::Object^ /*sender*/, System::EventArgs^ /*e*/) 
+    {
+        m_editorService->Close();
+    }
 
     void FlagControl::UpdateValue()
     {
         int value = 0;
-		for each(Control^ item in this->Controls)
-		{
-			CheckBox^ checkBox = dynamic_cast<CheckBox^>(item);
-			if (checkBox == nullptr || checkBox->Checked == false)
-				continue;
-			value |= (int)item->Tag;
-		}
+        for each(Control^ item in this->Controls)
+        {
+            CheckBox^ checkBox = dynamic_cast<CheckBox^>(item);
+            if (checkBox == nullptr || checkBox->Checked == false)
+                continue;
+            value |= (int)item->Tag;
+        }
         m_value = System::Enum::ToObject(m_flagType, value);
     }
 } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

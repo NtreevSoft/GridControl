@@ -13,17 +13,17 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Native
 {
-	//GrFont* WinFormFontManager::m_pDefaultfont = NULL;
+    //GrFont* WinFormFontManager::m_pDefaultfont = NULL;
 
     //System::Collections::Hashtable WinFormFontManager::m_fonts;
 
     GrFont* WinFormFontManager::FromManagedFont(System::Drawing::Font^ font)
     {
         if(font == nullptr)
-			return NULL;
-		return GrFontCreator::Create(font->ToHfont().ToPointer());
+            return NULL;
+        return GrFontCreator::Create(font->ToHfont().ToPointer());
     }
-	
+
     System::Drawing::Font^ WinFormFontManager::ToManagedFont(GrFont* pFont)
     {
         if(pFont == NULL)
@@ -42,175 +42,175 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         return font;
     }
 
-	WinFormInvalidator::WinFormInvalidator(gcroot<Ntreev::Windows::Forms::Grid::GridControl^> gridControl)
-		: m_gridControl(gridControl)
-	{
-		m_rectType = RectType_Empty;
-		m_lockRef = 0;
-	}
+    WinFormInvalidator::WinFormInvalidator(gcroot<Ntreev::Windows::Forms::Grid::GridControl^> gridControl)
+        : m_gridControl(gridControl)
+    {
+        m_rectType = RectType_Empty;
+        m_lockRef = 0;
+    }
 
-	void WinFormInvalidator::Invalidate()
-	{
-		if(m_rectType == RectType_Full)
-			return;
+    void WinFormInvalidator::Invalidate()
+    {
+        if(m_rectType == RectType_Full)
+            return;
 
-		if(m_lockRef == 0)
-		{
+        if(m_lockRef == 0)
+        {
 #ifdef _PRINT_INVALIDATE_RECT
-			System::Console::Write("full : ");
+            System::Console::Write("full : ");
 #endif
-			m_gridControl->Invalidate(false);
-		}
-		m_rectType = RectType_Full;
-	}
+            m_gridControl->Invalidate(false);
+        }
+        m_rectType = RectType_Full;
+    }
 
-	void WinFormInvalidator::Invalidate(int x, int y, int width, int height)
-	{
-		switch(m_rectType)
-		{
-		case RectType_Full:
-			return;
-		case RectType_Custom:
-			{
-				m_rect.left = std::min(x, m_rect.left);
-				m_rect.top = std::min(y, m_rect.top);
-				m_rect.right = std::max(x + width, m_rect.right);
-				m_rect.bottom = std::max(y + height, m_rect.bottom);
-			}
-			break;
-		case RectType_Empty:
-			{
-				m_rect = GrRect(GrPoint(x, y), GrSize(width, height));
-			}
-			break;
-		}
+    void WinFormInvalidator::Invalidate(int x, int y, int width, int height)
+    {
+        switch(m_rectType)
+        {
+        case RectType_Full:
+            return;
+        case RectType_Custom:
+            {
+                m_rect.left = std::min(x, m_rect.left);
+                m_rect.top = std::min(y, m_rect.top);
+                m_rect.right = std::max(x + width, m_rect.right);
+                m_rect.bottom = std::max(y + height, m_rect.bottom);
+            }
+            break;
+        case RectType_Empty:
+            {
+                m_rect = GrRect(GrPoint(x, y), GrSize(width, height));
+            }
+            break;
+        }
 
-		if(m_lockRef == 0)
-		{
+        if(m_lockRef == 0)
+        {
 #ifdef _PRINT_INVALIDATE_RECT
-			System::Console::Write("custom : ");
+            System::Console::Write("custom : ");
 #endif
-			m_gridControl->Invalidate(m_rect, false);
-		}
+            m_gridControl->Invalidate(m_rect, false);
+        }
 
-		m_rectType = RectType_Custom;
-	}
+        m_rectType = RectType_Custom;
+    }
 
-	void WinFormInvalidator::Lock()
-	{
-		m_lockRef++;
-	}
+    void WinFormInvalidator::Lock()
+    {
+        m_lockRef++;
+    }
 
-	void WinFormInvalidator::Unlock()
-	{
-		
-		m_lockRef--;
-		if(m_lockRef < 0)
-			throw gcnew System::Exception("Invalidator의 잠금해제 횟수가 잠금 횟수보다 큽니다.");
+    void WinFormInvalidator::Unlock()
+    {
 
-		if(m_rectType == RectType_Custom)
-		{
+        m_lockRef--;
+        if(m_lockRef < 0)
+            throw gcnew System::Exception("Invalidator의 잠금해제 횟수가 잠금 횟수보다 큽니다.");
+
+        if(m_rectType == RectType_Custom)
+        {
 #ifdef _PRINT_INVALIDATE_RECT
             System::Console::Write("custom by unlock {0} : ", c++);
 #endif
-           
-			m_gridControl->Invalidate(m_rect, false);
-		}
-		else if(m_rectType == RectType_Full)
-		{
+
+            m_gridControl->Invalidate(m_rect, false);
+        }
+        else if(m_rectType == RectType_Full)
+        {
 #ifdef _PRINT_INVALIDATE_RECT
-			System::Console::Write("full by unlock : {0}", w++);
+            System::Console::Write("full by unlock : {0}", w++);
 #endif
-			m_gridControl->Invalidate(false);
-		}
+            m_gridControl->Invalidate(false);
+        }
         m_rectType = RectType_Empty;
-	}
+    }
 
-	void WinFormInvalidator::Reset()
-	{
-		if(m_lockRef == 0)
-			m_rectType = RectType_Empty;
-	}
+    void WinFormInvalidator::Reset()
+    {
+        if(m_lockRef == 0)
+            m_rectType = RectType_Empty;
+    }
 
-	bool WinFormInvalidator::IsInvalidated() const 
-	{
-		return m_rectType != RectType_Empty; 
-	}
+    bool WinFormInvalidator::IsInvalidated() const 
+    {
+        return m_rectType != RectType_Empty; 
+    }
 
-	WinFormScroll::WinFormScroll(gcroot<Ntreev::Windows::Forms::Grid::GridControl^> gridControl, int type)
-		: m_gridControl(gridControl)
-	{
-		if(type == 0)
-			m_scroll = m_gridControl->UserControl::HorizontalScroll;
-		else
-			m_scroll = m_gridControl->UserControl::VerticalScroll;
-		m_type = type;
-	}
+    WinFormScroll::WinFormScroll(gcroot<Ntreev::Windows::Forms::Grid::GridControl^> gridControl, int type)
+        : m_gridControl(gridControl)
+    {
+        if(type == 0)
+            m_scroll = m_gridControl->UserControl::HorizontalScroll;
+        else
+            m_scroll = m_gridControl->UserControl::VerticalScroll;
+        m_type = type;
+    }
 
-	WinFormScroll::~WinFormScroll()
-	{
+    WinFormScroll::~WinFormScroll()
+    {
 
-	}
+    }
 
-	int WinFormScroll::GetValue() const
-	{
-		return m_scroll->Value;
-	}
+    int WinFormScroll::GetValue() const
+    {
+        return m_scroll->Value;
+    }
 
-	void WinFormScroll::SetValue(int value)
-	{
-		m_scroll->Value = value;
-	}
+    void WinFormScroll::SetValue(int value)
+    {
+        m_scroll->Value = value;
+    }
 
-	int WinFormScroll::GetSmallChange() const
-	{
-		return m_scroll->SmallChange;
-	}
+    int WinFormScroll::GetSmallChange() const
+    {
+        return m_scroll->SmallChange;
+    }
 
-	void WinFormScroll::SetSmallChange(int value)
-	{
-		m_scroll->SmallChange = value;
-	}
+    void WinFormScroll::SetSmallChange(int value)
+    {
+        m_scroll->SmallChange = value;
+    }
 
-	int WinFormScroll::GetLargeChange() const
-	{
-		return m_scroll->LargeChange;
-	}
+    int WinFormScroll::GetLargeChange() const
+    {
+        return m_scroll->LargeChange;
+    }
 
-	void WinFormScroll::SetLargeChange(int value)
-	{
-		m_scroll->LargeChange = value;
-	}
+    void WinFormScroll::SetLargeChange(int value)
+    {
+        m_scroll->LargeChange = value;
+    }
 
-	int WinFormScroll::GetMaximum() const
-	{
-		return m_scroll->Maximum;
-	}
+    int WinFormScroll::GetMaximum() const
+    {
+        return m_scroll->Maximum;
+    }
 
-	void WinFormScroll::SetMaximum(int value)
-	{
-		m_scroll->Maximum = value;
-	}
+    void WinFormScroll::SetMaximum(int value)
+    {
+        m_scroll->Maximum = value;
+    }
 
-	int WinFormScroll::GetMinimum() const
-	{
-		return m_scroll->Minimum;
-	}
+    int WinFormScroll::GetMinimum() const
+    {
+        return m_scroll->Minimum;
+    }
 
-	void WinFormScroll::SetMinimum(int value)
-	{
-		m_scroll->Minimum = value;
-	}
+    void WinFormScroll::SetMinimum(int value)
+    {
+        m_scroll->Minimum = value;
+    }
 
-	bool WinFormScroll::GetVisible() const
-	{
-		return m_scroll->Visible;
-	}
+    bool WinFormScroll::GetVisible() const
+    {
+        return m_scroll->Visible;
+    }
 
-	void WinFormScroll::SetVisible(bool value)
-	{
-		m_scroll->Visible = value;
-	}
+    void WinFormScroll::SetVisible(bool value)
+    {
+        m_scroll->Visible = value;
+    }
 
 #define SB_LINEUP           0
 #define SB_LINELEFT         0
@@ -229,244 +229,244 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 #define SB_ENDSCROLL        8
 
     void WinFormScroll::WndProc(System::IntPtr handle, System::IntPtr wParam)
-	{
-		using namespace System::Windows::Forms;
+    {
+        using namespace System::Windows::Forms;
 
-		int nValue = m_scroll->Value;				;
+        int nValue = m_scroll->Value;    ;
 
-		ScrollEventType ScrollType;
+        ScrollEventType ScrollType;
 
-		switch(Win32::API::LoWord(wParam))
-		{
-		case SB_ENDSCROLL:
-			{
-				ScrollType = ScrollEventType::EndScroll;
-			}
-			break;
-		case SB_LEFT:
-			{
-				nValue = m_scroll->Minimum;
-				ScrollType = ScrollEventType::First;
-			}
-			break;
-		case SB_RIGHT:
-			{
-				nValue = m_scroll->Maximum;
-				ScrollType = ScrollEventType::Last;
-			}
-			break;
-		case SB_LINELEFT:
-			{
-				nValue -= m_scroll->SmallChange;
-				ScrollType = ScrollEventType::SmallDecrement;
-			}
-			break;
-		case SB_LINERIGHT:
-			{
-				nValue += m_scroll->SmallChange;
-				ScrollType = ScrollEventType::SmallIncrement;
-			}
-			break;
-		case SB_PAGELEFT:
-			{
-				nValue -= m_scroll->LargeChange;
-				ScrollType = ScrollEventType::LargeDecrement;
-			}
-			break;
-		case SB_PAGERIGHT:
-			{
-				nValue += m_scroll->LargeChange;
-				ScrollType = ScrollEventType::LargeIncrement;
-			}
-			break;
-		case SB_THUMBTRACK:
-			{
+        switch(Win32::API::LoWord(wParam))
+        {
+        case SB_ENDSCROLL:
+            {
+                ScrollType = ScrollEventType::EndScroll;
+            }
+            break;
+        case SB_LEFT:
+            {
+                nValue = m_scroll->Minimum;
+                ScrollType = ScrollEventType::First;
+            }
+            break;
+        case SB_RIGHT:
+            {
+                nValue = m_scroll->Maximum;
+                ScrollType = ScrollEventType::Last;
+            }
+            break;
+        case SB_LINELEFT:
+            {
+                nValue -= m_scroll->SmallChange;
+                ScrollType = ScrollEventType::SmallDecrement;
+            }
+            break;
+        case SB_LINERIGHT:
+            {
+                nValue += m_scroll->SmallChange;
+                ScrollType = ScrollEventType::SmallIncrement;
+            }
+            break;
+        case SB_PAGELEFT:
+            {
+                nValue -= m_scroll->LargeChange;
+                ScrollType = ScrollEventType::LargeDecrement;
+            }
+            break;
+        case SB_PAGERIGHT:
+            {
+                nValue += m_scroll->LargeChange;
+                ScrollType = ScrollEventType::LargeIncrement;
+            }
+            break;
+        case SB_THUMBTRACK:
+            {
                 if(Win32::API::GetScrollTrackPosition(handle, m_type, &nValue) == false)
                     return;
-				ScrollType = ScrollEventType::ThumbTrack;
-			}
-			break;
-		default:
-			return;
-		}
+                ScrollType = ScrollEventType::ThumbTrack;
+            }
+            break;
+        default:
+            return;
+        }
 
-		SetValue(nValue, (int)ScrollType);
-	}
+        SetValue(nValue, (int)ScrollType);
+    }
 
-	void WinFormScroll::SetValue(int value, int scrollEventType)
-	{
-		using namespace System::Windows::Forms;
+    void WinFormScroll::SetValue(int value, int scrollEventType)
+    {
+        using namespace System::Windows::Forms;
 
-		int oldValue = m_scroll->Value;
-		int newValue = ValidateValue(value);
+        int oldValue = m_scroll->Value;
+        int newValue = ValidateValue(value);
 
-		if(oldValue == newValue)
-			return;
+        if(oldValue == newValue)
+            return;
 
-		ScrollEventArgs se((ScrollEventType)scrollEventType, oldValue, newValue, (ScrollOrientation)m_type);
-		m_scroll->Value = newValue;
-		m_gridControl->InvokeScroll(%se);
-	}
+        ScrollEventArgs se((ScrollEventType)scrollEventType, oldValue, newValue, (ScrollOrientation)m_type);
+        m_scroll->Value = newValue;
+        m_gridControl->InvokeScroll(%se);
+    }
 
 
-	WinFormTimer::Timer::Timer(WinFormTimer* winformTimer, Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
-		: m_winformTimer(winformTimer)
-	{
-		BeginInit();
-		Enabled = false;
-		SynchronizingObject = gridControl;
-		AutoReset = true;
-		EndInit();
+    WinFormTimer::Timer::Timer(WinFormTimer* winformTimer, Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+        : m_winformTimer(winformTimer)
+    {
+        BeginInit();
+        Enabled = false;
+        SynchronizingObject = gridControl;
+        AutoReset = true;
+        EndInit();
 
-		this->Elapsed += gcnew System::Timers::ElapsedEventHandler(this, &Timer::elapsed);
-	}
+        this->Elapsed += gcnew System::Timers::ElapsedEventHandler(this, &Timer::elapsed);
+    }
 
-	void WinFormTimer::Timer::elapsed(System::Object^ /*sender*/, System::Timers::ElapsedEventArgs^ e)
-	{
-		m_winformTimer->Invoke(e->SignalTime.Millisecond);
-	}
+    void WinFormTimer::Timer::elapsed(System::Object^ /*sender*/, System::Timers::ElapsedEventArgs^ e)
+    {
+        m_winformTimer->Invoke(e->SignalTime.Millisecond);
+    }
 
-	WinFormTimer::WinFormTimer(gcroot<Ntreev::Windows::Forms::Grid::GridControl^> gridControl)
-		: m_gridControl(gridControl)
-	{
-		m_timer = gcnew Timer(this, m_gridControl);
+    WinFormTimer::WinFormTimer(gcroot<Ntreev::Windows::Forms::Grid::GridControl^> gridControl)
+        : m_gridControl(gridControl)
+    {
+        m_timer = gcnew Timer(this, m_gridControl);
         m_timer->AutoReset = true;
-	}
+    }
 
-	void WinFormTimer::Start()
-	{
-		m_timer->Start();
-	}
+    void WinFormTimer::Start()
+    {
+        m_timer->Start();
+    }
 
-	void WinFormTimer::Stop()
-	{
-		m_timer->Stop();
-	}
+    void WinFormTimer::Stop()
+    {
+        m_timer->Stop();
+    }
 
-	void WinFormTimer::SetInterval(time_t interval)
-	{
-		m_timer->Interval = (double)interval;
-	}
+    void WinFormTimer::SetInterval(time_t interval)
+    {
+        m_timer->Interval = (double)interval;
+    }
 
-	void WinFormTimer::Invoke(time_t signalTime)
-	{
-		InvokeElapsed(signalTime);
-	}
+    void WinFormTimer::Invoke(time_t signalTime)
+    {
+        InvokeElapsed(signalTime);
+    }
 
-	WinFormWindow::WinFormWindow(gcroot<Ntreev::Windows::Forms::Grid::GridControl^> gridControl)
-		: m_gridControl(gridControl), m_horzScroll(m_gridControl, 0), m_vertScroll(m_gridControl, 1), m_invalidator(m_gridControl)
-	{
+    WinFormWindow::WinFormWindow(gcroot<Ntreev::Windows::Forms::Grid::GridControl^> gridControl)
+        : m_gridControl(gridControl), m_horzScroll(m_gridControl, 0), m_vertScroll(m_gridControl, 1), m_invalidator(m_gridControl)
+    {
         WinFormFontManager::m_pDefaultfont = GetDefaultFont();
 
-		m_pGridPainter = CreateGridPainterDC(m_gridControl->Handle.ToPointer());
-		System::IO::Stream^ stream;
-		stream = Ntreev::Windows::Forms::Grid::GridControl::typeid->Assembly->GetManifestResourceStream("Ntreev.Windows.Forms.Grid.Cursors.Movable.cur");
-		m_cursorMove = gcnew System::Windows::Forms::Cursor(stream);
-		delete stream;
+        m_pGridPainter = CreateGridPainterDC(m_gridControl->Handle.ToPointer());
+        System::IO::Stream^ stream;
+        stream = Ntreev::Windows::Forms::Grid::GridControl::typeid->Assembly->GetManifestResourceStream("Ntreev.Windows.Forms.Grid.Cursors.Movable.cur");
+        m_cursorMove = gcnew System::Windows::Forms::Cursor(stream);
+        delete stream;
 
-		stream = Ntreev::Windows::Forms::Grid::GridControl::typeid->Assembly->GetManifestResourceStream("Ntreev.Windows.Forms.Grid.Cursors.Add.cur");
-		m_cursorAdd = gcnew System::Windows::Forms::Cursor(stream);
-		delete stream;
+        stream = Ntreev::Windows::Forms::Grid::GridControl::typeid->Assembly->GetManifestResourceStream("Ntreev.Windows.Forms.Grid.Cursors.Add.cur");
+        m_cursorAdd = gcnew System::Windows::Forms::Cursor(stream);
+        delete stream;
 
-		stream = Ntreev::Windows::Forms::Grid::GridControl::typeid->Assembly->GetManifestResourceStream("Ntreev.Windows.Forms.Grid.Cursors.Remove.cur");
-		m_cursorRemove = gcnew System::Windows::Forms::Cursor(stream);
-		delete stream;
+        stream = Ntreev::Windows::Forms::Grid::GridControl::typeid->Assembly->GetManifestResourceStream("Ntreev.Windows.Forms.Grid.Cursors.Remove.cur");
+        m_cursorRemove = gcnew System::Windows::Forms::Cursor(stream);
+        delete stream;
 
         m_pFont = WinFormFontManager::FromManagedFont(m_gridControl->Font);
-	}
+    }
 
-	GrRect WinFormWindow::GetSrceenRect() const
-	{
-		return System::Windows::Forms::Screen::PrimaryScreen->Bounds;
-	}
+    GrRect WinFormWindow::GetSrceenRect() const
+    {
+        return System::Windows::Forms::Screen::PrimaryScreen->Bounds;
+    }
 
-	GrPoint WinFormWindow::ClientToScreen(const GrPoint& location) const
-	{
-		return m_gridControl->PointToScreen(location);
-	}
+    GrPoint WinFormWindow::ClientToScreen(const GrPoint& location) const
+    {
+        return m_gridControl->PointToScreen(location);
+    }
 
-	int WinFormWindow::GetMouseWheelScrollLines() const
-	{
-		return System::Windows::Forms::SystemInformation::MouseWheelScrollLines;
-	}
+    int WinFormWindow::GetMouseWheelScrollLines() const
+    {
+        return System::Windows::Forms::SystemInformation::MouseWheelScrollLines;
+    }
 
-	int WinFormWindow::GetMouseWheelScrollDelta() const
-	{
-		return System::Windows::Forms::SystemInformation::MouseWheelScrollDelta;
-	}
+    int WinFormWindow::GetMouseWheelScrollDelta() const
+    {
+        return System::Windows::Forms::SystemInformation::MouseWheelScrollDelta;
+    }
 
-	GrSize WinFormWindow::GetDragSize() const
-	{
-		return System::Windows::Forms::SystemInformation::DragSize;
-	}
+    GrSize WinFormWindow::GetDragSize() const
+    {
+        return System::Windows::Forms::SystemInformation::DragSize;
+    }
 
-	bool WinFormWindow::GetMouseDragEventSupported() const
-	{
-		return false;
-	}
+    bool WinFormWindow::GetMouseDragEventSupported() const
+    {
+        return false;
+    }
 
-	void WinFormWindow::SetCursor(GrCursor cursor)
-	{
-		using namespace System::Windows::Forms;
-		Cursor^ temp = Cursors::Default;
-		switch(cursor)
-		{
-		case GrCursor_No:
-			temp = Cursors::No;
-			break;
-		case GrCursor_Wait:
-			temp = Cursors::WaitCursor;
-			break;
-		case GrCursor_Add:
-			temp = m_cursorAdd;
-			break;
-		case GrCursor_Remove:
-			temp = m_cursorRemove;
-			break;
-		case GrCursor_Move:
-			temp = m_cursorMove;
-			break;
-		case GrCursor_HSplit:
-			temp = Cursors::HSplit;
-			break;
-		case GrCursor_VSplit:
-			temp = Cursors::VSplit;
-			break;
-		case GrCursor_SizeWE:
-			temp = Cursors::SizeWE;
-			break;
-		case GrCursor_SizeNS:
-			temp = Cursors::SizeNS;
-			break;
-		}
-
-		if(m_gridControl->Cursor != temp)
+    void WinFormWindow::SetCursor(GrCursor cursor)
+    {
+        using namespace System::Windows::Forms;
+        Cursor^ temp = Cursors::Default;
+        switch(cursor)
         {
-			m_gridControl->Cursor = temp;
+        case GrCursor_No:
+            temp = Cursors::No;
+            break;
+        case GrCursor_Wait:
+            temp = Cursors::WaitCursor;
+            break;
+        case GrCursor_Add:
+            temp = m_cursorAdd;
+            break;
+        case GrCursor_Remove:
+            temp = m_cursorRemove;
+            break;
+        case GrCursor_Move:
+            temp = m_cursorMove;
+            break;
+        case GrCursor_HSplit:
+            temp = Cursors::HSplit;
+            break;
+        case GrCursor_VSplit:
+            temp = Cursors::VSplit;
+            break;
+        case GrCursor_SizeWE:
+            temp = Cursors::SizeWE;
+            break;
+        case GrCursor_SizeNS:
+            temp = Cursors::SizeNS;
+            break;
         }
-	}
 
-	GrKeys WinFormWindow::GetModifierKeys() const
-	{
-		using namespace System::Windows::Forms;
+        if(m_gridControl->Cursor != temp)
+        {
+            m_gridControl->Cursor = temp;
+        }
+    }
 
-		int modifierKeys = 0;
-		if((Control::ModifierKeys & Keys::Control) == Keys::Control)
-			modifierKeys |= GrKeys_Control;
-		if((Control::ModifierKeys & Keys::Shift) == Keys::Shift)
-			modifierKeys |= GrKeys_Shift;
-		if((Control::ModifierKeys & Keys::Alt) == Keys::Alt)
-			modifierKeys |= GrKeys_Alt;
-		return (GrKeys)modifierKeys;
-	}
+    GrKeys WinFormWindow::GetModifierKeys() const
+    {
+        using namespace System::Windows::Forms;
 
-	void WinFormWindow::OnEditValue(GrEditEventArgs* e)
-	{
+        int modifierKeys = 0;
+        if((Control::ModifierKeys & Keys::Control) == Keys::Control)
+            modifierKeys |= GrKeys_Control;
+        if((Control::ModifierKeys & Keys::Shift) == Keys::Shift)
+            modifierKeys |= GrKeys_Shift;
+        if((Control::ModifierKeys & Keys::Alt) == Keys::Alt)
+            modifierKeys |= GrKeys_Alt;
+        return (GrKeys)modifierKeys;
+    }
+
+    void WinFormWindow::OnEditValue(GrEditEventArgs* e)
+    {
         using namespace System::Windows::Forms;
         using namespace Ntreev::Windows::Forms::Grid::Design;
 
-		GrEditingReason reason = e->GetReason();
-		Cell^ cell = Cell::FromNative(e->GetItem());
+        GrEditingReason reason = e->GetReason();
+        Cell^ cell = Cell::FromNative(e->GetItem());
 
         if(m_gridControl->InvokeBeginEdit(cell) == false)
             return;
@@ -501,58 +501,58 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
         CellEventArgs ee(cell);
         m_gridControl->InvokeEndEdit(%ee);
-	}
+    }
 
-	GrScroll* WinFormWindow::GetHorzScroll() const
-	{
-		return const_cast<WinFormScroll*>(&m_horzScroll);
-	}
+    GrScroll* WinFormWindow::GetHorzScroll() const
+    {
+        return const_cast<WinFormScroll*>(&m_horzScroll);
+    }
 
-	GrScroll* WinFormWindow::GetVertScroll() const
-	{
-		return const_cast<WinFormScroll*>(&m_vertScroll);
-	}
+    GrScroll* WinFormWindow::GetVertScroll() const
+    {
+        return const_cast<WinFormScroll*>(&m_vertScroll);
+    }
 
-	GrInvalidator* WinFormWindow::GetInvalidator() const
-	{
-		return const_cast<WinFormInvalidator*>(&m_invalidator);
-	}
+    GrInvalidator* WinFormWindow::GetInvalidator() const
+    {
+        return const_cast<WinFormInvalidator*>(&m_invalidator);
+    }
 
-	GrGridPainter* WinFormWindow::GetGridPainter() const
-	{
-		return m_pGridPainter;
-	}
+    GrGridPainter* WinFormWindow::GetGridPainter() const
+    {
+        return m_pGridPainter;
+    }
 
-	GrFont* WinFormWindow::GetFont() const
-	{
-		return m_pFont;
-	}
+    GrFont* WinFormWindow::GetFont() const
+    {
+        return m_pFont;
+    }
 
-	void WinFormWindow::SetFont(System::Drawing::Font^ font)
-	{
-		m_pFont = WinFormFontManager::FromManagedFont(font);
-		OnFontChanged();
-	}
+    void WinFormWindow::SetFont(System::Drawing::Font^ font)
+    {
+        m_pFont = WinFormFontManager::FromManagedFont(font);
+        OnFontChanged();
+    }
 
-	GrFont* WinFormWindow::GetFont(void* fontData) const
-	{
-		return GrFontCreator::Create(fontData);
-	}
+    GrFont* WinFormWindow::GetFont(void* fontData) const
+    {
+        return GrFontCreator::Create(fontData);
+    }
 
-	GrFont* WinFormWindow::GetDefaultFont() const
-	{
-		return WinFormFontManager::FromManagedFont(System::Windows::Forms::Control::DefaultFont);
-	}
+    GrFont* WinFormWindow::GetDefaultFont() const
+    {
+        return WinFormFontManager::FromManagedFont(System::Windows::Forms::Control::DefaultFont);
+    }
 
-	GrTimer* WinFormWindow::CreateTimer()
-	{
-		return new WinFormTimer(m_gridControl);
-	}
+    GrTimer* WinFormWindow::CreateTimer()
+    {
+        return new WinFormTimer(m_gridControl);
+    }
 
-	void WinFormWindow::DestroyTimer(GrTimer* pTimer)
-	{
-		delete pTimer;
-	}
+    void WinFormWindow::DestroyTimer(GrTimer* pTimer)
+    {
+        delete pTimer;
+    }
 
     bool WinFormWindow::CanEdit(GrItem* pItem, GrEditingReason reason)
     {
@@ -560,50 +560,50 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             Ntreev::Windows::Forms::Grid::Cell::FromNative(pItem);
 
         //if(GrGridWindow::CanEdit(pItem, reason) == false)
-            return cell->Column->CanEditInternal(cell, Design::EditingReason(reason));
+        return cell->Column->CanEditInternal(cell, Design::EditingReason(reason));
     }
 
-	//GrFont* WinFormWindow::FromManagedFont(System::Drawing::Font^ font)
-	//{
-	//	if(font == nullptr)
-	//		return NULL;
-	//	return GrFontCreator::Create(font->ToHfont().ToPointer());
-	//}
+    //GrFont* WinFormWindow::FromManagedFont(System::Drawing::Font^ font)
+    //{
+    // if(font == nullptr)
+    //  return NULL;
+    // return GrFontCreator::Create(font->ToHfont().ToPointer());
+    //}
 
-	//System::Drawing::Font^ WinFormWindow::ToManagedFont(GrFont* pFont)
-	//{
-	//	if(pFont == NULL)
-	//		return nullptr;
-	//	if(pFont == m_pDefaultfont)
-	//		return System::Windows::Forms::Control::DefaultFont;
-	//	System::IntPtr ptr(GrFontCreator::GetFontHandle(pFont));
-	//	System::Drawing::Font^ font = System::Drawing::Font::FromHfont(ptr);
-	//	System::Drawing::Font^ font1 = gcnew System::Drawing::Font(font->FontFamily, font->SizeInPoints, font->Style, System::Windows::Forms::Control::DefaultFont->Unit, font->GdiCharSet);
-	//	return font1;
-	//}
+    //System::Drawing::Font^ WinFormWindow::ToManagedFont(GrFont* pFont)
+    //{
+    // if(pFont == NULL)
+    //  return nullptr;
+    // if(pFont == m_pDefaultfont)
+    //  return System::Windows::Forms::Control::DefaultFont;
+    // System::IntPtr ptr(GrFontCreator::GetFontHandle(pFont));
+    // System::Drawing::Font^ font = System::Drawing::Font::FromHfont(ptr);
+    // System::Drawing::Font^ font1 = gcnew System::Drawing::Font(font->FontFamily, font->SizeInPoints, font->Style, System::Windows::Forms::Control::DefaultFont->Unit, font->GdiCharSet);
+    // return font1;
+    //}
 
-	WinFormGridCore::WinFormGridCore(gcroot<Ntreev::Windows::Forms::Grid::GridControl^> gridControl, GrGridWindow* pGridWindow)
-		: GrGridCore(pGridWindow), m_gridControl(gridControl)
-	{
-		GrColumnList* pColumnList = GetColumnList();
+    WinFormGridCore::WinFormGridCore(gcroot<Ntreev::Windows::Forms::Grid::GridControl^> gridControl, GrGridWindow* pGridWindow)
+        : GrGridCore(pGridWindow), m_gridControl(gridControl)
+    {
+        GrColumnList* pColumnList = GetColumnList();
 
-		pColumnList->ColumnMouseDown.Add(this,	 &WinFormGridCore::columnList_ColumnMouseDown);
-		pColumnList->ColumnMouseEnter.Add(this,  &WinFormGridCore::columnList_ColumnMouseEnter);
-		pColumnList->ColumnMouseLeave.Add(this,  &WinFormGridCore::columnList_ColumnMouseLeave);
-		pColumnList->ColumnMouseMove.Add(this,	 &WinFormGridCore::columnList_ColumnMouseMove);
-		pColumnList->ColumnMouseUp.Add(this,	 &WinFormGridCore::columnList_ColumnMouseUp);
-		pColumnList->ColumnWidthChanged.Add(this,&WinFormGridCore::columnList_ColumnWidthChanged);
+        pColumnList->ColumnMouseDown.Add(this,  &WinFormGridCore::columnList_ColumnMouseDown);
+        pColumnList->ColumnMouseEnter.Add(this,  &WinFormGridCore::columnList_ColumnMouseEnter);
+        pColumnList->ColumnMouseLeave.Add(this,  &WinFormGridCore::columnList_ColumnMouseLeave);
+        pColumnList->ColumnMouseMove.Add(this,  &WinFormGridCore::columnList_ColumnMouseMove);
+        pColumnList->ColumnMouseUp.Add(this,  &WinFormGridCore::columnList_ColumnMouseUp);
+        pColumnList->ColumnWidthChanged.Add(this,&WinFormGridCore::columnList_ColumnWidthChanged);
         pColumnList->ColumnFrozenChanged.Add(this,&WinFormGridCore::columnList_ColumnFrozenChanged);
 
-		GrFocuser* pFocuser = GetFocuser();
-		pFocuser->FocusChanging.Add(this,		 &WinFormGridCore::focuser_FocusChanging);
-		pFocuser->FocusChanged.Add(this,		 &WinFormGridCore::focuser_FocusChanged);
+        GrFocuser* pFocuser = GetFocuser();
+        pFocuser->FocusChanging.Add(this,   &WinFormGridCore::focuser_FocusChanging);
+        pFocuser->FocusChanged.Add(this,   &WinFormGridCore::focuser_FocusChanged);
 
-		GrItemSelector* pItemSelector = GetItemSelector();
-		pItemSelector->SelectedRowsChanged.Add(this,	&WinFormGridCore::itemSelector_SelectedRowsChanged);
-		pItemSelector->SelectedColumnsChanged.Add(this,	&WinFormGridCore::itemSelector_SelectedColumnsChanged);
-		pItemSelector->SelectionChanged.Add(this,		&WinFormGridCore::itemSelector_SelectionChanged);
-	}
+        GrItemSelector* pItemSelector = GetItemSelector();
+        pItemSelector->SelectedRowsChanged.Add(this, &WinFormGridCore::itemSelector_SelectedRowsChanged);
+        pItemSelector->SelectedColumnsChanged.Add(this, &WinFormGridCore::itemSelector_SelectedColumnsChanged);
+        pItemSelector->SelectionChanged.Add(this,  &WinFormGridCore::itemSelector_SelectionChanged);
+    }
 
     void WinFormGridCore::OnItemMouseMove(GrItemMouseEventArgs* e)
     {
@@ -614,119 +614,119 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         }
     }
 
-	void WinFormGridCore::OnItemMouseClick(GrItemMouseEventArgs* e)
-	{
-		GrGridCore::OnItemMouseClick(e);
-		m_gridControl->InvokeCellClick(Cell::FromNative(e->GetItem()));
-	}
+    void WinFormGridCore::OnItemMouseClick(GrItemMouseEventArgs* e)
+    {
+        GrGridCore::OnItemMouseClick(e);
+        m_gridControl->InvokeCellClick(Cell::FromNative(e->GetItem()));
+    }
 
-	void WinFormGridCore::OnItemMouseDoubleClick(GrItemMouseEventArgs* e)
-	{
-		GrGridCore::OnItemMouseDoubleClick(e);
-		m_gridControl->InvokeCellDoubleClick(Cell::FromNative(e->GetItem()));
-	}
+    void WinFormGridCore::OnItemMouseDoubleClick(GrItemMouseEventArgs* e)
+    {
+        GrGridCore::OnItemMouseDoubleClick(e);
+        m_gridControl->InvokeCellDoubleClick(Cell::FromNative(e->GetItem()));
+    }
 
-	void WinFormGridCore::OnItemMouseEnter(GrItemMouseEventArgs* e)
-	{
-		GrGridCore::OnItemMouseEnter(e);
-		GrItem* pItem = e->GetItem();
+    void WinFormGridCore::OnItemMouseEnter(GrItemMouseEventArgs* e)
+    {
+        GrGridCore::OnItemMouseEnter(e);
+        GrItem* pItem = e->GetItem();
 
-		try
-		{
-			Cell^ cell = Cell::FromNative(pItem);
-			if(cell->ErrorDescription != System::String::Empty)
-				m_gridControl->ToolTip->Show(cell->ErrorDescription);
-		}
-		catch(System::Exception^)
-		{
-		}
-	}
+        try
+        {
+            Cell^ cell = Cell::FromNative(pItem);
+            if(cell->ErrorDescription != System::String::Empty)
+                m_gridControl->ToolTip->Show(cell->ErrorDescription);
+        }
+        catch(System::Exception^)
+        {
+        }
+    }
 
-	void WinFormGridCore::OnItemMouseLeave(GrItemMouseEventArgs* e)
-	{
-		GrGridCore::OnItemMouseLeave(e);
-		m_gridControl->ToolTip->Hide();
-	}
+    void WinFormGridCore::OnItemMouseLeave(GrItemMouseEventArgs* e)
+    {
+        GrGridCore::OnItemMouseLeave(e);
+        m_gridControl->ToolTip->Hide();
+    }
 
-	void WinFormGridCore::columnList_ColumnMouseDown(GrObject* /*pSender*/, GrColumnMouseEventArgs* e)
-	{
-		Column^ column = Column::FromNative(e->GetColumn());
-		if(m_gridControl->Site == nullptr)
-		{
-			bool handled = m_gridControl->InvokeColumnMouseDown(column, e->GetLocation());
+    void WinFormGridCore::columnList_ColumnMouseDown(GrObject* /*pSender*/, GrColumnMouseEventArgs* e)
+    {
+        Column^ column = Column::FromNative(e->GetColumn());
+        if(m_gridControl->Site == nullptr)
+        {
+            bool handled = m_gridControl->InvokeColumnMouseDown(column, e->GetLocation());
             e->SetHandled(handled);
-			return;
-		}
+            return;
+        }
 
-		using namespace System::ComponentModel::Design;
-		ISelectionService^ selectionService = (ISelectionService^)m_gridControl->GetInternalService(ISelectionService::typeid);
-		cli::array<System::Object^>^ components = gcnew cli::array<System::Object^>(1) { column, };
-		selectionService->SetSelectedComponents(components);
-		e->SetHandled(true);
-	}
+        using namespace System::ComponentModel::Design;
+        ISelectionService^ selectionService = (ISelectionService^)m_gridControl->GetInternalService(ISelectionService::typeid);
+        cli::array<System::Object^>^ components = gcnew cli::array<System::Object^>(1) { column, };
+        selectionService->SetSelectedComponents(components);
+        e->SetHandled(true);
+    }
 
-	void WinFormGridCore::columnList_ColumnMouseUp(GrObject* /*pSender*/, GrColumnMouseEventArgs* e)
-	{
-		Column^ column = Column::FromNative(e->GetColumn());
-		bool handled = m_gridControl->InvokeColumnMouseUp(column, e->GetLocation());
+    void WinFormGridCore::columnList_ColumnMouseUp(GrObject* /*pSender*/, GrColumnMouseEventArgs* e)
+    {
+        Column^ column = Column::FromNative(e->GetColumn());
+        bool handled = m_gridControl->InvokeColumnMouseUp(column, e->GetLocation());
         e->SetHandled(handled);
-	}
+    }
 
-	void WinFormGridCore::columnList_ColumnMouseEnter(GrObject* /*pSender*/, GrColumnMouseEventArgs* e)
-	{
-		Column^ column = Column::FromNative(e->GetColumn());
-		m_gridControl->InvokeColumnMouseEnter(column, e->GetLocation());
-	}
+    void WinFormGridCore::columnList_ColumnMouseEnter(GrObject* /*pSender*/, GrColumnMouseEventArgs* e)
+    {
+        Column^ column = Column::FromNative(e->GetColumn());
+        m_gridControl->InvokeColumnMouseEnter(column, e->GetLocation());
+    }
 
-	void WinFormGridCore::columnList_ColumnMouseLeave(GrObject* /*pSender*/, GrColumnMouseEventArgs* e)
-	{
-		Column^ column = Column::FromNative(e->GetColumn());
-		m_gridControl->InvokeColumnMouseLeave(column);
-	}
+    void WinFormGridCore::columnList_ColumnMouseLeave(GrObject* /*pSender*/, GrColumnMouseEventArgs* e)
+    {
+        Column^ column = Column::FromNative(e->GetColumn());
+        m_gridControl->InvokeColumnMouseLeave(column);
+    }
 
-	void WinFormGridCore::columnList_ColumnMouseMove(GrObject* /*pSender*/, GrColumnMouseEventArgs* e)
-	{
-		Column^ column = Column::FromNative(e->GetColumn());
+    void WinFormGridCore::columnList_ColumnMouseMove(GrObject* /*pSender*/, GrColumnMouseEventArgs* e)
+    {
+        Column^ column = Column::FromNative(e->GetColumn());
         if(m_gridControl->InvokeColumnMouseMove(column, e->GetLocation()) == true)
         {
             e->SetHandled(true);
         }
-	}
+    }
 
-	void WinFormGridCore::columnList_ColumnWidthChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
-	{
-		Column^ column = Column::FromNative(e->GetColumn());
-		m_gridControl->InvokeColumnWidthChanged(column);
-	}
+    void WinFormGridCore::columnList_ColumnWidthChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
+    {
+        Column^ column = Column::FromNative(e->GetColumn());
+        m_gridControl->InvokeColumnWidthChanged(column);
+    }
 
     void WinFormGridCore::columnList_ColumnFrozenChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
     {
         Column^ column = Column::FromNative(e->GetColumn());
-		m_gridControl->InvokeColumnFrozenChanged(column);
+        m_gridControl->InvokeColumnFrozenChanged(column);
     }
 
-	void WinFormGridCore::focuser_FocusChanging(GrObject* /*pSender*/, GrFocusChangeArgs* /*e*/)
-	{
-		m_gridControl->InvokeFocusChanging();
-	}
+    void WinFormGridCore::focuser_FocusChanging(GrObject* /*pSender*/, GrFocusChangeArgs* /*e*/)
+    {
+        m_gridControl->InvokeFocusChanging();
+    }
 
-	void WinFormGridCore::focuser_FocusChanged(GrObject* /*pSender*/, GrFocusChangeArgs* /*e*/)
-	{
-		m_gridControl->InvokeFocusChanged();
-	}
+    void WinFormGridCore::focuser_FocusChanged(GrObject* /*pSender*/, GrFocusChangeArgs* /*e*/)
+    {
+        m_gridControl->InvokeFocusChanged();
+    }
 
-	void WinFormGridCore::itemSelector_SelectedRowsChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
-	{
-		m_gridControl->InvokeSelectedRowsChanged();
-	}
+    void WinFormGridCore::itemSelector_SelectedRowsChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
+    {
+        m_gridControl->InvokeSelectedRowsChanged();
+    }
 
-	void WinFormGridCore::itemSelector_SelectedColumnsChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
-	{
-		m_gridControl->InvokeSelectedColumnsChanged();
-	}
+    void WinFormGridCore::itemSelector_SelectedColumnsChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
+    {
+        m_gridControl->InvokeSelectedColumnsChanged();
+    }
 
-	void WinFormGridCore::itemSelector_SelectionChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
-	{
-		m_gridControl->InvokeSelectionChanged();
-	}
-} /*namespace Native*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/	
+    void WinFormGridCore::itemSelector_SelectionChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
+    {
+        m_gridControl->InvokeSelectionChanged();
+    }
+} /*namespace Native*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/ 
