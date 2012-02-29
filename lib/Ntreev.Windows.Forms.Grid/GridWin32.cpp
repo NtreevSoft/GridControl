@@ -24,7 +24,6 @@
 #include "StdAfx.h"
 #include "GridWin32.h"
 #include <windows.h>
-#include "GridColumnControl2.h"
 
 #pragma comment(lib, "Imm32.lib")
 

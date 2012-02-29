@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../GridCore;../GridRendererDC"
+				AdditionalIncludeDirectories="../GridCore;../GridPainterDC"
 				PreprocessorDefinitions="WIN32;_DEBUG;_STRONG_NAME"
 				RuntimeLibrary="3"
 				OpenMP="false"
@@ -123,7 +123,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="&#x0D;&#x0A;"
-				AdditionalIncludeDirectories="../GridCore;../GridRendererDC"
+				AdditionalIncludeDirectories="../GridCore;../GridPainterDC"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -269,10 +269,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GridColumnControl2.h"
-				>
-			</File>
-			<File
 				RelativePath=".\GridColumnDropDown.h"
 				>
 			</File>
@@ -413,10 +409,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\bitmap2.bmp"
-				>
-			</File>
-			<File
 				RelativePath=".\Error.png"
 				>
 			</File>
@@ -517,10 +509,6 @@
 			</File>
 			<File
 				RelativePath=".\GridColumnControl.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridColumnControl2.cpp"
 				>
 			</File>
 			<File
