@@ -1327,44 +1327,46 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     internal: // methods
-        bool     InvokeValueChanging(Cell^ cell, System::Object^ value, System::Object^ oldValue);
-        void     InvokeValueChanged(Cell^ cell);
-        bool     InvokeInsertionRowInserting(Row^ row);
-        void     InvokeInsertionRowInserted(Row^ row);
-        bool     InvokeRowInserting(System::Object^ component);
-        void     InvokeRowInserted(Row^ row);
-        bool     InvokeRowRemoving(Row^ row);
-        void     InvokeRowRemoved(RowRemovedEventArgs^ e);
-        bool     InvokeColumnInserting(Column^ column);
-        void     InvokeColumnInserted(Column^ column);
-        Column^     InvokeColumnBinding(System::ComponentModel::PropertyDescriptor^ propertyDescriptor, Column^ existColumn);
-        void     InvokeColumnBinded(Column^ column);
-        bool     InvokeColumnMouseDown(Column^ column, System::Drawing::Point clientLocation);
-        bool     InvokeColumnMouseUp(Column^ column, System::Drawing::Point clientLocation);
-        void     InvokeColumnMouseEnter(Column^ column, System::Drawing::Point clientLocation);
-        bool     InvokeColumnMouseMove(Column^ column, System::Drawing::Point clientLocation);
-        void     InvokeColumnMouseLeave(Column^ column);
-        void     InvokeColumnWidthChanged(Column^ column);
-        void     InvokeColumnFrozenChanged(Column^ column);
-        bool     InvokeBeginEdit(Cell^ cell);
-        void     InvokeEndEdit(CellEventArgs^ e);
-        void     InvokeScroll(System::Windows::Forms::ScrollEventArgs^ e);
-        bool     InvokeCellMouseMove(Cell^ cell, System::Drawing::Point clientLocation);
-        void     InvokeCellClick(Cell^ cell);
-        void     InvokeCellDoubleClick(Cell^ cell);
+        bool InvokeValueChanging(Cell^ cell, System::Object^ value, System::Object^ oldValue);
+        void InvokeValueChanged(Cell^ cell);
+        bool InvokeInsertionRowInserting(Row^ row);
+        void InvokeInsertionRowInserted(Row^ row);
+        bool InvokeRowInserting(System::Object^ component);
+        void InvokeRowInserted(Row^ row);
+        bool InvokeRowRemoving(Row^ row);
+        void InvokeRowRemoved(RowRemovedEventArgs^ e);
+        bool InvokeColumnInserting(Column^ column);
+        void InvokeColumnInserted(Column^ column);
+        Column^ InvokeColumnBinding(System::ComponentModel::PropertyDescriptor^ propertyDescriptor, Column^ existColumn);
+        void InvokeColumnBinded(Column^ column);
+        bool InvokeColumnMouseDown(Column^ column, System::Drawing::Point clientLocation);
+        bool InvokeColumnMouseUp(Column^ column, System::Drawing::Point clientLocation);
+        void InvokeColumnMouseEnter(Column^ column, System::Drawing::Point clientLocation);
+        bool InvokeColumnMouseMove(Column^ column, System::Drawing::Point clientLocation);
+        void InvokeColumnMouseLeave(Column^ column);
+        void InvokeColumnWidthChanged(Column^ column);
+        void InvokeColumnFrozenChanged(Column^ column);
+        bool InvokeBeginEdit(Cell^ cell);
+        void InvokeEndEdit(CellEventArgs^ e);
+        void InvokeScroll(System::Windows::Forms::ScrollEventArgs^ e);
+        bool InvokeCellMouseMove(Cell^ cell, System::Drawing::Point clientLocation);
+        void InvokeCellClick(Cell^ cell);
+        void InvokeCellDoubleClick(Cell^ cell);
 
-        System::Object^     GetInternalService(System::Type^ serviceType);
+        System::Object^ GetInternalService(System::Type^ serviceType);
 
-        void     InvokeFocusChanging();
-        void     InvokeFocusChanged();
-        void     InvokeSelectedRowsChanged();
-        void     InvokeSelectedColumnsChanged();
-        void     InvokeSelectionChanged();
+        void InvokeFocusChanging();
+        void InvokeFocusChanged();
+        void InvokeSelectedRowsChanged();
+        void InvokeSelectedColumnsChanged();
+        void InvokeSelectionChanged();
 
-        void     OnStateBegin(System::EventArgs^ e);
-        void     OnStateEnd(System::EventArgs^ e);
+        void OnStateBegin(System::EventArgs^ e);
+        void OnStateEnd(System::EventArgs^ e);
 
-        bool     DesignTimeHitTest(System::Drawing::Point globalLocation);
+        bool DesignTimeSetCursor();
+        bool DesignTimeHitTest(System::Drawing::Point globalLocation);
+        void PostPaint(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle clipRectangle);
 
     internal: // properties
         //property _State State
@@ -1842,6 +1844,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 #ifdef _DEBUG
         virtual void OnInvalidated(System::Windows::Forms::InvalidateEventArgs^ e) override;
+        virtual void OnCursorChanged(System::EventArgs^ e) override;
 #endif
 
     private: // methods

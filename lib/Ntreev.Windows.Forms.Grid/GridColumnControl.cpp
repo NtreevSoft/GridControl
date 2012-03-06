@@ -36,7 +36,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_controlPainter = gcnew Win32::ControlPainter();
         m_control = CreateControlInstance(nullptr);
 
-        if(this->View != ViewType::Text)
+        if(this->ViewType != Ntreev::Windows::Forms::Grid::ViewType::Text)
         {
             m_viewControl = CreateControlInstance(nullptr);
             m_form = gcnew System::Windows::Forms::Form();
@@ -45,7 +45,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         m_eventCellMouseMove = gcnew CellMouseEventHandler(this, &ColumnControl<TControl>::gridControl_CellMouseMove);
-        NativeRef->m_customItemPaint = this->View != ViewType::Text;
+        NativeRef->m_customItemPaint = this->ViewType != Ntreev::Windows::Forms::Grid::ViewType::Text;
     }
 
     generic<class TControl> where TControl : System::Windows::Forms::Control
@@ -54,7 +54,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_controlPainter = gcnew Win32::ControlPainter();
         m_control = CreateControlInstance(controlArgs);
 
-        if(this->View != ViewType::Text)
+        if(this->ViewType != Ntreev::Windows::Forms::Grid::ViewType::Text)
         {
             m_viewControl = CreateControlInstance(controlArgs);
             m_form = gcnew System::Windows::Forms::Form();
@@ -62,7 +62,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         m_eventCellMouseMove = gcnew CellMouseEventHandler(this, &ColumnControl<TControl>::gridControl_CellMouseMove);
-        NativeRef->m_customItemPaint = this->View != ViewType::Text;
+        NativeRef->m_customItemPaint = this->ViewType != Ntreev::Windows::Forms::Grid::ViewType::Text;
     }
 
     generic<class TControl> where TControl : System::Windows::Forms::Control
@@ -105,28 +105,27 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         else
             m_form->ActiveControl = nullptr;
 
-        //System::Diagnostics::Trace::WriteLine(m_form->Cursor);
-        //if(m_form->Cursor != System::Windows::Forms::Cursors::Default)
-        //    GridControl->Cursor = m_form->Cursor;
-
-        if((cell->State & CellState::Hot) == CellState::Hot)
+        if(this->Site == nullptr)
         {
-            System::Windows::Forms::Message msg;
-            msg.HWnd = m_viewControl->Handle;
-            msg.Msg = (int)Win32::WM::WM_MOUSEMOVE;
-            msg.WParam = System::IntPtr(0);
-            System::Drawing::Point location = m_viewControl->PointToClient(System::Windows::Forms::Cursor::Position);
-            msg.LParam = Win32::API::MakeLParam(location.X, location.Y);
-            Win32::API::SendMessage(msg);
-        }
-        else
-        {
-            System::Windows::Forms::Message msg;
-            msg.HWnd = m_viewControl->Handle;
-            msg.Msg = (int)Win32::WM::WM_MOUSELEAVE;
-            msg.WParam = System::IntPtr(0);
-            msg.LParam = System::IntPtr(0);
-            Win32::API::SendMessage(msg);
+            if((cell->State & CellState::Hot) == CellState::Hot)
+            {
+                System::Windows::Forms::Message msg;
+                msg.HWnd = m_viewControl->Handle;
+                msg.Msg = (int)Win32::WM::WM_MOUSEMOVE;
+                msg.WParam = System::IntPtr(0);
+                System::Drawing::Point location = m_viewControl->PointToClient(System::Windows::Forms::Cursor::Position);
+                msg.LParam = Win32::API::MakeLParam(location.X, location.Y);
+                Win32::API::SendMessage(msg);
+            }
+            else
+            {
+                System::Windows::Forms::Message msg;
+                msg.HWnd = m_viewControl->Handle;
+                msg.Msg = (int)Win32::WM::WM_MOUSELEAVE;
+                msg.WParam = System::IntPtr(0);
+                msg.LParam = System::IntPtr(0);
+                Win32::API::SendMessage(msg);
+            }
         }
 
         try
@@ -219,19 +218,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         //SetControlLayout(m_viewControl, e->Cell);
         //SetControlValue(m_viewControl, e->Cell->Value);
 
-        System::Windows::Forms::Message msg;
+        if(this->Site == nullptr)
+        {
+            System::Windows::Forms::Message msg;
 
-        msg.HWnd = m_viewControl->Handle;
-        msg.Msg = (int)Win32::WM::WM_MOUSEMOVE;
-        msg.WParam = System::IntPtr(0);
-        msg.LParam = Win32::API::MakeLParam(location.X, location.Y);
-        Win32::API::SendMessage(msg);
+            msg.HWnd = m_viewControl->Handle;
+            msg.Msg = (int)Win32::WM::WM_MOUSEMOVE;
+            msg.WParam = System::IntPtr(0);
+            msg.LParam = Win32::API::MakeLParam(location.X, location.Y);
+            Win32::API::SendMessage(msg);
 
-        msg.HWnd = m_viewControl->Handle;
-        msg.Msg = (int)Win32::WM::WM_SETCURSOR;
-        msg.WParam = m_viewControl->Handle;
-        msg.LParam = System::IntPtr(1);
-        Win32::API::SendMessage(msg);
+            msg.HWnd = m_viewControl->Handle;
+            msg.Msg = (int)Win32::WM::WM_SETCURSOR;
+            msg.WParam = m_viewControl->Handle;
+            msg.LParam = System::IntPtr(1);
+            Win32::API::SendMessage(msg);
+        }
 
 
 

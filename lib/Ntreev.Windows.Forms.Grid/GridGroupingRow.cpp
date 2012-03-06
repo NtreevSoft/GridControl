@@ -35,7 +35,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::String^ GroupingRow::Text::get()
     {
-        return gcnew System::String(m_pGroupingList->GetText());
+        return gcnew System::String(m_pGroupingList->GetText().c_str());
     }
 
     void GroupingRow::Text::set(System::String^ text)

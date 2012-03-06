@@ -35,8 +35,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         System::Object^ m_pObject;
     public:
-        Lock(System::Object^ pObject )
-            : m_pObject( pObject ) 
+        Lock(System::Object^ pObject)
+            : m_pObject(pObject) 
         {
             System::Threading::Monitor::Enter(m_pObject);
         }

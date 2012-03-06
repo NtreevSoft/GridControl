@@ -178,12 +178,15 @@ namespace Ntreev.Windows.Forms.Grid.Design
         protected override bool GetHitTest(System.Drawing.Point point)
         {
             GridControl gridControl = this.Control as GridControl;
-            if (gridControl == null)
-            {
-                 return false;
-            }
-
             return gridControl.DesignTimeHitTest(point);
+        }
+
+        protected override void OnSetCursor()
+        {
+            GridControl gridControl = this.Control as GridControl;
+            if (gridControl.DesignTimeSetCursor() == true)
+                return;
+            base.OnSetCursor();
         }
 
         protected override void Dispose(bool disposing)

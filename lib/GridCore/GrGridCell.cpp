@@ -155,6 +155,27 @@ void GrItemMouseEventArgs::SetHandled(bool value)
     m_handled = value;
 }
 
+GrRowMouseEventArgs::GrRowMouseEventArgs(GrRow* pRow, const GrPoint& location, GrKeys modifierKeys)
+: GrMouseEventArgs(location, modifierKeys), m_pRow(pRow), m_handled(false)
+{
+
+}
+
+GrRow* GrRowMouseEventArgs::GetRow() const
+{
+    return m_pRow;
+}
+
+bool GrRowMouseEventArgs::GetHandled() const
+{
+    return m_handled;
+}
+
+void GrRowMouseEventArgs::SetHandled(bool value)
+{
+    m_handled = value;
+}
+
 GrFocusChangeArgs::GrFocusChangeArgs(IFocusable* pFocusable)
 : m_pFocusable(pFocusable)
 {
@@ -1069,12 +1090,12 @@ void GrCell::DrawText(GrGridPainter* pPainter, GrColor foreColor, const GrRect& 
                 clipRect.bottom = std::min(clipRect.bottom, pClipRect->bottom);
             }
 
-            pPainter->DrawText(pFont, GetText() + cl.textBegin, cl.length, textRect, foreColor, &clipRect);
+            pPainter->DrawText(pFont, GetText().c_str() + cl.textBegin, cl.length, textRect, foreColor, &clipRect);
             //pPainter->DrawRectangle(textRect, GrColor::Black);
         }
         else
         {
-            pPainter->DrawText(pFont, GetText() + cl.textBegin, cl.length, textRect, foreColor);
+            pPainter->DrawText(pFont, GetText().c_str() + cl.textBegin, cl.length, textRect, foreColor);
             //pPainter->DrawRectangle(textRect, GrColor::Black);
         }
     }
@@ -1121,12 +1142,12 @@ bool GrCell::ContainsVert(int y) const
     return true;
 }
 
-const wchar_t* GrCell::GetText() const
+const std::wstring& GrCell::GetText() const
 {
-    return m_text.c_str();
+    return m_text;
 }
 
-void GrCell::SetText(const wchar_t* text)
+void GrCell::SetText(const std::wstring& text)
 {
     if(m_text.compare(text) == 0)
         return;
@@ -1440,6 +1461,18 @@ void GrItem::SetFocused(bool b)
         pFocuser->Set(this);
     else
         pFocuser->Set(IFocusable::Null);
+}
+
+const std::wstring& GrItem::GetErrorDescription() const
+{
+    return m_errorDescription;
+}
+
+void GrItem::SetErrorDescription(const std::wstring& errorDescription)
+{
+    if(m_errorDescription.compare(errorDescription) == 0)
+        return;
+    m_errorDescription = errorDescription;
 }
 
 void GrItem::LockColor(bool b)
@@ -2745,9 +2778,9 @@ void GrColumn::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
         {
             const GrLineDesc& cl = GetTextLine(0);
             if(GetClipped() == true)
-                pPainter->DrawColumnText(GetPaintingFont(), GetText() + cl.textBegin, cl.length, textRect, foreColor, &clipRect);
+                pPainter->DrawColumnText(GetPaintingFont(), GetText().c_str() + cl.textBegin, cl.length, textRect, foreColor, &clipRect);
             else
-                pPainter->DrawColumnText(GetPaintingFont(), GetText() + cl.textBegin, cl.length, textRect, foreColor);
+                pPainter->DrawColumnText(GetPaintingFont(), GetText().c_str() + cl.textBegin, cl.length, textRect, foreColor);
         }
     }
 }
@@ -5311,12 +5344,14 @@ int GrGroupingInfo::GetY() const
 
 int GrGroupingInfo::GetWidth() const
 {
-    return GetTextBounds().GetWidth() + 20;
+    return GetTextBounds().GetWidth() + 
+        (int)(GetPaintingFont()->GetHeight() * 0.25f) + 
+        GetPadding().GetHorizontal() + SortGlyphSize;
 }
 
 int GrGroupingInfo::GetHeight() const
 {
-    return GetPaintingFont()->GetHeight() + GetPadding().GetVertical() + 10;
+    return (int)(GetPaintingFont()->GetHeight() * 1.25f) + GetPadding().GetVertical();
 }
 
 GrHorzAlign GrGroupingInfo::GetTextHorzAlign() const
@@ -5341,14 +5376,15 @@ void GrGroupingInfo::Paint(GrGridPainter* pPainter, const GrRect& /*clipRect*/) 
 
     GrColor backColor = m_pColumn->GetPaintingBackColor();
     GrColor foreColor = m_pColumn->GetPaintingForeColor();
+    GrPadding padding = GetPadding();
 
     pPainter->DrawColumn(paintStyle, paintRect, backColor);
 
     GrRect sortRect;
-    sortRect.right  = paintRect.right - 6;
-    sortRect.left   = sortRect.right - 10;
-    sortRect.top    = (paintRect.bottom + paintRect.top) / 2 - 5;
-    sortRect.bottom = sortRect.top + 10;
+    sortRect.right  = paintRect.right - padding.right;
+    sortRect.left   = sortRect.right - SortGlyphSize;
+    sortRect.top    = (paintRect.bottom + paintRect.top - SortGlyphSize) / 2;
+    sortRect.bottom = sortRect.top + SortGlyphSize;
 
     pPainter->DrawSortGlyph(sortRect, m_sortType);
     DrawText(pPainter, foreColor, paintRect);
@@ -5536,7 +5572,7 @@ bool GrSortFunc::SortRowsDown(GrGridCore* pGridCore, const GrRow* pRow1, const G
 
 bool GrSortFunc::SortRowsUp(GrGridCore* /*pGridCore*/, const GrRow* pRow1, const GrRow* pRow2, void* /*userData*/)
 {
-    int result = wcscmp(pRow1->GetText(), pRow2->GetText());
+    int result = pRow1->GetText().compare(pRow2->GetText());
     if(result == 0)
         return pRow1->GetID() < pRow2->GetID();
     return result < 0 ? true : false;
@@ -5568,11 +5604,11 @@ bool GrSortFunc::SortDataRowSortUp(GrGridCore* /*pGridCore*/, const GrRow* pRow1
             GrColumn* pColumn = (GrColumn*)userData;
             const GrItem* pItem1= ((const GrDataRow*)pRow1)->GetItem(pColumn);
             const GrItem* pItem2 = ((const GrDataRow*)pRow2)->GetItem(pColumn);
-            return wcscmp(pItem1->GetText(), pItem2->GetText()) < 0 ? true : false;
+            return pItem1->GetText().compare(pItem2->GetText()) < 0 ? true : false;
         }
         else if(pRow1->GetRowType() == GrRowType_GroupingRow)
         {
-            return wcscmp(pRow1->GetText(), pRow2->GetText()) < 0 ? true : false;
+            return pRow1->GetText().compare(pRow2->GetText()) < 0 ? true : false;
         }
         else
         {

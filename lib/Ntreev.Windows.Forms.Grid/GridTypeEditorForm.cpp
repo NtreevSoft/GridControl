@@ -121,7 +121,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             {
                 if (m.WParam == System::IntPtr(1))
                 {
-                    int qwer=0;
+                    //int qwer=0;
                     //m_dropDownForm->CancelEdit(false);
                 }
             }
@@ -532,7 +532,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             break;
         case EditingReasonType::Ime:
             {
-                System::Char imeChar = Win32::API::ImmGetVirtualKey(m_gridControl->Handle);
+                //System::Char imeChar = Win32::API::ImmGetVirtualKey(m_gridControl->Handle);
 
                 System::Windows::Forms::Message msg;
                 msg.HWnd = ActiveControl->Handle;
@@ -671,7 +671,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         ShowDialog();
     }
 
-    void TypeEditorForm::control_Resize(System::Object^ sender, System::EventArgs^ e)
+    void TypeEditorForm::control_Resize(System::Object^ /*sender*/, System::EventArgs^ /*e*/)
     {
         if ((m_control != nullptr) && m_resizing == false)
         {

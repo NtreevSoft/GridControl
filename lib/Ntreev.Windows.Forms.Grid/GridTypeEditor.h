@@ -203,9 +203,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         }
 
     public:
-        property ViewType View
+        property Ntreev::Windows::Forms::Grid::ViewType ViewType
         {
-            virtual ViewType get() { return ViewType::Text; }
+            virtual Ntreev::Windows::Forms::Grid::ViewType get() { return Ntreev::Windows::Forms::Grid::ViewType::Text; }
         }
 
     private:
@@ -259,13 +259,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         virtual void PaintValue(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle paintRect, ICell^ cell, System::Object^ value) override;
 
     public:
-        property ViewType View
+        property Ntreev::Windows::Forms::Grid::ViewType ViewType
         {
-            virtual ViewType get() override 
+            virtual Ntreev::Windows::Forms::Grid::ViewType get() override 
             {
                 if(m_typeEditor->GetPaintValueSupported() == true)
-                    return ViewType::Icon;
-                return ViewType::Text; 
+                    return Ntreev::Windows::Forms::Grid::ViewType::Icon;
+                return Ntreev::Windows::Forms::Grid::ViewType::Text; 
             }
         }
 
@@ -295,9 +295,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         virtual void PaintValue(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle paintRect, ICell^ cell, System::Object^ value) override;
 
     public:
-        property ViewType View
+        property Ntreev::Windows::Forms::Grid::ViewType ViewType
         {
-            virtual ViewType get() override { return ViewType::Custom; }
+            virtual Ntreev::Windows::Forms::Grid::ViewType get() override { return Ntreev::Windows::Forms::Grid::ViewType::Custom; }
         }
 
     private:

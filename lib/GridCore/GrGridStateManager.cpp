@@ -273,6 +273,11 @@ void GrStateManager::ChangeState(GrGridState state, GrCell* pCell, void* userDat
     ChangeState(m_states[(int)state], pCell, userData);
 }
 
+bool GrStateManager::SetCursor()
+{
+    return m_pGridWindow->SetCursor(m_state->GetCursor());
+}
+
 void GrStateManager::ChangeState(GrStateBase* state, GrCell* pHitted, void* userData)
 {
     GrStateBase* oldState = m_state;
@@ -413,6 +418,81 @@ void GrStateBase::OnGridCoreAttached()
     m_pGridWindow   = m_pGridCore->GetGridWindow();
 }
 
+void GrStateBase::InvokeMouseEvent(GrCell* pOldCell, GrCell* pNewCell, GrStateMouseEventArgs* e)
+{
+    if(pOldCell == pNewCell)
+        return;
+
+    if(pOldCell != NULL)
+    {
+        switch(pOldCell->GetCellType())
+        {
+        case GrCellType_Item:
+            {
+                GrItemMouseEventArgs e1((GrItem*)pOldCell, e->GetLocalHit(), e->GetModifierKeys());
+                m_pGridCore->Invoke(L"ItemMouseLeave", &e1);
+            }
+            break;
+        case GrCellType_Column:
+            {
+                GrColumnMouseEventArgs e2((GrColumn*)pOldCell, e->GetLocalHit(), e->GetModifierKeys());
+                m_pGridCore->Invoke(L"ColumnMouseLeave", &e2);
+            }
+            break;
+        case GrCellType_Row:
+            {
+                GrRowMouseEventArgs e2((GrRow*)pOldCell, e->GetLocalHit(), e->GetModifierKeys());
+                m_pGridCore->Invoke(L"RowMouseLeave", &e2);
+            }
+            break;
+        default:
+            break;
+        }
+    }
+
+    if(pNewCell != NULL)
+    {
+        switch(pNewCell->GetCellType())
+        {
+        case GrCellType_Item:
+            {
+                GrItemMouseEventArgs e1((GrItem*)pNewCell, e->GetLocalHit(), e->GetModifierKeys());
+                m_pGridCore->Invoke(L"ItemMouseEnter", &e1);
+                m_pGridCore->Invoke(L"ItemMouseMove", &e1);
+                if(e1.GetHandled() == true)
+                {
+                    e->SetHandled(true);
+                }
+            }
+            break;
+        case GrCellType_Column:
+            {
+                GrColumnMouseEventArgs e2((GrColumn*)pNewCell, e->GetLocalHit(), e->GetModifierKeys());
+                m_pGridCore->Invoke(L"ColumnMouseEnter", &e2);
+                m_pGridCore->Invoke(L"ColumnMouseMove", &e2);
+                if(e2.GetHandled() == true)
+                {
+                    e->SetHandled(true);
+                }
+            }
+            break;
+            case GrCellType_Row:
+            {
+                GrRowMouseEventArgs e2((GrRow*)pNewCell, e->GetLocalHit(), e->GetModifierKeys());
+                m_pGridCore->Invoke(L"RowMouseEnter", &e2);
+                m_pGridCore->Invoke(L"RowMouseMove", &e2);
+                if(e2.GetHandled() == true)
+                {
+                    e->SetHandled(true);
+                }
+            }
+            break;
+        default:
+            break;
+        }
+    }
+}
+
 
 namespace GridStateClass
 {
@@ -439,94 +519,12 @@ namespace GridStateClass
 
     void Normal::OnMouseMove(GrStateMouseEventArgs* e)
     {
-        GrColumnList* pColumnList = m_pGridCore->GetColumnList();
         GrCell* pCell = e->GetCell();
 
         m_pGridCore->SetMouseOver(pCell, e->GetLocalHit());
 
-        if(pCell != m_pCell)
-        {
-            if(m_pCell != NULL)
-            {
-                switch(m_pCell->GetCellType())
-                {
-                case GrCellType_Item:
-                    {
-                        GrItemMouseEventArgs e1((GrItem*)m_pCell, e->GetLocalHit(), e->GetModifierKeys());
-                        m_pGridCore->Invoke(L"ItemMouseLeave", &e1);
-                    }
-                    break;
-                case GrCellType_Column:
-                    {
-                        GrColumnMouseEventArgs e2((GrColumn*)m_pCell, e->GetLocalHit(), e->GetModifierKeys());
-                        pColumnList->Invoke(L"ColumnMouseLeave", &e2);
-                    }
-                    break;
-                default:
-                    break;
-                }
-            }
-
-            if(pCell != NULL)
-            {
-                switch(pCell->GetCellType())
-                {
-                case GrCellType_Item:
-                    {
-                        GrItemMouseEventArgs e1((GrItem*)pCell, e->GetLocalHit(), e->GetModifierKeys());
-                        m_pGridCore->Invoke(L"ItemMouseEnter", &e1);
-                        m_pGridCore->Invoke(L"ItemMouseMove", &e1);
-                        if(e1.GetHandled() == true)
-                        {
-                            e->SetHandled(true);
-                        }
-                    }
-                    break;
-                case GrCellType_Column:
-                    {
-                        GrColumnMouseEventArgs e2((GrColumn*)pCell, e->GetLocalHit(), e->GetModifierKeys());
-                        pColumnList->Invoke(L"ColumnMouseEnter", &e2);
-                        pColumnList->Invoke(L"ColumnMouseMove", &e2);
-                        if(e2.GetHandled() == true)
-                        {
-                            e->SetHandled(true);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-                }
-            }
-            m_pCell = pCell;
-        }
-        else if(m_pCell != NULL)
-        {
-            switch(m_pCell->GetCellType())
-            {
-            case GrCellType_Item:
-                {
-                    GrItemMouseEventArgs e1((GrItem*)m_pCell, e->GetLocalHit(), e->GetModifierKeys());
-                    m_pGridCore->Invoke(L"ItemMouseMove", &e1);
-                    if(e1.GetHandled() == true)
-                    {
-                        e->SetHandled(true);
-                    }
-                }
-                break;
-            case GrCellType_Column:
-                {
-                    GrColumnMouseEventArgs e2((GrColumn*)m_pCell, e->GetLocalHit(), e->GetModifierKeys());
-                    pColumnList->Invoke(L"ColumnMouseMove", &e2);
-                    if(e2.GetHandled() == true)
-                    {
-                        e->SetHandled(true);
-                    }
-                }
-                break;
-            default:
-                break;
-            }
-        }
+        InvokeMouseEvent(m_pCell, pCell, e);
+        m_pCell = pCell;
     }
 
     void Normal::OnMouseWheel(GrMouseEventArgs* e)
@@ -1662,66 +1660,11 @@ namespace GridStateClass
 
     void ItemEditing::OnMouseMove(GrStateMouseEventArgs* e)
     {
-        GrColumnList* pColumnList = m_pGridCore->GetColumnList();
         GrCell* pCell = e->GetCell();
         GrCell* pOldCell = m_pGridCore->GetMouseOver();
 
         m_pGridCore->SetMouseOver(pCell, e->GetLocalHit());
-
-        if(pCell != pOldCell)
-        {
-            if(pOldCell != NULL)
-            {
-                switch(pOldCell->GetCellType())
-                {
-                case GrCellType_Item:
-                    {
-                        GrItemMouseEventArgs e1((GrItem*)pOldCell, e->GetLocalHit(), e->GetModifierKeys());
-                        m_pGridCore->Invoke(L"ItemMouseLeave", &e1);
-                    }
-                    break;
-                case GrCellType_Column:
-                    {
-                        GrColumnMouseEventArgs e2((GrColumn*)pOldCell, e->GetLocalHit(), e->GetModifierKeys());
-                        pColumnList->Invoke(L"ColumnMouseLeave", &e2);
-                    }
-                    break;
-                default:
-                    break;
-                }
-            }
-
-            if(pCell != NULL)
-            {
-                switch(pCell->GetCellType())
-                {
-                case GrCellType_Item:
-                    {
-                        GrItemMouseEventArgs e1((GrItem*)pCell, e->GetLocalHit(), e->GetModifierKeys());
-                        m_pGridCore->Invoke(L"ItemMouseEnter", &e1);
-                        m_pGridCore->Invoke(L"ItemMouseMove", &e1);
-                        if(e1.GetHandled() == true)
-                        {
-                            e->SetHandled(true);
-                        }
-                    }
-                    break;
-                case GrCellType_Column:
-                    {
-                        GrColumnMouseEventArgs e2((GrColumn*)pCell, e->GetLocalHit(), e->GetModifierKeys());
-                        pColumnList->Invoke(L"ColumnMouseEnter", &e2);
-                        pColumnList->Invoke(L"ColumnMouseMove", &e2);
-                        if(e2.GetHandled() == true)
-                        {
-                            e->SetHandled(true);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-                }
-            }
-        }
+        InvokeMouseEvent(pOldCell, pCell, e);
     }
 
     void ItemEditing::OnMouseUp(GrStateMouseEventArgs* e)

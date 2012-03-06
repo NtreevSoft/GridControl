@@ -1,6 +1,74 @@
 #include "GrGridWindow.h"
 #include "GrGridCore.h"
 
+GrEditingReason::GrEditingReason()
+{
+    editingType = GrEditingType_None;
+}
+
+GrEditingReason::GrEditingReason(wchar_t character, bool ime)
+{
+    if(ime == true)
+        editingType = GrEditingType_Ime;
+    else
+        editingType = GrEditingType_Char;
+    this->character = character;
+}
+
+GrEditingReason::GrEditingReason(GrKeys key)
+{
+    editingType = GrEditingType_Key;
+    this->key = key;
+}
+
+GrEditingReason::GrEditingReason(GrPoint location)
+{
+    editingType = GrEditingType_Mouse;
+    this->location = location;
+}
+
+GrEditEventArgs::GrEditEventArgs(GrItem* pItem, GrEditingReason reason)
+: m_pItem(pItem), m_reason(reason), m_handled(false)
+{
+
+}
+
+GrItem* GrEditEventArgs::GetItem() const 
+{
+    return m_pItem; 
+}
+
+GrEditingReason GrEditEventArgs::GetReason() const 
+{
+    return m_reason; 
+}
+
+bool GrEditEventArgs::GetHandled() const 
+{
+    return m_handled; 
+}
+
+void GrEditEventArgs::SetHandled(bool b)
+{
+    m_handled = b; 
+}
+
+GrElapsedEventArgs::GrElapsedEventArgs(time_t signalTime)
+: m_signalTime(signalTime) 
+{
+
+}
+
+time_t GrElapsedEventArgs::GetSignalTime() const
+{
+    return m_signalTime; 
+}
+
+void GrInvalidator::Invalidate(const GrRect& rect)
+{
+    Invalidate(rect.left, rect.top, rect.GetWidth(), rect.GetHeight()); 
+}
+
 void GrTimer::InvokeElapsed(time_t signalTime)
 {
     GrElapsedEventArgs e(signalTime);
@@ -123,10 +191,13 @@ void GrGridWindow::OnUpdate()
 
 void GrGridWindow::OnPaint(void* painterDevice, const GrRect& clipping)
 {
-    GrRect clippingRect(clipping.left, clipping.top, clipping.right,clipping.bottom);
     GrGridPainter* pPainter = GetGridPainter();
     pPainter->BeginPaint(painterDevice);
-    m_pGridCore->Paint(pPainter, clippingRect);
+    m_pGridCore->BeginPaint();
+    m_pGridCore->PrePaint(pPainter, clipping);
+    m_pGridCore->Paint(pPainter, clipping);
+    m_pGridCore->PostPaint(pPainter, clipping);
+    m_pGridCore->EndPaint();
     pPainter->EndPaint();
 }
 

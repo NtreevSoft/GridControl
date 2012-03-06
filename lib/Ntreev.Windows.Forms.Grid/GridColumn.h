@@ -529,7 +529,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 열의 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
         /// </returns>
         /// <exception cref="System::ArgumentException">0보다 작은 수를 설정할때.</exception>
-        [System::ComponentModel::CategoryAttribute("Layout"), System::ComponentModel::DefaultValueAttribute(100)]
+        [System::ComponentModel::CategoryAttribute("Layout")]
+        [System::ComponentModel::DefaultValueAttribute(100)]
         property int Width
         {
             int get();
@@ -543,7 +544,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 열의 최소 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
         /// </returns>
         /// <exception cref="System::ArgumentException">0보다 작거나 최대 너비보다 큰 수를 설정할때.</exception>
-        [System::ComponentModel::CategoryAttribute("Layout"), System::ComponentModel::DefaultValueAttribute(30)]
+        [System::ComponentModel::CategoryAttribute("Layout")]
+        [System::ComponentModel::DefaultValueAttribute(30)]
         property int MinWidth
         {
             virtual int get() sealed;
@@ -557,7 +559,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 열의 최대 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
         /// </returns>
         /// <exception cref="System::ArgumentException">0보다 작거나 최소 너비보다 작은 수를 설정할때.</exception>
-        [System::ComponentModel::CategoryAttribute("Layout"), System::ComponentModel::DefaultValueAttribute(10000)]
+        [System::ComponentModel::CategoryAttribute("Layout")]
+        [System::ComponentModel::DefaultValueAttribute(10000)]
         property int MaxWidth
         {
             virtual int get() sealed;
@@ -570,7 +573,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 열이 표시되면 true를, 그렇지 않다면 false를 가져옵니다.
         /// </returns>
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool IsVisible
         {
             virtual bool get() sealed;
@@ -587,7 +591,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 열의 위치 이동이 가능하다면 true를, 그렇지 않다면 false를 가져옵니다.
         /// </returns>
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool IsMovable
         {
             virtual bool get() sealed;
@@ -604,7 +609,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 열의 너비 조절이 가능하면 true를, 그렇지 않다면 false를 반환합니다.
         /// </returns>
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool IsResizable
         {
             virtual bool get() sealed;
@@ -621,7 +627,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 열의 갯수가 많아 화면에 다 표시 되지 못할때는 수평 스크롤을 통해서 보이지 않는 열을 볼 수 있습니다. 
         /// 이 속성의 값이 true이면 분할면을 기준으로 좌측에 배치되어 수평 스크롤을 해도 움직이지 않고 고정되어 항상 화면에 표시할 수 있습니다.
         /// </remarks>
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(false)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(false)]
         property bool IsFrozen
         {
             virtual bool get() sealed;
@@ -637,7 +644,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <remarks>
         /// 이 속성의 값이 true이면 열이 소유한 모든 셀이 읽기 전용으로 적용됩니다.
         /// </remarks>
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(false)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(false)]
         property bool IsReadOnly
         {
             virtual bool get() sealed;
@@ -650,7 +658,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 정렬이 가능하다면 true를, 그렇지 않다면 false를 반환합니다.
         /// </returns>
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool CanBeSorted
         {
             virtual bool get() sealed;
@@ -808,7 +817,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 그리드 컨트롤에 종속되었다면 종속된 순서(0부터 시작)를 반환하고, 그렇지 않다면 -1를 반환합니다.
         /// </returns>
         [System::ComponentModel::DescriptionAttribute("컨트롤에 내에 Column 인덱스를 가져옵니다.")]
+#ifdef _DEBUG
         [System::ComponentModel::CategoryAttribute("Debug")]
+#endif
         property int Index
         {
             virtual int get() sealed; 
@@ -979,9 +990,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 셀의 값을 그리기 위해 <see cref="PaintValue"/>를 사용하려면 true를, 그렇지 않으면 false를 반환합니다.
         /// </returns>
-        property ViewType View
+        property Ntreev::Windows::Forms::Grid::ViewType ViewType
         {
-            virtual ViewType get();
+            virtual Ntreev::Windows::Forms::Grid::ViewType get();
         }
 
         /// <summary>
@@ -992,6 +1003,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         [System::ComponentModel::DefaultValueAttribute(false)]
         property bool HasLifeline;
+
+        property System::ComponentModel::ISite^ Site
+        {
+            virtual System::ComponentModel::ISite^ get();
+            virtual void set(System::ComponentModel::ISite^ value);
+        }
+
+    public: // events
+        event System::EventHandler^ Disposed
+        {
+            virtual void add(System::EventHandler^ p) { m_eventDisposed += p; }
+            virtual void remove(System::EventHandler^ p){ m_eventDisposed -= p; }
+        private:
+
+            virtual void raise(System::Object^ sender, System::EventArgs^ e) sealed { if(m_eventDisposed != nullptr) { m_eventDisposed->Invoke(sender, e); } }
+        }
 
     protected: // methods
         /// <summary>
@@ -1078,42 +1105,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             virtual Ntreev::Windows::Forms::Grid::ColumnState get() sealed = IColumn::ColumnState::get;
         }
 
-        property System::ComponentModel::ISite^ Site_IComponent
-        {
-            virtual System::ComponentModel::ISite^ get() sealed = System::ComponentModel::IComponent::Site::get { return m_site; }
-            virtual void set(System::ComponentModel::ISite^ value) sealed  = System::ComponentModel::IComponent::Site::set;
-        }
-
-    private: // events
-        event System::EventHandler^ Disposed_IComponent
-        {
-            virtual void add(System::EventHandler^ p) sealed = System::ComponentModel::IComponent::Disposed::add { m_eventDisposed += p; }
-            virtual void remove(System::EventHandler^ p)  sealed = System::ComponentModel::IComponent::Disposed::remove { m_eventDisposed -= p; }
-        private:
-
-            virtual void raise(System::Object^ sender, System::EventArgs^ e) sealed { if(m_eventDisposed != nullptr) { m_eventDisposed->Invoke(sender, e); } }
-        }
-
     private: // variables
-        System::Type^      m_dataType;
-        System::ComponentModel::TypeConverter^ m_typeConverter;
-        System::String^      m_title;
-        System::String^      m_name;
-        System::String^      m_tooltip;
-        System::ComponentModel::PropertyDescriptor^  m_propertyDescriptor;
+        System::Type^   m_dataType;
+        System::String^ m_title;
+        System::String^ m_name;
+        System::String^ m_tooltip;
         System::Collections::IComparer^ m_sortComparer;
+        System::ComponentModel::TypeConverter^ m_typeConverter;
+        System::ComponentModel::PropertyDescriptor^  m_propertyDescriptor;
+        
+        System::Object^ m_defaultValue;
+        Ntreev::Windows::Forms::Grid::ColumnPainter^ m_columnPainter;
+        Design::TypeEditor^ m_typeEditor;
 
-        System::Object^      m_defaultValue;
-        Ntreev::Windows::Forms::Grid::ColumnPainter^    m_columnPainter;
-
-        class CustomPaint*   m_pCustomPaint;
-
-        System::EventHandler^    m_eventDisposed;
+        System::EventHandler^ m_eventDisposed;
         System::ComponentModel::ISite^ m_site;
 
-        Design::TypeEditor^         m_typeEditor;
+        class CustomPaint*  m_pCustomPaint;
         GrColumn*     m_pColumn;
     };
-
-
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

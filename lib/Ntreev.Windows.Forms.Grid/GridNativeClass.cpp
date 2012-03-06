@@ -405,7 +405,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         return false;
     }
 
-    void WinFormWindow::SetCursor(GrCursor cursor)
+    bool WinFormWindow::SetCursor(GrCursor cursor)
     {
         using namespace System::Windows::Forms;
         Cursor^ temp = Cursors::Default;
@@ -443,7 +443,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         if(m_gridControl->Cursor != temp)
         {
             m_gridControl->Cursor = temp;
+            return true;
         }
+
+        return false;
     }
 
     GrKeys WinFormWindow::GetModifierKeys() const
@@ -646,6 +649,43 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     {
         GrGridCore::OnItemMouseLeave(e);
         m_gridControl->ToolTip->Hide();
+    }
+
+    void WinFormGridCore::OnRowMouseEnter(GrRowMouseEventArgs* e)
+    {
+        GrGridCore::OnRowMouseEnter(e);
+        GrDataRow* pDataRow = dynamic_cast<GrDataRow*>(e->GetRow());
+        if(pDataRow == nullptr)
+            return;
+
+        try
+        {
+            Row^ row = Row::FromNative(pDataRow);
+            if(row->ErrorDescription != System::String::Empty)
+                m_gridControl->ToolTip->Show(row->ErrorDescription);
+        }
+        catch(System::Exception^)
+        {
+        }
+    }
+
+    void WinFormGridCore::OnRowMouseMove(GrRowMouseEventArgs* /*e*/)
+    {
+
+    }
+
+    void WinFormGridCore::OnRowMouseLeave(GrRowMouseEventArgs* e)
+    {
+        GrGridCore::OnRowMouseLeave(e);
+        m_gridControl->ToolTip->Hide();
+    }
+
+    void WinFormGridCore::PostPaint(GrGridPainter* pPainter, const GrRect& clipRect) const
+    {
+        System::Drawing::Graphics^ graphics = System::Drawing::Graphics::FromHdc(System::IntPtr(pPainter->GetDevice()));
+        m_gridControl->PostPaint(graphics, clipRect);
+        delete graphics;
+        GrGridCore::PostPaint(pPainter, clipRect);
     }
 
     void WinFormGridCore::columnList_ColumnMouseDown(GrObject* /*pSender*/, GrColumnMouseEventArgs* e)

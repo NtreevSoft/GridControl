@@ -203,7 +203,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             m_site->Container->Remove(this);
         }
 
-        this->Disposed_IComponent(this, System::EventArgs::Empty);
+        this->Disposed(this, System::EventArgs::Empty);
 
         if(m_pColumn != nullptr)
         {
@@ -341,17 +341,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
             m_typeEditor = Design::TypeEditor::FromDataType(value->PropertyType);
 
-            switch(this->View)
+            switch(this->ViewType)
             {
-            case ViewType::Text:
+            case Ntreev::Windows::Forms::Grid::ViewType::Text:
                 m_pColumn->SetItemTextVisible(true);
                 m_pColumn->SetItemIcon(false);
                 break;
-            case ViewType::Icon:
+            case Ntreev::Windows::Forms::Grid::ViewType::Icon:
                 m_pColumn->SetItemTextVisible(true);
                 m_pColumn->SetItemIcon(true);
                 break;
-            case ViewType::Custom:
+            case Ntreev::Windows::Forms::Grid::ViewType::Custom:
                 m_pColumn->SetItemTextVisible(false);
                 m_pColumn->SetItemIcon(false);
                 break;
@@ -520,17 +520,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         m_typeEditor = Design::TypeEditor::FromDataType(value);
-        switch(this->View)
+        switch(this->ViewType)
         {
-        case ViewType::Text:
+        case Ntreev::Windows::Forms::Grid::ViewType::Text:
             m_pColumn->SetItemTextVisible(true);
             m_pColumn->SetItemIcon(false);
             break;
-        case ViewType::Icon:
+        case Ntreev::Windows::Forms::Grid::ViewType::Icon:
             m_pColumn->SetItemTextVisible(true);
             m_pColumn->SetItemIcon(true);
             break;
-        case ViewType::Custom:
+        case Ntreev::Windows::Forms::Grid::ViewType::Custom:
             m_pColumn->SetItemTextVisible(false);
             m_pColumn->SetItemIcon(false);
             break;
@@ -784,11 +784,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pColumn->SetItemClickEditing((GrClickEditing)value);
     }
 
-    ViewType Column::View::get()
+    Ntreev::Windows::Forms::Grid::ViewType Column::ViewType::get()
     {
         if(m_typeEditor == nullptr)
-            return ViewType::Text;
-        return m_typeEditor->View;
+            return Ntreev::Windows::Forms::Grid::ViewType::Text;
+        return m_typeEditor->ViewType;
     }
 
     void Column::RefreshAll()
@@ -987,9 +987,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return typeConverter->ConvertTo(value, m_propertyDescriptor->PropertyType);
     }
 
-    void Column::Site_IComponent::set(System::ComponentModel::ISite^ value)
+    void Column::Site::set(System::ComponentModel::ISite^ value)
     {
         m_site = value;
+    }
+
+    System::ComponentModel::ISite^ Column::Site::get()
+    {
+        return m_site;
     }
 
     Design::TypeEditor^ Column::TypeEditor::get()

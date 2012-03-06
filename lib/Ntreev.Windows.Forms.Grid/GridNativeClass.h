@@ -97,7 +97,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         GrSize    GetDragSize() const;
         bool    GetMouseDragEventSupported() const;
         int     GetEscapeKey() const;
-        void    SetCursor(GrCursor cursor);
+        bool    SetCursor(GrCursor cursor);
         GrKeys    GetModifierKeys() const;
 
         void    OnEditValue(GrEditEventArgs* e);
@@ -151,20 +151,26 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         WinFormGridCore(gcroot<Ntreev::Windows::Forms::Grid::GridControl^> gridControl, GrGridWindow* pGridWindow);
 
     protected:
+        virtual void OnItemMouseEnter(GrItemMouseEventArgs* e);
         virtual void OnItemMouseMove(GrItemMouseEventArgs* e);
+        virtual void OnItemMouseLeave(GrItemMouseEventArgs* e);
         virtual void OnItemMouseClick(GrItemMouseEventArgs* e);
         virtual void OnItemMouseDoubleClick(GrItemMouseEventArgs* e);
-        virtual void OnItemMouseEnter(GrItemMouseEventArgs* e);
-        virtual void OnItemMouseLeave(GrItemMouseEventArgs* e);
+
+        virtual void OnRowMouseEnter(GrRowMouseEventArgs* e);
+        virtual void OnRowMouseMove(GrRowMouseEventArgs* e);
+        virtual void OnRowMouseLeave(GrRowMouseEventArgs* e);
+
+        virtual void PostPaint(GrGridPainter* pPainter, const GrRect& clipRect) const;
 
     private:
-        void     columnList_ColumnMouseDown(GrObject* pSender, GrColumnMouseEventArgs* e);
-        void     columnList_ColumnMouseUp(GrObject* pSender, GrColumnMouseEventArgs* e);
-        void     columnList_ColumnMouseEnter(GrObject* pSender, GrColumnMouseEventArgs* e);
-        void     columnList_ColumnMouseLeave(GrObject* pSender, GrColumnMouseEventArgs* e);
-        void     columnList_ColumnMouseMove(GrObject* pSender, GrColumnMouseEventArgs* e);
+        void    columnList_ColumnMouseDown(GrObject* pSender, GrColumnMouseEventArgs* e);
+        void    columnList_ColumnMouseUp(GrObject* pSender, GrColumnMouseEventArgs* e);
+        void    columnList_ColumnMouseEnter(GrObject* pSender, GrColumnMouseEventArgs* e);
+        void    columnList_ColumnMouseLeave(GrObject* pSender, GrColumnMouseEventArgs* e);
+        void    columnList_ColumnMouseMove(GrObject* pSender, GrColumnMouseEventArgs* e);
         void    columnList_ColumnWidthChanged(GrObject* pSender, GrColumnEventArgs* e);
-        void                columnList_ColumnFrozenChanged(GrObject* pSender, GrColumnEventArgs* e);
+        void    columnList_ColumnFrozenChanged(GrObject* pSender, GrColumnEventArgs* e);
 
         void    focuser_FocusChanging(GrObject* pSender, GrFocusChangeArgs* e);
         void    focuser_FocusChanged(GrObject* pSender, GrFocusChangeArgs* e);

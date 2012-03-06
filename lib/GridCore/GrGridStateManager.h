@@ -113,7 +113,8 @@ public:
     virtual GrCursor    GetCursor() const { return GrCursor_Default; }
 
 protected:
-    virtual void OnGridCoreAttached();
+    virtual void        OnGridCoreAttached();
+    void                InvokeMouseEvent(GrCell* pOldCell, GrCell* pNewCell, GrStateMouseEventArgs* e);
 
 protected:
     class GrItemSelectorInternal* m_pItemSelector;
@@ -130,6 +131,7 @@ public:
 
     void                ChangeDefaultState();
     void                ChangeState(GrGridState gridState, GrCell* pCell, void* userData);
+    bool                SetCursor();
 
     GrGridState         GetHitTest(const GrPoint& location);
     GrGridState         GetGridState() const { return m_state->GetState(); }

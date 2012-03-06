@@ -81,9 +81,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <remarks>
         /// <see cref="ColumnControl"/>클래스의 인스턴스 생성시 이 속성이 true이면 셀을 표시하기 위한 별도의 컨트롤을 생성합니다.
         /// </remarks>
-        property ViewType View
+        property Ntreev::Windows::Forms::Grid::ViewType ViewType
         {
-            virtual ViewType get() override { return ViewType::Custom; }
+            virtual Ntreev::Windows::Forms::Grid::ViewType get() override { return Ntreev::Windows::Forms::Grid::ViewType::Custom; }
         }
 
     protected: // methods

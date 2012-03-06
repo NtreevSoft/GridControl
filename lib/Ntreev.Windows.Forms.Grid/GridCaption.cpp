@@ -36,7 +36,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::String^ CaptionRow::Text::get()
     {
-        return gcnew System::String(m_pCaption->GetText());
+        return gcnew System::String(m_pCaption->GetText().c_str());
     }
 
     void CaptionRow::Text::set(System::String^ text)

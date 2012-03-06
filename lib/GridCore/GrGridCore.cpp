@@ -396,13 +396,30 @@ GrRect GrGridCore::GetDataRect() const
     return dataRect;
 }
 
+void GrGridCore::PrePaint(GrGridPainter* /*pPainter*/, const GrRect& /*clipRect*/) const
+{
+    
+}
+
 void GrGridCore::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
+{
+    m_pRootRow->Paint(pPainter, clipRect);
+}
+
+void GrGridCore::PostPaint(GrGridPainter* pPainter, const GrRect& /*clipRect*/) const
+{
+    m_pStateManager->OnPaint(pPainter);    
+}
+
+void GrGridCore::BeginPaint()
 {
     uint horz = GetHorzScroll()->GetVisible() == true ? GetHorzScroll()->GetValue() : GetHorzScroll()->GetMinimum();
     uint vert = GetVertScroll()->GetVisible() == true ? GetVertScroll()->GetValue() : GetVertScroll()->GetMinimum();
     m_pRootRow->Clip(m_displayRect, horz, vert);
-    m_pRootRow->Paint(pPainter, clipRect);
-    m_pStateManager->OnPaint(pPainter);
+}
+
+void GrGridCore::EndPaint()
+{
     m_pInvalidator->Reset();
 }
 
@@ -700,6 +717,18 @@ void GrGridCore::Invoke(std::wstring eventName, GrEventArgs* e)
     {
         OnItemMouseDoubleClick((GrItemMouseEventArgs*)e);
     }
+    else if(eventName.compare(L"RowMouseEnter") == 0)
+    {
+        OnRowMouseEnter((GrRowMouseEventArgs*)e);
+    }
+    else if(eventName.compare(L"RowMouseMove") == 0)
+    {
+        OnRowMouseMove((GrRowMouseEventArgs*)e);
+    }
+    else if(eventName.compare(L"RowMouseLeave") == 0)
+    {
+        OnRowMouseLeave((GrRowMouseEventArgs*)e);
+    }
     else if(eventName.compare(L"close") == 0)
     {
         m_pStateManager->ChangeDefaultState();
@@ -709,7 +738,9 @@ void GrGridCore::Invoke(std::wstring eventName, GrEventArgs* e)
         OnFontChanged(e);
     }
     else
-        throw _Exception("Not implemented event");
+    {
+        m_pColumnList->Invoke(eventName, e);
+    }
 }
 
 void GrGridCore::OnEditValue(GrEditEventArgs* e)
@@ -740,6 +771,21 @@ void GrGridCore::OnItemMouseClick(GrItemMouseEventArgs* e)
 void GrGridCore::OnItemMouseDoubleClick(GrItemMouseEventArgs* e)
 {
     ItemMouseDoubleClick(this, e);
+}
+
+void GrGridCore::OnRowMouseEnter(GrRowMouseEventArgs* e)
+{
+    RowMouseEnter(this, e);
+}
+
+void GrGridCore::OnRowMouseMove(GrRowMouseEventArgs* e)
+{
+    RowMouseMove(this, e);
+}
+
+void GrGridCore::OnRowMouseLeave(GrRowMouseEventArgs* e)
+{
+    RowMouseLeave(this, e);
 }
 
 void GrGridCore::OnFontChanged(GrEventArgs* e)

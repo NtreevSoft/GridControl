@@ -34,8 +34,9 @@ class GrGridCore : public GrObject
 {
     typedef GrEvent<GrEventArgs, GrGridCore>        _GrEvent;
     typedef GrEvent<GrColumnEventArgs, GrGridCore>  _GrColumnEvent;
-    typedef GrEvent<GrEditEventArgs, GrGridCore> _GrBeginEditEvent;
+    typedef GrEvent<GrEditEventArgs, GrGridCore>    _GrBeginEditEvent;
     typedef GrEvent<GrItemMouseEventArgs, GrGridCore> _GrItemMouseEvent;
+    typedef GrEvent<GrRowMouseEventArgs, GrGridCore> _GrRowMouseEvent;
 
 public:
     GrGridCore(GrGridWindow* pGridWindow);
@@ -47,8 +48,6 @@ public:
 
     void                    Clear();
     bool                    Update(bool force = false);
-
-    void                    Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;    
 
     GrRootRow*              GetRootRow() const { return m_pRootRow; }
     GrDataRowList*          GetDataRowList() const { return m_pDataRowList; }
@@ -160,6 +159,9 @@ public:
     _GrItemMouseEvent       ItemMouseClick;
     _GrItemMouseEvent       ItemMouseDoubleClick;
 
+    _GrRowMouseEvent        RowMouseEnter;
+    _GrRowMouseEvent        RowMouseMove;
+    _GrRowMouseEvent        RowMouseLeave;
 
 protected:
     virtual void            OnCleared(GrEventArgs* e);
@@ -171,8 +173,16 @@ protected:
     virtual void            OnItemMouseLeave(GrItemMouseEventArgs* e);
     virtual void            OnItemMouseClick(GrItemMouseEventArgs* e);
     virtual void            OnItemMouseDoubleClick(GrItemMouseEventArgs* e);
+    
+    virtual void            OnRowMouseEnter(GrRowMouseEventArgs* e);
+    virtual void            OnRowMouseMove(GrRowMouseEventArgs* e);
+    virtual void            OnRowMouseLeave(GrRowMouseEventArgs* e);
 
     virtual void            OnFontChanged(GrEventArgs* e);
+
+    virtual void            PrePaint(GrGridPainter* pPainter, const GrRect& clipRect) const;
+    virtual void            Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
+    virtual void            PostPaint(GrGridPainter* pPainter, const GrRect& clipRect) const;
 
 private:
     void                    focuser_FocusChanging(GrObject* pSender, GrFocusChangeArgs* e);
@@ -186,6 +196,9 @@ private:
     void                    columnList_ColumnPaddingChanged(GrObject* pSender, GrColumnEventArgs* e);
 
     void                    groupingList_Changed(GrObject* pSender, GrEventArgs* e);
+
+    void                    BeginPaint();
+    void                    EndPaint();
 
 private:
     GrRootRow*              m_pRootRow;
@@ -246,4 +259,6 @@ private:
 
 public:
     static const GrClickEditing DefaultClickEditing;
+
+    friend class GrGridWindow;
 };

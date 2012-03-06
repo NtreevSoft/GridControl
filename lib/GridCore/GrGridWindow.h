@@ -17,31 +17,10 @@ enum GrEditingType
 
 struct GrEditingReason
 {
-    GrEditingReason()
-    {
-        editingType = GrEditingType_None;
-    }
-
-    GrEditingReason(wchar_t character, bool ime)
-    {
-        if(ime == true)
-            editingType = GrEditingType_Ime;
-        else
-            editingType = GrEditingType_Char;
-        this->character = character;
-    }
-
-    GrEditingReason(GrKeys key)
-    {
-        editingType = GrEditingType_Key;
-        this->key = key;
-    }
-
-    GrEditingReason(GrPoint location)
-    {
-        editingType = GrEditingType_Mouse;
-        this->location = location;
-    }
+    GrEditingReason();
+    GrEditingReason(wchar_t character, bool ime);
+    GrEditingReason(GrKeys key);
+    GrEditingReason(GrPoint location);
 
     GrEditingType   editingType;
     wchar_t         character;
@@ -53,29 +32,26 @@ struct GrEditingReason
 class GrEditEventArgs : public GrEventArgs
 {
 public:
-    GrEditEventArgs(GrItem* pItem, GrEditingReason reason)
-        : m_pItem(pItem), m_reason(reason), m_handled(false)
-    {
+    GrEditEventArgs(GrItem* pItem, GrEditingReason reason);
 
-    }
-
-    GrItem* GetItem() const { return m_pItem; }
-    GrEditingReason GetReason() const { return m_reason; }
-    bool GetHandled() const { return m_handled; }
-    void SetHandled(bool b) { m_handled = b; }
+    GrItem*         GetItem() const;
+    GrEditingReason GetReason() const;
+    bool            GetHandled() const;
+    void            SetHandled(bool b);
 
 private:
-    GrItem* m_pItem;
+    GrItem*         m_pItem;
     GrEditingReason m_reason;
-    bool m_handled;
+    bool            m_handled;
 };
 
 class GrElapsedEventArgs : public GrEventArgs
 {
 public:
-    GrElapsedEventArgs(time_t signalTime) : m_signalTime(signalTime) {}
+    GrElapsedEventArgs(time_t signalTime);
 
-    time_t GetSignalTime() const { return m_signalTime; }
+    time_t GetSignalTime() const;
+
 private:
     time_t m_signalTime;
 };
@@ -92,7 +68,7 @@ public:
 
     virtual bool        IsInvalidated() const = 0;
 
-    void                Invalidate(const GrRect& rect) { Invalidate(rect.left, rect.top, rect.GetWidth(), rect.GetHeight()); }
+    void                Invalidate(const GrRect& rect);
 };
 
 class GrScroll : public GrObject
@@ -143,7 +119,6 @@ enum GrCursor
     GrCursor_SizeWE,
     GrCursor_SizeNS,
 
-
     GrCursor_Unknown,
 };
 
@@ -156,7 +131,7 @@ public:
     virtual int                 GetMouseWheelScrollDelta() const = 0;
     virtual GrSize              GetDragSize() const = 0;
     virtual GrKeys              GetModifierKeys() const = 0;
-    virtual void                SetCursor(GrCursor cursor) = 0;
+    virtual bool                SetCursor(GrCursor cursor) = 0;
 
     virtual GrScroll*           GetHorzScroll() const = 0;
     virtual GrScroll*           GetVertScroll() const = 0;

@@ -161,6 +161,17 @@ private:
     int             m_delta;
 };
 
+class GrCellMouseEventArgs : public GrMouseEventArgs
+{
+public:
+    GrCellMouseEventArgs(GrCell* pCell, const GrPoint& location, GrKeys modifierKeys);
+
+    GrCell*         GetCell() const;
+
+private:
+    GrCell*         m_pCell;
+};
+
 class GrColumnMouseEventArgs : public GrMouseEventArgs
 {
 public:
@@ -175,15 +186,18 @@ private:
     bool            m_handled;
 };
 
-class GrCellMouseEventArgs : public GrMouseEventArgs
+class GrRowMouseEventArgs : public GrMouseEventArgs
 {
 public:
-    GrCellMouseEventArgs(GrCell* pCell, const GrPoint& location, GrKeys modifierKeys);
+    GrRowMouseEventArgs(GrRow* pRow, const GrPoint& location, GrKeys modifierKeys);
 
-    GrCell*         GetCell() const;
+    GrRow*          GetRow() const;
+    bool            GetHandled() const;
+    void            SetHandled(bool value);
 
 private:
-    GrCell*         m_pCell;
+    GrRow*          m_pRow;
+    bool            m_handled;
 };
 
 class GrItemMouseEventArgs : public GrMouseEventArgs
@@ -267,8 +281,8 @@ public:
     void                SetPadding(const GrPadding& padding);
 
     // text method
-    const wchar_t*      GetText() const;
-    void                SetText(const wchar_t* text);
+    const std::wstring& GetText() const;
+    void                SetText(const std::wstring& text);
     uint                GetTextLineCount() const;
     const GrLineDesc&   GetTextLine(uint index) const;
     const GrRect&       GetTextBounds() const;
@@ -816,6 +830,9 @@ public:
     void                SetSelected(bool b);
     void                SetFocused(bool b);
 
+    const std::wstring& GetErrorDescription() const;
+    void                SetErrorDescription(const std::wstring& errorDescription);
+
     bool                ShouldBringIntoView() const;
     int                 GetMinHeight() const;
     void                BringIntoView();
@@ -867,6 +884,7 @@ private:
     bool                m_readOnly;
     bool                m_selected;
     bool                m_colorLocked;
+    std::wstring        m_errorDescription;
 
     friend class GrItemSelector;
 };
@@ -1553,6 +1571,7 @@ public:
 
 public:
     _GrEvent            LevelChanged;
+    static const int SortGlyphSize = 10;
 
 protected:
     virtual void        OnGridCoreAttached();

@@ -218,11 +218,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         ::MsgWaitForMultipleObjectsEx(0, 0, 250, 0xff, 4);
     }
 
-    int API::OemKeyScan(System::Char word)
-    {
-        return (int)::OemKeyScan((WORD)word);
-    }
-
 #pragma push_macro("VkKeyScan")
 #undef VkKeyScan
     int API::VkKeyScan(System::Char word)
@@ -276,30 +271,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         return System::Drawing::Rectangle::FromLTRB(rt.left, rt.top, rt.right, rt.bottom);
     }
 
-    int API::GetAsyncKeyState(int vKey)
-    {
-        return (int)::GetAsyncKeyState(VK_LBUTTON);
-    }
-
-    void API::SetLButtonState(bool b)
-    {
-        static BYTE bytes[0xff];
-
-        if(b == false)
-        {
-            BYTE bbb[0xff];
-            ::GetKeyboardState(bbb);
-            memcpy(bytes, bbb, sizeof(BYTE) * 0xff);
-            bbb[VK_LBUTTON] = 0;
-            ::SetKeyboardState(bbb);
-            SHORT ddd = GetKeyState(1);
-        }
-        else
-        {
-            ::SetKeyboardState(bytes);
-        }
-    }
-
     ControlPainter::ControlPainter()
         : m_colorKey(RGB(0,128,128))
     {
@@ -333,7 +304,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         FillRect((HDC)m_dc, &r, (HBRUSH)hBrush);
         DeleteObject(hBrush);
 
-        LRESULT re = SendMessage(hControl, WM_PRINT, (WPARAM)m_dc, PRF_CLIENT|PRF_CHILDREN);
+        SendMessage(hControl, WM_PRINT, (WPARAM)m_dc, PRF_CLIENT|PRF_CHILDREN);
 
         HRGN hRgn = CreateRectRgn(paintRect.X, paintRect.Y, paintRect.Right, paintRect.Bottom);
         HRGN restoreRegion = CreateRectRgn( 0, 0, 0, 0 );
@@ -371,7 +342,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         SetRect(&r, 0, 0, m_width, m_height);
         FillRect((HDC)m_dc, &r, (HBRUSH)m_colorKeyBrush);
 
-        LRESULT re = SendMessage(hControl, WM_PRINT, (WPARAM)m_dc, PRF_CLIENT|PRF_CHILDREN);
+        SendMessage(hControl, WM_PRINT, (WPARAM)m_dc, PRF_CLIENT|PRF_CHILDREN);
 
         HRGN hRgn = CreateRectRgn(paintRect.X, paintRect.Y, paintRect.Right, paintRect.Bottom);
         HRGN restoreRegion = CreateRectRgn( 0, 0, 0, 0 );
