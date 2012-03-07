@@ -225,19 +225,43 @@
 				</File>
 			</File>
 			<File
+				RelativePath=".\CaptionRow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Cell.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CellBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CellCollection.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CellTagCollection.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Column.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ColumnControl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ColumnPainter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DisplayableRowCollection.h"
+				>
+			</File>
+			<File
 				RelativePath=".\GridAttributes.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridCaption.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridCell.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridCellBase.h"
 				>
 			</File>
 			<File
@@ -245,19 +269,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GridCollection.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridColumn.h"
-				>
-			</File>
-			<File
 				RelativePath=".\GridColumnCollection.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridColumnControl.h"
 				>
 			</File>
 			<File
@@ -321,22 +333,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GridResource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridRow.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridRowBase.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridRowCollection.h"
-				>
-			</File>
-			<File
 				RelativePath=".\GridStyle.h"
 				>
 			</File>
@@ -379,11 +375,51 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ICell.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ICellBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\IColumn.h"
+				>
+			</File>
+			<File
+				RelativePath=".\IControlPainter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\resource.h"
 				>
 			</File>
 			<File
+				RelativePath=".\Resources.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Row.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RowBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RowCollection.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SelectedRowCollection.h"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VisibleRowCollection.h"
 				>
 			</File>
 		</Filter>
@@ -460,19 +496,43 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CaptionRow.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Cell.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CellBase.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CellCollection.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CellTagCollection.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Column.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ColumnControl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ColumnPainter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DisplayableRowCollection.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GridAttributes.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridCaption.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridCell.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridCellBase.cpp"
 				>
 			</File>
 			<File
@@ -480,19 +540,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GridCollection.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridColumn.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\GridColumnCollection.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridColumnControl.cpp"
 				>
 			</File>
 			<File
@@ -544,22 +592,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GridResource.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridRow.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridRowBase.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridRowCollection.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\GridStyle.cpp"
 				>
 			</File>
@@ -596,6 +628,26 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Resources.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Row.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RowBase.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RowCollection.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SelectedRowCollection.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -614,6 +666,10 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\VisibleRowCollection.cpp"
+				>
 			</File>
 		</Filter>
 	</Files>

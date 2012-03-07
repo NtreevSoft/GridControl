@@ -22,11 +22,11 @@
 
 
 #pragma once
-#include "GridColumnControl.h"
+#include "IControlPainter.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Win32
 {
-    enum class WM : uint
+    enum class WM : unsigned int
     {
         WM_ACTIVATE = 0x0006,
         WM_ACTIVATEAPP = 0x001C,
@@ -284,6 +284,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         int m_height;
 
         void* m_colorKeyBrush;
-        const uint m_colorKey;
+        const unsigned int m_colorKey;
     };
 } /*namespace Win32*/} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

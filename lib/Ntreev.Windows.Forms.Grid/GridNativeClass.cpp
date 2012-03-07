@@ -3,9 +3,10 @@
 #include "GridWin32.h"
 #include "GridResource.h"
 #include "GrDCCreator.h"
-#include "GridCell.h"
+#include "Cell.h"
 #include "GridTooltip.h"
 #include "GridTypeEditorForm.h"
+#include "CaptionRow.h"
 
 #ifdef _DEBUG
 //#define _PRINT_INVALIDATE_RECT
@@ -405,10 +406,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         return false;
     }
 
-    bool WinFormWindow::SetCursor(GrCursor cursor)
+    bool WinFormWindow::SetCursor(int cursor)
     {
         using namespace System::Windows::Forms;
-        Cursor^ temp = Cursors::Default;
+        Cursor^ temp;
         switch(cursor)
         {
         case GrCursor_No:
@@ -438,7 +439,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         case GrCursor_SizeNS:
             temp = Cursors::SizeNS;
             break;
+        default:
+            temp = Cursors::Default;
+            break;
         }
+
+        //if(m_gridControl->Site != nullptr)
+        //{
+        //    m_gridControl->Cursor = temp;
+        //    //m_gridControl->CaptionRow->Text = temp->ToString();
+        //    //return System::Windows::Forms::Cursor::Current != System::Windows::Forms::Cursors::Default;
+        //    return true;
+        //}
 
         if(m_gridControl->Cursor != temp)
         {

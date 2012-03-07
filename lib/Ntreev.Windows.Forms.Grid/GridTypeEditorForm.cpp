@@ -23,10 +23,10 @@
 
 #include "StdAfx.h"
 #include "GridTypeEditorForm.h"
-#include "GridColumn.h"
+#include "Column.h"
 #include "GridControl.h"
 #include "GridWin32.h"
-#include "GridCell.h"
+#include "Cell.h"
 
 bool sadfsfas = false;
 

@@ -30,6 +30,8 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
+    ref class CaptionRow;
+    ref class GroupingRow;
     ref class ColumnCollection;
     ref class VisibleColumnCollection;
     ref class DisplayableColumnCollection;
@@ -1870,88 +1872,87 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     private: // properties
 
     private: // variables
-        //static int      s_ref = 0;
+        System::Object^ m_dataSource;
+        System::String^ m_dataMember;
 
-        System::Object^       m_dataSource;
-        System::String^       m_dataMember;
+    initonly ColumnCollection^ m_columnList;
+    initonly VisibleColumnCollection^ m_visibleColumnList;
+    initonly DisplayableColumnCollection^ m_displayableColumnList;
+    initonly FrozenColumnCollection^ m_frozenColumnList;
+    initonly UnfrozenColumnCollection^ m_unfrozenColumnList;
+    initonly RowCollection^ m_rowList;
+    initonly VisibleRowCollection^ m_visibleRowList;
+    initonly DisplayableRowCollection^ m_displayableRowList;
 
-        initonly ColumnCollection^    m_columnList;
-        initonly VisibleColumnCollection^  m_visibleColumnList;
-        initonly DisplayableColumnCollection^ m_displayableColumnList;
-        initonly FrozenColumnCollection^  m_frozenColumnList;
-        initonly UnfrozenColumnCollection^  m_unfrozenColumnList;
-        initonly RowCollection^     m_rowList;
-        initonly VisibleRowCollection^   m_visibleRowList;
-        initonly DisplayableRowCollection^  m_displayableRowList;
+    Design::Style^ m_style;
 
-        Design::Style^     m_style;
+    Ntreev::Windows::Forms::Grid::Cell^ m_focusedCell;
+    Ntreev::Windows::Forms::Grid::CaptionRow^ m_captionRow;
+    Ntreev::Windows::Forms::Grid::GroupingRow^ m_groupingRow;
+    Ntreev::Windows::Forms::Grid::InsertionRow^ m_insertionRow;
+    
 
-        Ntreev::Windows::Forms::Grid::CaptionRow^   m_captionRow;
-        Ntreev::Windows::Forms::Grid::GroupingRow^  m_groupingRow;
-        Ntreev::Windows::Forms::Grid::InsertionRow^ m_insertionRow;
-        Cell^       m_focusedCell;
+    initonly SelectedRowCollection^  m_selectedRows;
+    initonly SelectedColumnCollection^ m_selectedColumns;
 
-        initonly SelectedRowCollection^  m_selectedRows;
-        initonly SelectedColumnCollection^ m_selectedColumns;
+    Native::WinFormGridCore*  m_pGridCore;
+    Native::WinFormWindow*   m_pGridWindow;
+    GrColumnList* m_pColumnList;
+    GrDataRowList* m_pDataRowList;
+    GrDataRow*  m_pInsertionRow;
+    GrGridPainter* m_pGridPainter;
 
-        Native::WinFormGridCore*  m_pGridCore;
-        Native::WinFormWindow*   m_pGridWindow;
-        GrColumnList*     m_pColumnList;
-        GrDataRowList*     m_pDataRowList;
-        GrDataRow*      m_pInsertionRow;
-        GrGridPainter*     m_pGridPainter;
+    Ntreev::Windows::Forms::Grid::ErrorDescriptor^  m_errorDescriptor;
+    IToolTip^  m_tooltips;
+    System::DateTime    m_buttonDownTime;
 
-        Ntreev::Windows::Forms::Grid::ErrorDescriptor^  m_errorDescriptor;
-        IToolTip^      m_tooltips;
-        System::DateTime                m_buttonDownTime;
+    // events
+    ValueChangingEventHandler^  m_eventValueChanging;
+    CellEventHandler^    m_eventValueChanged;
+    RowInsertingEventHandler^  m_eventRowInserting;
+    RowInsertedEventHandler^  m_eventRowInserted;
+    RowRemovingEventHandler^  m_eventRowRemoving;
+    RowRemovedEventHandler^   m_eventRowRemoved;
+    InsertionRowInsertingEventHandler^   m_eventInsertionRowInserting;
+    RowEventHandler^    m_eventInsertionRowInserted;
+    System::EventHandler^ m_eventSelectedColumnsChanged;
+    System::EventHandler^ m_eventSelectedRowsChanged;
+    System::EventHandler^ m_eventSelectionChanged;
+    System::EventHandler^ m_eventFocusedColumnChanged;
+    System::EventHandler^ m_eventFocusedRowChanged;
+    CellEventHandler^    m_eventFocusedCellChanged;
+    ColumnInsertingEventHandler^ m_eventColumnInserting;
+    ColumnEventHandler^    m_eventColumnInserted;
+    ColumnBindingEventHandler^  m_eventColumnBinding;
+    ColumnEventHandler^    m_eventColumnBinded;
+    ColumnEventHandler^    m_eventColumnWidthChanged;
+    ColumnEventHandler^    m_eventColumnFrozenChanged;
+    ColumnMouseEventHandler^  m_eventColumnMouseEnter;
+    ColumnMouseEventHandler^  m_eventColumnMouseLeave;
+    ColumnMouseEventHandler^  m_eventColumnMouseDown;
+    ColumnMouseEventHandler^  m_eventColumnMouseUp;
+    ColumnMouseEventHandler^  m_eventColumnMouseMove;
+    CellMouseEventHandler^   m_eventCellMouseMove;
+    CellEventHandler^    m_eventCellClick;
+    CellEventHandler^    m_eventCellDoubleClick;
+    BeginEditEventHandler^   m_eventBeginEdit;
+    CellEventHandler^    m_eventEndEdit;
+    ClearEventHandler^    m_eventClearing;
+    ClearEventHandler^    m_eventCleared;
+    System::EventHandler^ m_eventDataSourceChanged;
+    System::EventHandler^ m_eventDataMemberChanged;
+    System::EventHandler^ m_eventDataBindingComplete;
 
-        // events
-        ValueChangingEventHandler^  m_eventValueChanging;
-        CellEventHandler^    m_eventValueChanged;
-        RowInsertingEventHandler^  m_eventRowInserting;
-        RowInsertedEventHandler^  m_eventRowInserted;
-        RowRemovingEventHandler^  m_eventRowRemoving;
-        RowRemovedEventHandler^   m_eventRowRemoved;
-        InsertionRowInsertingEventHandler^   m_eventInsertionRowInserting;
-        RowEventHandler^    m_eventInsertionRowInserted;
-        System::EventHandler^     m_eventSelectedColumnsChanged;
-        System::EventHandler^     m_eventSelectedRowsChanged;
-        System::EventHandler^     m_eventSelectionChanged;
-        System::EventHandler^     m_eventFocusedColumnChanged;
-        System::EventHandler^     m_eventFocusedRowChanged;
-        CellEventHandler^    m_eventFocusedCellChanged;
-        ColumnInsertingEventHandler^ m_eventColumnInserting;
-        ColumnEventHandler^    m_eventColumnInserted;
-        ColumnBindingEventHandler^  m_eventColumnBinding;
-        ColumnEventHandler^    m_eventColumnBinded;
-        ColumnEventHandler^    m_eventColumnWidthChanged;
-        ColumnEventHandler^    m_eventColumnFrozenChanged;
-        ColumnMouseEventHandler^  m_eventColumnMouseEnter;
-        ColumnMouseEventHandler^  m_eventColumnMouseLeave;
-        ColumnMouseEventHandler^  m_eventColumnMouseDown;
-        ColumnMouseEventHandler^  m_eventColumnMouseUp;
-        ColumnMouseEventHandler^  m_eventColumnMouseMove;
-        CellMouseEventHandler^   m_eventCellMouseMove;
-        CellEventHandler^    m_eventCellClick;
-        CellEventHandler^    m_eventCellDoubleClick;
-        BeginEditEventHandler^   m_eventBeginEdit;
-        CellEventHandler^    m_eventEndEdit;
-        ClearEventHandler^    m_eventClearing;
-        ClearEventHandler^    m_eventCleared;
-        System::EventHandler^     m_eventDataSourceChanged;
-        System::EventHandler^     m_eventDataMemberChanged;
-        System::EventHandler^     m_eventDataBindingComplete;
+    CurrencyManagerChangingEventHandler^m_eventCurrencyManagerChanging;
+    CurrencyManagerChangedEventHandler^ m_eventCurrencyManagerChanged;
 
-        CurrencyManagerChangingEventHandler^m_eventCurrencyManagerChanging;
-        CurrencyManagerChangedEventHandler^ m_eventCurrencyManagerChanged;
+    System::EventHandler^ m_eventStateBegin;
+    System::EventHandler^ m_eventStateEnd;
 
-        System::EventHandler^     m_eventStateBegin;
-        System::EventHandler^     m_eventStateEnd;
-
-        System::Windows::Forms::CurrencyManager^    m_manager;
-        System::Windows::Forms::CurrencyManager^    m_defaultManager;
-        System::Data::DataTable^  m_defaultDataSource;
-        int        m_dataBindingRef;
+    System::Windows::Forms::CurrencyManager^    m_manager;
+    System::Windows::Forms::CurrencyManager^    m_defaultManager;
+    System::Data::DataTable^  m_defaultDataSource;
+    int    m_dataBindingRef;
 
         ref class DataBindingRef
         {

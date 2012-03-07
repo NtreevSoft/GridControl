@@ -98,4 +98,59 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         DoubleClick,
         FocusedClick,
     };
+
+    [System::FlagsAttribute]
+    public enum class CellState : int
+    {
+        Normal = 0,
+        Focused = 1,
+        Hot = 2,
+        Selected = 4,
+        Pressed = 8,
+
+        All = 0x0000000f,
+    };
+
+    /// <summary>
+    /// 정렬 방식을 지정합니다.
+    /// </summary>
+    public enum class SortType : int
+    {
+        /// <summary>
+        /// 정렬을 하지 않습니다.
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// 오름차순으로 정렬을 합니다.
+        /// </summary>
+        Up,
+
+        /// <summary>
+        /// 내림차순으로 정렬을 합니다.
+        /// </summary>
+        Down,
+    };
+
+
+    /// <summary>
+    /// 마우스 커서에 따른 열의 상태를 나타냅니다.
+    /// </summary>
+    public enum class ColumnState : int
+    {
+        /// <summary>
+        /// 마우스 커서가 열의 영역에 있지 않은 일반적인 상태입니다.
+        /// </summary>
+        Normal,
+
+        /// <summary>
+        /// 마우스 커서가 열의 영역에 있고 좌측 버튼이 눌러진 상태입니다.
+        /// </summary>
+        Pressed,
+
+        /// <summary>
+        /// 마우스 커서가 열의 영역에 있는 상태입니다.
+        /// </summary>
+        Hot,
+    };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

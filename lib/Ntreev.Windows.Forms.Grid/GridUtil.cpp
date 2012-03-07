@@ -23,11 +23,11 @@
 
 #include "StdAfx.h"
 #include "GridUtil.h"
-#include "GridColumn.h"
-#include "GridRow.h"
-#include "GridCell.h"
+#include "Column.h"
+#include "Row.h"
+#include "Cell.h"
 #include "GridControl.h"
-#include "GridCollection.h"
+#include "CellCollection.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {

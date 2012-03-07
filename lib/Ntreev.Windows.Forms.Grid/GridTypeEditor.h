@@ -1,6 +1,6 @@
 #pragma once
 #include "GridType.h"
-#include "GridCellBase.h"
+#include "ICell.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design
 {

@@ -24,7 +24,7 @@
 #include "StdAfx.h"
 #include <windows.h>
 #include "GridTooltip.h"
-#include "GridColumn.h"
+#include "Column.h"
 #include "GridControl.h"
 
 #include <commctrl.h>

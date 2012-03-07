@@ -24,8 +24,8 @@
 #include "StdAfx.h"
 #include "GridColumnExtension.h"
 #include "GridControl.h"
-#include "GridRow.h"
-#include "GridCell.h"
+#include "Row.h"
+#include "Cell.h"
 #include "GridColumnDropDown.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Columns

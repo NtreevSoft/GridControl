@@ -26,19 +26,14 @@
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     ref class GridControl;
-    ref class CaptionRow;
-    ref class GroupingRow;
-    ref class Column;
-    ref class Cell;
-    ref class RowBase;
-    ref class Row;
-    ref class InsertionRow;
+
     /// <summary>
     /// GridControl에 종속되어 사용되는 개체를 나타냅니다.
     /// </summary>
     public ref class GridObject abstract
     {
     public: // methods
+
         /// <summary>
         /// <see cref="GridObject"/>클래스의 새 인스턴스를 초기화합니다.
         /// </summary>
@@ -64,48 +59,40 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #endif
         property Ntreev::Windows::Forms::Grid::GridControl^ GridControl 
         {
-            virtual Ntreev::Windows::Forms::Grid::GridControl^ get() sealed { return m_gridControl; }
+            virtual Ntreev::Windows::Forms::Grid::GridControl^ get() sealed;
         internal:
             void set(Ntreev::Windows::Forms::Grid::GridControl^);
         }
 
     internal: // methods
-        virtual void OnGridControlAttachedInternal() {}
 
-        virtual void OnGridControlDetachedInternal() {}
+        virtual void OnGridControlAttachedInternal();
+
+        virtual void OnGridControlDetachedInternal();
 
     internal: // properties
+
         property GrGridCore* GridCore
         {
-            GrGridCore* get() { return m_pGridCore; }
+            GrGridCore* get();
         }
 
         property GrItemSelector* Selector
         {
-            GrItemSelector* get() { return m_pItemSelector; }
+            GrItemSelector* get();
         }
 
         property GrFocuser* Focuser
         {
-            GrFocuser* get() { return m_pFocuser; }
+            GrFocuser* get();
         }
 
-    protected: // methods
-        /// <summary>
-        /// 지정된 형식의 서비스 개체를 가져옵니다.
-        /// </summary>
-        /// <param name="serviceType">가져올 서비스 개체의 형식을 지정하는 개체입니다. </param>
-        /// <returns>
-        /// serviceType 형식의 서비스 개체입니다.- 또는 - serviceType 형식의 서비스 개체가 없으면 null입니다.
-        /// </returns>
-        //virtual System::Object^ GetService(System::Type^ serviceType) sealed = System::IServiceProvider::GetService;
-
-
     private: // variables
-        Ntreev::Windows::Forms::Grid::GridControl^  m_gridControl;
-        GrGridCore*     m_pGridCore;
-        GrGridPainter*  m_pGridPainter;
+
+        GrGridCore* m_pGridCore;
+        GrGridPainter* m_pGridPainter;
         GrItemSelector* m_pItemSelector;
-        GrFocuser*      m_pFocuser;
+        GrFocuser* m_pFocuser;
+        Ntreev::Windows::Forms::Grid::GridControl^  m_gridControl;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

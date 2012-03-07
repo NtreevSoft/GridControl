@@ -22,7 +22,7 @@
 
 
 #pragma once
-#include "GridColumnControl.h"
+#include "ColumnControl.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Columns
 {

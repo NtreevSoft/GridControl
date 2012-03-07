@@ -22,78 +22,41 @@
 
 
 #include "StdAfx.h"
-#include "GridObject.h"
-#include "GridControl.h"
+#include "RowBase.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    GridObject::GridObject()
+    RowBase::RowBase(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, IDataRow* pDataRow)
+        : CellBase(gridControl, pDataRow), m_pDataRow(pDataRow)
     {
 
     }
 
-    GridObject::GridObject(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
-        : m_gridControl(gridControl), 
-        m_pGridCore(gridControl->GridCore), 
-        m_pGridPainter(gridControl->GridPainter), 
-        m_pItemSelector(m_pGridCore->GetItemSelector()),
-        m_pFocuser(m_pGridCore->GetFocuser())
+    void RowBase::Height::set(int value)
     {
-
-
+        if(value < 0)
+            throw gcnew System::ArgumentOutOfRangeException("value");
+        m_pDataRow->SetHeight(value);
     }
 
-    Ntreev::Windows::Forms::Grid::GridControl^ GridObject::GridControl::get()
+    bool RowBase::IsVisible::get()
     {
-        return m_gridControl; 
+        return m_pDataRow->GetVisible();
     }
 
-    void GridObject::GridControl::set(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+    unsigned int RowBase::DisplayIndex::get()
     {
-        if(gridControl != nullptr)
-        {
-            m_gridControl = gridControl;
-            m_pGridCore  = gridControl->GridCore;
-            m_pGridPainter  = gridControl->GridPainter;
-            m_pItemSelector = m_pGridCore->GetItemSelector();
-            m_pFocuser  = m_pGridCore->GetFocuser();
-
-            OnGridControlAttachedInternal();
-        }
-        else
-        {
-            OnGridControlDetachedInternal();
-
-            m_gridControl = nullptr;
-            m_pGridCore  = nullptr;
-            m_pGridPainter  = nullptr;
-            m_pItemSelector = nullptr;
-            m_pFocuser  = nullptr;
-        }
+        return m_pDataRow->GetDisplayIndex();
     }
 
-    void GridObject::OnGridControlAttachedInternal()
+    unsigned int RowBase::VisibleIndex::get()
     {
-
+        return m_pDataRow->GetVisibleIndex();
     }
 
-    void GridObject::OnGridControlDetachedInternal()
+    bool RowBase::ShouldSerializeHeight()
     {
-
+        return m_pDataRow->GetHeight() != GrRow::DefaultHeight;
     }
 
-    GrGridCore* GridObject::GridCore::get()
-    {
-        return m_pGridCore;
-    }
-
-    GrItemSelector* GridObject::Selector::get() 
-    {
-        return m_pItemSelector; 
-    }
-
-    GrFocuser* GridObject::Focuser::get() 
-    {
-        return m_pFocuser; 
-    }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

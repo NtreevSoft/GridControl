@@ -22,7 +22,7 @@
 
 
 #pragma once
-#include "GridColumnControl.h"
+#include "ColumnControl.h"
 #include "GridColumnDropDown.h"
 #include "GridFlagControl.h"
 

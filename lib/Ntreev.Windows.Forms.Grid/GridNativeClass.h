@@ -97,7 +97,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         GrSize    GetDragSize() const;
         bool    GetMouseDragEventSupported() const;
         int     GetEscapeKey() const;
-        bool    SetCursor(GrCursor cursor);
+        bool    SetCursor(int cursor);
         GrKeys    GetModifierKeys() const;
 
         void    OnEditValue(GrEditEventArgs* e);

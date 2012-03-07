@@ -23,16 +23,19 @@
 
 #include "stdafx.h"
 #include "GridControl.h"
-#include "GridColumn.h"
+#include "Column.h"
 
-#include "GridCell.h"
-#include "GridRow.h"
-#include "GridCaption.h"
+#include "Cell.h"
+#include "Row.h"
+#include "CaptionRow.h"
 #include "GridGroupingRow.h"
 #include "GridEvent.h"
 #include "GridResource.h"
-#include "GridCollection.h"
-#include "GridRowCollection.h"
+#include "CellCollection.h"
+#include "RowCollection.h"
+#include "SelectedRowCollection.h"
+#include "VisibleRowCollection.h"
+#include "DisplayableRowCollection.h"
 #include "GridColumnCollection.h"
 #include "GridWin32.h"
 #include "GridTimeTest.h"
@@ -225,7 +228,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GridControl::PaintColumnControls(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle clipRectangle)
     {
-        for(uint i=0 ; i<m_pColumnList->GetDisplayableColumnCount() ; i++)
+        for(unsigned int i=0 ; i<m_pColumnList->GetDisplayableColumnCount() ; i++)
         {
             GrColumn* pColumn = m_pColumnList->GetDisplayableColumn(i);
 
@@ -240,7 +243,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             if(viewType == Ntreev::Windows::Forms::Grid::ViewType::Text)
                 continue;
 
-            for(uint j=0 ; j<m_pDataRowList->GetDisplayableRowCount() + 1 ; j++)
+            for(unsigned int j=0 ; j<m_pDataRowList->GetDisplayableRowCount() + 1 ; j++)
             {
                 GrDataRow* pDataRow = nullptr;
                 if(j==0)
@@ -291,7 +294,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             center.y -= (image->Height / 2);
             g->DrawImageUnscaled(image, center.x, center.y);
         }
-        else if(FocusedRow->IsEdited == true)
+        else if(FocusedRow && FocusedRow->IsEdited == true)
         {
             GrRect bound = pFocusedRow->GetRect();
             GrPoint center = bound.GetCenter();
@@ -700,12 +703,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     Row^ GridControl::AddNewRow()
     {
-        return m_rowList->AddNew();
+        return m_rowList->Add();
     }
 
     Row^ GridControl::AddNewRowFromInsertion()
     {
-        return m_rowList->AddNewFromInsertion();
+        return m_rowList->AddFromInsertion();
     }
 
     bool GridControl::IsInputKey(System::Windows::Forms::Keys keyData) 
@@ -1722,11 +1725,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool GridControl::DesignTimeSetCursor()
     {
+        return false;
         GrStateManager* pStateManager = m_pGridCore->GetStateManager();
         
         switch (pStateManager->GetGridState())
         {
-        case GrGridState_ColumnPressing:
         case GrGridState_ColumnResizing:
         case GrGridState_ColumnSplitterMoving:
         case GrGridState_RowResizing:

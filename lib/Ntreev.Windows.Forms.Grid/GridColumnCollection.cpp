@@ -23,7 +23,7 @@
 
 #include "StdAfx.h"
 #include "GridColumnCollection.h"
-#include "GridColumn.h"
+#include "Column.h"
 #include "GridControl.h"
 #include "GridColumnExtension.h"
 #include "GridColumnExtension2.h"
@@ -253,13 +253,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         std::vector<GrColumn*> groupings;
         groupings.reserve(pGroupingList->GetGroupingCount());
 
-        for(uint i=0 ; i<pGroupingList->GetGroupingCount() ; i++)
+        for(unsigned int i=0 ; i<pGroupingList->GetGroupingCount() ; i++)
         {
             GrColumn* pColumn = pGroupingList->GetGrouping(i)->GetColumn();
             groupings.push_back(pColumn);
         }
 
-        for(uint i=m_pColumnList->GetColumnCount()-1 ; i>=0 && i<m_pColumnList->GetColumnCount() ; i--)
+        for(unsigned int i=m_pColumnList->GetColumnCount()-1 ; i>=0 && i<m_pColumnList->GetColumnCount() ; i--)
         {
             GrColumn* pColumn = m_pColumnList->GetColumn(i);
             m_pColumnList->RemoveColumn(pColumn);
@@ -293,7 +293,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         if(index < 0 || index >= (int)m_pColumnList->GetColumnCount())
             throw gcnew System::ArgumentOutOfRangeException("index");
-        GrColumn* pColumn = m_pColumnList->GetColumn((uint)index);
+        GrColumn* pColumn = m_pColumnList->GetColumn((unsigned int)index);
         return Column::FromNative(pColumn);
     }
 
@@ -582,7 +582,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     Column^ VisibleColumnCollection::default::get(int index)
     {
-        if((uint)index >= m_pColumnList->GetVisibleColumnCount())
+        if((unsigned int)index >= m_pColumnList->GetVisibleColumnCount())
             throw gcnew System::ArgumentOutOfRangeException("index");
         GrColumn* pColumn = m_pColumnList->GetVisibleColumn(index);
         return Column::FromNative(pColumn);
@@ -629,7 +629,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     Column^ DisplayableColumnCollection::default::get(int index)
     {
-        if((uint)index >= m_pColumnList->GetDisplayableColumnCount())
+        if((unsigned int)index >= m_pColumnList->GetDisplayableColumnCount())
             throw gcnew System::ArgumentOutOfRangeException("index");
         GrColumn* pColumn = m_pColumnList->GetDisplayableColumn(index);
         return Column::FromNative(pColumn);
@@ -677,7 +677,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     Column^ FrozenColumnCollection::default::get(int index)
     {
-        if((uint)index >= m_pColumnList->GetFrozenColumnCount())
+        if((unsigned int)index >= m_pColumnList->GetFrozenColumnCount())
             throw gcnew System::ArgumentOutOfRangeException("index");
         GrColumn* pColumn = m_pColumnList->GetFrozenColumn(index);
         return Column::FromNative(pColumn);
@@ -725,7 +725,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     Column^ UnfrozenColumnCollection::default::get(int index)
     {
-        if((uint)index >= m_pColumnList->GetUnfrozenColumnCount())
+        if((unsigned int)index >= m_pColumnList->GetUnfrozenColumnCount())
             throw gcnew System::ArgumentOutOfRangeException("index");
         GrColumn* pColumn = m_pColumnList->GetUnfrozenColumn(index);
         return Column::FromNative(pColumn);

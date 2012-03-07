@@ -24,7 +24,7 @@
 #include "StdAfx.h"
 #include "GridErrorDescriptor.h"
 #include "GridControl.h"
-#include "GridCell.h"
+#include "Cell.h"
 #include "GridResource.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid

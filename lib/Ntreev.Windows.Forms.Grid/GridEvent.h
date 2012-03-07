@@ -22,8 +22,8 @@
 
 
 #pragma once
-#include "GridCell.h"
-#include "GridRow.h"
+#include "Cell.h"
+#include "Row.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -356,7 +356,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="nNewIndex">
         /// 이벤트 완료후 새로 선택되어질 인덱스입니다.
         /// </param>
-        RowRemovedEventArgs(uint nNewIndex)
+        RowRemovedEventArgs(unsigned int nNewIndex)
             : m_newSelect(false), m_newIndex(nNewIndex) 
         { 
 
@@ -374,14 +374,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <summary>
         /// 제거 작업이 완료된후 새로 선택되어질 <see cref="Ntreev::Windows::Forms::Grid::Row"/>를 설정합니다.
         /// </summary>
-        property uint NewSelectionIndex
+        property unsigned int NewSelectionIndex
         {
-            void set(uint value) { m_newIndex = value; }
+            void set(unsigned int value) { m_newIndex = value; }
         }
 
     private: // variables
         bool    m_newSelect;
-        uint    m_newIndex;
+        unsigned int    m_newIndex;
     };
 
     /// <summary>

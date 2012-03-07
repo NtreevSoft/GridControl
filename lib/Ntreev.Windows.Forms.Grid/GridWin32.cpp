@@ -31,7 +31,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 {
     System::IntPtr API::SendMessage(System::IntPtr handle, WM message, System::IntPtr wParam, System::IntPtr lParam)
     {
-        LRESULT result = ::SendMessage((HWND)handle.ToPointer(), (uint)message, (WPARAM)wParam.ToPointer(), (LPARAM)lParam.ToPointer());
+        LRESULT result = ::SendMessage((HWND)handle.ToPointer(), (unsigned int)message, (WPARAM)wParam.ToPointer(), (LPARAM)lParam.ToPointer());
         return System::IntPtr(result);
     }
 
@@ -46,7 +46,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     System::IntPtr API::PostMessage(System::IntPtr handle, WM message, System::IntPtr wParam, System::IntPtr lParam)
     {
 #pragma pop_macro("PostMessage")
-        LRESULT result = ::PostMessage((HWND)handle.ToPointer(), (uint)message, (WPARAM)wParam.ToPointer(), (LPARAM)lParam.ToPointer());
+        LRESULT result = ::PostMessage((HWND)handle.ToPointer(), (unsigned int)message, (WPARAM)wParam.ToPointer(), (LPARAM)lParam.ToPointer());
         return System::IntPtr(result);
     }
 

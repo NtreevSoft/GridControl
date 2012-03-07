@@ -53,7 +53,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             }
 
         private:
-            uint   m_index;
+            unsigned int   m_index;
             GrColumnList* m_pColumnList;
         };
 
@@ -503,7 +503,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             }
 
         private:
-            uint   m_index;
+            unsigned int   m_index;
             const GrSelectedColumns* m_selectedColumns;
         };
 
@@ -600,7 +600,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             }
 
         private:
-            uint   m_index;
+            unsigned int   m_index;
             GrColumnList* m_pColumnList;
         };
 
@@ -713,7 +713,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             }
 
         private:
-            uint   m_index;
+            unsigned int   m_index;
             GrColumnList* m_pColumnList;
         };
 
@@ -830,7 +830,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             }
 
         private:
-            uint   m_index;
+            unsigned int   m_index;
             GrColumnList* m_pColumnList;
         };
 
@@ -946,7 +946,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             }
 
         private:
-            uint   m_index;
+            unsigned int   m_index;
             GrColumnList* m_pColumnList;
         };
 
