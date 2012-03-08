@@ -131,7 +131,7 @@ public:
     virtual int                 GetMouseWheelScrollDelta() const = 0;
     virtual GrSize              GetDragSize() const = 0;
     virtual GrKeys              GetModifierKeys() const = 0;
-    virtual bool                SetCursor(GrCursor cursor) = 0;
+    virtual bool                SetCursor(int cursor) = 0;
 
     virtual GrScroll*           GetHorzScroll() const = 0;
     virtual GrScroll*           GetVertScroll() const = 0;

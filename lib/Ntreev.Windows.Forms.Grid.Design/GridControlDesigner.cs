@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 1.1.4324.22060
+//Ntreev Grid for .Net 2.0.0.0
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.
@@ -93,6 +93,17 @@ namespace Ntreev.Windows.Forms.Grid.Design
             }
         }
 
+        protected override void PreFilterProperties(System.Collections.IDictionary properties)
+        {
+            string[] strArray = new string[] { "AutoScroll", "AutoScrollMargin", "AutoScrollMinSize", "AutoScrollPosition", "Cursor", };
+            foreach (string item in strArray)
+            {
+                properties.Remove(item);
+            }
+
+            base.PreFilterProperties(properties);
+        }
+
         public override System.Collections.ICollection AssociatedComponents
         {
             get
@@ -184,8 +195,12 @@ namespace Ntreev.Windows.Forms.Grid.Design
         protected override void OnSetCursor()
         {
             GridControl gridControl = this.Control as GridControl;
-            if (gridControl.DesignTimeSetCursor() == true)
-                return;
+            //if (gridControl.DesignTimeSetCursor() == true)
+            //{
+            //    //gridControl.CaptionRow.Text = "true";
+            //    return;
+            //}
+            gridControl.CaptionRow.Text = gridControl.Cursor.ToString();
             base.OnSetCursor();
         }
 

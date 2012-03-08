@@ -520,9 +520,7 @@ namespace GridStateClass
     void Normal::OnMouseMove(GrStateMouseEventArgs* e)
     {
         GrCell* pCell = e->GetCell();
-
         m_pGridCore->SetMouseOver(pCell, e->GetLocalHit());
-
         InvokeMouseEvent(m_pCell, pCell, e);
         m_pCell = pCell;
     }
