@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -23,9 +23,8 @@
 
 #include "StdAfx.h"
 #include "ColumnControl.h"
-#include "Cell.h"
-#include "GridWin32.h"
-#include "GridColumnDropDown.h"
+#include "ICell.h"
+#include "NativeUtilities.h"
 #include "GridControl.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
@@ -33,7 +32,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     generic<class TControl> where TControl : System::Windows::Forms::Control
         ColumnControl<TControl>::ColumnControl()
     {
-        m_controlPainter = gcnew Win32::ControlPainter();
+        m_controlPainter = gcnew Native::ControlPainter();
         m_control = CreateControlInstance(nullptr);
 
         if(this->ViewType != Ntreev::Windows::Forms::Grid::ViewType::Text)
@@ -51,7 +50,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     generic<class TControl> where TControl : System::Windows::Forms::Control
         ColumnControl<TControl>::ColumnControl(... cli::array<System::Object^>^ controlArgs)
     {
-        m_controlPainter = gcnew Win32::ControlPainter();
+        m_controlPainter = gcnew Native::ControlPainter();
         m_control = CreateControlInstance(controlArgs);
 
         if(this->ViewType != Ntreev::Windows::Forms::Grid::ViewType::Text)
@@ -92,7 +91,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     }
 
     generic<class TControl> where TControl : System::Windows::Forms::Control
-        void ColumnControl<TControl>::PaintValue(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle paintRect, ICell^ cell, System::Object^ value)
+        void ColumnControl<TControl>::PaintValue(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle paintRect, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value)
     {
         if(m_viewControl == nullptr)
             return;
@@ -111,20 +110,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             {
                 System::Windows::Forms::Message msg;
                 msg.HWnd = m_viewControl->Handle;
-                msg.Msg = (int)Win32::WM::WM_MOUSEMOVE;
+                msg.Msg = (int)Native::WM::WM_MOUSEMOVE;
                 msg.WParam = System::IntPtr(0);
                 System::Drawing::Point location = m_viewControl->PointToClient(System::Windows::Forms::Cursor::Position);
-                msg.LParam = Win32::API::MakeLParam(location.X, location.Y);
-                Win32::API::SendMessage(msg);
+                msg.LParam = Native::Methods::MakeLParam(location.X, location.Y);
+                Native::Methods::SendMessage(msg);
             }
             else
             {
                 System::Windows::Forms::Message msg;
                 msg.HWnd = m_viewControl->Handle;
-                msg.Msg = (int)Win32::WM::WM_MOUSELEAVE;
+                msg.Msg = (int)Native::WM::WM_MOUSELEAVE;
                 msg.WParam = System::IntPtr(0);
                 msg.LParam = System::IntPtr(0);
-                Win32::API::SendMessage(msg);
+                Native::Methods::SendMessage(msg);
             }
         }
 
@@ -155,7 +154,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     }
 
     generic<class TControl> where TControl : System::Windows::Forms::Control
-        void ColumnControl<TControl>::SetControlLayout(TControl control, ICell^ cell)
+        void ColumnControl<TControl>::SetControlLayout(TControl control, Ntreev::Windows::Forms::Grid::ICell^ cell)
     {
         control->SetBounds(0, 0, cell->ClientRectangle.Width, cell->ClientRectangle.Height);
         if(control->BackColor != cell->PaintingBackColor)
@@ -167,7 +166,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     }
 
     generic<class TControl> where TControl : System::Windows::Forms::Control
-        System::Object^ ColumnControl<TControl>::EditValue(Design::IEditorService^ editorService, ICell^ cell, System::Object^ value)
+        System::Object^ ColumnControl<TControl>::EditValue(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value)
     {
         SetControlLayout(m_control, cell);
         SetControlValue(m_control, value);
@@ -178,9 +177,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     }
 
     generic<class TControl> where TControl : System::Windows::Forms::Control
-        bool ColumnControl<TControl>::CanEdit(ICell^ cell, Design::EditingReason reason)
+        bool ColumnControl<TControl>::CanEdit(Ntreev::Windows::Forms::Grid::ICell^ cell, Ntreev::Windows::Forms::Grid::EditingReason reason)
     {
-        if(reason.ReasonType == Design::EditingReasonType::Mouse)
+        if(reason.ReasonType == Ntreev::Windows::Forms::Grid::EditingReasonType::Mouse)
             return cell->ClientRectangle.Contains(reason.Location);
         return false;
     }
@@ -209,7 +208,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     }
 
     generic<class TControl> where TControl : System::Windows::Forms::Control
-        void ColumnControl<TControl>::gridControl_CellMouseMove(System::Object^ /*sender*/, CellMouseEventArgs^ e)
+        void ColumnControl<TControl>::gridControl_CellMouseMove(System::Object^ /*sender*/, Ntreev::Windows::Forms::Grid::CellMouseEventArgs^ e)
     {
         if(e->Cell->Column != this || this->IsReadOnly == true || m_viewControl == nullptr)
             return;
@@ -235,28 +234,28 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             System::Windows::Forms::Message msg;
 
             msg.HWnd = m_viewControl->Handle;
-            msg.Msg = (int)Win32::WM::WM_MOUSEMOVE;
+            msg.Msg = (int)Native::WM::WM_MOUSEMOVE;
             msg.WParam = System::IntPtr(0);
-            msg.LParam = Win32::API::MakeLParam(location.X, location.Y);
-            Win32::API::SendMessage(msg);
+            msg.LParam = Native::Methods::MakeLParam(location.X, location.Y);
+            Native::Methods::SendMessage(msg);
 
             msg.HWnd = m_viewControl->Handle;
-            msg.Msg = (int)Win32::WM::WM_SETCURSOR;
+            msg.Msg = (int)Native::WM::WM_SETCURSOR;
             msg.WParam = m_viewControl->Handle;
             msg.LParam = System::IntPtr(1);
-            Win32::API::SendMessage(msg);
+            Native::Methods::SendMessage(msg);
         }
 
 
 
-        //System::Drawing::Rectangle rect = Win32::API::GetWindowRect(m_viewControl->Handle);
+        //System::Drawing::Rectangle rect = Native::Methods::GetWindowRect(m_viewControl->Handle);
         //System::Drawing::Point cur = System::Windows::Forms::Cursor::Position;
 
         //System::Diagnostics::Trace::WriteLine(System::Windows::Forms::Cursor::Current);
 
         //if(rect.Contains(cur) == true)
         //{
-        //    int qwer=0;
+        // int qwer=0;
         //}
 
         e->Handled = true;

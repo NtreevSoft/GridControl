@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -23,15 +23,15 @@
 
 #pragma once
 #include "Row.h"
-#include "GridEvent.h"
+#include "Events.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     /// <summary>
     /// 행의 컬렉션을 나타냅니다.
     /// </summary>
-    [System::ComponentModel::Editor("Ntreev.Windows.Forms.Grid.Design.RowCollectionEditor, Ntreev.Windows.Forms.Grid.Design, Version=1.1.4324.22060, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
-    [System::ComponentModel::Design::Serialization::DesignerSerializer("Ntreev.Windows.Forms.Grid.Design.RowCollectionCodeDomSerializer, Ntreev.Windows.Forms.Grid.Design, Version=1.1.4324.22060, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", "System.ComponentModel.Design.Serialization.CodeDomSerializer")]
+    [System::ComponentModel::Editor("Ntreev.Windows.Forms.Grid.Design.RowCollectionEditor, Ntreev.Windows.Forms.Grid.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
+    [System::ComponentModel::Design::Serialization::DesignerSerializer("Ntreev.Windows.Forms.Grid.Design.RowCollectionCodeDomSerializer, Ntreev.Windows.Forms.Grid.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", "System.ComponentModel.Design.Serialization.CodeDomSerializer")]
     public ref class RowCollection : Ntreev::Windows::Forms::Grid::GridObject,
         System::Collections::Generic::IList<Ntreev::Windows::Forms::Grid::Row^>, 
         System::Collections::IList
@@ -309,7 +309,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         void gridControl_CurrencyManagerChanging(System::Object^ sender, CurrencyManagerChangingEventArgs^ e);
 
-        void gridControl_CurrencyManagerChanged(System::Object^ sender, CurrencyManagerChangedEventArgs^ e);
+        void gridControl_CurrencyManagerChanged(System::Object^ sender, Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventArgs^ e);
 
         void ArgumentTest(Ntreev::Windows::Forms::Grid::Row^ item);
 
@@ -354,7 +354,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     private: // variables
 
         int m_locked;
-        GrDataRowList*  m_pDataRowList;
+        GrDataRowList* m_pDataRowList;
         System::Windows::Forms::CurrencyManager^ m_manager;
         System::EventHandler^ m_currentChangedEventHandler;
         System::ComponentModel::ListChangedEventHandler^ m_listChangedEventHandler;

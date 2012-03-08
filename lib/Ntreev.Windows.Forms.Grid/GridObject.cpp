@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -53,10 +53,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(gridControl != nullptr)
         {
             m_gridControl = gridControl;
-            m_pGridCore  = gridControl->GridCore;
-            m_pGridPainter  = gridControl->GridPainter;
+            m_pGridCore = gridControl->GridCore;
+            m_pGridPainter = gridControl->GridPainter;
             m_pItemSelector = m_pGridCore->GetItemSelector();
-            m_pFocuser  = m_pGridCore->GetFocuser();
+            m_pFocuser = m_pGridCore->GetFocuser();
 
             OnGridControlAttachedInternal();
         }
@@ -65,10 +65,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             OnGridControlDetachedInternal();
 
             m_gridControl = nullptr;
-            m_pGridCore  = nullptr;
-            m_pGridPainter  = nullptr;
+            m_pGridCore = nullptr;
+            m_pGridPainter = nullptr;
             m_pItemSelector = nullptr;
-            m_pFocuser  = nullptr;
+            m_pFocuser = nullptr;
         }
     }
 

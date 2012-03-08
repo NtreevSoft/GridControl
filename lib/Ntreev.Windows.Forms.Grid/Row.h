@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -35,6 +35,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     public ref class Row : Ntreev::Windows::Forms::Grid::RowBase
     {
     public: // methods
+
         /// <summary>
         /// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>을 반환합니다.
         /// </summary>
@@ -84,7 +85,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀들의 전경색을 기본값으로 되돌립니다.
         /// </summary>
         /// <remarks>
-        /// 기본값은 <see cref="Design::Style::RowCellForeColors"/> 속성의 값입니다.
+        /// 기본값은 <see cref="Style::RowCellForeColors"/> 속성의 값입니다.
         /// </remarks>
         void ResetCellForeColor();
 
@@ -92,7 +93,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀들의 배경색을 기본값으로 되돌립니다.
         /// </summary>
         /// <remarks>
-        /// 기본값은 <see cref="Design::Style::RowCellBackColors"/> 속성의 값입니다.
+        /// 기본값은 <see cref="Style::RowCellBackColors"/> 속성의 값입니다.
         /// </remarks>
         void ResetCellBackColor();
 
@@ -111,6 +112,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         Ntreev::Windows::Forms::Grid::Cell^ GetAt(int index);
 
     public: // properties
+
         /// <summary>
         /// 셀의 컬렉션을 가져옵니다.
         /// </summary>
@@ -385,6 +387,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     public: // events
 
     internal: // methodss
+
         Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
 
         Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pDataRow);
@@ -398,12 +401,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         void RefreshCells();
 
-        static Row^ FromNative(const GrDataRow* pDataRow);
+        static Ntreev::Windows::Forms::Grid::Row^ FromNative(const GrDataRow* pDataRow);
 
     internal: // properties
+
         property System::Object^ Component
         {
-            System::Object^ get()  { return m_component; }
+            System::Object^ get() { return m_component; }
             void set(System::Object^);
         }
 
@@ -419,20 +423,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private: // methods
+
         bool ShouldSerializeCellForeColor();
         bool ShouldSerializeCellBackColor();
         bool ShouldSerializeCellFont();
 
     private: // variables
-        CellCollection^             m_cells;
-        CellTagCollection^          m_cellTags;
-        GrDataRow*                  m_pDataRow;
-        System::Object^             m_component;
-        int                         m_componentIndex;
-        int                         m_editedCount;
-        int                         m_errorCell;
-        bool                        m_editing;
-        System::String^             m_errorDescription;
+
+        CellCollection^ m_cells;
+        CellTagCollection^ m_cellTags;
+        GrDataRow* m_pDataRow;
+        System::Object^ m_component;
+        int m_componentIndex;
+        int m_editedCount;
+        int m_errorCell;
+        bool m_editing;
+        System::String^ m_errorDescription;
     };
 
     /// <summary>
@@ -441,15 +447,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     public ref class InsertionRow : Row
     {
     public: // methods
+
         /// <summary>
         /// 각 셀의 값을 기본값으로 설정합니다.
         /// </summary>
-        void      SetDefaultValue();
+        void SetDefaultValue();
 
     internal: // methods
+
         InsertionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrInsertionRow* pInsertionRow);
+
         virtual void NewCell(Column^ column) override;
 
-    internal: // variables
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

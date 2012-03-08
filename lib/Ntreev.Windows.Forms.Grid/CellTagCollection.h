@@ -1,5 +1,5 @@
 //=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -46,13 +46,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         private:
             unsigned int m_index;
-            GrDataRow*  m_pDataRow;
+            GrDataRow* m_pDataRow;
             GrColumnList* m_pColumnList;
         };
 
     public: // methods
 
-         /// <summary>
+        /// <summary>
         /// 컬렉션을 반복하는 열거자를 가져옵니다.
         /// </summary>
         /// <returns>
@@ -148,7 +148,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             virtual int get() sealed = System::Collections::ICollection::Count::get;
         }
 
-    internal: // methods   
+    internal: // methods 
 
         CellTagCollection(Ntreev::Windows::Forms::Grid::Row^ row);
 
@@ -156,5 +156,5 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         Ntreev::Windows::Forms::Grid::Row^ m_row;
         GrColumnList* m_pColumnList;
-    };    
+    }; 
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

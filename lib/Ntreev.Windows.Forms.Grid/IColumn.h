@@ -3,7 +3,7 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-     /// <summary>
+    /// <summary>
     /// 열을 나타내기위한 속성을 정의합니다.
     /// </summary>
     public interface class IColumn : ICellBase

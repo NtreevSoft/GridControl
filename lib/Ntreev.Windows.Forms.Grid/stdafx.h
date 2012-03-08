@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -32,8 +32,8 @@
 //#define WINVER 0x0501
 
 // c++/cli precompiled header
-#include "GridType.h"
+//#include "Type.h"
 //#include "GridDef.h"
-//#include "GridResource.h"
+//#include "Resources.h"
 //#include "GridControl.h"
-#include "GridResource.h"
+//#include "Resources.h"

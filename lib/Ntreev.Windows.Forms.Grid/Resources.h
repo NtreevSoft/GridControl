@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -29,21 +29,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     {
         static Resources()
         {
-            m_resourceManager  = gcnew System::Resources::ResourceManager("GridControl.GridResource", System::Reflection::Assembly::GetExecutingAssembly());
+            m_resourceManager = gcnew System::Resources::ResourceManager("GridControl.GridResource", System::Reflection::Assembly::GetExecutingAssembly());
 
-            m_rowEditing   = dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("RowEditing"));
-            m_rowFocused   = dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("RowFocused"));
-            m_insertionRow   = dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("InsertionRow"));
+            m_rowEditing = dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("RowEditing"));
+            m_rowFocused = dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("RowFocused"));
+            m_insertionRow = dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("InsertionRow"));
             m_insertionRowFocused = dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("InsertionRowFocused"));
-            m_errorBitmap   = dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("Error"));
+            m_errorBitmap = dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("Error"));
 
-            m_defaultColumnName  = m_resourceManager->GetString("DefaultColumnName");
-            m_defaultTooltip  = m_resourceManager->GetString("DefaultTooltip");
-            m_setValueException  = m_resourceManager->GetString("SetValueException");
+            m_defaultColumnName = m_resourceManager->GetString("DefaultColumnName");
+            m_defaultTooltip = m_resourceManager->GetString("DefaultTooltip");
+            m_setValueException = m_resourceManager->GetString("SetValueException");
             m_removeInsertionRowException= m_resourceManager->GetString("RemoveInsertionRowException");
-            m_noColumnException  = m_resourceManager->GetString("NoColumnException");
-            m_width     = m_resourceManager->GetString("Width");
-            m_height    = m_resourceManager->GetString("Height");
+            m_noColumnException = m_resourceManager->GetString("NoColumnException");
+            m_width = m_resourceManager->GetString("Width");
+            m_height = m_resourceManager->GetString("Height");
         }
     public:
         static property System::Drawing::Bitmap^ RowEditing

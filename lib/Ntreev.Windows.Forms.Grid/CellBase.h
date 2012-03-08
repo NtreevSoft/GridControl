@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -24,7 +24,7 @@
 #pragma once
 #include "GridObject.h"
 #include "ICellBase.h"
-#include "GridStyle.h"
+#include "Style.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -39,7 +39,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀의 전경색을 기본값으로 되돌립니다.
         /// </summary>
         /// <remarks>
-        /// 기본값은 <see cref="Design::Style::CellForeColor"/> 속성의 값입니다.
+        /// 기본값은 <see cref="Style::CellForeColor"/> 속성의 값입니다.
         /// </remarks>
         void ResetForeColor();
 
@@ -47,7 +47,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀의 배경색을 기본값으로 되돌립니다.
         /// </summary>
         /// <remarks>
-        /// 기본값은 <see cref="Design::Style::CellBackColor"/> 속성의 값입니다.
+        /// 기본값은 <see cref="Style::CellBackColor"/> 속성의 값입니다.
         /// </remarks>
         void ResetBackColor();
 
@@ -55,7 +55,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀의 배경색을 기본값으로 되돌립니다.
         /// </summary>
         /// <remarks>
-        /// 기본값은 <see cref="Design::Style::CellBackColor"/> 속성의 값입니다.
+        /// 기본값은 <see cref="Style::CellBackColor"/> 속성의 값입니다.
         /// </remarks>
         void ResetFont();
 
@@ -65,7 +65,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀의 전경색을 가져오거나 설정합니다.
         /// </summary>
         /// <returns>
-        /// 셀의 전경색을 나타내는 <see cref="System::Drawing::Color"/>입니다. 기본값은 <see cref="Design::Style::CellForeColor"/> 속성의 값입니다.
+        /// 셀의 전경색을 나타내는 <see cref="System::Drawing::Color"/>입니다. 기본값은 <see cref="Style::CellForeColor"/> 속성의 값입니다.
         /// </returns>
         /// <remarks>
         /// 일반적으로 문자열의 색상을 나타냅니다.
@@ -82,7 +82,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀의 배경색을 가져오거나 설정합니다.
         /// </summary>
         /// <returns>
-        /// 셀의 배경색을 나타내는 <see cref="System::Drawing::Color"/>입니다. 기본값은 <see cref="Design::Style::CellBackColor"/> 속성의 값입니다.
+        /// 셀의 배경색을 나타내는 <see cref="System::Drawing::Color"/>입니다. 기본값은 <see cref="Style::CellBackColor"/> 속성의 값입니다.
         /// </returns>
         [System::ComponentModel::DescriptionAttribute("셀의 배경색을 가져오거나 설정합니다.")]
         [System::ComponentModel::CategoryAttribute("Appearance")]
@@ -96,9 +96,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀의 글꼴을 가져오거나 설정합니다.
         /// </summary>
         /// <returns>
-        /// 셀의 글꼴을 나타내는 <see cref="System::Drawing::Font"/>입니다. 기본값은 <see cref="Design::Style::CellFont"/> 속성의 값입니다.
+        /// 셀의 글꼴을 나타내는 <see cref="System::Drawing::Font"/>입니다. 기본값은 <see cref="Style::CellFont"/> 속성의 값입니다.
         /// </returns>
-        [System::ComponentModel::CategoryAttribute("Appearance"), System::ComponentModel::AmbientValue((System::String^)nullptr)]
+        [System::ComponentModel::CategoryAttribute("Appearance")]
+        [System::ComponentModel::AmbientValue((System::String^)nullptr)]
         property System::Drawing::Font^ Font
         { 
             virtual System::Drawing::Font^ get();
@@ -128,7 +129,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀에 대한 데이터가 들어 있는 <see cref="System::Object"/>입니다. 기본값은 null입니다.
         /// </returns>
         [System::ComponentModel::TypeConverter(System::ComponentModel::StringConverter::typeid)]
-        [System::ComponentModel::CategoryAttribute("Data"), System::ComponentModel::DefaultValueAttribute((System::String^)nullptr)]
+        [System::ComponentModel::CategoryAttribute("Data")]
+        [System::ComponentModel::DefaultValueAttribute((System::String^)nullptr)]
         virtual property System::Object^ Tag;
 
 
@@ -151,55 +153,101 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             virtual System::Drawing::Rectangle get() sealed;
         }
 
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
         property int X
         {
             virtual int get();
         }
 
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
         property int Y
         {
             virtual int get();
         }
 
-    private:
-
-        property int Width_ICellBase
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
+        property int Width
         {
-            virtual int get() sealed = ICellBase::Width::get;
+            virtual int get() sealed;
         }
 
-    public:
-
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
         property int Height
         {
             virtual int get() sealed;
         }
 
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
         property System::Drawing::Point Location
         {
             virtual System::Drawing::Point get();
         }
 
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
         property System::Drawing::Size Size
         {
             virtual System::Drawing::Size get();
         }
 
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
         property int Left
         {
             virtual int get();
         }
 
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
         property int Top
         {
             virtual int get();
         }
 
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
         property int Right
         {
             virtual int get();
         }
 
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
         property int Bottom
         {
             virtual int get();
@@ -277,6 +325,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     internal: // methods
+
         CellBase(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrCell* pCell);
 
         CellBase(GrCell* pCell);

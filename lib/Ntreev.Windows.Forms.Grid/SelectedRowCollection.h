@@ -7,8 +7,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// 선택된 행의 컬렉션을 나타냅니다.
     /// </summary>
     public ref class SelectedRowCollection : Ntreev::Windows::Forms::Grid::GridObject, 
-        System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Row^>, System::Collections::ICollection
+        System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Row^>, 
+        System::Collections::ICollection
     {
+    private: // classes
+
         ref class Enumerator : System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Row^>
         {
         public:
@@ -82,6 +85,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         virtual System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Row^>^ GetEnumerator();
 
     public: // properties
+
         /// <summary>
         /// 항목의 갯수를 가져옵니다.
         /// </summary>
@@ -111,6 +115,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     internal: // methods
+
         SelectedRowCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, const GrSelectedRows* selectedRows);
 
     private: // methods
@@ -136,7 +141,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             virtual int get() sealed = System::Collections::ICollection::Count::get;
         }
 
-    private:
+    private: // variables
+
         const GrSelectedRows* m_selectedRows;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

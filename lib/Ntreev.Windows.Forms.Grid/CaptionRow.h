@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -33,6 +33,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     public ref class CaptionRow : Ntreev::Windows::Forms::Grid::CellBase
     {
     public: // methods
+
         /// <summary>
         /// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>을 반환합니다.
         /// </summary>
@@ -45,6 +46,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     public: // properties
+
         /// <summary>
         /// 제목을 가져오거나 설정합니다.
         /// </summary>
@@ -111,15 +113,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     internal: // methods
+
         CaptionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrCaption* pCaption);
 
         static CaptionRow^ FromNative(GrCaption* pCaption);
 
     private: // methods
+
         bool ShouldSerializeHeight();
+
         bool ShouldSerializeText();
 
     private: // variables
+
         GrCaption* m_pCaption;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

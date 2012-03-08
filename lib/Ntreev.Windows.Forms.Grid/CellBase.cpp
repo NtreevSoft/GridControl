@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -24,7 +24,7 @@
 #include "StdAfx.h"
 #include "CellBase.h"
 #include "GridControl.h"
-#include "GridNativeClass.h"
+#include "NativeClasses.h"
 
 #include <vcclr.h>
 
@@ -128,7 +128,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void CellBase::Padding::set(System::Windows::Forms::Padding value)
     {
-        m_pCell->SetPadding(value);  
+        m_pCell->SetPadding(value); 
     }
 
     void CellBase::OnBackColorChanged(System::EventArgs^ e)
@@ -176,7 +176,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_pCell->GetY();
     }
 
-    int CellBase::Width_ICellBase::get()
+    int CellBase::Width::get()
     {
         return m_pCell->GetWidth();
     }

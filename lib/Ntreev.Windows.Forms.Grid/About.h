@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -29,10 +29,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// About에 대한 요약입니다.
     ///
     /// 경고: 이 클래스의 이름을 변경하면 이 클래스가 의존하는
-    ///          모든 .resx 파일과 관련된 관리되는 리소스 컴파일러 도구의
-    ///          '리소스 파일 이름' 속성도 변경해야 합니다. 그렇지 않은 경우
-    ///          디자이너는 이 폼과 관련된 지역화된 리소스와
-    ///          올바르게 상호 작용할 수 없습니다.
+    /// 모든 .resx 파일과 관련된 관리되는 리소스 컴파일러 도구의
+    /// '리소스 파일 이름' 속성도 변경해야 합니다. 그렇지 않은 경우
+    /// 디자이너는 이 폼과 관련된 지역화된 리소스와
+    /// 올바르게 상호 작용할 수 없습니다.
     /// </summary>
     private ref class About : System::Windows::Forms::Form
     {
@@ -56,9 +56,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 delete components;
             }
         }
-    private: System::Windows::Forms::Button^  button1;
+    private: System::Windows::Forms::Button^ button1;
     protected: 
-    private: System::Windows::Forms::Label^  label1;
+    private: System::Windows::Forms::Label^ label1;
 
     protected: 
 

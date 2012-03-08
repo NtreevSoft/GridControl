@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -23,12 +23,11 @@
 
 #include "StdAfx.h"
 #include "Cell.h"
-#include "GridUtil.h"
 #include "Column.h"
 #include "Row.h"
 #include "GridControl.h"
-#include "GridResource.h"
-#include "GridErrorDescriptor.h"
+#include "Resources.h"
+#include "ErrorDescriptor.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -96,7 +95,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     private:
         Column^ m_column;
-        Row^ m_row;
+        Ntreev::Windows::Forms::Grid::Row^ m_row;
     };
 
     Cell::Cell(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrItem* pItem)
@@ -214,13 +213,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             throw gcnew System::ArgumentException(reason);
         }
 
-        return typeConverter->ConvertFrom(typeDescriptorContext, System::Windows::Forms::Application::CurrentCulture,  value);
+        return typeConverter->ConvertFrom(typeDescriptorContext, System::Windows::Forms::Application::CurrentCulture, value);
     }
 
-    Cell^ Cell::FromNative(GrItem* pItem)
+    Ntreev::Windows::Forms::Grid::Cell^ Ntreev::Windows::Forms::Grid::Cell::FromNative(GrItem* pItem)
     {
         System::Object^ ref = pItem->ManagedRef;
-        return safe_cast<Cell^>(ref);
+        return safe_cast<Ntreev::Windows::Forms::Grid::Cell^>(ref);
     }
 
     bool Cell::CancelEdit()

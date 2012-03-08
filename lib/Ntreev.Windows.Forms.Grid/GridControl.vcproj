@@ -225,6 +225,10 @@
 				</File>
 			</File>
 			<File
+				RelativePath=".\Attributes.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CaptionRow.h"
 				>
 			</File>
@@ -249,6 +253,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ColumnCollection.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ColumnComboBox.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ColumnControl.h"
 				>
 			</File>
@@ -257,31 +269,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DisplayableColumnCollection.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DisplayableRowCollection.h"
 				>
 			</File>
 			<File
-				RelativePath=".\GridAttributes.h"
+				RelativePath=".\EditingReason.h"
 				>
 			</File>
 			<File
-				RelativePath=".\GridCheckBox.h"
+				RelativePath=".\ErrorDescriptor.h"
 				>
 			</File>
 			<File
-				RelativePath=".\GridColumnCollection.h"
+				RelativePath=".\Events.h"
 				>
 			</File>
 			<File
-				RelativePath=".\GridColumnDropDown.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridColumnExtension.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridColumnExtension2.h"
+				RelativePath=".\FrozenColumnCollection.h"
 				>
 			</File>
 			<File
@@ -295,83 +303,11 @@
 				</File>
 			</File>
 			<File
-				RelativePath=".\GridErrorDescriptor.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridEvent.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridFlagControl.h"
-				FileType="4"
-				>
-				<File
-					RelativePath=".\GridFlagControl.resx"
-					>
-				</File>
-			</File>
-			<File
-				RelativePath=".\GridGroupingRow.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridListBox.h"
-				FileType="4"
-				>
-			</File>
-			<File
-				RelativePath=".\GridNativeClass.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridNativeCollection.h"
-				>
-			</File>
-			<File
 				RelativePath=".\GridObject.h"
 				>
 			</File>
 			<File
-				RelativePath=".\GridStyle.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridTextBox.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridTimeTest.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridTooltip.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridType.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridTypeEditor.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridTypeEditorForm.h"
-				FileType="3"
-				>
-				<File
-					RelativePath=".\GridTypeEditorForm.resx"
-					SubType="Designer"
-					>
-				</File>
-			</File>
-			<File
-				RelativePath=".\GridUtil.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GridWin32.h"
+				RelativePath=".\GroupingRow.h"
 				>
 			</File>
 			<File
@@ -391,11 +327,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\resource.h"
+				RelativePath=".\NativeCollection.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources.h"
+				RelativePath=".\resource.h"
 				>
 			</File>
 			<File
@@ -411,6 +347,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SelectedColumnCollection.h"
+				>
+			</File>
+			<File
 				RelativePath=".\SelectedRowCollection.h"
 				>
 			</File>
@@ -419,9 +359,149 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Style.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TimeTester.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ToolTip.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Types.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UnfrozenColumnCollection.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Utilities.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VisibleColumnCollection.h"
+				>
+			</File>
+			<File
 				RelativePath=".\VisibleRowCollection.h"
 				>
 			</File>
+			<Filter
+				Name="Design"
+				>
+				<File
+					RelativePath=".\BindingListTypeEditor.h"
+					>
+				</File>
+				<File
+					RelativePath=".\BooleanTypeEditor.h"
+					>
+				</File>
+				<File
+					RelativePath=".\DataTypeEditor.h"
+					>
+				</File>
+				<File
+					RelativePath=".\DesignTypes.h"
+					>
+				</File>
+				<File
+					RelativePath=".\EnumTypeEditor.h"
+					>
+				</File>
+				<File
+					RelativePath=".\FlagTypeEditor.h"
+					>
+				</File>
+				<File
+					RelativePath=".\IEditorService.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ListTypeEditor.h"
+					>
+				</File>
+				<File
+					RelativePath=".\StringTypeEditor.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TypeEditor.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TypeEditorForm.h"
+					FileType="3"
+					>
+					<File
+						RelativePath=".\TypeEditorForm.resx"
+						SubType="Designer"
+						>
+					</File>
+				</File>
+				<Filter
+					Name="Controls"
+					>
+					<File
+						RelativePath=".\CheckBox.h"
+						>
+					</File>
+					<File
+						RelativePath=".\FlagControl.h"
+						FileType="4"
+						>
+						<File
+							RelativePath=".\FlagControl.resx"
+							>
+						</File>
+					</File>
+					<File
+						RelativePath=".\ListBox.h"
+						FileType="0"
+						>
+					</File>
+					<File
+						RelativePath=".\TextBox.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Columns"
+				>
+				<File
+					RelativePath=".\ColumnCheckBox.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ColumnDropDown.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Properties"
+				>
+				<File
+					RelativePath=".\Resources.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Native"
+				>
+				<File
+					RelativePath=".\NativeClasses.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NativeUtilities.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="리소스 파일"
@@ -496,6 +576,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Attributes.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CaptionRow.cpp"
 				>
 			</File>
@@ -520,6 +604,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ColumnCollection.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ColumnComboBox.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ColumnControl.cpp"
 				>
 			</File>
@@ -528,31 +620,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DisplayableColumnCollection.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DisplayableRowCollection.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\GridAttributes.cpp"
+				RelativePath=".\EditingReason.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\GridCheckBox.cpp"
+				RelativePath=".\ErrorDescriptor.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\GridColumnCollection.cpp"
+				RelativePath=".\Events.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\GridColumnDropDown.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridColumnExtension.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridColumnExtension2.cpp"
+				RelativePath=".\FrozenColumnCollection.cpp"
 				>
 			</File>
 			<File
@@ -560,75 +648,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GridErrorDescriptor.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridEvent.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridFlagControl.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridGroupingRow.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridListBox.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridNativeClass.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridNativeCollection.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\GridObject.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\GridStyle.cpp"
+				RelativePath=".\GroupingRow.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\GridTextBox.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridTimeTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridTooltip.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridType.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridTypeEditor.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridTypeEditorForm.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridUtil.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GridWin32.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Resources.cpp"
+				RelativePath=".\NativeCollection.cpp"
 				>
 			</File>
 			<File
@@ -641,6 +669,10 @@
 			</File>
 			<File
 				RelativePath=".\RowCollection.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SelectedColumnCollection.cpp"
 				>
 			</File>
 			<File
@@ -668,9 +700,125 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\Style.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TimeTester.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ToolTip.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\UnfrozenColumnCollection.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Utilities.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\VisibleColumnCollection.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\VisibleRowCollection.cpp"
 				>
 			</File>
+			<Filter
+				Name="Design"
+				>
+				<File
+					RelativePath=".\BindingListTypeEditor.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\BooleanTypeEditor.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\DataTypeEditor.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\EnumTypeEditor.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\FlagTypeEditor.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ListTypeEditor.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\StringTypeEditor.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TypeEditor.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TypeEditorForm.cpp"
+					>
+				</File>
+				<Filter
+					Name="Controls"
+					>
+					<File
+						RelativePath=".\CheckBox.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\FlagControl.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ListBox.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\TextBox.cpp"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Columns"
+				>
+				<File
+					RelativePath=".\ColumnCheckBox.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ColumnDropDown.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Properties"
+				>
+				<File
+					RelativePath=".\Resources.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Native"
+				>
+				<File
+					RelativePath=".\NativeClasses.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NativeUtilities.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

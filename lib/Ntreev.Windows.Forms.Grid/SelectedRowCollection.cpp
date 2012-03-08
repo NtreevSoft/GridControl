@@ -2,6 +2,7 @@
 #include "SelectedRowCollection.h"
 #include "Column.h"
 #include "GridControl.h"
+#include "Resources.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -34,7 +35,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         Add(row);
 
         GrDataRow* pDataRow = row->NativeRef;
-        GrItem*  pItem = nullptr;
+        GrItem* pItem = nullptr;
         if(focusColumn == nullptr)
         {
             GrFocuser* pFocuser = GridCore->GetFocuser();

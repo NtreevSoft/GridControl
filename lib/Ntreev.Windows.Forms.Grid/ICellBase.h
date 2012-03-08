@@ -1,5 +1,5 @@
 #pragma once
-#include "GridType.h"
+#include "Types.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {

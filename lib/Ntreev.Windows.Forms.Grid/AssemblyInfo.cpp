@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -46,15 +46,15 @@ using namespace System::Security::Permissions;
 //
 // 어셈블리의 버전 정보는 다음 네 가지 값으로 구성됩니다.
 //
-//      주 버전
-//      부 버전
-//      빌드 번호
-//      수정 버전
+// 주 버전
+// 부 버전
+// 빌드 번호
+// 수정 버전
 //
 // 모든 값을 지정하거나 아래와 같이 '*'를 사용하여 빌드 번호 및 수정 버전이 자동으로
 // 지정되도록 할 수 있습니다.
 
-[assembly:AssemblyVersionAttribute("1.1.4324.22060")];
+[assembly:AssemblyVersionAttribute("2.0.*")];
 //[assembly:AssemblyVersionAttribute("1.1.*")];
 
 [assembly:ComVisible(false)];

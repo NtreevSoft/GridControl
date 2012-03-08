@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -22,10 +22,9 @@
 
 
 #pragma once
-#include "GridEvent.h"
+#include "Events.h"
 #include "CellBase.h"
-#include "GridUtil.h"
-#include "GridTypeEditor.h"
+#include "TypeEditor.h"
 #include "IColumn.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
@@ -38,13 +37,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     [System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
     [System::ComponentModel::ToolboxItem(false)]
     [System::ComponentModel::DesignTimeVisible(false)]
-    [System::ComponentModel::Designer("Ntreev.Windows.Forms.Grid.Design.ColumnDesigner, Ntreev.Windows.Forms.Grid.Design, Version=1.1.4324.22060, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+    [System::ComponentModel::Designer("Ntreev.Windows.Forms.Grid.Design.ColumnDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
     public ref class Column : Ntreev::Windows::Forms::Grid::CellBase, 
         Ntreev::Windows::Forms::Grid::IColumn, 
         System::ComponentModel::IComponent, 
         System::IServiceProvider
     {
     public: // methods
+
         /// <summary>
         /// <see cref="Column"/>클래스의 새 인스턴스를 초기화합니다.
         /// </summary>
@@ -91,9 +91,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="paintRect">그리기에 대상이 되는 셀의 안쪽 영역입니다.</param>
         /// <param name="cell">그리기에 대상이 되는 셀의 스타일 정보를 가져올 수 있는 개체입니다.</param>
         /// <param name="value">그리기에 대상이 되는 셀의 값입니다.</param>
-        virtual void PaintValue(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle paintRect, ICell^ cell, System::Object^ value);
+        virtual void PaintValue(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle paintRect, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value);
 
     public: // properties
+
         /// <summary>
         /// 표시할 열의 제목을 가져오거나 설정합니다.
         /// </summary>
@@ -162,7 +163,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::DefaultValueAttribute(100)]
         property int Width
         {
-            int get();
+            int get() new;
             void set(int);
         }
 
@@ -364,7 +365,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::InvalidOperationException">
         /// 그리드 컨트롤에 바인딩 된 후에 값을 설정하려고 할때.
         /// </exception>
-        [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=1.1.4324.22060, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
+        [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
         property System::Type^ DataType
         {
             virtual System::Type^ get() sealed;
@@ -448,6 +449,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::DescriptionAttribute("컨트롤에 내에 Column 인덱스를 가져옵니다.")]
 #ifdef _DEBUG
         [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
 #endif
         property int Index
         {
@@ -461,7 +464,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀의 기본값을 나타내는 <see cref="System::Object"/>입니다.
         /// </returns>
         /// <remarks>
-        /// 이 속성의 사용 목적은 새로운 행을 추가 하기 위하여 제공되는 <see cref="InsertionRow"/>에 기본값을 제공하기 위해서입니다. 
+        /// 이 속성의 사용 목적은 새로운 행을 추가 하기 위하여 제공되는 삽입열에 기본값을 제공하기 위해서입니다. 
         /// 데이터 타입에 대한 검사가 없으므로, 가급적 <see cref="DataType"/>과 같은 타입의 개체를 사용하시기 바랍니다.
         /// </remarks>
         [System::ComponentModel::BrowsableAttribute(false)]
@@ -606,6 +609,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void set(int);
         }
 
+        /// <summary>
+        /// 마우스 클릭으로 셀을 편집하는 방법을 설정하거나 가져옵니다.
+        /// </summary>
+        /// <returns>
+        /// 마우스 클릭으로 셀을 편집하는 방법을 나타내는 <see cref="Ntreev::Windows::Forms::Grid::ClickEditType"/>입니다.
+        /// </returns>
         [System::ComponentModel::DefaultValueAttribute(Ntreev::Windows::Forms::Grid::ClickEditType::Default)]
         property Ntreev::Windows::Forms::Grid::ClickEditType ClickEditType
         {
@@ -614,11 +623,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// 셀의 값을 그릴 수 있는 기능을 제공하는지에 대한 여부를 가져옵니다.
+        /// 셀의 값을 표현하는 방법을 설정하거나 가져옵니다.
         /// </summary>
         /// <returns>
-        /// 셀의 값을 그리기 위해 <see cref="PaintValue"/>를 사용하려면 true를, 그렇지 않으면 false를 반환합니다.
+        /// 셀의 값을 표현하는 방법을 나타내는 <see cref="Ntreev::Windows::Forms::Grid::ViewType"/>입니다.
         /// </returns>
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
         property Ntreev::Windows::Forms::Grid::ViewType ViewType
         {
             virtual Ntreev::Windows::Forms::Grid::ViewType get();
@@ -640,6 +654,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     public: // events
+
         event System::EventHandler^ Disposed
         {
             virtual void add(System::EventHandler^ p) { m_eventDisposed += p; }
@@ -650,14 +665,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     protected: // methods
+
         /// <summary>
         /// 소멸자 입니다.
         /// </summary>
         ~Column();
 
-        virtual System::Object^ EditValue(Design::IEditorService^ editorService, ICell^ cell, System::Object^ value);
+        virtual System::Object^ EditValue(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value);
 
-        virtual bool CanEdit(ICell^ cell, Design::EditingReason reason);
+        virtual bool CanEdit(Ntreev::Windows::Forms::Grid::ICell^ cell, Ntreev::Windows::Forms::Grid::EditingReason reason);
 
         virtual Design::EditStyle GetEditStyle();
 
@@ -665,15 +681,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         virtual void OnGridControlDetached() {};
 
-    public protected:
+    public protected: // methods
+
         virtual void OnGridControlAttachedInternal() override;
 
         virtual void OnGridControlDetachedInternal() override;
 
     internal: // methods
-        System::Object^ EditValueInternal(Design::IEditorService^ editorService, ICell^ cell, System::Object^ value);
 
-        bool CanEditInternal(ICell^ cell, Design::EditingReason reason);
+        System::Object^ EditValueInternal(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value);
+
+        bool CanEditInternal(Ntreev::Windows::Forms::Grid::ICell^ cell, Ntreev::Windows::Forms::Grid::EditingReason reason);
 
         static Column^ FromNative(const GrColumn* pColumn);
 
@@ -686,6 +704,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::Object^ ConvertToSource(System::Object^ value);
 
     internal: // properties
+
         property System::ComponentModel::PropertyDescriptor^ PropertyDescriptor
         {
             System::ComponentModel::PropertyDescriptor^ get();
@@ -703,6 +722,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private: // methods
+
         virtual System::Object^ GetService(System::Type^ serviceType) sealed = System::IServiceProvider::GetService
         {
             if(m_site != nullptr)
@@ -724,6 +744,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void SetEditStyleToNative();
 
     private: // properties
+
         property System::Object^ Tag_IColumnDescriptor
         {
             virtual System::Object^ get() sealed = IColumn::Tag::get { return this->Tag; }
@@ -735,14 +756,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private: // variables
-        System::Type^   m_dataType;
+
+        System::Type^ m_dataType;
         System::String^ m_title;
         System::String^ m_name;
         System::String^ m_tooltip;
         System::Collections::IComparer^ m_sortComparer;
         System::ComponentModel::TypeConverter^ m_typeConverter;
-        System::ComponentModel::PropertyDescriptor^  m_propertyDescriptor;
-        
+        System::ComponentModel::PropertyDescriptor^ m_propertyDescriptor;
+
         System::Object^ m_defaultValue;
         Ntreev::Windows::Forms::Grid::ColumnPainter^ m_columnPainter;
         Design::TypeEditor^ m_typeEditor;
@@ -750,7 +772,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::EventHandler^ m_eventDisposed;
         System::ComponentModel::ISite^ m_site;
 
-        class CustomPaint*  m_pCustomPaint;
-        GrColumn*     m_pColumn;
+        class CustomPaint* m_pCustomPaint;
+        GrColumn* m_pColumn;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

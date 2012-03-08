@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -27,15 +27,13 @@
 #include "Cell.h"
 #include "Row.h"
 #include "CellCollection.h"
-#include "GridColumnCollection.h"
+#include "ColumnCollection.h"
 #include "RowCollection.h"
-#include "GridResource.h"
-#include "GridAttributes.h"
-#include "GridNativeClass.h"
-#include "GridListBox.h"
-#include "GridTextBox.h"
-#include "GridFlagControl.h"
+#include "Resources.h"
+#include "Attributes.h"
+#include "NativeClasses.h"
 #include "ColumnPainter.h"
+#include "StringTypeEditor.h"
 
 #include <vcclr.h>
 
@@ -86,15 +84,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private:
-        gcroot<Column^>   m_column;
+        gcroot<Column^> m_column;
     };
 
-    
+
 
     bool RowComparerUp(GrGridCore* /*pGridCore*/, const GrDataRow* pDataRow1, const GrDataRow* pDataRow2, const GrColumn* pColumn)
     {
-        Cell^ cell1 = Cell::FromNative(pDataRow1->GetItem(pColumn));
-        Cell^ cell2 = Cell::FromNative(pDataRow2->GetItem(pColumn));
+        Ntreev::Windows::Forms::Grid::Cell^ cell1 = Ntreev::Windows::Forms::Grid::Cell::FromNative(pDataRow1->GetItem(pColumn));
+        Ntreev::Windows::Forms::Grid::Cell^ cell2 = Ntreev::Windows::Forms::Grid::Cell::FromNative(pDataRow2->GetItem(pColumn));
 
         System::Object^ value1 = cell1->Value;
         System::Object^ value2 = cell2->Value;
@@ -471,8 +469,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 System::Text::StringBuilder^ builder = gcnew System::Text::StringBuilder();
 
                 builder->AppendLine(System::String::Format("데이터소스에서 데이터 타입을 변환할 수가 없습니다. 새로운 TypeConverter를 구현하세요"));
-                builder->AppendLine(System::String::Format("    DataSource  : {0}", m_propertyDescriptor->PropertyType));
-                builder->AppendLine(System::String::Format("    GridControl : {0}", value));
+                builder->AppendLine(System::String::Format(" DataSource : {0}", m_propertyDescriptor->PropertyType));
+                builder->AppendLine(System::String::Format(" GridControl : {0}", value));
 
                 throw gcnew System::NotSupportedException(builder->ToString());
             }
@@ -665,14 +663,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_columnPainter)
         {
             m_pColumn->m_fnColumnBackgroundPaint = CustomPaint::ColumnBackgroundPaint;
-            m_pColumn->m_fnColumnContentsPaint  = CustomPaint::ColumnContentsPaint;
-            m_pColumn->m_pColumnPaintData   = (void*)m_pCustomPaint;
+            m_pColumn->m_fnColumnContentsPaint = CustomPaint::ColumnContentsPaint;
+            m_pColumn->m_pColumnPaintData = (void*)m_pCustomPaint;
         }
         else
         {
             m_pColumn->m_fnColumnBackgroundPaint = nullptr;
-            m_pColumn->m_fnColumnContentsPaint  = nullptr;
-            m_pColumn->m_pColumnPaintData   = nullptr;
+            m_pColumn->m_fnColumnContentsPaint = nullptr;
+            m_pColumn->m_pColumnPaintData = nullptr;
         }
     }
 
@@ -752,14 +750,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Column::RefreshAll()
     {
-        for each(Row^ item in GridControl->Rows)
+        for each(Ntreev::Windows::Forms::Grid::Row^ item in GridControl->Rows)
         {
-            Cell^ cell = item->Cells[this];
+            Ntreev::Windows::Forms::Grid::Cell^ cell = item->Cells[this];
             cell->UpdateNativeText();
         }
     }
 
-    void Column::PaintValue(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle paintRect, ICell^ cell, System::Object^ value)
+    void Column::PaintValue(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle paintRect, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value)
     {
         m_typeEditor->PaintValue(graphics, paintRect, cell, value);
     }
@@ -784,7 +782,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pColumn->SetItemFont(nullptr);
     }
 
-    Column^ Column::FromNative(const GrColumn* pColumn)
+    Column^ Ntreev::Windows::Forms::Grid::Column::FromNative(const GrColumn* pColumn)
     {
         if(pColumn == nullptr)
             return nullptr;
@@ -802,22 +800,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         OnGridControlDetached();
     }
 
-    System::Object^ Column::EditValueInternal(Design::IEditorService^ editorService, ICell^ cell, System::Object^ value)
+    System::Object^ Column::EditValueInternal(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value)
     {
         return EditValue(editorService, cell, value);
     }
 
-    System::Object^ Column::EditValue(Design::IEditorService^ editorService, ICell^ cell, System::Object^ value)
+    System::Object^ Column::EditValue(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value)
     {
         return TypeEditor->EditValue(editorService, cell, value);
     }
 
-    bool Column::CanEdit(ICell^ cell, Design::EditingReason reason)
+    bool Column::CanEdit(Ntreev::Windows::Forms::Grid::ICell^ cell, Ntreev::Windows::Forms::Grid::EditingReason reason)
     {
         return TypeEditor->CanEdit(cell, reason);
     }
 
-    bool Column::CanEditInternal(ICell^ cell, Design::EditingReason reason)
+    bool Column::CanEditInternal(Ntreev::Windows::Forms::Grid::ICell^ cell, Ntreev::Windows::Forms::Grid::EditingReason reason)
     {
         return CanEdit(cell, reason);
     }

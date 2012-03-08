@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -37,8 +37,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     public ref class Cell : Ntreev::Windows::Forms::Grid::CellBase, Ntreev::Windows::Forms::Grid::ICell
     {
     public: // methods
-        /// <summary>
 
+        /// <summary>
         /// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>을 반환합니다.
         /// </summary>
         /// <returns>
@@ -234,7 +234,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::CategoryAttribute("Debug")]
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
-#endif  
+#endif 
         property bool IsMouseOvered
         { 
             bool get();
@@ -322,16 +322,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <code>
         /// private void gridControl1_Paint(object sender, PaintEventArgs e)
         /// {
-        ///     Point location = this.gridControl1.PointToClient(Cursor.Position);
-        ///     Cell cell = this.gridControl1.GetCellAt(location);
+        /// Point location = this.gridControl1.PointToClient(Cursor.Position);
+        /// Cell cell = this.gridControl1.GetCellAt(location);
         ///
-        ///     if (cell == null)
-        ///         return;
+        /// if (cell == null)
+        /// return;
         ///
-        ///     Rectangle textBound = cell.TextBound;
-        ///     textBound.Offset(cell.DisplayRectangle.Location);
+        /// Rectangle textBound = cell.TextBound;
+        /// textBound.Offset(cell.DisplayRectangle.Location);
         ///
-        ///     e.Graphics.DrawRectangle(Pens.Black, textBound);
+        /// e.Graphics.DrawRectangle(Pens.Black, textBound);
         /// }
         /// </code>
         /// </example>
@@ -351,7 +351,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <summary>
         /// 정의되지 않은 셀입니다.
         /// </summary>
-        static Cell^ Null = nullptr;
+        static Ntreev::Windows::Forms::Grid::Cell^ Null = nullptr;
 
     internal: // methods
 
@@ -363,7 +363,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         System::Object^ ValidateValue(System::Object^ value);
 
-        static Cell^ FromNative(GrItem* pItem);
+        static Ntreev::Windows::Forms::Grid::Cell^ FromNative(GrItem* pItem);
 
     internal: // properties
 
@@ -402,27 +402,30 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     private: // variables
 
         Ntreev::Windows::Forms::Grid::Column^ m_column;
-        Ntreev::Windows::Forms::Grid::Row^  m_row;
+        Ntreev::Windows::Forms::Grid::Row^ m_row;
 
-        GrItem*  m_pItem;
-        System::Object^  m_oldValue;
+        GrItem* m_pItem;
+        System::Object^ m_oldValue;
 
-        System::String^  m_errorDescription;
-        System::Object^  m_value;
+        System::String^ m_errorDescription;
+        System::Object^ m_value;
     };
 
-    private ref class InsertionCell : Cell
+    private ref class InsertionCell : Ntreev::Windows::Forms::Grid::Cell
     {
     internal: // methods
+
         InsertionCell(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrItem* pItem, System::Object^ defaultValue);
 
     public: // methods
+
         /// <summary>
         /// <see cref="Value"/>를 <see cref="Column"/>이 제공하는 기본값으로 설정합니다.
         /// </summary>
         void SetDefaultValue();
 
     internal: // properties
+
         virtual property System::Object^ ValueCore
         {
             System::Object^ get() override;
@@ -430,6 +433,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private: // variables
-        System::Object^  m_value;
+
+        System::Object^ m_value;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

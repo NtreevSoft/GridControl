@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -26,8 +26,8 @@
 #include "GridControl.h"
 #include "Cell.h"
 #include "Column.h"
-#include "GridColumnCollection.h"
-#include "GridErrorDescriptor.h"
+#include "ColumnCollection.h"
+#include "ErrorDescriptor.h"
 
 #include "GrGridCell.h"
 #include "GrGridCore.h"
@@ -75,7 +75,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void Row::NewCell(Column^ column)
     {
         GrItem* pItem = m_pDataRow->GetItem(column->NativeRef);
-        Ntreev::Windows::Forms::Grid::Cell^ cell = Cell::FromNative(pItem);
+        Ntreev::Windows::Forms::Grid::Cell^ cell = Ntreev::Windows::Forms::Grid::Cell::FromNative(pItem);
         if(cell == nullptr)
             cell = gcnew Cell(GridControl, pItem);
     }
@@ -202,10 +202,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             throw gcnew System::Exception();
     }
 
-    Row^ Row::FromNative(const GrDataRow* pDataRow)
+    Ntreev::Windows::Forms::Grid::Row^ Ntreev::Windows::Forms::Grid::Row::FromNative(const GrDataRow* pDataRow)
     {
         System::Object^ ref = pDataRow->ManagedRef;
-        return safe_cast<Row^>(ref);
+        return safe_cast<Ntreev::Windows::Forms::Grid::Row^>(ref);
     }
 
     bool Row::IsBeingEdited::get()
@@ -324,7 +324,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::String^ Row::ErrorDescription::get()
     {
-        return m_errorDescription;       
+        return m_errorDescription; 
     }
 
     void Row::ErrorDescription::set(System::String^ value)
@@ -389,7 +389,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void InsertionRow::NewCell(Column^ column)
     {
         GrItem* pItem = NativeRef->GetItem(column->NativeRef);
-        Ntreev::Windows::Forms::Grid::Cell^ cell = Cell::FromNative(pItem);
+        Ntreev::Windows::Forms::Grid::Cell^ cell = Ntreev::Windows::Forms::Grid::Cell::FromNative(pItem);
         if(cell == nullptr)
         {
             gcnew InsertionCell(GridControl, pItem, column->DefaultValue);

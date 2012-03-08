@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 1.1.4324.22060
+// Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -23,12 +23,11 @@
 
 #include "StdAfx.h"
 #include "CaptionRow.h"
-#include "GridUtil.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     CaptionRow::CaptionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrCaption* pCaption) 
-        : CellBase(gridControl, pCaption) , m_pCaption(pCaption)
+        : CellBase(gridControl, pCaption), m_pCaption(pCaption)
     {
         this->Text = "제목";
         m_pCaption->ManagedRef = this;
