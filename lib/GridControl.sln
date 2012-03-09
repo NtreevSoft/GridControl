@@ -94,6 +94,7 @@ Global
 		{8EB27EC4-86A3-44A7-9767-19C343709894}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8EB27EC4-86A3-44A7-9767-19C343709894}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8EB27EC4-86A3-44A7-9767-19C343709894}.Release|Win32.ActiveCfg = Release|Any CPU
+		{8EB27EC4-86A3-44A7-9767-19C343709894}.Release|Win32.Build.0 = Release|Any CPU
 		{861745B0-CE2E-4725-881A-FD0958DE602D}.Debug_Win32|Any CPU.ActiveCfg = Debug_Win32|Win32
 		{861745B0-CE2E-4725-881A-FD0958DE602D}.Debug_Win32|Mixed Platforms.ActiveCfg = Debug_Win32|Win32
 		{861745B0-CE2E-4725-881A-FD0958DE602D}.Debug_Win32|Mixed Platforms.Build.0 = Debug_Win32|Win32

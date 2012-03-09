@@ -19,7 +19,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             ~Enumerator();
             virtual bool MoveNext();
             virtual void Reset();
-            property Ntreev::Windows::Forms::Grid::Column^ Current { virtual Ntreev::Windows::Forms::Grid::Column^ get(); }
+
+        public:
+            property Ntreev::Windows::Forms::Grid::Column^ Current 
+            {
+                virtual Ntreev::Windows::Forms::Grid::Column^ get(); 
+            }
 
         private:
             property System::Object^ Current_System_Collections_IEnumerator
