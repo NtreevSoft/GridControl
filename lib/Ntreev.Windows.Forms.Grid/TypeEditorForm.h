@@ -29,7 +29,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     /// <summary>
     /// TypeEditorForm에 대한 요약입니다.
     /// </summary>
-    private ref class TypeEditorForm : System::Windows::Forms::Form,
+    ref class TypeEditorForm : System::Windows::Forms::Form,
         System::Windows::Forms::Design::IWindowsFormsEditorService, 
         System::IServiceProvider,
         System::ComponentModel::ITypeDescriptorContext,

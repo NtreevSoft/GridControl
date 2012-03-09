@@ -38,9 +38,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     ref class DisplayableRowCollection;
     ref class SelectedRowCollection;
     ref class SelectedColumnCollection;
-
     ref class ErrorDescriptor;
-
     ref class ToolTip;
 
     value class EditingReason;
@@ -208,7 +206,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 열과 열 사이를 기준으로 -/+ 속성값 만큼의 너비안에 커서가 들어가게 되면 마우스 클릭시 열의 너비 조절을 할 수 있습니다.
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("열의 너비조절을 수행하기 위한 열과 열 사이의 감지영역을 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(10)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(10)]
         property int ColumnSplitter
         {
             int get();
@@ -223,7 +222,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 행과 행 사이를 기준으로 -/+ 속성값 만큼의 높이안에 커서가 들어가게 되면 마우스 클릭시 행의 높이 조절을 할 수 있습니다.
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("행의 높이조절을 수행하기 위한 행과 행 사이의 감지영역을 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(3)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(3)]
         property int RowSplitter
         {
             int get();
@@ -238,7 +238,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// CellWordwrap 값이 true인 열에 대해서는 이 기능이 적용되지 않습니다.
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("열의 너비를 자동적으로 조절할지에 대한 여부를 가져오거나 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(false)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(false)]
         property bool AutoFitColumn 
         {
             bool get();
@@ -252,7 +253,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀의 내용이 변경되어 문자열의 라인수가 변경되면 최대 높이를 계산하여 자동으로 설정됩니다.
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("행의 높이를 자동적으로 조절할지에 대한 여부를 가져오거나 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(false)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(false)]
         property bool AutoFitRow
         {
             bool get();
@@ -505,7 +507,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이 속성의 값이 false일 경우 마우스 드래깅을 이용한 열의 위치 이동 기능이 제한됩니다.
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("마우스를 이용하여 열의 위치 이동을 할 수 있는지에 대한 여부를 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool EnableColumnMoving
         {
             bool get();
@@ -519,7 +522,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이 속성의 값이 false일 경우 마우스 드래깅을 이용한 열의 너비조절 기능이 제한됩니다.
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("마우스를 이용하여 열의 너비 조절을 할 수 있는지에 대한 여부를 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool EnableColumnResizing
         {
             bool get(); 
@@ -534,7 +538,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이 속성의 값이 false일 경우 마우스를 이용하여 Frozing을 설정하는 기능이 제한됩니다.
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("행의 스크롤 적용여부를 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool EnableColumnFrozing
         {
             bool get(); 
@@ -548,7 +553,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이 속성의 값이 false일 경우 마우스 클릭으로 열의 정렬기능이 제한됩니다.
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("마우스 클릭을 사용하여 열의 내용을 정렬할 수 있는지에 대한 여부를 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool EnableColumnSorting
         {
             bool get(); 
@@ -562,7 +568,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이 속성의 값이 false일 경우 마우스 또는 키보드를 이용한 셀의 편집 기능이 제한됩니다.
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("읽기 전용인지에 대한 여부를 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(false)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(false)]
         property bool ReadOnly
         {
             bool get(); 
@@ -576,7 +583,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이 속성의 값이 false일 경우 마우스 드래깅을 이용한 행 높이조절 기능이 제한됩니다.
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("마우스를 이용하여 행의 높이를 조절할 수 있는지에 대한 여부를 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool EnableRowResizing
         {
             bool get(); 
@@ -590,7 +598,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이 속성의 값이 false일 경우 마우스 또는 키보드를 이용한 그룹화 기능이 제한됩니다.
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("그룹화 기능을 사용할지에 대한 여부를 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool EnableGrouping
         {
             bool get();
@@ -618,7 +627,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이 속성의 값이 false일 경우에는 DataGridView 형식으로 표시합니다.
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("행의 숫자 표시에 대한 여부를 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Appearance"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Appearance")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool IsRowNumberVisible
         {
             bool get();
@@ -629,7 +639,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 행의 헤더 표시에 대한 여부를 가져오거나 설정합니다.
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("행의 헤더 표시에 대한 여부를 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Appearance"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Appearance")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool IsRowHeaderVisible
         {
             bool get();
@@ -640,14 +651,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 새로운 열을 추가하기위한 Insertion행에 표시 여부를 가져오거나 설정합니다.
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("새로운 행을 추가하기위한 삽입행의 표시 여부를 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Appearance"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Appearance")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool IsInsertionRowVisible { bool get(); void set(bool); }
 
         /// <summary>
         /// 상단의 제목 표시 여부를 가져오거나 설정합니다.
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("상단의 제목 표시 여부를 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Appearance"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Appearance")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool IsCaptionRowVisible
         {
             bool get(); 
@@ -658,7 +671,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 상단의 그룹핑 표시 여부를 가져오거나 설정합니다.
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("상단의 그룹핑 표시 여부를 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Appearance"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Appearance")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool IsGroupingRowVisible
         {
             bool get(); 
@@ -669,7 +683,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 컬럼 고정 분할면 표시 여부를 가져오거나 설정합니다.
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("컬럼 고정 분할면 표시 여부를 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Appearance"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Appearance")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool IsFrozingSplitterVisible
         {
             bool get(); 
@@ -683,7 +698,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이 속성의 값이 true일 경우 마우스로 인한 셀 선택시 같은 범위내에 있는 모든 셀들이 선택됩니다.
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("셀 선택시 같은 범위내에 있는 모든 셀들의 선택 여부를 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(false)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(false)]
         property bool FullRowSelect
         {
             bool get(); 
@@ -697,7 +713,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이 속성의 값이 true일 경우 포커스 된 열은 강조 표시가 되며, 그 방법은 <see cref="RowHighlightType"/>의 값으로 변경시킬 수 있습니다.
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("포커스된 행의 강조 표시 여부를 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(false)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(false)]
         property bool RowHighlight
         {
             bool get(); void set(bool); 
@@ -707,7 +724,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 포커스된 행의 강조 표시의 방법을 가져오거나 설정합니다.
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("포커스된 행의 강조 표시 방법을 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(Ntreev::Windows::Forms::Grid::RowHighlightType::Fill)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(Ntreev::Windows::Forms::Grid::RowHighlightType::Fill)]
         property Ntreev::Windows::Forms::Grid::RowHighlightType RowHighlightType
         {
             Ntreev::Windows::Forms::Grid::RowHighlightType get();
@@ -718,7 +736,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 컨트롤이 포커스를 잃었을 때 해당 컨트롤에서 선택된 항목이 강조 표시된 상태로 남아 있는지 여부를 나타내는 값을 가져오거나 설정합니다.
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("컨트롤이 포커스를 잃었을대 선택 영역을 표시하는지에 대한 여부를 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(false)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(false)]
         property bool HideSelection 
         {
             bool get();
@@ -729,7 +748,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 여러 개의 항목을 선택할 수 있는지에 대한 여부를 가져오거나 설정합니다.
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("여러 개의 항목을 선택할 수 있는지에 대한 여부를 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool MultiSelect
         {
             bool get();

@@ -66,7 +66,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 수평 정렬방식을 나타내는 <see cref="System::Drawing::StringAlignment"/>입니다.
         /// </returns>
-        [System::ComponentModel::CategoryAttribute("Layout"), System::ComponentModel::DefaultValueAttribute(System::Drawing::StringAlignment::Near)]
+        [System::ComponentModel::CategoryAttribute("Layout")]
+        [System::ComponentModel::DefaultValueAttribute(System::Drawing::StringAlignment::Near)]
         property System::Drawing::StringAlignment Alignment
         {
             System::Drawing::StringAlignment get(); 
@@ -79,7 +80,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 수직 정렬방식을 나타내는 <see cref="System::Drawing::StringAlignment"/>입니다.
         /// </returns>
-        [System::ComponentModel::CategoryAttribute("Layout"), System::ComponentModel::DefaultValueAttribute(System::Drawing::StringAlignment::Center)]
+        [System::ComponentModel::CategoryAttribute("Layout")]
+        [System::ComponentModel::DefaultValueAttribute(System::Drawing::StringAlignment::Center)]
         property System::Drawing::StringAlignment LineAlignment
         {
             System::Drawing::StringAlignment get();
@@ -92,7 +94,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 제목이 표시되면 true를, 그렇지 않으면 false를 반환합니다.
         /// </returns>
-        [System::ComponentModel::CategoryAttribute("Appearance"), System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::CategoryAttribute("Appearance")]
+        [System::ComponentModel::DefaultValueAttribute(true)]
         property bool IsVisible
         {
             bool get(); 

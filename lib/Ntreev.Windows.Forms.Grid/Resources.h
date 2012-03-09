@@ -25,7 +25,7 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Properties
 {
-    private ref class Resources
+    ref class Resources
     {
         static Resources()
         {
@@ -45,7 +45,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             m_width = m_resourceManager->GetString("Width");
             m_height = m_resourceManager->GetString("Height");
         }
-    public:
+
+    public: // properties
+
         static property System::Drawing::Bitmap^ RowEditing
         {
             System::Drawing::Bitmap^ get() { return m_rowEditing; } 
@@ -106,7 +108,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             System::String^ get() { return m_height; }
         }
 
-    private:
+    private: // variables
+
         static System::Resources::ResourceManager^ m_resourceManager;
 
         static System::Drawing::Bitmap^ m_rowEditing;

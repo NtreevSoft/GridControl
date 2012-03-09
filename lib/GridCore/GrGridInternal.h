@@ -177,4 +177,4 @@ private:
 
     GrIndexRange        m_columnSelecting;
     GrIndexRange        m_rowSelecting;
-};    
+};

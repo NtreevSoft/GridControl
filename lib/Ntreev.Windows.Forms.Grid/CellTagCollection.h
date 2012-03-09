@@ -1,4 +1,4 @@
-//=====================================================================================================================
+ï»¿//=====================================================================================================================
 // Ntreev Grid for .Net 2.0.0.0
 // https://github.com/NtreevSoft/GridControl
 // 
@@ -53,23 +53,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     public: // methods
 
         /// <summary>
-        /// ÄÃ·º¼ÇÀ» ¹Ýº¹ÇÏ´Â ¿­°ÅÀÚ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì»¬ë ‰ì…˜ì„ ë°˜ë³µí•˜ëŠ” ì—´ê±°ìžë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¿­°ÅÀÚ¸¦ ³ªÅ¸³»´Â <see cref="System::Collections::Generic::IEnumerator"/>ÀÔ´Ï´Ù.
+        /// ì—´ê±°ìžë¥¼ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::Collections::Generic::IEnumerator"/>ìž…ë‹ˆë‹¤.
         /// </returns>
         virtual System::Collections::IEnumerator^ GetEnumerator();
 
     public: // properties
 
         /// <summary>
-        /// ¿­ÀÇ ÀÌ¸§À¸·Î ¼¿À» °¡Á®¿É´Ï´Ù.
+        /// ì—´ì˜ ì´ë¦„ìœ¼ë¡œ ì…€ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <param name="columnName">
-        /// ¿­ÀÇ ÀÌ¸§ÀÔ´Ï´Ù.
+        /// ì—´ì˜ ì´ë¦„ìž…ë‹ˆë‹¤.
         /// </param>
         /// <exception cref="System::ArgumentException">
-        /// ¿­ÀÇ ÀÌ¸§À¸·Î ¼¿À» Ã£Áö ¸øÇÏ´Â °æ¿ì
+        /// ì—´ì˜ ì´ë¦„ìœ¼ë¡œ ì…€ì„ ì°¾ì§€ ëª»í•˜ëŠ” ê²½ìš°
         /// </exception>
         property System::Object^ default[System::String^]
         {
@@ -78,19 +78,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¿­ÀÇ ÀÎ½ºÅÏ½º·Î ¼¿À» °¡Á®¿É´Ï´Ù.
+        /// ì—´ì˜ ì¸ìŠ¤í„´ìŠ¤ë¡œ ì…€ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <param name="column">
-        /// Ã£À» <see cref="Ntreev::Windows::Forms::Grid::Column"/>ÀÇ ÀÎ½ºÅÏ½ºÀÔ´Ï´Ù.
+        /// ì°¾ì„ <see cref="Ntreev::Windows::Forms::Grid::Column"/>ì˜ ì¸ìŠ¤í„´ìŠ¤ìž…ë‹ˆë‹¤.
         /// </param>
         /// <returns>
-        /// Ã£Áö ¸øÇÏ´Â °æ¿ì nullÀ» ¹ÝÈ¯ÇÕ´Ï´Ù.
+        /// ì°¾ì§€ ëª»í•˜ëŠ” ê²½ìš° nullì„ ë°˜í™˜í•©ë‹ˆë‹¤.
         /// </returns>
         /// <exception cref="System::NullReferenceException">
-        /// ¸Å°³º¯¼ö°¡ nullÀÏ °æ¿ì
+        /// ë§¤ê°œë³€ìˆ˜ê°€ nullì¼ ê²½ìš°
         /// </exception>
         /// <exception cref="System::ArgumentException">
-        /// ¿­ÀÇ ÀÎ½ºÅÏ½º·Ñ ¼¿À» Ã£Áö ¸øÇÏ´Â °æ¿ì
+        /// ì—´ì˜ ì¸ìŠ¤í„´ìŠ¤ë¡¤ ì…€ì„ ì°¾ì§€ ëª»í•˜ëŠ” ê²½ìš°
         /// </exception>
         property System::Object^ default[Ntreev::Windows::Forms::Grid::Column^]
         {
@@ -99,16 +99,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ÁöÁ¤ÇÑ ÀÎµ¦½º¿¡ ÀÖ´Â ¼¿À» °¡Á®¿É´Ï´Ù.
+        /// ì§€ì •í•œ ì¸ë±ìŠ¤ì— ìžˆëŠ” ì…€ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <param name="index">
-        /// °¡Á®¿Ã ¼¿ÀÇ ÀÎµ¦½º(0ºÎÅÍ ½ÃÀÛ)ÀÔ´Ï´Ù.
+        /// ê°€ì ¸ì˜¬ ì…€ì˜ ì¸ë±ìŠ¤(0ë¶€í„° ì‹œìž‘)ìž…ë‹ˆë‹¤.
         /// </param>
         /// <returns>
-        /// ÁöÁ¤ÇÑ ÀÎµ¦½ºÀÇ ¼¿ÀÔ´Ï´Ù.
+        /// ì§€ì •í•œ ì¸ë±ìŠ¤ì˜ ì…€ìž…ë‹ˆë‹¤.
         /// </returns>
         /// <exception cref="System::ArgumentOutOfRangeException">
-        /// ÀÎµ¦½º°¡ 0º¸´Ù ÀÛ°Å³ª, <see cref="Count"/>º¸´Ù Å¬ °æ¿ì
+        /// ì¸ë±ìŠ¤ê°€ 0ë³´ë‹¤ ìž‘ê±°ë‚˜, <see cref="Count"/>ë³´ë‹¤ í´ ê²½ìš°
         /// </exception>
         property System::Object^ default[int]
         {
@@ -117,10 +117,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¼¿ÀÇ °¹¼ö¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì…€ì˜ ê°¯ìˆ˜ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// °¹¼ö¸¦ ³ªÅ¸³»´Â <see cref="System::Int32"/>ÀÇ Á¤¼ö°ªÀÔ´Ï´Ù.
+        /// ê°¯ìˆ˜ë¥¼ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::Int32"/>ì˜ ì •ìˆ˜ê°’ìž…ë‹ˆë‹¤.
         /// </returns>
         property int Count
         {

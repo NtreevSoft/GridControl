@@ -59,12 +59,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         virtual System::String^ ToString() override;
 
         /// <summary>
-        /// 사용되지 않습니다.
-        /// </summary>
-        [System::ObsoleteAttribute]
-        void RefreshAll();
-
-        /// <summary>
         /// 셀의 전경색을 기본값으로 되돌립니다.
         /// </summary>
         void ResetCellForeColor();
@@ -523,7 +517,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 자동개행을 적용하면 true를, 그렇지 않다면 false를 반환합니다.
         /// </returns>
-        [System::ComponentModel::CategoryAttribute("Cell"), System::ComponentModel::DefaultValueAttribute(false)]
+        [System::ComponentModel::CategoryAttribute("Cell")]
+        [System::ComponentModel::DefaultValueAttribute(false)]
         property bool CellWordWrap
         {
             bool get();
@@ -536,7 +531,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 멀티라인 적용하면 true를, 그렇지 않다면 false를 반환합니다.
         /// </returns>
-        [System::ComponentModel::CategoryAttribute("Cell"), System::ComponentModel::DefaultValueAttribute(false)]
+        [System::ComponentModel::CategoryAttribute("Cell")]
+        [System::ComponentModel::DefaultValueAttribute(false)]
         property bool CellMultiline
         {
             bool get();
@@ -658,7 +654,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         event System::EventHandler^ Disposed
         {
             virtual void add(System::EventHandler^ p) { m_eventDisposed += p; }
-            virtual void remove(System::EventHandler^ p){ m_eventDisposed -= p; }
+            virtual void remove(System::EventHandler^ p) { m_eventDisposed -= p; }
         private:
 
             virtual void raise(System::Object^ sender, System::EventArgs^ e) sealed { if(m_eventDisposed != nullptr) { m_eventDisposed->Invoke(sender, e); } }

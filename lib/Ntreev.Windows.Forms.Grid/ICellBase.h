@@ -1,18 +1,41 @@
+ï»¿//=====================================================================================================================
+// Ntreev Grid for .Net 2.0.0.0
+// https://github.com/NtreevSoft/GridControl
+// 
+// Released under the MIT License.
+// 
+// Copyright (c) 2010 Ntreev Soft co., Ltd.
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit 
+// persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the 
+// Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+// WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//=====================================================================================================================
+
+
 #pragma once
 #include "Types.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     /// <summary>
-    /// °³Ã¼ÀÇ ½ºÅ¸ÀÏ ¼Ó¼ºÀ» Á¤ÀÇÇÕ´Ï´Ù.
+    /// ê°œì²´ì˜ ìŠ¤íƒ€ì¼ ì†ì„±ì„ ì •ì˜í•©ë‹ˆë‹¤.
     /// </summary>
     public interface class ICellBase
     {
         /// <summary>
-        /// °³Ã¼ÀÇ Àü°æ»öÀ» °¡Á®¿É´Ï´Ù.
+        /// ê°œì²´ì˜ ì „ê²½ìƒ‰ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// Àü°æ»öÀ» ³ªÅ¸³»´Â <see cref="System::Drawing::Color"/>ÀÔ´Ï´Ù.
+        /// ì „ê²½ìƒ‰ì„ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::Drawing::Color"/>ì…ë‹ˆë‹¤.
         /// </returns>
         property System::Drawing::Color ForeColor
         {
@@ -20,10 +43,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// °³Ã¼ÀÇ ¹è°æ»öÀ» °¡Á®¿É´Ï´Ù.
+        /// ê°œì²´ì˜ ë°°ê²½ìƒ‰ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¹è°æ»öÀ» ³ªÅ¸³»´Â <see cref="System::Drawing::Color"/>ÀÔ´Ï´Ù.
+        /// ë°°ê²½ìƒ‰ì„ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::Drawing::Color"/>ì…ë‹ˆë‹¤.
         /// </returns>
         property System::Drawing::Color BackColor
         {
@@ -31,10 +54,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// °³Ã¼ÀÇ ±Û²ÃÀ» °¡Á®¿É´Ï´Ù.
+        /// ê°œì²´ì˜ ê¸€ê¼´ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ±Û²Ã»öÀ» ³ªÅ¸³»´Â <see cref="System::Drawing::Font"/>ÀÔ´Ï´Ù.
+        /// ê¸€ê¼´ìƒ‰ì„ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::Drawing::Font"/>ì…ë‹ˆë‹¤.
         /// </returns>
         property System::Drawing::Font^ Font
         {
@@ -127,10 +150,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¼¿ÀÇ ¼öÆò Á¤·Ä¹æ½ÄÀ» °¡Á®¿À°Å³ª ¼³Á¤ÇÕ´Ï´Ù.
+        /// ì…€ì˜ ìˆ˜í‰ ì •ë ¬ë°©ì‹ì„ ê°€ì ¸ì˜¤ê±°ë‚˜ ì„¤ì •í•©ë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¼öÆò Á¤·Ä¹æ½ÄÀ» ³ªÅ¸³»´Â <see cref="System::Drawing::StringAlignment"/>ÀÔ´Ï´Ù.
+        /// ìˆ˜í‰ ì •ë ¬ë°©ì‹ì„ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::Drawing::StringAlignment"/>ì…ë‹ˆë‹¤.
         /// </returns>
         property System::Drawing::StringAlignment Alignment
         {
@@ -138,10 +161,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¼¿ÀÇ ¼öÁ÷ Á¤·Ä¹æ½ÄÀ» °¡Á®¿À°Å³ª ¼³Á¤ÇÕ´Ï´Ù.
+        /// ì…€ì˜ ìˆ˜ì§ ì •ë ¬ë°©ì‹ì„ ê°€ì ¸ì˜¤ê±°ë‚˜ ì„¤ì •í•©ë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¼öÁ÷ Á¤·Ä¹æ½ÄÀ» ³ªÅ¸³»´Â <see cref="System::Drawing::StringAlignment"/>ÀÔ´Ï´Ù.
+        /// ìˆ˜ì§ ì •ë ¬ë°©ì‹ì„ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::Drawing::StringAlignment"/>ì…ë‹ˆë‹¤.
         /// </returns>
         property System::Drawing::StringAlignment LineAlignment
         {

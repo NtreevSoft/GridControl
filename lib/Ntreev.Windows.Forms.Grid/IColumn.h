@@ -1,18 +1,41 @@
+ï»¿//=====================================================================================================================
+// Ntreev Grid for .Net 2.0.0.0
+// https://github.com/NtreevSoft/GridControl
+// 
+// Released under the MIT License.
+// 
+// Copyright (c) 2010 Ntreev Soft co., Ltd.
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit 
+// persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the 
+// Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+// WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//=====================================================================================================================
+
+
 #pragma once
 #include "ICellBase.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     /// <summary>
-    /// ¿­À» ³ªÅ¸³»±âÀ§ÇÑ ¼Ó¼ºÀ» Á¤ÀÇÇÕ´Ï´Ù.
+    /// ì—´ì„ ë‚˜íƒ€ë‚´ê¸°ìœ„í•œ ì†ì„±ì„ ì •ì˜í•©ë‹ˆë‹¤.
     /// </summary>
     public interface class IColumn : ICellBase
     {
         /// <summary>
-        /// Ç¥½ÃÇÒ ¿­ÀÇ Á¦¸ñÀ» °¡Á®¿É´Ï´Ù.
+        /// í‘œì‹œí•  ì—´ì˜ ì œëª©ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// Ç¥½ÃÇÒ ¿­ÀÇ Á¦¸ñÀ» ³ªÅ¸³»´Â <see cref="System::String"/>ÀÔ´Ï´Ù.
+        /// í‘œì‹œí•  ì—´ì˜ ì œëª©ì„ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::String"/>ìž…ë‹ˆë‹¤.
         /// </returns>
         property System::String^ Title
         {
@@ -20,10 +43,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¿­ÀÇ ÀÌ¸§À» °¡Á®¿É´Ï´Ù.
+        /// ì—´ì˜ ì´ë¦„ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¿­ÀÇ ÀÌ¸§À» ³ªÅ¸³»´Â <see cref="System::String"/>ÀÔ´Ï´Ù.
+        /// ì—´ì˜ ì´ë¦„ì„ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::String"/>ìž…ë‹ˆë‹¤.
         /// </returns>
         property System::String^ ColumnName
         {
@@ -31,10 +54,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¿­ÀÇ ÅøÆÁÀ» °¡Á®¿É´Ï´Ù.
+        /// ì—´ì˜ íˆ´íŒì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¿­ÀÇ ÅøÆÁÀ» ³ªÅ¸³»´Â <see cref="System::String"/>ÀÔ´Ï´Ù.
+        /// ì—´ì˜ íˆ´íŒì„ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::String"/>ìž…ë‹ˆë‹¤.
         /// </returns>
         property System::String^ Tooltip
         {
@@ -42,10 +65,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¿­ÀÇ °íÀ¯ ¾ÆÀÌµð¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì—´ì˜ ê³ ìœ  ì•„ì´ë””ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// °íÀ¯ ¾ÆÀÌµð¸¦ ³ªÅ¸³»´Â <see cref="System::UInt32"/>ÇüÅÂÀÇ Á¤¼ö°ªÀÔ´Ï´Ù.
+        /// ê³ ìœ  ì•„ì´ë””ë¥¼ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::UInt32"/>í˜•íƒœì˜ ì •ìˆ˜ê°’ìž…ë‹ˆë‹¤.
         /// </returns>
         property unsigned int ColumnID
         {
@@ -53,10 +76,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¿­ÀÇ ÃÖ¼Ò ³Êºñ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì—´ì˜ ìµœì†Œ ë„ˆë¹„ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¿­ÀÇ ÃÖ¼Ò ³Êºñ¸¦ ³ªÅ¸³»´Â <see cref="System::Int32"/>ÇüÅÂÀÇ Á¤¼ö°ªÀÔ´Ï´Ù.
+        /// ì—´ì˜ ìµœì†Œ ë„ˆë¹„ë¥¼ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::Int32"/>í˜•íƒœì˜ ì •ìˆ˜ê°’ìž…ë‹ˆë‹¤.
         /// </returns>
         property int MinWidth
         {
@@ -64,10 +87,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¿­ÀÇ ÃÖ´ë ³Êºñ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì—´ì˜ ìµœëŒ€ ë„ˆë¹„ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¿­ÀÇ ÃÖ´ë ³Êºñ¸¦ ³ªÅ¸³»´Â <see cref="System::Int32"/>ÇüÅÂÀÇ Á¤¼ö°ªÀÔ´Ï´Ù.
+        /// ì—´ì˜ ìµœëŒ€ ë„ˆë¹„ë¥¼ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::Int32"/>í˜•íƒœì˜ ì •ìˆ˜ê°’ìž…ë‹ˆë‹¤.
         /// </returns>
         property int MaxWidth
         {
@@ -75,10 +98,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¿­ÀÇ Ç¥½Ã ¿©ºÎ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì—´ì˜ í‘œì‹œ ì—¬ë¶€ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¿­ÀÌ Ç¥½ÃµÇ¸é true¸¦, ±×·¸Áö ¾Ê´Ù¸é false¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì—´ì´ í‘œì‹œë˜ë©´ trueë¥¼, ê·¸ë ‡ì§€ ì•Šë‹¤ë©´ falseë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </returns>
         property bool IsVisible
         {
@@ -86,14 +109,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¿­ÀÇ À§Ä¡ ÀÌµ¿ ¿©ºÎ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì—´ì˜ ìœ„ì¹˜ ì´ë™ ì—¬ë¶€ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <remarks>
-        /// ÀÌ ¼Ó¼ºÀº ¸¶¿ì½º¸¦ ÀÌ¿ëÇÏ¿© Ç¥½ÃµÇ´Â ¿­ÀÇ À§Ä¡¸¦ ¹Ù²Ü¼ö ÀÖ´ÂÁö¿¡ ´ëÇÑ ¿©ºÎ¸¦ È®ÀÎÇÏ´Â °ÍÀÔ´Ï´Ù. 
-        /// ÀÌ ¼Ó¼ºÀÇ °ªÀÌ falseÀÌ¸é ¸¶¿ì½º¸¦ ÀÌ¿ëÇÏ¿© ¿­ÀÇ À§Ä¡ ÀÌµ¿À» ÇÒ ¼ö ¾ø½À´Ï´Ù.
+        /// ì´ ì†ì„±ì€ ë§ˆìš°ìŠ¤ë¥¼ ì´ìš©í•˜ì—¬ í‘œì‹œë˜ëŠ” ì—´ì˜ ìœ„ì¹˜ë¥¼ ë°”ê¿€ìˆ˜ ìžˆëŠ”ì§€ì— ëŒ€í•œ ì—¬ë¶€ë¥¼ í™•ì¸í•˜ëŠ” ê²ƒìž…ë‹ˆë‹¤. 
+        /// ì´ ì†ì„±ì˜ ê°’ì´ falseì´ë©´ ë§ˆìš°ìŠ¤ë¥¼ ì´ìš©í•˜ì—¬ ì—´ì˜ ìœ„ì¹˜ ì´ë™ì„ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.
         /// </remarks>
         /// <returns>
-        /// ¿­ÀÇ À§Ä¡ ÀÌµ¿ÀÌ °¡´ÉÇÏ´Ù¸é true¸¦, ±×·¸Áö ¾Ê´Ù¸é false¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì—´ì˜ ìœ„ì¹˜ ì´ë™ì´ ê°€ëŠ¥í•˜ë‹¤ë©´ trueë¥¼, ê·¸ë ‡ì§€ ì•Šë‹¤ë©´ falseë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </returns>
         property bool IsMovable
         {
@@ -101,14 +124,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¿­ÀÇ ³Êºñ Á¶Àý ¿©ºÎ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì—´ì˜ ë„ˆë¹„ ì¡°ì ˆ ì—¬ë¶€ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <remarks>
-        /// ÀÌ ¼Ó¼ºÀº ¸¶¿ì½º¸¦ ÀÌ¿ëÇÏ¿© ¿­ÀÇ ³Êºñ¸¦ Á¶ÀýÇÒ ¼ö ÀÖ´ÂÁö¿¡ ´ëÇÑ ¿©ºÎ¸¦ È®ÀÎÇÕ´Ï´Ù. 
-        /// ÀÌ ¼Ó¼ºÀÇ °ªÀÌ falseÀÌ¸é ¸¶¿ì½º¸¦ ÀÌ¿ëÇÏ¿© ¿­ÀÇ ³ÊºñÁ¶ÀýÀ» ÇÒ ¼ö ¾ø½À´Ï´Ù.
+        /// ì´ ì†ì„±ì€ ë§ˆìš°ìŠ¤ë¥¼ ì´ìš©í•˜ì—¬ ì—´ì˜ ë„ˆë¹„ë¥¼ ì¡°ì ˆí•  ìˆ˜ ìžˆëŠ”ì§€ì— ëŒ€í•œ ì—¬ë¶€ë¥¼ í™•ì¸í•©ë‹ˆë‹¤. 
+        /// ì´ ì†ì„±ì˜ ê°’ì´ falseì´ë©´ ë§ˆìš°ìŠ¤ë¥¼ ì´ìš©í•˜ì—¬ ì—´ì˜ ë„ˆë¹„ì¡°ì ˆì„ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.
         /// </remarks>
         /// <returns>
-        /// ¿­ÀÇ ³Êºñ Á¶ÀýÀÌ °¡´ÉÇÏ¸é true¸¦, ±×·¸Áö ¾Ê´Ù¸é false¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
+        /// ì—´ì˜ ë„ˆë¹„ ì¡°ì ˆì´ ê°€ëŠ¥í•˜ë©´ trueë¥¼, ê·¸ë ‡ì§€ ì•Šë‹¤ë©´ falseë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
         /// </returns>
         property bool IsResizable
         {
@@ -116,14 +139,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¼öÆò ½ºÅ©·Ñ½Ã ½ºÅ©·Ñ¿¡ Àû¿ë ¿©ºÎ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ìˆ˜í‰ ìŠ¤í¬ë¡¤ì‹œ ìŠ¤í¬ë¡¤ì— ì ìš© ì—¬ë¶€ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¼öÆò ½ºÅ©·Ñ½Ã ½ºÅ©·Ñ¿¡ Àû¿ëÀÌ µÇÁö ¾ÊÀ¸¸é true, Àû¿ëÀÌ µÇ¸é false¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
+        /// ìˆ˜í‰ ìŠ¤í¬ë¡¤ì‹œ ìŠ¤í¬ë¡¤ì— ì ìš©ì´ ë˜ì§€ ì•Šìœ¼ë©´ true, ì ìš©ì´ ë˜ë©´ falseë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
         /// </returns>
         /// <remarks>
-        /// ¿­ÀÇ °¹¼ö°¡ ¸¹¾Æ È­¸é¿¡ ´Ù Ç¥½Ã µÇÁö ¸øÇÒ¶§´Â ¼öÆò ½ºÅ©·ÑÀ» ÅëÇØ¼­ º¸ÀÌÁö ¾Ê´Â ¿­À» º¼ ¼ö ÀÖ½À´Ï´Ù. 
-        /// ÀÌ ¼Ó¼ºÀÇ °ªÀÌ trueÀÌ¸é ºÐÇÒ¸éÀ» ±âÁØÀ¸·Î ÁÂÃø¿¡ ¹èÄ¡µÇ¾î ¼öÆò ½ºÅ©·ÑÀ» ÇØµµ ¿òÁ÷ÀÌÁö ¾Ê°í °íÁ¤µÇ¾î Ç×»ó È­¸é¿¡ Ç¥½ÃÇÒ ¼ö ÀÖ½À´Ï´Ù.
+        /// ì—´ì˜ ê°¯ìˆ˜ê°€ ë§Žì•„ í™”ë©´ì— ë‹¤ í‘œì‹œ ë˜ì§€ ëª»í• ë•ŒëŠ” ìˆ˜í‰ ìŠ¤í¬ë¡¤ì„ í†µí•´ì„œ ë³´ì´ì§€ ì•ŠëŠ” ì—´ì„ ë³¼ ìˆ˜ ìžˆìŠµë‹ˆë‹¤. 
+        /// ì´ ì†ì„±ì˜ ê°’ì´ trueì´ë©´ ë¶„í• ë©´ì„ ê¸°ì¤€ìœ¼ë¡œ ì¢Œì¸¡ì— ë°°ì¹˜ë˜ì–´ ìˆ˜í‰ ìŠ¤í¬ë¡¤ì„ í•´ë„ ì›€ì§ì´ì§€ ì•Šê³  ê³ ì •ë˜ì–´ í•­ìƒ í™”ë©´ì— í‘œì‹œí•  ìˆ˜ ìžˆìŠµë‹ˆë‹¤.
         /// </remarks>
         property bool IsFrozen
         {
@@ -131,10 +154,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¿­ÀÌ ÀÐ±â Àü¿ëÀÎÁö¿¡ ´ëÇÑ ¿©ºÎ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì—´ì´ ì½ê¸° ì „ìš©ì¸ì§€ì— ëŒ€í•œ ì—¬ë¶€ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¿­ÀÌ ÀÐ±â Àü¿ëÀÌ¶ó¸é true¸¦, ±×·¸Áö ¾Ê´Ù¸é false¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
+        /// ì—´ì´ ì½ê¸° ì „ìš©ì´ë¼ë©´ trueë¥¼, ê·¸ë ‡ì§€ ì•Šë‹¤ë©´ falseë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
         /// </returns>
         property bool IsReadOnly
         {
@@ -142,10 +165,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// Á¤·Ä °¡´É ¿©ºÎ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì •ë ¬ ê°€ëŠ¥ ì—¬ë¶€ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// Á¤·ÄÀÌ °¡´ÉÇÏ´Ù¸é true¸¦, ±×·¸Áö ¾Ê´Ù¸é false¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
+        /// ì •ë ¬ì´ ê°€ëŠ¥í•˜ë‹¤ë©´ trueë¥¼, ê·¸ë ‡ì§€ ì•Šë‹¤ë©´ falseë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
         /// </returns>
         property bool CanBeSorted
         {
@@ -153,10 +176,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         ///// <summary>
-        ///// ¿­ÀÌ µ¥ÀÌÅÍ ¼Ò½º¿Í ¹ÙÀÎµù µÉ ¼ö ÀÖ´ÂÁö¿¡ ´ëÇÑ ¿©ºÎ¸¦ °¡Á®¿À°Å³ª ¼³Á¤ÇÕ´Ï´Ù.
+        ///// ì—´ì´ ë°ì´í„° ì†ŒìŠ¤ì™€ ë°”ì¸ë”© ë  ìˆ˜ ìžˆëŠ”ì§€ì— ëŒ€í•œ ì—¬ë¶€ë¥¼ ê°€ì ¸ì˜¤ê±°ë‚˜ ì„¤ì •í•©ë‹ˆë‹¤.
         ///// </summary>
         ///// <returns>
-        ///// ¿­ÀÌ µ¥ÀÌÅÍ ¼Ò½º¿Í ¹ÙÀÎµù µÉ ¼ö ÀÖ´Ù¸é true¸¦, ±×·¸Áö ¾Ê´Ù¸é false¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
+        ///// ì—´ì´ ë°ì´í„° ì†ŒìŠ¤ì™€ ë°”ì¸ë”© ë  ìˆ˜ ìžˆë‹¤ë©´ trueë¥¼, ê·¸ë ‡ì§€ ì•Šë‹¤ë©´ falseë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
         ///// </returns>
         //property bool IsBindable
         //{
@@ -164,10 +187,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         //}
 
         /// <summary>
-        /// ¼ÒÀ¯ÇÑ ¼¿µéÀÇ ¼±ÅÃ ¿©ºÎ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì†Œìœ í•œ ì…€ë“¤ì˜ ì„ íƒ ì—¬ë¶€ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¼ÒÀ¯ÇÑ ¼¿µéÁß ÇÑ°³ ÀÌ»óÀÌ¶óµµ ¼±ÅÃÀÌ µÇ¾ú´Ù¸é true¸¦, ±×·¸Áö ¾Ê´Ù¸é false¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
+        /// ì†Œìœ í•œ ì…€ë“¤ì¤‘ í•œê°œ ì´ìƒì´ë¼ë„ ì„ íƒì´ ë˜ì—ˆë‹¤ë©´ trueë¥¼, ê·¸ë ‡ì§€ ì•Šë‹¤ë©´ falseë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
         /// </returns>
         property bool IsSelected
         {
@@ -175,10 +198,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¼ÒÀ¯ÇÑ ¼¿µéÀÌ ¸ðµÎ ¼±ÅÃµÇ¾î ÀÖ´ÂÁö¿¡ ´ëÇÑ ¿©ºÎ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì†Œìœ í•œ ì…€ë“¤ì´ ëª¨ë‘ ì„ íƒë˜ì–´ ìžˆëŠ”ì§€ì— ëŒ€í•œ ì—¬ë¶€ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¼ÒÀ¯ÇÑ ¼¿µéÀÌ ¸ðµÎ ¼±ÅÃµÇ¾ú´Ù¸é true¸¦, ±×·¸Áö ¾Ê´Ù¸é false¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
+        /// ì†Œìœ í•œ ì…€ë“¤ì´ ëª¨ë‘ ì„ íƒë˜ì—ˆë‹¤ë©´ trueë¥¼, ê·¸ë ‡ì§€ ì•Šë‹¤ë©´ falseë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
         /// </returns>
         property bool IsFullSelected
         {
@@ -186,10 +209,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¿­ÀÇ ±×·ìÇÎ ±â´ÉÀÌ Àû¿ëµÇ¾ú´ÂÁö¿¡ ´ëÇÑ ¿©ºÎ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì—´ì˜ ê·¸ë£¹í•‘ ê¸°ëŠ¥ì´ ì ìš©ë˜ì—ˆëŠ”ì§€ì— ëŒ€í•œ ì—¬ë¶€ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¿­¿¡ ±×·ìÇÎ ±â´ÉÀÌ Àû¿ëµÇ¾ú´Ù¸é true¸¦, ±×·¸Áö ¾Ê´Ù¸é false¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
+        /// ì—´ì— ê·¸ë£¹í•‘ ê¸°ëŠ¥ì´ ì ìš©ë˜ì—ˆë‹¤ë©´ trueë¥¼, ê·¸ë ‡ì§€ ì•Šë‹¤ë©´ falseë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
         /// </returns>
         property bool IsGrouped
         {
@@ -197,10 +220,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¿­ÀÇ ±×·ìÇÎ ±â´ÉÀ» Àû¿ëÇÒ ¼ö ÀÖ´ÂÁö¿¡ ´ëÇÑ ¿©ºÎ¸¦ °¡Á®¿À°Å³ª ¼³Á¤ÇÕ´Ï´Ù.
+        /// ì—´ì˜ ê·¸ë£¹í•‘ ê¸°ëŠ¥ì„ ì ìš©í•  ìˆ˜ ìžˆëŠ”ì§€ì— ëŒ€í•œ ì—¬ë¶€ë¥¼ ê°€ì ¸ì˜¤ê±°ë‚˜ ì„¤ì •í•©ë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¿­¿¡ ±×·ìÇÎ ±â´ÉÀ» Àû¿ëÇÒ ¼ö ÀÖ´Ù¸é true¸¦, ±×·¸Áö ¾Ê´Ù¸é false¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
+        /// ì—´ì— ê·¸ë£¹í•‘ ê¸°ëŠ¥ì„ ì ìš©í•  ìˆ˜ ìžˆë‹¤ë©´ trueë¥¼, ê·¸ë ‡ì§€ ì•Šë‹¤ë©´ falseë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
         /// </returns>
         property bool CanBeGrouping
         {
@@ -208,10 +231,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¼ÒÀ¯ÇÑ ¼¿µéÀÌ °¡Áú °ªÀÇ µ¥ÀÌÅÍ Å¸ÀÔÀ» °¡Á®¿É´Ï´Ù.
+        /// ì†Œìœ í•œ ì…€ë“¤ì´ ê°€ì§ˆ ê°’ì˜ ë°ì´í„° íƒ€ìž…ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// µ¥ÀÌÅÍ Å¸ÀÔÀ» ³ªÅ¸³»´Â <see cref="System::Type"/>ÀÔ´Ï´Ù.
+        /// ë°ì´í„° íƒ€ìž…ì„ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::Type"/>ìž…ë‹ˆë‹¤.
         /// </returns>
         property System::Type^ DataType
         {
@@ -219,10 +242,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¿­ÀÇ Á¤·Ä¹æ½ÄÀ» °¡Á®¿É´Ï´Ù.
+        /// ì—´ì˜ ì •ë ¬ë°©ì‹ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¿­ÀÇ Á¤·Ä¹æ½ÄÀ» ³ªÅ¸³»´Â <see cref="SortType"/>ÀÔ´Ï´Ù.
+        /// ì—´ì˜ ì •ë ¬ë°©ì‹ì„ ë‚˜íƒ€ë‚´ëŠ” <see cref="SortType"/>ìž…ë‹ˆë‹¤.
         /// </returns>
         property Ntreev::Windows::Forms::Grid::SortType SortType
         {
@@ -230,10 +253,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¿­ÀÌ Ç¥½ÃµÇ´Â ¼ø¼­¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì—´ì´ í‘œì‹œë˜ëŠ” ìˆœì„œë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¿­ÀÌ º¸¿©ÁöÁö ¾Ê°Å³ª ±×¸®µå ÄÁÆ®·Ñ¿¡ Á¾¼ÓµÇ¾î ÀÖÁö ¾È´Ù¸é -1À» ¹ÝÈ¯ÇÕ´Ï´Ù.
+        /// ì—´ì´ ë³´ì—¬ì§€ì§€ ì•Šê±°ë‚˜ ê·¸ë¦¬ë“œ ì»¨íŠ¸ë¡¤ì— ì¢…ì†ë˜ì–´ ìžˆì§€ ì•ˆë‹¤ë©´ -1ì„ ë°˜í™˜í•©ë‹ˆë‹¤.
         /// </returns>
         property int VisibleIndex
         {
@@ -241,10 +264,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¿­ÀÌ È­¸é¿¡ Ç¥½ÃµÇ´Â ¼ø¼­¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì—´ì´ í™”ë©´ì— í‘œì‹œë˜ëŠ” ìˆœì„œë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¿­ÀÌ È­¸é¿¡ º¸¿©ÁöÁö ¾Ê´Ù¸é -1À» ¹ÝÈ¯ÇÕ´Ï´Ù.
+        /// ì—´ì´ í™”ë©´ì— ë³´ì—¬ì§€ì§€ ì•Šë‹¤ë©´ -1ì„ ë°˜í™˜í•©ë‹ˆë‹¤.
         /// </returns>
         property int DisplayIndex
         {
@@ -252,10 +275,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ±×¸®µå ÄÁÆ®·Ñ¿¡ Á¾¼ÓµÈ ¼ø¼­¸¦ °¡Á®¿É´Ï´Ù.
+        /// ê·¸ë¦¬ë“œ ì»¨íŠ¸ë¡¤ì— ì¢…ì†ëœ ìˆœì„œë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ±×¸®µå ÄÁÆ®·Ñ¿¡ Á¾¼ÓµÇ¾ú´Ù¸é Á¾¼ÓµÈ ¼ø¼­(0ºÎÅÍ ½ÃÀÛ)¸¦ ¹ÝÈ¯ÇÏ°í, ±×·¸Áö ¾Ê´Ù¸é -1¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
+        /// ê·¸ë¦¬ë“œ ì»¨íŠ¸ë¡¤ì— ì¢…ì†ë˜ì—ˆë‹¤ë©´ ì¢…ì†ëœ ìˆœì„œ(0ë¶€í„° ì‹œìž‘)ë¥¼ ë°˜í™˜í•˜ê³ , ê·¸ë ‡ì§€ ì•Šë‹¤ë©´ -1ë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
         /// </returns>
         property int Index
         {
@@ -263,10 +286,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¿­ÀÇ ´ëÇÑ »ç¿ëÀÚ Á¤ÀÇ µ¥ÀÌÅÍ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì—´ì˜ ëŒ€í•œ ì‚¬ìš©ìž ì •ì˜ ë°ì´í„°ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¿­ÀÇ ´ëÇÑ »ç¿ëÀÚ Á¤ÀÇ µ¥ÀÌÅÍ¸¦ ³ªÅ¸³»´Â <see cref="System::Object"/>ÀÔ´Ï´Ù.
+        /// ì—´ì˜ ëŒ€í•œ ì‚¬ìš©ìž ì •ì˜ ë°ì´í„°ë¥¼ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::Object"/>ìž…ë‹ˆë‹¤.
         /// </returns>
         property System::Object^ Tag
         {
@@ -274,10 +297,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¸¶¿ì½º Ä¿¼­¿¡ ´ëÇÑ ¿­ÀÇ »óÅÂ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ë§ˆìš°ìŠ¤ ì»¤ì„œì— ëŒ€í•œ ì—´ì˜ ìƒíƒœë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¸¶¿ì½º Ä¿¼­¿¡ ´ëÇÑ ¿­ÀÇ »óÅÂ¸¦ ³ªÅ¸³»´Â <see cref="ColumnState"/>ÀÔ´Ï´Ù.
+        /// ë§ˆìš°ìŠ¤ ì»¤ì„œì— ëŒ€í•œ ì—´ì˜ ìƒíƒœë¥¼ ë‚˜íƒ€ë‚´ëŠ” <see cref="ColumnState"/>ìž…ë‹ˆë‹¤.
         /// </returns>
         property Ntreev::Windows::Forms::Grid::ColumnState ColumnState
         {

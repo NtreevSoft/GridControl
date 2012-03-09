@@ -1478,11 +1478,6 @@ DropDown형식에 컨트롤을 부착해 편집할 수 있는 기능을 제공�
 셀의 전경색을 기본값으로 되돌립니다.
 </summary>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Column.RefreshAll">
-            <summary>
-사용되지 않습니다.
-</summary>
-        </member>
         <member name="M:Ntreev.Windows.Forms.Grid.Column.ToString">
             <summary>
 현재 <see cref="T:System.Object" />를 나타내는 <see cref="T:System.String" />을 반환합니다.

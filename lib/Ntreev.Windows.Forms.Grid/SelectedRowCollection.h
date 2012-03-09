@@ -1,10 +1,33 @@
+ï»¿//=====================================================================================================================
+// Ntreev Grid for .Net 2.0.0.0
+// https://github.com/NtreevSoft/GridControl
+// 
+// Released under the MIT License.
+// 
+// Copyright (c) 2010 Ntreev Soft co., Ltd.
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit 
+// persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the 
+// Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+// WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//=====================================================================================================================
+
+
 #pragma once
 #include "Row.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     /// <summary>
-    /// ¼±ÅÃµÈ ÇàÀÇ ÄÃ·º¼ÇÀ» ³ªÅ¸³À´Ï´Ù.
+    /// ì„ íƒëœ í–‰ì˜ ì»¬ë ‰ì…˜ì„ ë‚˜íƒ€ëƒ…ë‹ˆë‹¤.
     /// </summary>
     public ref class SelectedRowCollection : Ntreev::Windows::Forms::Grid::GridObject, 
         System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Row^>, 
@@ -40,57 +63,57 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     public: // methods
 
         /// <summary>
-        /// Row::IsSelectedÀÇ °ªÀ» true·Î ¼³Á¤ÇÏ°í ¸ñ·Ï¿¡ Ãß°¡ÇÕ´Ï´Ù.
+        /// Row::IsSelectedì˜ ê°’ì„ trueë¡œ ì„¤ì •í•˜ê³  ëª©ë¡ì— ì¶”ê°€í•©ë‹ˆë‹¤.
         /// </summary>
         /// <remarks> 
-        /// Row::IsSelected ÀÇ °ªÀÌ ÀÌ¹Ì true¿´´Ù¸é ¾Æ¹«·± µ¿ÀÛÀÌ ÀÏ¾î³ªÁö ¾Ê½À´Ï´Ù. 
-        /// ÀÌ ¸Ş¼­µå´Â Row::IsSelected = true ¿Í µ¿ÀÏÇÑ ÀÛ¾÷À» ¼öÇàÇÕ´Ï´Ù.
+        /// Row::IsSelected ì˜ ê°’ì´ ì´ë¯¸ trueì˜€ë‹¤ë©´ ì•„ë¬´ëŸ° ë™ì‘ì´ ì¼ì–´ë‚˜ì§€ ì•ŠìŠµë‹ˆë‹¤. 
+        /// ì´ ë©”ì„œë“œëŠ” Row::IsSelected = true ì™€ ë™ì¼í•œ ì‘ì—…ì„ ìˆ˜í–‰í•©ë‹ˆë‹¤.
         /// </remarks>
         virtual void Add(Ntreev::Windows::Forms::Grid::Row^ row); 
 
         /// <summary>
-        /// Row::IsSelectedÀÇ °ªÀ» true·Î ¼³Á¤ÇÏ°í ¸ñ·Ï¿¡ Ãß°¡ÇÏ°í focusÇà¿¡ ÇØ´çÇÏ´Â ¼¿ÀÇ Æ÷Ä¿½º¸¦ ¼³Á¤ÇÕ´Ï´Ù.
+        /// Row::IsSelectedì˜ ê°’ì„ trueë¡œ ì„¤ì •í•˜ê³  ëª©ë¡ì— ì¶”ê°€í•˜ê³  focusí–‰ì— í•´ë‹¹í•˜ëŠ” ì…€ì˜ í¬ì»¤ìŠ¤ë¥¼ ì„¤ì •í•©ë‹ˆë‹¤.
         /// </summary>
         /// <remarks>
         /// </remarks>
         /// <param name="focusColumn">
-        /// Æ÷Ä¿½º¸¦ ¼³Á¤ÇÒ ColumnÀÔ´Ï´Ù.
-        /// null ¼³Á¤½Ã °¡Àå ÃÖ±Ù°ªÀ¸·Î Æ÷Ä¿½º¸¦ ¼³Á¤ÇÕ´Ï´Ù.
+        /// í¬ì»¤ìŠ¤ë¥¼ ì„¤ì •í•  Columnì…ë‹ˆë‹¤.
+        /// null ì„¤ì •ì‹œ ê°€ì¥ ìµœê·¼ê°’ìœ¼ë¡œ í¬ì»¤ìŠ¤ë¥¼ ì„¤ì •í•©ë‹ˆë‹¤.
         /// </param>
         void Add(Ntreev::Windows::Forms::Grid::Row^ row, Column^ focusColumn);
 
         /// <summary>
-        /// Row::IsSelectedÀÇ °ªÀ» false·Î ¼³Á¤ÇÏ°í ¸ñ·Ï¿¡ Á¦°ÅÇÕ´Ï´Ù.
+        /// Row::IsSelectedì˜ ê°’ì„ falseë¡œ ì„¤ì •í•˜ê³  ëª©ë¡ì— ì œê±°í•©ë‹ˆë‹¤.
         /// </summary>
         /// <remarks> 
-        /// Row::IsSelected ÀÇ °ªÀÌ ÀÌ¹Ì false¿´´Ù¸é ¾Æ¹«·± µ¿ÀÛÀÌ ÀÏ¾î³ªÁö ¾Ê½À´Ï´Ù. 
-        /// ÀÌ ¸Ş¼­µå´Â Row::IsSelected = false ¿Í µ¿ÀÏÇÑ ÀÛ¾÷À» ¼öÇàÇÕ´Ï´Ù.
+        /// Row::IsSelected ì˜ ê°’ì´ ì´ë¯¸ falseì˜€ë‹¤ë©´ ì•„ë¬´ëŸ° ë™ì‘ì´ ì¼ì–´ë‚˜ì§€ ì•ŠìŠµë‹ˆë‹¤. 
+        /// ì´ ë©”ì„œë“œëŠ” Row::IsSelected = false ì™€ ë™ì¼í•œ ì‘ì—…ì„ ìˆ˜í–‰í•©ë‹ˆë‹¤.
         /// </remarks>
         virtual bool Remove(Ntreev::Windows::Forms::Grid::Row^ row);
 
         /// <summary>
-        /// ¸ğµç Row::IsSelected ÀÇ °ªÀ» false·Î ¼³Á¤ÇÏ°í Á¦°ÅÇÕ´Ï´Ù.
+        /// ëª¨ë“  Row::IsSelected ì˜ ê°’ì„ falseë¡œ ì„¤ì •í•˜ê³  ì œê±°í•©ë‹ˆë‹¤.
         /// </summary>
         /// <remarks> 
-        /// ÀÌ ¸Ş¼­µå´Â GridControl::ClearSelection() ¿Í µ¿ÀÏÇÑ ÀÛ¾÷À» ¼öÇàÇÕ´Ï´Ù.
+        /// ì´ ë©”ì„œë“œëŠ” GridControl::ClearSelection() ì™€ ë™ì¼í•œ ì‘ì—…ì„ ìˆ˜í–‰í•©ë‹ˆë‹¤.
         /// </remarks>
         virtual void Clear();
 
         /// <summary>
-        /// ÄÃ·º¼ÇÀ» ¹İº¹ÇÏ´Â ¿­°ÅÀÚ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì»¬ë ‰ì…˜ì„ ë°˜ë³µí•˜ëŠ” ì—´ê±°ìë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¿­°ÅÀÚ¸¦ ³ªÅ¸³»´Â <see cref="System::Collections::Generic::IEnumerator"/>ÀÔ´Ï´Ù.
+        /// ì—´ê±°ìë¥¼ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::Collections::Generic::IEnumerator"/>ì…ë‹ˆë‹¤.
         /// </returns>
         virtual System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Row^>^ GetEnumerator();
 
     public: // properties
 
         /// <summary>
-        /// Ç×¸ñÀÇ °¹¼ö¸¦ °¡Á®¿É´Ï´Ù.
+        /// í•­ëª©ì˜ ê°¯ìˆ˜ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// °¹¼ö¸¦ ³ªÅ¸³»´Â <see cref="System::Int32"/>ÀÇ Á¤¼ö°ªÀÔ´Ï´Ù.
+        /// ê°¯ìˆ˜ë¥¼ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::Int32"/>ì˜ ì •ìˆ˜ê°’ì…ë‹ˆë‹¤.
         /// </returns>
         property int Count
         {
@@ -98,16 +121,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ÁöÁ¤ÇÑ ÀÎµ¦½º¿¡ ÀÖ´Â <see cref="Row"/>¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì§€ì •í•œ ì¸ë±ìŠ¤ì— ìˆëŠ” <see cref="Row"/>ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <param name="index">
-        /// °¡Á®¿Ã <see cref="Row"/>ÀÇ ÀÎµ¦½º(0ºÎÅÍ ½ÃÀÛ)ÀÔ´Ï´Ù.
+        /// ê°€ì ¸ì˜¬ <see cref="Row"/>ì˜ ì¸ë±ìŠ¤(0ë¶€í„° ì‹œì‘)ì…ë‹ˆë‹¤.
         /// </param>
         /// <returns>
-        /// ÁöÁ¤ÇÑ ÀÎµ¦½ºÀÇ <see cref="Row"/>ÀÔ´Ï´Ù.
+        /// ì§€ì •í•œ ì¸ë±ìŠ¤ì˜ <see cref="Row"/>ì…ë‹ˆë‹¤.
         /// </returns>
         /// <exception cref="System::ArgumentOutOfRangeException">
-        /// index°¡ 0º¸´Ù ÀÛ°Å³ª, <see cref="Count"/>º¸´Ù Å¬ °æ¿ì
+        /// indexê°€ 0ë³´ë‹¤ ì‘ê±°ë‚˜, <see cref="Count"/>ë³´ë‹¤ í´ ê²½ìš°
         /// </exception>
         property Ntreev::Windows::Forms::Grid::Row^ default[int]
         {

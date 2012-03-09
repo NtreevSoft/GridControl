@@ -1,10 +1,33 @@
+ï»¿//=====================================================================================================================
+// Ntreev Grid for .Net 2.0.0.0
+// https://github.com/NtreevSoft/GridControl
+// 
+// Released under the MIT License.
+// 
+// Copyright (c) 2010 Ntreev Soft co., Ltd.
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit 
+// persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the 
+// Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+// WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//=====================================================================================================================
+
+
 #pragma once
 #include "Column.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     /// <summary>
-    /// ¼±ÅÃµÈ ¿­ÀÇ ÄÃ·º¼ÇÀ» ³ªÅ¸³À´Ï´Ù.
+    /// ì„ íƒëœ ì—´ì˜ ì»¬ë ‰ì…˜ì„ ë‚˜íƒ€ëƒ…ë‹ˆë‹¤.
     /// </summary>
     public ref class SelectedColumnCollection : Ntreev::Windows::Forms::Grid::GridObject, 
         System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Column^>,
@@ -45,10 +68,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void Clear();
 
         /// <summary>
-        /// Ç×¸ñÀÇ °¹¼ö¸¦ °¡Á®¿É´Ï´Ù.
+        /// í•­ëª©ì˜ ê°¯ìˆ˜ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// °¹¼ö¸¦ ³ªÅ¸³»´Â <see cref="System::Int32"/>ÀÇ Á¤¼ö°ªÀÔ´Ï´Ù.
+        /// ê°¯ìˆ˜ë¥¼ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::Int32"/>ì˜ ì •ìˆ˜ê°’ì…ë‹ˆë‹¤.
         /// </returns>
         property int Count
         {
@@ -56,10 +79,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ÄÃ·º¼ÇÀ» ¹İº¹ÇÏ´Â ¿­°ÅÀÚ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì»¬ë ‰ì…˜ì„ ë°˜ë³µí•˜ëŠ” ì—´ê±°ìë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ¿­°ÅÀÚ¸¦ ³ªÅ¸³»´Â <see cref="System::Collections::Generic::IEnumerator"/>ÀÔ´Ï´Ù.
+        /// ì—´ê±°ìë¥¼ ë‚˜íƒ€ë‚´ëŠ” <see cref="System::Collections::Generic::IEnumerator"/>ì…ë‹ˆë‹¤.
         /// </returns>
         virtual System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Column^>^ GetEnumerator();
 

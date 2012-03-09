@@ -34,7 +34,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// 디자이너는 이 폼과 관련된 지역화된 리소스와
     /// 올바르게 상호 작용할 수 없습니다.
     /// </summary>
-    private ref class About : System::Windows::Forms::Form
+    ref class About : System::Windows::Forms::Form
     {
     public:
         About(void)

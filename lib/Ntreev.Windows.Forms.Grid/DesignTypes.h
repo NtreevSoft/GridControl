@@ -1,24 +1,47 @@
+ï»¿//=====================================================================================================================
+// Ntreev Grid for .Net 2.0.0.0
+// https://github.com/NtreevSoft/GridControl
+// 
+// Released under the MIT License.
+// 
+// Copyright (c) 2010 Ntreev Soft co., Ltd.
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit 
+// persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the 
+// Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+// WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//=====================================================================================================================
+
+
 #pragma once
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design
 {
     /// <summary>
-    /// ¼¿À» ÆíÁıÇÏ´Â ¹æ½ÄÀ» ³ªÅ¸³À´Ï´Ù.
+    /// ì…€ì„ í¸ì§‘í•˜ëŠ” ë°©ì‹ì„ ë‚˜íƒ€ëƒ…ë‹ˆë‹¤.
     /// </summary>
     enum class EditStyle : int
     {
         /// <summary>
-        /// ´ÜÀÏ ÄÁÆ®·ÑÀ» »ç¿ëÇÏ¿© ¼¿À» ÆíÁıÇÕ´Ï´Ù.
+        /// ë‹¨ì¼ ì»¨íŠ¸ë¡¤ì„ ì‚¬ìš©í•˜ì—¬ ì…€ì„ í¸ì§‘í•©ë‹ˆë‹¤.
         /// </summary>
         Control,
 
         /// <summary>
-        /// DropDown¿¡ ÄÁÆ®·ÑÀ» ºÎÂø½ÃÄÑ ¼¿À» ÆíÁıÇÒ ¼ö ÀÖµµ·Ï ÇÕ´Ï´Ù.
+        /// DropDownì— ì»¨íŠ¸ë¡¤ì„ ë¶€ì°©ì‹œì¼œ ì…€ì„ í¸ì§‘í•  ìˆ˜ ìˆë„ë¡ í•©ë‹ˆë‹¤.
         /// </summary>
         DropDown,
 
         /// <summary>
-        /// Modal ÇüÅÂ¸¦ »ç¿ëÇÏ¿© ¼¿À» ÆíÁıÇÕ´Ï´Ù.
+        /// Modal í˜•íƒœë¥¼ ì‚¬ìš©í•˜ì—¬ ì…€ì„ í¸ì§‘í•©ë‹ˆë‹¤.
         /// </summary>
         Modal,
     };

@@ -748,15 +748,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_typeEditor->ViewType;
     }
 
-    void Column::RefreshAll()
-    {
-        for each(Ntreev::Windows::Forms::Grid::Row^ item in GridControl->Rows)
-        {
-            Ntreev::Windows::Forms::Grid::Cell^ cell = item->Cells[this];
-            cell->UpdateNativeText();
-        }
-    }
-
     void Column::PaintValue(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle paintRect, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value)
     {
         m_typeEditor->PaintValue(graphics, paintRect, cell, value);

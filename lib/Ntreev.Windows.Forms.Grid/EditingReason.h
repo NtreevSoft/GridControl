@@ -1,46 +1,69 @@
+ï»¿//=====================================================================================================================
+// Ntreev Grid for .Net 2.0.0.0
+// https://github.com/NtreevSoft/GridControl
+// 
+// Released under the MIT License.
+// 
+// Copyright (c) 2010 Ntreev Soft co., Ltd.
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit 
+// persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the 
+// Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+// WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//=====================================================================================================================
+
+
 #pragma once
 #include "Types.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     /// <summary>
-    /// ÆíÁı ½ÃÀÛ ¹æ½ÄÀ» ³ªÅ¸³»´Â °³Ã¼ÀÔ´Ï´Ù.
+    /// í¸ì§‘ ì‹œì‘ ë°©ì‹ì„ ë‚˜íƒ€ë‚´ëŠ” ê°œì²´ì…ë‹ˆë‹¤.
     /// </summary>
     public value class EditingReason
     {
     public: // methods
 
         /// <summary>
-        /// ¸¶¿ì½º·Î ÆíÁıÀÌ ½ÃÀÛµÊÀ» ¾Ë¸®´Â <see cref="EditingReason"/>Å¬·¡½ºÀÇ »õ ÀÎ½ºÅÏ½º¸¦ ÃÊ±âÈ­ÇÕ´Ï´Ù.
+        /// ë§ˆìš°ìŠ¤ë¡œ í¸ì§‘ì´ ì‹œì‘ë¨ì„ ì•Œë¦¬ëŠ” <see cref="EditingReason"/>í´ë˜ìŠ¤ì˜ ìƒˆ ì¸ìŠ¤í„´ìŠ¤ë¥¼ ì´ˆê¸°í™”í•©ë‹ˆë‹¤.
         /// </summary>
-        /// <param name="location">±×¸®µå ÄÁÆ®·Ñ¿¡ ´ëÇÑ ¸¶¿ì½º Ä¿¼­ÀÇ ÁÂÇ¥ÀÔ´Ï´Ù.</param>
+        /// <param name="location">ê·¸ë¦¬ë“œ ì»¨íŠ¸ë¡¤ì— ëŒ€í•œ ë§ˆìš°ìŠ¤ ì»¤ì„œì˜ ì¢Œí‘œì…ë‹ˆë‹¤.</param>
         EditingReason(System::Drawing::Point location);
 
         /// <summary>
-        /// Å°·Î ÆíÁıÀÌ ½ÃÀÛµÊÀ» ¾Ë¸®´Â <see cref="EditingReason"/>Å¬·¡½ºÀÇ »õ ÀÎ½ºÅÏ½º¸¦ ÃÊ±âÈ­ÇÕ´Ï´Ù.
+        /// í‚¤ë¡œ í¸ì§‘ì´ ì‹œì‘ë¨ì„ ì•Œë¦¬ëŠ” <see cref="EditingReason"/>í´ë˜ìŠ¤ì˜ ìƒˆ ì¸ìŠ¤í„´ìŠ¤ë¥¼ ì´ˆê¸°í™”í•©ë‹ˆë‹¤.
         /// </summary>
-        /// <param name="key">Ãß°¡ÀûÀ¸·Î Á¦°øÇÒ Å° Á¤º¸ÀÔ´Ï´Ù.</param>
+        /// <param name="key">ì¶”ê°€ì ìœ¼ë¡œ ì œê³µí•  í‚¤ ì •ë³´ì…ë‹ˆë‹¤.</param>
         EditingReason(System::Windows::Forms::Keys key);
 
         /// <summary>
-        /// ¹®ÀÚ¿­ Å°·Î ÆíÁıÀÌ ½ÃÀÛµÊÀ» ¾Ë¸®´Â <see cref="EditingReason"/>Å¬·¡½ºÀÇ »õ ÀÎ½ºÅÏ½º¸¦ ÃÊ±âÈ­ÇÕ´Ï´Ù.
+        /// ë¬¸ìì—´ í‚¤ë¡œ í¸ì§‘ì´ ì‹œì‘ë¨ì„ ì•Œë¦¬ëŠ” <see cref="EditingReason"/>í´ë˜ìŠ¤ì˜ ìƒˆ ì¸ìŠ¤í„´ìŠ¤ë¥¼ ì´ˆê¸°í™”í•©ë‹ˆë‹¤.
         /// </summary>
-        /// <param name="charKey">¹®ÀÚ¿­ Å° Á¤º¸ÀÔ´Ï´Ù.</param>
+        /// <param name="charKey">ë¬¸ìì—´ í‚¤ ì •ë³´ì…ë‹ˆë‹¤.</param>
         EditingReason(System::Char charKey);
 
         /// <summary>
-        /// ime¿¡ ÀÔ·Â¿¡ ÀÇÇØ¼­ ÆíÁıÀÌ ½ÃÀÛµÊÀ» ¾Ë¸®´Â <see cref="EditingReason"/>Å¬·¡½ºÀÇ »õ ÀÎ½ºÅÏ½º¸¦ ÃÊ±âÈ­ÇÕ´Ï´Ù.
+        /// imeì— ì…ë ¥ì— ì˜í•´ì„œ í¸ì§‘ì´ ì‹œì‘ë¨ì„ ì•Œë¦¬ëŠ” <see cref="EditingReason"/>í´ë˜ìŠ¤ì˜ ìƒˆ ì¸ìŠ¤í„´ìŠ¤ë¥¼ ì´ˆê¸°í™”í•©ë‹ˆë‹¤.
         /// </summary>
-        /// <param name="keyValue">Å°°ª Á¤º¸ÀÔ´Ï´Ù.</param>
+        /// <param name="keyValue">í‚¤ê°’ ì •ë³´ì…ë‹ˆë‹¤.</param>
         EditingReason(int keyValue);
 
     public: // properties
 
         /// <summary>
-        /// ÆíÁı ½ÃÀÛ ¹æ½ÄÀ» °¡Á®¿É´Ï´Ù.
+        /// í¸ì§‘ ì‹œì‘ ë°©ì‹ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ÆíÁı ½ÃÀÛ ¹æ½ÄÀ» ³ªÅ¸³»´Â <see cref="EditingReasonType"/>ÀÔ´Ï´Ù.
+        /// í¸ì§‘ ì‹œì‘ ë°©ì‹ì„ ë‚˜íƒ€ë‚´ëŠ” <see cref="EditingReasonType"/>ì…ë‹ˆë‹¤.
         /// </returns>
         property Ntreev::Windows::Forms::Grid::EditingReasonType ReasonType
         {
@@ -48,7 +71,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¸¶¿ì½º·Î ÀÎÇÑ ÆíÁı½Ã¿¡ ¸¶¿ì½º Ä¿¼­ÀÇ ÁÂÇ¥¸¦ °¡Á®¿É´Ï´Ù.
+        /// ë§ˆìš°ìŠ¤ë¡œ ì¸í•œ í¸ì§‘ì‹œì— ë§ˆìš°ìŠ¤ ì»¤ì„œì˜ ì¢Œí‘œë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         property System::Drawing::Point Location
         {
@@ -56,7 +79,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// Å°·Î ÀÎÇÑ ÆíÁı½Ã¿¡ Å° µ¥ÀÌÅÍ¸¦ °¡Á®¿É´Ï´Ù.
+        /// í‚¤ë¡œ ì¸í•œ í¸ì§‘ì‹œì— í‚¤ ë°ì´í„°ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         property System::Windows::Forms::Keys Key
         {
@@ -64,7 +87,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ¹®ÀÚ¿­ Å°·Î ÀÎÇÑ ÆíÁı½Ã¿¡ ¹®ÀÚ µ¥ÀÌÅÍ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ë¬¸ìì—´ í‚¤ë¡œ ì¸í•œ í¸ì§‘ì‹œì— ë¬¸ì ë°ì´í„°ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         property System::Char Char
         {
@@ -72,7 +95,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// ime ÀÔ·Â¿¡ ÀÇÇÑ Å°°ªÀ» °¡Á®¿É´Ï´Ù.
+        /// ime ì…ë ¥ì— ì˜í•œ í‚¤ê°’ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         property int KeyValue
         {
@@ -80,7 +103,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// Ãß°¡ÀûÀÎ µ¥ÀÌÅÍ·Î ÀÎÇÑ ÆíÁı½Ã¿¡ Ãß°¡ÀûÀÎ µ¥ÀÌÅÍ¸¦ °¡Á®¿É´Ï´Ù.
+        /// ì¶”ê°€ì ì¸ ë°ì´í„°ë¡œ ì¸í•œ í¸ì§‘ì‹œì— ì¶”ê°€ì ì¸ ë°ì´í„°ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         /// </summary>
         property System::Object^ Data
         {

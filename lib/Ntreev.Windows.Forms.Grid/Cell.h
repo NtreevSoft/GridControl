@@ -411,7 +411,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::Object^ m_value;
     };
 
-    private ref class InsertionCell : Ntreev::Windows::Forms::Grid::Cell
+    ref class InsertionCell : Ntreev::Windows::Forms::Grid::Cell
     {
     internal: // methods
 

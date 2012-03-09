@@ -1,10 +1,33 @@
+ï»¿//=====================================================================================================================
+// Ntreev Grid for .Net 2.0.0.0
+// https://github.com/NtreevSoft/GridControl
+// 
+// Released under the MIT License.
+// 
+// Copyright (c) 2010 Ntreev Soft co., Ltd.
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit 
+// persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the 
+// Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+// WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//=====================================================================================================================
+
+
 #pragma once
 #include "IColumn.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     /// <summary>
-    /// ¿­À» ±×¸±¼ö ÀÖ´Â °³Ã¼ÀÔ´Ï´Ù.
+    /// ì—´ì„ ê·¸ë¦´ìˆ˜ ìˆëŠ” ê°œì²´ì…ë‹ˆë‹¤.
     /// </summary>
     [System::ComponentModel::ToolboxItem(true)]
     [System::Drawing::ToolboxBitmap(ColumnPainter::typeid)]
@@ -12,42 +35,42 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
     public: // methods
         /// <summary>
-        /// <see cref="ColumnPainter"/>Å¬·¡½ºÀÇ »õ ÀÎ½ºÅÏ½º¸¦ ÃÊ±âÈ­ÇÕ´Ï´Ù.
+        /// <see cref="ColumnPainter"/>í´ë˜ìŠ¤ì˜ ìƒˆ ì¸ìŠ¤í„´ìŠ¤ë¥¼ ì´ˆê¸°í™”í•©ë‹ˆë‹¤.
         /// </summary>
         ColumnPainter();
 
         /// <summary>
-        /// ¿­ÀÇ ¹è°æÀ» ±×¸³´Ï´Ù.
+        /// ì—´ì˜ ë°°ê²½ì„ ê·¸ë¦½ë‹ˆë‹¤.
         /// </summary>
         /// <returns>
-        /// ±×¸®±â°¡ ¼º°øÇÏ¿© ±âº» ±×¸®±â ¼öÇàÀÌ ÇÊ¿ä ¾øÀ»¶§´Â true, ±×¸®±â°¡ ½ÇÆĞÇÏ¿© ±âº» ±×¸®±â¸¦ ¼öÇàÇÒ ÇÊ¿ä°¡ ÀÖ´Ù¸é false¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
+        /// ê·¸ë¦¬ê¸°ê°€ ì„±ê³µí•˜ì—¬ ê¸°ë³¸ ê·¸ë¦¬ê¸° ìˆ˜í–‰ì´ í•„ìš” ì—†ì„ë•ŒëŠ” true, ê·¸ë¦¬ê¸°ê°€ ì‹¤íŒ¨í•˜ì—¬ ê¸°ë³¸ ê·¸ë¦¬ê¸°ë¥¼ ìˆ˜í–‰í•  í•„ìš”ê°€ ìˆë‹¤ë©´ falseë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
         /// </returns>
-        /// <param name="g">±×¸®±â¿¡ »ç¿ëµÇ´Â ±×·¡ÇÈ °³Ã¼ÀÔ´Ï´Ù.</param>
-        /// <param name="paintRect">±×¸®±â¿¡ ´ë»óÀÌ µÇ´Â ¿­ÀÇ ¿µ¿ªÀÔ´Ï´Ù.</param>
-        /// <param name="column">±×¸®±â¿¡ ´ë»óÀÌ µÇ´Â ¿­ÀÇ Á¤º¸¸¦ °¡Á®¿Ã ¼ö ÀÖ´Â °³Ã¼ÀÔ´Ï´Ù.</param>
+        /// <param name="g">ê·¸ë¦¬ê¸°ì— ì‚¬ìš©ë˜ëŠ” ê·¸ë˜í”½ ê°œì²´ì…ë‹ˆë‹¤.</param>
+        /// <param name="paintRect">ê·¸ë¦¬ê¸°ì— ëŒ€ìƒì´ ë˜ëŠ” ì—´ì˜ ì˜ì—­ì…ë‹ˆë‹¤.</param>
+        /// <param name="column">ê·¸ë¦¬ê¸°ì— ëŒ€ìƒì´ ë˜ëŠ” ì—´ì˜ ì •ë³´ë¥¼ ê°€ì ¸ì˜¬ ìˆ˜ ìˆëŠ” ê°œì²´ì…ë‹ˆë‹¤.</param>
         virtual bool PaintBackground(System::Drawing::Graphics^ g, System::Drawing::Rectangle paintRect, IColumn^ column) abstract;
 
         /// <summary>
-        /// ¿­ÀÇ ¹è°æÀ» Á¦¿ÜÇÑ ³ª¸ÓÁö¸¦ ±×¸³´Ï´Ù.
+        /// ì—´ì˜ ë°°ê²½ì„ ì œì™¸í•œ ë‚˜ë¨¸ì§€ë¥¼ ê·¸ë¦½ë‹ˆë‹¤.
         /// </summary>
         /// <remarks>
-        /// ¹è°æÀ» Á¦¿ÜÇÑ ÅØ½ºÆ® Ãâ·Â ¹× Á¤·Ä Ç¥½ÃµîÀ» ±×¸®°í ½Í´Ù¸é ÀÌ ¸Ş¼­µå¸¦ ±¸ÇöÇÏ¸é µË´Ï´Ù.
+        /// ë°°ê²½ì„ ì œì™¸í•œ í…ìŠ¤íŠ¸ ì¶œë ¥ ë° ì •ë ¬ í‘œì‹œë“±ì„ ê·¸ë¦¬ê³  ì‹¶ë‹¤ë©´ ì´ ë©”ì„œë“œë¥¼ êµ¬í˜„í•˜ë©´ ë©ë‹ˆë‹¤.
         /// </remarks>
         /// <returns>
-        /// ±×¸®±â°¡ ¼º°øÇÏ¿© ±âº» ±×¸®±â ¼öÇàÀÌ ÇÊ¿ä ¾øÀ»¶§´Â true, ±×¸®±â°¡ ½ÇÆĞÇÏ¿© ±âº» ±×¸®±â¸¦ ¼öÇàÇÒ ÇÊ¿ä°¡ ÀÖ´Ù¸é false¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
+        /// ê·¸ë¦¬ê¸°ê°€ ì„±ê³µí•˜ì—¬ ê¸°ë³¸ ê·¸ë¦¬ê¸° ìˆ˜í–‰ì´ í•„ìš” ì—†ì„ë•ŒëŠ” true, ê·¸ë¦¬ê¸°ê°€ ì‹¤íŒ¨í•˜ì—¬ ê¸°ë³¸ ê·¸ë¦¬ê¸°ë¥¼ ìˆ˜í–‰í•  í•„ìš”ê°€ ìˆë‹¤ë©´ falseë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
         /// </returns>
-        /// <param name="g">±×¸®±â¿¡ »ç¿ëµÇ´Â ±×·¡ÇÈ °³Ã¼ÀÔ´Ï´Ù.</param>
-        /// <param name="paintRect">±×¸®±â¿¡ ´ë»óÀÌ µÇ´Â ¿­ÀÇ ¿µ¿ªÀÔ´Ï´Ù.</param>
-        /// <param name="column">±×¸®±â¿¡ ´ë»óÀÌ µÇ´Â ¿­ÀÇ Á¤º¸¸¦ °¡Á®¿Ã ¼ö ÀÖ´Â °³Ã¼ÀÔ´Ï´Ù.</param>
+        /// <param name="g">ê·¸ë¦¬ê¸°ì— ì‚¬ìš©ë˜ëŠ” ê·¸ë˜í”½ ê°œì²´ì…ë‹ˆë‹¤.</param>
+        /// <param name="paintRect">ê·¸ë¦¬ê¸°ì— ëŒ€ìƒì´ ë˜ëŠ” ì—´ì˜ ì˜ì—­ì…ë‹ˆë‹¤.</param>
+        /// <param name="column">ê·¸ë¦¬ê¸°ì— ëŒ€ìƒì´ ë˜ëŠ” ì—´ì˜ ì •ë³´ë¥¼ ê°€ì ¸ì˜¬ ìˆ˜ ìˆëŠ” ê°œì²´ì…ë‹ˆë‹¤.</param>
         virtual bool PaintContents(System::Drawing::Graphics^ g, System::Drawing::Rectangle paintRect, IColumn^ column) abstract;
 
     protected: // methods
         /// <summary>
-        /// ±âº» ±×¸®±â¿¡¼­ Á¤·Ä¹æ½ÄÀ» Ç¥ÇöÇÏ´Â È­»ìÇ¥¸¦ ±×¸³´Ï´Ù.
+        /// ê¸°ë³¸ ê·¸ë¦¬ê¸°ì—ì„œ ì •ë ¬ë°©ì‹ì„ í‘œí˜„í•˜ëŠ” í™”ì‚´í‘œë¥¼ ê·¸ë¦½ë‹ˆë‹¤.
         /// </summary>
-        /// <param name="g">±×¸®±â¿¡ »ç¿ëµÇ´Â ±×·¡ÇÈ °³Ã¼ÀÔ´Ï´Ù.</param>
-        /// <param name="paintRect">È­»ìÇ¥¸¦ ±×¸®±â À§ÇÑ ¿µ¿ªÀÔ´Ï´Ù.</param>
-        /// <param name="sortType">Á¤·Ä¹æ½ÄÀ» ³ªÅ¸³»´Â <see cref="SortType"/>ÀÔ´Ï´Ù.</param>
+        /// <param name="g">ê·¸ë¦¬ê¸°ì— ì‚¬ìš©ë˜ëŠ” ê·¸ë˜í”½ ê°œì²´ì…ë‹ˆë‹¤.</param>
+        /// <param name="paintRect">í™”ì‚´í‘œë¥¼ ê·¸ë¦¬ê¸° ìœ„í•œ ì˜ì—­ì…ë‹ˆë‹¤.</param>
+        /// <param name="sortType">ì •ë ¬ë°©ì‹ì„ ë‚˜íƒ€ë‚´ëŠ” <see cref="SortType"/>ì…ë‹ˆë‹¤.</param>
         void DrawSortArrow(System::Drawing::Graphics^ g, System::Drawing::Rectangle paintRect, SortType sortType);
 
     private: // variables
