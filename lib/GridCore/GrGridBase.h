@@ -40,7 +40,7 @@ protected:
     virtual void OnGridCoreDetached() {};
 
 protected:
-    GrGridCore*    m_pGridCore;
+    GrGridCore* m_pGridCore;
 
     friend class GrGridCore;
 };

@@ -33,7 +33,7 @@ void GrTextUtil::SingleLine(GrLineDesc* pLine, const std::wstring& cellText, con
 {
     memset(pLine, 0, sizeof(GrLineDesc));
     pLine->length = cellText.length();
-    pLine->width  = pFont->GetStringWidth(cellText);
+    pLine->width = pFont->GetStringWidth(cellText);
 }
 
 void GrTextUtil::MultiLine(_TextLines* pLines, const std::wstring& cellText, int cellWidth, const GrFont* pFont, bool wordWrap)
@@ -48,7 +48,7 @@ void GrTextUtil::DoMultiline(_TextLines* pLines, const std::wstring& cellText, c
 {
     uint pos = 0;
     GrLineDesc cl;
-    cl.width  = 0;
+    cl.width = 0;
     cl.length = 0;
     cl.textBegin = 0;
 
@@ -130,7 +130,7 @@ void GrTextUtil::DoMultilineWordWrap(_TextLines* pLines, const std::wstring& cel
             cl.textBegin = pos;
         }
 
-        cl.width  += value.width;
+        cl.width += value.width;
         cl.length += value.length;
         pos += value.length;
     }
@@ -140,15 +140,15 @@ void GrTextUtil::DoMultilineWordWrap(_TextLines* pLines, const std::wstring& cel
 
 GrSelectionTimer::GrSelectionTimer()
 {
-    m_pTimer     = NULL;
+    m_pTimer = NULL;
     m_horzEnable = true;
     m_vertEnable = true;
 
     m_horzScroll = 0;
     m_vertScroll = 0;
 
-    m_scrollAcceleration    = true;
-    m_intervalAcceleration  = true;
+    m_scrollAcceleration = true;
+    m_intervalAcceleration = true;
 }
 
 GrSelectionTimer::~GrSelectionTimer()
@@ -182,12 +182,12 @@ int GrSelectionTimer::ComputeSpeed(int pos, int length) const
         throw _Exception("DivideByZeroException");
     else if(length == 1)
         return 3;
-    return (int)ceilf( (pos / (float)length)  * 3.0f);
+    return (int)ceilf( (pos / (float)length) * 3.0f);
 }
 
 void GrSelectionTimer::SetMouseLocation(GrPoint point)
 {
-    GrRect inside  = GetInsideRectangle();
+    GrRect inside = GetInsideRectangle();
     GrRect outside = GetOutsideRectangle();
 
     m_vertScroll = 0;
@@ -211,7 +211,7 @@ void GrSelectionTimer::SetMouseLocation(GrPoint point)
             {
                 m_horzScroll = ComputeSpeed(point.x - inside.right, outside.right - inside.right);
             }
-        }    
+        } 
     }
 
     if(GetVScrollEnabled() == true)
@@ -229,7 +229,7 @@ void GrSelectionTimer::SetMouseLocation(GrPoint point)
             {
                 m_vertScroll = ComputeSpeed(point.y - inside.bottom, outside.bottom - inside.bottom);
             }
-        }    
+        } 
     }
 
     int speed = std::max(abs(m_horzScroll), abs(m_vertScroll));
@@ -267,7 +267,7 @@ void GrSelectionTimer::SetHScrollEnabled(bool value)
 
 bool GrSelectionTimer::GetVScrollEnabled() const
 {
-    return m_vertEnable && m_pVertScroll->GetVisible() == true;    
+    return m_vertEnable && m_pVertScroll->GetVisible() == true; 
 }
 
 void GrSelectionTimer::SetVScrollEnabled(bool value)
@@ -504,7 +504,7 @@ bool GrItemSelectorInternal::IsSelecting(const GrDataRow* pDataRow) const
 
 GrRect GrItemSelectorInternal::GetInvalidateRect(GrIndexRange visibleColumnRange, GrIndexRange visibleRowRange) const
 {
-    GrColumnList* pColumnList    = m_pGridCore->GetColumnList();
+    GrColumnList* pColumnList = m_pGridCore->GetColumnList();
     GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
 
     if(visibleColumnRange.GetLength() == 0 || visibleRowRange.GetLength() == 0)
@@ -518,7 +518,7 @@ GrRect GrItemSelectorInternal::GetInvalidateRect(GrIndexRange visibleColumnRange
         if(pColumn->GetDisplayable() == false)
             continue;
         GrRect displayRect = pColumn->GetRect();
-        rect.left  = std::min(rect.left,  displayRect.left);
+        rect.left = std::min(rect.left, displayRect.left);
         rect.right = std::max(rect.right, displayRect.right);
     }
 
@@ -528,7 +528,7 @@ GrRect GrItemSelectorInternal::GetInvalidateRect(GrIndexRange visibleColumnRange
         if(pDataRow->GetDisplayable() == false)
             continue;
         GrRect displayRect = pDataRow->GetRect();
-        rect.top    = std::min(rect.top,    displayRect.top);
+        rect.top = std::min(rect.top, displayRect.top);
         rect.bottom = std::max(rect.bottom, displayRect.bottom);
     }
     return rect;

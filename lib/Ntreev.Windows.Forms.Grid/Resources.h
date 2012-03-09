@@ -29,24 +29,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     {
         static Resources()
         {
-            m_resourceManager = gcnew System::Resources::ResourceManager("GridControl.GridResource", System::Reflection::Assembly::GetExecutingAssembly());
+            m_resourceManager = gcnew System::Resources::ResourceManager("GridControl.Resources", System::Reflection::Assembly::GetExecutingAssembly());
 
             m_rowEditing = dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("RowEditing"));
             m_rowFocused = dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("RowFocused"));
             m_insertionRow = dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("InsertionRow"));
             m_insertionRowFocused = dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("InsertionRowFocused"));
             m_errorBitmap = dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("Error"));
-
-            m_defaultColumnName = m_resourceManager->GetString("DefaultColumnName");
-            m_defaultTooltip = m_resourceManager->GetString("DefaultTooltip");
-            m_setValueException = m_resourceManager->GetString("SetValueException");
-            m_removeInsertionRowException= m_resourceManager->GetString("RemoveInsertionRowException");
-            m_noColumnException = m_resourceManager->GetString("NoColumnException");
-            m_width = m_resourceManager->GetString("Width");
-            m_height = m_resourceManager->GetString("Height");
         }
 
-    public: // properties
+    public: // properties bitmap
 
         static property System::Drawing::Bitmap^ RowEditing
         {
@@ -73,39 +65,46 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             System::Drawing::Bitmap^ get() { return m_errorBitmap; }
         }
 
+    public: // properties string
+
         static property System::String^ DefaultColumnName
         { 
-            System::String^ get() { return m_defaultColumnName; }
+            System::String^ get() { return m_resourceManager->GetString("DefaultColumnName"); }
         }
 
         static property System::String^ DefaultTooltip
         { 
-            System::String^ get() { return m_defaultTooltip; }
+            System::String^ get() { return m_resourceManager->GetString("DefaultTooltip"); }
         }
 
         static property System::String^ SetValueException
         { 
-            System::String^ get() { return m_setValueException; }
+            System::String^ get() { return m_resourceManager->GetString("SetValueException"); }
         }
 
         static property System::String^ RemoveInsertionRowException
         {
-            System::String^ get() { return m_removeInsertionRowException; }
+            System::String^ get() { return m_resourceManager->GetString("RemoveInsertionRowException"); }
         }
 
         static property System::String^ NoColumnException 
         { 
-            System::String^ get() { return m_noColumnException; }
+            System::String^ get() { return m_resourceManager->GetString("NoColumnException"); }
         }
 
         static property System::String^ Width
         {
-            System::String^ get() { return m_width; }
+            System::String^ get() { return m_resourceManager->GetString("Width"); }
         }
 
         static property System::String^ Height
         {
-            System::String^ get() { return m_height; }
+            System::String^ get() { return m_resourceManager->GetString("Height"); }
+        }
+
+        static property System::String^ DataSourceInitializingFailed
+        {
+            System::String^ get() { return m_resourceManager->GetString("DataSourceInitializingFailed"); }
         }
 
     private: // variables
@@ -117,15 +116,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         static System::Drawing::Bitmap^ m_insertionRow;
         static System::Drawing::Bitmap^ m_insertionRowFocused;
         static System::Drawing::Bitmap^ m_errorBitmap;
-
-        static System::String^ m_defaultColumnName;
-        static System::String^ m_defaultTooltip;
-        static System::String^ m_setValueException;
-        static System::String^ m_removeInsertionRowException;
-        static System::String^ m_noColumnException;
-
-        static System::String^ m_width;
-        static System::String^ m_height;
     };
 } /*namespace Properties*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
 

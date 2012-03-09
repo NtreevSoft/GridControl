@@ -29,7 +29,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 셀의 컬렉션을 나타냅니다.
     /// </summary>
-    public ref class CellCollection : System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Cell^>, System::Collections::ICollection
+    public ref class CellCollection
+        : System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Cell^>
+        , System::Collections::ICollection
     {
     private: // classes
 

@@ -33,54 +33,54 @@ class GrFocuser : public GrObject
 public:
     GrFocuser();
 
-    void                Set(IFocusable* pFocusable);
-    void                Set(GrColumn* pColumn);
-    void                Set(IDataRow* pDataRow);
+    void Set(IFocusable* pFocusable);
+    void Set(GrColumn* pColumn);
+    void Set(IDataRow* pDataRow);
 
-    GrColumn*           GetLastFocusedColumn() const;
-    IDataRow*           GetLastFocusedRow() const;
+    GrColumn* GetLastFocusedColumn() const;
+    IDataRow* GetLastFocusedRow() const;
 
-    GrColumn*           GetFocusedColumn() const;
-    IDataRow*           GetFocusedRow() const;
+    GrColumn* GetFocusedColumn() const;
+    IDataRow* GetFocusedRow() const;
 
-    IFocusable*         Get() const;
-    GrItem*             GetItem() const;
-    bool                Has() const;
+    IFocusable* Get() const;
+    GrItem* GetItem() const;
+    bool Has() const;
 
 public:
-    _GrEvent            FocusChanging;
-    _GrEvent            FocusChanged;
+    _GrEvent FocusChanging;
+    _GrEvent FocusChanged;
 
 protected:
-    virtual void        OnFocusChanging(GrFocusChangeArgs* e);
-    virtual void        OnFocusChanged(GrFocusChangeArgs* e);
-    virtual void        OnGridCoreAttached();
+    virtual void OnFocusChanging(GrFocusChangeArgs* e);
+    virtual void OnFocusChanged(GrFocusChangeArgs* e);
+    virtual void OnGridCoreAttached();
     virtual IFocusable* GetFocusing() const;
 
 private:
-    void                gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
-    void                gridCore_Created(GrObject* pSender, GrEventArgs* e);
+    void gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
+    void gridCore_Created(GrObject* pSender, GrEventArgs* e);
 
-    void                ResetVariables();
-    void                Invalidate(IFocusable* pFocusable);
+    void ResetVariables();
+    void Invalidate(IFocusable* pFocusable);
 
-    GrColumn*           GetFocusableColumn() const;
-    GrDataRow*          GetFocusableDataRow() const;
+    GrColumn* GetFocusableColumn() const;
+    GrDataRow* GetFocusableDataRow() const;
 
 private:
-    IFocusable*         m_pFocus;
-    GrItem*             m_pFocusItem;
+    IFocusable* m_pFocus;
+    GrItem* m_pFocusItem;
 
-    GrItem*             m_pLastFocusedItem;
-    GrColumn*           m_pLastFocusedColumn;
-    IDataRow*           m_pLastFocusedRow;
+    GrItem* m_pLastFocusedItem;
+    GrColumn* m_pLastFocusedColumn;
+    IDataRow* m_pLastFocusedRow;
 };
 
-typedef std::set<GrItem*>       GrItems;
-typedef std::set<GrColumn*>     GrColumns;
-typedef std::set<GrDataRow*>    GrDataRows;
+typedef std::set<GrItem*> GrItems;
+typedef std::set<GrColumn*> GrColumns;
+typedef std::set<GrDataRow*> GrDataRows;
 
-typedef std::vector<GrColumn*>  GrSelectedColumns;
+typedef std::vector<GrColumn*> GrSelectedColumns;
 typedef std::vector<GrDataRow*> GrSelectedRows;
 
 class GrItemSelector : public GrObject
@@ -89,100 +89,100 @@ class GrItemSelector : public GrObject
 public:
     GrItemSelector();
 
-    void                SelectItem(GrItem* pItem, GrSelectionType selectType);
-    void                SelectItems(const GrItems* pItems, GrSelectionType selectType);
-    void                SelectItems(GrItem* pBegin, GrItem* pEnd, GrSelectionType selectType);
-    void                SelectItems(GrIndexRange visibleColumnIndex, GrIndexRange visibleRowIndex, GrSelectionType selectType);
-    void                SelectItems(GrColumn* pColumn, GrSelectionType selectType);
-    void                SelectItems(GrDataRow* pDataRow, GrSelectionType selectType);
-    void                SelectColumns(const GrColumns* pColumns, GrSelectionType selectType);
-    void                SelectColumns(GrColumn* pFrom, GrColumn* pTo, GrSelectionType selectType);
-    void                SelectDataRows(const GrDataRows* pDataRows, GrSelectionType selectType);
-    void                SelectDataRows(GrDataRow* pFrom, GrDataRow* pTo, GrSelectionType selectType);
-    void                SelectDataRows(IDataRow* pFrom, IDataRow* pTo, GrSelectionType selectType);
-    void                SelectAll();
-    void                ClearSelection();
+    void SelectItem(GrItem* pItem, GrSelectionType selectType);
+    void SelectItems(const GrItems* pItems, GrSelectionType selectType);
+    void SelectItems(GrItem* pBegin, GrItem* pEnd, GrSelectionType selectType);
+    void SelectItems(GrIndexRange visibleColumnIndex, GrIndexRange visibleRowIndex, GrSelectionType selectType);
+    void SelectItems(GrColumn* pColumn, GrSelectionType selectType);
+    void SelectItems(GrDataRow* pDataRow, GrSelectionType selectType);
+    void SelectColumns(const GrColumns* pColumns, GrSelectionType selectType);
+    void SelectColumns(GrColumn* pFrom, GrColumn* pTo, GrSelectionType selectType);
+    void SelectDataRows(const GrDataRows* pDataRows, GrSelectionType selectType);
+    void SelectDataRows(GrDataRow* pFrom, GrDataRow* pTo, GrSelectionType selectType);
+    void SelectDataRows(IDataRow* pFrom, IDataRow* pTo, GrSelectionType selectType);
+    void SelectAll();
+    void ClearSelection();
 
     const GrSelectedColumns*GetSelectedColumns() const;
-    const GrSelectedRows*   GetSelectedRows() const;
+    const GrSelectedRows* GetSelectedRows() const;
 
-    void                LockSelectionUpdate();
-    void                UnlockSelectionUpdate();
+    void LockSelectionUpdate();
+    void UnlockSelectionUpdate();
 
-    bool                CanSelect(IDataRow* pDataRow) const;
-    bool                CanSelect(GrItem* pItem) const;
-    void                SetSelectionGroup(uint selectionGroup);
-    void                SetSelectionGroup(IDataRow* pDataRow);
-    void                SetSelectionGroup(GrItem* pItem);
+    bool CanSelect(IDataRow* pDataRow) const;
+    bool CanSelect(GrItem* pItem) const;
+    void SetSelectionGroup(uint selectionGroup);
+    void SetSelectionGroup(IDataRow* pDataRow);
+    void SetSelectionGroup(GrItem* pItem);
 
     // anchor
-    void                SetAnchor(GrItem* pItem);
-    void                SetColumnAnchor(GrItem* pItem);
-    void                SetColumnAnchor(GrColumn* pColumn);
+    void SetAnchor(GrItem* pItem);
+    void SetColumnAnchor(GrItem* pItem);
+    void SetColumnAnchor(GrColumn* pColumn);
 
-    void                SetRowAnchor(GrItem* pItem);
-    void                SetRowAnchor(IDataRow* pDataRow);
+    void SetRowAnchor(GrItem* pItem);
+    void SetRowAnchor(IDataRow* pDataRow);
 
-    GrColumn*           GetColumnAnchor() const;
-    IDataRow*           GetRowAnchor() const;
+    GrColumn* GetColumnAnchor() const;
+    IDataRow* GetRowAnchor() const;
 
-    GrIndexRange        GetColumnSelections(GrItem* pItem) const;
-    GrIndexRange        GetColumnSelections(GrColumn* pColumn) const;
-    GrIndexRange        GetRowSelections(GrItem* pItem) const;
-    GrIndexRange        GetRowSelections(IDataRow* pDataRow) const;
+    GrIndexRange GetColumnSelections(GrItem* pItem) const;
+    GrIndexRange GetColumnSelections(GrColumn* pColumn) const;
+    GrIndexRange GetRowSelections(GrItem* pItem) const;
+    GrIndexRange GetRowSelections(IDataRow* pDataRow) const;
 
-public:        // event
-    _GrEvent            SelectionChanged;
-    _GrEvent            SelectedRowsChanged;
-    _GrEvent            SelectedColumnsChanged;
+public: // event
+    _GrEvent SelectionChanged;
+    _GrEvent SelectedRowsChanged;
+    _GrEvent SelectedColumnsChanged;
 
 
 protected:
-    virtual void        OnSelectionChanged(GrEventArgs* e);
-    virtual void        OnSelectedColumnsChanged(GrEventArgs* e);
-    virtual void        OnSelectedRowsChanged(GrEventArgs* e);
+    virtual void OnSelectionChanged(GrEventArgs* e);
+    virtual void OnSelectedColumnsChanged(GrEventArgs* e);
+    virtual void OnSelectedRowsChanged(GrEventArgs* e);
 
-    virtual void        OnGridCoreAttached();
+    virtual void OnGridCoreAttached();
 
 protected:
-    void                DoSelect(GrItem* pItem);
-    void                DoDeselect(GrItem* pItem);
-    void                BeginSelection();
-    void                EndSelection();
+    void DoSelect(GrItem* pItem);
+    void DoDeselect(GrItem* pItem);
+    void BeginSelection();
+    void EndSelection();
 
 private:
-    void                AddInvalidatedRectangle(const GrRect& rect);
+    void AddInvalidatedRectangle(const GrRect& rect);
 
-    void                ResetVariables();
+    void ResetVariables();
 
-    void                gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
-    void                gridCore_Created(GrObject* pSender, GrEventArgs* e);
-    void                dataRowList_RowVisibleChanged(GrObject* pSender, GrEventArgs* e);
+    void gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
+    void gridCore_Created(GrObject* pSender, GrEventArgs* e);
+    void dataRowList_RowVisibleChanged(GrObject* pSender, GrEventArgs* e);
 
 private:
-    GrItems             m_selectedItems;
-    GrColumns           m_selectedColumns;
-    GrDataRows          m_selectedRows;
+    GrItems m_selectedItems;
+    GrColumns m_selectedColumns;
+    GrDataRows m_selectedRows;
 
-    GrItems             m_oldSelectedItems;
-    GrColumns           m_oldSelectedColumns;
-    GrDataRows          m_oldSelectedRows;
+    GrItems m_oldSelectedItems;
+    GrColumns m_oldSelectedColumns;
+    GrDataRows m_oldSelectedRows;
 
 
-    GrSelectedColumns   m_externalSelectedColumns;
-    GrSelectedRows      m_externalSelectedRows;
+    GrSelectedColumns m_externalSelectedColumns;
+    GrSelectedRows m_externalSelectedRows;
 
-    bool                m_selectionLock;
-    bool                m_selecting;
-    uint                m_selectionGroup;
+    bool m_selectionLock;
+    bool m_selecting;
+    uint m_selectionGroup;
 
-    GrIndexRange        m_columnSelecting;
-    GrIndexRange        m_rowSelecting;
+    GrIndexRange m_columnSelecting;
+    GrIndexRange m_rowSelecting;
 
-    GrColumn*           m_pAnchorColumn;
-    IDataRow*           m_pAnchorDataRow;
+    GrColumn* m_pAnchorColumn;
+    IDataRow* m_pAnchorDataRow;
 
-    GrRect              m_invalidate;
+    GrRect m_invalidate;
 
     template<class T>
     class SortSelections
@@ -193,7 +193,7 @@ private:
             return p1->GetVisibleIndex() < p2->GetVisibleIndex();
         }
     };
-};    
+}; 
 
 typedef std::vector<GrCell*> GrCells;
 
@@ -203,29 +203,29 @@ public:
     GrTextUpdater();
     virtual ~GrTextUpdater();
 
-    void                AddTextBounds(GrCell* pCell);
-    void                AddTextBounds(GrColumn* pColumn);
-    void                AddTextAlign(GrCell* pCell);
-    void                AddTextAlign(GrColumn* pColumn);
+    void AddTextBounds(GrCell* pCell);
+    void AddTextBounds(GrColumn* pColumn);
+    void AddTextAlign(GrCell* pCell);
+    void AddTextAlign(GrColumn* pColumn);
 
-    void                RemoveTextBounds(GrCell* pCell);
-    void                RemoveTextAlign(GrCell* pCell);
+    void RemoveTextBounds(GrCell* pCell);
+    void RemoveTextAlign(GrCell* pCell);
 
-    void                UpdateTextBounds();
-    void                UpdateTextAlign();
+    void UpdateTextBounds();
+    void UpdateTextAlign();
 
 protected:
-    virtual void        OnGridCoreAttached();
+    virtual void OnGridCoreAttached();
 
 private:
-    void                gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
-    void                gridCore_CapacityChanged(GrObject* pSender, GrEventArgs* e);
+    void gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
+    void gridCore_CapacityChanged(GrObject* pSender, GrEventArgs* e);
 
 private:
-    GrCells             m_vecTextBounds;
-    GrCells             m_vecTextAligns;
+    GrCells m_vecTextBounds;
+    GrCells m_vecTextAligns;
 
-    uint                m_nBaseCapacity;
+    uint m_nBaseCapacity;
 };
 
 class GrScroll;
@@ -245,40 +245,40 @@ class GrFocusMover : public GrObject
 public:
     GrFocusMover();
 
-    void                FirstCell(GrSelectionRange range);
-    void                LastCell(GrSelectionRange range);
-    void                PageUp(GrSelectionRange range);
-    void                PageDown(GrSelectionRange range);
-    void                FirstRow(GrSelectionRange range);
-    void                LastRow(GrSelectionRange range);
-    void                MoveLeft(GrSelectionRange range);
-    void                MoveUp(GrSelectionRange range);
-    void                MoveRight(GrSelectionRange range);
-    void                MoveDown(GrSelectionRange range);
+    void FirstCell(GrSelectionRange range);
+    void LastCell(GrSelectionRange range);
+    void PageUp(GrSelectionRange range);
+    void PageDown(GrSelectionRange range);
+    void FirstRow(GrSelectionRange range);
+    void LastRow(GrSelectionRange range);
+    void MoveLeft(GrSelectionRange range);
+    void MoveUp(GrSelectionRange range);
+    void MoveRight(GrSelectionRange range);
+    void MoveDown(GrSelectionRange range);
 
-    void                BringIntoView(IDataRow* pDataRow);
-    void                BringIntoView(GrColumn* pColumn);
+    void BringIntoView(IDataRow* pDataRow);
+    void BringIntoView(GrColumn* pColumn);
 
 protected:
-    void                OnGridCoreAttached();
+    void OnGridCoreAttached();
 
 private: // methods
-    void                focuser_FocusChanged(GrObject* pSender, GrFocusChangeArgs* e);
-    void                gridCore_Created(GrObject* pSender, GrEventArgs* e);
+    void focuser_FocusChanged(GrObject* pSender, GrFocusChangeArgs* e);
+    void gridCore_Created(GrObject* pSender, GrEventArgs* e);
 
-    void                SelectOne(IDataRow* pDataRow);
-    void                SelectMulti(IDataRow* pBegin, IDataRow* pEnd);
+    void SelectOne(IDataRow* pDataRow);
+    void SelectMulti(IDataRow* pBegin, IDataRow* pEnd);
 
-    bool                DoHorzScroll(GrScrollEventType type);
-    bool                DoVertScroll(GrScrollEventType type);
+    bool DoHorzScroll(GrScrollEventType type);
+    bool DoVertScroll(GrScrollEventType type);
 
 private: // variables
-    GrDataRowList*      m_pDataRowList;
-    GrColumnList*       m_pColumnList;
-    GrColumn*           m_pLastDataColumn;
-    GrScroll*           m_pHorzScroll;
-    GrScroll*           m_pVertScroll;
-    GrFocuser*          m_pFocuser;
-    GrItemSelector*     m_pItemSelector;
-    GrGridWindow*       m_pGridWindow;
+    GrDataRowList* m_pDataRowList;
+    GrColumnList* m_pColumnList;
+    GrColumn* m_pLastDataColumn;
+    GrScroll* m_pHorzScroll;
+    GrScroll* m_pVertScroll;
+    GrFocuser* m_pFocuser;
+    GrItemSelector* m_pItemSelector;
+    GrGridWindow* m_pGridWindow;
 };

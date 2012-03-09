@@ -29,7 +29,7 @@ GrStyle::GrStyle()
 {
     CellForeColor = GrColor::Black;
     CellBackColor = GrColor::White;
-    CellFont      = 0;//GrFontManager::GetDefaultFont();
+    CellFont = 0;//GrFontManager::GetDefaultFont();
 
     SelectedForeColor = GrColor::White;
     SelectedBackColor = GrColor::CornflowerBlue;
@@ -40,12 +40,12 @@ GrStyle::GrStyle()
     RowHighlightForeColor = GrColor::Black;
     RowHighlightBackColor = GrColor::LightCyan;
 
-    GroupingBackColors.push_back(GrColor::Red);
-    GroupingBackColors.push_back(GrColor::Green);
-    GroupingBackColors.push_back(GrColor::Blue);
-    GroupingBackColors.push_back(GrColor::Yellow);
-    GroupingBackColors.push_back(GrColor::Purple);
-    GroupingBackColors.push_back(GrColor::SkyBlue);
+    GroupBackColors.push_back(GrColor::Red);
+    GroupBackColors.push_back(GrColor::Green);
+    GroupBackColors.push_back(GrColor::Blue);
+    GroupBackColors.push_back(GrColor::Yellow);
+    GroupBackColors.push_back(GrColor::Purple);
+    GroupBackColors.push_back(GrColor::SkyBlue);
 }
 
 GrColor GrStyle::GetCellForeColor() const
@@ -91,24 +91,24 @@ GrFont* GrStyle::GetRowItemFont(uint index)
     return RowItemFonts[index % RowItemFonts.size()];
 }
 
-GrColor GrStyle::GetGroupingForeColor(uint index)
+GrColor GrStyle::GetGroupForeColor(uint index)
 {
-    if(GroupingForeColors.size() == 0)
+    if(GroupForeColors.size() == 0)
         return CellForeColor;
-    return GroupingForeColors[index % GroupingForeColors.size()];
+    return GroupForeColors[index % GroupForeColors.size()];
 }
 
-GrColor GrStyle::GetGroupingBackColor(uint index)
+GrColor GrStyle::GetGroupBackColor(uint index)
 {
-    if(GroupingBackColors.size() == 0)
+    if(GroupBackColors.size() == 0)
         return CellBackColor;
 
-    return GroupingBackColors[index % GroupingBackColors.size()];
+    return GroupBackColors[index % GroupBackColors.size()];
 }
 
-GrFont* GrStyle::GetGroupingFont(uint index)
+GrFont* GrStyle::GetGroupFont(uint index)
 {
-    if(GroupingFonts.size() == 0)
+    if(GroupFonts.size() == 0)
         return NULL;
-    return GroupingFonts[index % GroupingFonts.size()];
+    return GroupFonts[index % GroupFonts.size()];
 }

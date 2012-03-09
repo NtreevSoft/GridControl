@@ -47,7 +47,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 스크롤 될 수 없으면 true를, 그렇지 않다면 false를 반환합니다.
         /// </returns>
-        property bool Frozen
+        property bool IsFrozen
         {
             bool get();
         }
@@ -88,7 +88,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     public: // properties
 
-        property bool Resizable
+        property bool IsResizable
         {
             bool get();
         }
@@ -107,7 +107,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     public: // properties
 
-        property bool Sortable
+        property bool IsSortable
         {
             bool get();
         }

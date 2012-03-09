@@ -31,7 +31,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 셀을 표시하기 위한 기본 방법을 제공합니다.
     /// </summary>
-    public ref class CellBase abstract : Ntreev::Windows::Forms::Grid::GridObject, Ntreev::Windows::Forms::Grid::ICellBase
+    public ref class CellBase abstract : Ntreev::Windows::Forms::Grid::GridObject, 
+        Ntreev::Windows::Forms::Grid::ICellBase
     {
     public: // methods
 

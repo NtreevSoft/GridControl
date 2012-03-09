@@ -46,9 +46,9 @@ enum GrGridState
     GrGridState_ColumnSplitterMoving,
     GrGridState_RowPressing,
     GrGridState_RowResizing,
-    GrGridState_GroupingInfoPressing,
-    GrGridState_GroupingCellPressing,
-    GrGridState_GroupingExpandPressing,
+    GrGridState_GroupPressing,
+    GrGridState_GroupHeaderPressing,
+    GrGridState_GroupExpandPressing,
     GrGridState_ItemPressing,
     GrGridState_ItemButtonPressing,
     GrGridState_ItemEditing,
@@ -65,23 +65,23 @@ public:
 
     }
 
-    GrCell*             GetCell() const { return m_pCell; }
+    GrCell* GetCell() const { return m_pCell; }
     template<typename T>
-    T                   GetCell() const { return dynamic_cast<T>(m_pCell); }
-    GrGridState         GetNextState() const { return m_state; }
-    void*               GetUserData() const { return m_userData; }
+    T GetCell() const { return dynamic_cast<T>(m_pCell); }
+    GrGridState GetNextState() const { return m_state; }
+    void* GetUserData() const { return m_userData; }
 
-    void                SetNextState(GrGridState state) { m_state = state; }
-    void                SetUserData(void* userData) { m_userData = userData; }
-    void                SetCell(GrCell* pCell) { m_pCell = pCell; }
-    bool                GetHandled() const { return m_handled; }
-    void                SetHandled(bool b) { m_handled = b; }
+    void SetNextState(GrGridState state) { m_state = state; }
+    void SetUserData(void* userData) { m_userData = userData; }
+    void SetCell(GrCell* pCell) { m_pCell = pCell; }
+    bool GetHandled() const { return m_handled; }
+    void SetHandled(bool b) { m_handled = b; }
 
 private:
-    GrCell*             m_pCell;
-    GrGridState         m_state;
-    void*               m_userData;
-    bool                m_handled;
+    GrCell* m_pCell;
+    GrGridState m_state;
+    void* m_userData;
+    bool m_handled;
 };
 
 class GrStateMouseEventArgs : public GrMouseEventArgs, public GrStateEventArgs
@@ -102,7 +102,7 @@ public:
     GrPoint GetLocalHit() const { return m_localHit; }
 
 private:
-    GrPoint             m_localHit;
+    GrPoint m_localHit;
 };
 
 class GrStateBase : public GrObject
@@ -111,38 +111,38 @@ public:
     GrStateBase();
     virtual ~GrStateBase();
 
-    virtual bool        GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
+    virtual bool GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
 
-    virtual void        OnBegin(GrStateEventArgs* e);
-    virtual void        OnPaintAdornments(GrGridPainter* g, const GrRect& displayRect);
-    virtual void        OnEnd(GrStateEventArgs* e);
+    virtual void OnBegin(GrStateEventArgs* e);
+    virtual void OnPaintAdornments(GrGridPainter* g, const GrRect& displayRect);
+    virtual void OnEnd(GrStateEventArgs* e);
 
-    virtual void        OnMouseDown(GrStateMouseEventArgs* e);
-    virtual void        OnMouseMove(GrStateMouseEventArgs* e);
-    virtual void        OnMouseUp(GrStateMouseEventArgs* e);
-    virtual void        OnMouseClick(GrStateMouseEventArgs* e);
-    virtual void        OnMouseDoubleClick(GrStateMouseEventArgs* e);
-    virtual void        OnMouseWheel(GrMouseEventArgs* e);
-    virtual void        OnKeyDown(GrKeys key, GrKeys modifierKeys);
-    virtual void        OnKeyUp(GrKeys key, GrKeys modifierKeys);
+    virtual void OnMouseDown(GrStateMouseEventArgs* e);
+    virtual void OnMouseMove(GrStateMouseEventArgs* e);
+    virtual void OnMouseUp(GrStateMouseEventArgs* e);
+    virtual void OnMouseClick(GrStateMouseEventArgs* e);
+    virtual void OnMouseDoubleClick(GrStateMouseEventArgs* e);
+    virtual void OnMouseWheel(GrMouseEventArgs* e);
+    virtual void OnKeyDown(GrKeys key, GrKeys modifierKeys);
+    virtual void OnKeyUp(GrKeys key, GrKeys modifierKeys);
 
-    virtual void        OnMouseDragBegin(const GrPoint& location);
-    virtual void        OnMouseDragEnd(bool cancel, const GrHitTest& hitTest);
-    virtual void        OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest);
+    virtual void OnMouseDragBegin(const GrPoint& location);
+    virtual void OnMouseDragEnd(bool cancel, const GrHitTest& hitTest);
+    virtual void OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest);
 
 
     virtual GrGridState GetState() const = 0;
-    virtual bool        GetDragable() const { return false; }
-    virtual GrCursor    GetCursor() const { return GrCursor_Default; }
+    virtual bool GetDragable() const { return false; }
+    virtual GrCursor GetCursor() const { return GrCursor_Default; }
 
 protected:
-    virtual void        OnGridCoreAttached();
-    void                InvokeMouseEvent(GrCell* pOldCell, GrCell* pNewCell, GrStateMouseEventArgs* e);
+    virtual void OnGridCoreAttached();
+    void InvokeMouseEvent(GrCell* pOldCell, GrCell* pNewCell, GrStateMouseEventArgs* e);
 
 protected:
     class GrItemSelectorInternal* m_pItemSelector;
-    class GrFocuserInternal*      m_pFocuser;
-    GrGridWindow*       m_pGridWindow;
+    class GrFocuserInternal* m_pFocuser;
+    GrGridWindow* m_pGridWindow;
 };
 
 class GrStateManager : public GrObject
@@ -152,43 +152,43 @@ public:
     GrStateManager(void);
     ~GrStateManager(void);
 
-    void                ChangeDefaultState();
-    void                ChangeState(GrGridState gridState, GrCell* pCell, void* userData);
-    bool                SetCursor();
+    void ChangeDefaultState();
+    void ChangeState(GrGridState gridState, GrCell* pCell, void* userData);
+    bool SetCursor();
 
-    GrGridState         GetHitTest(const GrPoint& location);
-    GrGridState         GetGridState() const { return m_state->GetState(); }
+    GrGridState GetHitTest(const GrPoint& location);
+    GrGridState GetGridState() const { return m_state->GetState(); }
 
-    void                OnMouseDown(const GrPoint& location, GrKeys modifierKeys);
-    void                OnMouseMove(const GrPoint& location, GrKeys modifierKeys, bool pressed);
-    void                OnMouseUp(const GrPoint& location, GrKeys modifierKeys);
-    void                OnMouseClick(const GrPoint& location, GrKeys modifierKeys);
-    void                OnMouseDoubleClick(const GrPoint& location, GrKeys modifierKeys);
-    void                OnMouseWheel(const GrPoint& location, GrKeys modifierKeys, int delta);
-    void                OnKeyDown(GrKeys key, GrKeys modifierKeys);
-    void                OnKeyUp(GrKeys key, GrKeys modifierKeys);
+    void OnMouseDown(const GrPoint& location, GrKeys modifierKeys);
+    void OnMouseMove(const GrPoint& location, GrKeys modifierKeys, bool pressed);
+    void OnMouseUp(const GrPoint& location, GrKeys modifierKeys);
+    void OnMouseClick(const GrPoint& location, GrKeys modifierKeys);
+    void OnMouseDoubleClick(const GrPoint& location, GrKeys modifierKeys);
+    void OnMouseWheel(const GrPoint& location, GrKeys modifierKeys, int delta);
+    void OnKeyDown(GrKeys key, GrKeys modifierKeys);
+    void OnKeyUp(GrKeys key, GrKeys modifierKeys);
 
-    void                OnPaint(GrGridPainter* pGridPainter);
-    void                OnClearing();
+    void OnPaint(GrGridPainter* pGridPainter);
+    void OnClearing();
 
 protected:
-    virtual void        OnGridCoreAttached();
+    virtual void OnGridCoreAttached();
 
 private:
-    void                ChangeState(GrStateBase* state, GrCell* pHitted, void* userData);
-    GrStateBase*        GetHitTest(GrCell* pHitted, const GrPoint& localHitted);
-    GrRect              ComputeDragRectangle(const GrPoint& location);
+    void ChangeState(GrStateBase* state, GrCell* pHitted, void* userData);
+    GrStateBase* GetHitTest(GrCell* pHitted, const GrPoint& localHitted);
+    GrRect ComputeDragRectangle(const GrPoint& location);
 
 private:
-    _States             m_states;
-    GrStateBase*        m_state;
-    GrStateBase*        m_downState;
-    GrStateBase*        m_defaultState;
+    _States m_states;
+    GrStateBase* m_state;
+    GrStateBase* m_downState;
+    GrStateBase* m_defaultState;
 
-    GrPoint             m_downLocation;
-    GrRect              m_dragRectangle;
-    bool                m_dragging;
-    GrGridWindow*       m_pGridWindow;
+    GrPoint m_downLocation;
+    GrRect m_dragRectangle;
+    bool m_dragging;
+    GrGridWindow* m_pGridWindow;
 
 private:
     class Invalidator
@@ -198,7 +198,7 @@ private:
         ~Invalidator();
 
     private:
-        GrGridCore*     m_pGridCore;
+        GrGridCore* m_pGridCore;
     };
 };
 
@@ -209,21 +209,21 @@ namespace GridStateClass
     public:
         Normal();
 
-        virtual void        OnBegin(GrStateEventArgs* e);
-        virtual void        OnMouseMove(GrStateMouseEventArgs* e);
-        virtual void        OnMouseWheel(GrMouseEventArgs* e);
-        virtual void        OnKeyDown(GrKeys key, GrKeys modifierKeys);
+        virtual void OnBegin(GrStateEventArgs* e);
+        virtual void OnMouseMove(GrStateMouseEventArgs* e);
+        virtual void OnMouseWheel(GrMouseEventArgs* e);
+        virtual void OnKeyDown(GrKeys key, GrKeys modifierKeys);
 
         virtual GrGridState GetState() const { return GrGridState_Normal; }
 
     protected:
-        virtual void        OnGridCoreAttached();
+        virtual void OnGridCoreAttached();
 
     private:
-        void                gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
+        void gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
 
     private:
-        GrCell*             m_pCell;
+        GrCell* m_pCell;
     };
 
     class RootPressing : public GrStateBase
@@ -231,9 +231,9 @@ namespace GridStateClass
     public:
         RootPressing();
 
-        virtual bool        GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
-        virtual void        OnBegin(GrStateEventArgs* e);
-        virtual void        OnEnd(GrStateEventArgs* e);
+        virtual bool GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
+        virtual void OnBegin(GrStateEventArgs* e);
+        virtual void OnEnd(GrStateEventArgs* e);
 
         virtual GrGridState GetState() const { return GrGridState_RootPressing; }
     };
@@ -244,36 +244,36 @@ namespace GridStateClass
         ColumnPressing();
         virtual ~ColumnPressing();
 
-        virtual bool        GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
+        virtual bool GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
 
-        virtual void        OnMouseDown(GrStateMouseEventArgs* e);
-        virtual void        OnMouseUp(GrStateMouseEventArgs* e);
-        virtual void        OnPaintAdornments(GrGridPainter* g, const GrRect& displayRect);
+        virtual void OnMouseDown(GrStateMouseEventArgs* e);
+        virtual void OnMouseUp(GrStateMouseEventArgs* e);
+        virtual void OnPaintAdornments(GrGridPainter* g, const GrRect& displayRect);
 
-        virtual void        OnMouseDragBegin(const GrPoint& location);
-        virtual void        OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest);
-        virtual void        OnMouseDragEnd(bool cancel, const GrHitTest& hitTest);
+        virtual void OnMouseDragBegin(const GrPoint& location);
+        virtual void OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest);
+        virtual void OnMouseDragEnd(bool cancel, const GrHitTest& hitTest);
 
     public:
         virtual GrGridState GetState() const { return GrGridState_ColumnPressing; }
-        virtual bool        GetDragable() const { return true; }
+        virtual bool GetDragable() const { return true; }
 
-        virtual GrCursor    GetCursor() const { return m_cursor; }
+        virtual GrCursor GetCursor() const { return m_cursor; }
 
     protected:
-        virtual void        OnGridCoreAttached();
+        virtual void OnGridCoreAttached();
 
     private:
-        void                timer_Elapsed(GrObject* pSender, GrElapsedEventArgs* e);
-        bool                EnableSorting(const GrPoint& location);
+        void timer_Elapsed(GrObject* pSender, GrElapsedEventArgs* e);
+        bool GetSortable(const GrPoint& location);
 
     private:
-        GrColumnList*       m_pColumnList;
-        GrColumn*           m_pColumn;
-        GrColumn*           m_pOldDataColumn;
-        bool                m_handled;
-        GrPoint             m_locationStart;
-        GrCursor            m_cursor;
+        GrColumnList* m_pColumnList;
+        GrColumn* m_pColumn;
+        GrColumn* m_pOldDataColumn;
+        bool m_handled;
+        GrPoint m_locationStart;
+        GrCursor m_cursor;
 
     private:
         enum TargetType
@@ -282,10 +282,10 @@ namespace GridStateClass
 
             TargetType_Frozen,
             TargetType_Unfrozen,
-            TargetType_GroupingList,
+            TargetType_GroupList,
         } m_targetType;
 
-        GrCell*             m_targetCell;
+        GrCell* m_targetCell;
 
         class GrSelectionTimer2 : public GrSelectionTimer
         {
@@ -293,8 +293,8 @@ namespace GridStateClass
             GrSelectionTimer2();
 
         protected:
-            virtual GrRect  GetInsideRectangle() const;
-            virtual GrRect  GetOutsideRectangle() const;
+            virtual GrRect GetInsideRectangle() const;
+            virtual GrRect GetOutsideRectangle() const;
         }* m_pTimer;
     };
 
@@ -303,31 +303,31 @@ namespace GridStateClass
     public:
         ColumnResizing();
 
-        virtual bool        GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
+        virtual bool GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
 
-        virtual void        OnMouseDown(GrStateMouseEventArgs* e);
-        virtual void        OnMouseDoubleClick(GrStateMouseEventArgs* e);
-        virtual void        OnPaintAdornments(GrGridPainter* g, const GrRect& displayRect);
+        virtual void OnMouseDown(GrStateMouseEventArgs* e);
+        virtual void OnMouseDoubleClick(GrStateMouseEventArgs* e);
+        virtual void OnPaintAdornments(GrGridPainter* g, const GrRect& displayRect);
 
-        virtual void        OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest);
-        virtual void        OnMouseDragEnd(bool cancel, const GrHitTest& hitTest);
+        virtual void OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest);
+        virtual void OnMouseDragEnd(bool cancel, const GrHitTest& hitTest);
 
     private:
-        GrColumn*           GetResizingColumn(GrColumn* pColumn, const GrPoint& localLocation);
+        GrColumn* GetResizingColumn(GrColumn* pColumn, const GrPoint& localLocation);
 
     public:
         virtual GrGridState GetState() const { return GrGridState_ColumnResizing; } 
-        virtual bool        GetDragable() const { return true; }
-        virtual GrCursor    GetCursor() const { return GrCursor_VSplit; }
+        virtual bool GetDragable() const { return true; }
+        virtual GrCursor GetCursor() const { return GrCursor_VSplit; }
 
     private:
-        GrColumn*           m_pColumn;
-        int                 m_resizingStart;
-        int                 m_resizingLocation;
-        int                 m_resizingMin;
-        int                 m_resizingMax;
+        GrColumn* m_pColumn;
+        int m_resizingStart;
+        int m_resizingLocation;
+        int m_resizingMin;
+        int m_resizingMax;
 
-        int                 m_downX;
+        int m_downX;
     };
 
     class ColumnSplitterMoving : public GrStateBase
@@ -335,25 +335,25 @@ namespace GridStateClass
     public:
         ColumnSplitterMoving();
 
-        virtual bool        GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
+        virtual bool GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
 
-        virtual void        OnBegin(GrStateEventArgs* e);
-        virtual void        OnPaintAdornments(GrGridPainter* g, const GrRect& displayRect);
+        virtual void OnBegin(GrStateEventArgs* e);
+        virtual void OnPaintAdornments(GrGridPainter* g, const GrRect& displayRect);
 
-        virtual void        OnMouseDragBegin(const GrPoint& location);
-        virtual void        OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest);
-        virtual void        OnMouseDragEnd(bool cancel, const GrHitTest& hitTest);
+        virtual void OnMouseDragBegin(const GrPoint& location);
+        virtual void OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest);
+        virtual void OnMouseDragEnd(bool cancel, const GrHitTest& hitTest);
 
     public:
         virtual GrGridState GetState () const { return GrGridState_ColumnSplitterMoving; } 
-        virtual bool        GetDragable() const { return true; }
-        virtual GrCursor    GetCursor() const { return GrCursor_SizeWE; }
+        virtual bool GetDragable() const { return true; }
+        virtual GrCursor GetCursor() const { return GrCursor_SizeWE; }
 
     private:
-        GrColumnSplitter*   m_pColumnSplitter;
+        GrColumnSplitter* m_pColumnSplitter;
 
-        int                 m_location;
-        int                 m_frozenIndex;
+        int m_location;
+        int m_freezableIndex;
     };
 
     class ItemPressing : public GrStateBase
@@ -362,30 +362,30 @@ namespace GridStateClass
         ItemPressing();
         virtual ~ItemPressing();
 
-        virtual bool        GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
-        virtual void        OnMouseDown(GrStateMouseEventArgs* e);
-        virtual void        OnMouseClick(GrStateMouseEventArgs* e);
-        virtual void        OnMouseDoubleClick(GrStateMouseEventArgs* e);
-        virtual void        OnMouseUp(GrStateMouseEventArgs* e);
+        virtual bool GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
+        virtual void OnMouseDown(GrStateMouseEventArgs* e);
+        virtual void OnMouseClick(GrStateMouseEventArgs* e);
+        virtual void OnMouseDoubleClick(GrStateMouseEventArgs* e);
+        virtual void OnMouseUp(GrStateMouseEventArgs* e);
 
-        virtual void        OnMouseDragBegin(const GrPoint& location);
-        virtual void        OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest);
-        virtual void        OnMouseDragEnd(bool cancel, const GrHitTest& hitTest);
+        virtual void OnMouseDragBegin(const GrPoint& location);
+        virtual void OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest);
+        virtual void OnMouseDragEnd(bool cancel, const GrHitTest& hitTest);
 
     public:
         virtual GrGridState GetState() const { return GrGridState_ItemPressing; }
-        virtual bool        GetDragable() const { return true; }
+        virtual bool GetDragable() const { return true; }
 
     protected:
-        virtual void        OnGridCoreAttached();
+        virtual void OnGridCoreAttached();
 
     private:
         void timer_Elapsed(GrObject* pSender, GrElapsedEventArgs* e);
 
     private:
-        GrItem*             m_pItem;
-        GrSelectionTimer*   m_pTimer;
-        GrPoint             m_location;
+        GrItem* m_pItem;
+        GrSelectionTimer* m_pTimer;
+        GrPoint m_location;
 
         class FindSelection
         {
@@ -393,24 +393,24 @@ namespace GridStateClass
             FindSelection(GrGridCore* pGridCore, const GrPoint& location);
 
         public:
-            IFocusable*     GetFocus() const { return m_pFocus; }
-            GrIndexRange    GetColumnRange() const { return GrIndexRange(m_columnBegin, m_columnEnd); }
-            GrIndexRange    GetRowRange() const { return GrIndexRange(m_rowBegin, m_rowEnd); } 
+            IFocusable* GetFocus() const { return m_pFocus; }
+            GrIndexRange GetColumnRange() const { return GrIndexRange(m_columnBegin, m_columnEnd); }
+            GrIndexRange GetRowRange() const { return GrIndexRange(m_rowBegin, m_rowEnd); } 
 
         private:
-            IDataRow*       GetFocusRow(uint begin, uint end);
-            GrColumn*       GetFocusColumn(uint begin, uint end);
+            IDataRow* GetFocusRow(uint begin, uint end);
+            GrColumn* GetFocusColumn(uint begin, uint end);
 
         private:
-            IFocusable*     m_pFocus;
-            uint            m_columnBegin;
-            uint            m_columnEnd;
-            uint            m_rowBegin;
-            uint            m_rowEnd;
+            IFocusable* m_pFocus;
+            uint m_columnBegin;
+            uint m_columnEnd;
+            uint m_rowBegin;
+            uint m_rowEnd;
 
             GrItemSelector* m_pItemSelector;
-            GrFocuser*      m_pFocuser;
-            GrGridCore*     m_pGridCore;
+            GrFocuser* m_pFocuser;
+            GrGridCore* m_pGridCore;
         };
     };
 
@@ -425,28 +425,28 @@ namespace GridStateClass
     public:
         ItemEditing();
 
-        virtual bool        GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
-        virtual void        OnMouseDown(GrStateMouseEventArgs* e);
-        virtual void        OnMouseMove(GrStateMouseEventArgs* e);
-        virtual void        OnMouseUp(GrStateMouseEventArgs* e);
-        virtual void        OnBegin(GrStateEventArgs* e);
-        virtual void        OnEnd(GrStateEventArgs* e);
+        virtual bool GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
+        virtual void OnMouseDown(GrStateMouseEventArgs* e);
+        virtual void OnMouseMove(GrStateMouseEventArgs* e);
+        virtual void OnMouseUp(GrStateMouseEventArgs* e);
+        virtual void OnBegin(GrStateEventArgs* e);
+        virtual void OnEnd(GrStateEventArgs* e);
 
     public:
         virtual GrGridState GetState() const {return GrGridState_ItemEditing; } 
 
     private:
-        GrGridState         OnBegin(GrEditingReason reason);
+        GrGridState OnBegin(GrEditingReason reason);
 
     private:
-        void                LeaveEdit(bool update);
-        void                LeaveEdit();
+        void LeaveEdit(bool update);
+        void LeaveEdit();
 
     private:
-        GrColumn*           m_pColumn;
-        GrItem*             m_pItem;
+        GrColumn* m_pColumn;
+        GrItem* m_pItem;
 
-        GrEditingResult     m_result;
+        GrEditingResult m_result;
     };
 
     class ItemButtonPressing : public GrStateBase
@@ -454,9 +454,9 @@ namespace GridStateClass
     public:
         ItemButtonPressing();
 
-        virtual bool        GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
-        virtual void        OnMouseDown(GrStateMouseEventArgs* e);
-        virtual void        OnMouseUp(GrStateMouseEventArgs* e);
+        virtual bool GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
+        virtual void OnMouseDown(GrStateMouseEventArgs* e);
+        virtual void OnMouseUp(GrStateMouseEventArgs* e);
 
     public:
         virtual GrGridState GetState() const
@@ -465,78 +465,78 @@ namespace GridStateClass
         }
 
     private:
-        GrItem*             m_pItem;
-        GrPoint             m_mouseDownPoint;
+        GrItem* m_pItem;
+        GrPoint m_mouseDownPoint;
     };
 
-    class GroupingExpandPressing : public GrStateBase
+    class GroupExpandPressing : public GrStateBase
     {
     public:
-        GroupingExpandPressing();
+        GroupExpandPressing();
 
-        virtual bool        GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
-        virtual void        OnBegin(GrStateEventArgs* e);
-        virtual void        OnMouseUp(GrStateMouseEventArgs* e);
+        virtual bool GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
+        virtual void OnBegin(GrStateEventArgs* e);
+        virtual void OnMouseUp(GrStateMouseEventArgs* e);
 
     public:
         virtual GrGridState GetState() const
         {
-            return GrGridState_GroupingExpandPressing;
+            return GrGridState_GroupExpandPressing;
         }
 
     private:
-        GrGroupingRow*      m_pGroupingRow;
+        GrGroupRow* m_pGroupRow;
     };
 
-    class GroupingCellPressing : public GrStateBase
+    class GroupCellPressing : public GrStateBase
     {
     public:
-        GroupingCellPressing();
+        GroupCellPressing();
 
-        virtual bool        GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
-        virtual void        OnMouseDown(GrStateMouseEventArgs* e);
-        virtual void        OnMouseUp(GrStateMouseEventArgs* e);
-        virtual void        OnMouseDoubleClick(GrStateMouseEventArgs* e);
+        virtual bool GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
+        virtual void OnMouseDown(GrStateMouseEventArgs* e);
+        virtual void OnMouseUp(GrStateMouseEventArgs* e);
+        virtual void OnMouseDoubleClick(GrStateMouseEventArgs* e);
 
     public:
         virtual GrGridState GetState() const
         {
-            return GrGridState_GroupingCellPressing;
+            return GrGridState_GroupHeaderPressing;
         }
     private: // variable;
-        GrGroupingCell*     m_pGroupingCell;
+        GrGroupHeader* m_pGroupCell;
     };
 
-    class GroupingInfoPressing : public GrStateBase
+    class GroupInfoPressing : public GrStateBase
     {
     public:
-        GroupingInfoPressing();
+        GroupInfoPressing();
 
-        virtual bool        GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
-        virtual void        OnPaintAdornments(GrGridPainter* g, const GrRect& displayRect);
+        virtual bool GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
+        virtual void OnPaintAdornments(GrGridPainter* g, const GrRect& displayRect);
 
-        virtual void        OnMouseDown(GrStateMouseEventArgs* e);
-        virtual void        OnMouseUp(GrStateMouseEventArgs* e);
+        virtual void OnMouseDown(GrStateMouseEventArgs* e);
+        virtual void OnMouseUp(GrStateMouseEventArgs* e);
 
-        virtual void        OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest);
-        virtual void        OnMouseDragEnd(bool cancel, const GrHitTest& hitTest);
+        virtual void OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest);
+        virtual void OnMouseDragEnd(bool cancel, const GrHitTest& hitTest);
 
-        virtual void        OnEnd(GrStateEventArgs* e);
+        virtual void OnEnd(GrStateEventArgs* e);
 
     public:
-        virtual GrGridState GetState() const { return GrGridState_GroupingInfoPressing; }
-        virtual bool        GetDragable() const { return true; }
-        virtual GrCursor    GetCursor() const { return m_cursor; }
+        virtual GrGridState GetState() const { return GrGridState_GroupPressing; }
+        virtual bool GetDragable() const { return true; }
+        virtual GrCursor GetCursor() const { return m_cursor; }
 
     private:
-        GrGroupingInfo*     m_pGroupingInfo;
-        GrPoint             m_location;
-        uint                m_where;
-        GrCursor            m_cursor;
+        GrGroup* m_pGroup;
+        GrPoint m_location;
+        uint m_where;
+        GrCursor m_cursor;
 
         enum TargetType
         {
-            TargetType_Grouping,
+            TargetType_Group,
             TargetType_Remove,
             TargetType_Unknown,
         } m_targetType;
@@ -547,15 +547,15 @@ namespace GridStateClass
     public:
         RowPressing();
 
-        virtual bool        GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
-        virtual void        OnBegin(GrStateEventArgs* e);
-        virtual void        OnEnd(GrStateEventArgs* e);
+        virtual bool GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
+        virtual void OnBegin(GrStateEventArgs* e);
+        virtual void OnEnd(GrStateEventArgs* e);
 
     public:
         virtual GrGridState GetState() const { return GrGridState_RowPressing; }
 
     private:
-        GrRow*              m_pRow;
+        GrRow* m_pRow;
     };
 
     class RowResizing : public GrStateBase
@@ -563,30 +563,30 @@ namespace GridStateClass
     public:
         RowResizing();
 
-        virtual bool        GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
+        virtual bool GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
 
-        virtual void        OnMouseDown(GrStateMouseEventArgs* e);
-        virtual void        OnMouseDoubleClick(GrStateMouseEventArgs* e);
-        virtual void        OnPaintAdornments(GrGridPainter* g, const GrRect& displayRect);
+        virtual void OnMouseDown(GrStateMouseEventArgs* e);
+        virtual void OnMouseDoubleClick(GrStateMouseEventArgs* e);
+        virtual void OnPaintAdornments(GrGridPainter* g, const GrRect& displayRect);
 
-        virtual void        OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest);
-        virtual void        OnMouseDragEnd(bool cancel, const GrHitTest& hitTest);
+        virtual void OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest);
+        virtual void OnMouseDragEnd(bool cancel, const GrHitTest& hitTest);
 
     private:
-        GrRow*              GetResizingRow(GrRow* pRow, const GrPoint& localLocation);
+        GrRow* GetResizingRow(GrRow* pRow, const GrPoint& localLocation);
 
     public:
         virtual GrGridState GetState() const { return GrGridState_RowResizing; }
-        virtual bool        GetDragable() const { return true; }
-        virtual GrCursor    GetCursor() const { return GrCursor_HSplit; }
+        virtual bool GetDragable() const { return true; }
+        virtual GrCursor GetCursor() const { return GrCursor_HSplit; }
 
     private:
-        GrRow*              m_pRow;
-        int                 m_resizingStart;
-        int                 m_resizingLocation;
-        int                 m_resizingMin;
-        int                 m_resizingMax;
+        GrRow* m_pRow;
+        int m_resizingStart;
+        int m_resizingLocation;
+        int m_resizingMin;
+        int m_resizingMax;
 
-        int                 m_downY;
+        int m_downY;
     };
 } /*namespace GridStateClass*/

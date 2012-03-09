@@ -255,13 +255,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void ColumnCollection::SetItemsByDesigner(cli::array<System::Object^>^ values)
     {
-        GrGroupingList* pGroupingList = GridCore->GetGroupingList();
+        GrGroupPanel* pGroupPanel = GridCore->GetGroupPanel();
         std::vector<GrColumn*> groupings;
-        groupings.reserve(pGroupingList->GetGroupingCount());
+        groupings.reserve(pGroupPanel->GetGroupCount());
 
-        for(unsigned int i=0 ; i<pGroupingList->GetGroupingCount() ; i++)
+        for(unsigned int i=0 ; i<pGroupPanel->GetGroupCount() ; i++)
         {
-            GrColumn* pColumn = pGroupingList->GetGrouping(i)->GetColumn();
+            GrColumn* pColumn = pGroupPanel->GetGroup(i)->GetColumn();
             groupings.push_back(pColumn);
         }
 

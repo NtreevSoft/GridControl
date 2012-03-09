@@ -201,7 +201,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_manager->Position < 0)
             return;
 
-        Ntreev::Windows::Forms::Grid::Row^ focusedRow = this->GridControl->FocusedRow;
+        Ntreev::Windows::Forms::Grid::Row^ focusedRow = dynamic_cast<Ntreev::Windows::Forms::Grid::Row^>(GridControl->FocusedRow);
         if(focusedRow != nullptr && focusedRow->ComponentIndex == m_manager->Position)
             return;
 

@@ -39,16 +39,16 @@ GrStateManager::GrStateManager()
     m_states.push_back(new ColumnSplitterMoving());
     m_states.push_back(new RowPressing());
     m_states.push_back(new RowResizing());
-    m_states.push_back(new GroupingInfoPressing());
-    m_states.push_back(new GroupingCellPressing());
-    m_states.push_back(new GroupingExpandPressing()); 
+    m_states.push_back(new GroupInfoPressing());
+    m_states.push_back(new GroupCellPressing());
+    m_states.push_back(new GroupExpandPressing()); 
     m_states.push_back(new ItemPressing());
     m_states.push_back(new ItemButtonPressing());
     m_states.push_back(new ItemEditing());
 
-    m_state         = NULL;
-    m_defaultState  = m_states[0];
-    m_dragging      = false;
+    m_state = NULL;
+    m_defaultState = m_states[0];
+    m_dragging = false;
 }
 
 GrStateManager::Invalidator::Invalidator(GrGridCore* pGridCore)
@@ -437,8 +437,8 @@ void GrStateBase::OnGridCoreAttached()
 {
     GrObject::OnGridCoreAttached();
     m_pItemSelector = dynamic_cast<GrItemSelectorInternal*>(m_pGridCore->GetItemSelector());
-    m_pFocuser      = dynamic_cast<GrFocuserInternal*>(m_pGridCore->GetFocuser());
-    m_pGridWindow   = m_pGridCore->GetGridWindow();
+    m_pFocuser = dynamic_cast<GrFocuserInternal*>(m_pGridCore->GetFocuser());
+    m_pGridWindow = m_pGridCore->GetGridWindow();
 }
 
 void GrStateBase::InvokeMouseEvent(GrCell* pOldCell, GrCell* pNewCell, GrStateMouseEventArgs* e)
@@ -499,7 +499,7 @@ void GrStateBase::InvokeMouseEvent(GrCell* pOldCell, GrCell* pNewCell, GrStateMo
                 }
             }
             break;
-            case GrCellType_Row:
+        case GrCellType_Row:
             {
                 GrRowMouseEventArgs e2((GrRow*)pNewCell, e->GetLocalHit(), e->GetModifierKeys());
                 m_pGridCore->Invoke(L"RowMouseEnter", &e2);
@@ -596,10 +596,10 @@ namespace GridStateClass
                 IFocusable* pFocusable = m_pFocuser->Get();
                 if(pFocusable != NULL)
                 {
-                    if(pFocusable->GetCellType() == GrCellType_Grouping)
+                    if(pFocusable->GetCellType() == GrCellType_GroupHeader)
                     {
-                        GrGroupingRow* pGrGroupingRow = (GrGroupingRow*)pFocusable->GetDataRow();
-                        pGrGroupingRow->Expand(false);
+                        GrGroupRow* pGrGroupRow = (GrGroupRow*)pFocusable->GetDataRow();
+                        pGrGroupRow->Expand(false);
                     }
                     else
                     {
@@ -618,10 +618,10 @@ namespace GridStateClass
                 IFocusable* pFocusable = m_pFocuser->Get();
                 if(pFocusable != NULL)
                 {
-                    if(pFocusable->GetCellType() == GrCellType_Grouping)
+                    if(pFocusable->GetCellType() == GrCellType_GroupHeader)
                     {
-                        GrGroupingRow* pGrGroupingRow = (GrGroupingRow*)pFocusable->GetDataRow();
-                        pGrGroupingRow->Expand(true);
+                        GrGroupRow* pGrGroupRow = (GrGroupRow*)pFocusable->GetDataRow();
+                        pGrGroupRow->Expand(true);
                     }
                     else
                     {
@@ -664,78 +664,78 @@ namespace GridStateClass
             break;
 
             //case GrKeys_Enter:
-            //    {
-            //        if(m_focusedCell != nullptr)
-            //        {
-            //            if(m_focusedCell->Row == m_insertionRow)
-            //            {
-            //                Row^ row = AddNewRowFromInsertion();
-            //                if(row == nullptr)
-            //                    break;
+            // {
+            // if(m_focusedCell != nullptr)
+            // {
+            // if(m_focusedCell->Row == m_insertionRow)
+            // {
+            // Row^ row = AddNewRowFromInsertion();
+            // if(row == nullptr)
+            // break;
 
-            //                Ntreev::Windows::Forms::Grid::Cell^ cell = row[m_focusedCell->Column];
-            //                cell->Select(_SelectionType::Normal);
-            //                cell->Focus();
-            //                cell->BringIntoView();
-            //            }
-            //            else
-            //            {
-            //                EditCell(m_focusedCell, gcnew EditingReason());
-            //            }
-            //        }
-            //    }
-            //    break;
+            // Ntreev::Windows::Forms::Grid::Cell^ cell = row[m_focusedCell->Column];
+            // cell->Select(_SelectionType::Normal);
+            // cell->Focus();
+            // cell->BringIntoView();
+            // }
+            // else
+            // {
+            // EditCell(m_focusedCell, gcnew EditingReason());
+            // }
+            // }
+            // }
+            // break;
             //case GrKeys_F12:
-            //    {
-            //        if(m_insertionRow->IsVisible == true)
-            //        {
-            //            m_insertionRow->Select(_SelectionType::Normal);
-            //            m_insertionRow->Focus();
-            //            m_insertionRow->BringIntoView();
-            //        }
-            //    }
-            //    break;
+            // {
+            // if(m_insertionRow->IsVisible == true)
+            // {
+            // m_insertionRow->Select(_SelectionType::Normal);
+            // m_insertionRow->Focus();
+            // m_insertionRow->BringIntoView();
+            // }
+            // }
+            // break;
             //case GrKeys_F2:
-            //    {
-            //        if(m_focusedCell != nullptr)
-            //        {
-            //            EditCell(m_focusedCell, gcnew EditingReason());
-            //        }
-            //        else
-            //        {
-            //            break;
-            //        }
-            //    }
-            //    break;
+            // {
+            // if(m_focusedCell != nullptr)
+            // {
+            // EditCell(m_focusedCell, gcnew EditingReason());
+            // }
+            // else
+            // {
+            // break;
+            // }
+            // }
+            // break;
             //case GrKeys_Escape:
-            //    {
-            //        if(m_focusedCell != nullptr && m_focusedCell->IsEdited == true)
-            //        {
-            //            m_focusedCell->CancelEdit();
-            //            if(m_pGridCore->IsGrouped() == true)
-            //                m_pGridCore->GetDataRowList()->Update(true);
-            //        }
-            //        else if(FocusedRow != nullptr && FocusedRow->IsEdited == true)
-            //        {
-            //            FocusedRow->CancelEdit();
-            //            if(m_pGridCore->IsGrouped() == true)
-            //                m_pGridCore->GetDataRowList()->Update(true);
-            //        }
-            //        Invalidate(false);
-            //    }
-            //    break;
+            // {
+            // if(m_focusedCell != nullptr && m_focusedCell->IsEdited == true)
+            // {
+            // m_focusedCell->CancelEdit();
+            // if(m_pGridCore->IsGrouped() == true)
+            // m_pGridCore->GetDataRowList()->Update(true);
+            // }
+            // else if(FocusedRow != nullptr && FocusedRow->IsEdited == true)
+            // {
+            // FocusedRow->CancelEdit();
+            // if(m_pGridCore->IsGrouped() == true)
+            // m_pGridCore->GetDataRowList()->Update(true);
+            // }
+            // Invalidate(false);
+            // }
+            // break;
             //case GrKeys_ProcessKey:
-            //    {
-            //        if(dynamic_cast<IEditByIme^>(FocusedColumn))
-            //        {
-            //            _Char nnn = Win32::API::ImmGetVirtualKey(Handle);
-            //            if(_Char::IsLetter(nnn))
-            //            {
-            //                EditCell(m_focusedCell, gcnew EditingReason((System::Char)e->KeyValue, true));
-            //            }
-            //        }
-            //    }
-            //    break;
+            // {
+            // if(dynamic_cast<IEditByIme^>(FocusedColumn))
+            // {
+            // _Char nnn = Win32::API::ImmGetVirtualKey(Handle);
+            // if(_Char::IsLetter(nnn))
+            // {
+            // EditCell(m_focusedCell, gcnew EditingReason((System::Char)e->KeyValue, true));
+            // }
+            // }
+            // }
+            // break;
         default:
             break;
 
@@ -765,10 +765,10 @@ namespace GridStateClass
 
     ColumnPressing::ColumnPressing()
     {
-        m_cursor     = GrCursor_Default;
-        m_pColumn    = NULL;
+        m_cursor = GrCursor_Default;
+        m_pColumn = NULL;
         m_pOldDataColumn = NULL;
-        m_handled    = false;
+        m_handled = false;
         m_targetType = TargetType_Unknown;
 
         m_pTimer = new GrSelectionTimer2();
@@ -873,7 +873,7 @@ namespace GridStateClass
         {
         case GrCellType_Column:
             {
-                if(m_pGridCore->CanBeColumnMoving() == false || m_pColumn->GetMovable() == false)
+                if(m_pGridCore->GetColumnMovable() == false || m_pColumn->GetMovable() == false)
                     break;
 
                 if(m_pTimer->CanHScroll() == true)
@@ -886,18 +886,18 @@ namespace GridStateClass
                     {
                         uint targetIndex;
                         if(hitTest.localHit.x < pTarget->GetWidth() / 2)
-                            targetIndex = pTarget->GetFrozenIndex();
+                            targetIndex = pTarget->GetFreezableIndex();
                         else
-                            targetIndex = pTarget->GetFrozenIndex() + 1;
+                            targetIndex = pTarget->GetFreezableIndex() + 1;
 
                         if(m_pColumn->GetFrozen() == false)
                         {
-                            if(m_pGridCore->CanBeColumnFrozing() == false)
+                            if(m_pGridCore->GetColumnFreezable() == false)
                                 m_targetType = TargetType_Unknown;
                             else
                                 m_targetType = TargetType_Frozen;
                         }
-                        else if(targetIndex != m_pColumn->GetFrozenIndex() + 1 && targetIndex != m_pColumn->GetFrozenIndex()) 
+                        else if(targetIndex != m_pColumn->GetFreezableIndex() + 1 && targetIndex != m_pColumn->GetFreezableIndex()) 
                         {
                             m_targetType = TargetType_Frozen;
                         }
@@ -921,7 +921,7 @@ namespace GridStateClass
 
                         if(m_pColumn->GetFrozen() == true)
                         {
-                            if(m_pGridCore->CanBeColumnFrozing() == false)
+                            if(m_pGridCore->GetColumnFreezable() == false)
                                 m_targetType = TargetType_Unknown;
                             else
                                 m_targetType = TargetType_Unfrozen;
@@ -943,27 +943,27 @@ namespace GridStateClass
                 }
             }
             break;
-        case GrCellType_GroupingInfo:
+        case GrCellType_Group:
             {
-                if(m_pColumn->CanBeGrouping() == false)
+                if(m_pColumn->GetGroupable() == false)
                     break;
 
                 if(m_pColumn->GetGrouped() == false)
                 {
-                    m_targetCell = (GrGroupingInfo*)hitTest.pHitted;
-                    m_targetType = TargetType_GroupingList;
+                    m_targetCell = (GrGroup*)hitTest.pHitted;
+                    m_targetType = TargetType_GroupList;
                 }
             }
             break;
         case GrCellType_Row:
             {
-                if(m_pColumn->CanBeGrouping() == false)
+                if(m_pColumn->GetGroupable() == false)
                     break;
 
-                if(m_pColumn->GetGrouped() == false && dynamic_cast<GrGroupingList*>(hitTest.pHitted) != NULL)
+                if(m_pColumn->GetGrouped() == false && dynamic_cast<GrGroupPanel*>(hitTest.pHitted) != NULL)
                 {
                     m_targetCell = NULL;
-                    m_targetType = TargetType_GroupingList;
+                    m_targetType = TargetType_GroupList;
                 }
             }
             break;
@@ -973,7 +973,7 @@ namespace GridStateClass
 
         switch(m_targetType)
         {
-        case TargetType_GroupingList:
+        case TargetType_GroupList:
             {
                 m_cursor = GrCursor_Add;
             }
@@ -1007,13 +1007,13 @@ namespace GridStateClass
                     m_pColumnList->MoveToUnfrozen(m_pColumn, (GrColumn*)m_targetCell);
                 }
                 break;
-            case TargetType_GroupingList:
+            case TargetType_GroupList:
                 {
                     if(m_targetCell != NULL)
                     {
-                        GrGroupingInfo* pTargetGroupingInfo = (GrGroupingInfo*)m_targetCell;
-                        GrGroupingInfo* pGroupingInfo = m_pColumn->GetGroupingInfo();
-                        pGroupingInfo->SetGroupingLevel(pTargetGroupingInfo->GetGroupingLevel());
+                        GrGroup* pTargetGroupInfo = (GrGroup*)m_targetCell;
+                        GrGroup* pGroup = m_pColumn->GetGroup();
+                        pGroup->SetGroupLevel(pTargetGroupInfo->GetGroupLevel());
                     }
                     m_pColumn->SetGrouped(true);
                 }
@@ -1040,7 +1040,7 @@ namespace GridStateClass
 
         if(m_handled == false)
         {
-            if(EnableSorting(e->GetLocation()) == true)
+            if(GetSortable(e->GetLocation()) == true)
             {
                 int n = ((int)m_pColumn->GetSortType() + 1) % (int)GrSort_Count;
                 GrSort sortType = (GrSort)n;
@@ -1092,7 +1092,7 @@ namespace GridStateClass
                 g->FillRectangle(paintRect, GrColor::Black);
             }
             break;
-        case TargetType_GroupingList:
+        case TargetType_GroupList:
             {
                 if(m_targetCell != NULL)
                 {
@@ -1107,9 +1107,9 @@ namespace GridStateClass
         }
     }
 
-    bool ColumnPressing::EnableSorting(const GrPoint& location)
+    bool ColumnPressing::GetSortable(const GrPoint& location)
     {
-        if(m_pGridCore->CanBeColumnSorting() == false)
+        if(m_pGridCore->GetColumnSortable() == false)
             return false;
 
         if(m_targetType == TargetType_Unknown && 
@@ -1192,10 +1192,10 @@ namespace GridStateClass
 
         GrRect columnRect = m_pColumn->GetRect();
 
-        m_resizingStart    = columnRect.right;
+        m_resizingStart = columnRect.right;
         m_resizingLocation = columnRect.right;
-        m_resizingMin      = columnRect.left + m_pColumn->GetMinWidth();
-        m_resizingMax      = columnRect.left + m_pColumn->GetMaxWidth();
+        m_resizingMin = columnRect.left + m_pColumn->GetMinWidth();
+        m_resizingMax = columnRect.left + m_pColumn->GetMaxWidth();
 
         m_downX = e->GetX();
     }
@@ -1290,7 +1290,7 @@ namespace GridStateClass
 
     bool ColumnSplitterMoving::GetHitTest(GrCell* pHitted, const GrPoint& /*localLocation*/)
     {
-        return pHitted->GetCellType() == GrCellType_Splitter;    
+        return pHitted->GetCellType() == GrCellType_Splitter; 
     }
 
     void ColumnSplitterMoving::OnPaintAdornments(GrGridPainter* g, const GrRect& displayRect)
@@ -1329,12 +1329,12 @@ namespace GridStateClass
                 if(pColumn->GetFrozen())
                 {
                     m_location = columnRect.right;
-                    m_frozenIndex = i;
+                    m_freezableIndex = i;
                 }
                 else
                 {
                     m_location = columnRect.right - GrColumnSplitter::DefaultSplitterWidth;
-                    m_frozenIndex = i;
+                    m_freezableIndex = i;
                 }
             }
             else
@@ -1343,7 +1343,7 @@ namespace GridStateClass
                     m_location = columnRect.left;
                 else
                     m_location = columnRect.left - GrColumnSplitter::DefaultSplitterWidth;
-                m_frozenIndex = i - 1;
+                m_freezableIndex = i - 1;
             }
         }
 
@@ -1370,10 +1370,10 @@ namespace GridStateClass
         {
             GrColumn* pColumn = pColumnList->GetDisplayableColumn(i);
             bool oldFrozen = pColumn->GetFrozen();
-            if(m_frozenIndex == -1)
+            if(m_freezableIndex == -1)
                 pColumn->SetFrozen(false);
             else
-                pColumn->SetFrozen(i <= (uint)m_frozenIndex);
+                pColumn->SetFrozen(i <= (uint)m_freezableIndex);
 
             if(oldFrozen != pColumn->GetFrozen())
             {
@@ -1429,10 +1429,10 @@ namespace GridStateClass
             }
             break;
         }
-        
+
 
         //if(pItem->GetFocused() == true)
-        //    return false;
+        // return false;
 
         return true;
     }
@@ -1446,7 +1446,7 @@ namespace GridStateClass
             if(m_pItemSelector->CanSelect(m_pItem) == true)
             {
                 GrIndexRange columnRange = m_pItemSelector->GetColumnSelections(m_pItem);
-                GrIndexRange rowRange    = m_pItemSelector->GetRowSelections(m_pItem);
+                GrIndexRange rowRange = m_pItemSelector->GetRowSelections(m_pItem);
 
                 switch(m_pGridWindow->GetSelectionType())
                 {
@@ -1613,19 +1613,19 @@ namespace GridStateClass
         : m_pGridCore(pGridCore)
     {
         m_pItemSelector = pGridCore->GetItemSelector();
-        m_pFocuser      = pGridCore->GetFocuser();
+        m_pFocuser = pGridCore->GetFocuser();
 
 
         GrIndexRange columnRange = m_pGridCore->GetColumnList()->HitTest(location.x, m_pItemSelector->GetColumnAnchor());
-        GrIndexRange rowRange    = m_pGridCore->GetDataRowList()->HitTest(location.y, m_pItemSelector->GetRowAnchor());
+        GrIndexRange rowRange = m_pGridCore->GetDataRowList()->HitTest(location.y, m_pItemSelector->GetRowAnchor());
 
-        m_columnBegin    = columnRange.GetMinValue();
-        m_columnEnd        = columnRange.GetMaxValue();
-        m_rowBegin        = rowRange.GetMinValue();
-        m_rowEnd        = rowRange.GetMaxValue();
+        m_columnBegin = columnRange.GetMinValue();
+        m_columnEnd = columnRange.GetMaxValue();
+        m_rowBegin = rowRange.GetMinValue();
+        m_rowEnd = rowRange.GetMaxValue();
 
         GrColumn* pFocusColumn = GetFocusColumn(m_columnBegin, m_columnEnd);
-        IDataRow* pFocusRow    = GetFocusRow(m_rowBegin, m_rowEnd);
+        IDataRow* pFocusRow = GetFocusRow(m_rowBegin, m_rowEnd);
 
         m_pFocus = pFocusRow->GetFocusable(pFocusColumn);
     }
@@ -1651,7 +1651,7 @@ namespace GridStateClass
 
     ItemEditing::ItemEditing()
     {
-        
+
     }
 
     bool ItemEditing::GetHitTest(GrCell* pHitted, const GrPoint& localLocation)
@@ -1697,7 +1697,7 @@ namespace GridStateClass
 
     GrGridState ItemEditing::OnBegin(GrEditingReason reason)
     {
-        m_result  = GrEditingResult_None;
+        m_result = GrEditingResult_None;
         m_pColumn = m_pItem->GetColumn();
         m_pItem->LockColor(true);
 
@@ -1741,7 +1741,7 @@ namespace GridStateClass
     void ItemButtonPressing::OnMouseUp(GrStateMouseEventArgs* e)
     {
         static GrEditingReason reason;
-        
+
         if(m_pItem->HitMouseOverTest(e->GetLocalHit()) == GrMouseOverState_Control)
         {
             reason = GrEditingReason(e->GetLocation());
@@ -1757,58 +1757,58 @@ namespace GridStateClass
         m_mouseDownPoint = GrPoint::Empty;
     }
 
-    GroupingExpandPressing::GroupingExpandPressing()
+    GroupExpandPressing::GroupExpandPressing()
     {
 
     }
 
-    bool GroupingExpandPressing::GetHitTest(GrCell* pHitted, const GrPoint& localLocation)
+    bool GroupExpandPressing::GetHitTest(GrCell* pHitted, const GrPoint& localLocation)
     {
-        GrGroupingCell* pGroupingCell = dynamic_cast<GrGroupingCell*>(pHitted);
-        if(pGroupingCell == NULL)
+        GrGroupHeader* pGroupCell = dynamic_cast<GrGroupHeader*>(pHitted);
+        if(pGroupCell == NULL)
             return false;
 
-        return pGroupingCell->HitMouseOverTest(localLocation) == GrMouseOverState_Control;
+        return pGroupCell->HitMouseOverTest(localLocation) == GrMouseOverState_Control;
     }
 
-    void GroupingExpandPressing::OnBegin(GrStateEventArgs* e)
+    void GroupExpandPressing::OnBegin(GrStateEventArgs* e)
     {
-        GrGroupingCell* pGroupingCell = dynamic_cast<GrGroupingCell*>(e->GetCell());
+        GrGroupHeader* pGroupCell = dynamic_cast<GrGroupHeader*>(e->GetCell());
 
-        m_pGroupingRow = (GrGroupingRow*)pGroupingCell->GetRow();
+        m_pGroupRow = (GrGroupRow*)pGroupCell->GetRow();
     }
 
-    void GroupingExpandPressing::OnMouseUp(GrStateMouseEventArgs* /*e*/)
+    void GroupExpandPressing::OnMouseUp(GrStateMouseEventArgs* /*e*/)
     {
-        m_pGroupingRow->Expand(!m_pGroupingRow->IsExpanded());
+        m_pGroupRow->Expand(!m_pGroupRow->IsExpanded());
         m_pGridCore->Invalidate();
     }
 
-    GroupingCellPressing::GroupingCellPressing()
+    GroupCellPressing::GroupCellPressing()
     {
 
     }
 
-    bool GroupingCellPressing::GetHitTest(GrCell* pHitted, const GrPoint& localLocation)
+    bool GroupCellPressing::GetHitTest(GrCell* pHitted, const GrPoint& localLocation)
     {
-        GrGroupingCell* pGroupingCell = dynamic_cast<GrGroupingCell*>(pHitted);
-        if(pGroupingCell == NULL)
+        GrGroupHeader* pGroupCell = dynamic_cast<GrGroupHeader*>(pHitted);
+        if(pGroupCell == NULL)
             return false;
 
-        return pGroupingCell->HitMouseOverTest(localLocation) == GrMouseOverState_In;
+        return pGroupCell->HitMouseOverTest(localLocation) == GrMouseOverState_In;
     }
 
-    void GroupingCellPressing::OnMouseDown(GrStateMouseEventArgs* e)
+    void GroupCellPressing::OnMouseDown(GrStateMouseEventArgs* e)
     {
-        m_pGroupingCell = e->GetCell<GrGroupingCell*>();
-        IDataRow* pDataRow = (IDataRow*)m_pGroupingCell->GetRow();
+        m_pGroupCell = e->GetCell<GrGroupHeader*>();
+        IDataRow* pDataRow = (IDataRow*)m_pGroupCell->GetRow();
 
         if(m_pGridWindow->GetSelectionRange() == GrSelectionRange_Multi)
         {
             if(m_pItemSelector->CanSelect(pDataRow) == true)
             {
                 m_pItemSelector->SelectDataRows(pDataRow, m_pItemSelector->GetRowAnchor(), m_pGridWindow->GetSelectionType());
-                m_pFocuser->Set(m_pGroupingCell);
+                m_pFocuser->Set(m_pGroupCell);
             }
         }
         else
@@ -1825,7 +1825,7 @@ namespace GridStateClass
                     if(pColumn)
                         m_pItemSelector->SetColumnAnchor(pColumn);
                     m_pItemSelector->ClearSelection();
-                    m_pFocuser->Set(m_pGroupingCell);
+                    m_pFocuser->Set(m_pGroupCell);
                 }
                 break;
             default:
@@ -1833,8 +1833,8 @@ namespace GridStateClass
                     if(m_pItemSelector->CanSelect(pDataRow) == true)
                     {
                         //m_pItemSelector->SelectItems(pDataRow, GrSelectionType_Add);
-                        m_pFocuser->Set(m_pGroupingCell);
-                        m_pGridCore->SetMousePress(m_pGroupingCell);
+                        m_pFocuser->Set(m_pGroupCell);
+                        m_pGridCore->SetMousePress(m_pGroupCell);
                     }
                 }
                 break;
@@ -1843,63 +1843,63 @@ namespace GridStateClass
         m_pGridCore->Invalidate();
     }
 
-    void GroupingCellPressing::OnMouseUp(GrStateMouseEventArgs* /*e*/)
+    void GroupCellPressing::OnMouseUp(GrStateMouseEventArgs* /*e*/)
     {
         m_pGridCore->SetMouseUnpress();
         m_pGridCore->Invalidate();
     }
 
-    void GroupingCellPressing::OnMouseDoubleClick(GrStateMouseEventArgs* /*e*/)
+    void GroupCellPressing::OnMouseDoubleClick(GrStateMouseEventArgs* /*e*/)
     {
-        GrGroupingRow* pGroupingRow = (GrGroupingRow*)m_pGroupingCell->GetRow();
-        pGroupingRow->Expand(!pGroupingRow->IsExpanded());
+        GrGroupRow* pGroupRow = (GrGroupRow*)m_pGroupCell->GetRow();
+        pGroupRow->Expand(!pGroupRow->IsExpanded());
         m_pGridCore->Invalidate();
     }
 
-    GroupingInfoPressing::GroupingInfoPressing()
+    GroupInfoPressing::GroupInfoPressing()
     {
         m_cursor = GrCursor_Default;
     }
 
-    bool GroupingInfoPressing::GetHitTest(GrCell* pHitted, const GrPoint& /*localLocation*/)
+    bool GroupInfoPressing::GetHitTest(GrCell* pHitted, const GrPoint& /*localLocation*/)
     {
-        return pHitted->GetCellType() == GrCellType_GroupingInfo;
+        return pHitted->GetCellType() == GrCellType_Group;
     }
 
-    void GroupingInfoPressing::OnPaintAdornments(GrGridPainter* g, const GrRect& /*displayRect*/)
+    void GroupInfoPressing::OnPaintAdornments(GrGridPainter* g, const GrRect& /*displayRect*/)
     {
         if(m_where == INVALID_INDEX)
             return;
 
-        GrGroupingList* pGroupingList = m_pGridCore->GetGroupingList();
+        GrGroupPanel* pGroupList = m_pGridCore->GetGroupPanel();
         GrRect paintRect;
-        if(m_where < pGroupingList->GetGroupingCount())
+        if(m_where < pGroupList->GetGroupCount())
         {
-            GrGroupingInfo* pGroupingInfo = pGroupingList->GetGrouping(m_where);
-            paintRect = pGroupingInfo->GetRect();
+            GrGroup* pGroup = pGroupList->GetGroup(m_where);
+            paintRect = pGroup->GetRect();
         }
         else
         {
-            uint lastIndex = pGroupingList->GetGroupingCount() - 1;
-            GrGroupingInfo* pGroupingInfo = pGroupingList->GetGrouping(lastIndex);
-            paintRect = pGroupingList->GetRect();
-            paintRect.left = pGroupingInfo->GetRect().right;
+            uint lastIndex = pGroupList->GetGroupCount() - 1;
+            GrGroup* pGroup = pGroupList->GetGroup(lastIndex);
+            paintRect = pGroupList->GetRect();
+            paintRect.left = pGroup->GetRect().right;
         }
 
         const int padding = 2;
         g->FillRectangle(GrRect(paintRect.left - padding, paintRect.top, paintRect.left + padding, paintRect.bottom), GrColor::Black);
     }
 
-    void GroupingInfoPressing::OnMouseDown(GrStateMouseEventArgs* e)
+    void GroupInfoPressing::OnMouseDown(GrStateMouseEventArgs* e)
     {
-        m_pGroupingInfo = e->GetCell<GrGroupingInfo*>();
-        m_pGridCore->SetMousePress(m_pGroupingInfo);
-        m_where    = INVALID_INDEX;
+        m_pGroup = e->GetCell<GrGroup*>();
+        m_pGridCore->SetMousePress(m_pGroup);
+        m_where = INVALID_INDEX;
         m_location = e->GetLocation();
-        m_cursor   = GrCursor_Default;
+        m_cursor = GrCursor_Default;
     }
 
-    void GroupingInfoPressing::OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest)
+    void GroupInfoPressing::OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest)
     {
         GrCell* pHittedCell = hitTest.pHitted;
         m_cursor = GrCursor_No;
@@ -1912,29 +1912,29 @@ namespace GridStateClass
         m_where = INVALID_INDEX;
         m_targetType = TargetType_Unknown;
 
-        if(pRow->GetRowType() == GrRowType_GroupingList)
+        if(pRow->GetRowType() == GrRowType_GroupPanel)
         {
-            if(hitTest.pHitted->GetCellType() == GrCellType_GroupingInfo)
+            if(hitTest.pHitted->GetCellType() == GrCellType_Group)
             {
-                GrGroupingInfo* pHittedInfo = (GrGroupingInfo*)pHittedCell;
-                if(pHittedInfo != m_pGroupingInfo && m_pGroupingInfo->GetGroupingLevel() + 1 != pHittedInfo->GetGroupingLevel())
+                GrGroup* pHittedInfo = (GrGroup*)pHittedCell;
+                if(pHittedInfo != m_pGroup && m_pGroup->GetGroupLevel() + 1 != pHittedInfo->GetGroupLevel())
                 {
-                    m_where = dynamic_cast<GrGroupingInfo*>(pHittedCell)->GetGroupingLevel();
-                    m_targetType = TargetType_Grouping;
+                    m_where = dynamic_cast<GrGroup*>(pHittedCell)->GetGroupLevel();
+                    m_targetType = TargetType_Group;
                 }
             }
             else
             {
-                GrGroupingList* pGroupingList = (GrGroupingList*)pRow;
-                uint lastIndex = pGroupingList->GetGroupingCount() - 1;
+                GrGroupPanel* pGroupList = (GrGroupPanel*)pRow;
+                uint lastIndex = pGroupList->GetGroupCount() - 1;
 
-                if(m_pGroupingInfo->GetGroupingLevel() != lastIndex)
+                if(m_pGroup->GetGroupLevel() != lastIndex)
                 {
-                    GrGroupingInfo* pLastGrouping = pGroupingList->GetGrouping(lastIndex);
-                    if(location.x > pLastGrouping->GetRect().right)
+                    GrGroup* pLastGroup = pGroupList->GetGroup(lastIndex);
+                    if(location.x > pLastGroup->GetRect().right)
                     {
-                        m_where = pGroupingList->GetGroupingCount();
-                        m_targetType = TargetType_Grouping;
+                        m_where = pGroupList->GetGroupCount();
+                        m_targetType = TargetType_Group;
                     }
                 }
             }
@@ -1946,7 +1946,7 @@ namespace GridStateClass
 
         switch(m_targetType)
         {
-        case TargetType_Grouping:
+        case TargetType_Group:
             m_cursor = GrCursor_Move;
             break;
         case TargetType_Remove:
@@ -1958,22 +1958,22 @@ namespace GridStateClass
         m_pGridCore->Invalidate();
     }
 
-    void GroupingInfoPressing::OnMouseUp(GrStateMouseEventArgs* e)
+    void GroupInfoPressing::OnMouseUp(GrStateMouseEventArgs* e)
     {
         if(m_location == e->GetLocation())
         {
-            GrSort sortType = m_pGroupingInfo->GetSortType();
+            GrSort sortType = m_pGroup->GetSortType();
             if(sortType == GrSort_Up)
-                m_pGroupingInfo->SetSortType(GrSort_Down);
+                m_pGroup->SetSortType(GrSort_Down);
             else
-                m_pGroupingInfo->SetSortType(GrSort_Up);
+                m_pGroup->SetSortType(GrSort_Up);
         }
 
         m_pGridCore->SetMouseUnpress();
         m_pGridCore->Invalidate();
     }
 
-    void GroupingInfoPressing::OnMouseDragEnd(bool cancel, const GrHitTest& /*hitTest*/)
+    void GroupInfoPressing::OnMouseDragEnd(bool cancel, const GrHitTest& /*hitTest*/)
     {
         if(cancel == true)
             return;
@@ -1981,20 +1981,20 @@ namespace GridStateClass
         switch(m_targetType)
         {
         case TargetType_Remove:
-            m_pGroupingInfo->SetGrouped(false);
+            m_pGroup->SetGrouped(false);
             break;
-        case TargetType_Grouping:
-            m_pGroupingInfo->SetGroupingLevel(m_where);
+        case TargetType_Group:
+            m_pGroup->SetGroupLevel(m_where);
             break;
         default:
             break;
         }
     }
 
-    void GroupingInfoPressing::OnEnd(GrStateEventArgs* /*e*/)
+    void GroupInfoPressing::OnEnd(GrStateEventArgs* /*e*/)
     {
         m_cursor = GrCursor_Default;
-        m_where  = INVALID_INDEX;
+        m_where = INVALID_INDEX;
     }
 
     RowPressing::RowPressing()
@@ -2055,15 +2055,15 @@ namespace GridStateClass
                 }
             }
             break;
-        case GrRowType_GroupingRow:
+        case GrRowType_GroupRow:
             {
-                GrGroupingRow* pGroupingRow = (GrGroupingRow*)m_pRow;
+                GrGroupRow* pGroupRow = (GrGroupRow*)m_pRow;
                 if(m_pGridWindow->GetSelectionRange() == GrSelectionRange_Multi)
                 {
-                    if(m_pItemSelector->CanSelect(pGroupingRow) == true)
+                    if(m_pItemSelector->CanSelect(pGroupRow) == true)
                     {
-                        m_pItemSelector->SelectDataRows(pGroupingRow, m_pItemSelector->GetRowAnchor(), m_pGridWindow->GetSelectionType());
-                        m_pFocuser->Set(pGroupingRow);
+                        m_pItemSelector->SelectDataRows(pGroupRow, m_pItemSelector->GetRowAnchor(), m_pGridWindow->GetSelectionType());
+                        m_pFocuser->Set(pGroupRow);
                     }
                 }
                 else
@@ -2072,17 +2072,17 @@ namespace GridStateClass
                     {
                     case GrSelectionType_Normal:
                         {
-                            m_pItemSelector->SetSelectionGroup(pGroupingRow);
-                            m_pItemSelector->SetRowAnchor(pGroupingRow);
+                            m_pItemSelector->SetSelectionGroup(pGroupRow);
+                            m_pItemSelector->SetRowAnchor(pGroupRow);
                             m_pItemSelector->ClearSelection();
-                            m_pFocuser->Set(pGroupingRow);
+                            m_pFocuser->Set(pGroupRow);
                         }
                         break;
                     default:
                         {
-                            if(m_pItemSelector->CanSelect(pGroupingRow) == true)
+                            if(m_pItemSelector->CanSelect(pGroupRow) == true)
                             {
-                                m_pFocuser->Set(pGroupingRow);
+                                m_pFocuser->Set(pGroupRow);
                             }
                         }
                         break;
@@ -2143,12 +2143,12 @@ namespace GridStateClass
 
         GrRect rowRect = m_pRow->GetRect();
 
-        m_resizingStart    = rowRect.bottom;
+        m_resizingStart = rowRect.bottom;
         m_resizingLocation = rowRect.bottom;
-        m_resizingMin      = rowRect.top + 0;
-        m_resizingMax      = rowRect.top + 1000;
+        m_resizingMin = rowRect.top + 0;
+        m_resizingMax = rowRect.top + 1000;
 
-        m_downY            = e->GetY();
+        m_downY = e->GetY();
     }
 
     void RowResizing::OnMouseDoubleClick(GrStateMouseEventArgs* /*e*/)

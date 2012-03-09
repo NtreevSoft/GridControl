@@ -45,8 +45,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_rowCellFonts = gcnew  Ntreev::Windows::Forms::Grid::NativeCollection<System::Drawing::Font^, GrFont*, FontConverter>();
 
 
-        m_groupingForeColors = gcnew Ntreev::Windows::Forms::Grid::NativeCollection<System::Drawing::Color, GrColor>(&m_pNativeStyle->GroupingForeColors);
-        m_groupingBackColors = gcnew Ntreev::Windows::Forms::Grid::NativeCollection<System::Drawing::Color, GrColor>(&m_pNativeStyle->GroupingForeColors);
+        m_groupingForeColors = gcnew Ntreev::Windows::Forms::Grid::NativeCollection<System::Drawing::Color, GrColor>(&m_pNativeStyle->GroupForeColors);
+        m_groupingBackColors = gcnew Ntreev::Windows::Forms::Grid::NativeCollection<System::Drawing::Color, GrColor>(&m_pNativeStyle->GroupForeColors);
         m_groupingFonts = gcnew  Ntreev::Windows::Forms::Grid::NativeCollection<System::Drawing::Font^, GrFont*, FontConverter>();
     }
 

@@ -30,7 +30,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         : CellBase(gridControl, pCaption), m_pCaption(pCaption)
     {
         this->Text = "제목";
-        m_pCaption->ManagedRef = this;
     }
 
     System::String^ CaptionRow::Text::get()

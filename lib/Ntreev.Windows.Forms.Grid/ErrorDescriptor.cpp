@@ -119,7 +119,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_errorCount % 2 != 0)
             return;
 
-        System::Drawing::Bitmap^ errorBitmap = Properties::Resources::Error;
+        System::Drawing::Bitmap^ errorBitmap = _Resources::Error;
         System::Drawing::Pen^ pen = gcnew System::Drawing::Pen(System::Drawing::Color::Firebrick, 2);
         pen->Alignment = System::Drawing::Drawing2D::PenAlignment::Inset;
         for each(Ntreev::Windows::Forms::Grid::Cell^ cell in m_cells)

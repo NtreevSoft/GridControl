@@ -578,7 +578,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     System::Object^ TypeEditorForm::Instance_System_ComponentModel_ITypeDescriptorContext::get()
     {
-        return m_gridControl->FocusedRow->Component;
+        Ntreev::Windows::Forms::Grid::Row^ row = dynamic_cast<Ntreev::Windows::Forms::Grid::Row^>(m_gridControl->FocusedRow);
+        if(row == nullptr)
+            return nullptr;
+        return row->Component;
     }
 
     System::ComponentModel::PropertyDescriptor^ TypeEditorForm::PropertyDescriptor_System_ComponentModel_ITypeDescriptorContext::get()

@@ -77,11 +77,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType);
 
         /// <summary>
-        /// 포커스를 설정합니다.
-        /// </summary>
-        void Focus();
-
-        /// <summary>
         /// 셀들의 전경색을 기본값으로 되돌립니다.
         /// </summary>
         /// <remarks>
@@ -200,10 +195,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::NullReferenceException">
         /// 매개변수가 null일 경우
         /// </exception>
-        property System::Object^ default[Column^]
+        property System::Object^ default[Ntreev::Windows::Forms::Grid::Column^]
         {
-            System::Object^ get(Column^ column);
-            void set(Column^ column, System::Object^);
+            System::Object^ get(Ntreev::Windows::Forms::Grid::Column^ column);
+            void set(Ntreev::Windows::Forms::Grid::Column^ column, System::Object^);
         }
 
         /// <summary>
@@ -397,7 +392,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void AddErrorCell();
         void RemoveErrorCell();
 
-        virtual void NewCell(Column^ column);
+        virtual void NewCell(Ntreev::Windows::Forms::Grid::Column^ column);
 
         void RefreshCells();
 
@@ -457,7 +452,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         InsertionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrInsertionRow* pInsertionRow);
 
-        virtual void NewCell(Column^ column) override;
+        virtual void NewCell(Ntreev::Windows::Forms::Grid::Column^ column) override;
 
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

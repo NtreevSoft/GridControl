@@ -284,7 +284,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DefaultValueAttribute(true)]
-        property bool CanBeSorted
+        property bool IsSortable
         {
             virtual bool get() sealed;
             void set(bool);
@@ -344,7 +344,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 하지만 마우스를 이용한 그룹핑 기능을 사용할 수 없습니다.
         /// </remarks>
         [System::ComponentModel::DefaultValueAttribute(true)]
-        property bool CanBeGrouping
+        property bool IsGroupable
         {
             virtual bool get() sealed;
             void set(bool);
@@ -689,7 +689,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         bool CanEditInternal(Ntreev::Windows::Forms::Grid::ICell^ cell, Ntreev::Windows::Forms::Grid::EditingReason reason);
 
-        static Column^ FromNative(const GrColumn* pColumn);
+        static Ntreev::Windows::Forms::Grid::Column^ FromNative(const GrColumn* pColumn);
 
         void AsyncDisplayText();
 

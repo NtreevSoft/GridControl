@@ -42,7 +42,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     class CustomPaint
     {
     public:
-        CustomPaint(gcroot<Column^> column) : m_column(column)
+        CustomPaint(gcroot<Ntreev::Windows::Forms::Grid::Column^> column) : m_column(column)
         {
 
         }
@@ -63,7 +63,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             System::IntPtr hdc(pPainter->GetDevice());
             System::Drawing::Graphics^ g = System::Drawing::Graphics::FromHdc(hdc);
-            Column^ column = m_column;
+            Ntreev::Windows::Forms::Grid::Column^ column = m_column;
             ColumnPainter^ columnPainter = column->ColumnPainter;
             bool b = columnPainter->PaintBackground(g, paintRect, column);
             delete g;
@@ -75,7 +75,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             System::IntPtr hdc(pPainter->GetDevice());
             System::Drawing::Graphics^ g = System::Drawing::Graphics::FromHdc(hdc);
-            Column^ column = m_column;
+            Ntreev::Windows::Forms::Grid::Column^ column = m_column;
             ColumnPainter^ columnPainter = column->ColumnPainter;
             bool b = columnPainter->PaintContents(g, paintRect, column);
             delete g;
@@ -84,7 +84,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private:
-        gcroot<Column^> m_column;
+        gcroot<Ntreev::Windows::Forms::Grid::Column^> m_column;
     };
 
 
@@ -146,7 +146,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pColumn->SetSortComparer(GrSort_Down, RowComparerDown);
 
         m_pCustomPaint = new CustomPaint(this);
-        m_pColumn->ManagedRef = this;
 
         SetEditStyleToNative();
     }
@@ -282,7 +281,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
             FrozenAttribute^ frozenAttr = dynamic_cast<FrozenAttribute^>(value->Attributes[FrozenAttribute::typeid]);
             if(frozenAttr != nullptr)
-                this->IsFrozen = frozenAttr->Frozen;
+                this->IsFrozen = frozenAttr->IsFrozen;
 
             MovableAttribute^ movableAttr = dynamic_cast<MovableAttribute^>(value->Attributes[MovableAttribute::typeid]);
             if(movableAttr != nullptr)
@@ -290,11 +289,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
             ResizableAttribute^ resizableAttr = dynamic_cast<ResizableAttribute^>(value->Attributes[ResizableAttribute::typeid]);
             if(resizableAttr != nullptr)
-                this->IsResizable = resizableAttr->Resizable;
+                this->IsResizable = resizableAttr->IsResizable;
 
             SortableAttribute^ sortableAttr = dynamic_cast<SortableAttribute^>(value->Attributes[SortableAttribute::typeid]);
             if(sortableAttr != nullptr)
-                this->CanBeSorted = sortableAttr->Sortable;
+                this->IsSortable = sortableAttr->IsSortable;
 
             m_typeEditor = Design::TypeEditor::FromDataType(value->PropertyType);
 
@@ -428,14 +427,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pColumn->SetReadOnly(value);
     }
 
-    bool Column::CanBeSorted::get()
+    bool Column::IsSortable::get()
     {
-        return m_pColumn->CanBeSort();
+        return m_pColumn->GetSortable();
     }
 
-    void Column::CanBeSorted::set(bool value)
+    void Column::IsSortable::set(bool value)
     {
-        m_pColumn->EnableSort(value);
+        m_pColumn->SetSortable(value);
     }
 
     System::Type^ Column::DataType::get()
@@ -613,14 +612,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pColumn->SetGrouped(value);
     }
 
-    bool Column::CanBeGrouping::get()
+    bool Column::IsGroupable::get()
     {
-        return m_pColumn->CanBeGrouping();
+        return m_pColumn->GetGroupable();
     }
 
-    void Column::CanBeGrouping::set(bool value)
+    void Column::IsGroupable::set(bool value)
     {
-        m_pColumn->EnableGrouping(value);
+        m_pColumn->SetGroupable(value);
     }
 
     Ntreev::Windows::Forms::Grid::ColumnPainter^ Column::ColumnPainter::get()
@@ -773,12 +772,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pColumn->SetItemFont(nullptr);
     }
 
-    Column^ Ntreev::Windows::Forms::Grid::Column::FromNative(const GrColumn* pColumn)
+    Ntreev::Windows::Forms::Grid::Column^ Ntreev::Windows::Forms::Grid::Column::FromNative(const GrColumn* pColumn)
     {
         if(pColumn == nullptr)
             return nullptr;
         System::Object^ ref = pColumn->ManagedRef;
-        return safe_cast<Column^>(ref);
+        return safe_cast<Ntreev::Windows::Forms::Grid::Column^>(ref);
     }
 
     void Column::OnGridControlAttachedInternal()

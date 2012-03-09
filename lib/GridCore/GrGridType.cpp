@@ -23,13 +23,13 @@
 
 #include "GrGridType.h"
 
-#define LOBYTE(w)           ((byte)(((unsigned int)(w)) & 0xff))
-#define GetRValue(rgb)      (LOBYTE(rgb))
-#define GetGValue(rgb)      (LOBYTE(((unsigned short)(rgb)) >> 8))
-#define GetBValue(rgb)      (LOBYTE((rgb)>>16))
+#define LOBYTE(w) ((byte)(((unsigned int)(w)) & 0xff))
+#define GetRValue(rgb) (LOBYTE(rgb))
+#define GetGValue(rgb) (LOBYTE(((unsigned short)(rgb)) >> 8))
+#define GetBValue(rgb) (LOBYTE((rgb)>>16))
 
 const GrPoint GrPoint::Empty;
-const GrSize  GrSize::Empty;
+const GrSize GrSize::Empty;
 
 const GrPadding GrPadding::Empty;
 const GrPadding GrPadding::Default(3,3,3,3);
@@ -117,7 +117,7 @@ GrPoint::operator System::Drawing::Point ()
 
 GrPoint::operator System::Drawing::Point () const
 {
-    return  System::Drawing::Point(x, y); 
+    return System::Drawing::Point(x, y); 
 }
 #endif
 
@@ -139,7 +139,7 @@ GrSize::GrSize(System::Drawing::Size size) : width(size.Width), height(size.Heig
 
 void GrSize::operator = (System::Drawing::Size size)
 {
-    width  = size.Width;
+    width = size.Width;
     height = size.Height; 
 }
 
@@ -166,25 +166,25 @@ GrRect::GrRect(int left, int top, int right, int bottom) : left(left), top(top),
 
 GrRect::GrRect(const GrPoint& location, const GrSize& size)
 {
-    left   = location.x;
-    top    = location.y;
-    right  = left + size.width;
-    bottom = top  + size.height;
+    left = location.x;
+    top = location.y;
+    right = left + size.width;
+    bottom = top + size.height;
 }
 
 GrRect::GrRect(const GrPoint& pt1, const GrPoint& pt2)
 {
-    left   = pt1.x < pt2.x ? pt1.x : pt2.x;
-    top    = pt1.y < pt2.y ? pt1.y : pt2.y;
-    right  = left + abs(pt1.x - pt2.x);
-    bottom = top  + abs(pt1.y - pt2.y);
+    left = pt1.x < pt2.x ? pt1.x : pt2.x;
+    top = pt1.y < pt2.y ? pt1.y : pt2.y;
+    right = left + abs(pt1.x - pt2.x);
+    bottom = top + abs(pt1.y - pt2.y);
 }
 
 void GrRect::operator += (const GrRect& rect)
 {
-    left   = std::min(left, rect.left);
-    top    = std::min(top, rect.top);
-    right  = std::max(right, rect.right);
+    left = std::min(left, rect.left);
+    top = std::min(top, rect.top);
+    right = std::max(right, rect.right);
     bottom = std::max(bottom, rect.bottom);
 }
 
@@ -225,17 +225,17 @@ GrRect GrRect::operator - (const GrPadding& padding) const
 
 void GrRect::operator += (const GrPadding& padding)
 {
-    this->left   += padding.left;
-    this->top    += padding.top;
-    this->right  -= padding.right;
+    this->left += padding.left;
+    this->top += padding.top;
+    this->right -= padding.right;
     this->bottom -= padding.bottom;
 }
 
 void GrRect::operator -= (const GrPadding& padding)
 {
-    this->left   -= padding.left;
-    this->top    -= padding.top;
-    this->right  += padding.right;
+    this->left -= padding.left;
+    this->top -= padding.top;
+    this->right += padding.right;
     this->bottom += padding.bottom;
 }
 
@@ -273,15 +273,15 @@ int GrRect::GetHeight() const
 GrSize GrRect::GetSize() const
 {
     GrSize size;
-    size.width  = GetWidth();
+    size.width = GetWidth();
     size.height = GetHeight();
     return size;
 }
 
 void GrRect::SetSize(int width, int height)
 {
-    right   = left + width;
-    bottom  = top  + height;
+    right = left + width;
+    bottom = top + height;
 }
 
 void GrRect::SetSize(const GrSize& size)
@@ -297,10 +297,10 @@ GrPoint GrRect::GetLocation() const
 void GrRect::SetLocation(int x, int y)
 {
     const GrSize size = GetSize();
-    left   = x;
-    top    = y;
-    right  = left + size.width;
-    bottom = top  + size.height;
+    left = x;
+    top = y;
+    right = left + size.width;
+    bottom = top + size.height;
 }
 
 void GrRect::SetLocation(const GrPoint& location)
@@ -310,10 +310,10 @@ void GrRect::SetLocation(const GrPoint& location)
 
 void GrRect::Offset(int x, int y)
 {
-    left    += x;
-    top     += y;
-    right   += x;
-    bottom  += y;
+    left += x;
+    top += y;
+    right += x;
+    bottom += y;
 }
 
 void GrRect::Offset(const GrPoint& offset)
@@ -323,9 +323,9 @@ void GrRect::Offset(const GrPoint& offset)
 
 void GrRect::Expand(int left, int top, int right, int bottom)
 {
-    this->left   -= left;
-    this->top    -= top;
-    this->right  += right;
+    this->left -= left;
+    this->top -= top;
+    this->right += right;
     this->bottom += bottom;
 }
 
@@ -336,9 +336,9 @@ void GrRect::Expand(const GrPadding& padding)
 
 void GrRect::Contract(int left, int top, int right, int bottom)
 {
-    this->left   += left;
-    this->top    += top;
-    this->right  -= right;
+    this->left += left;
+    this->top += top;
+    this->right -= right;
     this->bottom -= bottom;
 }
 
@@ -377,9 +377,9 @@ bool GrRect::Contains(System::Drawing::Point% location) const
 
 void GrRect::operator = (System::Drawing::Rectangle% rect)
 {
-    left   = rect.Left;
-    top    = rect.Top;
-    right  = rect.Right;
+    left = rect.Left;
+    top = rect.Top;
+    right = rect.Right;
     bottom = rect.Bottom; 
 }
 
@@ -396,7 +396,7 @@ GrRect::operator System::Drawing::Rectangle () const
 GrPadding::GrPadding()
 : left(0), top(0), right(0), bottom(0)
 {
-    
+
 }
 
 GrPadding::GrPadding(int l, int t, int r, int b)
@@ -458,9 +458,9 @@ GrPadding::operator System::Windows::Forms::Padding () const
 
 void GrPadding::operator = (System::Windows::Forms::Padding% padding)
 {
-    left   = padding.Left;
-    top    = padding.Top;
-    right  = padding.Right;
+    left = padding.Left;
+    top = padding.Top;
+    right = padding.Right;
     bottom = padding.Bottom;
 }
 #endif
@@ -817,6 +817,6 @@ ulong GrFlag::operator - (ulong flag) const
 
 GrHitTest::GrHitTest()
 {
-    pHitted  = NULL;
+    pHitted = NULL;
     localHit = GrPoint::Empty;
 }

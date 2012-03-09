@@ -32,7 +32,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     }
 
-    bool FrozenAttribute::Frozen::get()
+    bool FrozenAttribute::IsFrozen::get()
     {
         return m_frozen; 
     }
@@ -54,7 +54,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     }
 
-    bool ResizableAttribute::Resizable::get()
+    bool ResizableAttribute::IsResizable::get()
     {
         return m_resizable;
     }
@@ -65,7 +65,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     }
 
-    bool SortableAttribute::Sortable::get()
+    bool SortableAttribute::IsSortable::get()
     {
         return m_sortable;
     }

@@ -218,12 +218,12 @@ void GrFocuser::gridCore_Created(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 
 void GrFocuser::ResetVariables()
 {
-    m_pFocus        = NULL;
-    m_pFocusItem    = NULL;
+    m_pFocus = NULL;
+    m_pFocusItem = NULL;
 
-    m_pLastFocusedItem   = NULL;
+    m_pLastFocusedItem = NULL;
     m_pLastFocusedColumn = NULL;
-    m_pLastFocusedRow    = NULL;
+    m_pLastFocusedRow = NULL;
 }
 
 GrItemSelector::GrItemSelector()
@@ -312,10 +312,10 @@ void GrItemSelector::SelectItems(GrItem* pBegin, GrItem* pEnd, GrSelectionType s
     uint beginColumn, endColumn, beginRow, endRow;
 
     beginColumn = pBegin->GetColumn()->GetVisibleIndex();
-    endColumn   = pEnd->GetColumn()->GetVisibleIndex();
+    endColumn = pEnd->GetColumn()->GetVisibleIndex();
 
     beginRow = pBegin->GetDataRow()->GetVisibleDataRowIndex();
-    endRow   = pEnd->GetDataRow()->GetVisibleDataRowIndex();
+    endRow = pEnd->GetDataRow()->GetVisibleDataRowIndex();
 
     if(beginColumn > endColumn)
     {
@@ -333,7 +333,7 @@ void GrItemSelector::SelectItems(GrItem* pBegin, GrItem* pEnd, GrSelectionType s
         for(uint j=beginColumn ; j<=endColumn ; j++)
         {
             GrColumn* pColumn = pColumnList->GetVisibleColumn(j);
-            GrItem*   pItem   = pDataRow->GetItem(pColumn);
+            GrItem* pItem = pDataRow->GetItem(pColumn);
             items.insert(pItem);
         }
     }
@@ -342,7 +342,7 @@ void GrItemSelector::SelectItems(GrItem* pBegin, GrItem* pEnd, GrSelectionType s
 
 void GrItemSelector::SelectItems(GrIndexRange visibleColumnIndex, GrIndexRange visibleRowIndex, GrSelectionType selectType)
 {
-    GrColumnList*  pColumnList  = m_pGridCore->GetColumnList();
+    GrColumnList* pColumnList = m_pGridCore->GetColumnList();
     GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
 
     GrItems items;
@@ -435,7 +435,7 @@ void GrItemSelector::SelectColumns(const GrColumns* pColumns, GrSelectionType se
             GrDataRow* pDataRow = pDataRowList->GetVisibleDataRow(i);
             GrItem* pItem = pDataRow->GetItem(value);
             items.insert(pItem);
-        }                
+        } 
     }
 
     SelectItems(&items, selectType);
@@ -498,11 +498,11 @@ void GrItemSelector::ResetVariables()
     m_selectedColumns.clear();
     m_selectedRows.clear();
 
-    m_selectionLock  = false;
-    m_selecting      = false;
+    m_selectionLock = false;
+    m_selecting = false;
     m_selectionGroup = 0;
 
-    m_pAnchorColumn  = NULL;
+    m_pAnchorColumn = NULL;
     m_pAnchorDataRow = NULL;
 }
 
@@ -623,7 +623,7 @@ void GrItemSelector::DoDeselect(GrItem* pItem)
     if(pItem->m_selected == false)
         return;
 
-    GrColumn*  pColumn  = pItem->GetColumn();
+    GrColumn* pColumn = pItem->GetColumn();
     GrDataRow* pDataRow = pItem->GetDataRow();
 
     pItem->m_selected = false;
@@ -653,8 +653,8 @@ void GrItemSelector::BeginSelection()
     if(m_selectionLock == true)
         return;
     m_oldSelectedColumns = m_selectedColumns;
-    m_oldSelectedRows    = m_selectedRows;
-    m_oldSelectedItems   = m_selectedItems;
+    m_oldSelectedRows = m_selectedRows;
+    m_oldSelectedItems = m_selectedItems;
 
     m_invalidate.DoEmpty();
 }
@@ -690,9 +690,9 @@ void GrItemSelector::AddInvalidatedRectangle(const GrRect& rect)
     }
     else
     {
-        m_invalidate.left   = std::min(m_invalidate.left, rect.left);
-        m_invalidate.top    = std::min(m_invalidate.top, rect.top);
-        m_invalidate.right  = std::max(m_invalidate.right, rect.right);
+        m_invalidate.left = std::min(m_invalidate.left, rect.left);
+        m_invalidate.top = std::min(m_invalidate.top, rect.top);
+        m_invalidate.right = std::max(m_invalidate.right, rect.right);
         m_invalidate.bottom = std::max(m_invalidate.bottom, rect.bottom);
     }
 }
@@ -943,13 +943,13 @@ void GrFocusMover::OnGridCoreAttached()
 
 void GrFocusMover::gridCore_Created(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 {
-    m_pDataRowList = m_pGridCore->GetDataRowList();    
-    m_pColumnList  = m_pGridCore->GetColumnList();
-    m_pHorzScroll  = m_pGridCore->GetHorzScroll();
-    m_pVertScroll  = m_pGridCore->GetVertScroll();
-    m_pFocuser     = m_pGridCore->GetFocuser();
+    m_pDataRowList = m_pGridCore->GetDataRowList(); 
+    m_pColumnList = m_pGridCore->GetColumnList();
+    m_pHorzScroll = m_pGridCore->GetHorzScroll();
+    m_pVertScroll = m_pGridCore->GetVertScroll();
+    m_pFocuser = m_pGridCore->GetFocuser();
     m_pItemSelector= m_pGridCore->GetItemSelector();
-    m_pGridWindow  = m_pGridCore->GetGridWindow();
+    m_pGridWindow = m_pGridCore->GetGridWindow();
 
     m_pFocuser->FocusChanged.Add(this, &GrFocusMover::focuser_FocusChanged);
 }
@@ -969,14 +969,14 @@ void GrFocusMover::FirstCell(GrSelectionRange range)
     if(pFocused == NULL)
         return;
 
-    GrColumn*  pColumn  = pFocused->GetColumn();
+    GrColumn* pColumn = pFocused->GetColumn();
     GrDataRow* pDataRow = pFocused->GetDataRow();
 
     GrColumnList* m_pColumnList = pColumn->GetColumnList();
 
     if(pColumn->GetFrozen() == true)
     {
-        uint index = pColumn->GetFrozenIndex();
+        uint index = pColumn->GetFreezableIndex();
         if(index == 0)
             return;
 
@@ -1023,7 +1023,7 @@ void GrFocusMover::LastCell(GrSelectionRange range)
     if(pFocused == NULL)
         return;
 
-    GrColumn*  pColumn  = pFocused->GetColumn();
+    GrColumn* pColumn = pFocused->GetColumn();
     GrDataRow* pDataRow = pFocused->GetDataRow();
 
     GrColumnList* m_pColumnList = pColumn->GetColumnList();
@@ -1244,7 +1244,7 @@ void GrFocusMover::MoveLeft(GrSelectionRange range)
     if(pFocused == NULL)
         return;
 
-    GrColumn*  pColumn  = pFocused->GetColumn();
+    GrColumn* pColumn = pFocused->GetColumn();
     GrDataRow* pDataRow = pFocused->GetDataRow();
 
     GrColumnList* m_pColumnList = pColumn->GetColumnList();
@@ -1285,7 +1285,7 @@ void GrFocusMover::MoveRight(GrSelectionRange range)
     if(pFocused == NULL)
         return;
 
-    GrColumn*  pColumn  = pFocused->GetColumn();
+    GrColumn* pColumn = pFocused->GetColumn();
     GrDataRow* pDataRow = pFocused->GetDataRow();
 
     GrColumnList* m_pColumnList = pColumn->GetColumnList();

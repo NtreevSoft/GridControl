@@ -307,7 +307,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GroupingRow.h"
+				RelativePath=".\GroupPanel.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GroupRow.h"
 				>
 			</File>
 			<File
@@ -517,11 +521,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GridResource.resx"
-				SubType="Designer"
-				>
-			</File>
-			<File
 				RelativePath=".\InsertionRow.png"
 				>
 			</File>
@@ -547,6 +546,11 @@
 			</File>
 			<File
 				RelativePath=".\Ntreev.Windows.Forms.Grid.GridControl.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources.resx"
+				SubType="Designer"
 				>
 			</File>
 			<File
@@ -652,7 +656,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GroupingRow.cpp"
+				RelativePath=".\GroupPanel.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GroupRow.cpp"
 				>
 			</File>
 			<File
@@ -796,14 +804,6 @@
 				</File>
 				<File
 					RelativePath=".\ColumnComboBox.cpp"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Properties"
-				>
-				<File
-					RelativePath=".\Resources.cpp"
 					>
 				</File>
 			</Filter>

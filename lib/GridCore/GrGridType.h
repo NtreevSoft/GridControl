@@ -33,13 +33,13 @@
 #include <algorithm>
 #include <exception>
 
-typedef unsigned int    uint;
-typedef unsigned long   ulong;
-typedef unsigned char   byte;
+typedef unsigned int uint;
+typedef unsigned long ulong;
+typedef unsigned char byte;
 
-#define DEF_GROUP_WIDTH       15
-#define DEF_CONTROL_WIDTH     17
-#define DEF_ICON_SIZE         20
+#define DEF_GROUP_WIDTH 15
+#define DEF_CONTROL_WIDTH 17
+#define DEF_ICON_SIZE 20
 
 
 #ifdef _MANAGED
@@ -67,9 +67,9 @@ template<typename T>
 class GrEnumerator 
 {
 public:
-    typedef typename T::value_type      ValueType;
-    typedef typename T::size_type       SizeType;
-    typedef typename T::const_iterator  IteratorType;
+    typedef typename T::value_type ValueType;
+    typedef typename T::size_type SizeType;
+    typedef typename T::const_iterator IteratorType;
 
 public:
     GrEnumerator(const T& container)
@@ -115,21 +115,21 @@ public:
     }
 
 private:
-    const T*        m_container;
-    IteratorType    m_iterator;
-    ValueType       m_value;
-    SizeType        m_index;
-};    
+    const T* m_container;
+    IteratorType m_iterator;
+    ValueType m_value;
+    SizeType m_index;
+}; 
 
 template<typename T, typename U>
 class GrEnumerator< std::map<T, U> >
 {
 public:
-    typedef typename std::map<T, U>             ContainerType;
-    typedef typename ContainerType::key_type    KeyType;
+    typedef typename std::map<T, U> ContainerType;
+    typedef typename ContainerType::key_type KeyType;
     typedef typename ContainerType::mapped_type ValueType;
-    typedef typename ContainerType::size_type   SizeType;
-    typedef typename ContainerType::iterator    IteratorType;
+    typedef typename ContainerType::size_type SizeType;
+    typedef typename ContainerType::iterator IteratorType;
 
 public:
     GrEnumerator(ContainerType& container)
@@ -174,10 +174,10 @@ public:
     }
 
 private:
-    ContainerType*  m_container;
-    IteratorType    m_value;
-    IteratorType    m_iterator;
-    SizeType        m_index;
+    ContainerType* m_container;
+    IteratorType m_value;
+    IteratorType m_iterator;
+    SizeType m_index;
 };
 
 #define for_each(_container_type, _container_instance, _value_name) \
@@ -202,8 +202,8 @@ enum GrCellType
     GrCellType_Column,
     GrCellType_Row,
     GrCellType_Item,
-    GrCellType_GroupingInfo,
-    GrCellType_Grouping,
+    GrCellType_Group,
+    GrCellType_GroupHeader,
     GrCellType_Splitter,
 
     GrCellType_Unknown,
@@ -214,13 +214,13 @@ enum GrCellType
 enum GrRowType
 {
     GrRowType_Caption,
-    GrRowType_GroupingList,
+    GrRowType_GroupPanel,
     GrRowType_InsertionRow,
     GrRowType_DataRow,
     GrRowType_Row,
     GrRowType_ColumnList,
     GrRowType_DataRowList,
-    GrRowType_GroupingRow,
+    GrRowType_GroupRow,
     GrRowType_Splitter,
 
     GrRowType_Dummy,
@@ -244,26 +244,26 @@ struct GrPoint
     GrPoint();
     GrPoint(int x, int y);
 
-    bool        operator == (const GrPoint& point) const;
-    bool        operator != (const GrPoint& point) const;
+    bool operator == (const GrPoint& point) const;
+    bool operator != (const GrPoint& point) const;
 
-    void        operator += (const GrPoint& point);
-    void        operator -= (const GrPoint& point);
+    void operator += (const GrPoint& point);
+    void operator -= (const GrPoint& point);
 
-    GrPoint     operator + (const GrPoint& point);
-    GrPoint     operator - (const GrPoint& point);
+    GrPoint operator + (const GrPoint& point);
+    GrPoint operator - (const GrPoint& point);
 
-    GrPoint     operator + (const GrPoint& point) const;
-    GrPoint     operator - (const GrPoint& point) const;
+    GrPoint operator + (const GrPoint& point) const;
+    GrPoint operator - (const GrPoint& point) const;
 
-    GrPoint     operator - () const;
-    GrPoint     operator + () const;
+    GrPoint operator - () const;
+    GrPoint operator + () const;
 
 #ifdef _MANAGED
     GrPoint(System::Drawing::Point point);
-    void        operator = (System::Drawing::Point point);
-    operator    System::Drawing::Point ();
-    operator    System::Drawing::Point () const;
+    void operator = (System::Drawing::Point point);
+    operator System::Drawing::Point ();
+    operator System::Drawing::Point () const;
 #endif
 
     int x;
@@ -279,13 +279,13 @@ struct GrSize
 
 #ifdef _MANAGED
     GrSize(System::Drawing::Size size);
-    void        operator = (System::Drawing::Size size);
-    operator    System::Drawing::Size ();
-    operator    System::Drawing::Size () const;
+    void operator = (System::Drawing::Size size);
+    operator System::Drawing::Size ();
+    operator System::Drawing::Size () const;
 #endif
 
-    int         width;
-    int         height;
+    int width;
+    int height;
 
     static const GrSize Empty;
 };
@@ -300,51 +300,51 @@ struct GrRect
     GrRect(const GrPoint& location, const GrSize& size);
     GrRect(const GrPoint& pt1, const GrPoint& pt2);
 
-    bool        Contains(const GrPoint& location) const;
-    bool        Contains(const GrRect& rect) const;
-    bool        IsEmpty() const;
+    bool Contains(const GrPoint& location) const;
+    bool Contains(const GrRect& rect) const;
+    bool IsEmpty() const;
 
-    int         GetWidth() const;
-    int         GetHeight() const;
+    int GetWidth() const;
+    int GetHeight() const;
 
-    GrSize      GetSize() const;
-    void        SetSize(const GrSize& size);
-    void        SetSize(int width, int height);
-    
+    GrSize GetSize() const;
+    void SetSize(const GrSize& size);
+    void SetSize(int width, int height);
 
-    GrPoint     GetCenter() const;
-    GrPoint     GetLocation() const;
-    void        SetLocation(const GrPoint& location);
-    void        SetLocation(int x, int y);
 
-    void        Offset(int x, int y);
-    void        Offset(const GrPoint& offset);
+    GrPoint GetCenter() const;
+    GrPoint GetLocation() const;
+    void SetLocation(const GrPoint& location);
+    void SetLocation(int x, int y);
 
-    void        Expand(int left, int top, int right, int bottom);
-    void        Expand(const GrPadding& padding);
-    void        Contract(int left, int top, int right, int bottom);
-    void        Contract(const GrPadding& padding);
+    void Offset(int x, int y);
+    void Offset(const GrPoint& offset);
 
-    void        DoEmpty();
+    void Expand(int left, int top, int right, int bottom);
+    void Expand(const GrPadding& padding);
+    void Contract(int left, int top, int right, int bottom);
+    void Contract(const GrPadding& padding);
 
-    void        operator += (const GrRect& rect);
-    bool        operator == (const GrRect& rect) const;
-    bool        operator != (const GrRect& rect) const;
-    GrRect      operator + (const GrPoint& point) const;
-    GrRect      operator - (const GrPoint& point) const;
+    void DoEmpty();
 
-    GrRect      operator + (const GrPadding& padding) const;
-    GrRect      operator - (const GrPadding& padding) const;
-    void        operator += (const GrPadding& padding);
-    void        operator -= (const GrPadding& padding);
+    void operator += (const GrRect& rect);
+    bool operator == (const GrRect& rect) const;
+    bool operator != (const GrRect& rect) const;
+    GrRect operator + (const GrPoint& point) const;
+    GrRect operator - (const GrPoint& point) const;
+
+    GrRect operator + (const GrPadding& padding) const;
+    GrRect operator - (const GrPadding& padding) const;
+    void operator += (const GrPadding& padding);
+    void operator -= (const GrPadding& padding);
 
 #ifdef _MANAGED
     GrRect(System::Drawing::Rectangle% rect);
     GrRect(System::Drawing::RectangleF% rect);
 
-    bool        Contains(System::Drawing::Point% location) const;
-    operator    System::Drawing::Rectangle ();
-    operator    System::Drawing::Rectangle () const;
+    bool Contains(System::Drawing::Point% location) const;
+    operator System::Drawing::Rectangle ();
+    operator System::Drawing::Rectangle () const;
     void operator = (System::Drawing::Rectangle% rect);
 #endif
 
@@ -358,21 +358,21 @@ struct GrPadding
     GrPadding();
     GrPadding(int left, int top, int right, int bottom);
 
-    int         GetHorizontal() const;
-    int         GetVertical() const;
+    int GetHorizontal() const;
+    int GetVertical() const;
 
-    operator    GrRect();
-    operator    GrRect() const;
+    operator GrRect();
+    operator GrRect() const;
 
-    bool        operator != (const GrPadding& padding) const;
-    bool        operator == (const GrPadding& padding) const;
+    bool operator != (const GrPadding& padding) const;
+    bool operator == (const GrPadding& padding) const;
 
 #ifdef _MANAGED
     GrPadding(System::Windows::Forms::Padding% padding);
 
-    operator    System::Windows::Forms::Padding ();
-    operator    System::Windows::Forms::Padding () const;
-    void        operator = (System::Windows::Forms::Padding% padding);
+    operator System::Windows::Forms::Padding ();
+    operator System::Windows::Forms::Padding () const;
+    void operator = (System::Windows::Forms::Padding% padding);
 #endif
 
     int left, top, right, bottom;
@@ -390,14 +390,14 @@ struct GrColor
 
 #ifdef _MANAGED
     GrColor(System::Drawing::Color color);
-    operator    System::Drawing::Color ();
-    operator    System::Drawing::Color () const;
+    operator System::Drawing::Color ();
+    operator System::Drawing::Color () const;
 #endif
-    void        operator *= (float f);
-    GrColor     operator * (float f) const;
-    GrColor     operator * (const GrColor& color) const;
-    bool        operator != (const GrColor& color) const;
-    bool        operator == (const GrColor& color) const;
+    void operator *= (float f);
+    GrColor operator * (float f) const;
+    GrColor operator * (const GrColor& color) const;
+    bool operator != (const GrColor& color) const;
+    bool operator == (const GrColor& color) const;
 
 #pragma warning(push)
 #pragma warning(disable:4201)
@@ -407,19 +407,19 @@ struct GrColor
         {
             byte b, g, r, a;
         };
-        int            value;
+        int value;
     };
 #pragma warning(pop)
 
-    float       A() const;
-    float       R() const;
-    float       G() const;
-    float       B() const;
+    float A() const;
+    float R() const;
+    float G() const;
+    float B() const;
 
-    void        A(float value);
-    void        R(float value);
-    void        G(float value);
-    void        B(float value);
+    void A(float value);
+    void R(float value);
+    void G(float value);
+    void B(float value);
 
     static const GrColor Empty;
     static const GrColor AliceBlue;
@@ -569,23 +569,23 @@ struct GrFlag
 public:
     GrFlag();
     GrFlag(ulong flag);
-    ulong       Add(ulong flag, ulong mask = 0xffffffff);
-    ulong       Remove(ulong flag, ulong mask = 0xffffffff);
-    void        Clear();
-    bool        Has(ulong flag, ulong mask = 0xffffffff) const;
-    ulong       Get(ulong mask = 0xffffffff) const;
+    ulong Add(ulong flag, ulong mask = 0xffffffff);
+    ulong Remove(ulong flag, ulong mask = 0xffffffff);
+    void Clear();
+    bool Has(ulong flag, ulong mask = 0xffffffff) const;
+    ulong Get(ulong mask = 0xffffffff) const;
 
-    ulong       operator += (ulong flag);
-    ulong       operator -= (ulong flag);
-    void        operator = (ulong flag);
+    ulong operator += (ulong flag);
+    ulong operator -= (ulong flag);
+    void operator = (ulong flag);
 
-    ulong       operator + (ulong flag) const;
-    ulong       operator - (ulong flag) const;
+    ulong operator + (ulong flag) const;
+    ulong operator - (ulong flag) const;
 
-    operator    ulong() const;
+    operator ulong() const;
 
 private:
-    ulong       m_flag;
+    ulong m_flag;
 };
 
 enum GrSelectionRange
@@ -618,7 +618,7 @@ public:
 
     GrRange(T minValue, T maxValue)
     {
-        SetRange(minValue, maxValue);    
+        SetRange(minValue, maxValue); 
     }
 
     inline bool IsIn(T value) const
@@ -698,15 +698,15 @@ public:
     static GrRange<T> Empty;
 
 private:
-    T    m_minValue;
-    T    m_maxValue;
+    T m_minValue;
+    T m_maxValue;
 };
 
 template<typename T>
 GrRange<T> GrRange<T>::Empty;
 
-typedef GrRange<int>    GrIntRange;
-typedef GrRange<uint>   GrIndexRange;
+typedef GrRange<int> GrIntRange;
+typedef GrRange<uint> GrIndexRange;
 
 #define foreach_range(_class_type, _instance, _value) \
     for(_class_type::value_type _value = _instance.GetMinValue() ; _value < _instance.GetMaxValue() ; _value++)
@@ -715,8 +715,8 @@ struct GrHitTest
 {
     GrHitTest();
 
-    class GrCell*   pHitted;
-    GrPoint         localHit;
+    class GrCell* pHitted;
+    GrPoint localHit;
 
     static GrHitTest Empty;
 };
@@ -917,4 +917,10 @@ enum GrKeys
     GrKeys_Shift = 65536,
     GrKeys_Control = 131072,
     GrKeys_Alt = 262144,
+};
+
+enum GrAutoFitColumnType
+{
+    GrAutoFitColumnType_ItemOnly,
+    GrAutoFitColumnType_ColumnIncluded,
 };

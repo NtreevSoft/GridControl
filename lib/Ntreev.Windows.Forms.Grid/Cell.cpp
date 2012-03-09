@@ -26,7 +26,7 @@
 #include "Column.h"
 #include "Row.h"
 #include "GridControl.h"
-#include "Resources.h"
+//#include "Resources.h"
 #include "ErrorDescriptor.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
@@ -92,9 +92,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             }
         }
 
-
     private:
-        Column^ m_column;
+        Ntreev::Windows::Forms::Grid::Column^ m_column;
         Ntreev::Windows::Forms::Grid::Row^ m_row;
     };
 
@@ -105,7 +104,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_row = Ntreev::Windows::Forms::Grid::Row::FromNative(pItem->GetDataRow());
 
         m_pItem->ManagedRef = this;
-
 
         UpdateNativeText();
     }

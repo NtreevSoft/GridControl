@@ -48,7 +48,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="g">그리기에 사용되는 그래픽 개체입니다.</param>
         /// <param name="paintRect">그리기에 대상이 되는 열의 영역입니다.</param>
         /// <param name="column">그리기에 대상이 되는 열의 정보를 가져올 수 있는 개체입니다.</param>
-        virtual bool PaintBackground(System::Drawing::Graphics^ g, System::Drawing::Rectangle paintRect, IColumn^ column) abstract;
+        virtual bool PaintBackground(System::Drawing::Graphics^ g, System::Drawing::Rectangle paintRect, Ntreev::Windows::Forms::Grid::IColumn^ column) abstract;
 
         /// <summary>
         /// 열의 배경을 제외한 나머지를 그립니다.
@@ -62,7 +62,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="g">그리기에 사용되는 그래픽 개체입니다.</param>
         /// <param name="paintRect">그리기에 대상이 되는 열의 영역입니다.</param>
         /// <param name="column">그리기에 대상이 되는 열의 정보를 가져올 수 있는 개체입니다.</param>
-        virtual bool PaintContents(System::Drawing::Graphics^ g, System::Drawing::Rectangle paintRect, IColumn^ column) abstract;
+        virtual bool PaintContents(System::Drawing::Graphics^ g, System::Drawing::Rectangle paintRect, Ntreev::Windows::Forms::Grid::IColumn^ column) abstract;
 
     protected: // methods
         /// <summary>

@@ -22,9 +22,38 @@
 
 
 #include "StdAfx.h"
-#include "Resources.h"
+#include "GroupPanel.h"
 
-namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Properties
+namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
+    GroupPanel::GroupPanel(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrGroupPanel* pGroupPanel) 
+        : CellBase(gridControl, pGroupPanel), m_pGroupPanel(pGroupPanel)
+    {
+        this->Text = "그룹핑할 컬럼을 이쪽으로 드래그하여 옮기세요";
+    }
 
-} /*namespace Properties*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
+    System::String^ GroupPanel::Text::get()
+    {
+        return gcnew System::String(m_pGroupPanel->GetText().c_str());
+    }
+
+    void GroupPanel::Text::set(System::String^ text)
+    {
+        m_pGroupPanel->SetText(ToNativeString::Convert(text));
+    }
+
+    bool GroupPanel::IsVisible::get()
+    {
+        return m_pGroupPanel->GetVisible();
+    }
+
+    void GroupPanel::IsVisible::set(bool value)
+    {
+        m_pGroupPanel->SetVisible(value);
+    }
+
+    bool GroupPanel::ShouldSerializeText()
+    {
+        return this->Text != "그룹핑할 컬럼을 이쪽으로 드래그하여 옮기세요";
+    }
+} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

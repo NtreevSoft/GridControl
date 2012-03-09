@@ -25,8 +25,8 @@
 
 #include "GrGridPainter.h"
 
-#ifndef _WIN32_WINNT            // 필요한 최소 플랫폼을 Windows Vista로 지정합니다.
-#define _WIN32_WINNT 0x0600     // 다른 버전의 Windows에 맞도록 적합한 값으로 변경해 주십시오.
+#ifndef _WIN32_WINNT // 필요한 최소 플랫폼을 Windows Vista로 지정합니다.
+#define _WIN32_WINNT 0x0600 // 다른 버전의 Windows에 맞도록 적합한 값으로 변경해 주십시오.
 #endif
 
 #include <windows.h>
@@ -37,97 +37,97 @@
 class GrGridPainterDC : public GrGridPainter
 {
 public:
-	GrGridPainterDC(HWND hWnd);
-	virtual ~GrGridPainterDC();
+    GrGridPainterDC(HWND hWnd);
+    virtual ~GrGridPainterDC();
 
-	virtual void			BeginPaint(void* hdc);
+    virtual void BeginPaint(void* hdc);
 
-	virtual void			DrawRowSplitter(const GrRect& paintRect);
-	virtual void			DrawDropDown(const GrRect& paintRect, GrControlState state);
-	virtual void			DrawModal(const GrRect& paintRect, GrControlState state);
-	virtual void			DrawTreeGlyph(const GrRect& paintRect, bool opened);
-	virtual void			DrawSortGlyph(const GrRect& paintRect, GrSort sortType);
+    virtual void DrawRowSplitter(const GrRect& paintRect);
+    virtual void DrawDropDown(const GrRect& paintRect, GrControlState state);
+    virtual void DrawModal(const GrRect& paintRect, GrControlState state);
+    virtual void DrawTreeGlyph(const GrRect& paintRect, bool opened);
+    virtual void DrawSortGlyph(const GrRect& paintRect, GrSort sortType);
 
-	virtual void			DrawColumn(GrFlag paintStyle, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect);
-	virtual void			DrawRow(GrFlag paintStyle, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect);
-	virtual void			DrawItem(GrFlag paintStyle, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRectping = NULL);
+    virtual void DrawColumn(GrFlag paintStyle, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect);
+    virtual void DrawRow(GrFlag paintStyle, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect);
+    virtual void DrawItem(GrFlag paintStyle, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRectping = NULL);
 #pragma push_macro("DrawText")
 #undef DrawText
-	virtual void			DrawText(GrFont* pFont, const wchar_t* text, int textLength, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect = NULL);
+    virtual void DrawText(GrFont* pFont, const wchar_t* text, int textLength, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect = NULL);
 #pragma pop_macro("DrawText")
-	virtual void			DrawColumnText(GrFont* pFont, const wchar_t* text, int textLength, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect = NULL);
-	virtual void			DrawTooltip(const GrRect& paintRect);
+    virtual void DrawColumnText(GrFont* pFont, const wchar_t* text, int textLength, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect = NULL);
+    virtual void DrawTooltip(const GrRect& paintRect);
 
-	virtual void			DrawResizingLine(int x1, int y1, int x2, int y2);
-	virtual void			DrawSplitterMovingLine(const GrRect& paintRect);
-	virtual void			DrawCellLine(int x1, int y1, int x2, int y2);
-	virtual void			DrawRectangle(const GrRect& rect, const GrColor& color);
-	virtual void			DrawLine(int x1, int y1, int x2, int y2, const GrColor& color);
+    virtual void DrawResizingLine(int x1, int y1, int x2, int y2);
+    virtual void DrawSplitterMovingLine(const GrRect& paintRect);
+    virtual void DrawCellLine(int x1, int y1, int x2, int y2);
+    virtual void DrawRectangle(const GrRect& rect, const GrColor& color);
+    virtual void DrawLine(int x1, int y1, int x2, int y2, const GrColor& color);
 
-    virtual void			FillRectangle(const GrRect& rect, const GrColor& color);
+    virtual void FillRectangle(const GrRect& rect, const GrColor& color);
 
-	virtual void			EndPaint();
-	virtual void			SetFont(GrFont* pFont);
-	virtual void*			GetDevice() { return (void*)m_hdc; }
-	virtual void			ReleaseDevice(void* /*dc*/) {}
-
-private:
-	void					DrawHeader(GrFlag paintStyle, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect);
+    virtual void EndPaint();
+    virtual void SetFont(GrFont* pFont);
+    virtual void* GetDevice() { return (void*)m_hdc; }
+    virtual void ReleaseDevice(void* /*dc*/) {}
 
 private:
-	HDC						m_hdc;
-	HWND					m_hWnd;
-	PAINTSTRUCT				m_ps;
+    void DrawHeader(GrFlag paintStyle, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect);
 
-	HDC						m_hOverlayDC;
-	HBITMAP					m_hOverlayBmp, m_hOverlayBmpOld;
+private:
+    HDC m_hdc;
+    HWND m_hWnd;
+    PAINTSTRUCT m_ps;
 
-	HDC						m_hColorDC;
-	HBITMAP					m_hColorBmp, m_hColorBmpOld;
+    HDC m_hOverlayDC;
+    HBITMAP m_hOverlayBmp, m_hOverlayBmpOld;
 
-	HBRUSH					m_hMouseOverBrush;
-	HBRUSH					m_hSelectedBrush;
-	HBRUSH					m_hSelectedMouseOverBrush;
-	HBRUSH					m_hWhiteBrush;
-	HPEN					m_hFocusedPen;
-	HPEN					m_hSelRectPen;
-	HPEN					m_hSizingPen;
-	HPEN					m_hSplitterMovingPen;
+    HDC m_hColorDC;
+    HBITMAP m_hColorBmp, m_hColorBmpOld;
 
-	HFONT					m_hFont;
-	HGDIOBJ					m_hOldFont;
+    HBRUSH m_hMouseOverBrush;
+    HBRUSH m_hSelectedBrush;
+    HBRUSH m_hSelectedMouseOverBrush;
+    HBRUSH m_hWhiteBrush;
+    HPEN m_hFocusedPen;
+    HPEN m_hSelRectPen;
+    HPEN m_hSizingPen;
+    HPEN m_hSplitterMovingPen;
 
-	HTHEME					m_hColumnTheme;
-	HTHEME					m_hDropDownTheme;
-	HTHEME					m_hModalTheme;
-	HTHEME					m_hTreeTheme;
-	HTHEME					m_hTooltip;
+    HFONT m_hFont;
+    HGDIOBJ m_hOldFont;
 
-	DWORD					m_dwMajorVersion;
+    HTHEME m_hColumnTheme;
+    HTHEME m_hDropDownTheme;
+    HTHEME m_hModalTheme;
+    HTHEME m_hTreeTheme;
+    HTHEME m_hTooltip;
 
-	GrPoint					m_ptTransform;
+    DWORD m_dwMajorVersion;
+
+    GrPoint m_ptTransform;
 };
 
 class GrFontDC : public GrFont
 {
 public:
-	GrFontDC(void* fontHandle);
-	virtual ~GrFontDC();
+    GrFontDC(void* fontHandle);
+    virtual ~GrFontDC();
 
-	virtual int		GetCharacterWidth(wchar_t w) const;
-	virtual int		GetHeight() const { return m_height; }
-    virtual int     GetInternalLeading() const { return m_internalLeading; }
-    virtual int     GetExternalLeading() const { return m_externalLeading; }
-	virtual int		GetStringWidth(const std::wstring& text) const;
+    virtual int GetCharacterWidth(wchar_t w) const;
+    virtual int GetHeight() const { return m_height; }
+    virtual int GetInternalLeading() const { return m_internalLeading; }
+    virtual int GetExternalLeading() const { return m_externalLeading; }
+    virtual int GetStringWidth(const std::wstring& text) const;
 
-	HFONT			GetFontHandle() const { return m_hFont; }
+    HFONT GetFontHandle() const { return m_hFont; }
 
 private:
-	int				m_height;
-    int				m_internalLeading;
-    int				m_externalLeading;
-    
-	HFONT			m_hFont;
-	HDC				m_hdc;
-    mutable int     m_characterWidth[0xffff];
+    int m_height;
+    int m_internalLeading;
+    int m_externalLeading;
+
+    HFONT m_hFont;
+    HDC m_hdc;
+    mutable int m_characterWidth[0xffff];
 };

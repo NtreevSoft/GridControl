@@ -30,7 +30,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// 제목을 표시하는 개체입니다.
     /// </summary>
     [System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
-    public ref class GroupingRow : Ntreev::Windows::Forms::Grid::CellBase
+    public ref class GroupPanel : Ntreev::Windows::Forms::Grid::CellBase
     {
     public: // properties
 
@@ -63,7 +63,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     internal: // methods
 
-        GroupingRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrGroupingList* pGroupingList);
+        GroupPanel(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrGroupPanel* pGroupPanel);
 
     private: // methods
 
@@ -71,6 +71,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     private: // variables
 
-        GrGroupingList* m_pGroupingList;
+        GrGroupPanel* m_pGroupPanel;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

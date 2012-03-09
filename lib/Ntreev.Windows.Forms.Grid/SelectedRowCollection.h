@@ -80,7 +80,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 포커스를 설정할 Column입니다.
         /// null 설정시 가장 최근값으로 포커스를 설정합니다.
         /// </param>
-        void Add(Ntreev::Windows::Forms::Grid::Row^ row, Column^ focusColumn);
+        void Add(Ntreev::Windows::Forms::Grid::Row^ row, Ntreev::Windows::Forms::Grid::Column^ focusColumn);
 
         /// <summary>
         /// Row::IsSelected의 값을 false로 설정하고 목록에 제거합니다.

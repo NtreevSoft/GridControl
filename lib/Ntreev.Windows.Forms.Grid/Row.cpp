@@ -38,7 +38,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     Row::Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
         : m_pDataRow(new GrDataRow()), RowBase(gridControl, m_pDataRow), m_errorDescription(System::String::Empty)
     {
-        m_pDataRow->ManagedRef = this;
         m_cells = gcnew Ntreev::Windows::Forms::Grid::CellCollection(this);
         m_componentIndex = -1;
     }
@@ -46,7 +45,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     Row::Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pDataRow) 
         : m_pDataRow(pDataRow), RowBase(gridControl, m_pDataRow), m_errorDescription(System::String::Empty)
     {
-        m_pDataRow->ManagedRef = this;
         m_cells = gcnew Ntreev::Windows::Forms::Grid::CellCollection(this);
     }
 
@@ -66,13 +64,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Row::RefreshCells()
     {
-        for each(Column^ item in GridControl->Columns)
+        for each(Ntreev::Windows::Forms::Grid::Column^ item in GridControl->Columns)
         {
             NewCell(item);
         }
     }
 
-    void Row::NewCell(Column^ column)
+    void Row::NewCell(Ntreev::Windows::Forms::Grid::Column^ column)
     {
         GrItem* pItem = m_pDataRow->GetItem(column->NativeRef);
         Ntreev::Windows::Forms::Grid::Cell^ cell = Ntreev::Windows::Forms::Grid::Cell::FromNative(pItem);
@@ -133,12 +131,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_cells[columnName]->Value = value;
     }
 
-    System::Object^ Row::default::get(Column^ column)
+    System::Object^ Row::default::get(Ntreev::Windows::Forms::Grid::Column^ column)
     {
         return m_cells[column]->Value;
     }
 
-    void Row::default::set(Column^ column, System::Object^ value)
+    void Row::default::set(Ntreev::Windows::Forms::Grid::Column^ column, System::Object^ value)
     {
         m_cells[column]->Value = value;
     }
@@ -284,19 +282,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         Selector->SelectItems(m_pDataRow, (GrSelectionType)selectionType);
     }
 
-    void Row::Focus()
-    {
-        Focuser->Set(m_pDataRow);
-
-        if(Focuser->Get() != nullptr)
-            return;
-
-        if(this->Cells->Count > 0)
-        {
-            this->Cells[0]->Focus();
-        }
-    }
-
     void Row::ResetCellBackColor()
     {
         CellBackColor = System::Drawing::Color::Empty;
@@ -386,7 +371,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         ApplyEdit();
     }
 
-    void InsertionRow::NewCell(Column^ column)
+    void InsertionRow::NewCell(Ntreev::Windows::Forms::Grid::Column^ column)
     {
         GrItem* pItem = NativeRef->GetItem(column->NativeRef);
         Ntreev::Windows::Forms::Grid::Cell^ cell = Ntreev::Windows::Forms::Grid::Cell::FromNative(pItem);

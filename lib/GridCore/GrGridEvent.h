@@ -28,15 +28,15 @@
 class IEventHandler
 {
 public:
-    virtual size_t    obj() const = 0;
-    virtual size_t    func() const = 0;
-    virtual size_t    size() const = 0;
+    virtual size_t obj() const = 0;
+    virtual size_t func() const = 0;
+    virtual size_t size() const = 0;
 
-    virtual void    Raise(GrObject* pObject, void* args) const = 0;
+    virtual void Raise(GrObject* pObject, void* args) const = 0;
 };
 
 template<typename T, typename ARG>
-class  GrEventHandler : public IEventHandler
+class GrEventHandler : public IEventHandler
 {
 public:
     typedef void (T::*Delegate)(GrObject*, ARG*);
@@ -50,7 +50,7 @@ public:
     GrEventHandler(const GrEventHandler<T, ARG>& handler)
         : m_delegate(handler.m_delegate), m_obj(handler.m_obj), m_size(handler.m_size)
     {
-        
+
     }
 
     virtual ~GrEventHandler()
@@ -68,9 +68,9 @@ public:
     virtual size_t size() const { return m_size; }
 
 private:
-    Delegate    m_delegate;
-    T*          m_obj;
-    size_t      m_size;
+    Delegate m_delegate;
+    T* m_obj;
+    size_t m_size;
 };
 
 template<typename ARG, class OWNER>
@@ -90,7 +90,7 @@ class GrEvent : public GrObject
 public:
     GrEvent()
     {
-        
+
     }
 
     virtual ~GrEvent()
@@ -163,7 +163,7 @@ public:
     }
 
 private:
-    _Handlers        m_handlers;
+    _Handlers m_handlers;
 
 #ifdef _MSC_VER 
     friend OWNER;

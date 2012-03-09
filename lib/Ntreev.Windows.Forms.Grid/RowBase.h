@@ -28,7 +28,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     public ref class RowBase : Ntreev::Windows::Forms::Grid::CellBase
     {
+    public: // methods
+
+        /// <summary>
+        /// 포커스를 설정합니다.
+        /// </summary>
+        void Focus();
+
     public: // properties
+
         /// <summary>
         /// 행의 높이를 가져오거나 설정합니다.
         /// </summary>
@@ -96,13 +104,35 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             unsigned int get(); 
         }
 
+        /// <summary>
+        /// 포커스 설정 여부를 가져옵니다.
+        /// </summary>
+        /// <returns>
+        /// 포커스가 설정되었다면 true를, 그렇지 않다면 false를 반환합니다.
+        /// </returns>
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
+        property bool Focused
+        {
+            bool get(); 
+        }
+
+
     internal: // methods
+
         RowBase(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, IDataRow* pDataRow);
 
+        static Ntreev::Windows::Forms::Grid::RowBase^ FromNative(const IDataRow* pDataRow);
+
     private: // methods
+
         bool ShouldSerializeHeight();
 
     private: // variables
+
         IDataRow* m_pDataRow;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

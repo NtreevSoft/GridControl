@@ -27,7 +27,7 @@
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     ref class CaptionRow;
-    ref class GroupingRow;
+    ref class GroupPanel;
     ref class ColumnCollection;
     ref class VisibleColumnCollection;
     ref class DisplayableColumnCollection;
@@ -284,9 +284,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::DescriptionAttribute("그룹핑 표시에 대한 인터페이스를 제공합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
-        property Ntreev::Windows::Forms::Grid::GroupingRow^ GroupingRow
+        property Ntreev::Windows::Forms::Grid::GroupPanel^ GroupPanel
         {
-            Ntreev::Windows::Forms::Grid::GroupingRow^ get(); 
+            Ntreev::Windows::Forms::Grid::GroupPanel^ get(); 
         }
 
         /// <summary>
@@ -455,9 +455,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::Row^ FocusedRow
+        property Ntreev::Windows::Forms::Grid::RowBase^ FocusedRow
         {
-            Ntreev::Windows::Forms::Grid::Row^ get(); 
+            Ntreev::Windows::Forms::Grid::RowBase^ get(); 
         } 
 
         /// <summary>
@@ -509,7 +509,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::DescriptionAttribute("마우스를 이용하여 열의 위치 이동을 할 수 있는지에 대한 여부를 설정합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DefaultValueAttribute(true)]
-        property bool EnableColumnMoving
+        property bool IsColumnMovable
         {
             bool get();
             void set(bool); 
@@ -524,7 +524,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::DescriptionAttribute("마우스를 이용하여 열의 너비 조절을 할 수 있는지에 대한 여부를 설정합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DefaultValueAttribute(true)]
-        property bool EnableColumnResizing
+        property bool IsColumnResizable
         {
             bool get(); 
             void set(bool);
@@ -540,7 +540,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::DescriptionAttribute("행의 스크롤 적용여부를 설정합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DefaultValueAttribute(true)]
-        property bool EnableColumnFrozing
+        property bool IsColumnFreezable
         {
             bool get(); 
             void set(bool); 
@@ -555,7 +555,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::DescriptionAttribute("마우스 클릭을 사용하여 열의 내용을 정렬할 수 있는지에 대한 여부를 설정합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DefaultValueAttribute(true)]
-        property bool EnableColumnSorting
+        property bool IsColumnSortable
         {
             bool get(); 
             void set(bool); 
@@ -585,7 +585,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::DescriptionAttribute("마우스를 이용하여 행의 높이를 조절할 수 있는지에 대한 여부를 설정합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DefaultValueAttribute(true)]
-        property bool EnableRowResizing
+        property bool IsRowResizable
         {
             bool get(); 
             void set(bool); 
@@ -600,7 +600,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::DescriptionAttribute("그룹화 기능을 사용할지에 대한 여부를 설정합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DefaultValueAttribute(true)]
-        property bool EnableGrouping
+        property bool IsGroupable
         {
             bool get();
             void set(bool);
@@ -673,7 +673,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::DescriptionAttribute("상단의 그룹핑 표시 여부를 설정합니다.")]
         [System::ComponentModel::CategoryAttribute("Appearance")]
         [System::ComponentModel::DefaultValueAttribute(true)]
-        property bool IsGroupingRowVisible
+        property bool IsGroupPanelVisible
         {
             bool get(); 
             void set(bool);
@@ -1840,9 +1840,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         Ntreev::Windows::Forms::Grid::Cell^ m_focusedCell;
         Ntreev::Windows::Forms::Grid::CaptionRow^ m_captionRow;
-        Ntreev::Windows::Forms::Grid::GroupingRow^ m_groupingRow;
+        Ntreev::Windows::Forms::Grid::GroupPanel^ m_groupPanel;
         Ntreev::Windows::Forms::Grid::InsertionRow^ m_insertionRow;
-
 
         initonly Ntreev::Windows::Forms::Grid::SelectedRowCollection^ m_selectedRows;
         initonly Ntreev::Windows::Forms::Grid::SelectedColumnCollection^ m_selectedColumns;
@@ -1857,6 +1856,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         Ntreev::Windows::Forms::Grid::ErrorDescriptor^ m_errorDescriptor;
         Ntreev::Windows::Forms::Grid::ToolTip^ m_tooltips;
         System::DateTime m_buttonDownTime;
+
+        Ntreev::Windows::Forms::Grid::Column^ m_oldFocusedColumn;
+        Ntreev::Windows::Forms::Grid::RowBase^ m_oldFocusedRow;
 
         // events
         Ntreev::Windows::Forms::Grid::ValueChangingEventHandler^ m_eventValueChanging;

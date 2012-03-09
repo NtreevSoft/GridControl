@@ -35,45 +35,45 @@ GrFontCreator::GrFontCreator()
 
 GrFontCreator::~GrFontCreator()
 {
-	for(Fonts::iterator itor = m_fonts.begin() ; itor != m_fonts.end() ; itor++)
-	{
-		delete (*itor).second;
-	}
+    for(Fonts::iterator itor = m_fonts.begin() ; itor != m_fonts.end() ; itor++)
+    {
+        delete (*itor).second;
+    }
 }
 
 std::wstring GrFontCreator::GetFontKey(void* fontHandle)
 {
-	LOGFONTW logfont;
-	GetObjectW(fontHandle, sizeof(logfont), &logfont);
+    LOGFONTW logfont;
+    GetObjectW(fontHandle, sizeof(logfont), &logfont);
 
-	wchar_t strFileName[MAX_PATH];
-	wsprintf(strFileName, L"%s%d%d%d%d%d%d%d%d%d%d%d%d%d.data", logfont.lfFaceName,
-		logfont.lfCharSet, logfont.lfClipPrecision, logfont.lfEscapement, logfont.lfHeight,
-		logfont.lfItalic, logfont.lfOrientation, logfont.lfOutPrecision, logfont.lfPitchAndFamily,
-		logfont.lfQuality, logfont.lfStrikeOut, logfont.lfUnderline, logfont.lfWeight, logfont.lfWidth);
+    wchar_t strFileName[MAX_PATH];
+    wsprintf(strFileName, L"%s%d%d%d%d%d%d%d%d%d%d%d%d%d.data", logfont.lfFaceName,
+        logfont.lfCharSet, logfont.lfClipPrecision, logfont.lfEscapement, logfont.lfHeight,
+        logfont.lfItalic, logfont.lfOrientation, logfont.lfOutPrecision, logfont.lfPitchAndFamily,
+        logfont.lfQuality, logfont.lfStrikeOut, logfont.lfUnderline, logfont.lfWeight, logfont.lfWidth);
 
-	return std::wstring(strFileName);
+    return std::wstring(strFileName);
 }
 
 GrFont* GrFontCreator::Create(void* fontHandle)
 {
-	//std::wstring fontName= GetFontKey(fontHandle);
-	Fonts::const_iterator itor = m_fonts.find(fontHandle);
+    //std::wstring fontName= GetFontKey(fontHandle);
+    Fonts::const_iterator itor = m_fonts.find(fontHandle);
 
-	GrFont* pFont = NULL;
-	if(itor == m_fonts.end())
-	{
-		pFont = new GrFontDC(fontHandle);
-		m_fonts.insert(Fonts::value_type(fontHandle, pFont));
-	}
-	else
-	{
-		pFont = (*itor).second;
-	}
-	return pFont;
+    GrFont* pFont = NULL;
+    if(itor == m_fonts.end())
+    {
+        pFont = new GrFontDC(fontHandle);
+        m_fonts.insert(Fonts::value_type(fontHandle, pFont));
+    }
+    else
+    {
+        pFont = (*itor).second;
+    }
+    return pFont;
 }
 
 void* GrFontCreator::GetFontHandle(GrFont* pFont)
 {
-	return dynamic_cast<GrFontDC*>(pFont)->GetFontHandle();
+    return dynamic_cast<GrFontDC*>(pFont)->GetFontHandle();
 }

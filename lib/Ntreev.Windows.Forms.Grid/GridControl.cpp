@@ -28,7 +28,8 @@
 #include "Cell.h"
 #include "Row.h"
 #include "CaptionRow.h"
-#include "GroupingRow.h"
+#include "GroupRow.h"
+#include "GroupPanel.h"
 #include "Events.h"
 #include "Resources.h"
 #include "CellCollection.h"
@@ -94,7 +95,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_selectedRows = gcnew SelectedRowCollection(this, Selector->GetSelectedRows());
 
         m_captionRow = gcnew Ntreev::Windows::Forms::Grid::CaptionRow(this, m_pGridCore->GetCaptionRow());
-        m_groupingRow = gcnew Ntreev::Windows::Forms::Grid::GroupingRow(this, m_pGridCore->GetGroupingList());
+        m_groupPanel = gcnew Ntreev::Windows::Forms::Grid::GroupPanel(this, m_pGridCore->GetGroupPanel());
         m_insertionRow = gcnew Ntreev::Windows::Forms::Grid::InsertionRow(this, m_pGridCore->GetInsertionRow());
 
         m_defaultDataSource = gcnew System::Data::DataTable();
@@ -244,7 +245,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             if(x >= clipRectangle.Right || r < clipRectangle.Left)
                 continue;
 
-            Column^ column = m_columnList[pColumn];
+            Ntreev::Windows::Forms::Grid::Column^ column = m_columnList[pColumn];
             Ntreev::Windows::Forms::Grid::ViewType viewType = column->ViewType;
             if(viewType == Ntreev::Windows::Forms::Grid::ViewType::Text)
                 continue;
@@ -290,6 +291,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(pFocusedRow == nullptr || pFocusedRow->GetDisplayable() == false)
             return;
 
+        Ntreev::Windows::Forms::Grid::Row^ row = dynamic_cast<Ntreev::Windows::Forms::Grid::Row^>(FocusedRow);
+
         if(EditingCell != nullptr)
         {
             GrRect bound = EditingCell->NativeRef->GetDataRow()->GetRect();
@@ -300,7 +303,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             center.y -= (image->Height / 2);
             g->DrawImageUnscaled(image, center.x, center.y);
         }
-        else if(FocusedRow && FocusedRow->IsEdited == true)
+        else if(row && row->IsEdited == true)
         {
             GrRect bound = pFocusedRow->GetRect();
             GrPoint center = bound.GetCenter();
@@ -317,7 +320,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
             System::Drawing::Bitmap^ image = _Resources::RowFocused;
             if(pFocusedRow == m_pInsertionRow)
-                image = _Resources::InsertionRowFocused;
+                image =_Resources::InsertionRowFocused;
             center.x -= (image->Width / 2);
             center.y -= (image->Height / 2);
             g->DrawImageUnscaled(image, center.x, center.y);
@@ -365,7 +368,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
             if(manager == nullptr)
             {
-                throw gcnew System::NotSupportedException("데이터 소스 초기화에 실패했습니다. 데이터 소스가 IList, IListSource 또는 IBindingList 인터페이스를 구현하는 개체인지 확인하십시오");
+                throw gcnew System::NotSupportedException(_Resources::DataSourceInitializingFailed);
             }
             else if(support != nullptr)
             {
@@ -533,9 +536,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_captionRow;
     }
 
-    Ntreev::Windows::Forms::Grid::GroupingRow^ GridControl::GroupingRow::get()
+    Ntreev::Windows::Forms::Grid::GroupPanel^ GridControl::GroupPanel::get()
     {
-        return m_groupingRow;
+        return m_groupPanel;
     }
 
     System::Object^ GridControl::DataSource::get()
@@ -643,7 +646,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_selectedColumns;
     }
 
-    Column^ GridControl::FocusedColumn::get()
+    Ntreev::Windows::Forms::Grid::Column^ GridControl::FocusedColumn::get()
     {
         Ntreev::Windows::Forms::Grid::Cell^ focusedCell = FocusedCell;
         if(focusedCell == nullptr)
@@ -809,24 +812,27 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             break;
         case Keys::Escape:
             {
-                if(m_focusedCell != nullptr && m_focusedCell->IsEdited == true)
+                if(m_focusedCell != nullptr)
                 {
-                    m_focusedCell->CancelEdit();
-                    if(m_pGridCore->IsGrouped() == true)
-                        m_pGridCore->GetDataRowList()->Update(true);
+                    if(m_focusedCell->IsEdited == true)
+                    {
+                        m_focusedCell->CancelEdit();
+                        if(m_pGridCore->IsGrouped() == true)
+                            m_pGridCore->GetDataRowList()->Update(true);
+                    }
+                    else if(m_focusedCell->Row->IsEdited == true)
+                    {
+                        m_focusedCell->Row->CancelEdit();
+                        if(m_pGridCore->IsGrouped() == true)
+                            m_pGridCore->GetDataRowList()->Update(true);
+                    }
+                    Invalidate(false);
                 }
-                else if(FocusedRow != nullptr && FocusedRow->IsEdited == true)
-                {
-                    FocusedRow->CancelEdit();
-                    if(m_pGridCore->IsGrouped() == true)
-                        m_pGridCore->GetDataRowList()->Update(true);
-                }
-                Invalidate(false);
             }
             break;
         case Keys::ProcessKey:
             {
-                Column^ column = this->FocusedColumn;
+                Ntreev::Windows::Forms::Grid::Column^ column = this->FocusedColumn;
 
                 if(column != nullptr)
                 {
@@ -866,7 +872,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         if(m_focusedCell != nullptr)
         {
-            Column^ column = m_focusedCell->Column;
+            Ntreev::Windows::Forms::Grid::Column^ column = m_focusedCell->Column;
             Ntreev::Windows::Forms::Grid::EditingReason reason(e->KeyChar);
             if(column->CanEditInternal(m_focusedCell, reason) == true)
             {
@@ -894,15 +900,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GridControl::InvokeFocusChanging()
     {
-
+        m_oldFocusedColumn = FocusedColumn;
+        m_oldFocusedRow = FocusedRow;
     }
 
     void GridControl::InvokeFocusChanged()
     {
         GrItem* pFocusedItem = Focuser->GetItem();
-
-        Column^ oldFocusedColumn = FocusedColumn;
-        Ntreev::Windows::Forms::Grid::Row^ oldFocusedRow = FocusedRow;
 
         if(pFocusedItem == nullptr)
         {
@@ -913,17 +917,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             m_focusedCell = Ntreev::Windows::Forms::Grid::Cell::FromNative(pFocusedItem);
         }
 
-        if(FocusedColumn != oldFocusedColumn)
+        if(FocusedColumn != m_oldFocusedColumn)
         {
             OnFocusedColumnChanged(System::EventArgs::Empty);
         }
 
-        if(FocusedRow != oldFocusedRow)
+        if(FocusedRow != m_oldFocusedRow)
         {
-            if(oldFocusedRow != nullptr)
-                oldFocusedRow->ApplyEdit();
+            if(m_focusedCell != nullptr)
+                m_focusedCell->Row->ApplyEdit();
             OnFocusedRowChanged(System::EventArgs::Empty);
         }
+
+        m_oldFocusedColumn = FocusedColumn;
+        m_oldFocusedRow = FocusedRow;
 
         OnFocusedCellChanged(gcnew CellEventArgs(m_focusedCell));
     }
@@ -948,7 +955,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     }
 
-    void GridControl::InvokeColumnWidthChanged(Column^ column)
+    void GridControl::InvokeColumnWidthChanged(Ntreev::Windows::Forms::Grid::Column^ column)
     {
         ColumnEventArgs e(column);
         OnColumnWidthChanged(%e);
@@ -964,7 +971,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
     }
 
-    void GridControl::InvokeColumnFrozenChanged(Column^ column)
+    void GridControl::InvokeColumnFrozenChanged(Ntreev::Windows::Forms::Grid::Column^ column)
     {
         ColumnEventArgs e(column);
         OnColumnFrozenChanged(%e);
@@ -1039,6 +1046,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         m_pGridCore->Clear();
         m_focusedCell = nullptr;
+        m_oldFocusedColumn = nullptr;
+        m_oldFocusedRow = nullptr;
 
         m_defaultDataSource->Clear();
 
@@ -1110,12 +1119,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_selectedRows; 
     }
 
-    Ntreev::Windows::Forms::Grid::Row^ GridControl::FocusedRow::get()
+    Ntreev::Windows::Forms::Grid::RowBase^ GridControl::FocusedRow::get()
     {
-        Ntreev::Windows::Forms::Grid::Cell^ focusedCell = FocusedCell;
-        if(focusedCell == nullptr)
+        IDataRow* pDataRow = Focuser->GetFocusedRow();
+        if(pDataRow == nullptr)
+        {
             return nullptr;
-        return focusedCell->Row;
+        }
+
+        Ntreev::Windows::Forms::Grid::RowBase^ rowBase = Ntreev::Windows::Forms::Grid::RowBase::FromNative(pDataRow);
+        if(rowBase != nullptr)
+        {
+            return rowBase;
+        }
+
+        return gcnew Ntreev::Windows::Forms::Grid::RowBase(this, pDataRow);
     }
 
     bool GridControl::IsInsertionRowVisible::get()
@@ -1141,17 +1159,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_captionRow->IsVisible = value;
     }
 
-    bool GridControl::IsGroupingRowVisible::get()
+    bool GridControl::IsGroupPanelVisible::get()
     {
-        return m_groupingRow->IsVisible;
+        return m_groupPanel->IsVisible;
     }
 
-    void GridControl::IsGroupingRowVisible::set(bool value)
+    void GridControl::IsGroupPanelVisible::set(bool value)
     {
-        if(value == m_groupingRow->IsVisible)
+        if(value == m_groupPanel->IsVisible)
             return;
 
-        m_groupingRow->IsVisible = value;
+        m_groupPanel->IsVisible = value;
     }
 
     bool GridControl::IsFrozingSplitterVisible::get()
@@ -1164,44 +1182,44 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pColumnList->GetColumnSplitter()->SetVisible(value);
     }
 
-    bool GridControl::EnableColumnMoving::get()
+    bool GridControl::IsColumnMovable::get()
     {
-        return m_pGridCore->CanBeColumnMoving();
+        return m_pGridCore->GetColumnMovable();
     }
 
-    void GridControl::EnableColumnMoving::set(bool value)
+    void GridControl::IsColumnMovable::set(bool value)
     {
-        m_pGridCore->EnableColumnMoving(value);
+        m_pGridCore->SetColumnMovable(value);
     }
 
-    bool GridControl::EnableColumnResizing::get()
+    bool GridControl::IsColumnResizable::get()
     {
-        return m_pGridCore->CanBeColumnResizing();
+        return m_pGridCore->GetColumnResizable();
     }
 
-    void GridControl::EnableColumnResizing::set(bool value)
+    void GridControl::IsColumnResizable::set(bool value)
     {
-        m_pGridCore->EnableColumnResizing(value);
+        m_pGridCore->SetColumnResizable(value);
     }
 
-    bool GridControl::EnableColumnFrozing::get()
+    bool GridControl::IsColumnFreezable::get()
     {
-        return m_pGridCore->CanBeColumnFrozing();
+        return m_pGridCore->GetColumnFreezable();
     }
 
-    void GridControl::EnableColumnFrozing::set(bool value)
+    void GridControl::IsColumnFreezable::set(bool value)
     {
-        m_pGridCore->EnableColumnFrozing(value);
+        m_pGridCore->SetColumnFreezable(value);
     }
 
-    bool GridControl::EnableColumnSorting::get()
+    bool GridControl::IsColumnSortable::get()
     {
-        return m_pGridCore->CanBeColumnSorting();
+        return m_pGridCore->GetColumnSortable();
     }
 
-    void GridControl::EnableColumnSorting::set(bool value)
+    void GridControl::IsColumnSortable::set(bool value)
     {
-        m_pGridCore->EnableColumnSorting(value);
+        m_pGridCore->SetColumnSortable(value);
     }
 
     bool GridControl::ReadOnly::get()
@@ -1214,24 +1232,24 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pGridCore->SetReadOnly(value);
     }
 
-    bool GridControl::EnableRowResizing::get()
+    bool GridControl::IsRowResizable::get()
     {
-        return m_pGridCore->CanBeRowResizing();
+        return m_pGridCore->GetRowResizable();
     }
 
-    void GridControl::EnableRowResizing::set(bool value)
+    void GridControl::IsRowResizable::set(bool value)
     {
-        m_pGridCore->EnableRowResizing(value);
+        m_pGridCore->SetRowResizable(value);
     }
 
-    bool GridControl::EnableGrouping::get()
+    bool GridControl::IsGroupable::get()
     {
-        return m_pGridCore->CanBeGrouping();
+        return m_pGridCore->GetGroupable();
     }
 
-    void GridControl::EnableGrouping::set(bool value)
+    void GridControl::IsGroupable::set(bool value)
     {
-        m_pGridCore->EnableGrouping(value);
+        m_pGridCore->SetGroupable(value);
     }
 
     bool GridControl::FullRowSelect::get()
@@ -1338,53 +1356,53 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         OnRowRemoved(e);
     }
 
-    bool GridControl::InvokeColumnInserting(Column^ column)
+    bool GridControl::InvokeColumnInserting(Ntreev::Windows::Forms::Grid::Column^ column)
     {
         ColumnInsertingEventArgs e(column);
         OnColumnInserting(%e);
         return e.Cancel == false;
     }
 
-    void GridControl::InvokeColumnInserted(Column^ column)
+    void GridControl::InvokeColumnInserted(Ntreev::Windows::Forms::Grid::Column^ column)
     {
         ColumnEventArgs e(column);
         OnColumnInserted(%e);
     }
 
-    Column^ GridControl::InvokeColumnBinding(System::ComponentModel::PropertyDescriptor^ propertyDescriptor, Column^ existColumn)
+    Ntreev::Windows::Forms::Grid::Column^ GridControl::InvokeColumnBinding(System::ComponentModel::PropertyDescriptor^ propertyDescriptor, Ntreev::Windows::Forms::Grid::Column^ existColumn)
     {
         ColumnBindingEventArgs e(propertyDescriptor, existColumn);
         OnColumnBinding(%e);
         return e.BindingColumn;
     }
 
-    void GridControl::InvokeColumnBinded(Column^ column)
+    void GridControl::InvokeColumnBinded(Ntreev::Windows::Forms::Grid::Column^ column)
     {
         ColumnEventArgs e(column);
         OnColumnBinded(%e);
     }
 
-    bool GridControl::InvokeColumnMouseDown(Column^ column, System::Drawing::Point clientLocation)
+    bool GridControl::InvokeColumnMouseDown(Ntreev::Windows::Forms::Grid::Column^ column, System::Drawing::Point clientLocation)
     {
         ColumnMouseEventArgs ce(column, clientLocation);
         OnColumnMouseDown(%ce);
         return ce.Handled == true;
     }
 
-    bool GridControl::InvokeColumnMouseUp(Column^ column, System::Drawing::Point clientLocation)
+    bool GridControl::InvokeColumnMouseUp(Ntreev::Windows::Forms::Grid::Column^ column, System::Drawing::Point clientLocation)
     {
         ColumnMouseEventArgs ce(column, clientLocation);
         OnColumnMouseUp(%ce);
         return ce.Handled == true;
     }
 
-    void GridControl::InvokeColumnMouseEnter(Column^ column, System::Drawing::Point clientLocation)
+    void GridControl::InvokeColumnMouseEnter(Ntreev::Windows::Forms::Grid::Column^ column, System::Drawing::Point clientLocation)
     {
         ColumnMouseEventArgs ce(column, clientLocation);
         OnColumnMouseEnter(%ce);
     }
 
-    bool GridControl::InvokeColumnMouseMove(Column^ column, System::Drawing::Point clientLocation)
+    bool GridControl::InvokeColumnMouseMove(Ntreev::Windows::Forms::Grid::Column^ column, System::Drawing::Point clientLocation)
     {
         ColumnMouseEventArgs ce(column, clientLocation);
         OnColumnMouseMove(%ce);
@@ -1392,7 +1410,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return ce.Handled;
     }
 
-    void GridControl::InvokeColumnMouseLeave(Column^ column)
+    void GridControl::InvokeColumnMouseLeave(Ntreev::Windows::Forms::Grid::Column^ column)
     {
         ColumnMouseEventArgs ce(column, System::Drawing::Point::Empty);
         OnColumnMouseLeave(%ce);
@@ -1520,7 +1538,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GridControl::OnColumnInserted(Ntreev::Windows::Forms::Grid::ColumnEventArgs^ e)
     {
-        Column^ column = e->Column;
+        Ntreev::Windows::Forms::Grid::Column^ column = e->Column;
         m_insertionRow->NewCell(column);
         for each(Ntreev::Windows::Forms::Grid::Row^ item in m_rowList)
         {
@@ -1537,7 +1555,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GridControl::OnColumnBinded(Ntreev::Windows::Forms::Grid::ColumnEventArgs^ e)
     {
-        Column^ column = e->Column;
+        Ntreev::Windows::Forms::Grid::Column^ column = e->Column;
         m_insertionRow->NewCell(column);
         for each(Ntreev::Windows::Forms::Grid::Row^ item in m_rowList)
         {
@@ -1645,7 +1663,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         try
         {
-            Column^ column = m_visibleColumnList->Count > 0 ? m_visibleColumnList[0] : nullptr;
+            Ntreev::Windows::Forms::Grid::Column^ column = m_visibleColumnList->Count > 0 ? m_visibleColumnList[0] : nullptr;
             Ntreev::Windows::Forms::Grid::Row^ row = m_visibleRowList->Count > 0 ? (Ntreev::Windows::Forms::Grid::Row^)m_visibleRowList[0] : nullptr;
             if(column == nullptr || row == nullptr)
                 return;
@@ -1750,9 +1768,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         case GrGridState_ColumnResizing:
         case GrGridState_ColumnSplitterMoving:
         case GrGridState_RowResizing:
-        case GrGridState_GroupingInfoPressing:
-        case GrGridState_GroupingCellPressing:
-        case GrGridState_GroupingExpandPressing:
+        case GrGridState_GroupPressing:
+        case GrGridState_GroupHeaderPressing:
+        case GrGridState_GroupExpandPressing:
             return pStateManager->SetCursor();
         default:
             break;
@@ -1774,9 +1792,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             case GrGridState_ColumnResizing:
             case GrGridState_ColumnSplitterMoving:
             case GrGridState_RowResizing:
-            case GrGridState_GroupingInfoPressing:
-            case GrGridState_GroupingCellPressing:
-            case GrGridState_GroupingExpandPressing:
+            case GrGridState_GroupPressing:
                 return true;
             default:
                 break;
@@ -1789,10 +1805,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
 
-        //if (this->DisplayRectangle.Contains(point) == false)
-        //{
-        // return true;
-        //}
+        if (this->DisplayRectangle.Contains(point) == false)
+        {
+         return true;
+        }
 
         return false;
     }

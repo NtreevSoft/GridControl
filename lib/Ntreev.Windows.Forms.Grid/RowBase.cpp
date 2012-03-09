@@ -32,6 +32,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     }
 
+    void RowBase::Focus()
+    {
+        Focuser->Set(m_pDataRow);
+    }
+
     void RowBase::Height::set(int value)
     {
         if(value < 0)
@@ -54,9 +59,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_pDataRow->GetVisibleIndex();
     }
 
+    bool RowBase::Focused::get()
+    {
+        return m_pDataRow->HasFocused();
+    }
+
+    Ntreev::Windows::Forms::Grid::RowBase^ RowBase::FromNative(const IDataRow* pDataRow)
+    {
+        System::Object^ ref = pDataRow->ManagedRef;
+        return safe_cast<Ntreev::Windows::Forms::Grid::RowBase^>(ref);
+    }
+
     bool RowBase::ShouldSerializeHeight()
     {
         return m_pDataRow->GetHeight() != GrRow::DefaultHeight;
     }
-
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

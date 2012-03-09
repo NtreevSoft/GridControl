@@ -29,17 +29,17 @@ GrGridPainter* CreateGridPainterDC(void* windowHandle);
 
 class GrFontCreator
 {
-	typedef std::map<void*, GrFont*> Fonts;
+    typedef std::map<void*, GrFont*> Fonts;
 public:
-	GrFontCreator();
-	~GrFontCreator();
+    GrFontCreator();
+    ~GrFontCreator();
 
-	static GrFont* Create(void* fontHandle);
-	static void* GetFontHandle(GrFont* pFont);
-
-private:
-	static std::wstring GetFontKey(void* fontHandle);
+    static GrFont* Create(void* fontHandle);
+    static void* GetFontHandle(GrFont* pFont);
 
 private:
-	static Fonts m_fonts;
+    static std::wstring GetFontKey(void* fontHandle);
+
+private:
+    static Fonts m_fonts;
 };

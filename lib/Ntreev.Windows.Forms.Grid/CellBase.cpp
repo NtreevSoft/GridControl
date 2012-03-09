@@ -33,12 +33,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     CellBase::CellBase(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrCell* pCell)
         : GridObject(gridControl), m_pCell(pCell)
     {
-
+        m_pCell->ManagedRef = this;
     }
 
-    CellBase::CellBase(GrCell* pCell) : GridObject(), m_pCell(pCell)
+    CellBase::CellBase(GrCell* pCell)
+        : GridObject(), m_pCell(pCell)
     {
-
+        m_pCell->ManagedRef = this;
     }
 
     System::Drawing::Color CellBase::BackColor::get()

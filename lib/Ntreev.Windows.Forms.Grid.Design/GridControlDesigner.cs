@@ -202,7 +202,6 @@ namespace Ntreev.Windows.Forms.Grid.Design
             //    //gridControl.CaptionRow.Text = "true";
             //    return;
             //}
-            gridControl.CaptionRow.Text = gridControl.Cursor.ToString();
             base.OnSetCursor();
         }
 

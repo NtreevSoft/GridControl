@@ -170,7 +170,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 정렬이 가능하다면 true를, 그렇지 않다면 false를 반환합니다.
         /// </returns>
-        property bool CanBeSorted
+        property bool IsSortable
         {
             bool get();
         }
@@ -225,7 +225,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 열에 그룹핑 기능을 적용할 수 있다면 true를, 그렇지 않다면 false를 반환합니다.
         /// </returns>
-        property bool CanBeGrouping
+        property bool IsGroupable
         {
             bool get();
         }
