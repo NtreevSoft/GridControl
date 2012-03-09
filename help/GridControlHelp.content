@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Topics>
-  <Topic id="f4010ee5-e46e-4218-8332-01af8dc68ca6" visible="True" isDefault="true" title="시작하기">
-    <Topic id="e3c8b1d6-121e-40c7-a92d-2177f4275216" visible="True" title="시작하기 전에" />
-    <Topic id="89926727-d3e6-4411-9d50-e97c8ae02487" visible="True" title="간단한 그리드 컨트롤을 만들려면" />
-    <Topic id="700fe066-b38d-44da-bf3d-2fe791df3ba6" visible="True" title="새로운 컬럼을 정의하려면" />
-  </Topic>
-</Topics>

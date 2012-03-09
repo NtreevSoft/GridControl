@@ -257,11 +257,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ColumnComboBox.h"
+				RelativePath=".\ColumnControl.h"
 				>
 			</File>
 			<File
-				RelativePath=".\ColumnControl.h"
+				RelativePath=".\ColumnDropDown.h"
 				>
 			</File>
 			<File
@@ -478,7 +478,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\ColumnDropDown.h"
+					RelativePath=".\ColumnComboBox.h"
 					>
 				</File>
 			</Filter>
@@ -608,11 +608,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ColumnComboBox.cpp"
+				RelativePath=".\ColumnControl.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\ColumnControl.cpp"
+				RelativePath=".\ColumnDropDown.cpp"
 				>
 			</File>
 			<File
@@ -795,7 +795,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\ColumnDropDown.cpp"
+					RelativePath=".\ColumnComboBox.cpp"
 					>
 				</File>
 			</Filter>
