@@ -61,7 +61,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         GrItem* pItem = nullptr;
         if(focusColumn == nullptr)
         {
-            GrFocuser* pFocuser = GridCore->GetFocuser();
+            GrFocuser* pFocuser = this->GridCore->GetFocuser();
             GrColumn* pLastFocusedColumn = pFocuser->GetLastFocusedColumn();
             if(pLastFocusedColumn != nullptr)
             {
@@ -69,7 +69,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             }
             else
             {
-                GrColumnList* pColumnList = GridCore->GetColumnList();
+                GrColumnList* pColumnList = this->GridCore->GetColumnList();
                 if(pColumnList->GetDisplayableColumnCount() != 0)
                 {
                     GrColumn* pColumn = pColumnList->GetDisplayableColumn(0);
@@ -95,7 +95,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void SelectedRowCollection::Clear()
     {
-        GridControl->ClearSelection();
+        this->GridControl->ClearSelection();
     }
 
 

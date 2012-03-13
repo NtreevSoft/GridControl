@@ -27,9 +27,14 @@
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     CaptionRow::CaptionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrCaption* pCaption) 
-        : CellBase(gridControl, pCaption), m_pCaption(pCaption)
+        : CellBase(pCaption), m_pCaption(pCaption)
     {
         this->Text = "제목";
+    }
+
+    System::String^ CaptionRow::ToString()
+    {
+        return Text; 
     }
 
     System::String^ CaptionRow::Text::get()
@@ -70,12 +75,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void CaptionRow::IsVisible::set(bool value)
     {
         m_pCaption->SetVisible(value);
-    }
-
-    CaptionRow^ CaptionRow::FromNative(GrCaption* pCaption)
-    {
-        System::Object^ ref = pCaption->ManagedRef;
-        return safe_cast<CaptionRow^>(ref);
     }
 
     void CaptionRow::Height::set(int value)

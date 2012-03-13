@@ -98,12 +98,27 @@ namespace Ntreev.Windows.Forms.Grid.Design
         protected override void PreFilterProperties(System.Collections.IDictionary properties)
         {
             string[] strArray = new string[] { "AutoScroll", "AutoScrollMargin", "AutoScrollMinSize", "AutoScrollPosition", "Cursor", };
+            
             foreach (string item in strArray)
             {
                 properties.Remove(item);
             }
 
             base.PreFilterProperties(properties);
+
+            string[] props = {"IsFreezable", "IsColumnResizable", "IsColumnMovable", "IsColumnSortable", "IsGroupable", };
+
+            Attribute[] attributes = new Attribute[0];
+            for (int i = 0; i < props.Length; i++)
+            {
+                PropertyDescriptor oldPropertyDescriptor = (PropertyDescriptor)properties[strArray[i]];
+                if (oldPropertyDescriptor != null)
+                {
+                    PropertyDescriptor p = System.ComponentModel.TypeDescriptor.CreateProperty(typeof(ColumnDesigner), 
+                                                            oldPropertyDescriptor, attributes);
+                    properties[strArray[i]] = p;
+                }
+            }
         }
 
         public override System.Collections.ICollection AssociatedComponents

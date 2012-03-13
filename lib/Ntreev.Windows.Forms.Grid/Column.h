@@ -38,10 +38,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     [System::ComponentModel::ToolboxItem(false)]
     [System::ComponentModel::DesignTimeVisible(false)]
     [System::ComponentModel::Designer("Ntreev.Windows.Forms.Grid.Design.ColumnDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
-    public ref class Column : Ntreev::Windows::Forms::Grid::CellBase, 
-        Ntreev::Windows::Forms::Grid::IColumn, 
-        System::ComponentModel::IComponent, 
-        System::IServiceProvider
+    public ref class Column
+        : Ntreev::Windows::Forms::Grid::CellBase
+        , Ntreev::Windows::Forms::Grid::IColumn
+        , System::ComponentModel::IComponent
+        , System::IServiceProvider
     {
     public: // methods
 
@@ -49,6 +50,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <see cref="Column"/>클래스의 새 인스턴스를 초기화합니다.
         /// </summary>
         Column();
+
+        void Focus();
+
+        void BringIntoView();
 
         /// <summary>
         /// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>을 반환합니다.
@@ -689,8 +694,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         bool CanEditInternal(Ntreev::Windows::Forms::Grid::ICell^ cell, Ntreev::Windows::Forms::Grid::EditingReason reason);
 
-        static Ntreev::Windows::Forms::Grid::Column^ FromNative(const GrColumn* pColumn);
-
         void AsyncDisplayText();
 
         bool CanConvertFrom(System::Type^ sourceType);
@@ -735,6 +738,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         bool ShouldSerializeTitle();
         bool ShouldSerializeDataType();
         bool ShouldSerializeTypeConverter();
+
+        void ResetTitle();
 
         void propertyDescriptor_ValueChanged(System::Object^ sender, System::EventArgs^ e);
         void SetEditStyleToNative();

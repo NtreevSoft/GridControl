@@ -23,11 +23,21 @@
 
 #include "StdAfx.h"
 #include "RowBase.h"
+#include "RowBaseCollection.h"
+#include "Row.h"
+#include "GroupRow.h"
+#include "FromNative.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     RowBase::RowBase(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, IDataRow* pDataRow)
         : CellBase(gridControl, pDataRow), m_pDataRow(pDataRow)
+    {
+
+    }
+
+    RowBase::RowBase(IDataRow* pDataRow)
+        : CellBase(pDataRow), m_pDataRow(pDataRow)
     {
 
     }
@@ -64,10 +74,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_pDataRow->HasFocused();
     }
 
-    Ntreev::Windows::Forms::Grid::RowBase^ RowBase::FromNative(const IDataRow* pDataRow)
+    Ntreev::Windows::Forms::Grid::RowBaseCollection^ RowBase::Childs::get()
     {
-        System::Object^ ref = pDataRow->ManagedRef;
-        return safe_cast<Ntreev::Windows::Forms::Grid::RowBase^>(ref);
+        if(m_childs == nullptr)
+        {
+            m_childs = gcnew Ntreev::Windows::Forms::Grid::RowBaseCollection(m_pDataRow);
+        }
+        return m_childs;
+    }
+
+    Ntreev::Windows::Forms::Grid::RowBase^ RowBase::Parent::get()
+    {
+        IDataRow* pParent = dynamic_cast<IDataRow*>(m_pDataRow->GetParent());
+        if(pParent == nullptr)
+            return nullptr;
+        
+        return FromNative::Get(pParent);
     }
 
     bool RowBase::ShouldSerializeHeight()

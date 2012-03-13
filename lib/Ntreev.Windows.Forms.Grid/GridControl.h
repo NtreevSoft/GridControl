@@ -27,6 +27,7 @@
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     ref class CaptionRow;
+    ref class GroupRow;
     ref class GroupPanel;
     ref class ColumnCollection;
     ref class VisibleColumnCollection;
@@ -38,6 +39,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     ref class DisplayableRowCollection;
     ref class SelectedRowCollection;
     ref class SelectedColumnCollection;
+    ref class GroupRowCollection;
     ref class ErrorDescriptor;
     ref class ToolTip;
 
@@ -45,7 +47,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     namespace Native
     {
-        class WinFormGridCore;
         class WinFormWindow;
     }
 
@@ -304,7 +305,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 표시되는 열의 목록을 가져옵니다.
         /// </summary>
 #ifdef _DEBUG
-        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::CategoryAttribute("Debug")]
         [System::ComponentModel::DescriptionAttribute("표시되는 열의 목록을 가져옵니다.")]
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
@@ -318,7 +319,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// Displayable 열의 목록을 가져옵니다.
         /// </summary>
 #ifdef _DEBUG
-        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::CategoryAttribute("Debug")]
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
@@ -331,7 +332,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// Frozen 열의 목록을 가져옵니다.
         /// </summary>
 #ifdef _DEBUG
-        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::CategoryAttribute("Debug")]
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
@@ -344,7 +345,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// Unfrozen 열의 목록을 가져옵니다.
         /// </summary>
 #ifdef _DEBUG
-        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::CategoryAttribute("Debug")]
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
@@ -371,7 +372,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 선택된 열들의 목록을 가져옵니다.
         /// </summary>
 #ifdef _DEBUG
-        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::CategoryAttribute("Debug")]
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
@@ -392,10 +393,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
+        /// <see cref="GroupRow"/>의 목록을 목록을 가져옵니다.
+        /// </summary>
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
+        property Ntreev::Windows::Forms::Grid::GroupRowCollection^ GroupRows
+        {
+            Ntreev::Windows::Forms::Grid::GroupRowCollection^ get();
+        }
+
+        /// <summary>
         /// Visible 행의 목록을 가져옵니다.
         /// </summary>
 #ifdef _DEBUG
-        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::CategoryAttribute("Debug")]
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
@@ -408,7 +422,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// Displayable 행의 목록을 가져옵니다.
         /// </summary>
 #ifdef _DEBUG
-        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::CategoryAttribute("Debug")]
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
@@ -1322,9 +1336,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     internal: // properties
 
-        property GrGridCore* GridCore
+        property Native::WinFormGridCore* GridCore
         {
-            GrGridCore* get();
+            Native::WinFormGridCore* get();
         }
 
         property GrGridPainter* GridPainter
@@ -1835,6 +1849,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         initonly Ntreev::Windows::Forms::Grid::RowCollection^ m_rowList;
         initonly Ntreev::Windows::Forms::Grid::VisibleRowCollection^ m_visibleRowList;
         initonly Ntreev::Windows::Forms::Grid::DisplayableRowCollection^ m_displayableRowList;
+        initonly Ntreev::Windows::Forms::Grid::SelectedRowCollection^ m_selectedRows;
+        initonly Ntreev::Windows::Forms::Grid::SelectedColumnCollection^ m_selectedColumns;
+        initonly Ntreev::Windows::Forms::Grid::GroupRowCollection^ m_groupRows;
 
         Ntreev::Windows::Forms::Grid::Style^ m_style;
 
@@ -1842,9 +1859,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         Ntreev::Windows::Forms::Grid::CaptionRow^ m_captionRow;
         Ntreev::Windows::Forms::Grid::GroupPanel^ m_groupPanel;
         Ntreev::Windows::Forms::Grid::InsertionRow^ m_insertionRow;
-
-        initonly Ntreev::Windows::Forms::Grid::SelectedRowCollection^ m_selectedRows;
-        initonly Ntreev::Windows::Forms::Grid::SelectedColumnCollection^ m_selectedColumns;
 
         Native::WinFormGridCore* m_pGridCore;
         Native::WinFormWindow* m_pGridWindow;

@@ -423,7 +423,7 @@ GrIndexRange GrColumnList::HitTest(int x, GrColumn* pColumnAnchor) const
 
 void GrColumnList::BringIntoView(GrColumn* pColumn)
 {
-    if(pColumn->ShouldBringIntoView() == false)
+    if(pColumn->ShouldBringIntoView() == false || pColumn->GetFrozen() == true)
         return;
 
     GrScroll* pHorzScroll = m_pGridCore->GetHorzScroll();

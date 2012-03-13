@@ -26,7 +26,7 @@
 #include "Column.h"
 #include "Row.h"
 #include "GridControl.h"
-//#include "Resources.h"
+#include "FromNative.h"
 #include "ErrorDescriptor.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
@@ -100,8 +100,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     Cell::Cell(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrItem* pItem)
         : CellBase(gridControl, pItem), m_pItem(pItem), m_errorDescription(System::String::Empty)
     {
-        m_column = Ntreev::Windows::Forms::Grid::Column::FromNative(pItem->GetColumn());
-        m_row = Ntreev::Windows::Forms::Grid::Row::FromNative(pItem->GetDataRow());
+        m_column = FromNative::Get(pItem->GetColumn());
+        m_row = FromNative::Get(pItem->GetDataRow());
 
         m_pItem->ManagedRef = this;
 
@@ -165,7 +165,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         UpdateNativeText(value);
 
-        GridControl->InvokeValueChanged(this);
+        this->GridControl->InvokeValueChanged(this);
     }
 
     void Cell::UpdateNativeText()
@@ -214,11 +214,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return typeConverter->ConvertFrom(typeDescriptorContext, System::Windows::Forms::Application::CurrentCulture, value);
     }
 
-    Ntreev::Windows::Forms::Grid::Cell^ Ntreev::Windows::Forms::Grid::Cell::FromNative(GrItem* pItem)
-    {
-        System::Object^ ref = pItem->ManagedRef;
-        return safe_cast<Ntreev::Windows::Forms::Grid::Cell^>(ref);
-    }
+    //Ntreev::Windows::Forms::Grid::Cell^ FromNative::Get(GrItem* pItem)
+    //{
+    //    System::Object^ ref = pItem->ManagedRef;
+    //    return safe_cast<Ntreev::Windows::Forms::Grid::Cell^>(ref);
+    //}
 
     bool Cell::CancelEdit()
     {
@@ -253,7 +253,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Cell::BringIntoView()
     {
-        GridControl->BringIntoView(this);
+        this->GridControl->BringIntoView(this);
     }
 
     bool Cell::IsEdited::get()
@@ -314,7 +314,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Cell::IsBeingEdited::get()
     {
-        return GridControl->EditingCell == this;
+        return this->GridControl->EditingCell == this;
     }
 
     //bool Cell::IsDisplayable::get()
@@ -343,12 +343,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_errorDescription = value;
         if(m_errorDescription == System::String::Empty)
         {
-            GridControl->ErrorDescriptor->Remove(this);
+            this->GridControl->ErrorDescriptor->Remove(this);
             this->Row->RemoveErrorCell();
         }
         else
         {
-            GridControl->ErrorDescriptor->Add(this);
+            this->GridControl->ErrorDescriptor->Add(this);
             this->Row->AddErrorCell();
         }
     }

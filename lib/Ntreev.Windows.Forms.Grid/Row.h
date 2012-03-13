@@ -396,8 +396,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         void RefreshCells();
 
-        static Ntreev::Windows::Forms::Grid::Row^ FromNative(const GrDataRow* pDataRow);
-
     internal: // properties
 
         property System::Object^ Component

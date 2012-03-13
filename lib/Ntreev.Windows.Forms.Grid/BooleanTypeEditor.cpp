@@ -54,7 +54,26 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     bool BooleanTypeEditor::CanEdit(Ntreev::Windows::Forms::Grid::ICell^ cell, Ntreev::Windows::Forms::Grid::EditingReason reason)
     {
-        return cell->ClientRectangle.Contains(reason.Location);
+        switch(reason.ReasonType)
+        {
+        case Ntreev::Windows::Forms::Grid::EditingReasonType::Mouse:
+            return cell->ClientRectangle.Contains(reason.Location);
+        case Ntreev::Windows::Forms::Grid::EditingReasonType::Key:
+            {
+                switch(reason.Key)
+                {
+                case System::Windows::Forms::Keys::Space:
+                case System::Windows::Forms::Keys::Enter:
+                    return true;
+                default:
+                    return false;
+                }
+            }
+            break;
+        }
+
+        return TypeEditor::CanEdit(cell, reason);
+
     }
 
     System::Object^ BooleanTypeEditor::EditValue(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value)

@@ -24,6 +24,7 @@
 #include "StdAfx.h"
 #include "SelectedColumnCollection.h"
 #include "GridControl.h"
+#include "FromNative.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -51,8 +52,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     Ntreev::Windows::Forms::Grid::Column^ SelectedColumnCollection::Enumerator::Current::get()
     {
-        const GrColumn* pColumn = (*m_selectedColumns)[m_index - 1];
-        return Ntreev::Windows::Forms::Grid::Column::FromNative(pColumn);
+        GrColumn* pColumn = (*m_selectedColumns)[m_index - 1];
+        return FromNative::Get(pColumn);
     }
 
     System::Object^ SelectedColumnCollection::Enumerator::Current_System_Collections_IEnumerator::get()
@@ -83,7 +84,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void SelectedColumnCollection::Clear()
     {
-        GridControl->ClearSelection();
+        this->GridControl->ClearSelection();
     }
 
     int SelectedColumnCollection::Count::get()

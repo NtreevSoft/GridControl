@@ -289,6 +289,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FromNative.h"
+				>
+			</File>
+			<File
 				RelativePath=".\FrozenColumnCollection.h"
 				>
 			</File>
@@ -312,6 +316,10 @@
 			</File>
 			<File
 				RelativePath=".\GroupRow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GroupRowCollection.h"
 				>
 			</File>
 			<File
@@ -344,6 +352,10 @@
 			</File>
 			<File
 				RelativePath=".\RowBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RowBaseCollection.h"
 				>
 			</File>
 			<File
@@ -644,6 +656,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FromNative.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\FrozenColumnCollection.cpp"
 				>
 			</File>
@@ -664,6 +680,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GroupRowCollection.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\NativeCollection.cpp"
 				>
 			</File>
@@ -673,6 +693,10 @@
 			</File>
 			<File
 				RelativePath=".\RowBase.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RowBaseCollection.cpp"
 				>
 			</File>
 			<File

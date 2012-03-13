@@ -22,75 +22,75 @@
 
 
 #include "stdafx.h"
-#include "VisibleRowCollection.h"
+#include "RowBaseCollection.h"
+#include "FromNative.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    VisibleRowCollection::Enumerator::Enumerator(GrDataRowList* pDataRowList)
-        : m_pDataRowList(pDataRowList)
+    RowBaseCollection::Enumerator::Enumerator(IDataRow* pDataRow)
+        : m_pDataRow(pDataRow)
     {
         m_index = 0;
     }
 
-    VisibleRowCollection::Enumerator::~Enumerator()
+    RowBaseCollection::Enumerator::~Enumerator()
     {
 
     }
 
-    bool VisibleRowCollection::Enumerator::MoveNext()
+    bool RowBaseCollection::Enumerator::MoveNext()
     {
         m_index++;
-        return m_index <= m_pDataRowList->GetVisibleRowCount();
+        return m_index <= m_pDataRow->GetChildCount();
     }
 
-    void VisibleRowCollection::Enumerator::Reset()
+    void RowBaseCollection::Enumerator::Reset()
     {
         m_index = 0;
     }
 
-    Ntreev::Windows::Forms::Grid::RowBase^ VisibleRowCollection::Enumerator::Current::get()
+    Ntreev::Windows::Forms::Grid::RowBase^ RowBaseCollection::Enumerator::Current::get()
     {
-        IDataRow* pDataRow = m_pDataRowList->GetVisibleRow(m_index - 1);
-        System::Object^ ref = pDataRow->ManagedRef;
-        return safe_cast<Ntreev::Windows::Forms::Grid::RowBase^>(ref);
+        IDataRow* pDataRow = (IDataRow*)m_pDataRow->GetChild(m_index - 1);
+        return FromNative::Get(pDataRow);
     }
 
-    System::Object^ VisibleRowCollection::Enumerator::Current_System_Collections_IEnumerator::get()
+    System::Object^ RowBaseCollection::Enumerator::Current_System_Collections_IEnumerator::get()
     {
-        return Current; 
+        return this->Current; 
     }
 
-    VisibleRowCollection::VisibleRowCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
-        : GridObject(gridControl)
+    RowBaseCollection::RowBaseCollection(IDataRow* pDataRow)
+        : m_pDataRow(pDataRow)
     {
-        m_pDataRowList = this->GridCore->GetDataRowList();
+        
     }
 
-    System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::RowBase^>^ VisibleRowCollection::GetEnumerator()
+    System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::RowBase^>^ RowBaseCollection::GetEnumerator()
     {
-        return gcnew Enumerator(m_pDataRowList); 
+        return gcnew Ntreev::Windows::Forms::Grid::RowBaseCollection::Enumerator(m_pDataRow); 
     }
 
-    Ntreev::Windows::Forms::Grid::RowBase^ VisibleRowCollection::default::get(int index)
+    Ntreev::Windows::Forms::Grid::RowBase^ RowBaseCollection::default::get(int index)
     {
-        if((unsigned int)index >= m_pDataRowList->GetVisibleRowCount())
+        if(index >= this->Count)
             throw gcnew System::ArgumentOutOfRangeException("index");
-        IDataRow* pDataRow = m_pDataRowList->GetVisibleRow(index);
-        System::Object^ ref = pDataRow->ManagedRef;
-        return safe_cast<RowBase^>(ref);
+
+        IDataRow* pDataRow = (IDataRow*)m_pDataRow->GetChild(index);
+        return FromNative::Get(pDataRow);
     }
 
-    int VisibleRowCollection::Count::get()
+    int RowBaseCollection::Count::get()
     {
-        return m_pDataRowList->GetVisibleRowCount();
+        return m_pDataRow->GetChildCount();
     }
 
-    System::Collections::IEnumerator^ VisibleRowCollection::GetEnumerator_System_Collections_IEnumerable()
+    System::Collections::IEnumerator^ RowBaseCollection::GetEnumerator_System_Collections_IEnumerable()
     {
         return GetEnumerator();
     }
 
-    void VisibleRowCollection::CopyTo_System_Collections_ICollection(System::Array^ array, int index)
+    void RowBaseCollection::CopyTo_System_Collections_ICollection(System::Array^ array, int index)
     {
         for each(Ntreev::Windows::Forms::Grid::RowBase^ item in this)
         {
@@ -98,17 +98,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
     }
 
-    bool VisibleRowCollection::IsSynchronized_System_Collections_ICollection::get()
+    bool RowBaseCollection::IsSynchronized_System_Collections_ICollection::get()
     {
-        return true;
+        return true; 
     }
 
-    System::Object^ VisibleRowCollection::SyncRoot_System_Collections_ICollection::get()
+    System::Object^ RowBaseCollection::SyncRoot_System_Collections_ICollection::get()
     {
-        return this; 
+        return this;
     }
 
-    int VisibleRowCollection::Count_System_Collections_ICollection::get()
+    int RowBaseCollection::Count_System_Collections_ICollection::get()
     {
         return this->Count; 
     }

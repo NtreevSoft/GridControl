@@ -210,7 +210,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     generic<class TControl> where TControl : System::Windows::Forms::Control
         void ColumnControl<TControl>::gridControl_CellMouseMove(System::Object^ /*sender*/, Ntreev::Windows::Forms::Grid::CellMouseEventArgs^ e)
     {
-        if(e->Cell->Column != this || this->IsReadOnly == true || m_viewControl == nullptr)
+        if(e->Cell->Column != this || e->Cell->IsReadOnly == true || m_viewControl == nullptr)
             return;
 
         System::Drawing::Point cursorLocation = System::Windows::Forms::Cursor::Position;

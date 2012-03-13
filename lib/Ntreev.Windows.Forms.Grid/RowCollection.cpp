@@ -27,6 +27,7 @@
 #include "GridControl.h"
 #include "Column.h"
 #include "Cell.h"
+#include "FromNative.h"
 #include "Resources.h"
 
 #include <vcclr.h>
@@ -58,7 +59,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     Ntreev::Windows::Forms::Grid::Row^ RowCollection::Enumerator::Current::get()
     {
         GrDataRow* pDataRow = m_pDataRowList->GetDataRow(m_index - 1);
-        return Ntreev::Windows::Forms::Grid::Row::FromNative(pDataRow);
+        return FromNative::Get(pDataRow);
     }
 
     System::Object^ RowCollection::Enumerator::Current_System_Collections_IEnumerator::get()
@@ -84,7 +85,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     RowCollection::RowCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl) 
         : GridObject(gridControl)
     {
-        m_pDataRowList = GridCore->GetDataRowList();
+        m_pDataRowList = this->GridCore->GetDataRowList();
 
         m_listChangedEventHandler = gcnew System::ComponentModel::ListChangedEventHandler(this, &RowCollection::currencyManager_ListChanged);
         m_currentChangedEventHandler = gcnew System::EventHandler(this, &RowCollection::currencyManager_CurrentChanged);
@@ -103,7 +104,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         row->Component = component;
         row->ComponentIndex = componentIndex;
 
-        GridControl->InvokeRowInserted(row);
+        this->GridControl->InvokeRowInserted(row);
     }
 
     void RowCollection::Unbind(int componentIndex)
@@ -115,7 +116,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         Ntreev::Windows::Forms::Grid::Row^ row = this->GetAt(componentIndex);
         m_pDataRowList->RemoveDataRow(row->NativeRef);
-        GridControl->InvokeRowRemoved(gcnew RowRemovedEventArgs(componentIndex));
+        this->GridControl->InvokeRowRemoved(gcnew RowRemovedEventArgs(componentIndex));
     }
 
     void RowCollection::SetItemsByDesigner(cli::array<System::Object^>^ values)
@@ -286,7 +287,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             item->Component = component;
             item->ComponentIndex = m_manager->List->Count - 1;
 
-            GridControl->InvokeRowInserted(item);
+            this->GridControl->InvokeRowInserted(item);
         }
     }
 
@@ -307,7 +308,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             throw gcnew System::ArgumentOutOfRangeException("index");
 
         GrDataRow* pDataRow = m_pDataRowList->GetDataRow((unsigned int)index);
-        return Ntreev::Windows::Forms::Grid::Row::FromNative(pDataRow);
+        return FromNative::Get(pDataRow);
     }
 
     void RowCollection::default::set(int /*index*/, Ntreev::Windows::Forms::Grid::Row^ /*value*/)
@@ -388,7 +389,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             m_manager->EndCurrentEdit();
             row->IsVisible = true;
-            GridControl->InvokeInsertionRowInserted(row);
+            this->GridControl->InvokeInsertionRowInserted(row);
         }
         catch(System::Exception^ e)
         {
@@ -432,7 +433,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pDataRowList->RemoveDataRow(item->NativeRef);
 
         RowRemovedEventArgs eRemoved(0);
-        GridControl->InvokeRowRemoved(%eRemoved);
+        this->GridControl->InvokeRowRemoved(%eRemoved);
 
         return true;
     }
@@ -461,12 +462,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     Ntreev::Windows::Forms::Grid::InsertionRow^ RowCollection::InsertionRow::get()
     {
-        return GridControl->InsertionRow;
+        return this->GridControl->InsertionRow;
     }
 
     Ntreev::Windows::Forms::Grid::Row^ RowCollection::default::get(GrDataRow* pDataRow)
     {
-        return Ntreev::Windows::Forms::Grid::Row::FromNative(pDataRow);
+        return FromNative::Get(pDataRow);
     }
 
     Ntreev::Windows::Forms::Grid::Row^ RowCollection::default::get(System::Object^ component)

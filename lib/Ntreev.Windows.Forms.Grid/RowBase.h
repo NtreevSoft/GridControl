@@ -26,7 +26,9 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    public ref class RowBase : Ntreev::Windows::Forms::Grid::CellBase
+    ref class RowBaseCollection;
+
+    public ref class RowBase abstract : Ntreev::Windows::Forms::Grid::CellBase 
     {
     public: // methods
 
@@ -120,12 +122,37 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             bool get(); 
         }
 
+        /// <summary>
+        /// 자식들의 컬렉션을 가져옵니다.
+        /// </summary>
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
+        property Ntreev::Windows::Forms::Grid::RowBaseCollection^ Childs
+        {
+            Ntreev::Windows::Forms::Grid::RowBaseCollection^ get();
+        }
+
+        /// <summary>
+        /// 부모를 가져옵니다.
+        /// </summary>
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
+        property Ntreev::Windows::Forms::Grid::RowBase^ Parent
+        {
+            Ntreev::Windows::Forms::Grid::RowBase^ get();
+        }
 
     internal: // methods
 
         RowBase(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, IDataRow* pDataRow);
 
-        static Ntreev::Windows::Forms::Grid::RowBase^ FromNative(const IDataRow* pDataRow);
+        RowBase(IDataRow* pDataRow);
 
     private: // methods
 
@@ -134,5 +161,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     private: // variables
 
         IDataRow* m_pDataRow;
+        Ntreev::Windows::Forms::Grid::RowBaseCollection^ m_childs;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

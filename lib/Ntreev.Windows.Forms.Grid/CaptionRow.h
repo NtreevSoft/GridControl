@@ -40,10 +40,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>입니다.
         /// </returns>
-        virtual System::String^ ToString() override
-        {
-            return Text; 
-        }
+        virtual System::String^ ToString() override;
 
     public: // properties
 
@@ -118,8 +115,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     internal: // methods
 
         CaptionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrCaption* pCaption);
-
-        static CaptionRow^ FromNative(GrCaption* pCaption);
 
     private: // methods
 

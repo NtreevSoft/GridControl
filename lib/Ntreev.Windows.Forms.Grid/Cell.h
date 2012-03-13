@@ -34,7 +34,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// 셀을 나타내는 개체입니다.
     /// </summary>
     [System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
-    public ref class Cell : Ntreev::Windows::Forms::Grid::CellBase, Ntreev::Windows::Forms::Grid::ICell
+    public ref class Cell
+        : Ntreev::Windows::Forms::Grid::CellBase
+        , Ntreev::Windows::Forms::Grid::ICell
     {
     public: // methods
 
@@ -363,7 +365,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         System::Object^ ValidateValue(System::Object^ value);
 
-        static Ntreev::Windows::Forms::Grid::Cell^ FromNative(GrItem* pItem);
+        //static Ntreev::Windows::Forms::Grid::Cell^ FromNative(GrItem* pItem);
 
     internal: // properties
 

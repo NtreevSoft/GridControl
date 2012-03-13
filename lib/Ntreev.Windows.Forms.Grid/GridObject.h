@@ -28,6 +28,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     ref class GridControl;
 
+    namespace Native
+    {
+        class WinFormGridCore;
+        class WinFormWindow;
+    }
+
     /// <summary>
     /// GridControl에 종속되어 사용되는 개체를 나타냅니다.
     /// </summary>
@@ -71,6 +77,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         virtual void OnGridControlDetachedInternal();
 
+        GridObject(GrCell* pCell);
+
     internal: // properties
 
         property GrGridCore* GridCore
@@ -90,7 +98,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     private: // variables
 
-        GrGridCore* m_pGridCore;
+        Native::WinFormGridCore* m_pGridCore;
         GrGridPainter* m_pGridPainter;
         GrItemSelector* m_pItemSelector;
         GrFocuser* m_pFocuser;

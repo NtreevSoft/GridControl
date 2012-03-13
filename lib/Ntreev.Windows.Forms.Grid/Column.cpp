@@ -34,6 +34,7 @@
 #include "NativeClasses.h"
 #include "ColumnPainter.h"
 #include "StringTypeEditor.h"
+#include "FromNative.h"
 
 #include <vcclr.h>
 
@@ -91,8 +92,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool RowComparerUp(GrGridCore* /*pGridCore*/, const GrDataRow* pDataRow1, const GrDataRow* pDataRow2, const GrColumn* pColumn)
     {
-        Ntreev::Windows::Forms::Grid::Cell^ cell1 = Ntreev::Windows::Forms::Grid::Cell::FromNative(pDataRow1->GetItem(pColumn));
-        Ntreev::Windows::Forms::Grid::Cell^ cell2 = Ntreev::Windows::Forms::Grid::Cell::FromNative(pDataRow2->GetItem(pColumn));
+        Ntreev::Windows::Forms::Grid::Cell^ cell1 = FromNative::Get(pDataRow1->GetItem(pColumn));
+        Ntreev::Windows::Forms::Grid::Cell^ cell2 = FromNative::Get(pDataRow2->GetItem(pColumn));
 
         System::Object^ value1 = cell1->Value;
         System::Object^ value2 = cell2->Value;
@@ -171,6 +172,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             m_pColumn->ManagedRef = nullptr;
             m_pColumn = nullptr;
         }
+    }
+
+    void Column::Focus()
+    {
+        Focuser->Set(m_pColumn);
+    }
+
+    void Column::BringIntoView()
+    {
+        if(this->GridControl == nullptr)
+            return;
+        this->GridControl->BringIntoView(this);
     }
 
     System::String^ Column::ToString()
@@ -772,14 +785,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pColumn->SetItemFont(nullptr);
     }
 
-    Ntreev::Windows::Forms::Grid::Column^ Ntreev::Windows::Forms::Grid::Column::FromNative(const GrColumn* pColumn)
-    {
-        if(pColumn == nullptr)
-            return nullptr;
-        System::Object^ ref = pColumn->ManagedRef;
-        return safe_cast<Ntreev::Windows::Forms::Grid::Column^>(ref);
-    }
-
     void Column::OnGridControlAttachedInternal()
     {
         OnGridControlAttached();
@@ -848,6 +853,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Column::ShouldSerializeTitle()
     {
+        if(this->Title == System::String::Empty)
+            return true;
         return this->Title != this->ColumnName;
     }
 
@@ -870,6 +877,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             return System::ComponentModel::TypeDescriptor::GetConverter(this->DataType) != m_typeConverter;
         }
         return m_typeConverter != m_propertyDescriptor->Converter;
+    }
+
+    void Column::ResetTitle()
+    {
+        m_title = nullptr;
     }
 
     void Column::AsyncDisplayText()

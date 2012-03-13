@@ -24,6 +24,7 @@
 #include "StdAfx.h"
 #include "VisibleColumnCollection.h"
 #include "GridControl.h"
+#include "FromNative.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -52,7 +53,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     Ntreev::Windows::Forms::Grid::Column^ VisibleColumnCollection::Enumerator::Current::get()
     {
         GrColumn* pColumn = m_pColumnList->GetVisibleColumn(m_index - 1);
-        return Ntreev::Windows::Forms::Grid::Column::FromNative(pColumn);
+        return FromNative::Get(pColumn);
     }
 
     System::Object^ VisibleColumnCollection::Enumerator::Current_System_Collections_IEnumerator::get()
@@ -63,7 +64,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     VisibleColumnCollection::VisibleColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
         : GridObject(gridControl)
     {
-        m_pColumnList = GridCore->GetColumnList();
+        m_pColumnList = this->GridCore->GetColumnList();
     }
 
     Ntreev::Windows::Forms::Grid::Column^ VisibleColumnCollection::default::get(int index)
@@ -71,7 +72,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if((unsigned int)index >= m_pColumnList->GetVisibleColumnCount())
             throw gcnew System::ArgumentOutOfRangeException("index");
         GrColumn* pColumn = m_pColumnList->GetVisibleColumn(index);
-        return Ntreev::Windows::Forms::Grid::Column::FromNative(pColumn);
+        return FromNative::Get(pColumn);
     }
 
     int VisibleColumnCollection::Count::get()

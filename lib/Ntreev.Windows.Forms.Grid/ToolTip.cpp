@@ -130,7 +130,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_showed == true)
             return;
         ToolTipItem^ current = m_toolTips.Current;
-        current->Show(text, GridControl->Handle);
+        current->Show(text, this->GridControl->Handle);
         m_toolTips.MoveNext();
         m_showed = true;
         //Debug::WriteLine("Show tooltip : {0}", text);

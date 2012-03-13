@@ -43,9 +43,11 @@
 #include "DisplayableColumnCollection.h"
 #include "FrozenColumnCollection.h"
 #include "UnfrozenColumnCollection.h"
+#include "GroupRowCollection.h"
 #include "NativeUtilities.h"
 #include "TimeTester.h"
 #include "NativeClasses.h"
+#include "FromNative.h"
 
 // Private include
 #include "About.h"
@@ -93,6 +95,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         m_selectedColumns = gcnew SelectedColumnCollection(this, Selector->GetSelectedColumns());
         m_selectedRows = gcnew SelectedRowCollection(this, Selector->GetSelectedRows());
+
+        m_groupRows = gcnew GroupRowCollection(this);
 
         m_captionRow = gcnew Ntreev::Windows::Forms::Grid::CaptionRow(this, m_pGridCore->GetCaptionRow());
         m_groupPanel = gcnew Ntreev::Windows::Forms::Grid::GroupPanel(this, m_pGridCore->GetGroupPanel());
@@ -279,7 +283,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 //if(pItem->GetControlVisible() == true)
                 // paintRect.Width -= pItem->GetControlRect().GetWidth();
 
-                Ntreev::Windows::Forms::Grid::Cell^ cell = Ntreev::Windows::Forms::Grid::Cell::FromNative(pItem);
+                Ntreev::Windows::Forms::Grid::Cell^ cell = FromNative::Get(pItem);
                 column->PaintValue(graphics, paintRect, cell, cell->Value);
             }
         }
@@ -783,7 +787,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                     }
                     else
                     {
-                        EditCell(m_focusedCell, Ntreev::Windows::Forms::Grid::EditingReason());
+                        EditCell(m_focusedCell, Ntreev::Windows::Forms::Grid::EditingReason(e->KeyCode));
                     }
                 }
             }
@@ -802,7 +806,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             {
                 if(m_focusedCell != nullptr)
                 {
-                    EditCell(m_focusedCell, Ntreev::Windows::Forms::Grid::EditingReason());
+                    EditCell(m_focusedCell, Ntreev::Windows::Forms::Grid::EditingReason(e->KeyCode));
                 }
                 else
                 {
@@ -914,7 +918,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
         else
         {
-            m_focusedCell = Ntreev::Windows::Forms::Grid::Cell::FromNative(pFocusedItem);
+            m_focusedCell = FromNative::Get(pFocusedItem);
         }
 
         if(FocusedColumn != m_oldFocusedColumn)
@@ -1119,21 +1123,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_selectedRows; 
     }
 
+    GroupRowCollection^ GridControl::GroupRows::get()
+    {
+        return m_groupRows; 
+    }
+
     Ntreev::Windows::Forms::Grid::RowBase^ GridControl::FocusedRow::get()
     {
         IDataRow* pDataRow = Focuser->GetFocusedRow();
-        if(pDataRow == nullptr)
-        {
-            return nullptr;
-        }
-
-        Ntreev::Windows::Forms::Grid::RowBase^ rowBase = Ntreev::Windows::Forms::Grid::RowBase::FromNative(pDataRow);
-        if(rowBase != nullptr)
-        {
-            return rowBase;
-        }
-
-        return gcnew Ntreev::Windows::Forms::Grid::RowBase(this, pDataRow);
+        return FromNative::Get(pDataRow);
     }
 
     bool GridControl::IsInsertionRowVisible::get()
@@ -1710,7 +1708,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pGridCore->SetRowVisible(value);
     }
 
-    GrGridCore* GridControl::GridCore::get()
+    Native::WinFormGridCore* GridControl::GridCore::get()
     {
         return m_pGridCore; 
     }

@@ -24,6 +24,7 @@
 #include "StdAfx.h"
 #include "GridObject.h"
 #include "GridControl.h"
+#include "NativeClasses.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -41,6 +42,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
 
 
+    }
+
+    GridObject::GridObject(GrCell* pCell)
+    {
+        Native::WinFormGridCore* pGridCore = dynamic_cast<Native::WinFormGridCore*>(pCell->GetGridCore());
+        if(pGridCore != nullptr)
+        {
+            m_gridControl = pGridCore->m_gridControl; 
+            m_pGridCore = pGridCore; 
+            m_pGridPainter = m_gridControl->GridPainter;
+            m_pItemSelector = m_pGridCore->GetItemSelector();
+            m_pFocuser = m_pGridCore->GetFocuser();
+        }
     }
 
     Ntreev::Windows::Forms::Grid::GridControl^ GridObject::GridControl::get()

@@ -63,7 +63,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     DisplayableRowCollection::DisplayableRowCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
         : GridObject(gridControl)
     {
-        m_pDataRowList = GridCore->GetDataRowList();
+        m_pDataRowList = this->GridCore->GetDataRowList();
     }
 
     System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::RowBase^>^ DisplayableRowCollection::GetEnumerator()

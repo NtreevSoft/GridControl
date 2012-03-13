@@ -24,6 +24,7 @@
 #include "StdAfx.h"
 #include "UnfrozenColumnCollection.h"
 #include "GridControl.h"
+#include "FromNative.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -52,7 +53,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     Ntreev::Windows::Forms::Grid::Column^ UnfrozenColumnCollection::Enumerator::Current::get()
     {
         GrColumn* pColumn = m_pColumnList->GetUnfrozenColumn(m_index - 1);
-        return Ntreev::Windows::Forms::Grid::Column::FromNative(pColumn);
+        return FromNative::Get(pColumn);
     }
 
     System::Object^ UnfrozenColumnCollection::Enumerator::Current_System_Collections_IEnumerator::get()
@@ -63,7 +64,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     UnfrozenColumnCollection::UnfrozenColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
         : GridObject(gridControl)
     {
-        m_pColumnList = GridCore->GetColumnList();
+        m_pColumnList = this->GridCore->GetColumnList();
     }
 
     System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Column^>^ UnfrozenColumnCollection::GetEnumerator()
@@ -76,7 +77,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if((unsigned int)index >= m_pColumnList->GetUnfrozenColumnCount())
             throw gcnew System::ArgumentOutOfRangeException("index");
         GrColumn* pColumn = m_pColumnList->GetUnfrozenColumn(index);
-        return Ntreev::Windows::Forms::Grid::Column::FromNative(pColumn);
+        return FromNative::Get(pColumn);
     }
 
     int UnfrozenColumnCollection::Count::get()

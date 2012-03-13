@@ -31,6 +31,7 @@
 #include "Tooltip.h"
 #include "TypeEditorForm.h"
 #include "CaptionRow.h"
+#include "FromNative.h"
 
 #ifdef _DEBUG
 //#define _PRINT_INVALIDATE_RECT
@@ -501,7 +502,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         using namespace Ntreev::Windows::Forms::Grid::Design;
 
         GrEditingReason reason = e->GetReason();
-        Ntreev::Windows::Forms::Grid::Cell^ cell = Ntreev::Windows::Forms::Grid::Cell::FromNative(e->GetItem());
+        Ntreev::Windows::Forms::Grid::Cell^ cell = FromNative::Get(e->GetItem());
 
         if(m_gridControl->InvokeBeginEdit(cell) == false)
             return;
@@ -592,7 +593,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     bool WinFormWindow::CanEdit(GrItem* pItem, GrEditingReason reason)
     {
         Ntreev::Windows::Forms::Grid::Cell^ cell = 
-            Ntreev::Windows::Forms::Grid::Cell::FromNative(pItem);
+            FromNative::Get(pItem);
 
         //if(GrGridWindow::CanEdit(pItem, reason) == false)
         return cell->Column->CanEditInternal(cell, Ntreev::Windows::Forms::Grid::EditingReason(reason));
@@ -643,7 +644,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     void WinFormGridCore::OnItemMouseMove(GrItemMouseEventArgs* e)
     {
         GrGridCore::OnItemMouseMove(e);
-        if(m_gridControl->InvokeCellMouseMove(Ntreev::Windows::Forms::Grid::Cell::FromNative(e->GetItem()), e->GetLocation()) == true)
+        if(m_gridControl->InvokeCellMouseMove(FromNative::Get(e->GetItem()), e->GetLocation()) == true)
         {
             e->SetHandled(true);
         }
@@ -652,13 +653,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     void WinFormGridCore::OnItemMouseClick(GrItemMouseEventArgs* e)
     {
         GrGridCore::OnItemMouseClick(e);
-        m_gridControl->InvokeCellClick(Ntreev::Windows::Forms::Grid::Cell::FromNative(e->GetItem()));
+        m_gridControl->InvokeCellClick(FromNative::Get(e->GetItem()));
     }
 
     void WinFormGridCore::OnItemMouseDoubleClick(GrItemMouseEventArgs* e)
     {
         GrGridCore::OnItemMouseDoubleClick(e);
-        m_gridControl->InvokeCellDoubleClick(Ntreev::Windows::Forms::Grid::Cell::FromNative(e->GetItem()));
+        m_gridControl->InvokeCellDoubleClick(FromNative::Get(e->GetItem()));
     }
 
     void WinFormGridCore::OnItemMouseEnter(GrItemMouseEventArgs* e)
@@ -668,7 +669,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
         try
         {
-            Ntreev::Windows::Forms::Grid::Cell^ cell = Ntreev::Windows::Forms::Grid::Cell::FromNative(pItem);
+            Ntreev::Windows::Forms::Grid::Cell^ cell = FromNative::Get(pItem);
             if(cell->ErrorDescription != System::String::Empty)
                 m_gridControl->ToolTip->Show(cell->ErrorDescription);
         }
@@ -692,7 +693,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
         try
         {
-            Ntreev::Windows::Forms::Grid::Row^ row = Ntreev::Windows::Forms::Grid::Row::FromNative(pDataRow);
+            Ntreev::Windows::Forms::Grid::Row^ row = FromNative::Get(pDataRow);
             if(row->ErrorDescription != System::String::Empty)
                 m_gridControl->ToolTip->Show(row->ErrorDescription);
         }
@@ -722,7 +723,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     void WinFormGridCore::columnList_ColumnMouseDown(GrObject* /*pSender*/, GrColumnMouseEventArgs* e)
     {
-        Ntreev::Windows::Forms::Grid::Column^ column = Ntreev::Windows::Forms::Grid::Column::FromNative(e->GetColumn());
+        Ntreev::Windows::Forms::Grid::Column^ column = FromNative::Get(e->GetColumn());
         if(m_gridControl->Site == nullptr)
         {
             bool handled = m_gridControl->InvokeColumnMouseDown(column, e->GetLocation());
@@ -739,26 +740,26 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     void WinFormGridCore::columnList_ColumnMouseUp(GrObject* /*pSender*/, GrColumnMouseEventArgs* e)
     {
-        Ntreev::Windows::Forms::Grid::Column^ column = Ntreev::Windows::Forms::Grid::Column::FromNative(e->GetColumn());
+        Ntreev::Windows::Forms::Grid::Column^ column = FromNative::Get(e->GetColumn());
         bool handled = m_gridControl->InvokeColumnMouseUp(column, e->GetLocation());
         e->SetHandled(handled);
     }
 
     void WinFormGridCore::columnList_ColumnMouseEnter(GrObject* /*pSender*/, GrColumnMouseEventArgs* e)
     {
-        Ntreev::Windows::Forms::Grid::Column^ column = Ntreev::Windows::Forms::Grid::Column::FromNative(e->GetColumn());
+        Ntreev::Windows::Forms::Grid::Column^ column = FromNative::Get(e->GetColumn());
         m_gridControl->InvokeColumnMouseEnter(column, e->GetLocation());
     }
 
     void WinFormGridCore::columnList_ColumnMouseLeave(GrObject* /*pSender*/, GrColumnMouseEventArgs* e)
     {
-        Ntreev::Windows::Forms::Grid::Column^ column = Ntreev::Windows::Forms::Grid::Column::FromNative(e->GetColumn());
+        Ntreev::Windows::Forms::Grid::Column^ column = FromNative::Get(e->GetColumn());
         m_gridControl->InvokeColumnMouseLeave(column);
     }
 
     void WinFormGridCore::columnList_ColumnMouseMove(GrObject* /*pSender*/, GrColumnMouseEventArgs* e)
     {
-        Ntreev::Windows::Forms::Grid::Column^ column = Ntreev::Windows::Forms::Grid::Column::FromNative(e->GetColumn());
+        Ntreev::Windows::Forms::Grid::Column^ column = FromNative::Get(e->GetColumn());
         if(m_gridControl->InvokeColumnMouseMove(column, e->GetLocation()) == true)
         {
             e->SetHandled(true);
@@ -767,13 +768,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     void WinFormGridCore::columnList_ColumnWidthChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
     {
-        Ntreev::Windows::Forms::Grid::Column^ column = Ntreev::Windows::Forms::Grid::Column::FromNative(e->GetColumn());
+        Ntreev::Windows::Forms::Grid::Column^ column = FromNative::Get(e->GetColumn());
         m_gridControl->InvokeColumnWidthChanged(column);
     }
 
     void WinFormGridCore::columnList_ColumnFrozenChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
     {
-        Ntreev::Windows::Forms::Grid::Column^ column = Ntreev::Windows::Forms::Grid::Column::FromNative(e->GetColumn());
+        Ntreev::Windows::Forms::Grid::Column^ column = FromNative::Get(e->GetColumn());
         m_gridControl->InvokeColumnFrozenChanged(column);
     }
 
@@ -801,4 +802,4 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     {
         m_gridControl->InvokeSelectionChanged();
     }
-} /*namespace Native*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/ 
+} /*namespace Native*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

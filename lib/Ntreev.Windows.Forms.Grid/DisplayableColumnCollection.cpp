@@ -24,6 +24,7 @@
 #include "StdAfx.h"
 #include "DisplayableColumnCollection.h"
 #include "GridControl.h"
+#include "FromNative.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -64,7 +65,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     DisplayableColumnCollection::DisplayableColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
         : GridObject(gridControl)
     {
-        m_pColumnList = GridCore->GetColumnList();
+        m_pColumnList = this->GridCore->GetColumnList();
     }
 
     Ntreev::Windows::Forms::Grid::Column^ DisplayableColumnCollection::default::get(int index)
@@ -72,7 +73,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if((unsigned int)index >= m_pColumnList->GetDisplayableColumnCount())
             throw gcnew System::ArgumentOutOfRangeException("index");
         GrColumn* pColumn = m_pColumnList->GetDisplayableColumn(index);
-        return Ntreev::Windows::Forms::Grid::Column::FromNative(pColumn);
+        return FromNative::Get(pColumn);
     }
 
     int DisplayableColumnCollection::Count::get()

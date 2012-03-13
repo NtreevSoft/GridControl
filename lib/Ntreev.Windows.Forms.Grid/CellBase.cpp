@@ -37,7 +37,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     }
 
     CellBase::CellBase(GrCell* pCell)
-        : GridObject(), m_pCell(pCell)
+        : GridObject(pCell), m_pCell(pCell)
     {
         m_pCell->ManagedRef = this;
     }
@@ -104,7 +104,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         GrFont* pFont = m_pCell->GetFont(false);
         if(pFont == nullptr)
             return false;
-        return pFont != GridCore->GetGridWindow()->GetDefaultFont();
+        return pFont != this->GridCore->GetGridWindow()->GetDefaultFont();
     }
 
     bool CellBase::ShouldSerializePadding()

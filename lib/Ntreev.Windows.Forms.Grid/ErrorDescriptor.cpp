@@ -39,8 +39,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_timer->Interval = 300;
         m_errorCount = 0;
 
-        GridControl->Cleared += gcnew ClearEventHandler(this, &ErrorDescriptor::gridControl_Cleared);
-        GridControl->VisibleChanged += gcnew System::EventHandler(this, &ErrorDescriptor::gridControl_VisibleChanged);
+        this->GridControl->Cleared += gcnew ClearEventHandler(this, &ErrorDescriptor::gridControl_Cleared);
+        this->GridControl->VisibleChanged += gcnew System::EventHandler(this, &ErrorDescriptor::gridControl_VisibleChanged);
     }
 
     void ErrorDescriptor::Add(Ntreev::Windows::Forms::Grid::Cell^ cell)
@@ -87,7 +87,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             m_timer->Stop();
             m_errorCount = 0;
         }
-        GridControl->Invalidate();
+        this->GridControl->Invalidate();
     }
 
     void ErrorDescriptor::gridControl_Cleared(System::Object^ /*sender*/, Ntreev::Windows::Forms::Grid::ClearEventArgs^ /*e*/)
@@ -141,7 +141,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 continue;
 
             System::Drawing::Rectangle bounds = row->Bounds;
-            bounds.Width = GridCore->GetColumnList()->GetBounds().GetWidth();
+            bounds.Width = this->GridCore->GetColumnList()->GetBounds().GetWidth();
             bounds.Height--;
             g->DrawRectangle(pen, bounds);
 

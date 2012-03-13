@@ -1166,6 +1166,9 @@ namespace GridStateClass
 
     GrColumn* ColumnResizing::GetResizingColumn(GrColumn* pColumn, const GrPoint& localLocation)
     {
+        if(m_pGridCore->GetColumnResizable() == false)
+            return NULL;
+
         int columnSplitter = m_pGridCore->GetColumnSplitter();
         if(localLocation.x >= pColumn->GetWidth() - columnSplitter)
         {
@@ -1290,6 +1293,8 @@ namespace GridStateClass
 
     bool ColumnSplitterMoving::GetHitTest(GrCell* pHitted, const GrPoint& /*localLocation*/)
     {
+        if(m_pGridCore->GetColumnFreezable() == false)
+            return false;
         return pHitted->GetCellType() == GrCellType_Splitter; 
     }
 

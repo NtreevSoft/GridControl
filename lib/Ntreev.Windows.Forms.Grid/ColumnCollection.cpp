@@ -25,6 +25,7 @@
 #include "ColumnCollection.h"
 #include "Column.h"
 #include "GridControl.h"
+#include "FromNative.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -53,7 +54,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     Ntreev::Windows::Forms::Grid::Column^ ColumnCollection::Enumerator::Current::get()
     {
         GrColumn* pColumn = m_pColumnList->GetColumn(m_index - 1);
-        return Ntreev::Windows::Forms::Grid::Column::FromNative(pColumn);
+        return FromNative::Get(pColumn);
     }
 
     System::Object^ ColumnCollection::Enumerator::Current_System_Collections_IEnumerator::get()
@@ -75,7 +76,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     ColumnCollection::ColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
         : GridObject(gridControl)
     {
-        m_pColumnList = GridCore->GetColumnList();
+        m_pColumnList = this->GridCore->GetColumnList();
 
         m_listChangedEventHandler = gcnew System::ComponentModel::ListChangedEventHandler(this, &ColumnCollection::currencyManager_ListChanged);
 
@@ -155,7 +156,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         item->GridControl = GridControl;
         m_pColumnList->InsertColumn(item->NativeRef, index);
 
-        GridControl->InvokeColumnInserted(item);
+        this->GridControl->InvokeColumnInserted(item);
     }
 
     Ntreev::Windows::Forms::Grid::Column^ ColumnCollection::Insert(int index)
@@ -203,7 +204,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     Ntreev::Windows::Forms::Grid::Column^ ColumnCollection::Bind(System::ComponentModel::PropertyDescriptor^ propertyDescriptor)
     {
         Ntreev::Windows::Forms::Grid::Column^ existColumn = this[propertyDescriptor->Name];
-        Ntreev::Windows::Forms::Grid::Column^ column = GridControl->InvokeColumnBinding(propertyDescriptor, existColumn);
+        Ntreev::Windows::Forms::Grid::Column^ column = this->GridControl->InvokeColumnBinding(propertyDescriptor, existColumn);
         if(column == nullptr)
         {
             column = CreateColumnInstance();
@@ -226,8 +227,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             column->PropertyDescriptor = propertyDescriptor;
         }
 
-        GridControl->InvokeColumnInserted(column);
-        GridControl->InvokeColumnBinded(column);
+        this->GridControl->InvokeColumnInserted(column);
+        this->GridControl->InvokeColumnBinded(column);
 
         return column;
     }
@@ -255,7 +256,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void ColumnCollection::SetItemsByDesigner(cli::array<System::Object^>^ values)
     {
-        GrGroupPanel* pGroupPanel = GridCore->GetGroupPanel();
+        GrGroupPanel* pGroupPanel = this->GridCore->GetGroupPanel();
         std::vector<GrColumn*> groupings;
         groupings.reserve(pGroupPanel->GetGroupCount());
 
@@ -300,7 +301,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(index < 0 || index >= (int)m_pColumnList->GetColumnCount())
             throw gcnew System::ArgumentOutOfRangeException("index");
         GrColumn* pColumn = m_pColumnList->GetColumn((unsigned int)index);
-        return Ntreev::Windows::Forms::Grid::Column::FromNative(pColumn);
+        return FromNative::Get(pColumn);
     }
 
     int ColumnCollection::Count::get()
@@ -323,7 +324,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     Ntreev::Windows::Forms::Grid::Column^ ColumnCollection::default::get(GrColumn* pColumn)
     {
-        return Ntreev::Windows::Forms::Grid::Column::FromNative(pColumn);
+        return FromNative::Get(pColumn);
     }
 
     Ntreev::Windows::Forms::Grid::Column^ ColumnCollection::CreateColumnInstance(System::IServiceProvider^ serviceProvider, System::Type^ columnType)

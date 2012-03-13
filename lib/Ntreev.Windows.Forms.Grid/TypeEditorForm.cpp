@@ -492,6 +492,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         using namespace System::Windows::Forms;
         switch(m_reason.ReasonType)
         {
+        case EditingReasonType::Key:
+            {
+                Message msg;
+                msg.HWnd = ActiveControl->Handle;
+                msg.Msg = (int)Native::WM::WM_KEYDOWN;
+                msg.WParam = System::IntPtr((int)m_reason.Key);
+                Native::Methods::SendMessage(msg);
+            }
+            break;
         case EditingReasonType::Char:
             {
                 int vk = Native::Methods::VkKeyScan(m_reason.Char);

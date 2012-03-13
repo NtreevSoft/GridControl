@@ -151,7 +151,7 @@ public:
 
     _GrEvent Created;
     _GrEvent Cleared;
-    _GrEvent GroupChanged;
+    //_GrEvent GroupChanged;
     _GrEvent CapacityChanged;
     _GrEvent FontChanged;
 

@@ -201,7 +201,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         void itemSelector_SelectedColumnsChanged(GrObject* pSender, GrEventArgs* e);
         void itemSelector_SelectionChanged(GrObject* pSender, GrEventArgs* e);
 
-    private:
+    public:
         gcroot<Ntreev::Windows::Forms::Grid::GridControl^> m_gridControl;
     };
 } /*namespace Native*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

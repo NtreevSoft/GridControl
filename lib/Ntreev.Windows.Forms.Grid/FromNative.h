@@ -21,23 +21,31 @@
 //=====================================================================================================================
 
 
-#include "StdAfx.h"
-#include "CheckBox.h"
+#pragma once
 
-namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design { namespace Controls
+namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    CheckBox::CheckBox(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService)
-        : m_editorService(editorService)
-    {
-        this->CheckAlign = System::Drawing::ContentAlignment::MiddleCenter;
-    }
+    ref class Cell;
+    ref class Column;
+    ref class RowBase;
+    ref class Row;
+    ref class CaptionRow;
+    ref class GroupRow;
 
-    void CheckBox::OnCheckedChanged(System::EventArgs^ e)
+    ref class FromNative
     {
-        System::Windows::Forms::CheckBox::OnCheckedChanged(e);
-        if(this->Parent != nullptr)
-        {
-            m_editorService->Close();
-        }
-    }
-} /*namespace Controls*/ } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
+    public: // methods
+
+        static Ntreev::Windows::Forms::Grid::Cell^ Get(GrItem* pItem);
+
+        static Ntreev::Windows::Forms::Grid::Column^ Get(GrColumn* pColumn);
+
+        static Ntreev::Windows::Forms::Grid::RowBase^ Get(IDataRow* pDataRow);
+
+        static Ntreev::Windows::Forms::Grid::GroupRow^ Get(GrGroupRow* pGroupRow);
+
+        static Ntreev::Windows::Forms::Grid::Row^ Get(GrDataRow* pDataRow);
+
+        static Ntreev::Windows::Forms::Grid::CaptionRow^ Get(GrCaption* pCaption);
+    };
+} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
