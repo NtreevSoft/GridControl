@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -473,26 +473,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     void TypeEditorForm::PreProcessEvent(System::Windows::Forms::Control^ control)
     {
         using namespace System::Windows::Forms;
-        if(m_reason.ReasonType == EditingReasonType::Mouse)
-        {
-            System::Windows::Forms::Message msg;
-            System::Drawing::Point location = m_gridControl->PointToScreen(m_reason.Location);;
-            location = control->PointToClient(location);
-
-            msg.HWnd = control->Handle;
-            msg.Msg = (int)Native::WM::WM_LBUTTONDOWN;
-            msg.WParam = System::IntPtr(1);
-            msg.LParam = Native::Methods::MakeLParam(location.X,location.Y);
-            Native::Methods::SendMessage(msg);
-        }
-    }
-
-    void TypeEditorForm::PostProcessEvent(System::Windows::Forms::Control^ control)
-    {
-        using namespace System::Windows::Forms;
         switch(m_reason.ReasonType)
         {
-        case EditingReasonType::Key:
+        case EditingReasonType::Mouse:
+            {
+                System::Windows::Forms::Message msg;
+                System::Drawing::Point location = m_gridControl->PointToScreen(m_reason.Location);;
+                location = control->PointToClient(location);
+
+                msg.HWnd = control->Handle;
+                msg.Msg = (int)Native::WM::WM_LBUTTONDOWN;
+                msg.WParam = System::IntPtr(1);
+                msg.LParam = Native::Methods::MakeLParam(location.X,location.Y);
+                Native::Methods::SendMessage(msg);
+            }
+            break;
+             case EditingReasonType::Key:
             {
                 Message msg;
                 msg.HWnd = ActiveControl->Handle;
@@ -524,6 +520,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
                 Native::Methods::TranslateAndDispatchMessage(msg);
             }
             break;
+        }
+    }
+
+    void TypeEditorForm::PostProcessEvent(System::Windows::Forms::Control^ control)
+    {
+        using namespace System::Windows::Forms;
+        switch(m_reason.ReasonType)
+        {
+       
         case EditingReasonType::Mouse:
             {
                 System::Windows::Forms::Message msg;

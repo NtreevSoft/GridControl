@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -83,22 +83,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     RowEventArgs::RowEventArgs()
     {
 
-    }
-
-    InsertionRowInsertingEventArgs::InsertionRowInsertingEventArgs(Ntreev::Windows::Forms::Grid::Row^ row)
-        : RowEventArgs(row), m_cancel(false)
-    { 
-
-    }
-
-    bool InsertionRowInsertingEventArgs::Cancel::get()
-    {
-        return m_cancel;
-    }
-
-    void InsertionRowInsertingEventArgs::Cancel::set(bool value)
-    {
-        m_cancel = value;
     }
 
     RowInsertingEventArgs::RowInsertingEventArgs(System::Object^ component)

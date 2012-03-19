@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -29,9 +29,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 선택된 열의 컬렉션을 나타냅니다.
     /// </summary>
-    public ref class SelectedColumnCollection : Ntreev::Windows::Forms::Grid::GridObject, 
-        System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Column^>,
-        System::Collections::ICollection
+    public ref class SelectedColumnCollection
+        : Ntreev::Windows::Forms::Grid::GridObject
+        , System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Column^>
+        , System::Collections::ICollection
     {
     private: // classes
 

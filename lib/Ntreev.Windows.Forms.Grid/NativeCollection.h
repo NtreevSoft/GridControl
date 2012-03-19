@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -41,7 +41,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     };
 
     template<typename T, typename S, typename C = DefaultConverter<T, S> >
-    ref class NativeCollection : System::Collections::Generic::ICollection<T>
+    ref class NativeCollection
+        : System::Collections::Generic::ICollection<T>
     {
     public:
         typename typedef std::vector<S> _NativeType;

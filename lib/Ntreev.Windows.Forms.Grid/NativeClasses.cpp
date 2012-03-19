@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -476,6 +476,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         if(m_gridControl->Cursor != temp)
         {
             m_gridControl->Cursor = temp;
+#ifdef _DEBUG
+            System::Diagnostics::Trace::WriteLine(temp);
+#endif
+            if(m_gridControl->Site != nullptr)
+            {
+                System::Windows::Forms::Cursor::Current = temp;
+            }
+
             return true;
         }
 
@@ -510,7 +518,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         cell->Row->BeginEdit();
 
         TypeEditorForm^ form = gcnew TypeEditorForm(m_gridControl, cell, EditingReason(reason));
-        m_gridControl->Refresh();
+        m_gridControl->Update();
 
         try
         {

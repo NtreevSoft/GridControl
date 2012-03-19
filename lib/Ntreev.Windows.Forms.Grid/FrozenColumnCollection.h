@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -29,7 +29,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 스크롤 되지 않는 열의 컬렉션을 나타냅니다.
     /// </summary>
-    public ref class FrozenColumnCollection : System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Column^>, System::Collections::ICollection, GridObject
+    public ref class FrozenColumnCollection
+        : System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Column^>
+        , System::Collections::ICollection, GridObject
     {
     private: // classes
 

@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -37,7 +37,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     [System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
     [System::ComponentModel::ToolboxItem(false)]
     [System::ComponentModel::DesignTimeVisible(false)]
-    [System::ComponentModel::Designer("Ntreev.Windows.Forms.Grid.Design.ColumnDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+    [System::ComponentModel::Designer("Ntreev.Windows.Forms.Grid.Design.ColumnDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4461.30274, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
     public ref class Column
         : Ntreev::Windows::Forms::Grid::CellBase
         , Ntreev::Windows::Forms::Grid::IColumn
@@ -364,7 +364,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::InvalidOperationException">
         /// 그리드 컨트롤에 바인딩 된 후에 값을 설정하려고 할때.
         /// </exception>
-        [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
+        [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4461.30274, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
         property System::Type^ DataType
         {
             virtual System::Type^ get() sealed;

@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -31,7 +31,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// </summary>
     [System::ComponentModel::ToolboxItem(true)]
     [System::Drawing::ToolboxBitmap(ColumnPainter::typeid)]
-    public ref class ColumnPainter abstract : System::ComponentModel::Component
+    public ref class ColumnPainter abstract
+        : System::ComponentModel::Component
     {
     public: // methods
         /// <summary>

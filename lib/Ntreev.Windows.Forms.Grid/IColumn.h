@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -29,7 +29,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 열을 나타내기위한 속성을 정의합니다.
     /// </summary>
-    public interface class IColumn : ICellBase
+    public interface class IColumn
+        : Ntreev::Windows::Forms::Grid::ICellBase
     {
         /// <summary>
         /// 표시할 열의 제목을 가져옵니다.

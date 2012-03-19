@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -30,11 +30,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 행의 컬렉션을 나타냅니다.
     /// </summary>
-    [System::ComponentModel::Editor("Ntreev.Windows.Forms.Grid.Design.RowCollectionEditor, Ntreev.Windows.Forms.Grid.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
-    [System::ComponentModel::Design::Serialization::DesignerSerializer("Ntreev.Windows.Forms.Grid.Design.RowCollectionCodeDomSerializer, Ntreev.Windows.Forms.Grid.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", "System.ComponentModel.Design.Serialization.CodeDomSerializer")]
-    public ref class RowCollection : Ntreev::Windows::Forms::Grid::GridObject,
-        System::Collections::Generic::IList<Ntreev::Windows::Forms::Grid::Row^>, 
-        System::Collections::IList
+    [System::ComponentModel::Editor("Ntreev.Windows.Forms.Grid.Design.RowCollectionEditor, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4461.30274, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
+    [System::ComponentModel::Design::Serialization::DesignerSerializer("Ntreev.Windows.Forms.Grid.Design.RowCollectionCodeDomSerializer, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4461.30274, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", "System.ComponentModel.Design.Serialization.CodeDomSerializer")]
+    public ref class RowCollection
+        : Ntreev::Windows::Forms::Grid::GridObject
+        , System::Collections::Generic::IList<Ntreev::Windows::Forms::Grid::Row^>
+        ,  System::Collections::IList
     {
     private: // classes
 
@@ -312,6 +313,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void gridControl_CurrencyManagerChanged(System::Object^ sender, Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventArgs^ e);
 
         void ArgumentTest(Ntreev::Windows::Forms::Grid::Row^ item);
+
+        Ntreev::Windows::Forms::Grid::Row^ Clone(Ntreev::Windows::Forms::Grid::Row^ source);
 
     private: //properties
 

@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 2.0.0.0
+//Ntreev Grid for .Net 2.0.4461.30274
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.
@@ -48,7 +48,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
         public GridControlDesigner()
         {
-            
+
         }
 
         public override void Initialize(System.ComponentModel.IComponent component)
@@ -61,7 +61,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 this.selectionService.SelectionChanged += new EventHandler(selectionService_SelectionChanged);
             }
 
-            if(this.componentChangeService == null)
+            if (this.componentChangeService == null)
             {
                 this.componentChangeService = GetService(typeof(IComponentChangeService)) as IComponentChangeService;
                 this.componentChangeService.ComponentRemoved += new ComponentEventHandler(componentChangeService_ComponentRemoved);
@@ -98,7 +98,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
         protected override void PreFilterProperties(System.Collections.IDictionary properties)
         {
             string[] strArray = new string[] { "AutoScroll", "AutoScrollMargin", "AutoScrollMinSize", "AutoScrollPosition", "Cursor", };
-            
+
             foreach (string item in strArray)
             {
                 properties.Remove(item);
@@ -106,7 +106,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
             base.PreFilterProperties(properties);
 
-            string[] props = {"IsFreezable", "IsColumnResizable", "IsColumnMovable", "IsColumnSortable", "IsGroupable", };
+            string[] props = { "IsFreezable", "IsColumnResizable", "IsColumnMovable", "IsColumnSortable", "IsGroupable", };
 
             Attribute[] attributes = new Attribute[0];
             for (int i = 0; i < props.Length; i++)
@@ -114,7 +114,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 PropertyDescriptor oldPropertyDescriptor = (PropertyDescriptor)properties[strArray[i]];
                 if (oldPropertyDescriptor != null)
                 {
-                    PropertyDescriptor p = System.ComponentModel.TypeDescriptor.CreateProperty(typeof(ColumnDesigner), 
+                    PropertyDescriptor p = System.ComponentModel.TypeDescriptor.CreateProperty(typeof(ColumnDesigner),
                                                             oldPropertyDescriptor, attributes);
                     properties[strArray[i]] = p;
                 }
@@ -126,12 +126,12 @@ namespace Ntreev.Windows.Forms.Grid.Design
             get
             {
                 GridControl gridControl = this.Control as GridControl;
-                if(gridControl == null)
+                if (gridControl == null)
                     return base.AssociatedComponents;
                 return gridControl.Columns.ToArray();
             }
         }
-          
+
         protected override InheritanceAttribute InheritanceAttribute
         {
             get
@@ -182,7 +182,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
                     rectancle.Inflate(1, 1);
                     Pen pen = new Pen(Color.Black);
                     pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
-                    
+
                     pe.Graphics.DrawRectangle(pen, rectancle);
                 }
             }
@@ -207,17 +207,6 @@ namespace Ntreev.Windows.Forms.Grid.Design
         {
             GridControl gridControl = this.Control as GridControl;
             return gridControl.DesignTimeHitTest(point);
-        }
-
-        protected override void OnSetCursor()
-        {
-            GridControl gridControl = this.Control as GridControl;
-            //if (gridControl.DesignTimeSetCursor() == true)
-            //{
-            //    //gridControl.CaptionRow.Text = "true";
-            //    return;
-            //}
-            base.OnSetCursor();
         }
 
         protected override void Dispose(bool disposing)

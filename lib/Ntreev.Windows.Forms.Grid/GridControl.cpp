@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -149,6 +149,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         UserControl::OnInvalidated(e);
         System::Diagnostics::Debug::WriteLine(e->InvalidRect);
+
+        if(e->InvalidRect.Left == 0 && e->InvalidRect.Top == 0)
+            int eqwr=0;
     }
 
     void GridControl::OnCursorChanged(System::EventArgs^ e)
@@ -482,14 +485,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GridControl::OnMouseLeave(System::EventArgs^ e)
     {
-        m_pGridWindow->OnMouseLeave();
         UserControl::OnMouseLeave(e);
+        m_pGridWindow->OnMouseLeave();
     }
 
     void GridControl::OnMouseMove(System::Windows::Forms::MouseEventArgs^ e)
     {
-        m_pGridWindow->OnMouseMove(e->Location, e->Button == System::Windows::Forms::MouseButtons::Left);
         UserControl::OnMouseMove(e);
+        m_pGridWindow->OnMouseMove(e->Location, e->Button == System::Windows::Forms::MouseButtons::Left);
     }
 
     void GridControl::OnMouseDown(System::Windows::Forms::MouseEventArgs^ e)
@@ -715,20 +718,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     }
 
-    void GridControl::RemoveRow(Ntreev::Windows::Forms::Grid::Row^ row)
-    {
-        m_rowList->Remove(row);
-    }
+    //void GridControl::RemoveRow(Ntreev::Windows::Forms::Grid::Row^ row)
+    //{
+    //    m_rowList->Remove(row);
+    //}
 
-    Ntreev::Windows::Forms::Grid::Row^ GridControl::AddNewRow()
-    {
-        return m_rowList->Add();
-    }
+    //Ntreev::Windows::Forms::Grid::Row^ GridControl::AddNewRow()
+    //{
+    //    return m_rowList->Add();
+    //}
 
-    Ntreev::Windows::Forms::Grid::Row^ GridControl::AddNewRowFromInsertion()
-    {
-        return m_rowList->AddFromInsertion();
-    }
+    //Ntreev::Windows::Forms::Grid::Row^ GridControl::AddNewRowFromInsertion()
+    //{
+    //    return m_rowList->AddFromInsertion();
+    //}
 
     bool GridControl::IsInputKey(System::Windows::Forms::Keys keyData) 
     {
@@ -776,7 +779,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 {
                     if(m_focusedCell->Row == m_insertionRow)
                     {
-                        Ntreev::Windows::Forms::Grid::Row^ row = AddNewRowFromInsertion();
+                        Ntreev::Windows::Forms::Grid::Row^ row = this->Rows->AddFromInsertion();
                         if(row == nullptr)
                             break;
 
@@ -858,12 +861,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         switch(e->KeyCode)
         {
         case System::Windows::Forms::Keys::Enter:
-            {
-                e->SuppressKeyPress = true;
-            }
         case System::Windows::Forms::Keys::Escape:
             {
                 e->SuppressKeyPress = true;
+            }
+        default:
+            {
+                Ntreev::Windows::Forms::Grid::Column^ column = this->FocusedColumn;
+
+                if(column != nullptr)
+                {
+                    Ntreev::Windows::Forms::Grid::EditingReason er(e->KeyCode);
+                    if(column->CanEditInternal(m_focusedCell, er) == true)
+                    {
+                        EditCell(m_focusedCell, er);
+                        e->SuppressKeyPress = true;
+                    }
+                }
             }
             break;
         }
@@ -1317,19 +1331,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         OnValueChanged(gcnew CellEventArgs(cell));
     }
 
-    bool GridControl::InvokeInsertionRowInserting(Ntreev::Windows::Forms::Grid::Row^ row)
-    {
-        InsertionRowInsertingEventArgs e(row);
-        OnInsertionRowInserting(%e);
-        return e.Cancel != true;
-    }
-
-    void GridControl::InvokeInsertionRowInserted(Ntreev::Windows::Forms::Grid::Row^ row)
-    {
-        RowEventArgs e(row);
-        OnInsertionRowInserted(%e);
-    }
-
     bool GridControl::InvokeRowInserting(System::Object^ component)
     {
         Ntreev::Windows::Forms::Grid::RowInsertingEventArgs e(component);
@@ -1481,17 +1482,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void GridControl::OnRowRemoved(RowRemovedEventArgs^ e)
     {
         RowRemoved(this, e);
-    }
-
-    void GridControl::OnInsertionRowInserting(Ntreev::Windows::Forms::Grid::InsertionRowInsertingEventArgs^ e)
-    {
-        InsertionRowInserting(this, e);
-    }
-
-    void GridControl::OnInsertionRowInserted(Ntreev::Windows::Forms::Grid::RowEventArgs^ e)
-    {
-        Refresh();
-        InsertionRowInserted(this, e);
     }
 
     void GridControl::OnSelectedRowsChanged(System::EventArgs^ e)

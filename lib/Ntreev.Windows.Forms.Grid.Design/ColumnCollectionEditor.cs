@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 2.0.0.0
+//Ntreev Grid for .Net 2.0.4461.30274
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.

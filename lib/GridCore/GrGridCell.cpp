@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -4155,6 +4155,31 @@ void GrDataRowList::OnYChanged()
     RepositionVisibleRowList();
 }
 
+void GrDataRowList::OnDataRowInserted(GrDataRowEventArgs* e)
+{
+    SetListChanged();
+    m_pGridCore->Invalidate();
+
+    DataRowInserted(this, e);
+}
+
+void GrDataRowList::OnDataRowRemoved(GrDataRowEventArgs* e)
+{
+    GrDataRow* pDataRow = e->GetDataRow();
+
+    pDataRow->SetDataRowIndex(INVALID_INDEX);
+    pDataRow->SetSelected(false);
+
+    if(pDataRow->HasFocused() == true)
+        m_pGridCore->GetFocuser()->Set(IFocusable::Null);
+
+    m_pGridCore->Invalidate();
+
+    Update(true);
+
+    DataRowRemoved(this, e);
+}
+
 GrGroupRow* GrDataRowList::CreateGroupRow(GrRow* pParent, GrColumn* pColumn, const std::wstring& itemText)
 {
     GrGroupRow* pGroupRow;
@@ -4199,7 +4224,6 @@ GrDataRowList::~GrDataRowList()
 {
     DeleteObjects();
 }
-
 
 void GrDataRowList::BuildGroup(GrRow* pParent, uint groupLevel)
 {
@@ -4683,8 +4707,8 @@ void GrDataRowList::InsertDataRow(GrDataRow* pDataRow, uint index)
         (*itor)->SetDataRowIndex(index++);
     }
 
-    SetListChanged();
-    m_pGridCore->Invalidate();
+    GrDataRowEventArgs e(pDataRow);
+    OnDataRowInserted(&e);
 }
 
 void GrDataRowList::RemoveDataRow(GrDataRow* pDataRow)
@@ -4705,15 +4729,9 @@ void GrDataRowList::RemoveDataRow(GrDataRow* pDataRow)
 
     m_vecDataRowsRemoved.push_back(pDataRow);
     m_vecDataRows.erase(itor);
-    pDataRow->SetDataRowIndex(INVALID_INDEX);
-    pDataRow->SetSelected(false);
-
-    if(pDataRow->HasFocused() == true)
-        m_pGridCore->GetFocuser()->Set(IFocusable::Null);
-
-    m_pGridCore->Invalidate();
-
-    Update(true);
+    
+    GrDataRowEventArgs e(pDataRow);
+    OnDataRowRemoved(&e);
 }
 
 GrDataRow* GrDataRowList::NewDataRowFromInsertion()

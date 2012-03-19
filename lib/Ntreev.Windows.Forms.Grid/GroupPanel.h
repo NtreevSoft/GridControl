@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -30,7 +30,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// 제목을 표시하는 개체입니다.
     /// </summary>
     [System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
-    public ref class GroupPanel : Ntreev::Windows::Forms::Grid::CellBase
+    public ref class GroupPanel
+        : Ntreev::Windows::Forms::Grid::CellBase
     {
     public: // properties
 

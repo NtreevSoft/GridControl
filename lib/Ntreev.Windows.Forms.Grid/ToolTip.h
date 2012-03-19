@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -29,7 +29,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 툴팁을 보이거나 감추는 기능을 제공합니다.
     /// </summary>
-    public ref class ToolTip : Ntreev::Windows::Forms::Grid::GridObject
+    public ref class ToolTip
+        : Ntreev::Windows::Forms::Grid::GridObject
     {
     private: // classes
 

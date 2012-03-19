@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -210,6 +210,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     generic<class TControl> where TControl : System::Windows::Forms::Control
         void ColumnControl<TControl>::gridControl_CellMouseMove(System::Object^ /*sender*/, Ntreev::Windows::Forms::Grid::CellMouseEventArgs^ e)
     {
+        if(this->IsVisible == false)
+            return;
+
+        //System::Diagnostics::Trace::WriteLine(System::Windows::Forms::Cursor::Position);
         if(e->Cell->Column != this || e->Cell->IsReadOnly == true || m_viewControl == nullptr)
             return;
 
@@ -242,8 +246,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             msg.HWnd = m_viewControl->Handle;
             msg.Msg = (int)Native::WM::WM_SETCURSOR;
             msg.WParam = m_viewControl->Handle;
-            msg.LParam = System::IntPtr(1);
+            msg.LParam = Native::Methods::MakeLParam(1, (int)Native::WM::WM_MOUSEMOVE);
             Native::Methods::SendMessage(msg);
+
+            this->GridControl->Cursor = System::Windows::Forms::Cursor::Current;
         }
 
 

@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -259,14 +259,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             m_manager->RemoveAt(i);
     }
 
+    Ntreev::Windows::Forms::Grid::Row^ RowCollection::Clone(Ntreev::Windows::Forms::Grid::Row^ source)
+    {
+            return nullptr;
+    }
+
     void RowCollection::Insert(int index, Ntreev::Windows::Forms::Grid::Row^ item)
     {
         if(index < 0 || index > Count)
             throw gcnew System::ArgumentOutOfRangeException("index");
         if(item == nullptr)
             throw gcnew System::ArgumentNullException("item");
-        if(item == InsertionRow)
-            throw gcnew System::ArgumentException();
+        //if(item == InsertionRow)
+        //    throw gcnew System::ArgumentException();
         if(item->Index != 0xffffffff)
             throw gcnew System::ArgumentException();
 
@@ -274,6 +279,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         m_manager->AddNew();
         System::Object^ component = m_manager->Current;
+
+        if(item == this->InsertionRow)
+        {
+            for each(Ntreev::Windows::Forms::Grid::Cell^ cell in item->Cells)
+            {
+                Ntreev::Windows::Forms::Grid::Column^ column = cell->Column;
+                if(column->PropertyDescriptor == nullptr)
+                    continue;
+
+                column->PropertyDescriptor->SetValue(component, cell->Value);
+            }
+        }
 
         if(GridControl->InvokeRowInserting(component) == false)
         {
@@ -283,9 +300,30 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             m_manager->EndCurrentEdit();
 
+            bool b = false;
+            if(item == this->InsertionRow)
+            {
+                item = gcnew Ntreev::Windows::Forms::Grid::Row(this->GridControl);
+                b = true;
+            }
+
             m_pDataRowList->InsertDataRow(item->NativeRef, index);
             item->Component = component;
             item->ComponentIndex = m_manager->List->Count - 1;
+
+            if(b == true)
+            {
+                for(int i=0 ; i<InsertionRow->CellCount ; i++)
+                {
+                    Ntreev::Windows::Forms::Grid::Cell^ sourceCell = this->InsertionRow->Cells[i];
+                    Ntreev::Windows::Forms::Grid::Cell^ cell = item->Cells[i];
+
+                    cell->Value = sourceCell->Value;
+                    cell->Tag = sourceCell->Tag;
+                }
+
+                this->InsertionRow->SetDefaultValue();
+            }
 
             this->GridControl->InvokeRowInserted(item);
         }
@@ -350,62 +388,64 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     Ntreev::Windows::Forms::Grid::Row^ RowCollection::AddFromInsertion()
     {
-        ManagerEventDetach managerEventDeatch(this);
+        Add(this->InsertionRow);
+        return nullptr;
+        //ManagerEventDetach managerEventDeatch(this);
 
-        try
-        {
-            m_manager->AddNew();
-        }
-        catch(System::Exception^ e)
-        {
-            throw e;
-        }
+        //try
+        //{
+        //    m_manager->AddNew();
+        //}
+        //catch(System::Exception^ e)
+        //{
+        //    throw e;
+        //}
 
-        Ntreev::Windows::Forms::Grid::Row^ row = gcnew Row(GridControl);
-        m_pDataRowList->AddDataRow(row->NativeRef);
-        row->Component = m_manager->Current;
-        row->ComponentIndex = m_manager->List->Count - 1;
-        row->IsVisible = false;
+        //Ntreev::Windows::Forms::Grid::Row^ row = gcnew Row(GridControl);
+        //m_pDataRowList->AddDataRow(row->NativeRef);
+        //row->Component = m_manager->Current;
+        //row->ComponentIndex = m_manager->List->Count - 1;
+        //row->IsVisible = false;
 
-        for(int i=0 ; i<InsertionRow->CellCount ; i++)
-        {
-            Ntreev::Windows::Forms::Grid::Cell^ sourceCell = InsertionRow->Cells[i];
-            Ntreev::Windows::Forms::Grid::Cell^ cell = row->Cells[i];
+        //for(int i=0 ; i<InsertionRow->CellCount ; i++)
+        //{
+        //    Ntreev::Windows::Forms::Grid::Cell^ sourceCell = InsertionRow->Cells[i];
+        //    Ntreev::Windows::Forms::Grid::Cell^ cell = row->Cells[i];
 
-            cell->Value = sourceCell->Value;
-            cell->Tag = sourceCell->Tag;
-        }
+        //    cell->Value = sourceCell->Value;
+        //    cell->Tag = sourceCell->Tag;
+        //}
 
-        if(GridControl->InvokeInsertionRowInserting(row) == false)
-        {
-            m_manager->CancelCurrentEdit(); 
-            m_pDataRowList->RemoveDataRow(row->NativeRef);
-            row->Component = nullptr;
-            row->ComponentIndex = -1;
-            return nullptr;
-        }
+        //if(GridControl->InvokeInsertionRowInserting(row) == false)
+        //{
+        //    m_manager->CancelCurrentEdit(); 
+        //    m_pDataRowList->RemoveDataRow(row->NativeRef);
+        //    row->Component = nullptr;
+        //    row->ComponentIndex = -1;
+        //    return nullptr;
+        //}
 
-        try
-        {
-            m_manager->EndCurrentEdit();
-            row->IsVisible = true;
-            this->GridControl->InvokeInsertionRowInserted(row);
-        }
-        catch(System::Exception^ e)
-        {
-            m_manager->CancelCurrentEdit();
-            m_manager->Position = -1;
-            m_pDataRowList->RemoveDataRow(row->NativeRef);
-            row->Component = nullptr;
-            row->ComponentIndex = -1;
-            throw e;
-        }
-        finally
-        {
-            InsertionRow->SetDefaultValue();
-        }
+        //try
+        //{
+        //    m_manager->EndCurrentEdit();
+        //    row->IsVisible = true;
+        //    this->GridControl->InvokeInsertionRowInserted(row);
+        //}
+        //catch(System::Exception^ e)
+        //{
+        //    m_manager->CancelCurrentEdit();
+        //    m_manager->Position = -1;
+        //    m_pDataRowList->RemoveDataRow(row->NativeRef);
+        //    row->Component = nullptr;
+        //    row->ComponentIndex = -1;
+        //    throw e;
+        //}
+        //finally
+        //{
+        //    InsertionRow->SetDefaultValue();
+        //}
 
-        return row;
+        //return row;
     }
 
     void RowCollection::Add(Ntreev::Windows::Forms::Grid::Row^ item)

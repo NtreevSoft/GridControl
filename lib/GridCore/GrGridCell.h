@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -138,6 +138,40 @@ public:
 
 private:
     GrColumn* m_pColumn;
+};
+
+class GrDataRowEventArgs : public GrEventArgs
+{
+public:
+    GrDataRowEventArgs(GrDataRow* pDataRow) 
+        : m_pDataRow(pDataRow) 
+    {
+
+    }
+
+    GrDataRow* GetDataRow() const
+    {
+        return m_pDataRow;
+    }
+
+private:
+    GrDataRow* m_pDataRow;
+};
+
+class GrDataRowInsertEventArgs : public GrDataRowEventArgs
+{
+public:
+    GrDataRowInsertEventArgs(GrDataRow* pDataRow)
+        : GrDataRowEventArgs(pDataRow), m_cancel(false)
+    {
+
+    }
+
+    bool GetCancel() const { return m_cancel; }
+    void SetCancel(bool b) { m_cancel = b; }
+
+private:
+    bool m_cancel;
 };
 
 class GrMouseEventArgs : public GrEventArgs
@@ -997,6 +1031,9 @@ class GrDataRowList : public GrUpdatableRow
     typedef std::map<std::wstring, GrCache> _MapCaches;
 
     typedef GrEvent<GrEventArgs, GrDataRowList> _GrEvent;
+    typedef GrEvent<GrDataRowEventArgs, GrDataRowList> _GrDataRowEvent;
+    typedef GrEvent<GrDataRowInsertEventArgs, GrDataRowList> _GrDataRowInsertEvent;
+
 public:
     GrDataRowList();
     virtual ~GrDataRowList();
@@ -1048,6 +1085,8 @@ public:
     void SetListChanged();
 
     _GrEvent VisibleChanged;
+    _GrDataRowEvent DataRowInserted;
+    _GrDataRowEvent DataRowRemoved;
 
     virtual GrRect GetBounds() const;
     virtual bool ShouldClip(const GrRect& displayRect, uint horizontal, uint vertical) const;
@@ -1066,6 +1105,9 @@ public:
 protected:
     virtual void OnGridCoreAttached();
     virtual void OnYChanged();
+
+    virtual void OnDataRowInserted(GrDataRowEventArgs* e);
+    virtual void OnDataRowRemoved(GrDataRowEventArgs* e);
 
 private:
     GrGroupRow* CreateGroupRow(GrRow* pParent, GrColumn* pColumn, const std::wstring& itemText);

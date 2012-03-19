@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -32,7 +32,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// 행을 나타냅니다.
     /// </summary>
     [System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
-    public ref class Row : Ntreev::Windows::Forms::Grid::RowBase
+    public ref class Row 
+        : Ntreev::Windows::Forms::Grid::RowBase
     {
     public: // methods
 
@@ -437,7 +438,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 새로운 행을 추가하기 위한 편집가능한 행을 제공합니다.
     /// </summary>
-    public ref class InsertionRow : Row
+    public ref class InsertionRow
+        : Ntreev::Windows::Forms::Grid::Row
     {
     public: // methods
 

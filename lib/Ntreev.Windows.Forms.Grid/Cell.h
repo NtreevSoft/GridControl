@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -365,8 +365,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         System::Object^ ValidateValue(System::Object^ value);
 
-        //static Ntreev::Windows::Forms::Grid::Cell^ FromNative(GrItem* pItem);
-
     internal: // properties
 
         property GrItem* NativeRef
@@ -413,7 +411,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::Object^ m_value;
     };
 
-    ref class InsertionCell : Ntreev::Windows::Forms::Grid::Cell
+    ref class InsertionCell
+        : Ntreev::Windows::Forms::Grid::Cell
     {
     internal: // methods
 

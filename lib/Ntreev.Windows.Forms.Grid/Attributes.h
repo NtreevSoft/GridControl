@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -29,7 +29,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// 지정된 속성이 스크롤될 수 없는지 설정합니다.
     /// </summary>
     [System::AttributeUsage(System::AttributeTargets::Property)]
-    public ref class FrozenAttribute : System::Attribute
+    public ref class FrozenAttribute
+        : System::Attribute
     {
     public: // methods
 
@@ -61,7 +62,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// 지정된 속성이 위치 이동이 되는지 설정합니다.
     /// </summary>
     [System::AttributeUsage(System::AttributeTargets::Property)]
-    public ref class MovableAttribute : System::Attribute
+    public ref class MovableAttribute
+        : System::Attribute
     {
     public: // methods
 
@@ -80,7 +82,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     };
 
     [System::AttributeUsage(System::AttributeTargets::Property)]
-    public ref class ResizableAttribute : System::Attribute
+    public ref class ResizableAttribute
+        : System::Attribute
     {
     public: // methods
 
@@ -99,7 +102,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     };
 
     [System::AttributeUsage(System::AttributeTargets::Property)]
-    public ref class SortableAttribute : System::Attribute
+    public ref class SortableAttribute
+        : System::Attribute
     {
     public: // methods
 

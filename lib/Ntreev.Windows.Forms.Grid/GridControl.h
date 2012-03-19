@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.0.0
+// Ntreev Grid for .Net 2.0.4461.30274
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -56,9 +56,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     [System::ComponentModel::ToolboxItem(true)]
     [System::ComponentModel::DefaultEvent("")]
     [System::Drawing::ToolboxBitmap(GridControl::typeid)]
-    [System::ComponentModel::Designer("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+    [System::ComponentModel::Designer("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4461.30274, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
     [System::Windows::Forms::Docking(System::Windows::Forms::DockingBehavior::Ask)]
-    public ref class GridControl : System::Windows::Forms::UserControl
+    public ref class GridControl
+        : System::Windows::Forms::UserControl
     {
     public: // methods
 
@@ -66,29 +67,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <see cref="GridControl"/>클래스의 새 인스턴스를 초기화합니다.
         /// </summary>
         GridControl();
-
-        /// <summary>
-        /// 삽입행 속한 셀의 값들을 이용하여 새로운 행의 인스턴스를 생성하고 <see cref="GridControl::Rows"/>에 추가합니다.
-        /// </summary>
-        /// <returns>
-        /// 삽입행 속한 셀들의 값중 옳바르지 않은 값이 존재하거나 이벤트 등의 의해서 작업이 실패할 경우 null을 반환합니다.
-        /// 성공시 새로 생성된 행의 인스턴스가 반환됩니다.
-        /// </returns>
-        Ntreev::Windows::Forms::Grid::Row^ AddNewRowFromInsertion();
-
-        /// <summary>
-        /// 기본값을 이용하여 새로운 열을 만들고 <see cref="GridControl::Rows"/>에 추가합니다.
-        /// </summary>
-        Ntreev::Windows::Forms::Grid::Row^ AddNewRow();
-
-        /// <summary>
-        /// 행을 <see cref="GridControl::Rows"/>에서 제거 합니다.
-        /// </summary>
-        /// <param name="row"><see cref="Row"/>의 인스턴스입니다.</param>
-        /// <exception cref="System::Exception">제거할 행의 타입이 <see cref="InsertionRow"/>일때 발생합니다.</exception>
-        /// <exception cref="System::ArgumentNullException">제거할 행의 인스턴스가 null일경우 발생합니다.</exception>
-        /// <exception cref="System::ArgumentException">제거할 행이 이미 제거되었거나 사용한적이 없는 행일때 발생합니다.</exception>
-        void RemoveRow(Ntreev::Windows::Forms::Grid::Row^ row);
 
         /// <summary>
         /// 셀의 편집을 시작합니다.
@@ -904,35 +882,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// 삽입행 의하여 새로운 행이 삽입되기 전에 발생합니다.
-        /// </summary>
-        /// <remarks>
-        /// 삽입행 의하여 새로운 행이 삽입되는 것을 원하지 않는다면 이벤트 데이터를 통하여 취소시킬 수 있습니다.
-        /// </remarks>
-        [System::ComponentModel::DescriptionAttribute("삽입행 의하여 새로운 행이 삽입되기 전에 발생합니다.")]
-        [System::ComponentModel::CategoryAttribute("Row")]
-        event Ntreev::Windows::Forms::Grid::InsertionRowInsertingEventHandler^ InsertionRowInserting
-        {
-            void add(Ntreev::Windows::Forms::Grid::InsertionRowInsertingEventHandler^ p) { m_eventInsertionRowInserting += p; }
-            void remove(Ntreev::Windows::Forms::Grid::InsertionRowInsertingEventHandler^ p) { m_eventInsertionRowInserting -= p; }
-        private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::InsertionRowInsertingEventArgs^ e) { if(m_eventInsertionRowInserting != nullptr) m_eventInsertionRowInserting->Invoke(sender, e); }
-        }
-
-        /// <summary>
-        /// 삽입행 의하여 새로운 행이 삽입된 후에 발생합니다.
-        /// </summary>
-        [System::ComponentModel::DescriptionAttribute("삽입행 의하여 새로운 행이 삽입된 후에 발생합니다.")]
-        [System::ComponentModel::CategoryAttribute("Row")]
-        event Ntreev::Windows::Forms::Grid::RowEventHandler^ InsertionRowInserted
-        {
-            void add(Ntreev::Windows::Forms::Grid::RowEventHandler^ p) { m_eventInsertionRowInserted += p; }
-            void remove(Ntreev::Windows::Forms::Grid::RowEventHandler^ p) { m_eventInsertionRowInserted -= p; }
-        private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowEventArgs^ e) { if(m_eventInsertionRowInserted != nullptr) m_eventInsertionRowInserted->Invoke(sender, e); }
-        }
-
-        /// <summary>
         /// 열들의 선택 범위가 변경되었을때 발생합니다.
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("열들의 선택 범위가 변경되었을때 발생합니다.")]
@@ -1295,8 +1244,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         bool InvokeValueChanging(Ntreev::Windows::Forms::Grid::Cell^ cell, System::Object^ value, System::Object^ oldValue);
         void InvokeValueChanged(Ntreev::Windows::Forms::Grid::Cell^ cell);
-        bool InvokeInsertionRowInserting(Ntreev::Windows::Forms::Grid::Row^ row);
-        void InvokeInsertionRowInserted(Ntreev::Windows::Forms::Grid::Row^ row);
         bool InvokeRowInserting(System::Object^ component);
         void InvokeRowInserted(Ntreev::Windows::Forms::Grid::Row^ row);
         bool InvokeRowRemoving(Ntreev::Windows::Forms::Grid::Row^ row);
@@ -1451,22 +1398,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이벤트 데이터가 들어 있는 <see cref="RowRemovedEventArgs"/>입니다.
         /// </param>
         virtual void OnRowRemoved(Ntreev::Windows::Forms::Grid::RowRemovedEventArgs^ e);
-
-        /// <summary>
-        /// <see cref="InsertionRowInserting"/> 이벤트를 발생시킵니다.
-        /// </summary>
-        /// <param name="e">
-        /// 이벤트 데이터가 들어 있는 <see cref="InsertionRowInsertingEventArgs"/>입니다.
-        /// </param>
-        virtual void OnInsertionRowInserting(Ntreev::Windows::Forms::Grid::InsertionRowInsertingEventArgs^ e);
-
-        /// <summary>
-        /// <see cref="InsertionRowInserted"/> 이벤트를 발생시킵니다.
-        /// </summary>
-        /// <param name="e">
-        /// 이벤트 데이터가 들어 있는 <see cref="RowEventArgs"/>입니다.
-        /// </param>
-        virtual void OnInsertionRowInserted(Ntreev::Windows::Forms::Grid::RowEventArgs^ e);
 
         /// <summary>
         /// <see cref="SelectedColumnsChanged"/> 이벤트를 발생시킵니다.
@@ -1881,7 +1812,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         Ntreev::Windows::Forms::Grid::RowInsertedEventHandler^ m_eventRowInserted;
         Ntreev::Windows::Forms::Grid::RowRemovingEventHandler^ m_eventRowRemoving;
         Ntreev::Windows::Forms::Grid::RowRemovedEventHandler^ m_eventRowRemoved;
-        Ntreev::Windows::Forms::Grid::InsertionRowInsertingEventHandler^ m_eventInsertionRowInserting;
         Ntreev::Windows::Forms::Grid::RowEventHandler^ m_eventInsertionRowInserted;
         System::EventHandler^ m_eventSelectedColumnsChanged;
         System::EventHandler^ m_eventSelectedRowsChanged;
