@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -44,7 +44,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void RowBase::Focus()
     {
-        Focuser->Set(m_pDataRow);
+        this->Focuser->Set(m_pDataRow);
     }
 
     void RowBase::Height::set(int value)

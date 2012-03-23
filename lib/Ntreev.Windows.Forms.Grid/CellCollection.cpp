@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -27,11 +27,12 @@
 #include "Row.h"
 #include "Cell.h"
 #include "GridControl.h"
+#include "FromNative.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    CellCollection::Enumerator::Enumerator(GrDataRow* pDataRow, GrColumnList* pColumnList)
-        : m_pColumnList(pColumnList), m_pDataRow(pDataRow), m_index(0)
+    CellCollection::Enumerator::Enumerator(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pDataRow, GrColumnList* pColumnList)
+        : m_gridControl(gridControl), m_pColumnList(pColumnList), m_pDataRow(pDataRow), m_index(0)
     {
 
     }
@@ -56,22 +57,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         GrColumn* pColumn = m_pColumnList->GetColumn(m_index - 1);
         GrItem* pItem = m_pDataRow->GetItem(pColumn);
-        System::Object^ ref = pItem->ManagedRef;
-        return safe_cast<Ntreev::Windows::Forms::Grid::Cell^>(ref);
+        return Ntreev::Windows::Forms::Grid::FromNative::Get(pItem, m_gridControl);
     }
 
     System::Object^ CellCollection::Enumerator::Current_System_Collections_IEnumerator::get()
     {
-        return Current;
+        return this->Current;
     }
 
     System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Cell^>^ CellCollection::GetEnumerator()
     {
-        return gcnew Enumerator(m_row->NativeRef, m_pColumnList);
+        return gcnew Enumerator(this->GridControl, m_row->NativeRef, m_pColumnList);
     }
 
     CellCollection::CellCollection(Ntreev::Windows::Forms::Grid::Row^ row)
-        : m_row(row)
+        : GridObject(row->GridControl), m_row(row)
     {
         m_pColumnList = row->GridCore->GetColumnList();
     }
@@ -103,8 +103,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         GrColumn* pColumn = m_pColumnList->GetColumn(index);
         GrDataRow* pDataRow = m_row->NativeRef;
         GrItem* pItem = pDataRow->GetItem(pColumn);
-        System::Object^ ref = pItem->ManagedRef;
-        return safe_cast<Ntreev::Windows::Forms::Grid::Cell^>(ref);
+        return Ntreev::Windows::Forms::Grid::FromNative::Get(pItem, this->GridControl);
     }
 
     int CellCollection::Count::get()
@@ -116,8 +115,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         GrDataRow* pDataRow = m_row->NativeRef;
         GrItem* pItem = pDataRow->GetItem(pColumn);
-        System::Object^ ref = pItem->ManagedRef;
-        return safe_cast<Ntreev::Windows::Forms::Grid::Cell^>(ref);
+        return Ntreev::Windows::Forms::Grid::FromNative::Get(pItem, this->GridControl);
     }
 
     System::Collections::IEnumerator^ CellCollection::GetEnumerator_System_Collections_IEnumerable()

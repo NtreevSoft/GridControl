@@ -12,6 +12,9 @@
 		<Platform
 			Name="Win32"
 		/>
+		<Platform
+			Name="x64"
+		/>
 	</Platforms>
 	<ToolFiles>
 	</ToolFiles>
@@ -98,6 +101,90 @@
 			/>
 		</Configuration>
 		<Configuration
+			Name="Debug|x64"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="2"
+			InheritedPropertySheets="..\Default.vsprops"
+			CharacterSet="1"
+			ManagedExtensions="2"
+			WholeProgramOptimization="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="../GridCore;../GridPainterDC"
+				PreprocessorDefinitions="WIN32;_DEBUG;_STRONG_NAME"
+				RuntimeLibrary="3"
+				OpenMP="false"
+				UsePrecompiledHeader="2"
+				WarningLevel="4"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="$(NoInherit) "
+				Version=""
+				LinkIncremental="1"
+				EmbedManagedResourceFile="$(ProjectDir)Ntreev.Windows.Forms.Grid.GridControl.bmp;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Movable.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Add.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Remove.cur"
+				GenerateDebugInformation="true"
+				AssemblyDebug="1"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				TargetMachine="17"
+				KeyFile="$(ProjectDir)GridControl.snk"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+				SuppressStartupBanner="true"
+				OutputDocumentFile="$(OutDir)\$(ProjectName).xml"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(TargetDir)$(TargetName).dll&quot; &quot;$(TargetDir)..\$(TargetName).dll&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(TargetDir)..\$(TargetName).pdb&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
+			/>
+		</Configuration>
+		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="2"
 			InheritedPropertySheets="..\Default.vsprops"
@@ -150,6 +237,87 @@
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 				TargetMachine="1"
+				KeyFile="$(ProjectDir)GridControl.snk"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(TargetDir)$(TargetName).dll&quot; &quot;$(TargetDir)..\$(TargetName).dll&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(TargetDir)..\$(TargetName).pdb&quot;&#x0D;&#x0A;copy &quot;$(TargetDir)$(TargetName).xml&quot; &quot;$(TargetDir)..\$(TargetName).xml&quot;&#x0D;&#x0A;"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="2"
+			InheritedPropertySheets="..\Default.vsprops"
+			CharacterSet="1"
+			ManagedExtensions="2"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="&#x0D;&#x0A;"
+				AdditionalIncludeDirectories="../GridCore;../GridPainterDC"
+				PreprocessorDefinitions="WIN32;NDEBUG"
+				RuntimeLibrary="2"
+				UsePrecompiledHeader="2"
+				GenerateXMLDocumentationFiles="true"
+				WarningLevel="4"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				Culture="1042"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="$(NoInherit)"
+				LinkIncremental="1"
+				EmbedManagedResourceFile="$(ProjectDir)Ntreev.Windows.Forms.Grid.GridControl.bmp;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Movable.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Add.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Remove.cur"
+				GenerateDebugInformation="true"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				TargetMachine="17"
 				KeyFile="$(ProjectDir)GridControl.snk"
 			/>
 			<Tool
@@ -561,6 +729,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Resources.en.resx"
+				>
+			</File>
+			<File
 				RelativePath=".\Resources.resx"
 				SubType="Designer"
 				>
@@ -723,7 +895,23 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"

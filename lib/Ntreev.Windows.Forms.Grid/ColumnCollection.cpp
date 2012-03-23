@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -150,7 +150,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(item->ColumnName == System::String::Empty)
             item->ColumnName = NewColumnName();
 
-        if(GridControl->InvokeColumnInserting(item) == false)
+        if(this->GridControl->InvokeColumnInserting(item) == false)
             return;
 
         item->GridControl = GridControl;
@@ -214,7 +214,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(existColumn == nullptr)
             column->HasLifeline = true;
 
-        if(GridControl->InvokeColumnInserting(column) == false)
+        if(this->GridControl->InvokeColumnInserting(column) == false)
             return nullptr;
 
         if(column->GridControl == nullptr)
@@ -225,6 +225,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
         else
         {
+            m_pColumnList->RemoveColumn(column->NativeRef);
+            m_pColumnList->AddColumn(column->NativeRef);
             column->PropertyDescriptor = propertyDescriptor;
         }
 
@@ -455,7 +457,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
             if(column->DataType != item->PropertyType)
             {
-                if(column->CanConvertFrom(item->PropertyType) == true)
+                if(column->CanConvertFrom(column->DataType, item->PropertyType) == true)
                     continue;
 
                 System::Text::StringBuilder^ builder = gcnew System::Text::StringBuilder();

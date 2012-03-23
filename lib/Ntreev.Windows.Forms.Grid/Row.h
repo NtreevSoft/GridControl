@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -163,7 +163,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </exception>
         property System::Object^ default[int]
         {
-            System::Object^ get(int index); 
+            System::Object^ get(int index);
+            void set(int index, System::Object^);
         }
 
         /// <summary>
@@ -395,7 +396,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         virtual void NewCell(Ntreev::Windows::Forms::Grid::Column^ column);
 
-        void RefreshCells();
+        //void RefreshCells();
 
     internal: // properties
 
@@ -451,8 +452,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     internal: // methods
 
         InsertionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrInsertionRow* pInsertionRow);
-
-        virtual void NewCell(Ntreev::Windows::Forms::Grid::Column^ column) override;
 
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

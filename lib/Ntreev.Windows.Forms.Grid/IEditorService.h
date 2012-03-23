@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -45,6 +45,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         property Ntreev::Windows::Forms::Grid::EditingReasonType ReasonType
         {
             Ntreev::Windows::Forms::Grid::EditingReasonType get();
+        }
+
+        property System::Windows::Forms::DialogResult Result
+        {
+            System::Windows::Forms::DialogResult get();
         }
     };
 } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

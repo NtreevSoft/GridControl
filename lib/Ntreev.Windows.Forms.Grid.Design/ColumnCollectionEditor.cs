@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 2.0.4461.30274
+//Ntreev Grid for .Net 2.0.4464.32161
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.
@@ -40,7 +40,7 @@ using System.Collections;
 
 namespace Ntreev.Windows.Forms.Grid.Design
 {
-    public class ColumnCollectionEditor : CollectionEditor
+    public class ColumnCollectionEditor : CollectionEditor, IServiceProvider
     {
         public ColumnCollectionEditor(Type type)
             : base(type)
@@ -108,45 +108,13 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
         object CreateInstanceBySelectingType()
         {
-            IDesignerHost designerHost = GetService(typeof(IDesignerHost)) as IDesignerHost;
-            IReferenceService refService = GetService(typeof(IReferenceService)) as IReferenceService;
-            ITypeResolutionService resService = GetService(typeof(ITypeResolutionService)) as ITypeResolutionService;
-            DTE dte = GetService(typeof(DTE)) as DTE;
+            TypeSelectorForm form = TypeSelectorForm.FromVSProject(this);
 
-            if (dte.ActiveWindow.Project.Object is VSProject)
+            if (form != null && form.ShowDialog() == DialogResult.OK)
             {
-                VSProject vsproj = dte.ActiveWindow.Project.Object as VSProject;
-
-                List<Assembly> assemblies = new List<Assembly>();
-
-                try
-                {
-                    Assembly projectAseembly = Assembly.Load(dte.ActiveWindow.Project.Name);
-                    if (projectAseembly != null)
-                        assemblies.Add(projectAseembly);
-                }
-                catch (Exception)
-                {
-                }
-
-                for (int i = 1; i <= vsproj.References.Count; i++)
-                {
-                    Reference reference = vsproj.References.Item(i);
-                    
-                    Assembly assembly = resService.GetAssembly(new AssemblyName(reference.Name));
-                    if(assembly != null)
-                        assemblies.Add(assembly);
-                }
-
-                TypeSelectorForm form = new TypeSelectorForm(assemblies.ToArray());
-
-
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    Column column = ColumnCollection.CreateColumnInstance(this.Context);
-                    column.DataType = form.SelectedType;
-                    return column;
-                }
+                Column column = ColumnCollection.CreateColumnInstance(this.Context);
+                column.DataType = form.SelectedType;
+                return column;
             }
 
             return null;
@@ -154,38 +122,11 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
         object CreateInstanceBySelectingColumn()
         {
-            IDesignerHost designerHost = GetService(typeof(IDesignerHost)) as IDesignerHost;
-            IReferenceService refService = GetService(typeof(IReferenceService)) as IReferenceService;
-            ITypeResolutionService resService = GetService(typeof(ITypeResolutionService)) as ITypeResolutionService;
-            DTE dte = GetService(typeof(DTE)) as DTE;
+            TypeSelectorForm form = TypeSelectorForm.FromVSProject(this);
 
-            if (dte.ActiveWindow.Project.Object is VSProject)
+            if (form != null)
             {
-                VSProject vsproj = dte.ActiveWindow.Project.Object as VSProject;
-
-                List<Assembly> assemblies = new List<Assembly>();
-
-                try
-                {
-                    Assembly projectAseembly = Assembly.Load(dte.ActiveWindow.Project.Name);
-                    if (projectAseembly != null)
-                        assemblies.Add(projectAseembly);
-                }
-                catch (Exception)
-                {
-                }
-
-                for (int i = 1; i <= vsproj.References.Count; i++)
-                {
-                    Reference reference = vsproj.References.Item(i);
-                    Assembly assembly = resService.GetAssembly(new AssemblyName(reference.Name));
-                    if (assembly != null)
-                        assemblies.Add(assembly);
-                }
-
-                TypeSelectorForm form = new TypeSelectorForm(assemblies.ToArray(), typeof(Column));
-
-
+                form.Filter = typeof(Column);
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     return ColumnCollection.CreateColumnInstance(this.Context, form.SelectedType);
@@ -193,7 +134,6 @@ namespace Ntreev.Windows.Forms.Grid.Design
             }
 
             return null;
-
         }
 
         class EtcType : TypeDelegator
@@ -217,5 +157,14 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 }
             }
         }
+
+        #region IServiceProvider 멤버
+
+        object IServiceProvider.GetService(Type serviceType)
+        {
+            return GetService(serviceType);
+        }
+
+        #endregion
     }
 }

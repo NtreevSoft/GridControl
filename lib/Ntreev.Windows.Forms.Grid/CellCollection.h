@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -30,7 +30,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// 셀의 컬렉션을 나타냅니다.
     /// </summary>
     public ref class CellCollection
-        : System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Cell^>
+        : Ntreev::Windows::Forms::Grid::GridObject
+        , System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Cell^>
         , System::Collections::ICollection
     {
     private: // classes
@@ -38,7 +39,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         ref class Enumerator : System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Cell^>
         {
         public:
-            Enumerator(GrDataRow* pDataRow, GrColumnList* pColumnList);
+            Enumerator(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pDataRow, GrColumnList* pColumnList);
             ~Enumerator();
             virtual bool MoveNext();
             virtual void Reset();
@@ -59,6 +60,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             unsigned int m_index;
             GrDataRow* m_pDataRow;
             GrColumnList* m_pColumnList;
+            Ntreev::Windows::Forms::Grid::GridControl^ m_gridControl;
         };
 
     public: // methods

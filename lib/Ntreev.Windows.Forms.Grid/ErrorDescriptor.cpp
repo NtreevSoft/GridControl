@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -48,7 +48,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_cells->Add(cell);
         m_errorCount = 0;
 
-        if(GridControl->Visible == true)
+        if(this->GridControl->Visible == true)
         {
             m_timer->Start();
         }
@@ -66,7 +66,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_rows->Add(row);
         m_errorCount = 0;
 
-        if(GridControl->Visible == true)
+        if(this->GridControl->Visible == true)
         {
             m_timer->Start();
         }
@@ -100,7 +100,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void ErrorDescriptor::gridControl_VisibleChanged(System::Object^ /*sender*/, System::EventArgs^ /*e*/)
     {
-        if(GridControl->Visible == false)
+        if(this->GridControl->Visible == false)
         {
             m_timer->Stop();
             m_errorCount = 0;

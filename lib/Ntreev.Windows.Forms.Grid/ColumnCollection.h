@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -30,7 +30,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 열의 컬렉션을 나타냅니다.
     /// </summary>
-    [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.ColumnCollectionEditor, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4461.30274, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
+    [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.ColumnCollectionEditor, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4464.32161, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
     public ref class ColumnCollection
         : Ntreev::Windows::Forms::Grid::GridObject
         , System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Column^>

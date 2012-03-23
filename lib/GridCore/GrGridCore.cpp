@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -598,7 +598,7 @@ void GrGridCore::columnList_ColumnInserted(GrObject* /*pSender*/, GrColumnEventA
     m_pTextUpdater->AddTextBounds(m_pGroupPanel);
 }
 
-void GrGridCore::columnList_ColumnRemoved(GrObject* /*pSender*/, GrColumnEventArgs* /*e*/)
+void GrGridCore::columnList_ColumnRemoved(GrObject* /*pSender*/, GrColumnEventArgs* e)
 {
     m_pTextUpdater->AddTextBounds(m_pCaption);
     m_pTextUpdater->AddTextBounds(m_pGroupPanel);

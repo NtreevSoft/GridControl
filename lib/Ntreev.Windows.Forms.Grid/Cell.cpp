@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -31,9 +31,11 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    ref class TypeDescriptorContextCore : System::ComponentModel::ITypeDescriptorContext
+    ref class TypeDescriptorContextCore
+        : System::ComponentModel::ITypeDescriptorContext
     {
-    public:
+    public: // methods
+
         TypeDescriptorContextCore(Ntreev::Windows::Forms::Grid::Cell^ cell)
             : m_column(cell->Column), m_row(cell->Row)
         {
@@ -61,7 +63,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             return false;
         }
 
-    public:
+    public: // properties
+
         property System::ComponentModel::IContainer^ Container
         {
             virtual System::ComponentModel::IContainer^ get()
@@ -92,7 +95,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             }
         }
 
-    private:
+    private: // variables
+
         Ntreev::Windows::Forms::Grid::Column^ m_column;
         Ntreev::Windows::Forms::Grid::Row^ m_row;
     };
@@ -105,7 +109,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         m_pItem->ManagedRef = this;
 
-        UpdateNativeText();
+        //UpdateNativeText();
     }
 
     Ntreev::Windows::Forms::Grid::Column^ Cell::Column::get()
@@ -142,7 +146,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         value = ValidateValue(value);
 
-        if(GridControl->InvokeValueChanging(this, value, oldValue) == false)
+        if(this->GridControl->InvokeValueChanging(this, value, oldValue) == false)
             return;
 
         if(this->Row->IsBeingEdited == true)
@@ -214,11 +218,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return typeConverter->ConvertFrom(typeDescriptorContext, System::Windows::Forms::Application::CurrentCulture, value);
     }
 
-    //Ntreev::Windows::Forms::Grid::Cell^ FromNative::Get(GrItem* pItem)
-    //{
-    //    System::Object^ ref = pItem->ManagedRef;
-    //    return safe_cast<Ntreev::Windows::Forms::Grid::Cell^>(ref);
-    //}
+    void Cell::SyncValue()
+    {
+        if(this->Row->Component != nullptr)
+        {
+            this->ValueCore = m_value;
+        }
+        else
+        {
+            m_value = this->ValueCore;
+        }
+    }
 
     bool Cell::CancelEdit()
     {
@@ -226,7 +236,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             return false;
 
         m_row->RemoveEditedCell();
-        Value = m_oldValue;
+        this->Value = m_oldValue;
         m_oldValue = nullptr;
         return true;
     }
@@ -243,17 +253,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Cell::Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType)
     {
-        Selector->SelectItem(m_pItem, (GrSelectionType)selectionType);
+        this->Selector->SelectItem(m_pItem, (GrSelectionType)selectionType);
     }
 
     void Cell::Focus()
     {
-        Focuser->Set(m_pItem);
+        this->Focuser->Set(m_pItem);
     }
 
     void Cell::BringIntoView()
     {
         this->GridControl->BringIntoView(this);
+    }
+
+    void Cell::SetDefaultValue()
+    {
+        this->ValueCore = this->Column->DefaultValue;
+        UpdateNativeText();
     }
 
     bool Cell::IsEdited::get()
@@ -296,10 +312,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::String^ Cell::ToString()
     {
+        using namespace Ntreev::Windows::Forms::Grid;
+
         if(this->Value == nullptr)
             return System::String::Empty;
         TypeDescriptorContextCore^ typeDescriptorContext = gcnew TypeDescriptorContextCore(this);
-        return m_column->TypeConverter->ConvertToString(typeDescriptorContext, Value);
+        return m_column->TypeConverter->ConvertToString(typeDescriptorContext, this->Value);
     }
 
     bool Cell::IsReadOnly::get()
@@ -355,17 +373,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::Object^ Cell::ValueCore::get()
     {
-        System::ComponentModel::PropertyDescriptor^ propertyDescriptor = Column->PropertyDescriptor;
-        if(propertyDescriptor == nullptr)
+        System::ComponentModel::PropertyDescriptor^ propertyDescriptor = this->Column->PropertyDescriptor;
+        System::Object^ component = this->Row->Component;
+        if(propertyDescriptor == nullptr || component == nullptr)
             return m_value;
-        System::Object^ value = propertyDescriptor->GetValue(Row->Component);
+        System::Object^ value = propertyDescriptor->GetValue(component);
         return this->Column->ConvertFromSource(value);
     }
 
     void Cell::ValueCore::set(System::Object^ value)
     {
-        System::ComponentModel::PropertyDescriptor^ propertyDescriptor = Column->PropertyDescriptor;
-        if(propertyDescriptor == nullptr)
+        System::ComponentModel::PropertyDescriptor^ propertyDescriptor = this->Column->PropertyDescriptor;
+        System::Object^ component = this->Row->Component;
+        if(propertyDescriptor == nullptr || component == nullptr)
         {
             m_value = value;
         }
@@ -409,32 +429,37 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return this->Tag;
     }
 
-    InsertionCell::InsertionCell(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrItem* pItem, System::Object^ defaultValue)
-        : m_value(defaultValue), Cell(gridControl, pItem)
+    Ntreev::Windows::Forms::Grid::IColumn^ Cell::Column_ICell::get()
     {
-
+        return this->Column;
     }
 
-    System::Object^ InsertionCell::ValueCore::get()
-    {
-        return m_value;
-    }
+    //InsertionCell::InsertionCell(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrItem* pItem, System::Object^ defaultValue)
+    //    : m_value(defaultValue), Cell(gridControl, pItem)
+    //{
 
-    void InsertionCell::ValueCore::set(System::Object^ value)
-    {
-        m_value = value;
-    }
+    //}
 
-    void InsertionCell::SetDefaultValue()
-    {
-        try
-        {
-            m_value = Column->DefaultValue;
-            UpdateNativeText(m_value);
-        }
-        catch(System::Exception^)
-        {
+    //System::Object^ InsertionCell::ValueCore::get()
+    //{
+    //    return m_value;
+    //}
 
-        }
-    }
+    //void InsertionCell::ValueCore::set(System::Object^ value)
+    //{
+    //    m_value = value;
+    //}
+
+    //void InsertionCell::SetDefaultValue()
+    //{
+    //    try
+    //    {
+    //        m_value = this->Column->DefaultValue;
+    //        UpdateNativeText(m_value);
+    //    }
+    //    catch(System::Exception^)
+    //    {
+
+    //    }
+    //}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

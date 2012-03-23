@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -53,11 +53,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 그리드 컨트롤 개체입니다.
     /// </summary>
-    [System::ComponentModel::ToolboxItem(true)]
-    [System::ComponentModel::DefaultEvent("")]
-    [System::Drawing::ToolboxBitmap(GridControl::typeid)]
-    [System::ComponentModel::Designer("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4461.30274, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
-    [System::Windows::Forms::Docking(System::Windows::Forms::DockingBehavior::Ask)]
+    [System::ComponentModel::ToolboxItemAttribute(true)]
+    [System::ComponentModel::DefaultEventAttribute("")]
+    [System::Drawing::ToolboxBitmapAttribute(GridControl::typeid)]
+    [System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4464.32161, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+    [System::Windows::Forms::DockingAttribute(System::Windows::Forms::DockingBehavior::Ask)]
     public ref class GridControl
         : System::Windows::Forms::UserControl
     {
@@ -1277,7 +1277,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void OnStateBegin(System::EventArgs^ e);
         void OnStateEnd(System::EventArgs^ e);
 
-        bool DesignTimeSetCursor();
         bool DesignTimeHitTest(System::Drawing::Point globalLocation);
         void PostPaint(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle clipRectangle);
 
@@ -1866,5 +1865,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     internal:
         System::Windows::Forms::Message m_msg;
-    };
+    private: System::Void InitializeComponent() {
+                 this->SuspendLayout();
+                 // 
+                 // GridControl
+                 // 
+                 this->Name = L"GridControl";
+                 this->ResumeLayout(false);
+             }
+};
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 2.0.4461.30274
+//Ntreev Grid for .Net 2.0.4464.32161
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.
@@ -176,8 +176,8 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 if (column.GridControl == gridControl && column.IsDisplayable == true)
                 {
                     Rectangle rectancle = column.Bounds;
-                    rectancle.Width--;
-                    rectancle.Height--;
+                    rectancle.Width-=2;
+                    rectancle.Height-=2;
 
                     rectancle.Inflate(1, 1);
                     Pen pen = new Pen(Color.Black);

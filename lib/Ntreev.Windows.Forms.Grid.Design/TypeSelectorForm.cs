@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 2.0.4461.30274
+//Ntreev Grid for .Net 2.0.4464.32161
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.
@@ -39,105 +39,109 @@ namespace Ntreev.Windows.Forms.Grid.Design
 {
     public partial class TypeSelectorForm : Form
     {
-        Type type = null;
+        Type type;
+        Assembly projectAssembly;
+        Assembly[] referenceAssemblies;
+        Type filter;
 
         static public TypeSelectorForm FromVSProject(IServiceProvider provider)
         {
-            //IDesignerHost designerHost = provider.GetService(typeof(IDesignerHost)) as IDesignerHost;
-            //IReferenceService refService = provider.GetService(typeof(IReferenceService)) as IReferenceService;
             ITypeResolutionService resService = provider.GetService(typeof(ITypeResolutionService)) as ITypeResolutionService;
             DTE dte = provider.GetService(typeof(DTE)) as DTE;
 
-            if (dte.ActiveWindow.Project.Object is VSProject)
+            Project project = null;
+            try
             {
-                VSProject vsproj = dte.ActiveWindow.Project.Object as VSProject;
-
-                List<Assembly> assemblies = new List<Assembly>();
-
-                try
+                object[] projects = dte.ActiveSolutionProjects as object[];
+                if (projects.Length == 0)
                 {
-                    Assembly projectAseembly = Assembly.Load(dte.ActiveWindow.Project.Name);
-                    if (projectAseembly != null)
-                        assemblies.Add(projectAseembly);
-                }
-                catch (Exception)
-                {
+                    return null;
                 }
 
-                for (int i = 1; i <= vsproj.References.Count; i++)
-                {
-                    Reference reference = vsproj.References.Item(i);
-                    Assembly assembly = resService.GetAssembly(new AssemblyName(reference.Name));
-                    assemblies.Add(assembly);
-                }
+                project = projects[0] as Project;
 
-                return new TypeSelectorForm(assemblies.ToArray());
             }
-            return null;
-        }
+            catch (Exception e)
+            {
+                return null;
+            }
 
+            if (project == null)
+            {
+                return null;
+            }
+
+            TypeSelectorForm typeSelectorForm = new TypeSelectorForm();
+            VSProject vsproj = project.Object as VSProject;
+
+            try
+            {
+                Assembly projectAseembly = Assembly.Load(project.Name);
+                if (projectAseembly != null)
+                {
+                    typeSelectorForm.projectAssembly = projectAseembly;
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            List<Assembly> assemblies = new List<Assembly>();
+            for (int i = 1; i <= vsproj.References.Count; i++)
+            {
+                Reference reference = vsproj.References.Item(i);
+                Assembly assembly = resService.GetAssembly(new AssemblyName(reference.Name));
+                assemblies.Add(assembly);
+            }
+
+            typeSelectorForm.referenceAssemblies = assemblies.ToArray();
+
+            return typeSelectorForm;
+
+
+        }
 
         public TypeSelectorForm()
-            :this(null)
-        {
-
-        }
-
-        public TypeSelectorForm(Assembly[] assemblies)
-            :this(assemblies, null)
-        {
-            
-        }
-
-        public TypeSelectorForm(Assembly[] assemblies, Type classType)
         {
             InitializeComponent();
+        }
 
-            foreach (Assembly assembly in assemblies)
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            if (this.projectAssembly != null)
             {
-                Type[] types = assembly.GetExportedTypes();
-                string assemblyName = assembly.GetName().Name;
+                AddTypeToTreeView(this.projectAssembly, true);
+            }
 
-                TreeNode assemblyNode = null;
-
-                foreach (Type type in types)
+            if (this.referenceAssemblies != null)
+            {
+                foreach (Assembly item in this.referenceAssemblies)
                 {
-                    if (classType != null)
-                    {
-                        if (classType.IsAssignableFrom(type) == false)
-                            continue;
-
-                        if (type.IsAbstract == true)
-                            continue;
-
-                        if (type.GetConstructor(new Type[] {}) == null)
-                            continue;
-                    }
-                    else if (type.IsValueType == false)
-                    {
-                        continue;
-                    }
-
-                    if(assemblyNode == null)
-                        assemblyNode = this.treeView1.Nodes.Add(assemblyName, assemblyName, 0, 0);
-
-                    TreeNode namespaceNode = null;
-                    if (assemblyNode.Nodes.Find(type.Namespace, false).Length != 0)
-                    {
-                        namespaceNode = assemblyNode.Nodes[type.Namespace];
-                    }
-                    else
-                    {
-                        namespaceNode = assemblyNode.Nodes.Add(type.Namespace, type.Namespace, 1, 1);
-                    }
-
-                    int imageIndex = type.IsEnum == true ? 2 : 3;
-                    TreeNode typeNode = namespaceNode.Nodes.Add(type.Name, type.Name, imageIndex, imageIndex);
-                    typeNode.Tag = type;
-
+                    AddTypeToTreeView(item, false);
                 }
             }
+
             this.treeView1.Sort();
+        }
+
+        public Type Filter
+        {
+            get { return this.filter; }
+            set { this.filter = value; }
+        }
+
+        public Assembly ProjectAssembly
+        {
+            get { return this.projectAssembly; }
+            set { this.projectAssembly = value; }
+        }
+
+        public Assembly[] ReferenceAssemblies
+        {
+            get { return this.referenceAssemblies; }
+            set { this.referenceAssemblies = value; }
         }
 
         public Type SelectedType
@@ -146,13 +150,115 @@ namespace Ntreev.Windows.Forms.Grid.Design
             {
                 if (this.type == null)
                     return typeof(string);
-                return this.type; 
+                return this.type;
             }
         }
 
-        protected override void OnSizeChanged(EventArgs e)
+        private void AddTypeToTreeView(Assembly assembly, bool isProjectAsssembly)
         {
-            base.OnSizeChanged(e);
+            Type[] types;
+            //Type[] types = assembly.GetExportedTypes();
+            if (isProjectAsssembly == true)
+            {
+                types = assembly.GetTypes();
+            }
+            else
+            {
+                types = assembly.GetExportedTypes();
+            }
+
+            string assemblyName = assembly.GetName().Name;
+
+            TreeNode assemblyNode = null;
+
+            foreach (Type type in types)
+            {
+                if (this.filter != null)
+                {
+                    if (this.filter.IsAssignableFrom(type) == false)
+                        continue;
+
+                    if (type.IsAbstract == true)
+                        continue;
+
+                    if (type.GetConstructor(new Type[] { }) == null)
+                        continue;
+                }
+                else if (type.IsValueType == false)
+                {
+                    continue;
+                }
+
+                if (assemblyNode == null)
+                    assemblyNode = this.treeView1.Nodes.Add(assemblyName, assemblyName, 0, 0);
+
+                TreeNode namespaceNode = null;
+                if (assemblyNode.Nodes.Find(type.Namespace, false).Length != 0)
+                {
+                    namespaceNode = assemblyNode.Nodes[type.Namespace];
+                }
+                else
+                {
+                    namespaceNode = assemblyNode.Nodes.Add(type.Namespace, type.Namespace, 1, 1);
+                }
+
+                int imageIndex = GetImageIndex(type); ;
+                TreeNode typeNode = namespaceNode.Nodes.Add(type.Name, type.Name, imageIndex, imageIndex);
+                typeNode.Tag = type;
+
+            }
+        }
+
+        private int GetImageIndex(Type type)
+        {
+            string imageName = "VSObject";
+
+
+            if (type.IsClass == true)
+            {
+                imageName += "_Class";
+            }
+            else if (type.IsEnum == true)
+            {
+                imageName += "_Enum";
+            }
+            else if (type.IsValueType == true)
+            {
+                imageName += "_Structure";
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+
+            if (type.IsNested == false)
+            {
+                if (type.IsPublic == false)
+                {
+                    imageName += "_Sealed";
+                }
+            }
+            else
+            {
+                if (type.IsNestedPrivate == true)
+                {
+                    imageName += "_Private";
+                }
+                else if (type.IsNestedFamily == true)
+                {
+                    imageName += "_Sealed";
+                }
+                else if (type.IsNestedPublic == false)
+                {
+                    imageName += "_Protected";
+                }
+            }
+
+            imageName += ".bmp";
+
+            return this.imageList1.Images.IndexOfKey(imageName);
+
+
         }
 
         private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)

@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -33,13 +33,19 @@
 #include <algorithm>
 #include <exception>
 
-typedef unsigned int uint;
+
+#ifdef _WIN64
+typedef unsigned __int64 uint;
+#else
+typedef unsigned __int32 uint;
+#endif
+
 typedef unsigned long ulong;
 typedef unsigned char byte;
 
-#define DEF_GROUP_WIDTH 15
-#define DEF_CONTROL_WIDTH 17
-#define DEF_ICON_SIZE 20
+static const int DEF_GROUP_WIDTH = 15;
+static const int DEF_CONTROL_WIDTH = 17;
+static const int DEF_ICON_SIZE = 20;
 
 
 #ifdef _MANAGED

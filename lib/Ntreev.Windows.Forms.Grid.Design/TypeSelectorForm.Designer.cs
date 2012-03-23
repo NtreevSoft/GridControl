@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 2.0.4461.30274
+//Ntreev Grid for .Net 2.0.4464.32161
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.
@@ -63,8 +63,18 @@ namespace Ntreev.Windows.Forms.Grid.Design
             this.imageList1.TransparentColor = System.Drawing.Color.Fuchsia;
             this.imageList1.Images.SetKeyName(0, "VSObject_Assembly.bmp");
             this.imageList1.Images.SetKeyName(1, "VSObject_Namespace.bmp");
-            this.imageList1.Images.SetKeyName(2, "VSObject_Enum.bmp");
-            this.imageList1.Images.SetKeyName(3, "VSObject_Structure.bmp");
+            this.imageList1.Images.SetKeyName(2, "VSObject_Class.bmp");
+            this.imageList1.Images.SetKeyName(3, "VSObject_Class_Private.bmp");
+            this.imageList1.Images.SetKeyName(4, "VSObject_Class_Protected.bmp");
+            this.imageList1.Images.SetKeyName(5, "VSObject_Class_Sealed.bmp");
+            this.imageList1.Images.SetKeyName(6, "VSObject_Enum.bmp");
+            this.imageList1.Images.SetKeyName(7, "VSObject_Enum_Private.bmp");
+            this.imageList1.Images.SetKeyName(8, "VSObject_Enum_Protected.bmp");
+            this.imageList1.Images.SetKeyName(9, "VSObject_Enum_Sealed.bmp");
+            this.imageList1.Images.SetKeyName(10, "VSObject_Structure.bmp");
+            this.imageList1.Images.SetKeyName(11, "VSObject_Structure_Private.bmp");
+            this.imageList1.Images.SetKeyName(12, "VSObject_Structure_Protected.bmp");
+            this.imageList1.Images.SetKeyName(13, "VSObject_Structure_Sealed.bmp");
             // 
             // treeView1
             // 

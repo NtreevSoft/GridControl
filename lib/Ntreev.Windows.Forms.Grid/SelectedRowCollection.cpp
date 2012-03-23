@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -82,7 +82,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             pItem = pDataRow->GetItem(focusColumn->NativeRef);
         }
 
-        Focuser->Set(pItem);
+        this->Focuser->Set(pItem);
     }
 
     bool SelectedRowCollection::Remove(Ntreev::Windows::Forms::Grid::Row^ row)

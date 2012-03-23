@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -232,6 +232,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
+        /// 데이터 소스에 의해 바인딩 될 경우에 데이터 소스에서 지정한 데이터 타입을 가져옵니다.
+        /// </summary>
+        /// <returns>
+        /// 데이터 타입을 나타내는 <see cref="System::Type"/>입니다.
+        /// </returns>
+        property System::Type^ SourceType
+        {
+            System::Type^ get();
+        }
+
+        /// <summary>
         /// 소유한 셀들이 가질 값의 데이터 타입을 가져옵니다.
         /// </summary>
         /// <returns>
@@ -240,6 +251,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property System::Type^ DataType
         {
             System::Type^ get();
+        }
+
+        property System::ComponentModel::TypeConverter^ TypeConverter
+        {
+            System::ComponentModel::TypeConverter^ get();
         }
 
         /// <summary>

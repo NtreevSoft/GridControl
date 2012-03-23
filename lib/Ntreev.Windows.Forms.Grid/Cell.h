@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -92,6 +92,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이미 화면내에 표시가 되었다면 아무 동작도 일어나지 않습니다.
         /// </remarks>
         void BringIntoView();
+
+        void SetDefaultValue();
 
     public: // properties
 
@@ -365,6 +367,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         System::Object^ ValidateValue(System::Object^ value);
 
+        void SyncValue();
+
     internal: // properties
 
         property GrItem* NativeRef
@@ -399,6 +403,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             virtual System::Object^ get() sealed = ICell::Tag::get;
         }
 
+        property Ntreev::Windows::Forms::Grid::IColumn^ Column_ICell
+        {
+            virtual Ntreev::Windows::Forms::Grid::IColumn^ get() sealed = ICell::Column::get;
+        }
+
     private: // variables
 
         Ntreev::Windows::Forms::Grid::Column^ m_column;
@@ -411,30 +420,30 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::Object^ m_value;
     };
 
-    ref class InsertionCell
-        : Ntreev::Windows::Forms::Grid::Cell
-    {
-    internal: // methods
+    //ref class InsertionCell
+    //    : Ntreev::Windows::Forms::Grid::Cell
+    //{
+    //internal: // methods
 
-        InsertionCell(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrItem* pItem, System::Object^ defaultValue);
+    //    InsertionCell(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrItem* pItem, System::Object^ defaultValue);
 
-    public: // methods
+    //public: // methods
 
-        /// <summary>
-        /// <see cref="Value"/>를 <see cref="Column"/>이 제공하는 기본값으로 설정합니다.
-        /// </summary>
-        void SetDefaultValue();
+    //    /// <summary>
+    //    /// <see cref="Value"/>를 <see cref="Column"/>이 제공하는 기본값으로 설정합니다.
+    //    /// </summary>
+    //    void SetDefaultValue();
 
-    internal: // properties
+    //internal: // properties
 
-        virtual property System::Object^ ValueCore
-        {
-            System::Object^ get() override;
-            void set(System::Object^) override; 
-        }
+    //    virtual property System::Object^ ValueCore
+    //    {
+    //        System::Object^ get() override;
+    //        void set(System::Object^) override; 
+    //    }
 
-    private: // variables
+    //private: // variables
 
-        System::Object^ m_value;
-    };
+    //    System::Object^ m_value;
+    //};
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

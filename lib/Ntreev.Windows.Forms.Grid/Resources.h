@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -38,6 +38,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             m_errorBitmap = dynamic_cast<System::Drawing::Bitmap^>(m_resourceManager->GetObject("Error"));
         }
 
+    public:
+        static System::String^ GetString(System::String^ name)
+        {
+            return m_resourceManager->GetString(name, System::Windows::Forms::Application::CurrentCulture);
+        }
+
     public: // properties bitmap
 
         static property System::Drawing::Bitmap^ RowEditing
@@ -69,42 +75,42 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
         static property System::String^ DefaultColumnName
         { 
-            System::String^ get() { return m_resourceManager->GetString("DefaultColumnName"); }
+            System::String^ get() { return GetString("DefaultColumnName"); }
         }
 
         static property System::String^ DefaultTooltip
         { 
-            System::String^ get() { return m_resourceManager->GetString("DefaultTooltip"); }
+            System::String^ get() { return GetString("DefaultTooltip"); }
         }
 
         static property System::String^ SetValueException
         { 
-            System::String^ get() { return m_resourceManager->GetString("SetValueException"); }
+            System::String^ get() { return GetString("SetValueException"); }
         }
 
         static property System::String^ RemoveInsertionRowException
         {
-            System::String^ get() { return m_resourceManager->GetString("RemoveInsertionRowException"); }
+            System::String^ get() { return GetString("RemoveInsertionRowException"); }
         }
 
         static property System::String^ NoColumnException 
         { 
-            System::String^ get() { return m_resourceManager->GetString("NoColumnException"); }
+            System::String^ get() { return GetString("NoColumnException"); }
         }
 
         static property System::String^ Width
         {
-            System::String^ get() { return m_resourceManager->GetString("Width"); }
+            System::String^ get() { return GetString("Width"); }
         }
 
         static property System::String^ Height
         {
-            System::String^ get() { return m_resourceManager->GetString("Height"); }
+            System::String^ get() { return GetString("Height"); }
         }
 
         static property System::String^ DataSourceInitializingFailed
         {
-            System::String^ get() { return m_resourceManager->GetString("DataSourceInitializingFailed"); }
+            System::String^ get() { return GetString("DataSourceInitializingFailed"); }
         }
 
     private: // variables

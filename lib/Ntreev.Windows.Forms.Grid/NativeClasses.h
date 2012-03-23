@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -80,6 +80,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         gcroot<Ntreev::Windows::Forms::Grid::GridControl^> m_gridControl;
         gcroot<System::Windows::Forms::ScrollProperties^> m_scroll;
         int m_type;
+
+        static const int SB_LINEUP = 0;
+        static const int SB_LINELEFT = 0;
+        static const int SB_LINEDOWN = 1;
+        static const int SB_LINERIGHT = 1;
+        static const int SB_PAGEUP = 2;
+        static const int SB_PAGELEFT = 2;
+        static const int SB_PAGEDOWN = 3;
+        static const int SB_PAGERIGHT = 3;
+        static const int SB_THUMBPOSITION = 4;
+        static const int SB_THUMBTRACK = 5;
+        static const int SB_TOP = 6;
+        static const int SB_LEFT = 6;
+        static const int SB_BOTTOM = 7;
+        static const int SB_RIGHT = 7;
+        static const int SB_ENDSCROLL = 8;
     };
 
     class WinFormTimer : public GrTimer

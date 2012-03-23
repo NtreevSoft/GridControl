@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -34,10 +34,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 열을 나타냅니다.
     /// </summary>
-    [System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
-    [System::ComponentModel::ToolboxItem(false)]
-    [System::ComponentModel::DesignTimeVisible(false)]
-    [System::ComponentModel::Designer("Ntreev.Windows.Forms.Grid.Design.ColumnDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4461.30274, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+    [System::ComponentModel::TypeConverterAttribute(System::ComponentModel::ExpandableObjectConverter::typeid)]
+    [System::ComponentModel::ToolboxItemAttribute(false)]
+    [System::ComponentModel::DesignTimeVisibleAttribute(false)]
+    [System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.ColumnDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4464.32161, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
     public ref class Column
         : Ntreev::Windows::Forms::Grid::CellBase
         , Ntreev::Windows::Forms::Grid::IColumn
@@ -52,6 +52,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         Column();
 
         void Focus();
+
+        void Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType);
 
         void BringIntoView();
 
@@ -356,7 +358,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// 소유한 셀들이 가질 값의 데이터 타입을 가져오거나 설정합니다.
+        /// 데이터 소스에 의해 바인딩 될 경우에 데이터 소스에서 지정한 데이터 타입을 가져옵니다.
+        /// </summary>
+        /// <returns>
+        /// 데이터 타입을 나타내는 <see cref="System::Type"/>입니다.
+        /// </returns>
+        property System::Type^ SourceType
+        {
+            virtual System::Type^ get();
+        }
+
+        /// <summary>
+        /// 값의 편집 타입을 가져오거나 설정합니다.
         /// </summary>
         /// <returns>
         /// 데이터 타입을 나타내는 <see cref="System::Type"/>입니다.
@@ -364,7 +377,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::InvalidOperationException">
         /// 그리드 컨트롤에 바인딩 된 후에 값을 설정하려고 할때.
         /// </exception>
-        [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4461.30274, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
+        [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4464.32161, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
         property System::Type^ DataType
         {
             virtual System::Type^ get() sealed;
@@ -372,7 +385,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// 소유한 셀들이 가질 값의 데이터 타입 변환기를 가져오거나 설정합니다.
+        /// 값의 데이터 타입 변환기를 가져오거나 설정합니다.
         /// </summary>
         /// <returns>
         /// 데이터 타입 변환기를 나타내는 <see cref="System::ComponentModel::TypeConverter"/>입니다.
@@ -384,7 +397,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
         property System::ComponentModel::TypeConverter^ TypeConverter
         {
-            System::ComponentModel::TypeConverter^ get();
+            virtual System::ComponentModel::TypeConverter^ get() sealed;
             void set(System::ComponentModel::TypeConverter^);
         }
 
@@ -466,8 +479,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이 속성의 사용 목적은 새로운 행을 추가 하기 위하여 제공되는 삽입열에 기본값을 제공하기 위해서입니다. 
         /// 데이터 타입에 대한 검사가 없으므로, 가급적 <see cref="DataType"/>과 같은 타입의 개체를 사용하시기 바랍니다.
         /// </remarks>
-        [System::ComponentModel::BrowsableAttribute(false)]
-        [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+        [System::ComponentModel::TypeConverterAttribute("Ntreev.Windows.Forms.Grid.Design.ValueConverter, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4464.32161, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
         property System::Object^ DefaultValue
         {
             virtual System::Object^ get();
@@ -696,7 +708,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         void AsyncDisplayText();
 
-        bool CanConvertFrom(System::Type^ sourceType);
+        bool CanConvertFrom(System::Type^ dataType, System::Type^ sourceType);
 
         System::Object^ ConvertFromSource(System::Object^ value);
 
@@ -729,8 +741,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             return nullptr;
         }
 
-        void ValidateDefaultValue();
-
         bool ShouldSerializeCellForeColor();
         bool ShouldSerializeCellBackColor();
         bool ShouldSerializeCellPadding();
@@ -738,11 +748,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         bool ShouldSerializeTitle();
         bool ShouldSerializeDataType();
         bool ShouldSerializeTypeConverter();
+        bool ShouldSerializeDefaultValue();
 
         void ResetTitle();
 
         void propertyDescriptor_ValueChanged(System::Object^ sender, System::EventArgs^ e);
         void SetEditStyleToNative();
+
+        generic<class Attr> where Attr : System::Attribute, ref class
+            Attr GetSourceAttribute(System::ComponentModel::PropertyDescriptor^ propertyDescriptor);
 
     private: // properties
 

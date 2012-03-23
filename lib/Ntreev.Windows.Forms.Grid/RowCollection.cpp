@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -96,7 +96,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void RowCollection::Bind(System::Object^ component, int componentIndex)
     {
-        if(GridControl->InvokeRowInserting(component) == false)
+        if(this->GridControl->InvokeRowInserting(component) == false)
             return;
 
         Ntreev::Windows::Forms::Grid::Row^ row = gcnew Row(GridControl);
@@ -202,7 +202,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_manager->Position < 0)
             return;
 
-        Ntreev::Windows::Forms::Grid::Row^ focusedRow = dynamic_cast<Ntreev::Windows::Forms::Grid::Row^>(GridControl->FocusedRow);
+        Ntreev::Windows::Forms::Grid::Row^ focusedRow = dynamic_cast<Ntreev::Windows::Forms::Grid::Row^>(this->GridControl->FocusedRow);
         if(focusedRow != nullptr && focusedRow->ComponentIndex == m_manager->Position)
             return;
 
@@ -259,12 +259,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             m_manager->RemoveAt(i);
     }
 
-    Ntreev::Windows::Forms::Grid::Row^ RowCollection::Clone(Ntreev::Windows::Forms::Grid::Row^ source)
+    void RowCollection::Insert(int index, Ntreev::Windows::Forms::Grid::Row^ item)
     {
-            return nullptr;
+        InsertCore(index, item);
     }
 
-    void RowCollection::Insert(int index, Ntreev::Windows::Forms::Grid::Row^ item)
+    Ntreev::Windows::Forms::Grid::Row^ RowCollection::InsertCore(int index, Ntreev::Windows::Forms::Grid::Row^ item)
     {
         if(index < 0 || index > Count)
             throw gcnew System::ArgumentOutOfRangeException("index");
@@ -292,7 +292,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             }
         }
 
-        if(GridControl->InvokeRowInserting(component) == false)
+        if(this->GridControl->InvokeRowInserting(component) == false)
         {
             m_manager->CancelCurrentEdit();
         }
@@ -300,18 +300,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             m_manager->EndCurrentEdit();
 
-            bool b = false;
+            bool newRow = false;
             if(item == this->InsertionRow)
             {
                 item = gcnew Ntreev::Windows::Forms::Grid::Row(this->GridControl);
-                b = true;
+                newRow = true;
             }
 
             m_pDataRowList->InsertDataRow(item->NativeRef, index);
-            item->Component = component;
-            item->ComponentIndex = m_manager->List->Count - 1;
 
-            if(b == true)
+            if(newRow == true)
             {
                 for(int i=0 ; i<InsertionRow->CellCount ; i++)
                 {
@@ -325,8 +323,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 this->InsertionRow->SetDefaultValue();
             }
 
+            
+            item->Component = component;
+            item->ComponentIndex = m_manager->List->Count - 1;
+
             this->GridControl->InvokeRowInserted(item);
         }
+        return item;
     }
 
     void RowCollection::RemoveAt(int index)
@@ -388,69 +391,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     Ntreev::Windows::Forms::Grid::Row^ RowCollection::AddFromInsertion()
     {
-        Add(this->InsertionRow);
-        return nullptr;
-        //ManagerEventDetach managerEventDeatch(this);
-
-        //try
-        //{
-        //    m_manager->AddNew();
-        //}
-        //catch(System::Exception^ e)
-        //{
-        //    throw e;
-        //}
-
-        //Ntreev::Windows::Forms::Grid::Row^ row = gcnew Row(GridControl);
-        //m_pDataRowList->AddDataRow(row->NativeRef);
-        //row->Component = m_manager->Current;
-        //row->ComponentIndex = m_manager->List->Count - 1;
-        //row->IsVisible = false;
-
-        //for(int i=0 ; i<InsertionRow->CellCount ; i++)
-        //{
-        //    Ntreev::Windows::Forms::Grid::Cell^ sourceCell = InsertionRow->Cells[i];
-        //    Ntreev::Windows::Forms::Grid::Cell^ cell = row->Cells[i];
-
-        //    cell->Value = sourceCell->Value;
-        //    cell->Tag = sourceCell->Tag;
-        //}
-
-        //if(GridControl->InvokeInsertionRowInserting(row) == false)
-        //{
-        //    m_manager->CancelCurrentEdit(); 
-        //    m_pDataRowList->RemoveDataRow(row->NativeRef);
-        //    row->Component = nullptr;
-        //    row->ComponentIndex = -1;
-        //    return nullptr;
-        //}
-
-        //try
-        //{
-        //    m_manager->EndCurrentEdit();
-        //    row->IsVisible = true;
-        //    this->GridControl->InvokeInsertionRowInserted(row);
-        //}
-        //catch(System::Exception^ e)
-        //{
-        //    m_manager->CancelCurrentEdit();
-        //    m_manager->Position = -1;
-        //    m_pDataRowList->RemoveDataRow(row->NativeRef);
-        //    row->Component = nullptr;
-        //    row->ComponentIndex = -1;
-        //    throw e;
-        //}
-        //finally
-        //{
-        //    InsertionRow->SetDefaultValue();
-        //}
-
-        //return row;
+        return InsertCore(this->Count, this->InsertionRow);
     }
 
     void RowCollection::Add(Ntreev::Windows::Forms::Grid::Row^ item)
     {
-        Insert(Count, item);
+        Insert(this->Count, item);
     }
 
     bool RowCollection::Remove(Ntreev::Windows::Forms::Grid::Row^ item)
@@ -462,7 +408,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         ManagerEventDetach managerEventDeatch(this);
 
-        if(GridControl->InvokeRowRemoving(item) == false)
+        if(this->GridControl->InvokeRowRemoving(item) == false)
             return false;
 
         int index = m_manager->List->IndexOf(item->Component);
@@ -588,7 +534,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void RowCollection::default_System_Collections_IList::set(int /*index*/, System::Object^ /*value*/)
     {
-
+        throw gcnew System::NotImplementedException();
     }
 
     bool RowCollection::IsReadOnly_System_Collections_IList::get()

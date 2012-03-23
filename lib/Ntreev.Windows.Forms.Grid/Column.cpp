@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -143,6 +143,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     Column::Column()
         : m_pColumn(new GrColumn()), CellBase(m_pColumn)
     {
+
         m_pColumn->SetSortComparer(GrSort_Up, RowComparerUp);
         m_pColumn->SetSortComparer(GrSort_Down, RowComparerDown);
 
@@ -176,7 +177,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Column::Focus()
     {
-        Focuser->Set(m_pColumn);
+        this->Focuser->Set(m_pColumn);
+    }
+
+    void Column::Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType)
+    {
+        this->Selector->SelectItems(m_pColumn, (GrSelectionType)selectionType);
     }
 
     void Column::BringIntoView()
@@ -194,7 +200,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     System::String^ Column::Title::get()
     {
         if(m_title == nullptr)
+        {
+            if(m_propertyDescriptor != nullptr && m_propertyDescriptor->DisplayName != m_propertyDescriptor->Name)
+            {
+                return m_propertyDescriptor->DisplayName;
+            }
             return this->ColumnName;
+        }
         return m_title;
     }
 
@@ -228,7 +240,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         if(GridControl != nullptr)
         {
-            if(GridControl->Columns[value] != nullptr)
+            if(this->GridControl->Columns[value] != nullptr)
                 throw gcnew System::ArgumentException(System::String::Format("\"{0}\"의 이름을 가진 항목이 이미 있습니다.", value));
         }
 
@@ -273,25 +285,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         if(value != nullptr)
         {
-            if(m_defaultValue == nullptr)
-            {
-                System::ComponentModel::DefaultValueAttribute^ attr = dynamic_cast<System::ComponentModel::DefaultValueAttribute^>(value->Attributes[System::ComponentModel::DefaultValueAttribute::typeid]);
-                if(attr != nullptr)
-                {
-                    m_defaultValue = attr->Value;
-                }
-                else if(value->PropertyType->IsEnum == true)
-                {
-                    System::Array^ values = System::Enum::GetValues(value->PropertyType);
-                    if(values->Length > 0)
-                        m_defaultValue = values->GetValue(0);
-                }
-                else if(value->PropertyType->IsValueType == true)
-                {
-                    m_defaultValue = System::Activator::CreateInstance(value->PropertyType);
-                }
-            }
-
             FrozenAttribute^ frozenAttr = dynamic_cast<FrozenAttribute^>(value->Attributes[FrozenAttribute::typeid]);
             if(frozenAttr != nullptr)
                 this->IsFrozen = frozenAttr->IsFrozen;
@@ -307,25 +300,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             SortableAttribute^ sortableAttr = dynamic_cast<SortableAttribute^>(value->Attributes[SortableAttribute::typeid]);
             if(sortableAttr != nullptr)
                 this->IsSortable = sortableAttr->IsSortable;
-
-            m_typeEditor = Design::TypeEditor::FromDataType(value->PropertyType);
-
-            switch(this->ViewType)
-            {
-            case Ntreev::Windows::Forms::Grid::ViewType::Text:
-                m_pColumn->SetItemTextVisible(true);
-                m_pColumn->SetItemIcon(false);
-                break;
-            case Ntreev::Windows::Forms::Grid::ViewType::Icon:
-                m_pColumn->SetItemTextVisible(true);
-                m_pColumn->SetItemIcon(true);
-                break;
-            case Ntreev::Windows::Forms::Grid::ViewType::Custom:
-                m_pColumn->SetItemTextVisible(false);
-                m_pColumn->SetItemIcon(false);
-                break;
-            }
-            SetEditStyleToNative();
         }
         else
         {
@@ -333,6 +307,25 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         m_propertyDescriptor = value;
+
+        m_typeEditor = Design::TypeEditor::FromDataType(this->DataType);
+
+        switch(this->ViewType)
+        {
+        case Ntreev::Windows::Forms::Grid::ViewType::Text:
+            m_pColumn->SetItemTextVisible(true);
+            m_pColumn->SetItemIcon(false);
+            break;
+        case Ntreev::Windows::Forms::Grid::ViewType::Icon:
+            m_pColumn->SetItemTextVisible(true);
+            m_pColumn->SetItemIcon(true);
+            break;
+        case Ntreev::Windows::Forms::Grid::ViewType::Custom:
+            m_pColumn->SetItemTextVisible(false);
+            m_pColumn->SetItemIcon(false);
+            break;
+        }
+        SetEditStyleToNative();
 
         m_pColumn->SetReadOnly(this->IsReadOnly);
         m_pColumn->SetVisible(this->IsVisible);
@@ -450,6 +443,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pColumn->SetSortable(value);
     }
 
+    System::Type^ Column::SourceType::get()
+    {
+        if(m_propertyDescriptor == nullptr)
+            return this->DataType;
+        return m_propertyDescriptor->PropertyType;
+    }
+
     System::Type^ Column::DataType::get()
     {
         if(m_dataType == nullptr)
@@ -474,15 +474,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         if(m_propertyDescriptor != nullptr)
         {
-            System::ComponentModel::TypeConverter^ converter = TypeDescriptor::GetConverter(value);
-
-            if(converter->CanConvertFrom(m_propertyDescriptor->PropertyType) == false)
+            if(CanConvertFrom(value, m_propertyDescriptor->PropertyType) == false)
             {
                 System::Text::StringBuilder^ builder = gcnew System::Text::StringBuilder();
 
-                builder->AppendLine(System::String::Format("데이터소스에서 데이터 타입을 변환할 수가 없습니다. 새로운 TypeConverter를 구현하세요"));
-                builder->AppendLine(System::String::Format(" DataSource : {0}", m_propertyDescriptor->PropertyType));
-                builder->AppendLine(System::String::Format(" GridControl : {0}", value));
+                builder->AppendLine(System::String::Format("데이터 타입을 소스 타입으로 변환할 수가 없습니다. TypeConverter를 구현하세요"));
+                builder->AppendLine(System::String::Format("    SourceType : {0}", m_propertyDescriptor->PropertyType));
+                builder->AppendLine(System::String::Format("    DataType : {0}", value));
 
                 throw gcnew System::NotSupportedException(builder->ToString());
             }
@@ -505,6 +503,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             break;
         }
         m_dataType = value;
+        m_defaultValue = nullptr;
         SetEditStyleToNative();
     }
 
@@ -512,8 +511,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         if(m_typeConverter == nullptr)
         {
-            if(m_propertyDescriptor != nullptr)
-                return m_propertyDescriptor->Converter;
             return System::ComponentModel::TypeDescriptor::GetConverter(this->DataType);
         }
 
@@ -562,20 +559,61 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::Object^ Column::DefaultValue::get()
     {
-        if(m_defaultValue == nullptr || m_defaultValue == System::DBNull::Value)
-            return m_defaultValue;
+        using namespace System::ComponentModel;
 
-        if(m_defaultValue->GetType() == this->DataType)
-            return m_defaultValue;
-
-        if(this->TypeConverter->CanConvertFrom(m_defaultValue->GetType()) == false)
-            return nullptr;
-        return this->TypeConverter->ConvertFrom(m_defaultValue);
+        if(m_defaultValue == nullptr)
+        {
+            DefaultValueAttribute^ attr = GetSourceAttribute<DefaultValueAttribute^>(m_propertyDescriptor);
+            if(attr != nullptr)
+            {
+                try
+                {
+                    return ConvertFromSource(attr->Value);
+                }
+                catch(System::Exception^)
+                {
+                    return nullptr;
+                }
+            }
+        }
+        return m_defaultValue;
     }
 
     void Column::DefaultValue::set(System::Object^ value)
     {
-        m_defaultValue = value;
+        System::Object^ oldDefaultValue = m_defaultValue;
+
+        try
+        {
+            m_defaultValue = nullptr;
+            if(value == nullptr || value == System::DBNull::Value)
+                return;
+
+            if(this->DataType != System::String::typeid)
+            {
+                if(value->GetType() == System::String::typeid && value->ToString() == System::String::Empty)
+                {
+                    m_defaultValue = nullptr;
+                    return;
+                }
+            }
+
+            if(value->GetType() == this->DataType)
+            {
+                m_defaultValue = value;
+            }
+            else if(this->TypeConverter->CanConvertFrom(value->GetType()) == true)
+            {       
+                m_defaultValue = this->TypeConverter->ConvertFrom(value);
+            }
+        }
+        finally
+        {
+            if(oldDefaultValue != m_defaultValue && this->GridControl != nullptr)
+            {
+                this->GridControl->InsertionRow->Cells[this]->SetDefaultValue();
+            }
+        }
     }
 
     System::Drawing::StringAlignment Column::CellAlignment::get()
@@ -825,12 +863,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_pColumn->GetColumnID(); 
     }
 
-    void Column::ValidateDefaultValue()
-    {
-        if(m_dataType == nullptr || m_defaultValue == nullptr)
-            return;
-    }
-
     bool Column::ShouldSerializeCellForeColor()
     {
         return m_pColumn->GetItemForeColor() != GrColor::Empty;
@@ -879,6 +911,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_typeConverter != m_propertyDescriptor->Converter;
     }
 
+    bool Column::ShouldSerializeDefaultValue()
+    {
+        return m_defaultValue != nullptr;
+    }
+
     void Column::ResetTitle()
     {
         m_title = nullptr;
@@ -889,10 +926,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pColumn->SetText(ToNativeString::Convert(this->Title));
     }
 
-    bool Column::CanConvertFrom(System::Type^ sourceType)
+    bool Column::CanConvertFrom(System::Type^ dataType, System::Type^ sourceType)
     {
-        if(m_dataType == nullptr)
+        if(dataType == sourceType)
             return true;
+
+        if(dataType->IsEnum == true && sourceType == int::typeid)
+        {
+            return true;
+        }
+
         return this->TypeConverter->CanConvertFrom(sourceType);
     }
 
@@ -907,7 +950,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_propertyDescriptor->PropertyType == this->DataType)
             return value;
 
-        System::ComponentModel::TypeConverter^ typeConverter = nullptr;
+        if(this->DataType->IsEnum == true && this->SourceType == int::typeid)
+        {
+            return System::Enum::ToObject(this->DataType, value);
+        }
+
+        System::ComponentModel::TypeConverter^ typeConverter = this->TypeConverter;
 
         if(m_typeConverter == nullptr)
         {
@@ -931,6 +979,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         if(m_propertyDescriptor->PropertyType == this->DataType)
             return value;
+
+        if(this->DataType->IsEnum == true && this->SourceType == int::typeid)
+        {
+            return (int)value;
+        }
 
         System::ComponentModel::TypeConverter^ typeConverter = nullptr;
 
@@ -977,5 +1030,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             m_pColumn->SetItemType(GrItemType_Modal);
             break;
         }
+    }
+
+    generic<class Attr> where Attr : System::Attribute, ref class
+        Attr Column::GetSourceAttribute(System::ComponentModel::PropertyDescriptor^ propertyDescriptor)
+    {
+        if(propertyDescriptor == nullptr)
+            return Attr();
+
+        return (Attr)(propertyDescriptor->Attributes[Attr::typeid]);
     }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

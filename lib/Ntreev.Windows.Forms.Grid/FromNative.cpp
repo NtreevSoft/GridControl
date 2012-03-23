@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -37,10 +37,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return safe_cast<Ntreev::Windows::Forms::Grid::Cell^>(ref);
     }
 
+    Ntreev::Windows::Forms::Grid::Cell^ FromNative::Get(GrItem* pItem, Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+    {
+        Ntreev::Windows::Forms::Grid::Cell^ cell = Get(pItem);
+        if(cell == nullptr)
+            cell = gcnew Ntreev::Windows::Forms::Grid::Cell(gridControl, pItem);
+        return cell;
+    }
+
     Ntreev::Windows::Forms::Grid::Column^ FromNative::Get(GrColumn* pColumn)
     {
-
-    if(pColumn == nullptr)
+        if(pColumn == nullptr)
             return nullptr;
         System::Object^ ref = pColumn->ManagedRef;
         return safe_cast<Ntreev::Windows::Forms::Grid::Column^>(ref);

@@ -117,74 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AlreadyInitialized" xml:space="preserve">
-    <value>이미 초기화가 되었습니다.</value>
-  </data>
-  <data name="CannotConvert" xml:space="preserve">
-    <value>변환 할 수 없습니다.</value>
-  </data>
-  <data name="DefaultColumnName" xml:space="preserve">
-    <value>Column</value>
-  </data>
-  <data name="DefaultTooltip" xml:space="preserve">
-    <value>Tooltip</value>
-  </data>
-  <data name="InvalidEditingReasonType_Char" xml:space="preserve">
-    <value>GridEditingReasonType::Char 가 아닙니다</value>
-  </data>
-  <data name="InvalidEditingReasonType_Key" xml:space="preserve">
-    <value>GridEditingReasonType::Key</value>
-  </data>
-  <data name="InvalidEditingReasonType_Mouse" xml:space="preserve">
-    <value>GridEditingReasonType::Mouse</value>
-  </data>
-  <data name="NullColumn" xml:space="preserve">
-    <value>컬럼 정보를 가지고 있지 않습니다.</value>
-  </data>
-  <data name="IsReadOnly" xml:space="preserve">
-    <value>읽기 전용으로 되어 있습니다.</value>
-  </data>
-  <data name="Height" xml:space="preserve">
-    <value>높이</value>
-  </data>
-  <data name="Width" xml:space="preserve">
-    <value>넓이</value>
-  </data>
-  <data name="SetValueException" xml:space="preserve">
-    <value>값을 설정할 수 없습니다.\n Column::AutoValueConvert의 값이 false이거나, Column::TypeConverter에 의해서 변환될 수 있는 Type인지 확인하세요</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="InsertionRow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>InsertionRow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="InsertionRowFocused" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>InsertionRowFocused.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="RowEditing" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>RowEditing.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="RowFocused" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>RowFocused.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="NoColumnException" xml:space="preserve">
-    <value>행의 갯수가 0입니다. 먼저 Column을 추가하십시오.</value>
-  </data>
-  <data name="RemoveInsertionRowException" xml:space="preserve">
-    <value>InsertionRow는 삭제할 수 없습니다.</value>
-  </data>
-  <data name="CannotRemove" xml:space="preserve">
-    <value>삭제할 수 없는 항목입니다.</value>
-  </data>
-  <data name="Error" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Error.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DataSourceInitializingFailed" xml:space="preserve">
-    <value>데이터 소스 초기화에 실패했습니다. 데이터 소스가 IList, IListSource 또는 IBindingList 인터페이스를 구현하는 개체인지 확인하십시오</value>
-  </data>
   <data name="CaptionRow.Text" xml:space="preserve">
-    <value>제목</value>
+    <value>Title</value>
   </data>
   <data name="GroupPanel.Text" xml:space="preserve">
-    <value>"그룹화 시킬 컬럼을 이쪽으로 드래그하여 옮기세요"</value>
+    <value>drag a column here to group by that column</value>
   </data>
 </root>

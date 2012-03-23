@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -313,7 +313,7 @@ void GrColumnList::InsertColumn(GrColumn* pColumn, uint index)
     m_pGridCore->AttachObject(pColumn);
 
     if(m_vecVisibleColumns.size() == 0)
-        pColumn->SetPriority(m_vecColumns.size());
+        pColumn->SetPriority((int)m_vecColumns.size());
 
     GrColumnEventArgs e(pColumn);
     OnColumnInserted(&e);
@@ -439,7 +439,7 @@ void GrColumnList::BringIntoView(GrColumn* pColumn)
         newValue = ClipTo(visibleIndex);
     }
 
-    pHorzScroll->SetValue(newValue);
+    pHorzScroll->SetValue((int)newValue);
     m_pGridCore->Invalidate();
 }
 
@@ -575,7 +575,7 @@ void GrColumnList::UpdateHorzScroll(const GrRect& displayRect)
     largeChange = std::max(1, largeChange);
 
     pHorzScroll->SetMinimum(0);
-    pHorzScroll->SetMaximum(unfrozenCount - countPerPage + largeChange - 1);
+    pHorzScroll->SetMaximum((int)(unfrozenCount - countPerPage + largeChange - 1));
     pHorzScroll->SetLargeChange(largeChange);
 }
 
@@ -2078,6 +2078,12 @@ void GrColumn::OnGridCoreAttached()
 
 void GrColumn::OnGridCoreDetached()
 {
+    if(m_pGridCore->GetMouseOver() == this)
+        m_pGridCore->SetMouseOver(NULL, GrPoint::Empty);
+
+    if(m_pGridCore->GetMousePress() == this)
+        m_pGridCore->SetMouseUnpress();
+
     GrCell::OnGridCoreDetached();
     m_pGridCore->DetachObject(m_pGroup);
     m_pColumnList = NULL;

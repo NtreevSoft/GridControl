@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -31,12 +31,12 @@
 #include <vcclr.h>
 #endif
 
-#define INVALID_INDEX ((uint)-1)
-#define INSERTION_ROW ((uint)-8)
+static const unsigned int INVALID_INDEX = ((uint)-1);
+static const unsigned int INSERTION_ROW = ((uint)-8);
 
-#define UPDATEPRIORITY_DATAROWLIST 1
-#define UPDATEPRIORITY_COLUMNLIST 2
-#define UPDATEPRIORITY_GROUPPANEL 3
+static const int UPDATEPRIORITY_DATAROWLIST = 1;
+static const int UPDATEPRIORITY_COLUMNLIST = 2;
+static const int UPDATEPRIORITY_GROUPPANEL = 3;
 
 
 class GrGridCore;

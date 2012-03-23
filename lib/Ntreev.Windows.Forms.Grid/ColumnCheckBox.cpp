@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -30,13 +30,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     {
         using namespace System::Windows::Forms::VisualStyles;
 
-        Control->CheckAlign = System::Drawing::ContentAlignment::MiddleCenter;
-        Control->CheckedChanged += gcnew System::EventHandler(this, &ColumnCheckBox::checkBox_CheckedChanged);
+        this->Control->CheckAlign = System::Drawing::ContentAlignment::MiddleCenter;
+        this->Control->CheckedChanged += gcnew System::EventHandler(this, &ColumnCheckBox::checkBox_CheckedChanged);
 
         try
         {
-            m_rendererChecked = gcnew VisualStyleRenderer(System::Windows::Forms::VisualStyles::VisualStyleElement::Button::CheckBox::CheckedNormal);
-            m_rendererUnchecked = gcnew VisualStyleRenderer(System::Windows::Forms::VisualStyles::VisualStyleElement::Button::CheckBox::UncheckedNormal);
+            m_rendererChecked = gcnew VisualStyleRenderer(VisualStyleElement::Button::CheckBox::CheckedNormal);
+            m_rendererUnchecked = gcnew VisualStyleRenderer(VisualStyleElement::Button::CheckBox::UncheckedNormal);
         }
         catch(System::Exception^)
         {

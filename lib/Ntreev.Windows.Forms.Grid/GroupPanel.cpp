@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -23,13 +23,14 @@
 
 #include "StdAfx.h"
 #include "GroupPanel.h"
+#include "Resources.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     GroupPanel::GroupPanel(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrGroupPanel* pGroupPanel) 
         : CellBase(gridControl, pGroupPanel), m_pGroupPanel(pGroupPanel)
     {
-        this->Text = "그룹핑할 컬럼을 이쪽으로 드래그하여 옮기세요";
+        this->Text = Properties::Resources::GetString("GroupPanel.Text");
     }
 
     System::String^ GroupPanel::Text::get()
@@ -54,6 +55,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool GroupPanel::ShouldSerializeText()
     {
-        return this->Text != "그룹핑할 컬럼을 이쪽으로 드래그하여 옮기세요";
+        return this->Text != Properties::Resources::GetString("GroupPanel.Text");
     }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

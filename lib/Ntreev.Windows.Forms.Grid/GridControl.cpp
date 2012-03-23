@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -48,8 +48,6 @@
 #include "TimeTester.h"
 #include "NativeClasses.h"
 #include "FromNative.h"
-
-// Private include
 #include "About.h"
 #include "Tooltip.h"
 #include "ErrorDescriptor.h"
@@ -93,8 +91,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_displayableRowList = gcnew DisplayableRowCollection(this);
         m_style = gcnew Ntreev::Windows::Forms::Grid::Style();
 
-        m_selectedColumns = gcnew SelectedColumnCollection(this, Selector->GetSelectedColumns());
-        m_selectedRows = gcnew SelectedRowCollection(this, Selector->GetSelectedRows());
+        m_selectedColumns = gcnew SelectedColumnCollection(this, this->Selector->GetSelectedColumns());
+        m_selectedRows = gcnew SelectedRowCollection(this, this->Selector->GetSelectedRows());
 
         m_groupRows = gcnew GroupRowCollection(this);
 
@@ -294,7 +292,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GridControl::PaintRowState(System::Drawing::Graphics^ g)
     {
-        IDataRow* pFocusedRow = Focuser->GetFocusedRow();
+        IDataRow* pFocusedRow = this->Focuser->GetFocusedRow();
         if(pFocusedRow == nullptr || pFocusedRow->GetDisplayable() == false)
             return;
 
@@ -924,7 +922,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GridControl::InvokeFocusChanged()
     {
-        GrItem* pFocusedItem = Focuser->GetItem();
+        GrItem* pFocusedItem = this->Focuser->GetItem();
 
         if(pFocusedItem == nullptr)
         {
@@ -1018,8 +1016,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GridControl::ClearSelection()
     {
-        Selector->ClearSelection();
-        Focuser->Set(IFocusable::Null);
+        this->Selector->ClearSelection();
+        this->Focuser->Set(IFocusable::Null);
     }
 
     void GridControl::SelectAll()
@@ -1027,7 +1025,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_pGridCore->GetMultiSelect() == false)
             throw gcnew System::InvalidOperationException();
 
-        Selector->SelectAll();
+        this->Selector->SelectAll();
     }
 
     void GridControl::BringIntoView(Ntreev::Windows::Forms::Grid::Cell^ cell)
@@ -1100,9 +1098,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void GridControl::FocusedCell::set(Ntreev::Windows::Forms::Grid::Cell^ value)
     {
         if(value != nullptr)
-            Focuser->Set(value->NativeRef);
+            this->Focuser->Set(value->NativeRef);
         else
-            Focuser->Set((IFocusable*)nullptr);
+            this->Focuser->Set((IFocusable*)nullptr);
     }
 
     Ntreev::Windows::Forms::Grid::Cell^ GridControl::EditingCell::get()
@@ -1144,7 +1142,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     Ntreev::Windows::Forms::Grid::RowBase^ GridControl::FocusedRow::get()
     {
-        IDataRow* pDataRow = Focuser->GetFocusedRow();
+        IDataRow* pDataRow = this->Focuser->GetFocusedRow();
         return FromNative::Get(pDataRow);
     }
 
@@ -1513,9 +1511,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         FocusedCellChanged(this, e);
 
-        if(e->Cell != nullptr)
+        Ntreev::Windows::Forms::Grid::Cell^ cell = e->Cell;
+        if(cell != nullptr && cell->Row != m_insertionRow)
         {
-            m_manager->Position = e->Cell->Row->ComponentIndex;
+            m_manager->Position = cell->Row->ComponentIndex;
         }
     }
 
@@ -1656,9 +1655,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             if(column == nullptr || row == nullptr)
                 return;
             GrItem* pItem = row->Cells[column]->NativeRef;
-            Selector->SelectItem(pItem, GrSelectionType_Normal);
-            Selector->SetAnchor(pItem);
-            Focuser->Set(pItem);
+            this->Selector->SelectItem(pItem, GrSelectionType_Normal);
+            this->Selector->SetAnchor(pItem);
+            this->Focuser->Set(pItem);
         }
         catch(System::Exception^)
         {
@@ -1744,26 +1743,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     bool GridControl::CanEnableIme::get()
     {
         return true; 
-    }
-
-    bool GridControl::DesignTimeSetCursor()
-    {
-        return false;
-        GrStateManager* pStateManager = m_pGridCore->GetStateManager();
-
-        switch (pStateManager->GetGridState())
-        {
-        case GrGridState_ColumnResizing:
-        case GrGridState_ColumnSplitterMoving:
-        case GrGridState_RowResizing:
-        case GrGridState_GroupPressing:
-        case GrGridState_GroupHeaderPressing:
-        case GrGridState_GroupExpandPressing:
-            return pStateManager->SetCursor();
-        default:
-            break;
-        }
-        return false;
     }
 
     bool GridControl::DesignTimeHitTest(System::Drawing::Point globalLocation)

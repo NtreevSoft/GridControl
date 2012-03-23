@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -56,20 +56,30 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     System::Object^ StringTypeEditor::EditValue(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value)
     {
         Ntreev::Windows::Forms::Grid::Design::Controls::TextBox^ textBox = gcnew Ntreev::Windows::Forms::Grid::Design::Controls::TextBox(editorService);
+        System::ComponentModel::TypeConverter^ converter = cell->Column->TypeConverter;
 
+        System::String^ oldText = System::String::Empty;
+        
         switch(editorService->ReasonType)
         {
         case Ntreev::Windows::Forms::Grid::EditingReasonType::Ime:
-        case Ntreev::Windows::Forms::Grid::EditingReasonType::Key:
         case Ntreev::Windows::Forms::Grid::EditingReasonType::Char:
             break;
         default:
             {
-                if(value != nullptr)
-                    textBox->Text = value->ToString();
+                if(value == nullptr || value == System::DBNull::Value)
+                {
+                    textBox->Text = System::String::Empty;
+                }
+                else
+                {
+                    textBox->Text = converter->ConvertToString(value);
+                }
             }
             break;
         }
+
+        oldText = textBox->Text;
 
         textBox->BackColor = cell->BackColor;
         textBox->ForeColor = cell->ForeColor;
@@ -93,6 +103,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         }
 
         editorService->ShowControl(textBox);
-        return textBox->Text;
+
+        if(editorService->Result == System::Windows::Forms::DialogResult::Cancel || textBox->Text == oldText)
+            return value;
+
+        return converter->ConvertFromString(textBox->Text);
     }
 } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

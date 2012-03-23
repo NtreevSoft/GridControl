@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -74,6 +74,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             Ntreev::Windows::Forms::Grid::GridControl^ get();
         }
 
+        property System::Windows::Forms::DialogResult Result
+        {
+            virtual System::Windows::Forms::DialogResult get();
+        }
+
     public: // events
 
         event System::EventHandler^ EscapeKeyPress;
@@ -99,6 +104,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         virtual bool ProcessDialogKey(System::Windows::Forms::Keys keyData) override;
 
     private: // methods
+
         System::Void InitializeComponent()
         {
             this->SuspendLayout();

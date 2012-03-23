@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -52,9 +52,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void Row::Component::set(System::Object^ value)
     {
         m_component = value;
-        if(m_component != nullptr)
+
+        for each(Ntreev::Windows::Forms::Grid::Cell^ item in m_cells)
         {
-            RefreshCells();
+            item->SyncValue();
         }
     }
 
@@ -63,29 +64,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_pDataRow;
     }
 
-    void Row::RefreshCells()
-    {
-        for each(Ntreev::Windows::Forms::Grid::Column^ item in this->GridControl->Columns)
-        {
-            NewCell(item);
-        }
-    }
+    //void Row::RefreshCells()
+    //{
+    //    for each(Ntreev::Windows::Forms::Grid::Column^ item in this->GridControl->Columns)
+    //    {
+    //        NewCell(item);
+    //    }
+    //}
 
     void Row::NewCell(Ntreev::Windows::Forms::Grid::Column^ column)
     {
         GrItem* pItem = m_pDataRow->GetItem(column->NativeRef);
-        Ntreev::Windows::Forms::Grid::Cell^ cell = FromNative::Get(pItem);
-        if(cell == nullptr)
-            cell = gcnew Cell(GridControl, pItem);
+        Ntreev::Windows::Forms::Grid::FromNative::Get(pItem, this->GridControl);
     }
 
     System::String^ Row::ToString()
     {
         return this->Index.ToString();
-        //System::String^ text = gcnew System::String(m_pDataRow->GetText());
-        //text += " : ";
-        //text += this->Cells->ToString();
-        //return text;
     }
 
     Ntreev::Windows::Forms::Grid::Cell^ Row::GetAt(int index)
@@ -120,6 +115,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     System::Object^ Row::default::get(int index)
     {
         return m_cells[index]->Value;
+    }
+
+    void Row::default::set(int index, System::Object^ value)
+    {
+        m_cells[index]->Value = value;
     }
 
     System::Object^ Row::default::get(System::String^ columnName)
@@ -274,7 +274,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Row::Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType)
     {
-        Selector->SelectItems(m_pDataRow, (GrSelectionType)selectionType);
+        this->Selector->SelectItems(m_pDataRow, (GrSelectionType)selectionType);
     }
 
     void Row::ResetCellBackColor()
@@ -359,20 +359,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void InsertionRow::SetDefaultValue()
     {
-        for each(Ntreev::Windows::Forms::Grid::InsertionCell^ cell in Cells)
+        for each(Ntreev::Windows::Forms::Grid::Cell^ cell in this->Cells)
         {
             cell->SetDefaultValue();
         }
         ApplyEdit();
-    }
-
-    void InsertionRow::NewCell(Ntreev::Windows::Forms::Grid::Column^ column)
-    {
-        GrItem* pItem = NativeRef->GetItem(column->NativeRef);
-        Ntreev::Windows::Forms::Grid::Cell^ cell = FromNative::Get(pItem);
-        if(cell == nullptr)
-        {
-            gcnew InsertionCell(GridControl, pItem, column->DefaultValue);
-        }
     }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

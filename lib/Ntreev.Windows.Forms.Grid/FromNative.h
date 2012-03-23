@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4461.30274
+// Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -31,12 +31,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     ref class Row;
     ref class CaptionRow;
     ref class GroupRow;
+    ref class GridControl;
 
     ref class FromNative
     {
     public: // methods
 
         static Ntreev::Windows::Forms::Grid::Cell^ Get(GrItem* pItem);
+
+        static Ntreev::Windows::Forms::Grid::Cell^ Get(GrItem* pItem, Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
 
         static Ntreev::Windows::Forms::Grid::Column^ Get(GrColumn* pColumn);
 
