@@ -32,6 +32,7 @@
 #include "TypeEditorForm.h"
 #include "CaptionRow.h"
 #include "FromNative.h"
+#include "RowCollection.h"
 
 #ifdef _DEBUG
 //#define _PRINT_INVALIDATE_RECT
@@ -614,7 +615,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         : GrGridCore(pGridWindow), m_gridControl(gridControl)
     {
         GrColumnList* pColumnList = GetColumnList();
-
         pColumnList->ColumnMouseDown.Add(this, &WinFormGridCore::columnList_ColumnMouseDown);
         pColumnList->ColumnMouseEnter.Add(this, &WinFormGridCore::columnList_ColumnMouseEnter);
         pColumnList->ColumnMouseLeave.Add(this, &WinFormGridCore::columnList_ColumnMouseLeave);

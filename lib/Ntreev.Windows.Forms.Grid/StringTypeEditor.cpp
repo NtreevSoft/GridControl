@@ -25,6 +25,8 @@
 #include "stdafx.h"
 #include "StringTypeEditor.h"
 #include "TextBox.h"
+#include "Utilities.h"
+#include "ITextCacheProvider.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design
 {
@@ -67,7 +69,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             break;
         default:
             {
-                if(value == nullptr || value == System::DBNull::Value)
+                if(ValueChecker::IsNullOrDBNull(value) == true)
                 {
                     textBox->Text = System::String::Empty;
                 }
@@ -86,6 +88,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         textBox->Font = cell->Font;
         textBox->Multiline = cell->Multiline;
         textBox->WordWrap = cell->WordWrap;
+
+        ITextCacheProvider^ textCacheProvider = dynamic_cast<ITextCacheProvider^>(editorService->GetService(ITextCacheProvider::typeid));
+        if(textCacheProvider != nullptr)
+        {
+            textBox->AutoCompleteCustomSource->AddRange(textCacheProvider->TextCache);
+        }
 
         if(textBox->Multiline == false)
         {

@@ -67,6 +67,7 @@ public:
 
     GrColors RowItemBackColors;
     GrColors RowItemForeColors;
+
     GrFonts RowItemFonts;
 
     GrColors GroupBackColors;

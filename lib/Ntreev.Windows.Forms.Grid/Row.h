@@ -31,7 +31,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 행을 나타냅니다.
     /// </summary>
-    [System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
+    [System::ComponentModel::TypeConverterAttribute(System::ComponentModel::ExpandableObjectConverter::typeid)]
     public ref class Row 
         : Ntreev::Windows::Forms::Grid::RowBase
     {
@@ -394,9 +394,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void AddErrorCell();
         void RemoveErrorCell();
 
-        virtual void NewCell(Ntreev::Windows::Forms::Grid::Column^ column);
+        Ntreev::Windows::Forms::Grid::Cell^ NewCell(Ntreev::Windows::Forms::Grid::Column^ column);
 
         //void RefreshCells();
+
+        void SetDefaultValue();
+
+        void ValueToSource(System::Object^ component);
 
     internal: // properties
 
@@ -436,22 +440,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::String^ m_errorDescription;
     };
 
-    /// <summary>
-    /// 새로운 행을 추가하기 위한 편집가능한 행을 제공합니다.
-    /// </summary>
-    public ref class InsertionRow
-        : Ntreev::Windows::Forms::Grid::Row
-    {
-    public: // methods
+    ///// <summary>
+    ///// 새로운 행을 추가하기 위한 편집가능한 행을 제공합니다.
+    ///// </summary>
+    //public ref class InsertionRow
+    //    : Ntreev::Windows::Forms::Grid::Row
+    //{
+    //public: // methods
 
-        /// <summary>
-        /// 각 셀의 값을 기본값으로 설정합니다.
-        /// </summary>
-        void SetDefaultValue();
+    //    /// <summary>
+    //    /// 각 셀의 값을 기본값으로 설정합니다.
+    //    /// </summary>
+    //    void SetDefaultValue();
 
-    internal: // methods
+    //internal: // methods
 
-        InsertionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrInsertionRow* pInsertionRow);
+    //    InsertionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrInsertionRow* pInsertionRow);
 
-    };
+    //};
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

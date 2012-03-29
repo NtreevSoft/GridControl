@@ -37,13 +37,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return safe_cast<Ntreev::Windows::Forms::Grid::Cell^>(ref);
     }
 
-    Ntreev::Windows::Forms::Grid::Cell^ FromNative::Get(GrItem* pItem, Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
-    {
-        Ntreev::Windows::Forms::Grid::Cell^ cell = Get(pItem);
-        if(cell == nullptr)
-            cell = gcnew Ntreev::Windows::Forms::Grid::Cell(gridControl, pItem);
-        return cell;
-    }
+    //Ntreev::Windows::Forms::Grid::Cell^ FromNative::Get(GrItem* pItem, Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+    //{
+    //    Ntreev::Windows::Forms::Grid::Cell^ cell = Get(pItem);
+    //    if(cell == nullptr)
+    //        cell = gcnew Ntreev::Windows::Forms::Grid::Cell(gridControl, pItem);
+    //    return cell;
+    //}
 
     Ntreev::Windows::Forms::Grid::Column^ FromNative::Get(GrColumn* pColumn)
     {

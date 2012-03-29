@@ -195,7 +195,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::Object^ Cell::ValidateValue(System::Object^ value)
     {
-        if(value == nullptr || value == System::DBNull::Value)
+        if(ValueChecker::IsNullOrDBNull(value) == true)
             return value;
 
         System::Type^ dataType = this->Column->DataType;
@@ -216,18 +216,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         return typeConverter->ConvertFrom(typeDescriptorContext, System::Windows::Forms::Application::CurrentCulture, value);
-    }
-
-    void Cell::SyncValue()
-    {
-        if(this->Row->Component != nullptr)
-        {
-            this->ValueCore = m_value;
-        }
-        else
-        {
-            m_value = this->ValueCore;
-        }
     }
 
     bool Cell::CancelEdit()
@@ -335,11 +323,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return this->GridControl->EditingCell == this;
     }
 
-    //bool Cell::IsDisplayable::get()
-    //{
-    // return m_pItem->GetDisplayable(); 
-    //}
-
     bool Cell::IsSelecting::get()
     {
         return m_pItem->IsItemSelecting();
@@ -433,33 +416,4 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         return this->Column;
     }
-
-    //InsertionCell::InsertionCell(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrItem* pItem, System::Object^ defaultValue)
-    //    : m_value(defaultValue), Cell(gridControl, pItem)
-    //{
-
-    //}
-
-    //System::Object^ InsertionCell::ValueCore::get()
-    //{
-    //    return m_value;
-    //}
-
-    //void InsertionCell::ValueCore::set(System::Object^ value)
-    //{
-    //    m_value = value;
-    //}
-
-    //void InsertionCell::SetDefaultValue()
-    //{
-    //    try
-    //    {
-    //        m_value = this->Column->DefaultValue;
-    //        UpdateNativeText(m_value);
-    //    }
-    //    catch(System::Exception^)
-    //    {
-
-    //    }
-    //}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -52,7 +52,7 @@ public:
     GrRootRow* GetRootRow() const { return m_pRootRow; }
     GrDataRowList* GetDataRowList() const { return m_pDataRowList; }
     GrColumnList* GetColumnList() const { return m_pColumnList; }
-    GrInsertionRow* GetInsertionRow() const { return m_pInsertionRow; }
+    GrInsertionRow* GetInsertionRow() const { return m_pDataRowList->GetInsertionRow(); }
     GrCaption* GetCaptionRow() const { return m_pCaption; }
     GrGroupPanel* GetGroupPanel() const { return m_pGroupPanel; }
     GrItemSelector* GetItemSelector() const { return m_pItemSelector; }
@@ -206,7 +206,6 @@ private:
     GrCaption* m_pCaption;
     GrGroupPanel* m_pGroupPanel;
     GrColumnList* m_pColumnList;
-    GrInsertionRow* m_pInsertionRow;
     GrRowSplitter* m_pSplitterRow;
     GrDataRowList* m_pDataRowList;
     GrFocusMover* m_pFocusMover;

@@ -23,6 +23,7 @@
 
 #include "StdAfx.h"
 #include "FlagControl.h"
+#include "Utilities.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design { namespace Controls
 {
@@ -49,7 +50,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     void FlagControl::Value::set(System::Object^ value)
     {
-        int enumValue = value != nullptr ? (int)value : 0;
+        int enumValue = ValueChecker::IsNullOrDBNull(value) == false ? (int)value : 0;
+
         for each (Control^ item in this->Controls)
         {
             CheckBox^ checkBox = dynamic_cast<CheckBox^>(item);

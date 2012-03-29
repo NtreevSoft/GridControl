@@ -507,6 +507,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ITextCacheProvider.h"
+				>
+			</File>
+			<File
 				RelativePath=".\NativeCollection.h"
 				>
 			</File>

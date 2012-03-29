@@ -57,7 +57,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         GrColumn* pColumn = m_pColumnList->GetColumn(m_index - 1);
         GrItem* pItem = m_pDataRow->GetItem(pColumn);
-        return Ntreev::Windows::Forms::Grid::FromNative::Get(pItem, m_gridControl);
+        return FromNative::Get(pItem);
     }
 
     System::Object^ CellCollection::Enumerator::Current_System_Collections_IEnumerator::get()
@@ -103,7 +103,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         GrColumn* pColumn = m_pColumnList->GetColumn(index);
         GrDataRow* pDataRow = m_row->NativeRef;
         GrItem* pItem = pDataRow->GetItem(pColumn);
-        return Ntreev::Windows::Forms::Grid::FromNative::Get(pItem, this->GridControl);
+        return FromNative::Get(pItem);
     }
 
     int CellCollection::Count::get()
@@ -115,7 +115,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         GrDataRow* pDataRow = m_row->NativeRef;
         GrItem* pItem = pDataRow->GetItem(pColumn);
-        return Ntreev::Windows::Forms::Grid::FromNative::Get(pItem, this->GridControl);
+        return FromNative::Get(pItem);
     }
 
     System::Collections::IEnumerator^ CellCollection::GetEnumerator_System_Collections_IEnumerable()

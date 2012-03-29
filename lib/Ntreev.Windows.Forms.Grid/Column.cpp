@@ -511,6 +511,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         if(m_typeConverter == nullptr)
         {
+            if(m_dataType == nullptr)
+            {
+                if(m_propertyDescriptor != nullptr)
+                {
+                    return m_propertyDescriptor->Converter;
+                }
+            }
             return System::ComponentModel::TypeDescriptor::GetConverter(this->DataType);
         }
 
@@ -586,7 +593,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         try
         {
             m_defaultValue = nullptr;
-            if(value == nullptr || value == System::DBNull::Value)
+            if(ValueChecker::IsNullOrDBNull(value) == true)
                 return;
 
             if(this->DataType != System::String::typeid)
@@ -913,7 +920,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Column::ShouldSerializeDefaultValue()
     {
-        return m_defaultValue != nullptr;
+        if(m_defaultValue == nullptr)
+            return false;
+
+        if(this->DataType == System::String::typeid)
+        {
+            return System::String::IsNullOrEmpty(m_defaultValue->ToString()) == false;
+        }
+        return true;
     }
 
     void Column::ResetTitle()
@@ -928,20 +942,33 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Column::CanConvertFrom(System::Type^ dataType, System::Type^ sourceType)
     {
-        if(dataType == sourceType)
+        if(dataType == nullptr || dataType == sourceType)
             return true;
 
-        if(dataType->IsEnum == true && sourceType == int::typeid)
+        if(dataType->IsEnum == true)
         {
-            return true;
+             if(sourceType == signed char::typeid || 
+                 sourceType == unsigned char::typeid || 
+                 sourceType == short::typeid ||
+                 sourceType == unsigned short::typeid || 
+                 sourceType == int::typeid ||
+                 sourceType == unsigned int::typeid)
+             {
+                 return true;
+             }
         }
 
         return this->TypeConverter->CanConvertFrom(sourceType);
     }
 
+    bool Column::CanConvertFrom(System::Type^ sourceType)
+    {
+        return CanConvertFrom(m_dataType, sourceType);
+    }
+
     System::Object^ Column::ConvertFromSource(System::Object^ value)
     {
-        if(value == nullptr || value == System::DBNull::Value)
+        if(ValueChecker::IsNullOrDBNull(value) == true)
             return value;
 
         if(m_propertyDescriptor == nullptr)
@@ -950,9 +977,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_propertyDescriptor->PropertyType == this->DataType)
             return value;
 
-        if(this->DataType->IsEnum == true && this->SourceType == int::typeid)
+        if(this->DataType->IsEnum == true)
         {
-            return System::Enum::ToObject(this->DataType, value);
+            System::Type^ sourceType = this->SourceType;
+            if(sourceType == signed char::typeid || 
+                 sourceType == unsigned char::typeid || 
+                 sourceType == short::typeid ||
+                 sourceType == unsigned short::typeid || 
+                 sourceType == int::typeid ||
+                 sourceType == unsigned int::typeid)
+             {
+                 return System::Enum::ToObject(this->DataType, value);
+             }
         }
 
         System::ComponentModel::TypeConverter^ typeConverter = this->TypeConverter;
@@ -971,7 +1007,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::Object^ Column::ConvertToSource(System::Object^ value)
     {
-        if(value == nullptr || value == System::DBNull::Value)
+        if(ValueChecker::IsNullOrDBNull(value) == true)
             return value;
 
         if(m_propertyDescriptor == nullptr)
@@ -980,9 +1016,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_propertyDescriptor->PropertyType == this->DataType)
             return value;
 
-        if(this->DataType->IsEnum == true && this->SourceType == int::typeid)
+        if(this->DataType->IsEnum == true)
         {
-            return (int)value;
+            System::Type^ sourceType = this->SourceType;
+            if(sourceType == signed char::typeid)
+                return (signed char)value;
+            else if(sourceType == unsigned char::typeid)
+                return (unsigned char)value;
+            else if(sourceType == short::typeid)
+                return (short)value;
+            else if(sourceType == unsigned short::typeid)
+                return (unsigned short)value;
+            else if(sourceType == int::typeid)
+                return (int)value;
+            else if(sourceType == unsigned int::typeid)
+                return (unsigned int)value;
         }
 
         System::ComponentModel::TypeConverter^ typeConverter = nullptr;
@@ -1014,6 +1062,31 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_typeEditor == nullptr)
             return %Design::StringTypeEditor::Default;
         return m_typeEditor;
+    }
+
+    cli::array<System::String^>^ Column::ITextCacheProvider_TextCache::get()
+    {
+        GrDataRowList* pDataRowList = this->GridCore->GetDataRowList();
+        std::set<std::wstring> texts;
+
+        for(unsigned int i=0 ; i<pDataRowList->GetVisibleDataRowCount() ; i++)
+        {
+            GrDataRow* pDataRow = pDataRowList->GetVisibleDataRow(i);
+            GrItem* pItem = pDataRow->GetItem(m_pColumn);
+
+            texts.insert(pItem->GetText());
+        }
+
+        cli::array<System::String^>^ textCache = gcnew cli::array<System::String^>(texts.size());
+
+        int i=0;
+        for_each(std::set<std::wstring>, texts, value)
+        {
+            const std::wstring t = value;
+            textCache[i] = gcnew System::String(t.c_str());
+            i++;
+        }
+        return textCache;
     }
 
     void Column::SetEditStyleToNative()

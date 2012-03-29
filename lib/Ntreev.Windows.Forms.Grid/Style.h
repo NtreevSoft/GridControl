@@ -34,7 +34,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         static GrFont* TtoS(System::Drawing::Font^ font);
     };
 
-    [System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
+    [System::ComponentModel::TypeConverterAttribute(System::ComponentModel::ExpandableObjectConverter::typeid)]
     public ref class Style
     {
     public: // methods

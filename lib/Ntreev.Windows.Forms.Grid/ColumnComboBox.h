@@ -57,9 +57,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         }
 
         [System::ComponentModel::CategoryAttribute("Data")]
-        [System::ComponentModel::Editor("System.Windows.Forms.Design.ListControlStringCollectionEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", System::Drawing::Design::UITypeEditor::typeid)]
+        [System::ComponentModel::EditorAttribute("System.Windows.Forms.Design.ListControlStringCollectionEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", System::Drawing::Design::UITypeEditor::typeid)]
         [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
-        [System::ComponentModel::MergableProperty(false)]
+        [System::ComponentModel::MergablePropertyAttribute(false)]
         property System::Windows::Forms::ListBox::ObjectCollection^ Items
         {
             System::Windows::Forms::ListBox::ObjectCollection^ get();

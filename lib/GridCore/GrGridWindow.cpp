@@ -182,9 +182,10 @@ void GrGridWindow::OnMouseLeave()
     m_pGridCore->SetMouseOver(NULL, GrPoint::Empty);
 }
 
-void GrGridWindow::OnKeyDown(GrKeys key)
+bool GrGridWindow::OnKeyDown(GrKeys key)
 {
     m_pGridCore->GetStateManager()->OnKeyDown(key, GetModifierKeys());
+    return false;
 }
 
 void GrGridWindow::OnKeyUp(GrKeys key)

@@ -56,6 +56,8 @@ class GrItem;
 class IDataRow;
 class IFocusable;
 
+typedef GrDataRow GrInsertionRow;
+
 typedef bool (*FuncSortRow)(GrGridCore* pGridCore, const GrRow* pRow1, const GrRow* pRow2, void* userData);
 
 enum GrHorzAlign
@@ -158,20 +160,40 @@ private:
     GrDataRow* m_pDataRow;
 };
 
-class GrDataRowInsertEventArgs : public GrDataRowEventArgs
+class GrDataRowInsertedEventArgs : public GrDataRowEventArgs
 {
 public:
-    GrDataRowInsertEventArgs(GrDataRow* pDataRow)
-        : GrDataRowEventArgs(pDataRow), m_cancel(false)
+    GrDataRowInsertedEventArgs(GrDataRow* pDataRow, GrDataRowInsertType insertType)
+        : GrDataRowEventArgs(pDataRow), m_insertType(insertType)
     {
 
     }
+
+    GrDataRowInsertType GetInsertType() const { return m_insertType; }
+    void SetInsertType(GrDataRowInsertType insertType) { m_insertType = insertType; }
+
+private:
+    GrDataRowInsertType m_insertType;
+};
+
+class GrDataRowInsertingEventArgs : public GrDataRowEventArgs
+{
+public:
+    GrDataRowInsertingEventArgs(GrDataRow* pDataRow, GrDataRowInsertType insertType)
+        : GrDataRowEventArgs(pDataRow), m_cancel(false), m_insertType(insertType)
+    {
+
+    }
+
+    GrDataRowInsertType GetInsertType() const { return m_insertType; }
+    void SetInsertType(GrDataRowInsertType insertType) { m_insertType = insertType; }
 
     bool GetCancel() const { return m_cancel; }
     void SetCancel(bool b) { m_cancel = b; }
 
 private:
     bool m_cancel;
+    GrDataRowInsertType m_insertType;
 };
 
 class GrMouseEventArgs : public GrEventArgs
@@ -515,6 +537,7 @@ public:
     virtual GrRow* GetRow() const;
 
     virtual GrFlag ToPaintStyle() const;
+    virtual GrColor GetPaintingForeColor() const;
     virtual GrColor GetPaintingBackColor() const;
     virtual bool GetDisplayable() const;
     virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
@@ -677,6 +700,7 @@ protected:
     int CellStart() const;
 
     void InvalidateRow();
+    void SetChild(uint index, GrRow* pRow);
 
 protected:
     bool m_visible;
@@ -685,11 +709,11 @@ private:
     GrRowArray m_vecChilds;
     GrRow* m_pParent;
     uint m_hierarchyLevel;
+
     int m_y;
+    int m_height;
 
     bool m_resizable;
-
-    int m_height;
     bool m_fitting;
 
     friend class GrGridCore;
@@ -698,17 +722,19 @@ private:
     class SortDesc
     {
     public:
-        SortDesc(GrGridCore* pGridCore, FuncSortRow fn, void* userData) : 
-          m_pGridCore(pGridCore), m_fn(fn), m_userData(userData) {}
+        SortDesc(GrGridCore* pGridCore, FuncSortRow fn, void* userData)
+            : m_pGridCore(pGridCore), m_fn(fn), m_userData(userData)
+        {
+        }
 
-          bool operator () (const GrRow* pRow1, const GrRow* pRow2)
-          {
-              return (*m_fn)(m_pGridCore, pRow1, pRow2, m_userData);
-          }
+        bool operator () (const GrRow* pRow1, const GrRow* pRow2)
+        {
+            return (*m_fn)(m_pGridCore, pRow1, pRow2, m_userData);
+        }
 
-          GrGridCore* m_pGridCore;
-          FuncSortRow m_fn;
-          void* m_userData;
+        GrGridCore* m_pGridCore;
+        FuncSortRow m_fn;
+        void* m_userData;
     };
 };
 
@@ -735,8 +761,9 @@ public:
     bool ShouldBringIntoView() const;
     bool HasFocused() const;
 
+    unsigned int GetSelectionGroup() const { return m_selectionGroup; }
+
     virtual IFocusable* GetFocusable(GrColumn* pColumn) const = 0;
-    virtual uint GetSelectionGroup() const { return 0; }
     virtual bool GetFullSelected() const { return false; }
 
 protected:
@@ -752,6 +779,7 @@ private:
     bool m_clipped;
     uint m_visibleIndex;
     uint m_displayIndex;
+    int m_selectionGroup;
 };
 
 class GrDataRow : public IDataRow
@@ -788,7 +816,7 @@ public:
     virtual bool GetVisible() const;
     virtual void SetVisible(bool b);
 
-    virtual GrRowType GetRowType() const { return GrRowType_DataRow; }
+    virtual GrRowType GetRowType() const { return GetVisibleIndex() == INSERTION_ROW ? GrRowType_InsertionRow : GrRowType_DataRow; }
     virtual GrFlag ToPaintStyle() const;
     virtual GrColor GetPaintingBackColor() const;
     virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
@@ -802,6 +830,7 @@ protected:
     virtual void OnGridCoreAttached();
     virtual void OnGridCoreDetached();
     virtual void OnHeightAdjusted();
+    virtual void OnHeightChanged();
 
 private:
     void SetVisibleDataRowIndex(uint index);
@@ -976,6 +1005,7 @@ private:
     void RepositionVisibleList();
 
     void gridCore_Created(GrObject* pSender, GrEventArgs* e);
+    void dataRowList_DataRowInserted(GrObject* pSender, GrDataRowInsertedEventArgs* e);
 
 private:
     _Rows m_vecVisibleRows;
@@ -989,6 +1019,7 @@ private:
 
     GrRect m_bound;
     GrColumnList* m_pColumnList;
+    GrDataRow* m_pInsertionRow;
 
 private:
     class SortUpdatable
@@ -1001,20 +1032,20 @@ private:
     };
 };
 
-class GrInsertionRow : public GrDataRow
-{
-public:
-    GrInsertionRow();
-
-    virtual GrRowType GetRowType() const { return GrRowType_InsertionRow; }
-    virtual void SetVisible(bool b);
-
-    virtual uint GetSelectionGroup() const { return 1; }
-
-protected:
-    virtual void OnGridCoreAttached();
-    virtual void OnHeightChanged();
-};
+//class GrInsertionRow : public GrDataRow
+//{
+//public:
+//    GrInsertionRow();
+//
+//    virtual GrRowType GetRowType() const { return GrRowType_InsertionRow; }
+//    virtual void SetVisible(bool b);
+//
+//    virtual uint GetSelectionGroup() const { return 1; }
+//
+//protected:
+//    virtual void OnGridCoreAttached();
+//    virtual void OnHeightChanged();
+//};
 
 class GrDataRowList : public GrUpdatableRow
 {
@@ -1032,7 +1063,8 @@ class GrDataRowList : public GrUpdatableRow
 
     typedef GrEvent<GrEventArgs, GrDataRowList> _GrEvent;
     typedef GrEvent<GrDataRowEventArgs, GrDataRowList> _GrDataRowEvent;
-    typedef GrEvent<GrDataRowInsertEventArgs, GrDataRowList> _GrDataRowInsertEvent;
+    typedef GrEvent<GrDataRowInsertingEventArgs, GrDataRowList> _GrDataRowInsertingEvent;
+    typedef GrEvent<GrDataRowInsertedEventArgs, GrDataRowList> _GrDataRowInsertedEvent;
 
 public:
     GrDataRowList();
@@ -1051,6 +1083,8 @@ public:
     GrDataRow* GetVisibleDataRow(uint index) const;
 
     GrDataRow* NewDataRowFromInsertion();
+
+    GrInsertionRow* GetInsertionRow() const;
 
     void AddDataRow(GrDataRow* pDataRow);
     void RemoveDataRow(GrDataRow* pDataRow);
@@ -1085,7 +1119,9 @@ public:
     void SetListChanged();
 
     _GrEvent VisibleChanged;
-    _GrDataRowEvent DataRowInserted;
+
+    _GrDataRowInsertingEvent DataRowInserting;
+    _GrDataRowInsertedEvent DataRowInserted;
     _GrDataRowEvent DataRowRemoved;
 
     virtual GrRect GetBounds() const;
@@ -1106,11 +1142,13 @@ protected:
     virtual void OnGridCoreAttached();
     virtual void OnYChanged();
 
-    virtual void OnDataRowInserted(GrDataRowEventArgs* e);
+    virtual void OnDataRowInserting(GrDataRowInsertingEventArgs* e);
+    virtual void OnDataRowInserted(GrDataRowInsertedEventArgs* e);
     virtual void OnDataRowRemoved(GrDataRowEventArgs* e);
 
 private:
     GrGroupRow* CreateGroupRow(GrRow* pParent, GrColumn* pColumn, const std::wstring& itemText);
+    GrDataRow* CreateInsertionRow();
     void BuildGroup(GrRow* pParent, uint groupLevel);
     void BuildChildRowList();
     void BuildVisibleRowList();
@@ -1118,7 +1156,7 @@ private:
     void BuildCache();
     void DeleteObjects();
     void UpdateVertScroll(const GrRect& displayRect);
-
+    
     void groupPanel_Changed(GrObject* pSender, GrEventArgs* e);
     void groupPanel_Expanded(GrObject* pSender, GrGroupEventArgs* e);
     void groupPanel_SortChanged(GrObject* pSender, GrGroupEventArgs* e);
@@ -1139,7 +1177,6 @@ private:
     _IDataRows m_vecVisibleRows;
     _IDataRows m_vecDisplayableRows;
     _GroupRows m_vecGroupRows;
-    GrInsertionRow* m_pInsertionRow;
 
     _MapCaches m_mapCache;
     _Columns m_vecColumns;
@@ -1156,6 +1193,7 @@ private:
     GrIndexRange m_selectingRange;
     GrDataRow* m_pFocusedDataRow;
     GrRect m_bound;
+    GrDataRow* m_pInsertionRow;
 
     bool m_visibleRowNumber;
     bool m_zeroBasedRowIndex;

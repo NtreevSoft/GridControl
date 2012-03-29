@@ -26,6 +26,7 @@
 #include "CellBase.h"
 #include "TypeEditor.h"
 #include "IColumn.h"
+#include "ITextCacheProvider.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -43,6 +44,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         , Ntreev::Windows::Forms::Grid::IColumn
         , System::ComponentModel::IComponent
         , System::IServiceProvider
+        , Ntreev::Windows::Forms::Grid::ITextCacheProvider
     {
     public: // methods
 
@@ -651,15 +653,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             virtual Ntreev::Windows::Forms::Grid::ViewType get();
         }
 
-        /// <summary>
-        /// 데이터 소스 삭제시 이 열의 인스턴스 삭제 여부를 가져옵니다.
-        /// </summary>
-        /// <returns>
-        /// 데이터 소스 삭제시 이 열의 인스턴스가 삭제된다면 true를 그렇지 않다면 false를 반환합니다.
-        /// </returns>
-        [System::ComponentModel::DefaultValueAttribute(false)]
-        property bool HasLifeline;
-
         property System::ComponentModel::ISite^ Site
         {
             virtual System::ComponentModel::ISite^ get();
@@ -673,7 +666,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             virtual void add(System::EventHandler^ p) { m_eventDisposed += p; }
             virtual void remove(System::EventHandler^ p) { m_eventDisposed -= p; }
         private:
-
             virtual void raise(System::Object^ sender, System::EventArgs^ e) sealed { if(m_eventDisposed != nullptr) { m_eventDisposed->Invoke(sender, e); } }
         }
 
@@ -710,6 +702,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         bool CanConvertFrom(System::Type^ dataType, System::Type^ sourceType);
 
+        bool CanConvertFrom(System::Type^ sourceType);
+
         System::Object^ ConvertFromSource(System::Object^ value);
 
         System::Object^ ConvertToSource(System::Object^ value);
@@ -731,6 +725,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             Design::TypeEditor^ get();
         }
+
+        property bool HasLifeline;
 
     private: // methods
 
@@ -768,6 +764,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property Ntreev::Windows::Forms::Grid::ColumnState ColumnState
         {
             virtual Ntreev::Windows::Forms::Grid::ColumnState get() sealed = IColumn::ColumnState::get;
+        }
+
+        property cli::array<System::String^>^ ITextCacheProvider_TextCache
+        {
+            virtual cli::array<System::String^>^ get() sealed = ITextCacheProvider::TextCache::get;
         }
 
     private: // variables

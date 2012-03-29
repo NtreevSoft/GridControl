@@ -160,10 +160,10 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 else
                     image = Properties.Resources.DataSource_Binding;
 
-                int x = item.Bounds.Left - image.Width / 3;
-                int y = item.Bounds.Top + image.Height / 3;
+                int x = item.Bounds.Left + 1;
+                int y = item.Bounds.Bottom - (image.Height + 1);
 
-                pe.Graphics.DrawImage(image, x, y);
+                pe.Graphics.DrawImage(image, x, y, image.Width, image.Height);
             }
 
 

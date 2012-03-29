@@ -1,4 +1,4 @@
-﻿//=====================================================================================================================
+//=====================================================================================================================
 // Ntreev Grid for .Net 2.0.4464.32161
 // https://github.com/NtreevSoft/GridControl
 // 
@@ -22,33 +22,16 @@
 
 
 #pragma once
+#include "ICellBase.h"
+#include "IColumn.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    ref class ToNativeString
+    interface class ITextCacheProvider
     {
-    public: // methods
-
-        static const wchar_t* Convert(System::String^ text);
-    };
-
-    ref class Lock
-    {
-    public: // methods
-
-        Lock(System::Object^ object);
-
-        ~Lock();
-
-    private: // variables
-
-        System::Object^ m_object;
-    };
-
-    ref class ValueChecker
-    {
-    public: // methods
-
-        static bool IsNullOrDBNull(System::Object^ value);
+        property cli::array<System::String^>^ TextCache
+        {
+            cli::array<System::String^>^ get();
+        }
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

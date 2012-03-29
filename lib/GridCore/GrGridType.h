@@ -930,3 +930,9 @@ enum GrAutoFitColumnType
     GrAutoFitColumnType_ItemOnly,
     GrAutoFitColumnType_ColumnIncluded,
 };
+
+enum GrDataRowInsertType
+{
+    GrDataRowInsertType_New,
+    GrDataRowInsertType_Insertion,
+};

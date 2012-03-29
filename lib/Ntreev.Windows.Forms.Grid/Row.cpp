@@ -53,9 +53,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         m_component = value;
 
-        for each(Ntreev::Windows::Forms::Grid::Cell^ item in m_cells)
+        if(m_component == nullptr)
+            return;
+
+        for each(Ntreev::Windows::Forms::Grid::Column^ item in this->GridControl->Columns)
         {
-            item->SyncValue();
+            try
+            {
+                Ntreev::Windows::Forms::Grid::Cell^ cell = NewCell(item);
+                cell->UpdateNativeText();
+            }
+            catch(System::Exception^)
+            {
+                
+            }
         }
     }
 
@@ -64,18 +75,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_pDataRow;
     }
 
-    //void Row::RefreshCells()
-    //{
-    //    for each(Ntreev::Windows::Forms::Grid::Column^ item in this->GridControl->Columns)
-    //    {
-    //        NewCell(item);
-    //    }
-    //}
-
-    void Row::NewCell(Ntreev::Windows::Forms::Grid::Column^ column)
+    Ntreev::Windows::Forms::Grid::Cell^ Row::NewCell(Ntreev::Windows::Forms::Grid::Column^ column)
     {
         GrItem* pItem = m_pDataRow->GetItem(column->NativeRef);
-        Ntreev::Windows::Forms::Grid::FromNative::Get(pItem, this->GridControl);
+
+        Ntreev::Windows::Forms::Grid::Cell^ cell = FromNative::Get(pItem);
+        if(cell == nullptr)
+            cell = gcnew Ntreev::Windows::Forms::Grid::Cell(this->GridControl, pItem);
+
+        return cell;
     }
 
     System::String^ Row::ToString()
@@ -351,18 +359,41 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_pDataRow->GetItemFont() != nullptr;
     }
 
-    InsertionRow::InsertionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrInsertionRow* pInsertionRow)
-        : Row(gridControl, pInsertionRow)
+    void Row::SetDefaultValue()
     {
-
+        for each(Ntreev::Windows::Forms::Grid::Column^ item in this->GridControl->Columns)
+        {
+            try
+            {
+                Ntreev::Windows::Forms::Grid::Cell^ cell = NewCell(item);
+                cell->SetDefaultValue();
+            }
+            catch(System::Exception^)
+            {
+                
+            }
+        }
+        ApplyEdit();
     }
 
-    void InsertionRow::SetDefaultValue()
+    void Row::ValueToSource(System::Object^ component)
     {
         for each(Ntreev::Windows::Forms::Grid::Cell^ cell in this->Cells)
         {
-            cell->SetDefaultValue();
+            Ntreev::Windows::Forms::Grid::Column^ column = cell->Column;
+            System::ComponentModel::PropertyDescriptor^ propertyDescriptor = column->PropertyDescriptor;
+            if(propertyDescriptor == nullptr)
+                continue;
+
+            System::Object^ value = column->ConvertToSource(cell->Value);
+            try
+            {
+                propertyDescriptor->SetValue(component, value);
+            }
+            catch(System::Exception^ e)
+            {
+                propertyDescriptor->SetValue(component, System::DBNull::Value);
+            }
         }
-        ApplyEdit();
     }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

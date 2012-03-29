@@ -196,7 +196,6 @@ GrGridCore::GrGridCore(GrGridWindow* pGridWindow) : m_pGridWindow(pGridWindow)
     m_pGroupPanel = new GrGroupPanel();
     m_pColumnList = new GrColumnList();
     m_pDataRowList = new GrDataRowList();
-    m_pInsertionRow = new GrInsertionRow();
     m_pSplitterRow = new GrRowSplitter();
     m_pFocusMover = new GrFocusMover();
     m_pStateManager = new GrStateManager();
@@ -213,7 +212,6 @@ GrGridCore::GrGridCore(GrGridWindow* pGridWindow) : m_pGridWindow(pGridWindow)
     AttachObject(m_pGroupPanel);
     AttachObject(m_pColumnList);
     AttachObject(m_pDataRowList);
-    AttachObject(m_pInsertionRow);
     AttachObject(m_pSplitterRow);
     AttachObject(m_pStateManager);
     AttachObject(m_pGridWindow);
@@ -222,7 +220,7 @@ GrGridCore::GrGridCore(GrGridWindow* pGridWindow) : m_pGridWindow(pGridWindow)
     m_pRootRow->AddChild(m_pCaption);
     m_pRootRow->AddChild(m_pGroupPanel);
     m_pRootRow->AddChild(m_pColumnList);
-    m_pRootRow->AddChild(m_pInsertionRow);
+    m_pRootRow->AddChild(m_pDataRowList->GetInsertionRow());
     m_pRootRow->AddChild(m_pSplitterRow);
     m_pRootRow->AddChild(m_pDataRowList);
 
@@ -245,7 +243,6 @@ GrGridCore::~GrGridCore()
     delete m_pStateManager;
     delete m_pFocusMover;
     delete m_pSplitterRow;
-    delete m_pInsertionRow;
     delete m_pDataRowList;
     delete m_pColumnList;
     delete m_pGroupPanel;
@@ -317,12 +314,12 @@ GrCell* GrGridCore::GetMousePress() const
 
 bool GrGridCore::GetInsertionRowVisible() const
 {
-    return m_pInsertionRow->GetVisible();
+    return GetInsertionRow()->GetVisible();
 }
 
 void GrGridCore::SetInsertionRowVisible(bool b)
 {
-    m_pInsertionRow->SetVisible(b);
+    GetInsertionRow()->SetVisible(b);
 }
 
 bool GrGridCore::GetRowHighlight() const
@@ -598,7 +595,7 @@ void GrGridCore::columnList_ColumnInserted(GrObject* /*pSender*/, GrColumnEventA
     m_pTextUpdater->AddTextBounds(m_pGroupPanel);
 }
 
-void GrGridCore::columnList_ColumnRemoved(GrObject* /*pSender*/, GrColumnEventArgs* e)
+void GrGridCore::columnList_ColumnRemoved(GrObject* /*pSender*/, GrColumnEventArgs* /*e*/)
 {
     m_pTextUpdater->AddTextBounds(m_pCaption);
     m_pTextUpdater->AddTextBounds(m_pGroupPanel);
@@ -688,6 +685,7 @@ void GrGridCore::BringIntoView(GrItem* pItem)
     if(pItem == NULL)
         return;
 
+    Update();
     m_pColumnList->BringIntoView(pItem->GetColumn());
     m_pDataRowList->BringIntoView(pItem->GetDataRow());
 }

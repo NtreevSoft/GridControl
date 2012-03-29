@@ -29,8 +29,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     /// <summary>
     /// 열거형을 비트 필드 형태를 나타내는 사용자 정의 컨트롤입니다.
     /// </summary>
-    [System::ComponentModel::ToolboxItem(false)]
-    [System::ComponentModel::DesignTimeVisible(false)]
+    [System::ComponentModel::ToolboxItemAttribute(false)]
+    [System::ComponentModel::DesignTimeVisibleAttribute(false)]
     ref class FlagControl : public System::Windows::Forms::UserControl
     {
     public: // methods

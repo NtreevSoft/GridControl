@@ -244,6 +244,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             column->GridControl = nullptr;
             m_pColumnList->RemoveColumn(column->NativeRef);
+            m_pColumnList->Update();
             delete column;
         }
     }
@@ -422,8 +423,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         case System::ComponentModel::ListChangedType::PropertyDescriptorDeleted:
             {
                 Ntreev::Windows::Forms::Grid::Column^ column = this[e->PropertyDescriptor->Name];
-                System::Diagnostics::Debug::Assert(column != nullptr);
-                Unbind(column);
+                if(column != nullptr)
+                {
+                    Unbind(column);
+                }
             }
             break;
         case System::ComponentModel::ListChangedType::Reset:
@@ -455,7 +458,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             if(column == nullptr)
                 continue;
 
-            if(column->DataType != item->PropertyType)
+            if(column->CanConvertFrom(item->PropertyType) == false)
             {
                 if(column->CanConvertFrom(column->DataType, item->PropertyType) == true)
                     continue;
@@ -504,7 +507,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             for each(Ntreev::Windows::Forms::Grid::Column^ item in this)
             {
                 if(item->HasLifeline == false || item->PropertyDescriptor == nullptr)
+                {
+                    item->PropertyDescriptor = nullptr;
                     m_tempBindableColumns->Add(item);
+                }
             }
 
             for each(Ntreev::Windows::Forms::Grid::Column^ item in m_tempBindableColumns)

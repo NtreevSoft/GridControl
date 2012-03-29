@@ -32,6 +32,10 @@ namespace Ntreev.Windows.Forms.Grid.Design
 {
     public class ColumnDesigner : ComponentDesigner
     {
+        bool isMovable = true;
+        bool isResizable = true;
+        bool isVisible = true;
+
         public ColumnDesigner()
         {
                 
@@ -45,14 +49,52 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
             this.IsVisible = column.IsVisible;
             this.IsResizable = column.IsResizable;
-            this.IsMovable = column.IsMovable;
+            this.isMovable = column.IsMovable;
+        }
+
+        public bool IsMovable
+        {
+            get { return this.isMovable; }
+            set { this.isMovable = value; }
+        }
+
+        public bool IsResizable
+        {
+            get { return this.isResizable; }
+            set { this.isResizable = value; }
+        }
+
+        public bool IsVisible
+        {
+            get { return this.isVisible; }
+            set { this.isVisible = value; }
+        }
+
+        [DesignOnly(true)]
+        public bool HasLifeline
+        {
+            get
+            {
+                Column column = this.Component as Column;
+                return column.HasLifeline;
+            }
+            set
+            {
+                Column column = this.Component as Column;
+                column.HasLifeline = value;
+            }
+        }
+
+        protected override void PostFilterProperties(System.Collections.IDictionary properties)
+        {
+            base.PostFilterProperties(properties);
         }
 
         protected override void PreFilterProperties(System.Collections.IDictionary properties)
         {
             base.PreFilterProperties(properties);
 
-            string[] strArray = new string[] { "IsVisible", "IsResizable", "IsMovable"};
+            string[] strArray = new string[] { "IsVisible", "IsResizable", "IsMovable", };
             Attribute[] attributes = new Attribute[0];
             for (int i = 0; i < strArray.Length; i++)
             {
@@ -64,24 +106,28 @@ namespace Ntreev.Windows.Forms.Grid.Design
                     properties[strArray[i]] = p;
                 }
             }
+
+            properties["GridControl"] = System.ComponentModel.TypeDescriptor.CreateProperty(typeof(ColumnDesigner), "GridControl", typeof(GridControl), attributes);
+            properties["HasLifeline"] = System.ComponentModel.TypeDescriptor.CreateProperty(typeof(ColumnDesigner), "HasLifeline", typeof(bool), attributes);
         }
 
-        public bool IsMovable
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        GridControl GridControl
         {
-            get;
-            set;
-        }
-
-        public bool IsResizable
-        {
-            get;
-            set;
-        }
-
-        public bool IsVisible
-        {
-            get; 
-            set;
+            get
+            {
+                Column column = this.Component as Column;
+                return column.GridControl;
+            }
+            set
+            {
+                Column column = this.Component as Column;
+                if (column.Index == -1)
+                {
+                    value.Columns.Add(column);
+                }
+            }
         }
     }
 }

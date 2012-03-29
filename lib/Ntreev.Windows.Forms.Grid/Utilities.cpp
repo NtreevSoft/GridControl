@@ -42,4 +42,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         System::Threading::Monitor::Exit(m_object);
     }
+
+    bool ValueChecker::IsNullOrDBNull(System::Object^ value)
+    {
+        if(value == nullptr || value == System::DBNull::Value)
+            return true;
+        return false;
+    }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -101,7 +101,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀의 글꼴을 나타내는 <see cref="System::Drawing::Font"/>입니다. 기본값은 <see cref="Style::CellFont"/> 속성의 값입니다.
         /// </returns>
         [System::ComponentModel::CategoryAttribute("Appearance")]
-        [System::ComponentModel::AmbientValue((System::String^)nullptr)]
+        [System::ComponentModel::AmbientValueAttribute((System::String^)nullptr)]
         property System::Drawing::Font^ Font
         { 
             virtual System::Drawing::Font^ get();
@@ -130,7 +130,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 셀에 대한 데이터가 들어 있는 <see cref="System::Object"/>입니다. 기본값은 null입니다.
         /// </returns>
-        [System::ComponentModel::TypeConverter(System::ComponentModel::StringConverter::typeid)]
+        [System::ComponentModel::TypeConverterAttribute(System::ComponentModel::StringConverter::typeid)]
         [System::ComponentModel::CategoryAttribute("Data")]
         [System::ComponentModel::DefaultValueAttribute((System::String^)nullptr)]
         virtual property System::Object^ Tag;

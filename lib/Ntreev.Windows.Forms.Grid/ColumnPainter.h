@@ -29,8 +29,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 열을 그릴수 있는 개체입니다.
     /// </summary>
-    [System::ComponentModel::ToolboxItem(true)]
-    [System::Drawing::ToolboxBitmap(ColumnPainter::typeid)]
+    [System::ComponentModel::ToolboxItemAttribute(true)]
+    [System::Drawing::ToolboxBitmapAttribute(ColumnPainter::typeid)]
     public ref class ColumnPainter abstract
         : System::ComponentModel::Component
     {

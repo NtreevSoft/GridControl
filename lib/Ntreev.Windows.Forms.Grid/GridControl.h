@@ -141,6 +141,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     public: // properties
 
         /// <summary>
+        /// 그리드 컨트롤상단에 표시될 제목을 가져오거나 설정합니다.
+        /// </summary>
+        /// <returns>
+        /// 제목을 나타내는 문자열입니다.
+        /// </returns>
+        [System::ComponentModel::CategoryAttribute("Appearance")]
+        property System::String^ Caption
+        {
+            System::String^ get();
+            void set(System::String^);
+        }
+
+        /// <summary>
         /// 그리드 컨트롤을 채울 데이터 소스를 가져오거나 설정합니다.
         /// </summary>
         /// <returns>
@@ -169,8 +182,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::NotSupportedException">
         /// 데이터 초기화에 실패 했거나 데이터 소스가 IList, IListSource 또는 IBindingList 인터페이스를 구현하는 개체가 아닐때.
         /// </exception>
+        [System::ComponentModel::CategoryAttribute("Data")]
         [System::ComponentModel::DefaultValueAttribute("")]
-        [System::ComponentModel::Editor("System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", System::Drawing::Design::UITypeEditor::typeid)]
+        [System::ComponentModel::EditorAttribute("System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", System::Drawing::Design::UITypeEditor::typeid)]
         property System::String^ DataMember
         {
             System::String^ get();
@@ -417,9 +431,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 삽입열은 새로 만들거나 삭제할 수 없습니다.
         /// </remarks>
         [System::ComponentModel::CategoryAttribute("Behavior")]
-        property Ntreev::Windows::Forms::Grid::InsertionRow^ InsertionRow
+        property Ntreev::Windows::Forms::Grid::Row^ InsertionRow
         {
-            Ntreev::Windows::Forms::Grid::InsertionRow^ get();
+            Ntreev::Windows::Forms::Grid::Row^ get();
         }
 
         /// <summary>
@@ -1274,9 +1288,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void InvokeSelectedColumnsChanged();
         void InvokeSelectionChanged();
 
-        void OnStateBegin(System::EventArgs^ e);
-        void OnStateEnd(System::EventArgs^ e);
-
         bool DesignTimeHitTest(System::Drawing::Point globalLocation);
         void PostPaint(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle clipRectangle);
 
@@ -1308,22 +1319,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     internal: // events
-
-        event System::EventHandler^ StateBegin
-        {
-            void add(System::EventHandler^ p) { m_eventStateBegin += p; }
-            void remove(System::EventHandler^ p) { m_eventStateBegin -= p; }
-        private:
-            void raise(System::Object^ sender, System::EventArgs^ e) { if(m_eventStateBegin != nullptr) m_eventStateBegin->Invoke(sender, e); }
-        }
-
-        event System::EventHandler^ StateEnd
-        {
-            void add(System::EventHandler^ p) { m_eventStateEnd += p; }
-            void remove(System::EventHandler^ p) { m_eventStateEnd -= p; }
-        private:
-            void raise(System::Object^ sender, System::EventArgs^ e) { if(m_eventStateEnd != nullptr) m_eventStateEnd->Invoke(sender, e); }
-        }
 
         event Ntreev::Windows::Forms::Grid::CurrencyManagerChangingEventHandler^ CurrencyManagerChanging
         {
@@ -1757,6 +1752,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         bool ShouldSerializeColumns();
         bool ShouldSerializeRows();
+        bool ShouldSerializeCaption();
+        
 
         void ResetColumns();
         void ResetRows();
@@ -1788,13 +1785,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         Ntreev::Windows::Forms::Grid::Cell^ m_focusedCell;
         Ntreev::Windows::Forms::Grid::CaptionRow^ m_captionRow;
         Ntreev::Windows::Forms::Grid::GroupPanel^ m_groupPanel;
-        Ntreev::Windows::Forms::Grid::InsertionRow^ m_insertionRow;
 
         Native::WinFormGridCore* m_pGridCore;
         Native::WinFormWindow* m_pGridWindow;
         GrColumnList* m_pColumnList;
         GrDataRowList* m_pDataRowList;
-        GrDataRow* m_pInsertionRow;
         GrGridPainter* m_pGridPainter;
 
         Ntreev::Windows::Forms::Grid::ErrorDescriptor^ m_errorDescriptor;
@@ -1842,9 +1837,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         Ntreev::Windows::Forms::Grid::CurrencyManagerChangingEventHandler^ m_eventCurrencyManagerChanging;
         Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventHandler^ m_eventCurrencyManagerChanged;
-
-        System::EventHandler^ m_eventStateBegin;
-        System::EventHandler^ m_eventStateEnd;
 
         System::Windows::Forms::CurrencyManager^ m_manager;
         System::Windows::Forms::CurrencyManager^ m_defaultManager;

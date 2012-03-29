@@ -181,7 +181,7 @@ public:
     virtual void OnMouseWheel(const GrPoint& location, int delta);
     virtual void OnMouseLeave();
     virtual void OnMouseEnter();
-    virtual void OnKeyDown(GrKeys key);
+    virtual bool OnKeyDown(GrKeys key);
     virtual void OnKeyUp(GrKeys key);
     virtual void OnGotFocus();
     virtual void OnLostFocus();

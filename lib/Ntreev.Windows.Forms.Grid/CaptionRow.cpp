@@ -28,7 +28,7 @@
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     CaptionRow::CaptionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrCaption* pCaption) 
-        : CellBase(pCaption), m_pCaption(pCaption)
+        : CellBase(gridControl, pCaption), m_pCaption(pCaption)
     {
         this->Text = Properties::Resources::GetString("CaptionRow.Text");
     }
@@ -92,6 +92,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool CaptionRow::ShouldSerializeText()
     {
-        return this->Text != Properties::Resources::GetString("CaptionRow.Text");
+        return false;
     }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

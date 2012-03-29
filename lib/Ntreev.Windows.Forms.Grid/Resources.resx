@@ -185,6 +185,6 @@
     <value>제목</value>
   </data>
   <data name="GroupPanel.Text" xml:space="preserve">
-    <value>"그룹화 시킬 컬럼을 이쪽으로 드래그하여 옮기세요"</value>
+    <value>그룹화 시킬 컬럼을 이쪽으로 드래그하여 옮기세요</value>
   </data>
 </root>

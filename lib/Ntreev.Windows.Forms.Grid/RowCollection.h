@@ -30,8 +30,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 행의 컬렉션을 나타냅니다.
     /// </summary>
-    [System::ComponentModel::Editor("Ntreev.Windows.Forms.Grid.Design.RowCollectionEditor, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4464.32161, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
-    [System::ComponentModel::Design::Serialization::DesignerSerializer("Ntreev.Windows.Forms.Grid.Design.RowCollectionCodeDomSerializer, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4464.32161, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", "System.ComponentModel.Design.Serialization.CodeDomSerializer")]
+    [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.RowCollectionEditor, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4464.32161, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
+    [System::ComponentModel::Design::Serialization::DesignerSerializerAttribute("Ntreev.Windows.Forms.Grid.Design.RowCollectionCodeDomSerializer, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4464.32161, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", "System.ComponentModel.Design.Serialization.CodeDomSerializer")]
     public ref class RowCollection
         : Ntreev::Windows::Forms::Grid::GridObject
         , System::Collections::Generic::IList<Ntreev::Windows::Forms::Grid::Row^>
@@ -255,9 +255,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <summary>
         /// <see cref="InsertionRow"/>을 가져옵니다.
         /// </summary>
-        property Ntreev::Windows::Forms::Grid::InsertionRow^ InsertionRow
+        property Ntreev::Windows::Forms::Grid::Row^ InsertionRow
         {
-            Ntreev::Windows::Forms::Grid::InsertionRow^ get();
+            Ntreev::Windows::Forms::Grid::Row^ get();
         }
 
     internal: // methods
@@ -361,5 +361,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::Windows::Forms::CurrencyManager^ m_manager;
         System::EventHandler^ m_currentChangedEventHandler;
         System::ComponentModel::ListChangedEventHandler^ m_listChangedEventHandler;
+        System::Collections::Generic::Dictionary<System::Object^, Ntreev::Windows::Forms::Grid::Row^>^ m_components;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

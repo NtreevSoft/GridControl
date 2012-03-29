@@ -112,6 +112,7 @@
     <None Include="GridControl.snk" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.en.resx" />
     <EmbeddedResource Include="TypeSelectorForm.resx">
       <DependentUpon>TypeSelectorForm.cs</DependentUpon>
     </EmbeddedResource>

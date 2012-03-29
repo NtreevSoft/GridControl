@@ -328,7 +328,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         // CancelEdit(true);
         // return true;
         //}
-        return Form::ProcessCmdKey(msg, keyData);
+        if(keyData == System::Windows::Forms::Keys::Enter)
+        {
+int qwer=0;
+        }
+
+        bool result = Form::ProcessCmdKey(msg, keyData);
+
+        return result;
     }
 
     bool TypeEditorForm::ProcessDialogKey(System::Windows::Forms::Keys keyData)
@@ -577,6 +584,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             return this;
         if(serviceType == Ntreev::Windows::Forms::Grid::GridControl::typeid)
             return this->GridControl;
+        if(serviceType == Ntreev::Windows::Forms::Grid::ITextCacheProvider::typeid)
+            return dynamic_cast<Ntreev::Windows::Forms::Grid::ITextCacheProvider^>(m_cell->Column);
+
         return GetService(serviceType);
     }
 

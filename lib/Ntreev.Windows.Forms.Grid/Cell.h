@@ -33,7 +33,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 셀을 나타내는 개체입니다.
     /// </summary>
-    [System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
+    [System::ComponentModel::TypeConverterAttribute(System::ComponentModel::ExpandableObjectConverter::typeid)]
     public ref class Cell
         : Ntreev::Windows::Forms::Grid::CellBase
         , Ntreev::Windows::Forms::Grid::ICell
@@ -117,8 +117,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 지원되지 않는 값이 설정 되었을때 발생합니다.
         /// </exception>
         [System::ComponentModel::CategoryAttribute("Data")]
-        [System::ComponentModel::Editor("Ntreev.Windows.Forms.Grid.Design.ValueEditor", System::Drawing::Design::UITypeEditor::typeid)]
-        [System::ComponentModel::TypeConverter(System::ComponentModel::StringConverter::typeid)]
+        [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.ValueEditor", System::Drawing::Design::UITypeEditor::typeid)]
+        [System::ComponentModel::TypeConverterAttribute(System::ComponentModel::StringConverter::typeid)]
         property System::Object^ Value
         {
             System::Object^ get();
@@ -367,8 +367,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         System::Object^ ValidateValue(System::Object^ value);
 
-        void SyncValue();
-
     internal: // properties
 
         property GrItem* NativeRef
@@ -381,7 +379,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             bool get(); 
         }
 
-        virtual property System::Object^ ValueCore
+        property System::Object^ ValueCore
         {
             System::Object^ get();
             void set(System::Object^);
@@ -419,31 +417,4 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::String^ m_errorDescription;
         System::Object^ m_value;
     };
-
-    //ref class InsertionCell
-    //    : Ntreev::Windows::Forms::Grid::Cell
-    //{
-    //internal: // methods
-
-    //    InsertionCell(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrItem* pItem, System::Object^ defaultValue);
-
-    //public: // methods
-
-    //    /// <summary>
-    //    /// <see cref="Value"/>를 <see cref="Column"/>이 제공하는 기본값으로 설정합니다.
-    //    /// </summary>
-    //    void SetDefaultValue();
-
-    //internal: // properties
-
-    //    virtual property System::Object^ ValueCore
-    //    {
-    //        System::Object^ get() override;
-    //        void set(System::Object^) override; 
-    //    }
-
-    //private: // variables
-
-    //    System::Object^ m_value;
-    //};
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

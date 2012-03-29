@@ -29,7 +29,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 제목을 표시하는 개체입니다.
     /// </summary>
-    [System::ComponentModel::TypeConverter(System::ComponentModel::ExpandableObjectConverter::typeid)]
+    [System::ComponentModel::TypeConverterAttribute(System::ComponentModel::ExpandableObjectConverter::typeid)]
     public ref class GroupPanel
         : Ntreev::Windows::Forms::Grid::CellBase
     {

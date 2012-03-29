@@ -110,20 +110,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
         {
             base.OnShown(e);
 
-            if (this.projectAssembly != null)
-            {
-                AddTypeToTreeView(this.projectAssembly, true);
-            }
-
-            if (this.referenceAssemblies != null)
-            {
-                foreach (Assembly item in this.referenceAssemblies)
-                {
-                    AddTypeToTreeView(item, false);
-                }
-            }
-
-            this.treeView1.Sort();
+            InitializeNode(string.Empty);
         }
 
         public Type Filter
@@ -154,7 +141,33 @@ namespace Ntreev.Windows.Forms.Grid.Design
             }
         }
 
-        private void AddTypeToTreeView(Assembly assembly, bool isProjectAsssembly)
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+            this.toolStripComboBox1.Size = new Size(this.Width - 25, this.toolStripComboBox1.Height);
+        }
+
+        private void InitializeNode(string filter)
+        {
+            this.treeView1.Nodes.Clear();
+
+            if (this.projectAssembly != null)
+            {
+                AddTypeToTreeView(this.projectAssembly, true, filter);
+            }
+
+            if (this.referenceAssemblies != null)
+            {
+                foreach (Assembly item in this.referenceAssemblies)
+                {
+                    AddTypeToTreeView(item, false, filter);
+                }
+            }
+
+            this.treeView1.Sort();
+        }
+
+        private void AddTypeToTreeView(Assembly assembly, bool isProjectAsssembly, string filter)
         {
             Type[] types;
             //Type[] types = assembly.GetExportedTypes();
@@ -173,6 +186,12 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
             foreach (Type type in types)
             {
+                if(string.IsNullOrEmpty(filter) == false)
+                {
+                    if (type.Name.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) == -1)
+                        continue;
+                }
+
                 if (this.filter != null)
                 {
                     if (this.filter.IsAssignableFrom(type) == false)
@@ -202,10 +221,9 @@ namespace Ntreev.Windows.Forms.Grid.Design
                     namespaceNode = assemblyNode.Nodes.Add(type.Namespace, type.Namespace, 1, 1);
                 }
 
-                int imageIndex = GetImageIndex(type); ;
+                int imageIndex = GetImageIndex(type);
                 TreeNode typeNode = namespaceNode.Nodes.Add(type.Name, type.Name, imageIndex, imageIndex);
                 typeNode.Tag = type;
-
             }
         }
 
@@ -279,6 +297,25 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 return;
 
             this.DialogResult = DialogResult.OK;
+        }
+
+        private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            InitializeNode(this.toolStripComboBox1.Text);
+        }
+
+        private void toolStripComboBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter)
+                return;
+
+            if (this.toolStripComboBox1.Text != string.Empty)
+            {
+                this.toolStripComboBox1.Items.Add(this.toolStripComboBox1.Text);
+            }
+
+            InitializeNode(this.toolStripComboBox1.Text);
+            e.SuppressKeyPress = true;
         }
     }
 }

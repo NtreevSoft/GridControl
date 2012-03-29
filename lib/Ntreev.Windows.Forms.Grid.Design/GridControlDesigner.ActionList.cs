@@ -80,7 +80,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
                 try
                 {
-                    items.Add(new DesignerActionPropertyItem("CaptionText", Resources.CaptionText));
+                    items.Add(new DesignerActionPropertyItem("Caption", Resources.Caption));
                     items.Add(new DesignerActionPropertyItem("DataSource", Resources.DataSource));
                     items.Add(new DesignerActionPropertyItem("DataMember", Resources.DataMember));
                     items.Add(new DesignerActionPropertyItem("Columns", Resources.ColumnsEditing));
@@ -112,15 +112,34 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 }
             }
 
-            public string CaptionText
+            public string Caption
             {
                 get
                 {
-                    return this.gridControl.CaptionRow.Text;
+                    return this.gridControl.Caption;
                 }
                 set
                 {
-                    this.gridControl.CaptionRow.Text = value;
+                    IDesignerHost host = GetService(typeof(IDesignerHost)) as IDesignerHost;
+                    PropertyDescriptor member = System.ComponentModel.TypeDescriptor.GetProperties(this.gridControl)["Caption"];
+                    IComponentChangeService service = GetService(typeof(IComponentChangeService)) as IComponentChangeService;
+                    DesignerTransaction transaction = host.CreateTransaction("GridControl.Caption Transaction");
+                    try
+                    {
+                        service.OnComponentChanging(this.gridControl, member);
+                        this.gridControl.Caption = value;
+                        service.OnComponentChanged(this.gridControl, member, null, null);
+                        transaction.Commit();
+                        transaction = null;
+                    }
+                    finally
+                    {
+                        if (transaction != null)
+                        {
+                            transaction.Cancel();
+                        }
+                    }
+                    
                 }
             }
 
@@ -133,7 +152,25 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 }
                 set
                 {
-                    this.gridControl.DataSource = value;
+                    IDesignerHost host = GetService(typeof(IDesignerHost)) as IDesignerHost;
+                    PropertyDescriptor member = System.ComponentModel.TypeDescriptor.GetProperties(this.gridControl)["DataSource"];
+                    IComponentChangeService service = GetService(typeof(IComponentChangeService)) as IComponentChangeService;
+                    DesignerTransaction transaction = host.CreateTransaction("GridControl.DataSource Transaction");
+                    try
+                    {
+                        service.OnComponentChanging(this.gridControl, member);
+                        this.gridControl.DataSource = value;
+                        service.OnComponentChanged(this.gridControl, member, null, null);
+                        transaction.Commit();
+                        transaction = null;
+                    }
+                    finally
+                    {
+                        if (transaction != null)
+                        {
+                            transaction.Cancel();
+                        }
+                    }
                 }
             }
 
@@ -146,13 +183,48 @@ namespace Ntreev.Windows.Forms.Grid.Design
                 }
                 set
                 {
-                    this.gridControl.DataMember = value;
+                    IDesignerHost host = GetService(typeof(IDesignerHost)) as IDesignerHost;
+                    PropertyDescriptor member = System.ComponentModel.TypeDescriptor.GetProperties(this.gridControl)["DataMember"];
+                    IComponentChangeService service = GetService(typeof(IComponentChangeService)) as IComponentChangeService;
+                    DesignerTransaction transaction = host.CreateTransaction("GridControl.DataMember Transaction");
+                    try
+                    {
+                        service.OnComponentChanging(this.gridControl, member);
+                        this.gridControl.DataMember = value;
+                        service.OnComponentChanged(this.gridControl, member, null, null);
+                        transaction.Commit();
+                        transaction = null;
+                    }
+                    finally
+                    {
+                        if (transaction != null)
+                        {
+                            transaction.Cancel();
+                        }
+                    }
                 }
             }
 
             void Clear()
             {
-                 this.gridControl.Clear();
+                IDesignerHost host = GetService(typeof(IDesignerHost)) as IDesignerHost;
+                IComponentChangeService service = GetService(typeof(IComponentChangeService)) as IComponentChangeService;
+                DesignerTransaction transaction = host.CreateTransaction("GridControl.Clear() Transaction");
+                try
+                {
+                    service.OnComponentChanging(this.gridControl, null);
+                    this.gridControl.Clear();
+                    service.OnComponentChanged(this.gridControl, null, null, null);
+                    transaction.Commit();
+                    transaction = null;
+                }
+                finally
+                {
+                    if (transaction != null)
+                    {
+                        transaction.Cancel();
+                    }
+                }
             }
         }
     }
