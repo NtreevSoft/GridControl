@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4464.32161
+// Ntreev Grid for .Net 2.0.4475.19551
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -228,8 +228,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::DefaultValueAttribute(true)]
         property bool IsVisible 
         {
-            virtual bool get() new;
-            virtual void set(bool);
+            bool get() new;
+            void set(bool);
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4464.32161
+// Ntreev Grid for .Net 2.0.4475.19551
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -38,7 +38,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     [System::ComponentModel::TypeConverterAttribute(System::ComponentModel::ExpandableObjectConverter::typeid)]
     [System::ComponentModel::ToolboxItemAttribute(false)]
     [System::ComponentModel::DesignTimeVisibleAttribute(false)]
-    [System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.ColumnDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4464.32161, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+    [System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.ColumnDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4475.19551, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
     public ref class Column
         : Ntreev::Windows::Forms::Grid::CellBase
         , Ntreev::Windows::Forms::Grid::IColumn
@@ -124,7 +124,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property System::String^ ColumnName
         {
             virtual System::String^ get() sealed;
-            virtual void set(System::String^); 
+            void set(System::String^); 
         }
 
         /// <summary>
@@ -367,7 +367,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         property System::Type^ SourceType
         {
-            virtual System::Type^ get();
+            virtual System::Type^ get() sealed;
         }
 
         /// <summary>
@@ -379,7 +379,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::InvalidOperationException">
         /// 그리드 컨트롤에 바인딩 된 후에 값을 설정하려고 할때.
         /// </exception>
-        [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4464.32161, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
+        [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4475.19551, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
         property System::Type^ DataType
         {
             virtual System::Type^ get() sealed;
@@ -481,11 +481,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이 속성의 사용 목적은 새로운 행을 추가 하기 위하여 제공되는 삽입열에 기본값을 제공하기 위해서입니다. 
         /// 데이터 타입에 대한 검사가 없으므로, 가급적 <see cref="DataType"/>과 같은 타입의 개체를 사용하시기 바랍니다.
         /// </remarks>
-        [System::ComponentModel::TypeConverterAttribute("Ntreev.Windows.Forms.Grid.Design.ValueConverter, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4464.32161, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+        [System::ComponentModel::TypeConverterAttribute("Ntreev.Windows.Forms.Grid.Design.ValueConverter, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4475.19551, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
         property System::Object^ DefaultValue
         {
-            virtual System::Object^ get();
-            virtual void set(System::Object^);
+            virtual System::Object^ get() sealed;
+            void set(System::Object^);
         }
 
         /// <summary>
@@ -655,16 +655,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         property System::ComponentModel::ISite^ Site
         {
-            virtual System::ComponentModel::ISite^ get();
-            virtual void set(System::ComponentModel::ISite^ value);
+            virtual System::ComponentModel::ISite^ get() sealed;
+            virtual void set(System::ComponentModel::ISite^ value) sealed;
         }
 
     public: // events
 
         event System::EventHandler^ Disposed
         {
-            virtual void add(System::EventHandler^ p) { m_eventDisposed += p; }
-            virtual void remove(System::EventHandler^ p) { m_eventDisposed -= p; }
+            virtual void add(System::EventHandler^ p) sealed { m_eventDisposed += p; }
+            virtual void remove(System::EventHandler^ p) sealed { m_eventDisposed -= p; }
         private:
             virtual void raise(System::Object^ sender, System::EventArgs^ e) sealed { if(m_eventDisposed != nullptr) { m_eventDisposed->Invoke(sender, e); } }
         }
@@ -674,7 +674,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <summary>
         /// 소멸자 입니다.
         /// </summary>
-        ~Column();
+        virtual ~Column();
 
         virtual System::Object^ EditValue(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value);
 
@@ -751,7 +751,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void propertyDescriptor_ValueChanged(System::Object^ sender, System::EventArgs^ e);
         void SetEditStyleToNative();
 
-        generic<class Attr> where Attr : System::Attribute, ref class
+        generic<class Attr> where Attr : System::Attribute
             Attr GetSourceAttribute(System::ComponentModel::PropertyDescriptor^ propertyDescriptor);
 
     private: // properties

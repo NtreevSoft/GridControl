@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4464.32161
+// Ntreev Grid for .Net 2.0.4475.19551
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -76,6 +76,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void CaptionRow::IsVisible::set(bool value)
     {
         m_pCaption->SetVisible(value);
+    }
+
+    int CaptionRow::Height::get()
+    {
+        return m_pCaption->GetHeight();
     }
 
     void CaptionRow::Height::set(int value)

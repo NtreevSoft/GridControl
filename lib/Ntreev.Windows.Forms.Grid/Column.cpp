@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4464.32161
+// Ntreev Grid for .Net 2.0.4475.19551
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -177,12 +177,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Column::Focus()
     {
-        this->Focuser->Set(m_pColumn);
+        GrFocuser* pFocuser = this->Focuser;
+        if(pFocuser != nullptr)
+            pFocuser->Set(m_pColumn);
     }
 
     void Column::Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType)
     {
-        this->Selector->SelectItems(m_pColumn, (GrSelectionType)selectionType);
+        GrItemSelector* pItemSelector = this->Selector;
+        if(pItemSelector != nullptr)
+            pItemSelector->SelectItems(m_pColumn, (GrSelectionType)selectionType);
     }
 
     void Column::BringIntoView()
@@ -807,7 +811,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Column::PaintValue(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle paintRect, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value)
     {
-        m_typeEditor->PaintValue(graphics, paintRect, cell, value);
+        if(m_typeEditor != nullptr)
+            m_typeEditor->PaintValue(graphics, paintRect, cell, value);
     }
 
     void Column::ResetCellBackColor()
@@ -1105,7 +1110,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
     }
 
-    generic<class Attr> where Attr : System::Attribute, ref class
+    generic<class Attr> where Attr : System::Attribute
         Attr Column::GetSourceAttribute(System::ComponentModel::PropertyDescriptor^ propertyDescriptor)
     {
         if(propertyDescriptor == nullptr)

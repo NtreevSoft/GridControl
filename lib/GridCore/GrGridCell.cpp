@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4464.32161
+// Ntreev Grid for .Net 2.0.4475.19551
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -2139,6 +2139,9 @@ GrColumn::~GrColumn()
 
 void GrColumn::SetSelected(bool b)
 {
+    if(m_pGridCore == NULL)
+        return;
+
     GrItemSelector* pItemSelector = m_pGridCore->GetItemSelector();
     if(b == true)
         pItemSelector->SelectItems(this, GrSelectionType_Add);
@@ -2153,6 +2156,9 @@ bool GrColumn::GetSelected() const
 
 bool GrColumn::GetFullSelected() const
 {
+    if(m_pGridCore == NULL)
+        return false;
+
     uint visibleRows = m_pGridCore->GetDataRowList()->GetVisibleDataRowCount();
     if(visibleRows == 0)
         return false;
@@ -2740,6 +2746,8 @@ const wchar_t* GrColumn::GetTooltip() const
 
 bool GrColumn::GetSelecting() const
 {
+    if(m_pGridCore == NULL)
+        return false;
     GrItemSelectorInternal* pItemSelector = dynamic_cast<GrItemSelectorInternal*>(m_pGridCore->GetItemSelector());
     return pItemSelector->IsSelecting(this);
 }
@@ -2758,6 +2766,9 @@ GrColor GrColumn::GetPaintingForeColor() const
 
 GrColor GrColumn::GetPaintingBackColor() const
 {
+    if(m_pGridCore == NULL)
+        return GrCell::GetPaintingBackColor();
+
     GrStyle* pStyle = m_pGridCore->GetStyle();
     GrColor backColor;
     if(GetGrouped() == true)
