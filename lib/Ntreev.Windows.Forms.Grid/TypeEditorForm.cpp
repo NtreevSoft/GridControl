@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4475.19551
+// Ntreev Grid for .Net 2.0.4478.19833
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -322,17 +322,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     bool TypeEditorForm::ProcessCmdKey(System::Windows::Forms::Message% msg, System::Windows::Forms::Keys keyData)
     {
-        //switch(keyData)
-        //{
-        //case System::Windows::Forms::Keys::Escape:
-        // CancelEdit(true);
-        // return true;
-        //}
-        if(keyData == System::Windows::Forms::Keys::Enter)
-        {
-int qwer=0;
-        }
-
         bool result = Form::ProcessCmdKey(msg, keyData);
 
         return result;

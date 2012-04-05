@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4475.19551
+// Ntreev Grid for .Net 2.0.4478.19833
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -34,10 +34,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     }
 
-    System::Object^ BindingListTypeEditor::EditValue(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, Ntreev::Windows::Forms::Grid::ICell^ /*cell*/, System::Object^ value)
+    System::Object^ BindingListTypeEditor::EditValue(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value)
     {
+        if(ValueChecker::IsNullOrDBNull(value) == true)
+            return value;
+
         Ntreev::Windows::Forms::Grid::GridControl^ gridControl = gcnew Ntreev::Windows::Forms::Grid::GridControl();
         gridControl->Dock = System::Windows::Forms::DockStyle::Fill;
+        gridControl->Caption = cell->Column->Title;
         gridControl->DataSource = dynamic_cast<System::ComponentModel::IBindingList^>(value);
 
         editorService->ShowDialog(gridControl);

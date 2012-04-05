@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 2.0.4475.19551
+//Ntreev Grid for .Net 2.0.4478.19833
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.
@@ -84,7 +84,8 @@ namespace Ntreev.Windows.Forms.Grid.Design
                     items.Add(new DesignerActionPropertyItem("DataSource", Resources.DataSource));
                     items.Add(new DesignerActionPropertyItem("DataMember", Resources.DataMember));
                     items.Add(new DesignerActionPropertyItem("Columns", Resources.ColumnsEditing));
-                    items.Add(new DesignerActionPropertyItem("Rows", Resources.RowsEditing));
+                    if(this.gridControl.DataSource == null)
+                        items.Add(new DesignerActionPropertyItem("Rows", Resources.RowsEditing));
 
                     items.Add(new DesignerActionMethodItem(this, "Clear", Resources.Clear));
                 }
@@ -144,6 +145,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
             }
 
             [AttributeProvider(typeof(IListSource))]
+            [RefreshProperties(RefreshProperties.All)]
             public object DataSource
             {
                 get
@@ -156,6 +158,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
                     PropertyDescriptor member = System.ComponentModel.TypeDescriptor.GetProperties(this.gridControl)["DataSource"];
                     IComponentChangeService service = GetService(typeof(IComponentChangeService)) as IComponentChangeService;
                     DesignerTransaction transaction = host.CreateTransaction("GridControl.DataSource Transaction");
+
                     try
                     {
                         service.OnComponentChanging(this.gridControl, member);
@@ -163,6 +166,12 @@ namespace Ntreev.Windows.Forms.Grid.Design
                         service.OnComponentChanged(this.gridControl, member, null, null);
                         transaction.Commit();
                         transaction = null;
+
+                        DesignerActionUIService uiService = this.GetService(typeof(DesignerActionUIService)) as DesignerActionUIService;
+                        if (uiService != null)
+                        {
+                            uiService.Refresh(this.Component);
+                        }
                     }
                     finally
                     {
@@ -175,6 +184,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
             }
 
             [Editor("System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(UITypeEditor))]
+            [RefreshProperties(RefreshProperties.All)]
             public string DataMember
             {
                 get
@@ -194,6 +204,12 @@ namespace Ntreev.Windows.Forms.Grid.Design
                         service.OnComponentChanged(this.gridControl, member, null, null);
                         transaction.Commit();
                         transaction = null;
+
+                        DesignerActionUIService uiService = this.GetService(typeof(DesignerActionUIService)) as DesignerActionUIService;
+                        if (uiService != null)
+                        {
+                            uiService.Refresh(this.Component);
+                        }
                     }
                     finally
                     {
@@ -217,6 +233,12 @@ namespace Ntreev.Windows.Forms.Grid.Design
                     service.OnComponentChanged(this.gridControl, null, null, null);
                     transaction.Commit();
                     transaction = null;
+
+                    DesignerActionUIService uiService = this.GetService(typeof(DesignerActionUIService)) as DesignerActionUIService;
+                    if (uiService != null)
+                    {
+                        uiService.Refresh(this.Component);
+                    }
                 }
                 finally
                 {

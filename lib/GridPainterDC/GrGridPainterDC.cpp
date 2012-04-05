@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4475.19551
+// Ntreev Grid for .Net 2.0.4478.19833
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -410,7 +410,7 @@ void GrGridPainterDC::DrawHeader(GrFlag paintStyle, const GrRect& paintRect, con
     SelectObject(m_hOverlayDC, hOldBitmap);
     DeleteObject(hBitmap);
 
-    if(paintStyle & GrPaintStyle_Focused)
+    if(paintStyle.Has(GrPaintStyle_Focused) == true)
     {
         HGDIOBJ hOld = SelectObject(m_hdc, (HGDIOBJ)m_hFocusedPen);
         HGDIOBJ hOb = SelectObject(m_hdc, GetStockObject(NULL_BRUSH));

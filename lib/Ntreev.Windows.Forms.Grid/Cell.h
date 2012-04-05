@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4475.19551
+// Ntreev Grid for .Net 2.0.4478.19833
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -92,8 +92,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이미 화면내에 표시가 되었다면 아무 동작도 일어나지 않습니다.
         /// </remarks>
         void BringIntoView();
-
-        void SetDefaultValue();
 
     public: // properties
 
@@ -366,6 +364,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void UpdateNativeText(System::Object^ value);
 
         System::Object^ ValidateValue(System::Object^ value);
+
+        void SetDefaultValue();
 
     internal: // properties
 

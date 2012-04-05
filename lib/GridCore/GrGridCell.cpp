@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4475.19551
+// Ntreev Grid for .Net 2.0.4478.19833
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -1036,8 +1036,6 @@ void GrCell::ComputeTextBounds()
         maxHeight = pFont->GetHeight() + pFont->GetExternalLeading();
     }
 
-    //maxHeight += pFont->GetLeading();
-
     if(maxWidth + (padding.left + padding.right) > GetWidth() || 
         maxHeight + padding.top + padding.bottom > GetHeight())
         m_textClipped = true;
@@ -1093,12 +1091,10 @@ void GrCell::DrawText(GrGridPainter* pPainter, GrColor foreColor, const GrRect& 
             }
 
             pPainter->DrawText(pFont, GetText().c_str() + cl.textBegin, cl.length, textRect, foreColor, &clipRect);
-            //pPainter->DrawRectangle(textRect, GrColor::Black);
         }
         else
         {
             pPainter->DrawText(pFont, GetText().c_str() + cl.textBegin, cl.length, textRect, foreColor);
-            //pPainter->DrawRectangle(textRect, GrColor::Black);
         }
     }
 }
@@ -1195,7 +1191,6 @@ void GrCell::Invalidate(bool thisOnly)
 void GrCell::OnTextChanged()
 {
     SetTextBoundsChanged();
-
 }
 
 GrHorzAlign GrCell::GetTextHorzAlign() const

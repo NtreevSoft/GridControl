@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4475.19551
+// Ntreev Grid for .Net 2.0.4478.19833
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -45,6 +45,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         virtual System::String^ ToString() override;
 
+        /// <summary>
+        /// 셀의 값을 변경하기 시작합니다.
+        /// </summary>
         void BeginEdit();
 
         /// <summary>
@@ -65,7 +68,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void ApplyEdit();
 
         /// <summary>
-        /// 행을 화면에 표시되도록 스크롤을 조정합니다.
+        /// 행이 화면에 표시되도록 스크롤을 조정합니다.
         /// </summary>
         void BringIntoView();
 

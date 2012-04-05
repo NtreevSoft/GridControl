@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4475.19551
+// Ntreev Grid for .Net 2.0.4478.19833
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -38,7 +38,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     [System::ComponentModel::TypeConverterAttribute(System::ComponentModel::ExpandableObjectConverter::typeid)]
     [System::ComponentModel::ToolboxItemAttribute(false)]
     [System::ComponentModel::DesignTimeVisibleAttribute(false)]
-    [System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.ColumnDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4475.19551, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+    [System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.ColumnDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4478.19833, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
     public ref class Column
         : Ntreev::Windows::Forms::Grid::CellBase
         , Ntreev::Windows::Forms::Grid::IColumn
@@ -53,10 +53,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         Column();
 
+        /// <summary>
+        /// 포커스를 설정합니다.
+        /// </summary>
         void Focus();
 
+        /// <summary>
+        /// 열을 선택합니다.
+        /// </summary>
+        /// <param name="selectionType">
+        /// 열을 선택하기 위한 방법을 지정합니다.
+        /// </param>
         void Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType);
 
+        /// <summary>
+        /// 열이 화면에 표시되도록 스크롤을 조정합니다.
+        /// </summary>
         void BringIntoView();
 
         /// <summary>
@@ -104,6 +116,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 표시할 열의 제목을 나타내는 <see cref="System::String"/>입니다.
         /// </returns>
+        [System::ComponentModel::CategoryAttribute("Layout")]
         property System::String^ Title
         {
             virtual System::String^ get() sealed;
@@ -121,6 +134,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </remarks>
         /// <exception cref="System::ArgumentException">이름을 빈 문자열로 설정하거나. <see cref="GridControl"/>에 종속되어 있는 경우 같은 이름을 가진 열이 이미 있을때.</exception>
         [System::ComponentModel::RefreshPropertiesAttribute(System::ComponentModel::RefreshProperties::Repaint)]
+        [System::ComponentModel::CategoryAttribute("Layout")]
         property System::String^ ColumnName
         {
             virtual System::String^ get() sealed;
@@ -134,6 +148,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 열의 툴팁을 나타내는 <see cref="System::String"/>입니다.
         /// </returns>
         [System::ComponentModel::DefaultValueAttribute("")]
+        [System::ComponentModel::CategoryAttribute("Layout")]
         property System::String^ Tooltip
         {
             virtual System::String^ get() sealed;
@@ -334,6 +349,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 열에 그룹핑 기능이 적용되었다면 true를, 그렇지 않다면 false를 반환합니다.
         /// </returns>
+        [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DefaultValueAttribute(false)]
         property bool IsGrouped
         {
@@ -352,6 +368,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 때문에 이 속성이 false라고 해도 그룹핑 기능을 사용할 수 없는것은 아닙니다.
         /// 하지만 마우스를 이용한 그룹핑 기능을 사용할 수 없습니다.
         /// </remarks>
+        [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DefaultValueAttribute(true)]
         property bool IsGroupable
         {
@@ -365,6 +382,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 데이터 타입을 나타내는 <see cref="System::Type"/>입니다.
         /// </returns>
+        [System::ComponentModel::CategoryAttribute("Data")]
         property System::Type^ SourceType
         {
             virtual System::Type^ get() sealed;
@@ -379,7 +397,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::InvalidOperationException">
         /// 그리드 컨트롤에 바인딩 된 후에 값을 설정하려고 할때.
         /// </exception>
-        [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4475.19551, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
+        [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4478.19833, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
+        [System::ComponentModel::CategoryAttribute("Data")]
         property System::Type^ DataType
         {
             virtual System::Type^ get() sealed;
@@ -410,6 +429,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 열의 정렬방식을 나타내는 <see cref="SortType"/>입니다.
         /// </returns>
         [System::ComponentModel::DefaultValueAttribute(Ntreev::Windows::Forms::Grid::SortType::None)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
         property Ntreev::Windows::Forms::Grid::SortType SortType
         {
             virtual Ntreev::Windows::Forms::Grid::SortType get() sealed;
@@ -481,7 +501,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이 속성의 사용 목적은 새로운 행을 추가 하기 위하여 제공되는 삽입열에 기본값을 제공하기 위해서입니다. 
         /// 데이터 타입에 대한 검사가 없으므로, 가급적 <see cref="DataType"/>과 같은 타입의 개체를 사용하시기 바랍니다.
         /// </remarks>
-        [System::ComponentModel::TypeConverterAttribute("Ntreev.Windows.Forms.Grid.Design.ValueConverter, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4475.19551, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+        [System::ComponentModel::TypeConverterAttribute("Ntreev.Windows.Forms.Grid.Design.ValueConverter, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4478.19833, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+        [System::ComponentModel::CategoryAttribute("Data")]
         property System::Object^ DefaultValue
         {
             virtual System::Object^ get() sealed;
@@ -496,6 +517,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         [System::ComponentModel::DefaultValueAttribute((System::String^)nullptr)]
         [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+        [System::ComponentModel::CategoryAttribute("Layout")]
         property Ntreev::Windows::Forms::Grid::ColumnPainter^ ColumnPainter
         {
             Ntreev::Windows::Forms::Grid::ColumnPainter^ get();
@@ -631,6 +653,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 마우스 클릭으로 셀을 편집하는 방법을 나타내는 <see cref="Ntreev::Windows::Forms::Grid::ClickEditType"/>입니다.
         /// </returns>
         [System::ComponentModel::DefaultValueAttribute(Ntreev::Windows::Forms::Grid::ClickEditType::Default)]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
         property Ntreev::Windows::Forms::Grid::ClickEditType ClickEditType
         {
             Ntreev::Windows::Forms::Grid::ClickEditType get();
@@ -653,6 +676,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             virtual Ntreev::Windows::Forms::Grid::ViewType get();
         }
 
+        /// <summary>
+        /// 열의 <see cref="System::ComponentModel::ISite"/>를 가져오거나 설정합니다.
+        /// </summary>
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
         property System::ComponentModel::ISite^ Site
         {
             virtual System::ComponentModel::ISite^ get() sealed;
@@ -661,6 +692,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     public: // events
 
+        /// <summary>
+        /// 구성 요소가 삭제되는 경우 발생합니다.
+        /// </summary>
         event System::EventHandler^ Disposed
         {
             virtual void add(System::EventHandler^ p) sealed { m_eventDisposed += p; }

@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4475.19551
+// Ntreev Grid for .Net 2.0.4478.19833
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -239,10 +239,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_propertyDescriptor != nullptr)
             throw gcnew System::InvalidOperationException("바인딩된 컬럼에는 이름을 설정할 수 없습니다.");
 
-        if(value == nullptr || value == System::String::Empty)
+        if(System::String::IsNullOrEmpty(value) == true)
             throw gcnew System::ArgumentException("빈 문자열의 이름은 설정할 수 없습니다.");
 
-        if(GridControl != nullptr)
+        if(this->GridControl != nullptr)
         {
             if(this->GridControl->Columns[value] != nullptr)
                 throw gcnew System::ArgumentException(System::String::Format("\"{0}\"의 이름을 가진 항목이 이미 있습니다.", value));
@@ -483,8 +483,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 System::Text::StringBuilder^ builder = gcnew System::Text::StringBuilder();
 
                 builder->AppendLine(System::String::Format("데이터 타입을 소스 타입으로 변환할 수가 없습니다. TypeConverter를 구현하세요"));
-                builder->AppendLine(System::String::Format("    SourceType : {0}", m_propertyDescriptor->PropertyType));
                 builder->AppendLine(System::String::Format("    DataType : {0}", value));
+                builder->AppendLine(System::String::Format("    SourceType : {0}", m_propertyDescriptor->PropertyType));
+                
 
                 throw gcnew System::NotSupportedException(builder->ToString());
             }

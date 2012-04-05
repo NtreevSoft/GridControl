@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4475.19551
+// Ntreev Grid for .Net 2.0.4478.19833
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -390,7 +390,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             {
                 propertyDescriptor->SetValue(component, value);
             }
-            catch(System::Exception^ e)
+            catch(System::Exception^ /*e*/)
             {
                 propertyDescriptor->SetValue(component, System::DBNull::Value);
             }

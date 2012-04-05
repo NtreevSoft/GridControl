@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4475.19551
+// Ntreev Grid for .Net 2.0.4478.19833
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -1031,21 +1031,6 @@ private:
         }
     };
 };
-
-//class GrInsertionRow : public GrDataRow
-//{
-//public:
-//    GrInsertionRow();
-//
-//    virtual GrRowType GetRowType() const { return GrRowType_InsertionRow; }
-//    virtual void SetVisible(bool b);
-//
-//    virtual uint GetSelectionGroup() const { return 1; }
-//
-//protected:
-//    virtual void OnGridCoreAttached();
-//    virtual void OnHeightChanged();
-//};
 
 class GrDataRowList : public GrUpdatableRow
 {

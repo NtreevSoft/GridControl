@@ -475,182 +475,6 @@ Row::IsSelected 의 값이 이미 true였다면 아무런 동작이 일어나지
 지정된 속성이 스크롤될 수 없는지 설정합니다.
 </summary>
         </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.RowCollection.InsertionRow">
-            <summary>
-                <see cref="P:Ntreev.Windows.Forms.Grid.RowCollection.InsertionRow" />을 가져옵니다.
-</summary>
-        </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.RowCollection.Count">
-            <summary>
-항목의 갯수를 가져옵니다.
-</summary>
-            <returns>
-갯수를 나타내는 <see cref="T:System.Int32" />의 정수값입니다.
-</returns>
-        </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.RowCollection.Item(System.Int32)">
-            <summary>
-지정한 인덱스에 있는 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />를 가져옵니다.
-</summary>
-            <param name="index">
-가져올 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />의 인덱스(0부터 시작)입니다.
-</param>
-            <returns>
-지정한 인덱스의 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />입니다.
-</returns>
-            <exception cref="T:System.ArgumentOutOfRangeException">
-index가 0보다 작거나, <see cref="P:Ntreev.Windows.Forms.Grid.RowCollection.Count" />보다 클 경우
-</exception>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.GetAt(System.Int32)">
-            <summary>
-지정한 인덱스에 있는 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />를 가져옵니다.
-</summary>
-            <param name="index">
-가져올 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />의 인덱스(0부터 시작)입니다.
-</param>
-            <returns>
-지정한 인덱스의 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />입니다.
-</returns>
-            <exception cref="T:System.ArgumentOutOfRangeException">
-index가 0보다 작거나, <see cref="P:Ntreev.Windows.Forms.Grid.RowCollection.Count" />보다 클 경우
-</exception>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.GetEnumerator">
-            <summary>
-컬렉션을 반복하는 열거자를 가져옵니다.
-</summary>
-            <returns>
-열거자를 나타내는 <see cref="T:System.Collections.Generic.IEnumerator`1" />입니다.
-</returns>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.RemoveAt(System.Int32)">
-            <summary>
-컬렉션에서 지정된 위치의 행을 제거합니다.
-</summary>
-            <param name="index">
-제거할 행의 위치를 나타냅니다.
-</param>
-            <exception cref="T:System.ArgumentOutOfRangeException">
-index가 0보다 작거나, <see cref="P:Ntreev.Windows.Forms.Grid.RowCollection.Count" />보다 클 경우
-</exception>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.Insert(System.Int32,Ntreev.Windows.Forms.Grid.Row)">
-            <summary>
-컬렉션에 새로운 행을 삽입합니다.
-</summary>
-            <remarks>
-사용자는 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />형태의 인스턴스를 새로 생성해 삽입 하거나, <see cref="M:Ntreev.Windows.Forms.Grid.RowCollection.Remove(Ntreev.Windows.Forms.Grid.Row)" />등의 의해 컬렉션에서 제거된 행을 다시 삽입할 수 있습니다.
-</remarks>
-            <exception cref="T:System.ArgumentNullException">
-매개변수 item의 값이 null일때
-</exception>
-            <exception cref="T:System.ArgumentException">
-삽입할 행이 이미 존재하거나, 같은 이름을 가진 행이 컬렉션에 이미 존재하는 경우
-</exception>
-            <exception cref="T:System.ArgumentOutOfRangeException">
-index가 0보다 작거나, <see cref="P:Ntreev.Windows.Forms.Grid.RowCollection.Count" />보다 클 경우
-</exception>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.Clear">
-            <summary>
-컬렉션에 모든 행을 제거합니다.
-</summary>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.IndexOf(Ntreev.Windows.Forms.Grid.Row)">
-            <summary>
-컬렉션에서 행의 위치를 확인합니다.
-</summary>
-            <exception cref="T:System.ArgumentNullException">
-매개변수 item의 값이 null일때
-</exception>
-            <returns>
-컬렉션에 포함되어 있지 않다면 -1을 반환합니다.
-</returns>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.Contains(Ntreev.Windows.Forms.Grid.Row)">
-            <summary>
-컬렉션에서 행이 포함되어 있는지 확인합니다.
-</summary>
-            <exception cref="T:System.ArgumentNullException">
-매개변수 item의 값이 null일때
-</exception>
-            <returns>
-컬렉션에 포함되어있다면 true, 그렇지 않다면 false를 반환합니다.
-</returns>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.Remove(Ntreev.Windows.Forms.Grid.Row)">
-            <summary>
-컬렉션에서 행을 제거합니다.
-</summary>
-            <returns>
-제거가 완료되면 true를 반환하고, 그렇지 않으면 false를 반환합니다.
-</returns>
-            <param name="item">
-삭제할 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />입니다.
-</param>
-            <exception cref="T:System.ArgumentNullException">
-row가 null일경우 발생합니다.
-</exception>
-            <exception cref="T:System.ArgumentException">
-이미 제거가 된 경우 또는 제거할 수 없는 특수한 행일 경우
-</exception>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.Add(Ntreev.Windows.Forms.Grid.Row)">
-            <summary>
-컬렉션에 새로운 행을 추가합니다.
-</summary>
-            <remarks>
-사용자는 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />형태의 인스턴스를 새로 생성해 추가 하거나, <see cref="M:Ntreev.Windows.Forms.Grid.RowCollection.Remove(Ntreev.Windows.Forms.Grid.Row)" />등의 의해 컬렉션에서 제거된 행을 다시 추가할 수 있습니다.
-</remarks>
-            <exception cref="T:System.ArgumentNullException">
-매개변수 item의 값이 null일때
-</exception>
-            <exception cref="T:System.ArgumentException">
-추가할 행이 이미 존재하거나, 같은 이름을 가진 행이 컬렉션에 이미 존재하는 경우
-</exception>
-            <exception cref="T:System.NotSupportedException">
-새로운 행을 생성할 수 없는 경우
-</exception>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.AddFromInsertion">
-            <summary>
-                <see cref="P:Ntreev.Windows.Forms.Grid.RowCollection.InsertionRow" />의 값을 이용하여 새로운 행의 인스턴스를 생성하고 컬렉션에 추가합니다.
-</summary>
-            <returns>
-새로 생성된 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />의 인스턴스입니다.
-</returns>
-            <exception cref="T:System.NotSupportedException">
-새로운 행을 생성할 수 없는 경우
-</exception>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.Add(System.Int32)">
-            <summary>
-여러개의 새로운 행의 인스턴스를 생성하고 컬렉션에 추가합니다.
-</summary>
-            <returns>
-새로 생성된 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />의 인스턴스들입니다.
-</returns>
-            <exception cref="T:System.ArgumentOutOfRangeException">
-생성 갯수가 0보다 같거나 작을 경우
-</exception>
-            <exception cref="T:System.NotSupportedException">
-새로운 행을 생성할 수 없는 경우
-</exception>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.Add">
-            <summary>
-새로운 행의 인스턴스를 생성하고 컬렉션에 추가합니다.
-</summary>
-            <returns>
-새로 생성된 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />의 인스턴스입니다.
-</returns>
-        </member>
-        <member name="T:Ntreev.Windows.Forms.Grid.RowCollection">
-            <summary>
-행의 컬렉션을 나타냅니다.
-</summary>
-        </member>
         <member name="P:Ntreev.Windows.Forms.Grid.ColumnCollection.default(System.String)">
             <summary>
 컬렉션에서 이름으로 열을 찾습니다.
@@ -1076,6 +900,182 @@ DropDown형식에 컨트롤을 부착해 편집할 수 있는 기능을 제공�
 열거형을 비트 필드 형태를 나타내는 사용자 정의 컨트롤입니다.
 </summary>
         </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.RowCollection.InsertionRow">
+            <summary>
+                <see cref="P:Ntreev.Windows.Forms.Grid.RowCollection.InsertionRow" />을 가져옵니다.
+</summary>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.RowCollection.Count">
+            <summary>
+항목의 갯수를 가져옵니다.
+</summary>
+            <returns>
+갯수를 나타내는 <see cref="T:System.Int32" />의 정수값입니다.
+</returns>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.RowCollection.Item(System.Int32)">
+            <summary>
+지정한 인덱스에 있는 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />를 가져옵니다.
+</summary>
+            <param name="index">
+가져올 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />의 인덱스(0부터 시작)입니다.
+</param>
+            <returns>
+지정한 인덱스의 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />입니다.
+</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+index가 0보다 작거나, <see cref="P:Ntreev.Windows.Forms.Grid.RowCollection.Count" />보다 클 경우
+</exception>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.GetAt(System.Int32)">
+            <summary>
+지정한 인덱스에 있는 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />를 가져옵니다.
+</summary>
+            <param name="index">
+가져올 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />의 인덱스(0부터 시작)입니다.
+</param>
+            <returns>
+지정한 인덱스의 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />입니다.
+</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+index가 0보다 작거나, <see cref="P:Ntreev.Windows.Forms.Grid.RowCollection.Count" />보다 클 경우
+</exception>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.GetEnumerator">
+            <summary>
+컬렉션을 반복하는 열거자를 가져옵니다.
+</summary>
+            <returns>
+열거자를 나타내는 <see cref="T:System.Collections.Generic.IEnumerator`1" />입니다.
+</returns>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.RemoveAt(System.Int32)">
+            <summary>
+컬렉션에서 지정된 위치의 행을 제거합니다.
+</summary>
+            <param name="index">
+제거할 행의 위치를 나타냅니다.
+</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+index가 0보다 작거나, <see cref="P:Ntreev.Windows.Forms.Grid.RowCollection.Count" />보다 클 경우
+</exception>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.Insert(System.Int32,Ntreev.Windows.Forms.Grid.Row)">
+            <summary>
+컬렉션에 새로운 행을 삽입합니다.
+</summary>
+            <remarks>
+사용자는 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />형태의 인스턴스를 새로 생성해 삽입 하거나, <see cref="M:Ntreev.Windows.Forms.Grid.RowCollection.Remove(Ntreev.Windows.Forms.Grid.Row)" />등의 의해 컬렉션에서 제거된 행을 다시 삽입할 수 있습니다.
+</remarks>
+            <exception cref="T:System.ArgumentNullException">
+매개변수 item의 값이 null일때
+</exception>
+            <exception cref="T:System.ArgumentException">
+삽입할 행이 이미 존재하거나, 같은 이름을 가진 행이 컬렉션에 이미 존재하는 경우
+</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+index가 0보다 작거나, <see cref="P:Ntreev.Windows.Forms.Grid.RowCollection.Count" />보다 클 경우
+</exception>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.Clear">
+            <summary>
+컬렉션에 모든 행을 제거합니다.
+</summary>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.IndexOf(Ntreev.Windows.Forms.Grid.Row)">
+            <summary>
+컬렉션에서 행의 위치를 확인합니다.
+</summary>
+            <exception cref="T:System.ArgumentNullException">
+매개변수 item의 값이 null일때
+</exception>
+            <returns>
+컬렉션에 포함되어 있지 않다면 -1을 반환합니다.
+</returns>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.Contains(Ntreev.Windows.Forms.Grid.Row)">
+            <summary>
+컬렉션에서 행이 포함되어 있는지 확인합니다.
+</summary>
+            <exception cref="T:System.ArgumentNullException">
+매개변수 item의 값이 null일때
+</exception>
+            <returns>
+컬렉션에 포함되어있다면 true, 그렇지 않다면 false를 반환합니다.
+</returns>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.Remove(Ntreev.Windows.Forms.Grid.Row)">
+            <summary>
+컬렉션에서 행을 제거합니다.
+</summary>
+            <returns>
+제거가 완료되면 true를 반환하고, 그렇지 않으면 false를 반환합니다.
+</returns>
+            <param name="item">
+삭제할 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />입니다.
+</param>
+            <exception cref="T:System.ArgumentNullException">
+row가 null일경우 발생합니다.
+</exception>
+            <exception cref="T:System.ArgumentException">
+이미 제거가 된 경우 또는 제거할 수 없는 특수한 행일 경우
+</exception>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.Add(Ntreev.Windows.Forms.Grid.Row)">
+            <summary>
+컬렉션에 새로운 행을 추가합니다.
+</summary>
+            <remarks>
+사용자는 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />형태의 인스턴스를 새로 생성해 추가 하거나, <see cref="M:Ntreev.Windows.Forms.Grid.RowCollection.Remove(Ntreev.Windows.Forms.Grid.Row)" />등의 의해 컬렉션에서 제거된 행을 다시 추가할 수 있습니다.
+</remarks>
+            <exception cref="T:System.ArgumentNullException">
+매개변수 item의 값이 null일때
+</exception>
+            <exception cref="T:System.ArgumentException">
+추가할 행이 이미 존재하거나, 같은 이름을 가진 행이 컬렉션에 이미 존재하는 경우
+</exception>
+            <exception cref="T:System.NotSupportedException">
+새로운 행을 생성할 수 없는 경우
+</exception>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.AddFromInsertion">
+            <summary>
+                <see cref="P:Ntreev.Windows.Forms.Grid.RowCollection.InsertionRow" />의 값을 이용하여 새로운 행의 인스턴스를 생성하고 컬렉션에 추가합니다.
+</summary>
+            <returns>
+새로 생성된 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />의 인스턴스입니다.
+</returns>
+            <exception cref="T:System.NotSupportedException">
+새로운 행을 생성할 수 없는 경우
+</exception>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.Add(System.Int32)">
+            <summary>
+여러개의 새로운 행의 인스턴스를 생성하고 컬렉션에 추가합니다.
+</summary>
+            <returns>
+새로 생성된 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />의 인스턴스들입니다.
+</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+생성 갯수가 0보다 같거나 작을 경우
+</exception>
+            <exception cref="T:System.NotSupportedException">
+새로운 행을 생성할 수 없는 경우
+</exception>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.Add">
+            <summary>
+새로운 행의 인스턴스를 생성하고 컬렉션에 추가합니다.
+</summary>
+            <returns>
+새로 생성된 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />의 인스턴스입니다.
+</returns>
+        </member>
+        <member name="T:Ntreev.Windows.Forms.Grid.RowCollection">
+            <summary>
+행의 컬렉션을 나타냅니다.
+</summary>
+        </member>
         <member name="P:Ntreev.Windows.Forms.Grid.CaptionRow.Height">
             <summary>
 제목의 높이를 가져오거나 설정합니다.
@@ -1144,13 +1144,15 @@ TypeEditorForm에 대한 요약입니다.
 소멸자 입니다.
 </summary>
         </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.Column.HasLifeline">
+        <member name="E:Ntreev.Windows.Forms.Grid.Column.Disposed">
             <summary>
-데이터 소스 삭제시 이 열의 인스턴스 삭제 여부를 가져옵니다.
+구성 요소가 삭제되는 경우 발생합니다.
 </summary>
-            <returns>
-데이터 소스 삭제시 이 열의 인스턴스가 삭제된다면 true를 그렇지 않다면 false를 반환합니다.
-</returns>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.Column.Site">
+            <summary>
+열의 <see cref="T:System.ComponentModel.ISite" />를 가져오거나 설정합니다.
+</summary>
         </member>
         <member name="P:Ntreev.Windows.Forms.Grid.Column.ViewType">
             <summary>
@@ -1535,6 +1537,24 @@ TypeEditorForm에 대한 요약입니다.
             <returns>
 현재 <see cref="T:System.Object" />를 나타내는 <see cref="T:System.String" />입니다.
 </returns>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Column.BringIntoView">
+            <summary>
+열이 화면에 표시되도록 스크롤을 조정합니다.
+</summary>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Column.Select(Ntreev.Windows.Forms.Grid.SelectionType)">
+            <summary>
+열을 선택합니다.
+</summary>
+            <param name="selectionType">
+열을 선택하기 위한 방법을 지정합니다.
+</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Column.Focus">
+            <summary>
+포커스를 설정합니다.
+</summary>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.Column.#ctor">
             <summary>
@@ -2517,6 +2537,14 @@ CellWordwrap 값이 true인 열에 대해서는 이 기능이 적용되지 않�
 데이터 초기화에 실패 했거나 데이터 소스가 IList, IListSource 또는 IBindingList 인터페이스를 구현하는 개체가 아닐때.
 </exception>
         </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.GridControl.Caption">
+            <summary>
+그리드 컨트롤상단에 표시될 제목을 가져오거나 설정합니다.
+</summary>
+            <returns>
+제목을 나타내는 문자열입니다.
+</returns>
+        </member>
         <member name="M:Ntreev.Windows.Forms.Grid.GridControl.ShowAbout">
             <summary>
 그리드 컨트롤에 대한 정보를 담은 대화상자를 모달 형태로 표시합니다.
@@ -3032,16 +3060,6 @@ DataSource가 <see cref="T:System.Data.DataTable" />일때는 이 속성의 타�
                 <see cref="T:Ntreev.Windows.Forms.Grid.Cell" />과 관련된 이벤트의 데이터를 제공합니다.
 </summary>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.InsertionRow.SetDefaultValue">
-            <summary>
-각 셀의 값을 기본값으로 설정합니다.
-</summary>
-        </member>
-        <member name="T:Ntreev.Windows.Forms.Grid.InsertionRow">
-            <summary>
-새로운 행을 추가하기 위한 편집가능한 행을 제공합니다.
-</summary>
-        </member>
         <member name="P:Ntreev.Windows.Forms.Grid.Row.CellBackColor">
             <summary>
                 <see cref="P:Ntreev.Windows.Forms.Grid.Row.Cells" />의 배경색을 가져오거나 설정합니다.
@@ -3232,7 +3250,7 @@ index가 0보다 작거나, <see cref="P:Ntreev.Windows.Forms.Grid.Row.CellCount
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.Row.BringIntoView">
             <summary>
-행을 화면에 표시되도록 스크롤을 조정합니다.
+행이 화면에 표시되도록 스크롤을 조정합니다.
 </summary>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.Row.ApplyEdit">
@@ -3251,6 +3269,11 @@ index가 0보다 작거나, <see cref="P:Ntreev.Windows.Forms.Grid.Row.CellCount
             <remarks>
 셀들의 데이터가 변경되었을때 사용자는 변경된 내용을 취소하고 원래값으로 되돌릴수 있습니다.
 </remarks>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.Row.BeginEdit">
+            <summary>
+셀의 값을 변경하기 시작합니다.
+</summary>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.Row.ToString">
             <summary>
