@@ -631,18 +631,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 편집을 취소할 수 있는 이벤트의 데이터를 제공합니다.
     /// </summary>
-    public ref class BeginEditEventArgs
+    public ref class EditBegunEventArgs
         : Ntreev::Windows::Forms::Grid::CellEventArgs
     {
     public: // methods
 
         /// <summary>
-        /// <see cref="BeginEditEventArgs"/>클래스의 새 인스턴스를 초기화합니다.
+        /// <see cref="EditBegunEventArgs"/>클래스의 새 인스턴스를 초기화합니다.
         /// </summary>
         /// <param name="cell">
         /// 편집이 되는 <see cref="Ntreev::Windows::Forms::Grid::Cell"/>의 인스턴스입니다.
         /// </param>
-        BeginEditEventArgs(Ntreev::Windows::Forms::Grid::Cell^ cell);
+        EditBegunEventArgs(Ntreev::Windows::Forms::Grid::Cell^ cell);
 
     public: // properties
 
@@ -666,7 +666,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 편집을 취소할 수 있는 이벤트를 처리하는 메서드를 나타냅니다.
     /// </summary>
-    public delegate void BeginEditEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::BeginEditEventArgs^ e);
+    public delegate void EditBegunEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::EditBegunEventArgs^ e);
 
     /// <summary>
     /// 데이터가 초기화 되는 이벤트의 데이터를 제공합니다.

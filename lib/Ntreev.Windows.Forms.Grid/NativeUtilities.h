@@ -258,7 +258,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         static void InvokeLButtonDownEvent(System::Drawing::Point location);
         static void InvokeLButtonUpEvent(System::Drawing::Point location);
         static void keybd_event(int key);
-        static void DoEvents();
+        static void DoEvents(System::Collections::ArrayList% mm);
         static void DoEventsModal(System::Windows::Forms::Form^ form);
         static void TranslateAndDispatchMessage(System::Windows::Forms::Message% msg);
 

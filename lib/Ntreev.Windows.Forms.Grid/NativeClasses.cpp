@@ -497,10 +497,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         GrEditingReason reason = e->GetReason();
         Ntreev::Windows::Forms::Grid::Cell^ cell = FromNative::Get(e->GetItem());
 
-        if(m_gridControl->InvokeBeginEdit(cell) == false)
+        if(m_gridControl->InvokeEditBegun(cell) == false)
             return;
-
-        cell->Row->BeginEdit();
 
         TypeEditorForm^ form = gcnew TypeEditorForm(m_gridControl, cell, EditingReason(reason));
         m_gridControl->Update();
@@ -520,16 +518,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         }
         catch(System::Exception^ /*e*/)
         {
-            cell->Row->CancelEdit();
+            cell->CancelEdit();
         }
         finally
         {
             delete form;
-            //System::Diagnostics::Trace::WriteLine("Form deleted");
         }
 
         CellEventArgs ee(cell);
-        m_gridControl->InvokeEndEdit(%ee);
+        m_gridControl->InvokeEditEnded(%ee);
     }
 
     GrScroll* WinFormWindow::GetHorzScroll() const

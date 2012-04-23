@@ -745,6 +745,7 @@ void GrGridCore::Invoke(std::wstring eventName, GrEventArgs* e)
 void GrGridCore::OnEditValue(GrEditEventArgs* e)
 {
     m_pGridWindow->OnEditValue(e);
+    m_pInvalidator->Invalidate();
 }
 
 void GrGridCore::OnItemMouseEnter(GrItemMouseEventArgs* e)

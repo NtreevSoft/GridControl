@@ -89,7 +89,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     void TypeEditorForm::MessageFilter::WndProc(System::Windows::Forms::Message% m)
     {
-        NativeWindow::WndProc(m);
+        
 
         switch((Native::WM)m.Msg)
         {
@@ -97,7 +97,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             {
                 if(((int)m.WParam) == 0)
                 {
-                    Native::Methods::SendMessage(Handle, Native::WM::WM_NCACTIVATE, System::IntPtr(1), System::IntPtr::Zero);
+                    //Native::Methods::SendMessage(Handle, Native::WM::WM_NCACTIVATE, System::IntPtr(1), System::IntPtr::Zero);
+                    m.WParam = System::IntPtr(1);
+                    m.LParam = System::IntPtr::Zero;
                 }
             }
             break;
@@ -119,6 +121,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             }
             break;
         }
+
+        NativeWindow::WndProc(m);
 
         // Native::WM wm = (Native::WM)m.Msg;
         //System::Windows::Forms::Control^ control = System::Windows::Forms::Control::FromHandle(m.HWnd);
@@ -442,7 +446,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         }
 
         m_filter.Start(m_parentForm, this);
-
         System::IntPtr handle = this->Handle;
 
         this->SuspendLayout();
@@ -457,13 +460,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         this->Bounds = m_clientBounds;
         this->ResumeLayout(false);
 
+        m_gridControl->Refresh();
         this->Visible = true;
+        
         this->Activate();
 
-
         PreProcessEvent(control);
-        Native::Methods::DoEvents();
+
+        System::Collections::ArrayList dd;
+        Native::Methods::DoEvents(dd);
         PostProcessEvent(control);
+
+        if(dd.Count > 0)
+        {
+            System::Windows::Forms::Message m = (System::Windows::Forms::Message)dd[0];
+            Native::Methods::SendMessage(m);
+        }
+
 
         Native::Methods::DoEventsModal(this);
         m_filter.Stop();
@@ -489,13 +502,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
                 Native::Methods::SendMessage(msg);
             }
             break;
-             case EditingReasonType::Key:
+        case EditingReasonType::Key:
             {
                 Message msg;
                 msg.HWnd = ActiveControl->Handle;
                 msg.Msg = (int)Native::WM::WM_KEYDOWN;
                 msg.WParam = System::IntPtr((int)m_reason.Key);
-                Native::Methods::SendMessage(msg);
+                if(m_reason.Key != System::Windows::Forms::Keys::Enter)
+                    Native::Methods::SendMessage(msg);
             }
             break;
         case EditingReasonType::Char:

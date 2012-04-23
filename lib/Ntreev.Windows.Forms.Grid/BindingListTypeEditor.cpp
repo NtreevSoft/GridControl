@@ -28,6 +28,7 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design
 {
+#ifdef PAINT_MODAL
     BindingListTypeEditor::BindingListTypeEditor(System::Type^ dataType)
         : TypeEditor(dataType)
     {
@@ -52,4 +53,70 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     {
         return Ntreev::Windows::Forms::Grid::Design::EditStyle::Modal; 
     }
+#else
+
+    BindingListTypeEditor::BindingListTypeEditor(System::Type^ dataType)
+        : TypeEditor(dataType)
+    {
+        
+    }
+
+    System::Object^ BindingListTypeEditor::EditValue(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value)
+    {
+        if(ValueChecker::IsNullOrDBNull(value) == true)
+            return value;
+
+        Ntreev::Windows::Forms::Grid::GridControl^ gridControl = GetGridControl(cell);
+        if(gridControl->DataSource == nullptr)
+            gridControl->DataSource = dynamic_cast<System::ComponentModel::IBindingList^>(value);
+        editorService->ShowControl(gridControl);
+        return nullptr;
+    }
+
+    Ntreev::Windows::Forms::Grid::Design::EditStyle BindingListTypeEditor::GetEditStyle() 
+    {
+        return Ntreev::Windows::Forms::Grid::Design::EditStyle::Control; 
+    }
+
+    void BindingListTypeEditor::PaintValue(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle paintRect, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value)
+    {
+        System::Drawing::Bitmap^ bitmap = gcnew System::Drawing::Bitmap(paintRect.Width, paintRect.Height, graphics);
+        Ntreev::Windows::Forms::Grid::GridControl^ gridControl = GetGridControl(cell);
+        if(gridControl->DataSource == nullptr)
+        gridControl->DataSource = value;
+        gridControl->Bounds = System::Drawing::Rectangle(0, 0, paintRect.Width, paintRect.Height);
+
+        gridControl->DrawToBitmap(bitmap, System::Drawing::Rectangle(0, 0, paintRect.Width, paintRect.Height));
+
+
+        graphics->DrawImage(bitmap, paintRect.Location);
+
+        //m_gridControl->DataSource = value;
+        
+        //m_gridControl->DrawToBitmap(
+    }
+
+    Ntreev::Windows::Forms::Grid::ViewType BindingListTypeEditor::ViewType::get()
+    {
+        return Ntreev::Windows::Forms::Grid::ViewType::Custom;
+    }
+
+    Ntreev::Windows::Forms::Grid::GridControl^ BindingListTypeEditor::GetGridControl(Ntreev::Windows::Forms::Grid::ICell^ cell)
+    {
+        Ntreev::Windows::Forms::Grid::GridControl^ gridControl;
+        if(m_gridControls.TryGetValue(cell, gridControl) == false)
+        {
+            gridControl = gcnew Ntreev::Windows::Forms::Grid::GridControl();
+            gridControl->IsCaptionRowVisible = false;
+            gridControl->IsFrozingSplitterVisible = false;
+            gridControl->IsGroupPanelVisible = false;
+            gridControl->Dock = System::Windows::Forms::DockStyle::Fill;
+            gridControl->Caption = cell->Column->Title;
+
+            m_gridControls.Add(cell, gridControl);
+        }
+
+        return gridControl;
+    }
+#endif
 } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

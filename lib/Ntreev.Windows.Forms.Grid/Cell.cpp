@@ -108,7 +108,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_row = FromNative::Get(pItem->GetDataRow());
 
         m_pItem->ManagedRef = this;
-
+        m_value = Cell::NullValue;
+        m_oldValue = Cell::NullValue;
+        
         //UpdateNativeText();
     }
 
@@ -134,7 +136,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::Object^ Cell::Value::get()
     {
-        return ValueCore;
+        return this->ValueCore;
     }
 
     void Cell::Value::set(System::Object^ value)
@@ -149,23 +151,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(this->GridControl->InvokeValueChanging(this, value, oldValue) == false)
             return;
 
-        if(this->Row->IsBeingEdited == true)
+        if(m_row->IsBeingEdited == true)
         {
-            if(m_oldValue == nullptr)
+            if(m_oldValue == Cell::NullValue)
             {
-                m_oldValue = oldValue;
                 m_row->AddEditedCell();
+                m_oldValue = oldValue;
             }
         }
 
-        try
-        {
-            this->ValueCore = value;
-        }
-        catch(System::ArgumentException^)
-        {
-            this->ValueCore = System::DBNull::Value;
-        }
+        this->ValueCore = value;
 
         UpdateNativeText(value);
 
@@ -220,22 +215,29 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Cell::CancelEdit()
     {
-        if(m_oldValue == nullptr)
+        if(m_oldValue == Cell::NullValue)
             return false;
 
         m_row->RemoveEditedCell();
-        this->Value = m_oldValue;
-        m_oldValue = nullptr;
+        this->ValueCore = m_oldValue;
+        UpdateNativeText();
+        m_oldValue = Cell::NullValue;
         return true;
     }
 
-    bool Cell::ApplyEdit()
+    bool Cell::EndEdit()
     {
-        if(m_oldValue == nullptr)
+        if(m_oldValue == Cell::NullValue)
             return false;
 
+        if(m_value != Cell::NullValue)
+        {
+            this->ValueCore = m_value;
+            m_value = Cell::NullValue;
+        }
+
         m_row->RemoveEditedCell();
-        m_oldValue = nullptr;
+        m_oldValue = Cell::NullValue;
         return true;
     }
 
@@ -262,7 +264,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Cell::IsEdited::get()
     { 
-        return m_oldValue != nullptr ? true : false;
+        return m_oldValue != Cell::NullValue ? true : false;
     }
 
     bool Cell::IsSelected::get()
@@ -393,9 +395,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Cell::ShouldSerializeValue()
     {
-        //if(this->Column->PropertyDescriptor != nullptr)
-        // return false;
-
         if(this->ValueCore == nullptr || this->ValueCore->ToString() == "")
             return false;
 

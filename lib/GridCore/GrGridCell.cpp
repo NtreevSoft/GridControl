@@ -2015,7 +2015,7 @@ void GrDataRow::OnHeightAdjusted()
 
 void GrDataRow::OnHeightChanged()
 {
-    GrRow::OnHeightChanged();
+    IDataRow::OnHeightChanged();
     GrRootRow* pHeaderRow = dynamic_cast<GrRootRow*>(GetParent());
     if(pHeaderRow != NULL)
         pHeaderRow->SetHeightChanged();
@@ -4173,6 +4173,7 @@ GrDataRowList::GrDataRowList()
     m_pFocusedDataRow = NULL;
     m_pInsertionRow = CreateInsertionRow();
     m_dataRowID = 0;
+    m_displayableHeight = 0;
     m_visibleRowNumber = true;
     m_clippedIndex = INVALID_INDEX;
     m_zeroBasedRowIndex = false;
@@ -5562,6 +5563,13 @@ bool GrRootRow::ShouldClip() const
 
 void GrRootRow::Clip(const GrRect& displayRect, uint horizontal, uint vertical)
 {
+    int y = GetY();
+    for_each(_Rows, m_vecVisibleRows, value)
+    {
+        y += value->GetHeight();
+    }
+    m_height = y - GetY();
+
     m_bound.SetLocation(displayRect.GetLocation());
     m_bound.right = displayRect.left;
     m_bound.bottom = displayRect.top;

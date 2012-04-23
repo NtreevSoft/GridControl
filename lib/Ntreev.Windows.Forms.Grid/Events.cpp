@@ -274,18 +274,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_handled = value;
     } 
 
-    BeginEditEventArgs::BeginEditEventArgs(Ntreev::Windows::Forms::Grid::Cell^ cell)
+    EditBegunEventArgs::EditBegunEventArgs(Ntreev::Windows::Forms::Grid::Cell^ cell)
         : m_cancel(false), CellEventArgs(cell)
     {
 
     }
 
-    bool BeginEditEventArgs::Cancel::get()
+    bool EditBegunEventArgs::Cancel::get()
     {
         return m_cancel;
     }
 
-    void BeginEditEventArgs::Cancel::set(bool value)
+    void EditBegunEventArgs::Cancel::set(bool value)
     {
         m_cancel = value;
     } 

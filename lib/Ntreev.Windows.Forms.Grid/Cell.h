@@ -72,7 +72,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이 메서드는 이전값을 삭제하여 <see cref="CancelEdit"/>호출로 인해 이전 값으로 되돌릴 수 없도록 하는 기능입니다.
         /// 추가적으로 그리드 컨트롤에서 포커스된 행이 변경될때는 자동적으로 이 메서드가 호출됩니다.
         /// </remarks>
-        bool ApplyEdit();
+        bool EndEdit();
 
         /// <summary>
         /// 셀을 선택합니다.
@@ -279,7 +279,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀의 값이 변경 되었는지의 여부를 가져옵니다.
         /// </summary>
         /// <remarks>
-        /// 이 속성은 <see cref="CancelEdit"/> 또는 <see cref="ApplyEdit"/>의 호출로 인해서 값이 초기화 됩니다.
+        /// 이 속성은 <see cref="CancelEdit"/> 또는 <see cref="EndEdit"/>의 호출로 인해서 값이 초기화 됩니다.
         /// </remarks>
         /// <returns>
         /// 셀의 값이 변경되었다면 true를, 그렇지 않다면 false를 반환합니다.
@@ -350,11 +350,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             System::Drawing::Rectangle get();
         }
 
-        /// <summary>
-        /// 정의되지 않은 셀입니다.
-        /// </summary>
-        static Ntreev::Windows::Forms::Grid::Cell^ Null = nullptr;
-
     internal: // methods
 
         Cell(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrItem* pItem);
@@ -416,5 +411,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         System::String^ m_errorDescription;
         System::Object^ m_value;
+
+        static initonly System::Object^ NullValue = gcnew System::Object();
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -92,26 +92,33 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         gridControl->CurrencyManagerChanging += gcnew CurrencyManagerChangingEventHandler(this, &RowCollection::gridControl_CurrencyManagerChanging);
         gridControl->CurrencyManagerChanged += gcnew CurrencyManagerChangedEventHandler(this, &RowCollection::gridControl_CurrencyManagerChanged);
+        gridControl->FocusedRowChanged += gcnew System::EventHandler(this, &RowCollection::gridControl_FocusedRowChanged);
 
         m_components = gcnew System::Collections::Generic::Dictionary<System::Object^, Ntreev::Windows::Forms::Grid::Row^>();
     }
 
     void RowCollection::Bind(System::Object^ component, int componentIndex)
     {
-        if(m_components->ContainsKey(component) == true)
-            return;
+        Ntreev::Windows::Forms::Grid::Row^ row;
+        if(m_components->ContainsKey(component) == false)
+        {
+            if(this->GridControl->InvokeRowInserting(component) == false)
+                return;
 
-        if(this->GridControl->InvokeRowInserting(component) == false)
-            return;
+            row = gcnew Ntreev::Windows::Forms::Grid::Row(GridControl);
+            m_pDataRowList->AddDataRow(row->NativeRef);
+            m_components->Add(component, row);
 
-        Ntreev::Windows::Forms::Grid::Row^ row = gcnew Ntreev::Windows::Forms::Grid::Row(GridControl);
-        m_pDataRowList->AddDataRow(row->NativeRef);
-        row->Component = component;
-        row->ComponentIndex = componentIndex;
-
-        m_components->Add(component, row);
-
-        this->GridControl->InvokeRowInserted(row);
+            row->Component = component;
+            row->ComponentIndex = componentIndex;
+            this->GridControl->InvokeRowInserted(row);
+        }
+        else
+        {
+            row = m_components[component];
+            row->Component = component;
+            row->ComponentIndex = componentIndex;
+        }
     }
 
     void RowCollection::Unbind(int componentIndex)
@@ -217,6 +224,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         Ntreev::Windows::Forms::Grid::Row^ row = this[m_manager->Current];
         if(row != nullptr)
         {
+            row->Select();
             row->Focus();
             row->BringIntoView();
         }
@@ -224,7 +232,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void RowCollection::gridControl_CurrencyManagerChanging(System::Object^ /*sender*/, CurrencyManagerChangingEventArgs^ /*e*/)
     {
-
+        
     }
 
     void RowCollection::gridControl_CurrencyManagerChanged(System::Object^ /*sender*/, Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventArgs^ e)
@@ -251,6 +259,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         m_manager->ListChanged += m_listChangedEventHandler;
         m_manager->CurrentChanged += m_currentChangedEventHandler;
+    }
+
+    void RowCollection::gridControl_FocusedRowChanged(System::Object^ /*sender*/, System::EventArgs^ /*e*/)
+    {
+        ManagerEventDetach managerEventDeatch(this);
+
+        Ntreev::Windows::Forms::Grid::Row^ row = dynamic_cast<Ntreev::Windows::Forms::Grid::Row^>(this->GridControl->FocusedRow);
+
+        if(row != nullptr && row != this->InsertionRow)
+        {
+            if(m_manager->Position != row->ComponentIndex)
+            {
+                m_manager->Position = row->ComponentIndex;
+            }
+        }
     }
 
     void RowCollection::ArgumentTest(Ntreev::Windows::Forms::Grid::Row^ item)
@@ -290,9 +313,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::Object^ component = m_manager->Current;
         bool fromInsertion = item == this->InsertionRow;
 
-        if(fromInsertion == true)
-            item->ValueToSource(component);
-
         if(this->GridControl->InvokeRowInserting(component) == false)
         {
             m_manager->CancelCurrentEdit();
@@ -301,22 +321,24 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             try
             {
+                item->Component = component;
+                item->ComponentIndex = m_manager->List->Count - 1;
+
                 m_manager->EndCurrentEdit();
+
             }
             catch(System::Exception^ e)
             {
                 System::Windows::Forms::MessageBox::Show(e->Message);
+                item->Component = nullptr;
                 m_manager->CancelCurrentEdit();
                 return nullptr;
             }
-          
+
             m_pDataRowList->InsertDataRow(item->NativeRef, index);
 
             if(fromInsertion == true)
                 this->InsertionRow->SetDefaultValue();
-
-            item->Component = component;
-            item->ComponentIndex = m_manager->List->Count - 1;
 
             this->GridControl->InvokeRowInserted(item);
         }

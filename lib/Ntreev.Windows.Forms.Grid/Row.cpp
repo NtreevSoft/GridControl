@@ -56,18 +56,26 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_component == nullptr)
             return;
 
-        for each(Ntreev::Windows::Forms::Grid::Column^ item in this->GridControl->Columns)
+        if(IsBeingEdited == true)
         {
-            try
+            EndEdit();
+        }
+        else
+        {
+            for each(Ntreev::Windows::Forms::Grid::Column^ item in this->GridControl->Columns)
             {
-                Ntreev::Windows::Forms::Grid::Cell^ cell = NewCell(item);
-                cell->UpdateNativeText();
-            }
-            catch(System::Exception^)
-            {
-                
+                try
+                {
+                    Ntreev::Windows::Forms::Grid::Cell^ cell = NewCell(item);
+                    cell->UpdateNativeText();
+                }
+                catch(System::Exception^)
+                {
+
+                }
             }
         }
+            
     }
 
     GrDataRow* Row::NativeRef::get()
@@ -251,7 +259,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
     }
 
-    void Row::ApplyEdit()
+    void Row::EndEdit()
     {
         try
         {
@@ -260,7 +268,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
             for each(Ntreev::Windows::Forms::Grid::Cell^ cell in m_cells)
             {
-                cell->ApplyEdit();
+                cell->EndEdit();
             }
 
             if(m_editedCount < 0)
@@ -278,6 +286,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_pDataRow->GetDisplayable() == true)
             return;
         this->GridControl->BringIntoView(this);
+    }
+
+    void Row::Select()
+    {
+        this->Selector->SelectItems(m_pDataRow, GrSelectionType_Normal);
     }
 
     void Row::Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType)
@@ -373,7 +386,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 
             }
         }
-        ApplyEdit();
     }
 
     void Row::ValueToSource(System::Object^ component)

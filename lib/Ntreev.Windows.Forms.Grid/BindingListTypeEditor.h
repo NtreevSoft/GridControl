@@ -24,8 +24,19 @@
 #pragma once
 #include "TypeEditor.h"
 
+#define PAINT_MODAL
+
+#ifndef PAINT_MODAL
+namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
+{
+    ref class GridControl;
+} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
+#endif
+
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design
 {
+#ifdef PAINT_MODAL
+
     ref class BindingListTypeEditor : Ntreev::Windows::Forms::Grid::Design::TypeEditor
     {
     public: // methods
@@ -36,4 +47,33 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
         virtual Ntreev::Windows::Forms::Grid::Design::EditStyle GetEditStyle() override;
     };
+
+#else
+
+    ref class BindingListTypeEditor : Ntreev::Windows::Forms::Grid::Design::TypeEditor
+    {
+    public: // methods
+
+        BindingListTypeEditor(System::Type^ dataType);
+
+        virtual System::Object^ EditValue(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value) override;
+
+        virtual Ntreev::Windows::Forms::Grid::Design::EditStyle GetEditStyle() override;
+
+        virtual void PaintValue(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle paintRect, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value) override;
+
+        property Ntreev::Windows::Forms::Grid::ViewType ViewType
+        {
+            virtual Ntreev::Windows::Forms::Grid::ViewType get() override;
+        }
+
+    private:
+        Ntreev::Windows::Forms::Grid::GridControl^ GetGridControl(Ntreev::Windows::Forms::Grid::ICell^ cell);
+
+
+
+        System::Collections::Generic::Dictionary<Ntreev::Windows::Forms::Grid::ICell^, Ntreev::Windows::Forms::Grid::GridControl^> m_gridControls;
+    };
+
+#endif
 } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

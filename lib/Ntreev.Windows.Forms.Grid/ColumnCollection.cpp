@@ -380,7 +380,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
         case System::ComponentModel::ListChangedType::PropertyDescriptorAdded:
             {
-                Bind(e->PropertyDescriptor);
+                if(m_manager->GetItemProperties()->Contains(e->PropertyDescriptor) == true)
+                {
+                    Bind(e->PropertyDescriptor);
+                }
             }
             break;
         case System::ComponentModel::ListChangedType::PropertyDescriptorChanged:

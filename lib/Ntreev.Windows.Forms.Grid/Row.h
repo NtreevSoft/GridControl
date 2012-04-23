@@ -65,12 +65,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀들의 데이터가 변경되었을때 사용자는 변경된 내용을 취소하고 원래값으로 되돌릴수 있지만, 이 작업을 수행한 이후로는
         /// 원래값으로 되돌릴 수 없게 됩니다.
         /// </remarks>
-        void ApplyEdit();
+        void EndEdit();
 
         /// <summary>
         /// 행이 화면에 표시되도록 스크롤을 조정합니다.
         /// </summary>
         void BringIntoView();
+
+        /// <summary>
+        /// 이전 선택 항목을 해재한후 행을 선택합니다.
+        /// </summary>
+        void Select();
 
         /// <summary>
         /// 행을 선택합니다.

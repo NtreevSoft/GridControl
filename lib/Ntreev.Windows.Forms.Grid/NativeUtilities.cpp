@@ -191,7 +191,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         while(form->DialogResult == DialogResult::None);
     }
 
-    void Methods::DoEvents()
+    void Methods::DoEvents(System::Collections::ArrayList% mm)
     {
         using namespace System::Windows::Forms;
         MSG message;
@@ -203,6 +203,31 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             msg.WParam = System::IntPtr((int)message.wParam);
             msg.LParam = System::IntPtr((int)message.lParam);
 
+            //Control^ sontrol = Control::FromHandle(msg.HWnd);
+            //if(sontrol != nullptr)
+            //{
+            //    if(System::String::IsNullOrEmpty(sontrol->Name) == true)
+            //    {
+            //        System::Diagnostics::Trace::Write(sontrol->GetType()->Name + " : ");   
+            //    }
+            //    else
+            //    {
+            //        System::Diagnostics::Trace::Write(sontrol->Name + " : ");
+            //    }
+            //}
+            //else
+            //{
+            //    System::Diagnostics::Trace::Write(msg.HWnd.ToString() + " : ");
+            //}
+
+            if(msg.Msg == WM_LBUTTONUP)
+            {
+                mm.Add(msg);
+                continue;
+            }
+
+
+            //System::Diagnostics::Trace::WriteLine((Native::WM)msg.Msg);
             if(Application::FilterMessage(msg) == false)
             {
                 Control^ control = Control::FromHandle(msg.HWnd);

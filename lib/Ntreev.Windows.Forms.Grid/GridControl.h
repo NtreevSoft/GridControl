@@ -1170,12 +1170,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("셀의 편집이 시작됬을때 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
-        event Ntreev::Windows::Forms::Grid::BeginEditEventHandler^ BeginEdit
+        event Ntreev::Windows::Forms::Grid::EditBegunEventHandler^ EditBegun
         {
-            void add(Ntreev::Windows::Forms::Grid::BeginEditEventHandler^ p) { m_eventBeginEdit += p; }
-            void remove(Ntreev::Windows::Forms::Grid::BeginEditEventHandler^ p) { m_eventBeginEdit -= p; }
+            void add(Ntreev::Windows::Forms::Grid::EditBegunEventHandler^ p) { m_eventEditBegun += p; }
+            void remove(Ntreev::Windows::Forms::Grid::EditBegunEventHandler^ p) { m_eventEditBegun -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::BeginEditEventArgs^ e) { if(m_eventBeginEdit != nullptr) m_eventBeginEdit->Invoke(sender, e); }
+            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::EditBegunEventArgs^ e) { if(m_eventEditBegun != nullptr) m_eventEditBegun->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1183,12 +1183,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("셀의 편집이 종료됬을때 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
-        event Ntreev::Windows::Forms::Grid::CellEventHandler^ EndEdit
+        event Ntreev::Windows::Forms::Grid::CellEventHandler^ EditEnded
         {
-            void add(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventEndEdit += p; }
-            void remove(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventEndEdit -= p; }
+            void add(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventEditEnded += p; }
+            void remove(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventEditEnded -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::CellEventArgs^ e) { if(m_eventEndEdit != nullptr) m_eventEndEdit->Invoke(sender, e); }
+            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::CellEventArgs^ e) { if(m_eventEditEnded != nullptr) m_eventEditEnded->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1273,8 +1273,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void InvokeColumnMouseLeave(Ntreev::Windows::Forms::Grid::Column^ column);
         void InvokeColumnWidthChanged(Ntreev::Windows::Forms::Grid::Column^ column);
         void InvokeColumnFrozenChanged(Ntreev::Windows::Forms::Grid::Column^ column);
-        bool InvokeBeginEdit(Ntreev::Windows::Forms::Grid::Cell^ cell);
-        void InvokeEndEdit(Ntreev::Windows::Forms::Grid::CellEventArgs^ e);
+        bool InvokeEditBegun(Ntreev::Windows::Forms::Grid::Cell^ cell);
+        void InvokeEditEnded(Ntreev::Windows::Forms::Grid::CellEventArgs^ e);
         void InvokeScroll(System::Windows::Forms::ScrollEventArgs^ e);
         bool InvokeCellMouseMove(Ntreev::Windows::Forms::Grid::Cell^ cell, System::Drawing::Point clientLocation);
         void InvokeCellClick(Ntreev::Windows::Forms::Grid::Cell^ cell);
@@ -1557,9 +1557,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <see cref="BeginEdit"/> 이벤트를 발생시킵니다.
         /// </summary>
         /// <param name="e">
-        /// 이벤트 데이터가 들어 있는 <see cref="BeginEditEventArgs"/>입니다.
+        /// 이벤트 데이터가 들어 있는 <see cref="EditBegunEventArgs"/>입니다.
         /// </param>
-        virtual void OnBeginEdit(Ntreev::Windows::Forms::Grid::BeginEditEventArgs^ e);
+        virtual void OnEditBegun(Ntreev::Windows::Forms::Grid::EditBegunEventArgs^ e);
 
         /// <summary>
         /// <see cref="EndEdit"/> 이벤트를 발생시킵니다.
@@ -1567,7 +1567,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="CellEventArgs"/>입니다.
         /// </param>
-        virtual void OnEndEdit(Ntreev::Windows::Forms::Grid::CellEventArgs^ e);
+        virtual void OnEditEnded(Ntreev::Windows::Forms::Grid::CellEventArgs^ e);
 
         /// <summary>
         /// <see cref="Clearing"/> 이벤트를 발생시킵니다.
@@ -1783,6 +1783,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         Ntreev::Windows::Forms::Grid::Style^ m_style;
 
         Ntreev::Windows::Forms::Grid::Cell^ m_focusedCell;
+        Ntreev::Windows::Forms::Grid::Cell^ m_editingCell;
         Ntreev::Windows::Forms::Grid::CaptionRow^ m_captionRow;
         Ntreev::Windows::Forms::Grid::GroupPanel^ m_groupPanel;
 
@@ -1827,8 +1828,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         Ntreev::Windows::Forms::Grid::CellMouseEventHandler^ m_eventCellMouseMove;
         Ntreev::Windows::Forms::Grid::CellEventHandler^ m_eventCellClick;
         Ntreev::Windows::Forms::Grid::CellEventHandler^ m_eventCellDoubleClick;
-        Ntreev::Windows::Forms::Grid::BeginEditEventHandler^ m_eventBeginEdit;
-        Ntreev::Windows::Forms::Grid::CellEventHandler^ m_eventEndEdit;
+        Ntreev::Windows::Forms::Grid::EditBegunEventHandler^ m_eventEditBegun;
+        Ntreev::Windows::Forms::Grid::CellEventHandler^ m_eventEditEnded;
         Ntreev::Windows::Forms::Grid::ClearEventHandler^ m_eventClearing;
         Ntreev::Windows::Forms::Grid::ClearEventHandler^ m_eventCleared;
         System::EventHandler^ m_eventDataSourceChanged;

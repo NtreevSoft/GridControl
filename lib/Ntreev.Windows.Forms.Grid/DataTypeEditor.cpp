@@ -67,12 +67,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         paintRect.Width--;
         paintRect.Height--;
         graphics->DrawRectangle(System::Drawing::SystemPens::WindowText, paintRect);
-
-        //if(value != nullptr && value->ToString() != System::String::Empty)
-        //{
-        // System::Drawing::SolidBrush brush(cell->ForeColor);
-        // graphics->DrawString(System::String::Format("{0}", value), cell->Font, %brush, paintRect.Right, paintRect.Top);
-        //}
     }
 
     Ntreev::Windows::Forms::Grid::ViewType DataTypeEditor::ViewType::get()

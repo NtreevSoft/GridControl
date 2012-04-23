@@ -312,6 +312,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         void gridControl_CurrencyManagerChanged(System::Object^ sender, Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventArgs^ e);
 
+        void gridControl_FocusedRowChanged(System::Object^ sender, System::EventArgs^ e);
+
         void ArgumentTest(Ntreev::Windows::Forms::Grid::Row^ item);
 
         Ntreev::Windows::Forms::Grid::Row^ InsertCore(int index, Ntreev::Windows::Forms::Grid::Row^ item);

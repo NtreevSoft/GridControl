@@ -139,7 +139,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return true;
     }
 
-
 #ifdef _DEBUG
     void GridControl::OnInvalidated(System::Windows::Forms::InvalidateEventArgs^ e)
     {
@@ -166,6 +165,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void GridControl::OnLostFocus(System::EventArgs^ e)
     {
         m_pGridWindow->OnLostFocus();
+        if(m_editingCell == nullptr)
+            m_manager->EndCurrentEdit();
         UserControl::OnLostFocus(e);
     }
 
@@ -969,13 +970,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         if(FocusedRow != m_oldFocusedRow)
         {
-            if(m_focusedCell != nullptr)
-                m_focusedCell->Row->ApplyEdit();
             OnFocusedRowChanged(System::EventArgs::Empty);
         }
-
-        m_oldFocusedColumn = FocusedColumn;
-        m_oldFocusedRow = FocusedRow;
 
         OnFocusedCellChanged(gcnew CellEventArgs(m_focusedCell));
     }
@@ -1139,7 +1135,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     Ntreev::Windows::Forms::Grid::Cell^ GridControl::EditingCell::get()
     {
-        return m_focusedCell;
+        return m_editingCell;
     }
 
     Ntreev::Windows::Forms::Grid::ToolTip^ GridControl::ToolTip::get()
@@ -1358,6 +1354,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GridControl::InvokeValueChanged(Ntreev::Windows::Forms::Grid::Cell^ cell)
     {
+        m_manager->EndCurrentEdit();
         OnValueChanged(gcnew CellEventArgs(cell));
     }
 
@@ -1445,16 +1442,28 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         OnColumnMouseLeave(%ce);
     }
 
-    bool GridControl::InvokeBeginEdit(Ntreev::Windows::Forms::Grid::Cell^ cell)
+    bool GridControl::InvokeEditBegun(Ntreev::Windows::Forms::Grid::Cell^ cell)
     {
-        BeginEditEventArgs e(cell);
-        OnBeginEdit(%e);
-        return e.Cancel != true;
+        EditBegunEventArgs e(cell);
+        OnEditBegun(%e);
+
+        if(e.Cancel == true)
+            return false;
+
+        Ntreev::Windows::Forms::Grid::Row^ row = cell->Row;
+
+        
+        if(row->IsBeingEdited == false)
+            row->BeginEdit();
+
+        m_editingCell = cell;
+        return true;
     }
 
-    void GridControl::InvokeEndEdit(CellEventArgs^ e)
+    void GridControl::InvokeEditEnded(CellEventArgs^ e)
     {
-        OnEndEdit(e);
+        m_editingCell = nullptr;
+        OnEditEnded(e);
     }
 
     void GridControl::InvokeScroll(System::Windows::Forms::ScrollEventArgs^ e)
@@ -1531,6 +1540,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GridControl::OnFocusedRowChanged(System::EventArgs^ e)
     {
+        Ntreev::Windows::Forms::Grid::Row^ row = dynamic_cast<Ntreev::Windows::Forms::Grid::Row^>(m_oldFocusedRow);
+        if(row != nullptr)
+        {
+            if(row->IsBeingEdited == true)
+            {
+                try
+                {
+                    row->EndEdit();
+                    m_manager->EndCurrentEdit();
+                }
+                catch(System::Exception^)
+                {
+                    m_manager->CancelCurrentEdit();
+                }
+            }
+        }
+
         FocusedRowChanged(this, e);
     }
 
@@ -1543,14 +1569,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         FocusedCellChanged(this, e);
 
-        Ntreev::Windows::Forms::Grid::Cell^ cell = e->Cell;
-        if(cell != nullptr && cell->Row != this->InsertionRow)
-        {
-            if(m_manager->Position != cell->Row->ComponentIndex)
-            {
-                m_manager->Position = cell->Row->ComponentIndex;
-            }
-        }
+        //Ntreev::Windows::Forms::Grid::Cell^ cell = e->Cell;
+        //if(cell != nullptr && cell->Row != this->InsertionRow)
+        //{
+        //    if(m_manager->Position != cell->Row->ComponentIndex)
+        //    {
+        //        m_manager->Position = cell->Row->ComponentIndex;
+        //    }
+        //}
     }
 
     void GridControl::OnColumnInserting(Ntreev::Windows::Forms::Grid::ColumnInsertingEventArgs^ e)
@@ -1650,14 +1676,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         CellDoubleClick(this, e); 
     }
 
-    void GridControl::OnBeginEdit(Ntreev::Windows::Forms::Grid::BeginEditEventArgs^ e)
+    void GridControl::OnEditBegun(Ntreev::Windows::Forms::Grid::EditBegunEventArgs^ e)
     {
-        BeginEdit(this, e);
+        EditBegun(this, e);
     }
 
-    void GridControl::OnEndEdit(CellEventArgs^ e)
+    void GridControl::OnEditEnded(CellEventArgs^ e)
     {
-        EndEdit(this, e);
+        EditEnded(this, e);
     }
 
     void GridControl::OnClearing(Ntreev::Windows::Forms::Grid::ClearEventArgs^ e)

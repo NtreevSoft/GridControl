@@ -312,23 +312,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         m_propertyDescriptor = value;
 
-        m_typeEditor = Design::TypeEditor::FromDataType(this->DataType);
-
-        switch(this->ViewType)
-        {
-        case Ntreev::Windows::Forms::Grid::ViewType::Text:
-            m_pColumn->SetItemTextVisible(true);
-            m_pColumn->SetItemIcon(false);
-            break;
-        case Ntreev::Windows::Forms::Grid::ViewType::Icon:
-            m_pColumn->SetItemTextVisible(true);
-            m_pColumn->SetItemIcon(true);
-            break;
-        case Ntreev::Windows::Forms::Grid::ViewType::Custom:
-            m_pColumn->SetItemTextVisible(false);
-            m_pColumn->SetItemIcon(false);
-            break;
-        }
         SetEditStyleToNative();
 
         m_pColumn->SetReadOnly(this->IsReadOnly);
@@ -470,9 +453,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         using namespace System::ComponentModel;
         using namespace System::Drawing::Design;
 
-        if(value == nullptr)
-            value = System::String::typeid;
-
         if(m_dataType == value)
             return;
 
@@ -491,24 +471,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             }
         }
 
-        m_typeEditor = Design::TypeEditor::FromDataType(value);
-        switch(this->ViewType)
-        {
-        case Ntreev::Windows::Forms::Grid::ViewType::Text:
-            m_pColumn->SetItemTextVisible(true);
-            m_pColumn->SetItemIcon(false);
-            break;
-        case Ntreev::Windows::Forms::Grid::ViewType::Icon:
-            m_pColumn->SetItemTextVisible(true);
-            m_pColumn->SetItemIcon(true);
-            break;
-        case Ntreev::Windows::Forms::Grid::ViewType::Custom:
-            m_pColumn->SetItemTextVisible(false);
-            m_pColumn->SetItemIcon(false);
-            break;
-        }
         m_dataType = value;
         m_defaultValue = nullptr;
+        m_typeConverter = nullptr;
+
         SetEditStyleToNative();
     }
 
@@ -941,6 +907,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_title = nullptr;
     }
 
+    void Column::ResetDataType()
+    {
+        this->DataType = nullptr;
+    }
+        
+    void Column::ResetDefaultValue()
+    {
+        m_defaultValue = nullptr;
+    }
+        
+    void Column::ResetTypeConverter()
+    {
+        m_typeConverter = nullptr;
+    }
+
     void Column::AsyncDisplayText()
     {
         m_pColumn->SetText(ToNativeString::Convert(this->Title));
@@ -1097,6 +1078,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Column::SetEditStyleToNative()
     {
+        m_typeEditor = Design::TypeEditor::FromDataType(this->DataType);
+        switch(this->ViewType)
+        {
+        case Ntreev::Windows::Forms::Grid::ViewType::Text:
+            m_pColumn->SetItemTextVisible(true);
+            m_pColumn->SetItemIcon(false);
+            break;
+        case Ntreev::Windows::Forms::Grid::ViewType::Icon:
+            m_pColumn->SetItemTextVisible(true);
+            m_pColumn->SetItemIcon(true);
+            break;
+        case Ntreev::Windows::Forms::Grid::ViewType::Custom:
+            m_pColumn->SetItemTextVisible(false);
+            m_pColumn->SetItemIcon(false);
+            break;
+        }
+
         switch(GetEditStyle())
         {
         case Design::EditStyle::Control:
