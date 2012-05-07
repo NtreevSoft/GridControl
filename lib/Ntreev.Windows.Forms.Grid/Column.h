@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.4510.20986
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -38,7 +38,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     [System::ComponentModel::TypeConverterAttribute(System::ComponentModel::ExpandableObjectConverter::typeid)]
     [System::ComponentModel::ToolboxItemAttribute(false)]
     [System::ComponentModel::DesignTimeVisibleAttribute(false)]
-    [System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.ColumnDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4478.19833, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+    [System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.ColumnDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
     public ref class Column
         : Ntreev::Windows::Forms::Grid::CellBase
         , Ntreev::Windows::Forms::Grid::IColumn
@@ -400,7 +400,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <remarks>
         /// 속성 변경시 <see cref="DefaultValue"/>와 <see cref="TypeConverter"/>의 값은 초기화 됩니다.
         /// </remarks>
-        [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4478.19833, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
+        [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
         [System::ComponentModel::CategoryAttribute("Data")]
         property System::Type^ DataType
         {
@@ -504,7 +504,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이 속성의 사용 목적은 새로운 행을 추가 하기 위하여 제공되는 삽입열에 기본값을 제공하기 위해서입니다. 
         /// 데이터 타입에 대한 검사가 없으므로, 가급적 <see cref="DataType"/>과 같은 타입의 개체를 사용하시기 바랍니다.
         /// </remarks>
-        [System::ComponentModel::TypeConverterAttribute("Ntreev.Windows.Forms.Grid.Design.ValueConverter, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4478.19833, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+        [System::ComponentModel::TypeConverterAttribute("Ntreev.Windows.Forms.Grid.Design.ValueConverter, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
         [System::ComponentModel::CategoryAttribute("Data")]
         property System::Object^ DefaultValue
         {

@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.4510.20986
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -786,9 +786,11 @@ class GrDataRow : public IDataRow
 {
 protected:
     typedef std::vector<GrItem*> _Items;
-public:
+
     GrDataRow();
     virtual ~GrDataRow();
+
+public:
 
     GrItem* GetItem(const GrColumn* pColumn) const;
     GrItem* GetItem(const GrItem* pOtherItem) const;
@@ -1068,6 +1070,7 @@ public:
     GrDataRow* GetVisibleDataRow(uint index) const;
 
     GrDataRow* NewDataRowFromInsertion();
+    GrDataRow* NewDataRow();
 
     GrInsertionRow* GetInsertionRow() const;
 

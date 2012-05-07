@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.4510.20986
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -105,7 +105,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             if(this->GridControl->InvokeRowInserting(component) == false)
                 return;
 
-            row = gcnew Ntreev::Windows::Forms::Grid::Row(GridControl);
+            row = gcnew Ntreev::Windows::Forms::Grid::Row(GridControl, m_pDataRowList->NewDataRow());
             m_pDataRowList->AddDataRow(row->NativeRef);
             m_components->Add(component, row);
 
@@ -180,16 +180,33 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 System::Object^ component = m_manager->List[e->NewIndex];
 
                 Ntreev::Windows::Forms::Grid::Row^ row = this[component];
+                System::Collections::Generic::List<Ntreev::Windows::Forms::Grid::Cell^> cells;
                 if(e->PropertyDescriptor == nullptr)
                 {
-                    for each(Ntreev::Windows::Forms::Grid::Cell^ item in row->Cells)
-                    {
-                        item->UpdateNativeText();
-                    }
+                    cells.AddRange(row->Cells);
                 }
                 else
                 {
-                    row->Cells[e->PropertyDescriptor->Name]->UpdateNativeText();
+                    cells.Add(row->Cells[e->PropertyDescriptor->Name]);
+                }
+
+                for each(Ntreev::Windows::Forms::Grid::Cell^ item in cells)
+                {
+                    try
+                    {
+                        if(item->WrongValue == true)
+                        {
+                            item->WrongValue = false;
+                            item->ErrorDescription = System::String::Empty;
+                        }
+                        item->UpdateNativeText();
+                    }
+                    catch(System::Exception^)
+                    {
+                        item->WrongValue = true;
+                        item->ErrorDescription = "wrong value";
+                        item->UpdateNativeText();
+                    }
                 }
             }
             break;
@@ -255,7 +272,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             Bind(item, componentIndex++);
         }
 
-        this->InsertionRow->SetDefaultValue();
+        this->InsertionRow->SetDefaultValue(m_manager);
 
         m_manager->ListChanged += m_listChangedEventHandler;
         m_manager->CurrentChanged += m_currentChangedEventHandler;
@@ -309,7 +326,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         ManagerEventDetach managerEventDeatch(this);
 
-        m_manager->AddNew();
+        try
+        {
+            m_manager->AddNew();
+        }
+        catch(System::Exception^)
+        {
+            return nullptr;
+        }
+
         System::Object^ component = m_manager->Current;
         bool fromInsertion = item == this->InsertionRow;
 
@@ -329,16 +354,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             }
             catch(System::Exception^ e)
             {
-                System::Windows::Forms::MessageBox::Show(e->Message);
                 item->Component = nullptr;
                 m_manager->CancelCurrentEdit();
+                System::Windows::Forms::MessageBox::Show(e->Message);
                 return nullptr;
             }
 
             m_pDataRowList->InsertDataRow(item->NativeRef, index);
 
             if(fromInsertion == true)
-                this->InsertionRow->SetDefaultValue();
+                this->InsertionRow->SetDefaultValue(m_manager);
 
             this->GridControl->InvokeRowInserted(item);
         }
@@ -379,7 +404,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         try
         {
-            Ntreev::Windows::Forms::Grid::Row^ row = gcnew Row(GridControl);
+            Ntreev::Windows::Forms::Grid::Row^ row = gcnew Row(GridControl, m_pDataRowList->NewDataRow());
             Insert(this->Count, row);
             return row;
         }

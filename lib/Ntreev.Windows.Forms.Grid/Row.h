@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.4510.20986
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -393,7 +393,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     internal: // methodss
 
-        Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
+        //Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
 
         Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pDataRow);
 
@@ -406,7 +406,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         //void RefreshCells();
 
-        void SetDefaultValue();
+        void SetDefaultValue(System::Windows::Forms::CurrencyManager^ manager);
 
         void ValueToSource(System::Object^ component);
 

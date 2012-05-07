@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.4510.20986
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -56,7 +56,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     [System::ComponentModel::ToolboxItemAttribute(true)]
     [System::ComponentModel::DefaultEventAttribute("")]
     [System::Drawing::ToolboxBitmapAttribute(GridControl::typeid)]
-    [System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4478.19833, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+    [System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
     [System::Windows::Forms::DockingAttribute(System::Windows::Forms::DockingBehavior::Ask)]
     public ref class GridControl
         : System::Windows::Forms::UserControl
@@ -1626,11 +1626,52 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </param>
         virtual void OnMouseLeave(System::EventArgs^ e) override;
 
+        /// <summary>
+        /// <see cref="MouseMove"/> 이벤트를 발생시킵니다.
+        /// </summary>
+        /// <param name="e">
+        /// 이벤트 데이터가 들어 있는 <see cref="MouseEventArgs"/>입니다.
+        /// </param>
         virtual void OnMouseMove(System::Windows::Forms::MouseEventArgs^ e) override;
+
+        /// <summary>
+        /// <see cref="MouseDown"/> 이벤트를 발생시킵니다.
+        /// </summary>
+        /// <param name="e">
+        /// 이벤트 데이터가 들어 있는 <see cref="MouseEventArgs"/>입니다.
+        /// </param>
         virtual void OnMouseDown(System::Windows::Forms::MouseEventArgs^ e) override;
+
+        /// <summary>
+        /// <see cref="MouseUp"/> 이벤트를 발생시킵니다.
+        /// </summary>
+        /// <param name="e">
+        /// 이벤트 데이터가 들어 있는 <see cref="MouseEventArgs"/>입니다.
+        /// </param>
         virtual void OnMouseUp(System::Windows::Forms::MouseEventArgs^ e) override;
+
+        /// <summary>
+        /// <see cref="MouseClick"/> 이벤트를 발생시킵니다.
+        /// </summary>
+        /// <param name="e">
+        /// 이벤트 데이터가 들어 있는 <see cref="MouseEventArgs"/>입니다.
+        /// </param>
         virtual void OnMouseClick(System::Windows::Forms::MouseEventArgs^ e) override;
+
+        /// <summary>
+        /// <see cref="MouseDoubleClick"/> 이벤트를 발생시킵니다.
+        /// </summary>
+        /// <param name="e">
+        /// 이벤트 데이터가 들어 있는 <see cref="MouseEventArgs"/>입니다.
+        /// </param>
         virtual void OnMouseDoubleClick(System::Windows::Forms::MouseEventArgs^ e) override;
+
+        /// <summary>
+        /// <see cref="MouseWheel"/> 이벤트를 발생시킵니다.
+        /// </summary>
+        /// <param name="e">
+        /// 이벤트 데이터가 들어 있는 <see cref="MouseEventArgs"/>입니다.
+        /// </param>
         virtual void OnMouseWheel(System::Windows::Forms::MouseEventArgs^ e) override;
 
         /// <summary>

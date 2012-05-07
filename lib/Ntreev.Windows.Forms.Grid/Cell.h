@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.4510.20986
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -380,6 +380,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void set(System::Object^);
         }
 
+        property System::Object^ SourceValue
+        {
+            System::Object^ get();
+        }
+
+        property bool WrongValue
+        {
+            bool get();
+            void set(bool);
+        }
+
     private: // methods
 
         bool ShouldSerializeValue();
@@ -411,7 +422,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         System::String^ m_errorDescription;
         System::Object^ m_value;
+        bool m_wrongValue;
 
-        static initonly System::Object^ NullValue = gcnew System::Object();
+        //static initonly System::Object^ NullValue = gcnew System::Object();
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

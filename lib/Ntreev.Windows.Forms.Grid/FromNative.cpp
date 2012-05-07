@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.4510.20986
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -64,7 +64,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             return Get((GrGroupRow*)pDataRow);
         }
-        else if(pDataRow->GetRowType() == GrRowType_DataRow)
+        else if(pDataRow->GetRowType() == GrRowType_DataRow || pDataRow->GetRowType() == GrRowType_InsertionRow)
         {
             return Get((GrDataRow*)pDataRow);
         }

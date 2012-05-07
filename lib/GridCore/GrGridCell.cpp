@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.4510.20986
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -1785,7 +1785,6 @@ void GrItem::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
 
     if(m_pColumn->m_customItemPaint == true)
     {
-        //(*m_pColumn->m_fnCustomPaint)(pPainter, this, paintRect, m_pColumn->m_userData);
         return;
     }
 
@@ -4774,7 +4773,7 @@ void GrDataRowList::InsertDataRow(GrDataRow* pDataRow, uint index)
     if(e1.GetCancel() == true)
         return;
 
-    if(pDataRow->GetDataRowID() == INVALID_INDEX)
+/*    if(pDataRow->GetDataRowID() == INVALID_INDEX)
     {
         pDataRow->SetDataRowID(m_dataRowID++);
         pDataRow->Reserve(m_vecColumns.size());
@@ -4783,7 +4782,7 @@ void GrDataRowList::InsertDataRow(GrDataRow* pDataRow, uint index)
             pDataRow->AddItem(value);
         }
     }
-    else if(pDataRow->GetDataRowID() == INSERTION_ROW)
+    else */if(pDataRow->GetDataRowID() == INSERTION_ROW)
     {
         pDataRow->SetDataRowID(m_dataRowID++);
     }
@@ -4847,6 +4846,19 @@ GrDataRow* GrDataRowList::NewDataRowFromInsertion()
     m_pGridCore->Update();
 
     return m_pInsertionRow;
+}
+
+GrDataRow* GrDataRowList::NewDataRow()
+{
+    GrDataRow* pDataRow = new GrDataRow();
+    pDataRow->SetDataRowID(m_dataRowID++);
+    pDataRow->Reserve(m_vecColumns.size());
+    for_each(_Columns, m_vecColumns, value)
+    {
+        pDataRow->AddItem(value);
+    }
+    m_vecDataRowsRemoved.push_back(pDataRow);
+    return pDataRow;
 }
 
 uint GrDataRowList::GetDataRowCount() const

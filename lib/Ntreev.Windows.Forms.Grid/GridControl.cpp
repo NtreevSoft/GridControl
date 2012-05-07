@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.4510.20986
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -165,8 +165,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void GridControl::OnLostFocus(System::EventArgs^ e)
     {
         m_pGridWindow->OnLostFocus();
-        if(m_editingCell == nullptr)
-            m_manager->EndCurrentEdit();
         UserControl::OnLostFocus(e);
     }
 
@@ -272,6 +270,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                     continue;
 
                 GrItem* pItem = pDataRow->GetItem(pColumn);
+                Ntreev::Windows::Forms::Grid::Cell^ cell = FromNative::Get(pItem);
+                if(cell->WrongValue == true)
+                    continue;
+
                 System::Drawing::Rectangle paintRect = pItem->GetClientRect();
                 paintRect.Offset(pItem->GetLocation());
 
@@ -283,8 +285,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
                 //if(pItem->GetControlVisible() == true)
                 // paintRect.Width -= pItem->GetControlRect().GetWidth();
-
-                Ntreev::Windows::Forms::Grid::Cell^ cell = FromNative::Get(pItem);
                 column->PaintValue(graphics, paintRect, cell, cell->Value);
             }
         }
@@ -296,7 +296,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(pFocusedRow == nullptr || pFocusedRow->GetDisplayable() == false)
             return;
 
-        Ntreev::Windows::Forms::Grid::Row^ row = dynamic_cast<Ntreev::Windows::Forms::Grid::Row^>(FocusedRow);
+        Ntreev::Windows::Forms::Grid::Row^ row = dynamic_cast<Ntreev::Windows::Forms::Grid::Row^>(this->FocusedRow);
 
         if(EditingCell != nullptr)
         {
@@ -963,12 +963,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             m_focusedCell = FromNative::Get(pFocusedItem);
         }
 
-        if(FocusedColumn != m_oldFocusedColumn)
+        if(this->FocusedColumn != m_oldFocusedColumn)
         {
             OnFocusedColumnChanged(System::EventArgs::Empty);
         }
 
-        if(FocusedRow != m_oldFocusedRow)
+        if(this->FocusedRow != m_oldFocusedRow)
         {
             OnFocusedRowChanged(System::EventArgs::Empty);
         }
@@ -1545,15 +1545,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             if(row->IsBeingEdited == true)
             {
-                try
-                {
-                    row->EndEdit();
-                    m_manager->EndCurrentEdit();
-                }
-                catch(System::Exception^)
-                {
-                    m_manager->CancelCurrentEdit();
-                }
+                row->EndEdit();
             }
         }
 
@@ -1568,15 +1560,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void GridControl::OnFocusedCellChanged(CellEventArgs^ e)
     {
         FocusedCellChanged(this, e);
-
-        //Ntreev::Windows::Forms::Grid::Cell^ cell = e->Cell;
-        //if(cell != nullptr && cell->Row != this->InsertionRow)
-        //{
-        //    if(m_manager->Position != cell->Row->ComponentIndex)
-        //    {
-        //        m_manager->Position = cell->Row->ComponentIndex;
-        //    }
-        //}
     }
 
     void GridControl::OnColumnInserting(Ntreev::Windows::Forms::Grid::ColumnInsertingEventArgs^ e)

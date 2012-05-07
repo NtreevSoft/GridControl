@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.4510.20986
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -108,9 +108,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_row = FromNative::Get(pItem->GetDataRow());
 
         m_pItem->ManagedRef = this;
-        m_value = Cell::NullValue;
-        m_oldValue = Cell::NullValue;
-        
+        m_value = System::DBNull::Value;
+        m_oldValue = System::DBNull::Value;
+
         //UpdateNativeText();
     }
 
@@ -153,7 +153,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         if(m_row->IsBeingEdited == true)
         {
-            if(m_oldValue == Cell::NullValue)
+            if(m_oldValue == System::DBNull::Value)
             {
                 m_row->AddEditedCell();
                 m_oldValue = oldValue;
@@ -162,9 +162,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         this->ValueCore = value;
 
-        UpdateNativeText(value);
-
         this->GridControl->InvokeValueChanged(this);
+
+        UpdateNativeText(value);
     }
 
     void Cell::UpdateNativeText()
@@ -178,8 +178,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             TypeDescriptorContextCore^ typeDescriptorContext = gcnew TypeDescriptorContextCore(this);
             System::String^ text = System::String::Empty;
-            if(value != nullptr && value != System::DBNull::Value)
+            if(m_wrongValue == true)
+            {
+                System::Object^ sourceValue = this->SourceValue;
+                if(sourceValue != nullptr)
+                    text = sourceValue->ToString();
+            }
+            else if(value != nullptr && value != System::DBNull::Value)
+            {
                 text = m_column->TypeConverter->ConvertToString(typeDescriptorContext, value);
+            }
             m_pItem->SetText(ToNativeString::Convert(text));
         }
         catch(System::Exception^)
@@ -215,29 +223,32 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Cell::CancelEdit()
     {
-        if(m_oldValue == Cell::NullValue)
+        if(m_oldValue == System::DBNull::Value)
             return false;
 
         m_row->RemoveEditedCell();
-        this->ValueCore = m_oldValue;
-        UpdateNativeText();
-        m_oldValue = Cell::NullValue;
+        if(m_wrongValue == false)
+        {
+            this->ValueCore = m_oldValue;
+            UpdateNativeText();
+        }
+        m_oldValue = System::DBNull::Value;
         return true;
     }
 
     bool Cell::EndEdit()
     {
-        if(m_oldValue == Cell::NullValue)
+        if(m_oldValue == System::DBNull::Value)
             return false;
 
-        if(m_value != Cell::NullValue)
+        if(m_value != System::DBNull::Value)
         {
             this->ValueCore = m_value;
-            m_value = Cell::NullValue;
+            m_value = System::DBNull::Value;
         }
 
         m_row->RemoveEditedCell();
-        m_oldValue = Cell::NullValue;
+        m_oldValue = System::DBNull::Value;
         return true;
     }
 
@@ -264,7 +275,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Cell::IsEdited::get()
     { 
-        return m_oldValue != Cell::NullValue ? true : false;
+        return m_oldValue != System::DBNull::Value ? true : false;
     }
 
     bool Cell::IsSelected::get()
@@ -358,10 +369,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::Object^ Cell::ValueCore::get()
     {
+        if(m_wrongValue == true)
+            return nullptr;
         System::ComponentModel::PropertyDescriptor^ propertyDescriptor = this->Column->PropertyDescriptor;
         System::Object^ component = this->Row->Component;
         if(propertyDescriptor == nullptr || component == nullptr)
+        {
+            if(m_value == System::DBNull::Value)
+                return nullptr;
             return m_value;
+        }
         System::Object^ value = propertyDescriptor->GetValue(component);
         return this->Column->ConvertFromSource(value);
     }
@@ -379,13 +396,35 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             value = this->Column->ConvertToSource(value);
             try
             {
-                propertyDescriptor->SetValue(Row->Component, value);
+                propertyDescriptor->SetValue(this->Row->Component, value);
             }
-            catch(System::Exception^)
+            catch(System::Exception^ e)
             {
-                propertyDescriptor->SetValue(Row->Component, System::DBNull::Value);
+                if(value == nullptr)
+                    propertyDescriptor->SetValue(this->Row->Component, System::DBNull::Value);
+                else
+                    throw e;
             }
         }
+    }
+
+    System::Object^ Cell::SourceValue::get()
+    {
+        System::ComponentModel::PropertyDescriptor^ propertyDescriptor = this->Column->PropertyDescriptor;
+        System::Object^ component = this->Row->Component;
+        if(propertyDescriptor == nullptr || component == nullptr)
+            return nullptr;
+        return propertyDescriptor->GetValue(component);
+    }
+
+    bool Cell::WrongValue::get()
+    {
+        return m_wrongValue;
+    }
+
+    void Cell::WrongValue::set(bool value)
+    {
+        m_wrongValue = value;
     }
 
     System::Drawing::Rectangle Cell::TextBound::get()

@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.4510.20986
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -36,31 +36,27 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    Row::Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
-        : m_pDataRow(new GrDataRow()), RowBase(gridControl, m_pDataRow), m_errorDescription(System::String::Empty)
-    {
-        m_cells = gcnew Ntreev::Windows::Forms::Grid::CellCollection(this);
-        m_componentIndex = -1;
-    }
-
     Row::Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pDataRow) 
         : m_pDataRow(pDataRow), RowBase(gridControl, m_pDataRow), m_errorDescription(System::String::Empty)
     {
         m_cells = gcnew Ntreev::Windows::Forms::Grid::CellCollection(this);
+        m_componentIndex = -1;
+
+        for each(Ntreev::Windows::Forms::Grid::Column^ item in this->GridControl->Columns)
+        {
+            NewCell(item);
+        }
     }
 
     void Row::Component::set(System::Object^ value)
     {
         m_component = value;
 
-        if(m_component == nullptr)
-            return;
-
         if(IsBeingEdited == true)
         {
             EndEdit();
         }
-        else
+        //else
         {
             for each(Ntreev::Windows::Forms::Grid::Column^ item in this->GridControl->Columns)
             {
@@ -372,19 +368,33 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_pDataRow->GetItemFont() != nullptr;
     }
 
-    void Row::SetDefaultValue()
+    void Row::SetDefaultValue(System::Windows::Forms::CurrencyManager^ manager)
     {
-        for each(Ntreev::Windows::Forms::Grid::Column^ item in this->GridControl->Columns)
+        try
         {
-            try
+            manager->AddNew();
+
+            for each(Ntreev::Windows::Forms::Grid::Cell^ cell in this->Cells)
             {
-                Ntreev::Windows::Forms::Grid::Cell^ cell = NewCell(item);
-                cell->SetDefaultValue();
+                Ntreev::Windows::Forms::Grid::Column^ column = cell->Column;
+                if(column->PropertyDescriptor == nullptr || column->DefaultValue != nullptr)
+                {
+                    cell->ValueCore = column->DefaultValue;
+                }
+                else
+                {
+                    cell->ValueCore = column->PropertyDescriptor->GetValue(manager->Current);
+                }
+                cell->UpdateNativeText();
             }
-            catch(System::Exception^)
-            {
-                
-            }
+        }
+        catch(System::Exception^)
+        {
+
+        }
+        finally
+        {
+            manager->CancelCurrentEdit();
         }
     }
 

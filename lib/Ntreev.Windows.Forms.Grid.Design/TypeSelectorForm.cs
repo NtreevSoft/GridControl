@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 2.0.4478.19833
+//Ntreev Grid for .Net 2.0.4510.20986
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.
@@ -76,7 +76,17 @@ namespace Ntreev.Windows.Forms.Grid.Design
 
             try
             {
-                Assembly projectAseembly = Assembly.Load(project.Name);
+                string assemblyName = string.Empty;
+                foreach (Property prop in project.Properties)
+                {
+                    if (prop.Name == "AssemblyName")
+                    {
+                        assemblyName = prop.Value.ToString();
+                        break;
+                    }
+                }
+
+                Assembly projectAseembly = Assembly.Load(assemblyName);
                 if (projectAseembly != null)
                 {
                     typeSelectorForm.projectAssembly = projectAseembly;
@@ -97,8 +107,6 @@ namespace Ntreev.Windows.Forms.Grid.Design
             typeSelectorForm.referenceAssemblies = assemblies.ToArray();
 
             return typeSelectorForm;
-
-
         }
 
         public TypeSelectorForm()
@@ -275,8 +283,6 @@ namespace Ntreev.Windows.Forms.Grid.Design
             imageName += ".bmp";
 
             return this.imageList1.Images.IndexOfKey(imageName);
-
-
         }
 
         private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
