@@ -179,6 +179,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::ArgumentException">0보다 작은 수를 설정할때.</exception>
         [System::ComponentModel::CategoryAttribute("Layout")]
         [System::ComponentModel::DefaultValueAttribute(100)]
+        [System::ComponentModel::SettingsBindableAttribute(true)]
         property int Width
         {
             int get() new;
@@ -223,6 +224,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::SettingsBindableAttribute(true)]
         property bool IsVisible
         {
             virtual bool get() sealed;
@@ -241,6 +243,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::SettingsBindableAttribute(true)]
         property bool IsMovable
         {
             virtual bool get() sealed;
@@ -259,6 +262,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::SettingsBindableAttribute(true)]
         property bool IsResizable
         {
             virtual bool get() sealed;
@@ -277,6 +281,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </remarks>
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DefaultValueAttribute(false)]
+        [System::ComponentModel::SettingsBindableAttribute(true)]
         property bool IsFrozen
         {
             virtual bool get() sealed;
@@ -294,6 +299,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </remarks>
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DefaultValueAttribute(false)]
+        [System::ComponentModel::SettingsBindableAttribute(true)]
         property bool IsReadOnly
         {
             virtual bool get() sealed;
@@ -351,6 +357,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DefaultValueAttribute(false)]
+        [System::ComponentModel::SettingsBindableAttribute(true)]
         property bool IsGrouped
         {
             virtual bool get() sealed;
@@ -370,6 +377,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </remarks>
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DefaultValueAttribute(true)]
+        [System::ComponentModel::SettingsBindableAttribute(true)]
         property bool IsGroupable
         {
             virtual bool get() sealed;
@@ -433,6 +441,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         [System::ComponentModel::DefaultValueAttribute(Ntreev::Windows::Forms::Grid::SortType::None)]
         [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::SettingsBindableAttribute(true)]
         property Ntreev::Windows::Forms::Grid::SortType SortType
         {
             virtual Ntreev::Windows::Forms::Grid::SortType get() sealed;
@@ -535,6 +544,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         [System::ComponentModel::CategoryAttribute("Cell")]
         [System::ComponentModel::DefaultValueAttribute(System::Drawing::StringAlignment::Near)]
+        [System::ComponentModel::SettingsBindableAttribute(true)]
         property System::Drawing::StringAlignment CellAlignment
         {
             System::Drawing::StringAlignment get();
@@ -549,6 +559,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         [System::ComponentModel::CategoryAttribute("Cell")]
         [System::ComponentModel::DefaultValueAttribute(System::Drawing::StringAlignment::Near)]
+        [System::ComponentModel::SettingsBindableAttribute(true)]
         property System::Drawing::StringAlignment CellLineAlignment
         {
             System::Drawing::StringAlignment get();
@@ -563,6 +574,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         [System::ComponentModel::CategoryAttribute("Cell")]
         [System::ComponentModel::DefaultValueAttribute(false)]
+        [System::ComponentModel::SettingsBindableAttribute(true)]
         property bool CellWordWrap
         {
             bool get();
@@ -577,6 +589,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         [System::ComponentModel::CategoryAttribute("Cell")]
         [System::ComponentModel::DefaultValueAttribute(false)]
+        [System::ComponentModel::SettingsBindableAttribute(true)]
         property bool CellMultiline
         {
             bool get();

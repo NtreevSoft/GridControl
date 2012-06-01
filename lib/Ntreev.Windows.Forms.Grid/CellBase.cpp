@@ -65,12 +65,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     System::Drawing::Font^ CellBase::Font::get()
     {
         GrFont* pFont = (GrFont*)m_pCell->GetPaintingFont();
-        return Native::WinFormFontManager::ToManagedFont(pFont);
+        return GrFont::ToManaged(pFont);
     }
 
     void CellBase::Font::set(System::Drawing::Font^ font)
     {
-        GrFont* pFont = Native::WinFormFontManager::FromManagedFont(font);
+        GrFont* pFont = GrFont::FromManaged(font);
         m_pCell->SetFont(pFont);
     }
 
@@ -91,20 +91,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool CellBase::ShouldSerializeForeColor()
     {
-        return m_pCell->GetForeColor(false) != GrColor::Empty;
+        return m_pCell->GetForeColorCore() != GrColor::Empty;
     }
 
     bool CellBase::ShouldSerializeBackColor()
     {
-        return m_pCell->GetBackColor(false) != GrColor::Empty;
+        return m_pCell->GetBackColorCore() != GrColor::Empty;
     }
 
     bool CellBase::ShouldSerializeFont()
     {
-        GrFont* pFont = m_pCell->GetFont(false);
-        if(pFont == nullptr)
-            return false;
-        return pFont != this->GridCore->GetGridWindow()->GetDefaultFont();
+		return m_pCell->GetFontCore() != GrFont::Empty;
     }
 
     bool CellBase::ShouldSerializePadding()
@@ -119,7 +116,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void CellBase::ResetFont()
     {
-        m_pCell->SetFont(NULL);
+        m_pCell->SetFont(GrFont::Empty);
     }
 
     System::Windows::Forms::Padding CellBase::Padding::get()

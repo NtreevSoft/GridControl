@@ -243,8 +243,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         if(m_value != System::DBNull::Value)
         {
-            this->ValueCore = m_value;
+            System::Object^ value = m_value;
             m_value = System::DBNull::Value;
+            this->ValueCore = value;
         }
 
         m_row->RemoveEditedCell();

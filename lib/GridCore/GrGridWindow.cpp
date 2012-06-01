@@ -184,8 +184,7 @@ void GrGridWindow::OnMouseLeave()
 
 bool GrGridWindow::OnKeyDown(GrKeys key)
 {
-    m_pGridCore->GetStateManager()->OnKeyDown(key, GetModifierKeys());
-    return false;
+    return m_pGridCore->GetStateManager()->OnKeyDown(key, GetModifierKeys());
 }
 
 void GrGridWindow::OnKeyUp(GrKeys key)
@@ -225,10 +224,10 @@ void GrGridWindow::OnPaint(void* painterDevice, const GrRect& clipping)
     pPainter->EndPaint();
 }
 
-void GrGridWindow::OnFontChanged()
-{
-    m_pGridCore->Invoke(L"FontChanged", &GrEventArgs::Empty);
-}
+//void GrGridWindow::OnFontChanged()
+//{
+//    m_pGridCore->Invoke(L"FontChanged", &GrEventArgs::Empty);
+//}
 
 void GrGridWindow::OnGridCoreAttached()
 {

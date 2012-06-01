@@ -25,8 +25,44 @@
 #include "GrGridPainterDC.h"
 
 GrFontCreator::Fonts GrFontCreator::m_fonts;
+static GrFontCreator fontCreator;
 
-GrFontCreator fontCreator;
+#ifdef _MANAGED
+
+GrFont* GrFont::GetDefaultFont()
+{
+	static GrFontDC defaultFont(System::Windows::Forms::Control::DefaultFont->ToHfont().ToPointer());
+	return &defaultFont;
+}
+
+GrFont* GrFont::FromManaged(System::Drawing::Font^ font)
+{
+	if(font == nullptr)
+		return NULL;
+	if(System::Windows::Forms::Control::DefaultFont == font)
+		return GetDefaultFont();
+	return GrFontCreator::Create(font->ToHfont().ToPointer());
+}
+
+System::Drawing::Font^ GrFont::ToManaged(GrFont* pFont)
+{
+	if(pFont == NULL)
+		return nullptr;
+	if(pFont == GetDefaultFont())
+		return System::Windows::Forms::Control::DefaultFont;
+
+	System::Drawing::Font^ font = pFont->ManagedRef;
+	if(font == nullptr)
+	{
+		System::IntPtr ptr(GrFontCreator::GetFontHandle(pFont));
+		font = System::Drawing::Font::FromHfont(ptr);
+		font = gcnew System::Drawing::Font(font->FontFamily, font->SizeInPoints, font->Style, System::Windows::Forms::Control::DefaultFont->Unit, font->GdiCharSet);
+		pFont->ManagedRef = font;
+	}
+	return font;
+}
+
+#endif
 
 GrFontCreator::GrFontCreator()
 {

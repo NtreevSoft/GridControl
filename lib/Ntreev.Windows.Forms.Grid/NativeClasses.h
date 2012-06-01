@@ -146,14 +146,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         GrInvalidator* GetInvalidator() const;
         GrGridPainter* GetGridPainter() const;
 
-        GrFont* GetFont() const;
-        GrFont* GetFont(void* fontData) const;
-        GrFont* GetDefaultFont() const; 
+		//GrColor GetForeColor() const;
+		//GrColor GetBackColor() const;
+  //      GrFont* GetFont() const;
+        //GrFont* GetFont(void* fontData) const;
+        //GrFont* GetDefaultFont() const; 
 
         GrTimer* CreateTimer();
         void DestroyTimer(GrTimer* pTimer);
 
-        void SetFont(System::Drawing::Font^ font);
+  //      void SetFont(System::Drawing::Font^ font);
+		//void SetForeColor(System::Drawing::Color foreColor);
+		//void SetBackColor(System::Drawing::Color backColor);
 
         //static GrFont* FromManagedFont(System::Drawing::Font^ font);
         //static System::Drawing::Font^ ToManagedFont(GrFont* pFont);
@@ -172,17 +176,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         WinFormInvalidator m_invalidator;
         GrGridPainter* m_pGridPainter;
         GrFont* m_pFont;
+		GrColor m_foreColor;
+		GrColor m_backColor;
     };
 
-    ref class WinFormFontManager
-    {
-    public:
-        static GrFont* FromManagedFont(System::Drawing::Font^ font);
-        static System::Drawing::Font^ ToManagedFont(GrFont* pFont);
+    //ref class WinFormFontManager
+    //{
+    //public:
+    //    static GrFont* FromManagedFont(System::Drawing::Font^ font);
+    //    static System::Drawing::Font^ ToManagedFont(GrFont* pFont);
 
-    public:
-        static GrFont* m_pDefaultfont;
-    };
+    //public:
+    //    static GrFont* m_pDefaultfont;
+    //};
 
     class WinFormGridCore : public GrGridCore
     {

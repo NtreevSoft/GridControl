@@ -23,9 +23,9 @@
 
 #include "StdAfx.h"
 #include "NativeClasses.h"
+#include "GrDCCreator.h"
 #include "NativeUtilities.h"
 #include "Resources.h"
-#include "GrDCCreator.h"
 #include "Cell.h"
 #include "Row.h"
 #include "Tooltip.h"
@@ -38,9 +38,11 @@
 //#define _PRINT_INVALIDATE_RECT
 #endif
 
+
+
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Native
 {
-    GrFont* WinFormFontManager::FromManagedFont(System::Drawing::Font^ font)
+    /*GrFont* WinFormFontManager::FromManagedFont(System::Drawing::Font^ font)
     {
         if(font == nullptr)
             return NULL;
@@ -63,7 +65,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             pFont->ManagedRef = font;
         }
         return font;
-    }
+    }*/
 
     WinFormInvalidator::WinFormInvalidator(gcroot<Ntreev::Windows::Forms::Grid::GridControl^> gridControl)
         : m_gridControl(gridControl)
@@ -363,8 +365,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     WinFormWindow::WinFormWindow(gcroot<Ntreev::Windows::Forms::Grid::GridControl^> gridControl)
         : m_gridControl(gridControl), m_horzScroll(m_gridControl, 0), m_vertScroll(m_gridControl, 1), m_invalidator(m_gridControl)
     {
-        WinFormFontManager::m_pDefaultfont = GetDefaultFont();
-
         m_pGridPainter = CreateGridPainterDC(m_gridControl->Handle.ToPointer());
         System::IO::Stream^ stream;
         stream = Ntreev::Windows::Forms::Grid::GridControl::typeid->Assembly->GetManifestResourceStream("Ntreev.Windows.Forms.Grid.Cursors.Movable.cur");
@@ -379,7 +379,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         m_cursorRemove = gcnew System::Windows::Forms::Cursor(stream);
         delete stream;
 
-        m_pFont = WinFormFontManager::FromManagedFont(m_gridControl->Font);
+        //m_pFont = WinFormFontManager::FromManagedFont(m_gridControl->Font);
     }
 
     GrRect WinFormWindow::GetSrceenRect() const
@@ -550,26 +550,46 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         return m_pGridPainter;
     }
 
-    GrFont* WinFormWindow::GetFont() const
-    {
-        return m_pFont;
-    }
+	//GrColor WinFormWindow::GetForeColor() const
+	//{
+	//	return m_foreColor;
+	//}
 
-    void WinFormWindow::SetFont(System::Drawing::Font^ font)
-    {
-        m_pFont = WinFormFontManager::FromManagedFont(font);
-        OnFontChanged();
-    }
+	//GrColor WinFormWindow::GetBackColor() const
+	//{
+	//	return m_backColor;
+	//}
 
-    GrFont* WinFormWindow::GetFont(void* fontData) const
-    {
-        return GrFontCreator::Create(fontData);
-    }
+ //   GrFont* WinFormWindow::GetFont() const
+ //   {
+ //       return m_pFont;
+ //   }
 
-    GrFont* WinFormWindow::GetDefaultFont() const
-    {
-        return WinFormFontManager::FromManagedFont(System::Windows::Forms::Control::DefaultFont);
-    }
+ //   void WinFormWindow::SetFont(System::Drawing::Font^ font)
+ //   {
+ //       m_pFont = WinFormFontManager::FromManagedFont(font);
+ //       OnFontChanged();
+ //   }
+
+	//void WinFormWindow::SetForeColor(System::Drawing::Color foreColor)
+	//{
+
+	//}
+	//
+	//void WinFormWindow::SetBackColor(System::Drawing::Color backColor)
+	//{
+
+	//}
+
+    //GrFont* WinFormWindow::GetFont(void* fontData) const
+    //{
+    //    return GrFontCreator::Create(fontData);
+    //}
+
+    //GrFont* WinFormWindow::GetDefaultFont() const
+    //{
+    //    return WinFormFontManager::FromManagedFont(System::Windows::Forms::Control::DefaultFont);
+    //}
 
     GrTimer* WinFormWindow::CreateTimer()
     {

@@ -22,6 +22,9 @@
 
 
 #include "GrGridType.h"
+#ifdef _MANAGED
+#include <vcclr.h>
+#endif
 
 #define LOBYTE(w) ((byte)(((unsigned int)(w)) & 0xff))
 #define GetRValue(rgb) (LOBYTE(rgb))
@@ -465,151 +468,164 @@ void GrPadding::operator = (System::Windows::Forms::Padding% padding)
 }
 #endif
 
-const GrColor GrColor::Empty(0, 0, 0, 0);
-const GrColor GrColor::AliceBlue(255, 240, 248, 255);
-const GrColor GrColor::AntiqueWhite(255, 250, 235, 215);
-const GrColor GrColor::Aqua(255, 0, 255, 255);
-const GrColor GrColor::Aquamarine(255, 127, 255, 212);
-const GrColor GrColor::Azure(255, 240, 255, 255);
-const GrColor GrColor::Beige(255, 245, 245, 220);
-const GrColor GrColor::Bisque(255, 255, 228, 196);
-const GrColor GrColor::Black(255, 0, 0, 0);
-const GrColor GrColor::BlanchedAlmond(255, 255, 235, 205);
-const GrColor GrColor::Blue(255, 0, 0, 255);
-const GrColor GrColor::BlueViolet(255, 138, 43, 226);
-const GrColor GrColor::Brown(255, 165, 42, 42);
-const GrColor GrColor::BurlyWood(255, 222, 184, 135);
-const GrColor GrColor::CadetBlue(255, 95, 158, 160);
-const GrColor GrColor::Chartreuse(255, 127, 255, 0);
-const GrColor GrColor::Chocolate(255, 210, 105, 30);
-const GrColor GrColor::Coral(255, 255, 127, 80);
-const GrColor GrColor::CornflowerBlue(255, 100, 149, 237);
-const GrColor GrColor::Cornsilk(255, 255, 248, 220);
-const GrColor GrColor::Crimson(255, 220, 20, 60);
-const GrColor GrColor::Cyan(255, 0, 255, 255);
-const GrColor GrColor::DarkBlue(255, 0, 0, 139);
-const GrColor GrColor::DarkCyan(255, 0, 139, 139);
-const GrColor GrColor::DarkGoldenrod(255, 184, 134, 11);
-const GrColor GrColor::DarkGray(255, 169, 169, 169);
-const GrColor GrColor::DarkGreen(255, 0, 100, 0);
-const GrColor GrColor::DarkKhaki(255, 189, 183, 107);
-const GrColor GrColor::DarkMagenta(255, 139, 0, 139);
-const GrColor GrColor::DarkOliveGreen(255, 85, 107, 47);
-const GrColor GrColor::DarkOrange(255, 255, 140, 0);
-const GrColor GrColor::DarkOrchid(255, 153, 50, 204);
-const GrColor GrColor::DarkRed(255, 139, 0, 0);
-const GrColor GrColor::DarkSalmon(255, 233, 150, 122);
-const GrColor GrColor::DarkSeaGreen(255, 143, 188, 139);
-const GrColor GrColor::DarkSlateBlue(255, 72, 61, 139);
-const GrColor GrColor::DarkSlateGray(255, 47, 79, 79);
-const GrColor GrColor::DarkTurquoise(255, 0, 206, 209);
-const GrColor GrColor::DarkViolet(255, 148, 0, 211);
-const GrColor GrColor::DeepPink(255, 255, 20, 147);
-const GrColor GrColor::DeepSkyBlue(255, 0, 191, 255);
-const GrColor GrColor::DimGray(255, 105, 105, 105);
-const GrColor GrColor::DodgerBlue(255, 30, 144, 255);
-const GrColor GrColor::Firebrick(255, 178, 34, 34);
-const GrColor GrColor::FloralWhite(255, 255, 250, 240);
-const GrColor GrColor::ForestGreen(255, 34, 139, 34);
-const GrColor GrColor::Fuchsia(255, 255, 0, 255);
-const GrColor GrColor::Gainsboro(255, 220, 220, 220);
-const GrColor GrColor::GhostWhite(255, 248, 248, 255);
-const GrColor GrColor::Gold(255, 255, 215, 0);
-const GrColor GrColor::Goldenrod(255, 218, 165, 32);
-const GrColor GrColor::Gray(255, 128, 128, 128);
-const GrColor GrColor::Green(255, 0, 128, 0);
-const GrColor GrColor::GreenYellow(255, 173, 255, 47);
-const GrColor GrColor::Honeydew(255, 240, 255, 240);
-const GrColor GrColor::HotPink(255, 255, 105, 180);
-const GrColor GrColor::IndianRed(255, 205, 92, 92);
-const GrColor GrColor::Indigo(255, 75, 0, 130);
-const GrColor GrColor::Ivory(255, 255, 255, 240);
-const GrColor GrColor::Khaki(255, 240, 230, 140);
-const GrColor GrColor::Lavender(255, 230, 230, 250);
-const GrColor GrColor::LavenderBlush(255, 255, 240, 245);
-const GrColor GrColor::LawnGreen(255, 124, 252, 0);
-const GrColor GrColor::LemonChiffon(255, 255, 250, 205);
-const GrColor GrColor::LightBlue(255, 173, 216, 230);
-const GrColor GrColor::LightCoral(255, 240, 128, 128);
-const GrColor GrColor::LightCyan(255, 224, 255, 255);
-const GrColor GrColor::LightGoldenrodYellow(255, 250, 250, 210);
-const GrColor GrColor::LightGray(255, 211, 211, 211);
-const GrColor GrColor::LightGreen(255, 144, 238, 144);
-const GrColor GrColor::LightPink(255, 255, 182, 193);
-const GrColor GrColor::LightSalmon(255, 255, 160, 122);
-const GrColor GrColor::LightSeaGreen(255, 32, 178, 170);
-const GrColor GrColor::LightSkyBlue(255, 135, 206, 250);
-const GrColor GrColor::LightSlateGray(255, 119, 136, 153);
-const GrColor GrColor::LightSteelBlue(255, 176, 196, 222);
-const GrColor GrColor::LightYellow(255, 255, 255, 224);
-const GrColor GrColor::Lime(255, 0, 255, 0);
-const GrColor GrColor::LimeGreen(255, 50, 205, 50);
-const GrColor GrColor::Linen(255, 250, 240, 230);
-const GrColor GrColor::Magenta(255, 255, 0, 255);
-const GrColor GrColor::Maroon(255, 128, 0, 0);
-const GrColor GrColor::MediumAquamarine(255, 102, 205, 170);
-const GrColor GrColor::MediumBlue(255, 0, 0, 205);
-const GrColor GrColor::MediumOrchid(255, 186, 85, 211);
-const GrColor GrColor::MediumPurple(255, 147, 112, 219);
-const GrColor GrColor::MediumSeaGreen(255, 60, 179, 113);
-const GrColor GrColor::MediumSlateBlue(255, 123, 104, 238);
-const GrColor GrColor::MediumSpringGreen(255, 0, 250, 154);
-const GrColor GrColor::MediumTurquoise(255, 72, 209, 204);
-const GrColor GrColor::MediumVioletRed(255, 199, 21, 133);
-const GrColor GrColor::MidnightBlue(255, 25, 25, 112);
-const GrColor GrColor::MintCream(255, 245, 255, 250);
-const GrColor GrColor::MistyRose(255, 255, 228, 225);
-const GrColor GrColor::Moccasin(255, 255, 228, 181);
-const GrColor GrColor::NavajoWhite(255, 255, 222, 173);
-const GrColor GrColor::Navy(255, 0, 0, 128);
-const GrColor GrColor::OldLace(255, 253, 245, 230);
-const GrColor GrColor::Olive(255, 128, 128, 0);
-const GrColor GrColor::OliveDrab(255, 107, 142, 35);
-const GrColor GrColor::Orange(255, 255, 165, 0);
-const GrColor GrColor::OrangeRed(255, 255, 69, 0);
-const GrColor GrColor::Orchid(255, 218, 112, 214);
-const GrColor GrColor::PaleGoldenrod(255, 238, 232, 170);
-const GrColor GrColor::PaleGreen(255, 152, 251, 152);
-const GrColor GrColor::PaleTurquoise(255, 175, 238, 238);
-const GrColor GrColor::PaleVioletRed(255, 219, 112, 147);
-const GrColor GrColor::PapayaWhip(255, 255, 239, 213);
-const GrColor GrColor::PeachPuff(255, 255, 218, 185);
-const GrColor GrColor::Peru(255, 205, 133, 63);
-const GrColor GrColor::Pink(255, 255, 192, 203);
-const GrColor GrColor::Plum(255, 221, 160, 221);
-const GrColor GrColor::PowderBlue(255, 176, 224, 230);
-const GrColor GrColor::Purple(255, 128, 0, 128);
-const GrColor GrColor::Red(255, 255, 0, 0);
-const GrColor GrColor::RosyBrown(255, 188, 143, 143);
-const GrColor GrColor::RoyalBlue(255, 65, 105, 225);
-const GrColor GrColor::SaddleBrown(255, 139, 69, 19);
-const GrColor GrColor::Salmon(255, 250, 128, 114);
-const GrColor GrColor::SandyBrown(255, 244, 164, 96);
-const GrColor GrColor::SeaGreen(255, 46, 139, 87);
-const GrColor GrColor::SeaShell(255, 255, 245, 238);
-const GrColor GrColor::Sienna(255, 160, 82, 45);
-const GrColor GrColor::Silver(255, 192, 192, 192);
-const GrColor GrColor::SkyBlue(255, 135, 206, 235);
-const GrColor GrColor::SlateBlue(255, 106, 90, 205);
-const GrColor GrColor::SlateGray(255, 112, 128, 144);
-const GrColor GrColor::Snow(255, 255, 250, 250);
-const GrColor GrColor::SpringGreen(255, 0, 255, 127);
-const GrColor GrColor::SteelBlue(255, 70, 130, 180);
-const GrColor GrColor::Tan(255, 210, 180, 140);
-const GrColor GrColor::Teal(255, 0, 128, 128);
-const GrColor GrColor::Thistle(255, 216, 191, 216);
-const GrColor GrColor::Tomato(255, 255, 99, 71);
-const GrColor GrColor::Turquoise(255, 64, 224, 208);
-const GrColor GrColor::Violet(255, 238, 130, 238);
-const GrColor GrColor::Wheat(255, 245, 222, 179);
-const GrColor GrColor::White(255, 255, 255, 255);
-const GrColor GrColor::WhiteSmoke(255, 245, 245, 245);
-const GrColor GrColor::Yellow(255, 255, 255, 0);
-const GrColor GrColor::YellowGreen(255, 154, 205, 50);
+std::map<std::wstring, const GrColor&> GrColor::namedColor;
 
+const GrColor GrColor::Empty(0, 0, 0, 0, L"Empty");
+const GrColor GrColor::AliceBlue(255, 240, 248, 255, L"AliceBlue");
+const GrColor GrColor::AntiqueWhite(255, 250, 235, 215, L"AntiqueWhite");
+const GrColor GrColor::Aqua(255, 0, 255, 255, L"Aqua");
+const GrColor GrColor::Aquamarine(255, 127, 255, 212, L"Aquamarine");
+const GrColor GrColor::Azure(255, 240, 255, 255, L"Azure");
+const GrColor GrColor::Beige(255, 245, 245, 220, L"Beige");
+const GrColor GrColor::Bisque(255, 255, 228, 196, L"Bisque");
+const GrColor GrColor::Black(255, 0, 0, 0, L"Black");
+const GrColor GrColor::BlanchedAlmond(255, 255, 235, 205, L"BlanchedAlmond");
+const GrColor GrColor::Blue(255, 0, 0, 255, L"Blue");
+const GrColor GrColor::BlueViolet(255, 138, 43, 226, L"BlueViolet");
+const GrColor GrColor::Brown(255, 165, 42, 42, L"Brown");
+const GrColor GrColor::BurlyWood(255, 222, 184, 135, L"BurlyWood");
+const GrColor GrColor::CadetBlue(255, 95, 158, 160, L"CadetBlue");
+const GrColor GrColor::Chartreuse(255, 127, 255, 0, L"Chartreuse");
+const GrColor GrColor::Chocolate(255, 210, 105, 30, L"Chocolate");
+const GrColor GrColor::Coral(255, 255, 127, 80, L"Coral");
+const GrColor GrColor::CornflowerBlue(255, 100, 149, 237, L"CornflowerBlue");
+const GrColor GrColor::Cornsilk(255, 255, 248, 220, L"Cornsilk");
+const GrColor GrColor::Crimson(255, 220, 20, 60, L"Crimson");
+const GrColor GrColor::Cyan(255, 0, 255, 255, L"Cyan");
+const GrColor GrColor::DarkBlue(255, 0, 0, 139, L"DarkBlue");
+const GrColor GrColor::DarkCyan(255, 0, 139, 139, L"DarkCyan");
+const GrColor GrColor::DarkGoldenrod(255, 184, 134, 11, L"DarkGoldenrod");
+const GrColor GrColor::DarkGray(255, 169, 169, 169, L"DarkGray");
+const GrColor GrColor::DarkGreen(255, 0, 100, 0, L"DarkGreen");
+const GrColor GrColor::DarkKhaki(255, 189, 183, 107, L"DarkKhaki");
+const GrColor GrColor::DarkMagenta(255, 139, 0, 139, L"DarkMagenta");
+const GrColor GrColor::DarkOliveGreen(255, 85, 107, 47, L"DarkOliveGreen");
+const GrColor GrColor::DarkOrange(255, 255, 140, 0, L"DarkOrange");
+const GrColor GrColor::DarkOrchid(255, 153, 50, 204, L"DarkOrchid");
+const GrColor GrColor::DarkRed(255, 139, 0, 0, L"DarkRed");
+const GrColor GrColor::DarkSalmon(255, 233, 150, 122, L"DarkSalmon");
+const GrColor GrColor::DarkSeaGreen(255, 143, 188, 139, L"DarkSeaGreen");
+const GrColor GrColor::DarkSlateBlue(255, 72, 61, 139, L"DarkSlateBlue");
+const GrColor GrColor::DarkSlateGray(255, 47, 79, 79, L"DarkSlateGray");
+const GrColor GrColor::DarkTurquoise(255, 0, 206, 209, L"DarkTurquoise");
+const GrColor GrColor::DarkViolet(255, 148, 0, 211, L"DarkViolet");
+const GrColor GrColor::DeepPink(255, 255, 20, 147, L"DeepPink");
+const GrColor GrColor::DeepSkyBlue(255, 0, 191, 255, L"DeepSkyBlue");
+const GrColor GrColor::DimGray(255, 105, 105, 105, L"DimGray");
+const GrColor GrColor::DodgerBlue(255, 30, 144, 255, L"DodgerBlue");
+const GrColor GrColor::Firebrick(255, 178, 34, 34, L"Firebrick");
+const GrColor GrColor::FloralWhite(255, 255, 250, 240, L"FloralWhite");
+const GrColor GrColor::ForestGreen(255, 34, 139, 34, L"ForestGreen");
+const GrColor GrColor::Fuchsia(255, 255, 0, 255, L"Fuchsia");
+const GrColor GrColor::Gainsboro(255, 220, 220, 220, L"Gainsboro");
+const GrColor GrColor::GhostWhite(255, 248, 248, 255, L"GhostWhite");
+const GrColor GrColor::Gold(255, 255, 215, 0, L"Gold");
+const GrColor GrColor::Goldenrod(255, 218, 165, 32, L"Goldenrod");
+const GrColor GrColor::Gray(255, 128, 128, 128, L"Gray");
+const GrColor GrColor::Green(255, 0, 128, 0, L"Green");
+const GrColor GrColor::GreenYellow(255, 173, 255, 47, L"GreenYellow");
+const GrColor GrColor::Honeydew(255, 240, 255, 240, L"Honeydew");
+const GrColor GrColor::HotPink(255, 255, 105, 180, L"HotPink");
+const GrColor GrColor::IndianRed(255, 205, 92, 92, L"IndianRed");
+const GrColor GrColor::Indigo(255, 75, 0, 130, L"Indigo");
+const GrColor GrColor::Ivory(255, 255, 255, 240, L"Ivory");
+const GrColor GrColor::Khaki(255, 240, 230, 140, L"Khaki");
+const GrColor GrColor::Lavender(255, 230, 230, 250, L"Lavender");
+const GrColor GrColor::LavenderBlush(255, 255, 240, 245, L"LavenderBlush");
+const GrColor GrColor::LawnGreen(255, 124, 252, 0, L"LawnGreen");
+const GrColor GrColor::LemonChiffon(255, 255, 250, 205, L"LemonChiffon");
+const GrColor GrColor::LightBlue(255, 173, 216, 230, L"LightBlue");
+const GrColor GrColor::LightCoral(255, 240, 128, 128, L"LightCoral");
+const GrColor GrColor::LightCyan(255, 224, 255, 255, L"LightCyan");
+const GrColor GrColor::LightGoldenrodYellow(255, 250, 250, 210, L"LightGoldenrodYellow");
+const GrColor GrColor::LightGray(255, 211, 211, 211, L"LightGray");
+const GrColor GrColor::LightGreen(255, 144, 238, 144, L"LightGreen");
+const GrColor GrColor::LightPink(255, 255, 182, 193, L"LightPink");
+const GrColor GrColor::LightSalmon(255, 255, 160, 122, L"LightSalmon");
+const GrColor GrColor::LightSeaGreen(255, 32, 178, 170, L"LightSeaGreen");
+const GrColor GrColor::LightSkyBlue(255, 135, 206, 250, L"LightSkyBlue");
+const GrColor GrColor::LightSlateGray(255, 119, 136, 153, L"LightSlateGray");
+const GrColor GrColor::LightSteelBlue(255, 176, 196, 222, L"LightSteelBlue");
+const GrColor GrColor::LightYellow(255, 255, 255, 224, L"LightYellow");
+const GrColor GrColor::Lime(255, 0, 255, 0, L"Lime");
+const GrColor GrColor::LimeGreen(255, 50, 205, 50, L"LimeGreen");
+const GrColor GrColor::Linen(255, 250, 240, 230, L"Linen");
+const GrColor GrColor::Magenta(255, 255, 0, 255, L"Magenta");
+const GrColor GrColor::Maroon(255, 128, 0, 0, L"Maroon");
+const GrColor GrColor::MediumAquamarine(255, 102, 205, 170, L"MediumAquamarine");
+const GrColor GrColor::MediumBlue(255, 0, 0, 205, L"MediumBlue");
+const GrColor GrColor::MediumOrchid(255, 186, 85, 211, L"MediumOrchid");
+const GrColor GrColor::MediumPurple(255, 147, 112, 219, L"MediumPurple");
+const GrColor GrColor::MediumSeaGreen(255, 60, 179, 113, L"MediumSeaGreen");
+const GrColor GrColor::MediumSlateBlue(255, 123, 104, 238, L"MediumSlateBlue");
+const GrColor GrColor::MediumSpringGreen(255, 0, 250, 154, L"MediumSpringGreen");
+const GrColor GrColor::MediumTurquoise(255, 72, 209, 204, L"MediumTurquoise");
+const GrColor GrColor::MediumVioletRed(255, 199, 21, 133, L"MediumVioletRed");
+const GrColor GrColor::MidnightBlue(255, 25, 25, 112, L"MidnightBlue");
+const GrColor GrColor::MintCream(255, 245, 255, 250, L"MintCream");
+const GrColor GrColor::MistyRose(255, 255, 228, 225, L"MistyRose");
+const GrColor GrColor::Moccasin(255, 255, 228, 181, L"Moccasin");
+const GrColor GrColor::NavajoWhite(255, 255, 222, 173, L"NavajoWhite");
+const GrColor GrColor::Navy(255, 0, 0, 128, L"Navy");
+const GrColor GrColor::OldLace(255, 253, 245, 230, L"OldLace");
+const GrColor GrColor::Olive(255, 128, 128, 0, L"Olive");
+const GrColor GrColor::OliveDrab(255, 107, 142, 35, L"OliveDrab");
+const GrColor GrColor::Orange(255, 255, 165, 0, L"Orange");
+const GrColor GrColor::OrangeRed(255, 255, 69, 0, L"OrangeRed");
+const GrColor GrColor::Orchid(255, 218, 112, 214, L"Orchid");
+const GrColor GrColor::PaleGoldenrod(255, 238, 232, 170, L"PaleGoldenrod");
+const GrColor GrColor::PaleGreen(255, 152, 251, 152, L"PaleGreen");
+const GrColor GrColor::PaleTurquoise(255, 175, 238, 238, L"PaleTurquoise");
+const GrColor GrColor::PaleVioletRed(255, 219, 112, 147, L"PaleVioletRed");
+const GrColor GrColor::PapayaWhip(255, 255, 239, 213, L"PapayaWhip");
+const GrColor GrColor::PeachPuff(255, 255, 218, 185, L"PeachPuff");
+const GrColor GrColor::Peru(255, 205, 133, 63, L"Peru");
+const GrColor GrColor::Pink(255, 255, 192, 203, L"Pink");
+const GrColor GrColor::Plum(255, 221, 160, 221, L"Plum");
+const GrColor GrColor::PowderBlue(255, 176, 224, 230, L"PowderBlue");
+const GrColor GrColor::Purple(255, 128, 0, 128, L"Purple");
+const GrColor GrColor::Red(255, 255, 0, 0, L"Red");
+const GrColor GrColor::RosyBrown(255, 188, 143, 143, L"RosyBrown");
+const GrColor GrColor::RoyalBlue(255, 65, 105, 225, L"RoyalBlue");
+const GrColor GrColor::SaddleBrown(255, 139, 69, 19, L"SaddleBrown");
+const GrColor GrColor::Salmon(255, 250, 128, 114, L"Salmon");
+const GrColor GrColor::SandyBrown(255, 244, 164, 96, L"SandyBrown");
+const GrColor GrColor::SeaGreen(255, 46, 139, 87, L"SeaGreen");
+const GrColor GrColor::SeaShell(255, 255, 245, 238, L"SeaShell");
+const GrColor GrColor::Sienna(255, 160, 82, 45, L"Sienna");
+const GrColor GrColor::Silver(255, 192, 192, 192, L"Silver");
+const GrColor GrColor::SkyBlue(255, 135, 206, 235, L"SkyBlue");
+const GrColor GrColor::SlateBlue(255, 106, 90, 205, L"SlateBlue");
+const GrColor GrColor::SlateGray(255, 112, 128, 144, L"SlateGray");
+const GrColor GrColor::Snow(255, 255, 250, 250, L"Snow");
+const GrColor GrColor::SpringGreen(255, 0, 255, 127, L"SpringGreen");
+const GrColor GrColor::SteelBlue(255, 70, 130, 180, L"SteelBlue");
+const GrColor GrColor::Tan(255, 210, 180, 140, L"Tan");
+const GrColor GrColor::Teal(255, 0, 128, 128, L"Teal");
+const GrColor GrColor::Thistle(255, 216, 191, 216, L"Thistle");
+const GrColor GrColor::Tomato(255, 255, 99, 71, L"Tomato");
+const GrColor GrColor::Turquoise(255, 64, 224, 208, L"Turquoise");
+const GrColor GrColor::Violet(255, 238, 130, 238, L"Violet");
+const GrColor GrColor::Wheat(255, 245, 222, 179, L"Wheat");
+const GrColor GrColor::White(255, 255, 255, 255, L"White");
+const GrColor GrColor::WhiteSmoke(255, 245, 245, 245, L"WhiteSmoke");
+const GrColor GrColor::Yellow(255, 255, 255, 0, L"Yellow");
+const GrColor GrColor::YellowGreen(255, 154, 205, 50, L"YellowGreen");
 
+GrColor::GrColor(int a, int r, int g, int b, const std::wstring& name)
+    : name(name)
+{
+    const int maxValue = (int)0xff;
+    this->a = (byte)std::min(a, maxValue);
+    this->r = (byte)std::min(r, maxValue);
+    this->g = (byte)std::min(g, maxValue);
+    this->b = (byte)std::min(b, maxValue);
 
-GrColor::GrColor() : value(0)
+    GrColor::namedColor.insert(std::map<std::wstring, const GrColor&>::value_type(name, *this));
+}
+    
+GrColor::GrColor()
+    : value(0), name(L"Empty")
 {
     //RGB(255,255,255)
 }
@@ -630,6 +646,7 @@ GrColor::GrColor(int a, int r, int g, int b)
     this->g = (byte)std::min(g, maxValue);
     this->b = (byte)std::min(b, maxValue);
 }
+
 GrColor::GrColor(int r, int g, int b)
 {
     const int maxValue = (int)0xff;
@@ -672,12 +689,14 @@ GrColor GrColor::operator * (const GrColor& color) const
 
 bool GrColor::operator != (const GrColor& color) const
 {
-    return this->value != color.value;
+    return !(*this == color);
 }
 
 bool GrColor::operator == (const GrColor& color) const
 {
-    return this->value == color.value;
+    if(this->name.length() == 0 && color.name.length() == 0)
+        return value == color.value;
+    return _wcsicmp(this->name.c_str(), color.name.c_str()) == 0;
 }
 
 float GrColor::A() const
@@ -724,6 +743,11 @@ void GrColor::B(float value)
     b = value > 255.0f ? 0xff : (byte)value;
 }
 
+const std::wstring& GrColor::GetName() const
+{
+    return this->name;
+}
+
 #ifdef _MANAGED
 GrColor::GrColor(System::Drawing::Color color)
 {
@@ -731,25 +755,40 @@ GrColor::GrColor(System::Drawing::Color color)
     r = color.R;
     g = color.G;
     b = color.B;
+    if(color.IsNamedColor == true)
+    {
+        pin_ptr<const wchar_t> unmngStr = PtrToStringChars(color.Name);
+        this->name = (const wchar_t*)unmngStr;
+    }
 }
 
 GrColor::operator System::Drawing::Color ()
 {
-    return System::Drawing::Color::FromArgb(a, r, g, b);
+    System::Drawing::Color color;
+    const wchar_t* d= this->name.c_str();
+    if(this->name.length() != 0)
+        color = System::Drawing::Color::FromName(gcnew System::String(this->name.c_str()));
+    else
+        color = System::Drawing::Color::FromArgb(a, r, g, b);
+    return color;
 }
 
 GrColor::operator System::Drawing::Color () const
 {
+    if(this->name.length() != 0)
+        return System::Drawing::Color::FromName(gcnew System::String(this->name.c_str()));
     return System::Drawing::Color::FromArgb(a, r, g, b);
 }
 #endif
 
-GrFlag::GrFlag() : m_flag(0)
+GrFlag::GrFlag()
+    : m_flag(0)
 {
 
 }
 
-GrFlag::GrFlag(ulong flag) : m_flag(flag)
+GrFlag::GrFlag(ulong flag)
+    : m_flag(flag)
 {
 
 }

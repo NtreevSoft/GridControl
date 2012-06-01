@@ -181,9 +181,10 @@ GrGridCore::GrGridCore(GrGridWindow* pGridWindow) : m_pGridWindow(pGridWindow)
     m_rowVisible = true;
     m_clickEditing = DefaultClickEditing;
 
-
-    m_pFont = NULL;
-    m_pDefaultStyle = new GrStyle();
+	m_foreColor = GrStyle::DefaultStyle.ForeColor;
+	m_backColor = GrStyle::DefaultStyle.BackColor;
+	m_lineColor = GrStyle::DefaultStyle.LineColor;
+    m_pFont = GrStyle::DefaultStyle.Font;
     m_pStyle = NULL;
 
     m_pItemSelector = new GrItemSelectorInternal();
@@ -254,8 +255,8 @@ GrGridCore::~GrGridCore()
     delete m_pFocuser;
     delete m_pItemSelector;
 
-    delete m_pDefaultStyle;
-    delete m_pStyle;
+	if(m_pStyle != NULL)
+		delete m_pStyle;
 
     if(m_createdCell != 0)
         throw _Exception("Some obejcts are not deleted");
@@ -527,6 +528,58 @@ void GrGridCore::SetClickEditing(GrClickEditing clickEditing)
     m_clickEditing = clickEditing;
 }
 
+GrColor GrGridCore::GetForeColor() const
+{
+	return m_foreColor;
+}
+
+GrColor GrGridCore::GetBackColor() const
+{
+	return m_backColor;
+}
+
+GrColor GrGridCore::GetLineColor() const
+{
+	return m_lineColor;
+}
+ 
+GrFont* GrGridCore::GetFont() const
+{
+	return m_pFont;
+}
+
+void GrGridCore::SetForeColor(GrColor foreColor)
+{
+	if(m_foreColor == foreColor)
+		return;
+	m_foreColor = foreColor;
+	Invalidate();
+}
+
+void GrGridCore::SetBackColor(GrColor backColor)
+{
+	if(m_backColor == backColor)
+		return;
+	m_backColor = backColor;
+	Invalidate();
+}
+
+void GrGridCore::SetLineColor(GrColor lineColor)
+{
+	if(m_lineColor == lineColor)
+		return;
+	m_lineColor = lineColor;
+	Invalidate();
+}
+
+void GrGridCore::SetFont(GrFont* pFont)
+{
+	if(m_pFont == pFont)
+		return;
+	m_pFont = pFont;
+	OnFontChanged(&GrEventArgs::Empty);
+}
+
 int GrGridCore::GetGroupMargin() const
 {
     return m_groupMargin;
@@ -644,8 +697,6 @@ void GrGridCore::SetStyle(GrStyle* pStyle)
 
 GrStyle* GrGridCore::GetStyle() const
 {
-    if(m_pStyle == NULL)
-        return m_pDefaultStyle;
     return m_pStyle;
 }
 

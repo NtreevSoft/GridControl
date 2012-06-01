@@ -41,54 +41,6 @@ enum GrPaintStyle
     GrPaintStyle_LeftLine = 0x00080000,
 };
 
-class GrFont;
-
-typedef std::vector<GrColor> GrColors;
-typedef std::vector<GrFont*> GrFonts;
-
-class GrStyle
-{
-public:
-    GrStyle();
-
-public:
-    GrColor CellForeColor;
-    GrColor CellBackColor;
-    GrFont* CellFont;
-
-    GrColor SelectedForeColor;
-    GrColor SelectedBackColor;
-
-    GrColor FocusedForeColor;
-    GrColor FocusedBackColor;
-
-    GrColor RowHighlightForeColor;
-    GrColor RowHighlightBackColor;
-
-    GrColors RowItemBackColors;
-    GrColors RowItemForeColors;
-
-    GrFonts RowItemFonts;
-
-    GrColors GroupBackColors;
-    GrColors GroupForeColors;
-    GrFonts GroupFonts;
-
-    GrColor GetCellForeColor() const;
-    GrColor GetCellBackColor() const;
-    GrFont* GetCellFont() const;
-
-    GrColor GetRowItemForeColor(uint index);
-    GrColor GetRowItemBackColor(uint index);
-    GrFont* GetRowItemFont(uint index);
-
-    GrColor GetGroupForeColor(uint index);
-    GrColor GetGroupBackColor(uint index);
-    GrFont* GetGroupFont(uint index);
-
-    static const GrStyle DefaultStyle;
-};
-
 class GrFont
 {
 public:
@@ -100,23 +52,87 @@ public:
 
 #ifdef _MANAGED
     gcroot<System::Drawing::Font^> ManagedRef;
+	static System::Drawing::Font^ ToManaged(GrFont* pFont);
+	static GrFont* FromManaged(System::Drawing::Font^ font);
 #endif
+
+	static GrFont* GetDefaultFont();
+
+	static GrFont* const Empty;
 };
+
+typedef std::vector<GrColor> GrColors;
+typedef std::vector<GrFont*> GrFonts;
+
+class GrStyle
+{
+public:
+    GrStyle();
+
+public:
+    GrColor ForeColor;
+    GrColor BackColor;
+	GrColor LineColor;
+    GrFont* Font;
+
+    GrColor SelectedForeColor;
+    GrColor SelectedBackColor;
+
+    GrColor FocusedForeColor;
+    GrColor FocusedBackColor;
+
+	GrColor ColumnForeColor;
+	GrColor ColumnBackColor;
+	GrColor ColumnLineColor;
+	GrFont* ColumnFont;
+
+	GrColor RowForeColor;
+	GrColor RowBackColor;
+	GrColor RowLineColor;
+	GrFont* RowFont;
+	
+    GrColor RowHighlightForeColor;
+    GrColor RowHighlightBackColor;
+
+    GrColors ItemBackColors;
+    GrColors ItemForeColors;
+	GrColors ItemLineColors;
+    GrFonts ItemFonts;
+
+    GrColors GroupBackColors;
+    GrColors GroupForeColors;
+    GrFonts GroupFonts;
+
+    GrColor GetItemForeColor(uint index) const;
+    GrColor GetItemBackColor(uint index)const;
+	GrColor GetItemLineColor(uint index)const;
+    GrFont* GetItemFont(uint index)const;
+
+    GrColor GetGroupForeColor(uint index)const;
+    GrColor GetGroupBackColor(uint index)const;
+    GrFont* GetGroupFont(uint index)const;
+
+    static const GrStyle DefaultStyle;
+};
+
+
+
+//GrFont* GetDefaultGridCoreFont();
 
 class GrGridPainter
 {
 public:
     virtual void BeginPaint(void* painterDevice) = 0;
 
-    virtual void DrawRowSplitter(const GrRect& paintRect) = 0;
+    virtual void DrawRowSplitter(const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor) = 0;
     virtual void DrawDropDown(const GrRect& paintRect, GrControlState state) = 0;
     virtual void DrawModal(const GrRect& paintRect, GrControlState state) = 0;
     virtual void DrawTreeGlyph(const GrRect& paintRect, bool opened) = 0;
     virtual void DrawSortGlyph(const GrRect& paintRect, GrSort sortType) = 0;
 
-    virtual void DrawColumn(GrFlag paintStyle, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect = NULL) = 0;
-    virtual void DrawRow(GrFlag paintStyle, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect = NULL) = 0;
-    virtual void DrawItem(GrFlag paintStyle, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect = NULL) = 0;
+    virtual void DrawColumn(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = NULL) = 0;
+    virtual void DrawRow(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = NULL) = 0;
+    virtual void DrawItem(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = NULL) = 0;
 
     virtual void DrawText(GrFont* pFont, const wchar_t* text, int textLength, const GrRect& paintRect, const GrColor& color , const GrRect* pClipRect = NULL) = 0;
     virtual void DrawColumnText(GrFont* pFont, const wchar_t* text, int textLength, const GrRect& paintRect, const GrColor& color , const GrRect* pClipRect = NULL) = 0;

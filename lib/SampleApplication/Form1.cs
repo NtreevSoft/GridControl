@@ -47,11 +47,11 @@ namespace SampleApplication
         {
             InitializeComponent();
 
-            this.gridControl1.Rows[0].ErrorDescription = "qwer";
-            this.gridControl1.Rows[0].Cells[0].ErrorDescription = "werwerwer";
+            //this.gridControl1.Rows[0].ErrorDescription = "qwer";
+            //this.gridControl1.Rows[0].Cells[0].ErrorDescription = "werwerwer";
 
-            this.gridControl1.Rows[0][this.columnLinkLabel1] = "wow";
-            this.gridControl1.Update();
+            //this.gridControl1.Rows[0][this.columnLinkLabel1] = "wow";
+            //this.gridControl1.Update();
         }
 
         public void SaveSettings()

@@ -405,6 +405,27 @@ struct GrColor
     bool operator != (const GrColor& color) const;
     bool operator == (const GrColor& color) const;
 
+    int ToARGB() const { return this->value; }
+
+    float A() const;
+    float R() const;
+    float G() const;
+    float B() const;
+
+    void A(float value);
+    void R(float value);
+    void G(float value);
+    void B(float value);
+
+    const std::wstring& GetName() const;
+
+private:
+    GrColor(int a, int r, int g, int b, const std::wstring& name);
+
+    std::wstring name;
+    static std::map<std::wstring, const GrColor&> namedColor;
+
+    
 #pragma warning(push)
 #pragma warning(disable:4201)
     union
@@ -417,16 +438,7 @@ struct GrColor
     };
 #pragma warning(pop)
 
-    float A() const;
-    float R() const;
-    float G() const;
-    float B() const;
-
-    void A(float value);
-    void R(float value);
-    void G(float value);
-    void B(float value);
-
+public:
     static const GrColor Empty;
     static const GrColor AliceBlue;
     static const GrColor AntiqueWhite;

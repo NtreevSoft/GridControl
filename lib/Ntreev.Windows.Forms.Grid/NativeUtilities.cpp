@@ -296,6 +296,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         return System::Drawing::Rectangle::FromLTRB(rt.left, rt.top, rt.right, rt.bottom);
     }
 
+    System::IntPtr Methods::GetRootWindow(System::IntPtr handle)
+    {
+        HWND hwnd = (HWND)handle.ToPointer();
+        HWND parent = GetParent(hwnd);
+        while(parent != NULL) 
+        {
+            hwnd = parent;
+            parent = GetParent(hwnd);
+        }
+
+        return System::IntPtr(hwnd);
+    }
+
     ControlPainter::ControlPainter()
         : m_colorKey(RGB(0,128,128))
     {

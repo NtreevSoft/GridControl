@@ -32,6 +32,9 @@
 #pragma comment(lib, "msimg32.lib")
 #pragma comment(lib, "shell32.lib")
 
+#define _RGB(_color) (RGB(_color.r, _color.g, _color.b))
+
+
 
 GrGridPainter* CreateGridPainterDC(void* windowHandle)
 {
@@ -116,7 +119,7 @@ GrGridPainterDC::GrGridPainterDC(HWND hWnd)
     m_hSelectedMouseOverBrush = CreateSolidBrush(RGB(71,130,221));
 
     m_hWhiteBrush = (HBRUSH)GetStockObject(WHITE_BRUSH);
-    m_hSelRectPen = CreatePen(PS_SOLID, 1, RGB(208,215,229));
+    //m_hSelRectPen = CreatePen(PS_SOLID, 1, RGB(208,215,229));
 
     LOGBRUSH lb;
     lb.lbStyle = BS_SOLID; 
@@ -139,7 +142,7 @@ GrGridPainterDC::~GrGridPainterDC()
     DeleteDC(m_hOverlayDC);
     DeleteObject(m_hSplitterMovingPen);
     DeleteObject(m_hSizingPen);
-    DeleteObject(m_hSelRectPen);
+    //DeleteObject(m_hSelRectPen);
     DeleteObject(m_hFocusedPen);
     DeleteObject(m_hSelectedMouseOverBrush);
     DeleteObject(m_hSelectedBrush);
@@ -177,16 +180,20 @@ void GrGridPainterDC::EndPaint()
     m_hdc = NULL;
 }
 
-void GrGridPainterDC::DrawRowSplitter(const GrRect& paintRect)
+void GrGridPainterDC::DrawRowSplitter(const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor)
 {
     RECT2 rt = paintRect;
 
-    FillRect(m_hdc, &rt, m_hWhiteBrush);
-    HGDIOBJ hOldPen = SelectObject(m_hdc, (HGDIOBJ)m_hSelRectPen);
+	HBRUSH hb = CreateSolidBrush(_RGB(backColor));
+    FillRect(m_hdc, &rt, hb);
+	DeleteObject(hb);
 
+	HPEN hPen = CreatePen(PS_SOLID, 1, _RGB(lineColor));
+    HGDIOBJ hOldPen = SelectObject(m_hdc, (HGDIOBJ)hPen);
     MoveToEx(m_hdc, rt.left, rt.bottom-1, NULL);
     LineTo(m_hdc, rt.right, rt.bottom-1);
     SelectObject(m_hdc, hOldPen);
+	DeleteObject(hPen);
 }
 
 void GrGridPainterDC::DrawTreeGlyph(const GrRect& paintRect, bool opened)
@@ -240,7 +247,7 @@ void GrGridPainterDC::DrawTreeGlyph(const GrRect& paintRect, bool opened)
     }
 }
 
-void GrGridPainterDC::DrawItem(GrFlag paintStyle, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect)
+void GrGridPainterDC::DrawItem(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor, const GrRect* pClipRect)
 {
     RECT2 rt = paintRect;
 
@@ -252,11 +259,12 @@ void GrGridPainterDC::DrawItem(GrFlag paintStyle, const GrRect& paintRect, const
             rt.bottom = pClipRect->bottom;
     }
 
-    HBRUSH hb = CreateSolidBrush(RGB(color.r,color.g,color.b));
+    HBRUSH hb = CreateSolidBrush(_RGB(backColor));
     FillRect(m_hdc, &rt, hb);
     DeleteObject(hb);
 
-    HGDIOBJ hOldPen = SelectObject(m_hdc, (HGDIOBJ)m_hSelRectPen);
+	HPEN hPen = CreatePen(PS_SOLID, 1, _RGB(lineColor));
+    HGDIOBJ hOldPen = SelectObject(m_hdc, (HGDIOBJ)hPen);
 
     if(paintStyle.Has(GrPaintStyle_NoRightLine) == false)
     {
@@ -270,6 +278,7 @@ void GrGridPainterDC::DrawItem(GrFlag paintStyle, const GrRect& paintRect, const
         LineTo(m_hdc, rt.right, rt.bottom-1);
     }
     SelectObject(m_hdc, hOldPen);
+	DeleteObject(hPen);
 
     if(paintStyle.Has(GrPaintStyle_Focused) == true)
     {
@@ -328,23 +337,23 @@ void GrGridPainterDC::DrawTooltip(const GrRect& paintRect)
     DrawThemeBackground(m_hTooltip, m_hdc, TTP_BALLOON, TTCS_NORMAL, &rtPaint, &rtPaint);
 }
 
-void GrGridPainterDC::DrawColumn(GrFlag paintStyle, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect)
+void GrGridPainterDC::DrawColumn(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor, const GrRect* pClipRect)
 {
-    DrawHeader(paintStyle, paintRect, color, pClipRect);
+    DrawHeader(paintStyle, paintRect, lineColor, backColor, pClipRect);
 }
 
-void GrGridPainterDC::DrawRow(GrFlag paintStyle, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect)
+void GrGridPainterDC::DrawRow(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor, const GrRect* pClipRect)
 {
-    DrawHeader(paintStyle, paintRect, color, pClipRect);
+    DrawHeader(paintStyle, paintRect, lineColor, backColor, pClipRect);
 }
 
-void GrGridPainterDC::DrawHeader(GrFlag paintStyle, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect)
+void GrGridPainterDC::DrawHeader(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor, const GrRect* pClipRect)
 {
     RECT2 rtPaint(paintRect), rtClip(paintRect);
     rtPaint.Offset(m_ptTransform);
     rtClip.Offset(m_ptTransform);
     rtPaint.bottom++;
-    GrColor paintColor = color;
+    GrColor paintColor = backColor;
 
     BLENDFUNCTION blend;
     blend.BlendFlags = 0;
@@ -387,7 +396,7 @@ void GrGridPainterDC::DrawHeader(GrFlag paintStyle, const GrRect& paintRect, con
     //c.A(columnAlpha/255.0f);
     for(int i=0 ; i<16 ; i++)
     {
-        bits[i] = paintColor.value;
+        bits[i] = paintColor.ToARGB();
     }
 
     HBITMAP hBitmap = CreateBitmap(4, 4, 1, 32, bits);
@@ -481,17 +490,17 @@ void GrGridPainterDC::DrawSortGlyph(const GrRect& paintRect, GrSort sortType)
     }
 }
 
-void GrGridPainterDC::DrawCellLine(int x1, int y1, int x2, int y2)
-{
-    HGDIOBJ hOldPen = SelectObject(m_hdc, (HGDIOBJ)m_hSelRectPen);
-    MoveToEx(m_hdc, x1, y1, NULL);
-    LineTo(m_hdc, x2, y2);
-    SelectObject(m_hdc, hOldPen);
-}
+//void GrGridPainterDC::DrawCellLine(int x1, int y1, int x2, int y2)
+//{
+//    HGDIOBJ hOldPen = SelectObject(m_hdc, (HGDIOBJ)m_hSelRectPen);
+//    MoveToEx(m_hdc, x1, y1, NULL);
+//    LineTo(m_hdc, x2, y2);
+//    SelectObject(m_hdc, hOldPen);
+//}
 
 void GrGridPainterDC::DrawRectangle(const GrRect& rect, const GrColor& color)
 {
-    HPEN hPen = CreatePen(PS_SOLID, 1, RGB(color.r,color.g,color.b));
+    HPEN hPen = CreatePen(PS_SOLID, 1, _RGB(color));
     HPEN hOldPen = (HPEN)SelectObject(m_hdc, hPen);
     // left
     MoveToEx(m_hdc, rect.left, rect.top, NULL);
@@ -512,14 +521,14 @@ void GrGridPainterDC::DrawRectangle(const GrRect& rect, const GrColor& color)
 void GrGridPainterDC::FillRectangle(const GrRect& rect, const GrColor& color)
 {
     RECT2 rt = rect;
-    HBRUSH hBrush = CreateSolidBrush(RGB(color.r,color.g,color.b));
+    HBRUSH hBrush = CreateSolidBrush(_RGB(color));
     FillRect(m_hdc, &rt, hBrush);
     DeleteObject(hBrush);
 }
 
 void GrGridPainterDC::DrawLine(int x1, int y1, int x2, int y2, const GrColor& color)
 {
-    HBRUSH hBrush = CreateSolidBrush(RGB(color.r,color.g,color.b));
+    HBRUSH hBrush = CreateSolidBrush(_RGB(color));
     MoveToEx(m_hdc, x1, y1, NULL);
     LineTo(m_hdc, x2, y2);
     DeleteObject(hBrush);
@@ -646,7 +655,7 @@ GrFontDC::GrFontDC(void* fontHandle)
 
 GrFontDC::~GrFontDC()
 {
-    DeleteDC(m_hdc);
+	DeleteDC(m_hdc);
 }
 
 int GrFontDC::GetCharacterWidth(wchar_t w) const
@@ -675,3 +684,4 @@ int GrFontDC::GetStringWidth(const std::wstring& text) const
 
     return width;
 }
+

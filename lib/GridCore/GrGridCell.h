@@ -333,10 +333,18 @@ public:
     int GetBottom() const { return GetY() + GetHeight(); }
     int GetRight() const { return GetX() + GetWidth(); }
 
+	void SetBackColor(const GrColor& color);
+    void SetForeColor(const GrColor& color);
+	void SetLineColor(const GrColor& color);
     void SetFont(GrFont* pFont);
     void SetPadding(const GrPadding& padding);
 
-    // text method
+	GrColor GetForeColorCore() const;
+    GrColor GetBackColorCore() const;
+	GrColor GetLineColorCore() const;
+	GrFont*	GetFontCore() const;
+
+	// text method
     const std::wstring& GetText() const;
     void SetText(const std::wstring& text);
     uint GetTextLineCount() const;
@@ -358,15 +366,15 @@ public:
 
     virtual GrColor GetPaintingForeColor() const;
     virtual GrColor GetPaintingBackColor() const;
+	virtual GrColor GetPaintingLineColor() const;
     virtual GrFont* GetPaintingFont() const;
 
-    virtual GrColor GetForeColor(bool inherited = true) const;
-    virtual GrColor GetBackColor(bool inherited = true) const;
+    virtual GrColor GetForeColor() const;
+    virtual GrColor GetBackColor() const;
+	virtual GrColor GetLineColor() const;
     virtual GrPadding GetPadding(bool inherited = true) const;
-    virtual GrFont* GetFont(bool inherited = true) const;
+    virtual GrFont* GetFont() const;
 
-    void SetBackColor(const GrColor& color);
-    void SetForeColor(const GrColor& color);
     virtual int HitMouseOverTest(const GrPoint& localLocation) const;
 
     GrGridCore* GetGridCore() const { return m_pGridCore; }
@@ -397,6 +405,7 @@ private:
 
     GrColor m_backColor;
     GrColor m_foreColor;
+	GrColor m_lineColor;
     GrFont* m_pFont;
 
     GrPadding m_padding;
@@ -533,6 +542,11 @@ public:
 
     virtual GrHorzAlign GetTextHorzAlign() const;
     virtual GrVertAlign GetTextVertAlign() const;
+
+	virtual GrColor GetForeColor() const;
+	virtual GrColor GetBackColor() const;
+	virtual GrColor GetLineColor() const;
+	virtual GrFont* GetFont() const;
 
     virtual GrRow* GetRow() const;
 
@@ -928,10 +942,10 @@ public:
     virtual GrColor GetPaintingForeColor() const;
     virtual GrColor GetPaintingBackColor() const;
 
-    virtual GrColor GetForeColor(bool inherited = true) const;
-    virtual GrColor GetBackColor(bool inherited = true) const;
+    virtual GrColor GetForeColor() const;
+    virtual GrColor GetBackColor() const;
     virtual GrPadding GetPadding(bool inherited = true) const;
-    virtual GrFont* GetFont(bool inherited = true) const;
+    virtual GrFont* GetFont() const;
 
     void LockColor(bool b);
 

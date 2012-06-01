@@ -24,18 +24,30 @@
 #include "GrGridPainter.h"
 
 const GrStyle GrStyle::DefaultStyle;
+GrFont* const GrFont::Empty = NULL;
 
 GrStyle::GrStyle()
 {
-    CellForeColor = GrColor::Black;
-    CellBackColor = GrColor::White;
-    CellFont = 0;//GrFontManager::GetDefaultFont();
+    ForeColor = GrColor::Black;
+    BackColor = GrColor::White;
+	LineColor = GrColor(208,215,229);
+    Font = GrFont::GetDefaultFont();
 
     SelectedForeColor = GrColor::White;
     SelectedBackColor = GrColor::CornflowerBlue;
 
     FocusedForeColor = GrColor::White;
     FocusedBackColor = GrColor::LightSkyBlue;
+
+	ColumnForeColor = GrColor::Black;
+	ColumnBackColor = GrColor::White;
+	ColumnLineColor = GrColor(208,215,229);
+	ColumnFont = GrFont::GetDefaultFont();
+
+	RowForeColor = GrColor::Black;
+	RowBackColor = GrColor::White;
+	RowLineColor = GrColor(208,215,229);
+	RowFont = GrFont::GetDefaultFont();
 
     RowHighlightForeColor = GrColor::Black;
     RowHighlightBackColor = GrColor::LightCyan;
@@ -48,67 +60,37 @@ GrStyle::GrStyle()
     GroupBackColors.push_back(GrColor::SkyBlue);
 }
 
-GrColor GrStyle::GetCellForeColor() const
+GrColor GrStyle::GetItemForeColor(uint index) const
 {
-    if(CellForeColor == GrColor::Empty)
-        return DefaultStyle.CellForeColor;
-    return CellForeColor;
+    return ItemForeColors[index % ItemForeColors.size()];
 }
 
-GrColor GrStyle::GetCellBackColor() const
+GrColor GrStyle::GetItemBackColor(uint index) const
 {
-    if(CellBackColor == GrColor::Empty)
-        return DefaultStyle.CellBackColor;
-    return CellBackColor;
+    return ItemBackColors[index % ItemBackColors.size()];
 }
 
-GrFont* GrStyle::GetCellFont() const
+GrColor GrStyle::GetItemLineColor(uint index) const
 {
-    if(CellFont == NULL)
-        return DefaultStyle.CellFont;
-    return CellFont;
+    return ItemLineColors[index % ItemLineColors.size()];
 }
 
-GrColor GrStyle::GetRowItemForeColor(uint index)
+GrFont* GrStyle::GetItemFont(uint index) const
 {
-    if(RowItemForeColors.size() == 0)
-        return CellForeColor;
-    return RowItemForeColors[index % RowItemForeColors.size()];
+    return ItemFonts[index % ItemFonts.size()];
 }
 
-GrColor GrStyle::GetRowItemBackColor(uint index)
+GrColor GrStyle::GetGroupForeColor(uint index) const
 {
-    if(RowItemBackColors.size() == 0)
-        return CellBackColor;
-
-    return RowItemBackColors[index % RowItemBackColors.size()];
-}
-
-GrFont* GrStyle::GetRowItemFont(uint index)
-{
-    if(RowItemFonts.size() == 0)
-        return NULL;
-    return RowItemFonts[index % RowItemFonts.size()];
-}
-
-GrColor GrStyle::GetGroupForeColor(uint index)
-{
-    if(GroupForeColors.size() == 0)
-        return CellForeColor;
     return GroupForeColors[index % GroupForeColors.size()];
 }
 
-GrColor GrStyle::GetGroupBackColor(uint index)
+GrColor GrStyle::GetGroupBackColor(uint index) const
 {
-    if(GroupBackColors.size() == 0)
-        return CellBackColor;
-
     return GroupBackColors[index % GroupBackColors.size()];
 }
 
-GrFont* GrStyle::GetGroupFont(uint index)
+GrFont* GrStyle::GetGroupFont(uint index) const
 {
-    if(GroupFonts.size() == 0)
-        return NULL;
     return GroupFonts[index % GroupFonts.size()];
 }

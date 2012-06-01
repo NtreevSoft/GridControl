@@ -123,7 +123,7 @@ public:
     virtual void OnMouseClick(GrStateMouseEventArgs* e);
     virtual void OnMouseDoubleClick(GrStateMouseEventArgs* e);
     virtual void OnMouseWheel(GrMouseEventArgs* e);
-    virtual void OnKeyDown(GrKeys key, GrKeys modifierKeys);
+    virtual bool OnKeyDown(GrKeys key, GrKeys modifierKeys);
     virtual void OnKeyUp(GrKeys key, GrKeys modifierKeys);
 
     virtual void OnMouseDragBegin(const GrPoint& location);
@@ -165,7 +165,7 @@ public:
     void OnMouseClick(const GrPoint& location, GrKeys modifierKeys);
     void OnMouseDoubleClick(const GrPoint& location, GrKeys modifierKeys);
     void OnMouseWheel(const GrPoint& location, GrKeys modifierKeys, int delta);
-    void OnKeyDown(GrKeys key, GrKeys modifierKeys);
+    bool OnKeyDown(GrKeys key, GrKeys modifierKeys);
     void OnKeyUp(GrKeys key, GrKeys modifierKeys);
 
     void OnPaint(GrGridPainter* pGridPainter);
@@ -212,7 +212,7 @@ namespace GridStateClass
         virtual void OnBegin(GrStateEventArgs* e);
         virtual void OnMouseMove(GrStateMouseEventArgs* e);
         virtual void OnMouseWheel(GrMouseEventArgs* e);
-        virtual void OnKeyDown(GrKeys key, GrKeys modifierKeys);
+        virtual bool OnKeyDown(GrKeys key, GrKeys modifierKeys);
 
         virtual GrGridState GetState() const { return GrGridState_Normal; }
 

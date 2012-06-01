@@ -22,146 +22,315 @@
 
 
 #pragma once
+#include "GridObject.h"
 #include "NativeCollection.h"
 #include "GrGridType.h"
+#include "StyleFontCollection.h"
+#include "StyleColorCollection.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    class FontConverter
-    {
-    public:
-        static System::Drawing::Font^ StoT(GrFont* pFont);
-        static GrFont* TtoS(System::Drawing::Font^ font);
-    };
+	[System::ComponentModel::TypeConverterAttribute(System::ComponentModel::ExpandableObjectConverter::typeid)]
+	public ref class Style
+		: Ntreev::Windows::Forms::Grid::GridObject
+		, System::ComponentModel::IComponent
+		, System::IServiceProvider
+	{
+	public: // methods
 
-    [System::ComponentModel::TypeConverterAttribute(System::ComponentModel::ExpandableObjectConverter::typeid)]
-    public ref class Style
-    {
-    public: // methods
+		Style();
 
-        Style();
+		void ResetForeColor();
+		void ResetBackColor();
+		void ResetLineColor();
+		void ResetFont();
 
-        void ResetRowCellForeColors();
-        void ResetRowCellBackColors();
-        void ResetRowCellFonts();
+		void ResetSelectedForeColor();
+		void ResetSelectedBackColor();
 
-        void ResetSelectedForeColor();
-        void ResetSelectedBackColor();
+		void ResetFocusedForeColor();
+		void ResetFocusedBackColor();
 
-        void ResetFocusedForeColor();
-        void ResetFocusedBackColor();
+		void ResetColumnForeColor();
+		void ResetColumnBackColor();
+		void ResetColumnLineColor();
+		void ResetColumnFont();
 
-        void ResetCellForeColor();
-        void ResetCellBackColor();
-        void ResetCellFont();
+		void ResetRowForeColor();
+		void ResetRowBackColor();
+		void ResetRowLineColor();
+		void ResetRowFont();
 
-        void ResetRowHighlightForeColor();
-        void ResetRowHighlightBackColor();
+		void ResetRowHighlightForeColor();
+		void ResetRowHighlightBackColor();
 
+		void ResetCellForeColors();
+		void ResetCellBackColors();
+		void ResetCellLineColors();
+		void ResetCellFonts();
 
-    public: // properties
+	public: // properties
 
-        property System::Drawing::Color CellForeColor
-        {
-            System::Drawing::Color get();
-            void set(System::Drawing::Color);
-        }
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		property System::Drawing::Color ForeColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
 
-        property System::Drawing::Color CellBackColor
-        {
-            System::Drawing::Color get();
-            void set(System::Drawing::Color);
-        }
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		property System::Drawing::Color BackColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
 
-        property System::Drawing::Font^ CellFont
-        {
-            System::Drawing::Font^ get();
-            void set(System::Drawing::Font^);
-        }
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		property System::Drawing::Color LineColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
 
-        property System::Drawing::Color SelectedForeColor
-        {
-            System::Drawing::Color get();
-            void set(System::Drawing::Color);
-        }
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		property System::Drawing::Font^ Font
+		{
+			System::Drawing::Font^ get();
+			void set(System::Drawing::Font^);
+		}
 
-        property System::Drawing::Color SelectedBackColor
-        {
-            System::Drawing::Color get();
-            void set(System::Drawing::Color);
-        }
+		[System::ComponentModel::CategoryAttribute("Column")]
+		property System::Drawing::Color ColumnForeColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
 
-        property System::Drawing::Color FocusedForeColor
-        {
-            System::Drawing::Color get();
-            void set(System::Drawing::Color);
-        }
+		[System::ComponentModel::CategoryAttribute("Column")]
+		property System::Drawing::Color ColumnBackColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
 
-        property System::Drawing::Color FocusedBackColor
-        {
-            System::Drawing::Color get();
-            void set(System::Drawing::Color);
-        }
+		[System::ComponentModel::CategoryAttribute("Column")]
+		property System::Drawing::Color ColumnLineColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
 
-        property System::Drawing::Color RowHighlightForeColor
-        {
-            System::Drawing::Color get();
-            void set(System::Drawing::Color);
-        }
+		[System::ComponentModel::CategoryAttribute("Column")]
+		property System::Drawing::Font^ ColumnFont
+		{
+			System::Drawing::Font^ get();
+			void set(System::Drawing::Font^);
+		}
 
-        property System::Drawing::Color RowHighlightBackColor
-        {
-            System::Drawing::Color get();
-            void set(System::Drawing::Color);
-        }
+		[System::ComponentModel::CategoryAttribute("Row")]
+		property System::Drawing::Color RowForeColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
 
-        property System::Collections::Generic::ICollection<System::Drawing::Color>^ RowCellForeColors
-        {
-            System::Collections::Generic::ICollection<System::Drawing::Color>^ get(); 
-        }
+		[System::ComponentModel::CategoryAttribute("Row")]
+		property System::Drawing::Color RowBackColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
 
-        property System::Collections::Generic::ICollection<System::Drawing::Color>^ RowCellBackColors
-        {
-            System::Collections::Generic::ICollection<System::Drawing::Color>^ get(); 
-        }
+		[System::ComponentModel::CategoryAttribute("Row")]
+		property System::Drawing::Color RowLineColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
 
-        property System::Collections::Generic::ICollection<System::Drawing::Font^>^ RowCellFonts
-        { 
-            System::Collections::Generic::ICollection<System::Drawing::Font^>^ get();
-        }
+		[System::ComponentModel::CategoryAttribute("Row")]
+		property System::Drawing::Font^ RowFont
+		{
+			System::Drawing::Font^ get();
+			void set(System::Drawing::Font^);
+		}
 
-        property System::Collections::Generic::ICollection<System::Drawing::Color>^ GroupingBackColors
-        {
-            System::Collections::Generic::ICollection<System::Drawing::Color>^ get(); 
-        }
+		[System::ComponentModel::CategoryAttribute("Cell")]
+		property System::Drawing::Color SelectedForeColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
 
-        property System::Collections::Generic::ICollection<System::Drawing::Color>^ GroupingForeColors
-        {
-            System::Collections::Generic::ICollection<System::Drawing::Color>^ get();
-        }
+		[System::ComponentModel::CategoryAttribute("Cell")]
+		property System::Drawing::Color SelectedBackColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
 
-        property System::Collections::Generic::ICollection<System::Drawing::Font^>^ GroupingFonts
-        {
-            System::Collections::Generic::ICollection<System::Drawing::Font^>^ get();
-        }
+		[System::ComponentModel::CategoryAttribute("Cell")]
+		property System::Drawing::Color FocusedForeColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
 
-    internal: // properties
+		[System::ComponentModel::CategoryAttribute("Cell")]
+		property System::Drawing::Color FocusedBackColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
 
-        property GrStyle* NativeStyle
-        {
-            GrStyle* get(); 
-        }
+		[System::ComponentModel::CategoryAttribute("Row")]
+		property System::Drawing::Color RowHighlightForeColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
 
-    private: // methods
+		[System::ComponentModel::CategoryAttribute("Row")]
+		property System::Drawing::Color RowHighlightBackColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
 
-        Ntreev::Windows::Forms::Grid::NativeCollection<System::Drawing::Color, GrColor>^ m_rowCellForeColors;
-        Ntreev::Windows::Forms::Grid::NativeCollection<System::Drawing::Color, GrColor>^ m_rowCellBackColors;
-        Ntreev::Windows::Forms::Grid::NativeCollection<System::Drawing::Font^, GrFont*, FontConverter>^ m_rowCellFonts;
+		[System::ComponentModel::CategoryAttribute("Cell")]
+		[System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
+		property StyleColorCollection^ CellForeColors
+		{
+			StyleColorCollection^ get(); 
+		}
 
-        Ntreev::Windows::Forms::Grid::NativeCollection<System::Drawing::Color, GrColor>^ m_groupingForeColors;
-        Ntreev::Windows::Forms::Grid::NativeCollection<System::Drawing::Color, GrColor>^ m_groupingBackColors;
-        Ntreev::Windows::Forms::Grid::NativeCollection<System::Drawing::Font^, GrFont*, FontConverter>^ m_groupingFonts;
+		[System::ComponentModel::CategoryAttribute("Cell")]
+		[System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
+		property StyleColorCollection^ CellBackColors
+		{
+			StyleColorCollection^ get(); 
+		}
 
-        GrStyle* m_pNativeStyle;
-    };
+		[System::ComponentModel::CategoryAttribute("Cell")]
+		[System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
+		property StyleColorCollection^ CellLineColors
+		{
+			StyleColorCollection^ get(); 
+		}
+
+		[System::ComponentModel::CategoryAttribute("Cell")]
+		[System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
+		property StyleFontCollection^ CellFonts
+		{ 
+			StyleFontCollection^ get();
+		}
+
+		[System::ComponentModel::CategoryAttribute("Cell")]
+		[System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
+		property StyleColorCollection^ GroupBackColors
+		{
+			StyleColorCollection^ get(); 
+		}
+
+		[System::ComponentModel::CategoryAttribute("Group")]
+		[System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
+		property StyleColorCollection^ GroupForeColors
+		{
+			StyleColorCollection^ get();
+		}
+
+		[System::ComponentModel::CategoryAttribute("Group")]
+		[System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
+		property StyleFontCollection^ GroupFonts
+		{
+			StyleFontCollection^ get();
+		}
+
+		/// <summary>
+		/// 열의 <see cref="System::ComponentModel::ISite"/>를 가져오거나 설정합니다.
+		/// </summary>
+		[System::ComponentModel::BrowsableAttribute(false)]
+		property System::ComponentModel::ISite^ Site
+		{
+			virtual System::ComponentModel::ISite^ get() sealed;
+			virtual void set(System::ComponentModel::ISite^ value) sealed;
+		}
+
+	public: // events
+
+		/// <summary>
+		/// 구성 요소가 삭제되는 경우 발생합니다.
+		/// </summary>
+		event System::EventHandler^ Disposed
+		{
+			virtual void add(System::EventHandler^ p) sealed { m_eventDisposed += p; }
+			virtual void remove(System::EventHandler^ p) sealed { m_eventDisposed -= p; }
+		private:
+			virtual void raise(System::Object^ sender, System::EventArgs^ e) sealed { if(m_eventDisposed != nullptr) { m_eventDisposed->Invoke(sender, e); } }
+		}
+
+	protected:
+		~Style();
+
+	internal: // methods
+
+		virtual void OnGridControlAttachedInternal() override;
+
+		virtual void OnGridControlDetachedInternal() override;
+
+	internal: // properties
+
+		property GrStyle* NativeStyle
+		{
+			GrStyle* get(); 
+		}
+
+	private: // methods
+		bool ShouldSerializeForeColor();
+		bool ShouldSerializeBackColor();
+		bool ShouldSerializeLineColor();
+		bool ShouldSerializeFont();
+
+		bool ShouldSerializeSelectedForeColor();
+		bool ShouldSerializeSelectedBackColor();
+
+		bool ShouldSerializeFocusedForeColor();
+		bool ShouldSerializeFocusedBackColor();
+
+		bool ShouldSerializeColumnForeColor();
+		bool ShouldSerializeColumnBackColor();
+		bool ShouldSerializeColumnLineColor();
+		bool ShouldSerializeColumnFont();
+
+		bool ShouldSerializeRowForeColor();
+		bool ShouldSerializeRowBackColor();
+		bool ShouldSerializeRowLineColor();
+		bool ShouldSerializeRowFont();
+
+		bool ShouldSerializeRowHighlightForeColor();
+		bool ShouldSerializeRowHighlightBackColor();
+
+		bool ShouldSerializeCellForeColors();
+		bool ShouldSerializeCellBackColors();
+		bool ShouldSerializeCellLineColors();
+		bool ShouldSerializeCellFonts();
+
+		virtual System::Object^ GetService(System::Type^ serviceType) sealed = System::IServiceProvider::GetService;
+
+	private: // variables
+
+		StyleColorCollection^ m_cellForeColors;
+		StyleColorCollection^ m_cellBackColors;
+		StyleColorCollection^ m_cellLineColors;
+		StyleFontCollection^ m_cellFonts;
+
+		StyleColorCollection^ m_groupForeColors;
+		StyleColorCollection^ m_groupBackColors;
+		StyleFontCollection^ m_groupFonts;
+
+		GrStyle* m_pNativeStyle;
+
+		System::EventHandler^ m_eventDisposed;
+		System::ComponentModel::ISite^ m_site;
+	};
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

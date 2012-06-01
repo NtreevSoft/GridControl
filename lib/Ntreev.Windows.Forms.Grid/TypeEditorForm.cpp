@@ -30,10 +30,10 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design
 {
-    void TypeEditorForm::MessageFilter::Start(System::Windows::Forms::Form^ mainForm, Ntreev::Windows::Forms::Grid::Design::TypeEditorForm^ dropDownForm)
+    void TypeEditorForm::MessageFilter::Start(System::IntPtr mainHandle, Ntreev::Windows::Forms::Grid::Design::TypeEditorForm^ dropDownForm)
     {
         System::Windows::Forms::Application::AddMessageFilter(this);
-        AssignHandle(mainForm->Handle);
+        AssignHandle(mainHandle);
 
         m_dropDownForm = dropDownForm;
     }
@@ -89,8 +89,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     void TypeEditorForm::MessageFilter::WndProc(System::Windows::Forms::Message% m)
     {
-        
-
         switch((Native::WM)m.Msg)
         {
         case Native::WM::WM_NCACTIVATE:
@@ -156,11 +154,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
         m_clientBounds = System::Drawing::Rectangle::Intersect(m_clientBounds, gs);
 
-        Form^ owner = m_gridControl->FindForm();
-        while(owner->ParentForm != nullptr)
-            owner = owner->ParentForm;
-
-        m_parentForm = owner;
+        m_mainHandle = Native::Methods::GetRootWindow(m_gridControl->Handle);
 
         try
         {
@@ -187,6 +181,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         {
             delete m_gripperRenderer;
         }
+
+        m_gridControl->Focus();
     }
 
     System::Drawing::Rectangle TypeEditorForm::GetClipScreenRect(System::Windows::Forms::Control^ control)
@@ -399,7 +395,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     void TypeEditorForm::DropDownControl(System::Windows::Forms::Control^ control)
     {
         using namespace System::Windows::Forms;
-        m_filter.Start(m_parentForm, this);
+        m_filter.Start(m_mainHandle, this);
 
         System::IntPtr handle = this->Handle;
 
@@ -445,7 +441,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             Native::Methods::SendMessage(msg);
         }
 
-        m_filter.Start(m_parentForm, this);
+        m_filter.Start(m_mainHandle, this);
         System::IntPtr handle = this->Handle;
 
         this->SuspendLayout();

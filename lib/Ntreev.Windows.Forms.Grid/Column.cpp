@@ -738,7 +738,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(pFont == nullptr)
             return nullptr;
 
-        return Native::WinFormFontManager::ToManagedFont(pFont);
+        return GrFont::ToManaged(pFont);
     }
 
     void Column::CellFont::set(System::Drawing::Font^ value)
@@ -746,7 +746,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(value == nullptr)
             m_pColumn->SetItemFont(nullptr);
         else
-            m_pColumn->SetItemFont(Native::WinFormFontManager::FromManagedFont(value));
+            m_pColumn->SetItemFont(GrFont::FromManaged(value));
     }
 
     int Column::CellMinHeight::get()

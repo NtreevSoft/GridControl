@@ -350,7 +350,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 item->ComponentIndex = m_manager->List->Count - 1;
 
                 m_manager->EndCurrentEdit();
-
             }
             catch(System::Exception^ e)
             {

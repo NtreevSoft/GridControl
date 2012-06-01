@@ -161,14 +161,15 @@ public:
     virtual GrInvalidator* GetInvalidator() const = 0;
     virtual GrGridPainter* GetGridPainter() const = 0;
 
-    virtual GrFont* GetFont() const = 0;
-    virtual GrFont* GetFont(void* fontData) const = 0;
-    virtual GrFont* GetDefaultFont() const = 0;
+    //virtual GrFont* GetFont(void* fontData) const = 0;
+    //virtual GrFont* GetDefaultFont() const = 0;
 
     virtual GrTimer* CreateTimer() = 0;
     virtual void DestroyTimer(GrTimer* pTimer) = 0;
 
     virtual void OnEditValue(GrEditEventArgs* e) = 0;
+
+
 
     virtual GrSelectionType GetSelectionType() const;
     virtual GrSelectionRange GetSelectionRange() const;
@@ -188,7 +189,7 @@ public:
     virtual void OnSizeChanged(const GrRect& rect);
     virtual void OnUpdate();
     virtual void OnPaint(void* painterDevice, const GrRect& clipping);
-    virtual void OnFontChanged();
+    //virtual void OnFontChanged();
 
     virtual bool CanEdit(GrItem* pItem, GrEditingReason reason);
 

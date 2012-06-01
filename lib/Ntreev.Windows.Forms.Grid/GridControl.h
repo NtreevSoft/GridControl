@@ -23,33 +23,10 @@
 
 #pragma once
 #include "Events.h"
+#include "GridControlPreDeclaration.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    ref class CaptionRow;
-    ref class GroupRow;
-    ref class GroupPanel;
-    ref class ColumnCollection;
-    ref class VisibleColumnCollection;
-    ref class DisplayableColumnCollection;
-    ref class FrozenColumnCollection;
-    ref class UnfrozenColumnCollection;
-    ref class RowCollection;
-    ref class VisibleRowCollection;
-    ref class DisplayableRowCollection;
-    ref class SelectedRowCollection;
-    ref class SelectedColumnCollection;
-    ref class GroupRowCollection;
-    ref class ErrorDescriptor;
-    ref class ToolTip;
-
-    value class EditingReason;
-
-    namespace Native
-    {
-        class WinFormWindow;
-    }
-
     /// <summary>
     /// 그리드 컨트롤 개체입니다.
     /// </summary>
@@ -58,9 +35,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     [System::Drawing::ToolboxBitmapAttribute(GridControl::typeid)]
     [System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
     [System::Windows::Forms::DockingAttribute(System::Windows::Forms::DockingBehavior::Ask)]
-    public ref class GridControl
-        : System::Windows::Forms::UserControl
+    public ref class GridControl : System::Windows::Forms::UserControl
     {
+		ref class StyleConverter;
     public: // methods
 
         /// <summary>
@@ -137,6 +114,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 그리드 컨트롤에 대한 정보를 담은 대화상자를 모달 형태로 표시합니다.
         /// </summary>
         void ShowAbout();
+
+		virtual void ResetBackColor() override;
+
+		virtual void ResetForeColor() override;
+
+		void ResetBackgroundColor();
+
+		void ResetLineColor();
 
     public: // properties
 
@@ -233,6 +218,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::DescriptionAttribute("열의 너비를 자동적으로 조절할지에 대한 여부를 가져오거나 설정합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DefaultValueAttribute(false)]
+        [System::ComponentModel::SettingsBindableAttribute(true)]
         property bool AutoFitColumn 
         {
             bool get();
@@ -763,10 +749,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// 스타일을 가져옵니다.
+        /// 스타일을 가져오거나 설정합니다.
         /// </summary>
-        [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+		[System::ComponentModel::DefaultValueAttribute((System::String^)nullptr)]
         [System::ComponentModel::CategoryAttribute("Appearance")]
+		[System::ComponentModel::TypeConverter(StyleConverter::typeid)]
         property Ntreev::Windows::Forms::Grid::Style^ Style
         {
             Ntreev::Windows::Forms::Grid::Style^ get();
@@ -799,6 +786,30 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property bool CanEnableIme
         {
             virtual bool get() override;
+        }
+
+		[System::ComponentModel::DescriptionAttribute("구성요소의 배경색입니다.")]
+        [System::ComponentModel::CategoryAttribute("Appearance")]
+        virtual property System::Drawing::Color BackColor 
+        {
+            System::Drawing::Color get() override;
+            void set(System::Drawing::Color) override;
+        }
+
+		[System::ComponentModel::DescriptionAttribute("그리드가 포함되지 않는 여분의 배경색입니다.")]
+        [System::ComponentModel::CategoryAttribute("Appearance")]
+        property System::Drawing::Color BackgroundColor 
+        {
+            System::Drawing::Color get();
+            void set(System::Drawing::Color);
+        }
+
+		[System::ComponentModel::DescriptionAttribute("그리드의 선을 나타내는 색입니다.")]
+        [System::ComponentModel::CategoryAttribute("Appearance")]
+        property System::Drawing::Color LineColor
+        {
+            System::Drawing::Color get();
+            void set(System::Drawing::Color);
         }
 
 #ifdef _TIME_TEST
@@ -1254,6 +1265,32 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void raise(System::Object^ sender, System::EventArgs^ e) { if(m_eventDataBindingComplete != nullptr) m_eventDataBindingComplete->Invoke(sender, e); }
         }
 
+		/// <summary>
+        /// <see cref="Ntreev::Windows::Forms::Grid::GridControl::BackgroundColor"/> 속성 값이 변경되면 발생합니다.
+        /// </summary>
+		[System::ComponentModel::CategoryAttribute("PropertyChanged")]
+        [System::ComponentModel::DescriptionAttribute("BackgroundColor 값이 변경되면 발생합니다.")]
+        event System::EventHandler^ BackgroundColorChanged
+        {
+            void add(System::EventHandler^ p) { m_eventBackgroundColorChanged += p; }
+            void remove(System::EventHandler^ p) { m_eventBackgroundColorChanged -= p; }
+        private:
+            void raise(System::Object^ sender, System::EventArgs^ e) { if(m_eventBackgroundColorChanged != nullptr) m_eventBackgroundColorChanged->Invoke(sender, e); }
+        }
+
+		/// <summary>
+        /// <see cref="Ntreev::Windows::Forms::Grid::GridControl::LineColor"/> 속성 값이 변경되면 발생합니다.
+        /// </summary>
+		[System::ComponentModel::CategoryAttribute("PropertyChanged")]
+        [System::ComponentModel::DescriptionAttribute("LineColor 값이 변경되면 발생합니다.")]
+        event System::EventHandler^ LineColorChanged
+        {
+            void add(System::EventHandler^ p) { m_eventLineColorChanged += p; }
+            void remove(System::EventHandler^ p) { m_eventLineColorChanged -= p; }
+        private:
+            void raise(System::Object^ sender, System::EventArgs^ e) { if(m_eventLineColorChanged != nullptr) m_eventLineColorChanged->Invoke(sender, e); }
+        }
+
     internal: // methods
 
         bool InvokeValueChanging(Ntreev::Windows::Forms::Grid::Cell^ cell, System::Object^ value, System::Object^ oldValue);
@@ -1554,7 +1591,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         virtual void OnCellDoubleClick(Ntreev::Windows::Forms::Grid::CellEventArgs^ e);
 
         /// <summary>
-        /// <see cref="BeginEdit"/> 이벤트를 발생시킵니다.
+        /// <see cref="EditBegun"/> 이벤트를 발생시킵니다.
         /// </summary>
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="EditBegunEventArgs"/>입니다.
@@ -1562,7 +1599,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         virtual void OnEditBegun(Ntreev::Windows::Forms::Grid::EditBegunEventArgs^ e);
 
         /// <summary>
-        /// <see cref="EndEdit"/> 이벤트를 발생시킵니다.
+        /// <see cref="EditEnded"/> 이벤트를 발생시킵니다.
         /// </summary>
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="CellEventArgs"/>입니다.
@@ -1609,7 +1646,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </param>
         virtual void OnDataBindingComplete(System::EventArgs^ e);
 
-        // overrides
         /// <summary>
         /// <see cref="Paint"/> 이벤트를 발생시킵니다.
         /// </summary>
@@ -1617,6 +1653,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이벤트 데이터가 들어 있는 <see cref="System::Windows::Forms::PaintEventArgs"/>입니다.
         /// </param>
         virtual void OnPaint(System::Windows::Forms::PaintEventArgs^ e) override;
+
+		/// <summary>
+        /// 컨트롤의 배경을 그립니다.
+        /// </summary>
+        /// <param name="e">
+        /// 이벤트 데이터가 들어 있는 <see cref="System::Windows::Forms::PaintEventArgs"/>입니다.
+        /// </param>
+        virtual void OnPaintBackground(System::Windows::Forms::PaintEventArgs^ e) override;
 
         /// <summary>
         /// <see cref="MouseLeave"/> 이벤트를 발생시킵니다.
@@ -1630,7 +1674,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <see cref="MouseMove"/> 이벤트를 발생시킵니다.
         /// </summary>
         /// <param name="e">
-        /// 이벤트 데이터가 들어 있는 <see cref="MouseEventArgs"/>입니다.
+        /// 이벤트 데이터가 들어 있는 <see cref="System::Windows::Forms::MouseEventArgs"/>입니다.
         /// </param>
         virtual void OnMouseMove(System::Windows::Forms::MouseEventArgs^ e) override;
 
@@ -1638,7 +1682,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <see cref="MouseDown"/> 이벤트를 발생시킵니다.
         /// </summary>
         /// <param name="e">
-        /// 이벤트 데이터가 들어 있는 <see cref="MouseEventArgs"/>입니다.
+        /// 이벤트 데이터가 들어 있는 <see cref="System::Windows::Forms::MouseEventArgs"/>입니다.
         /// </param>
         virtual void OnMouseDown(System::Windows::Forms::MouseEventArgs^ e) override;
 
@@ -1646,7 +1690,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <see cref="MouseUp"/> 이벤트를 발생시킵니다.
         /// </summary>
         /// <param name="e">
-        /// 이벤트 데이터가 들어 있는 <see cref="MouseEventArgs"/>입니다.
+        /// 이벤트 데이터가 들어 있는 <see cref="System::Windows::Forms::MouseEventArgs"/>입니다.
         /// </param>
         virtual void OnMouseUp(System::Windows::Forms::MouseEventArgs^ e) override;
 
@@ -1654,7 +1698,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <see cref="MouseClick"/> 이벤트를 발생시킵니다.
         /// </summary>
         /// <param name="e">
-        /// 이벤트 데이터가 들어 있는 <see cref="MouseEventArgs"/>입니다.
+        /// 이벤트 데이터가 들어 있는 <see cref="System::Windows::Forms::MouseEventArgs"/>입니다.
         /// </param>
         virtual void OnMouseClick(System::Windows::Forms::MouseEventArgs^ e) override;
 
@@ -1662,7 +1706,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <see cref="MouseDoubleClick"/> 이벤트를 발생시킵니다.
         /// </summary>
         /// <param name="e">
-        /// 이벤트 데이터가 들어 있는 <see cref="MouseEventArgs"/>입니다.
+        /// 이벤트 데이터가 들어 있는 <see cref="System::Windows::Forms::MouseEventArgs"/>입니다.
         /// </param>
         virtual void OnMouseDoubleClick(System::Windows::Forms::MouseEventArgs^ e) override;
 
@@ -1670,7 +1714,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <see cref="MouseWheel"/> 이벤트를 발생시킵니다.
         /// </summary>
         /// <param name="e">
-        /// 이벤트 데이터가 들어 있는 <see cref="MouseEventArgs"/>입니다.
+        /// 이벤트 데이터가 들어 있는 <see cref="System::Windows::Forms::MouseEventArgs"/>입니다.
         /// </param>
         virtual void OnMouseWheel(System::Windows::Forms::MouseEventArgs^ e) override;
 
@@ -1738,6 +1782,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </param>
         virtual void OnLayout(System::Windows::Forms::LayoutEventArgs^ e) override;
 
+		virtual void OnForeColorChanged(System::EventArgs^ e) override;
+
+		virtual void OnBackColorChanged(System::EventArgs^ e) override;
+
+		virtual void OnBackgroundColorChanged(System::EventArgs^ e);
+
+		virtual void OnLineColorChanged(System::EventArgs^ e);
+
         ///// <summary>
         ///// <see cref="Invalidated"/> 이벤트를 발생시킵니다.
         ///// </summary>
@@ -1794,7 +1846,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         bool ShouldSerializeColumns();
         bool ShouldSerializeRows();
         bool ShouldSerializeCaption();
-        
+
+        bool ShouldSerializeBackgroundColor();
+		bool ShouldSerializeLineColor();
+		bool ShouldSerializeBackColor();
+		bool ShouldSerializeForeColor();
 
         void ResetColumns();
         void ResetRows();
@@ -1804,6 +1860,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void dataSource_Initialized(System::Object^ sender, System::EventArgs^ e);
         void currencyManager_ListChanged(System::Object^ sender, System::ComponentModel::ListChangedEventArgs^ e);
         void currencyManager_BindingComplete(System::Object^ sender, System::Windows::Forms::BindingCompleteEventArgs^ e);
+		void style_Disposed(System::Object^ sender, System::EventArgs^ e);
 
     private: // variables
         System::Object^ m_dataSource;
@@ -1841,6 +1898,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         Ntreev::Windows::Forms::Grid::Column^ m_oldFocusedColumn;
         Ntreev::Windows::Forms::Grid::RowBase^ m_oldFocusedRow;
 
+        System::Drawing::Color m_backgroundColor;
+		System::Drawing::Color m_lineColor;
+		bool m_paintBackground;
+
         // events
         Ntreev::Windows::Forms::Grid::ValueChangingEventHandler^ m_eventValueChanging;
         Ntreev::Windows::Forms::Grid::CellEventHandler^ m_eventValueChanged;
@@ -1877,6 +1938,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::EventHandler^ m_eventDataMemberChanged;
         System::EventHandler^ m_eventDataBindingComplete;
 
+		System::EventHandler^ m_eventBackgroundColorChanged;
+		System::EventHandler^ m_eventLineColorChanged;
+
         Ntreev::Windows::Forms::Grid::CurrencyManagerChangingEventHandler^ m_eventCurrencyManagerChanging;
         Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventHandler^ m_eventCurrencyManagerChanged;
 
@@ -1884,6 +1948,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::Windows::Forms::CurrencyManager^ m_defaultManager;
         System::Data::DataTable^ m_defaultDataSource;
         int m_dataBindingRef;
+
+		System::EventHandler^ m_styleDisposedEventHandler;
 
         ref class DataBindingRef
         {
@@ -1894,18 +1960,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             GridControl^ m_gridControl;
         };
 
+		ref class StyleConverter : System::ComponentModel::ReferenceConverter
+		{
+		public:
+			StyleConverter() : ReferenceConverter(Ntreev::Windows::Forms::Grid::Style::typeid) {}
+		};
+
         System::ComponentModel::ListChangedEventHandler^ m_listChangedEventHandler;
         System::Windows::Forms::BindingCompleteEventHandler^ m_bindingCompleteEventHandler;
-
-    internal:
-        System::Windows::Forms::Message m_msg;
-    private: System::Void InitializeComponent() {
-                 this->SuspendLayout();
-                 // 
-                 // GridControl
-                 // 
-                 this->Name = L"GridControl";
-                 this->ResumeLayout(false);
-             }
-};
+    };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

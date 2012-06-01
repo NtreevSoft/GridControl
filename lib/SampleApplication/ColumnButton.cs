@@ -62,6 +62,7 @@ namespace SampleApplication
 
         protected override void SetControlLayout(Button control, ICell cell)
         {
+            control.ForeColor = cell.ForeColor;
             control.SetBounds(0, 0, cell.ClientRectangle.Width, cell.ClientRectangle.Height);
             control.Font = cell.Font;
         }

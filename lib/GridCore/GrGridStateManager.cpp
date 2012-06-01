@@ -52,7 +52,7 @@ GrStateManager::GrStateManager()
 }
 
 GrStateManager::Invalidator::Invalidator(GrGridCore* pGridCore)
-: m_pGridCore(pGridCore)
+    : m_pGridCore(pGridCore)
 {
     m_pGridCore->LockInvalidate();
 }
@@ -254,7 +254,7 @@ void GrStateManager::OnPaint(GrGridPainter* pGridPainter)
         m_state->OnPaintAdornments(pGridPainter, m_pGridCore->GetDisplayRect());
 }
 
-void GrStateManager::OnKeyDown(GrKeys key, GrKeys modifierKeys)
+bool GrStateManager::OnKeyDown(GrKeys key, GrKeys modifierKeys)
 {
     Invalidator invalidator(m_pGridCore);
 
@@ -274,8 +274,9 @@ void GrStateManager::OnKeyDown(GrKeys key, GrKeys modifierKeys)
     }
     else if(m_state != NULL)
     {
-        m_state->OnKeyDown(key, modifierKeys);
+        return m_state->OnKeyDown(key, modifierKeys);
     }
+    return false;
 }
 
 void GrStateManager::OnKeyUp(GrKeys key, GrKeys modifierKeys)
@@ -408,9 +409,9 @@ void GrStateBase::OnMouseWheel(GrMouseEventArgs* /*e*/)
 
 }
 
-void GrStateBase::OnKeyDown(GrKeys /*key*/, GrKeys /*modifierKeys*/)
+bool GrStateBase::OnKeyDown(GrKeys /*key*/, GrKeys /*modifierKeys*/)
 {
-
+    return false;
 }
 
 void GrStateBase::OnKeyUp(GrKeys /*key*/, GrKeys /*modifierKeys*/)
@@ -617,7 +618,7 @@ namespace GridStateClass
         m_pGridCore->Invalidate();
     }
 
-    void Normal::OnKeyDown(GrKeys key, GrKeys modifierKeys)
+    bool Normal::OnKeyDown(GrKeys key, GrKeys modifierKeys)
     {
         GrFocusMover* pMover = m_pGridCore->GetFocusMover();
 
@@ -632,7 +633,7 @@ namespace GridStateClass
                 else
                     pMover->MoveRight(GrSelectionRange_One);
             }
-            break;
+            return true;
         case GrKeys_Left:
             {
                 IFocusable* pFocusable = m_pFocuser->Get();
@@ -649,12 +650,12 @@ namespace GridStateClass
                     }
                 }
             }
-            break;
+            return true;
         case GrKeys_Up:
             {
                 pMover->MoveUp(GrSelectionRange_One);
             }
-            break;
+            return true;
         case GrKeys_Right:
             {
                 IFocusable* pFocusable = m_pFocuser->Get();
@@ -671,12 +672,12 @@ namespace GridStateClass
                     }
                 }
             }
-            break;
+            return true;
         case GrKeys_Down:
             {
                 pMover->MoveDown(GrSelectionRange_One);
             }
-            break;
+            return true;
 
         case GrKeys_End:
             {
@@ -685,7 +686,7 @@ namespace GridStateClass
                 else
                     pMover->LastCell(selectionRange);
             }
-            break;
+            return true;
         case GrKeys_Home:
             {
                 if(modifierKeys & GrKeys_Control)
@@ -693,94 +694,19 @@ namespace GridStateClass
                 else
                     pMover->FirstCell(selectionRange);
             }
-            break;
+            return true;
         case GrKeys_PageUp:
             {
                 pMover->PageUp(selectionRange);
             }
-            break;
+            return true;
         case GrKeys_PageDown:
             {
                 pMover->PageDown(selectionRange);
             }
-            break;
-
-            //case GrKeys_Enter:
-            // {
-            // if(m_focusedCell != nullptr)
-            // {
-            // if(m_focusedCell->Row == m_insertionRow)
-            // {
-            // Row^ row = AddNewRowFromInsertion();
-            // if(row == nullptr)
-            // break;
-
-            // Ntreev::Windows::Forms::Grid::Cell^ cell = row[m_focusedCell->Column];
-            // cell->Select(_SelectionType::Normal);
-            // cell->Focus();
-            // cell->BringIntoView();
-            // }
-            // else
-            // {
-            // EditCell(m_focusedCell, gcnew EditingReason());
-            // }
-            // }
-            // }
-            // break;
-            //case GrKeys_F12:
-            // {
-            // if(m_insertionRow->IsVisible == true)
-            // {
-            // m_insertionRow->Select(_SelectionType::Normal);
-            // m_insertionRow->Focus();
-            // m_insertionRow->BringIntoView();
-            // }
-            // }
-            // break;
-            //case GrKeys_F2:
-            // {
-            // if(m_focusedCell != nullptr)
-            // {
-            // EditCell(m_focusedCell, gcnew EditingReason());
-            // }
-            // else
-            // {
-            // break;
-            // }
-            // }
-            // break;
-            //case GrKeys_Escape:
-            // {
-            // if(m_focusedCell != nullptr && m_focusedCell->IsEdited == true)
-            // {
-            // m_focusedCell->CancelEdit();
-            // if(m_pGridCore->IsGrouped() == true)
-            // m_pGridCore->GetDataRowList()->Update(true);
-            // }
-            // else if(FocusedRow != nullptr && FocusedRow->IsEdited == true)
-            // {
-            // FocusedRow->CancelEdit();
-            // if(m_pGridCore->IsGrouped() == true)
-            // m_pGridCore->GetDataRowList()->Update(true);
-            // }
-            // Invalidate(false);
-            // }
-            // break;
-            //case GrKeys_ProcessKey:
-            // {
-            // if(dynamic_cast<IEditByIme^>(FocusedColumn))
-            // {
-            // _Char nnn = Win32::API::ImmGetVirtualKey(Handle);
-            // if(_Char::IsLetter(nnn))
-            // {
-            // EditCell(m_focusedCell, gcnew EditingReason((System::Char)e->KeyValue, true));
-            // }
-            // }
-            // }
-            // break;
+            return true;
         default:
-            break;
-
+            return false;
         }
     }
 

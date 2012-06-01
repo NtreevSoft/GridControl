@@ -166,7 +166,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         bool m_closed;
         bool m_defaultResult;
 
-        System::Windows::Forms::Form^ m_parentForm;
+        System::IntPtr m_mainHandle;
         Ntreev::Windows::Forms::Grid::GridControl^ m_gridControl;
 
         System::Drawing::Point m_mouseDownPoint;
@@ -189,7 +189,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         ref class MessageFilter : System::Windows::Forms::NativeWindow, System::Windows::Forms::IMessageFilter
         {
         public: 
-            void Start(System::Windows::Forms::Form^ mainForm, Ntreev::Windows::Forms::Grid::Design::TypeEditorForm^ dropDownForm);
+            void Start(System::IntPtr mainHandle, Ntreev::Windows::Forms::Grid::Design::TypeEditorForm^ dropDownForm);
             void Stop();
 
         protected:

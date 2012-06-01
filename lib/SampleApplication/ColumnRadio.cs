@@ -74,17 +74,17 @@ namespace SampleApplication
         }
     }
 
-    public class ColumnPainter2 : ColumnPainter
-    {
+    //public class ColumnPainter2 : ColumnPainter
+    //{
 
-        public override bool PaintBackground(System.Drawing.Graphics g, System.Drawing.Rectangle paintRect, IColumn column)
-        {
-            return false;
-        }
+    //    public override bool PaintBackground(System.Drawing.Graphics g, System.Drawing.Rectangle paintRect, IColumn column)
+    //    {
+    //        return false;
+    //    }
 
-        public override bool PaintContents(System.Drawing.Graphics g, System.Drawing.Rectangle paintRect, IColumn column)
-        {
-            return false;
-        }
-    }
+    //    public override bool PaintContents(System.Drawing.Graphics g, System.Drawing.Rectangle paintRect, IColumn column)
+    //    {
+    //        return false;
+    //    }
+    //}
 }

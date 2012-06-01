@@ -117,11 +117,18 @@ public:
     GrClickEditing GetClickEditing() const;
     void SetClickEditing(GrClickEditing clickEditing);
 
+	GrColor GetForeColor() const;
+	GrColor GetBackColor() const;
+	GrColor GetLineColor() const;
+	GrFont* GetFont() const;
+
+	void SetForeColor(GrColor foreColor);
+	void SetBackColor(GrColor backColor);
+	void SetLineColor(GrColor lineColor);
+	void SetFont(GrFont* pFont);
 
     int GetGroupMargin() const;
-
     void EditItem(GrItem* pItem, GrEditingReason reason);
-
     void BringIntoView(GrItem* pItem);
 
     bool SetMouseOver(GrCell* pCell, const GrPoint& localLocation);
@@ -251,9 +258,11 @@ private:
     bool m_multiSelect;
     GrClickEditing m_clickEditing;
 
+	GrColor m_foreColor;
+	GrColor m_backColor;
+	GrColor m_lineColor;
     GrFont* m_pFont;
     GrStyle* m_pStyle;
-    GrStyle* m_pDefaultStyle;
 
     int m_attachedCount;
     int m_createdCell; friend class GrCell;
