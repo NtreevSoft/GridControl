@@ -59,14 +59,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_pDataRow->GetVisible();
     }
 
-    unsigned int RowBase::DisplayIndex::get()
+    int RowBase::DisplayIndex::get()
     {
-        return m_pDataRow->GetDisplayIndex();
+        return (int)m_pDataRow->GetDisplayIndex();
     }
 
-    unsigned int RowBase::VisibleIndex::get()
+    int RowBase::VisibleIndex::get()
     {
-        return m_pDataRow->GetVisibleIndex();
+        return (int)m_pDataRow->GetVisibleIndex();
     }
 
     bool RowBase::Focused::get()

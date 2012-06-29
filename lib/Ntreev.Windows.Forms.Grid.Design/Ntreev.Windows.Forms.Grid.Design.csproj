@@ -47,6 +47,7 @@
     <WarningLevel>4</WarningLevel>
     <RegisterForComInterop>false</RegisterForComInterop>
     <UseVSHostingProcess>true</UseVSHostingProcess>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -103,6 +104,8 @@
     <Compile Include="GridControlDesigner.ActionList.cs">
       <Generator>SettingsSingleFileGenerator</Generator>
     </Compile>
+    <Compile Include="StyleColorCollectionEditor.cs" />
+    <Compile Include="StyleFontCollectionEditor.cs" />
     <Compile Include="TypeSelectorForm.cs">
       <SubType>Form</SubType>
     </Compile>

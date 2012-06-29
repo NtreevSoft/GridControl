@@ -309,6 +309,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         return System::IntPtr(hwnd);
     }
 
+    System::IntPtr Methods::GetOwnerWindow(System::IntPtr handle)
+    {
+        HWND hwnd = (HWND)handle.ToPointer();
+        HWND owner = GetWindow(hwnd, GW_OWNER);
+        return System::IntPtr(owner);
+    }
+
     ControlPainter::ControlPainter()
         : m_colorKey(RGB(0,128,128))
     {

@@ -31,6 +31,8 @@
 
 enum GrPaintStyle
 {
+    GrPaintStyle_Default = 0,
+
     GrPaintStyle_Focused = 0x00000001,
     GrPaintStyle_Mouseover = 0x00000002,
     GrPaintStyle_Selected = 0x00000004,
@@ -66,6 +68,8 @@ typedef std::vector<GrFont*> GrFonts;
 
 class GrStyle
 {
+private:
+    GrStyle(bool defaultStyle);
 public:
     GrStyle();
 
@@ -90,9 +94,19 @@ public:
 	GrColor RowBackColor;
 	GrColor RowLineColor;
 	GrFont* RowFont;
+
+    GrColor CaptionForeColor;
+	GrColor CaptionBackColor;
+	GrColor CaptionLineColor;
+	GrFont* CaptionFont;
+
+    GrColor GroupPanelForeColor;
+	GrColor GroupPanelBackColor;
+	GrColor GroupPanelLineColor;
+	GrFont* GroupPanelFont;
 	
-    GrColor RowHighlightForeColor;
-    GrColor RowHighlightBackColor;
+    GrColor RowHighlightLineColor;
+    GrColor RowHighlightFillColor;
 
     GrColors ItemBackColors;
     GrColors ItemForeColors;
@@ -101,7 +115,28 @@ public:
 
     GrColors GroupBackColors;
     GrColors GroupForeColors;
+    GrColors GroupLineColors;
     GrFonts GroupFonts;
+
+    GrColor GetColumnForeColor() const;
+    GrColor GetColumnBackColor() const;
+    GrColor GetColumnLineColor() const;
+    GrFont* GetColumnFont() const;
+
+    GrColor GetRowForeColor() const;
+    GrColor GetRowBackColor() const;
+    GrColor GetRowLineColor() const;
+    GrFont* GetRowFont() const;
+
+    GrColor GetCaptionForeColor() const;
+    GrColor GetCaptionBackColor() const;
+    GrColor GetCaptionLineColor() const;
+    GrFont* GetCaptionFont() const;
+
+    GrColor GetGroupPanelForeColor() const;
+    GrColor GetGroupPanelBackColor() const;
+    GrColor GetGroupPanelLineColor() const;
+    GrFont* GetGroupPanelFont() const;
 
     GrColor GetItemForeColor(uint index) const;
     GrColor GetItemBackColor(uint index)const;
@@ -110,6 +145,7 @@ public:
 
     GrColor GetGroupForeColor(uint index)const;
     GrColor GetGroupBackColor(uint index)const;
+    GrColor GetGroupLineColor(uint index)const;
     GrFont* GetGroupFont(uint index)const;
 
     static const GrStyle DefaultStyle;
@@ -124,15 +160,16 @@ class GrGridPainter
 public:
     virtual void BeginPaint(void* painterDevice) = 0;
 
-    virtual void DrawRowSplitter(const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor) = 0;
+    virtual void DrawRowSplitter(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor) = 0;
     virtual void DrawDropDown(const GrRect& paintRect, GrControlState state) = 0;
     virtual void DrawModal(const GrRect& paintRect, GrControlState state) = 0;
-    virtual void DrawTreeGlyph(const GrRect& paintRect, bool opened) = 0;
+    virtual void DrawExpander(const GrRect& paintRect, GrControlState state, bool opened, const GrColor& foreColor, const GrColor& backColor) = 0;
     virtual void DrawSortGlyph(const GrRect& paintRect, GrSort sortType) = 0;
 
     virtual void DrawColumn(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = NULL) = 0;
     virtual void DrawRow(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = NULL) = 0;
     virtual void DrawItem(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = NULL) = 0;
+    virtual void DrawGroupHeader(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = NULL) = 0;
 
     virtual void DrawText(GrFont* pFont, const wchar_t* text, int textLength, const GrRect& paintRect, const GrColor& color , const GrRect* pClipRect = NULL) = 0;
     virtual void DrawColumnText(GrFont* pFont, const wchar_t* text, int textLength, const GrRect& paintRect, const GrColor& color , const GrRect* pClipRect = NULL) = 0;

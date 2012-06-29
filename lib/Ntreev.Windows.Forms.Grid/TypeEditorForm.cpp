@@ -138,6 +138,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
         InitializeComponent();
 
+        m_gridControl->EditClosed += gcnew System::EventHandler(this, &TypeEditorForm::gridControl_EditClosed);
+
         m_bounds = m_gridControl->RectangleToScreen(cell->Bounds);
         m_clientBounds = cell->ClientRectangle;
         m_clientBounds.Offset(cell->Bounds.Location);
@@ -169,6 +171,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     TypeEditorForm::~TypeEditorForm()
     {
         m_filter.Stop();
+        m_gridControl->EditClosed -= gcnew System::EventHandler(this, &TypeEditorForm::gridControl_EditClosed);
         this->Controls->Clear();
 
         if(m_control != nullptr)
@@ -700,5 +703,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             }
             this->Left -= this->Width - width;
         }
+    }
+
+    void TypeEditorForm::gridControl_EditClosed(System::Object^ sender, System::EventArgs^ e)
+    {
+        this->CancelEdit();
     }
 } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

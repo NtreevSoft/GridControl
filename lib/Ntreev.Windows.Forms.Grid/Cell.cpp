@@ -110,8 +110,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pItem->ManagedRef = this;
         m_value = System::DBNull::Value;
         m_oldValue = System::DBNull::Value;
-
-        //UpdateNativeText();
     }
 
     Ntreev::Windows::Forms::Grid::Column^ Cell::Column::get()
@@ -188,11 +186,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             {
                 text = m_column->TypeConverter->ConvertToString(typeDescriptorContext, value);
             }
-            m_pItem->SetText(ToNativeString::Convert(text));
+            this->DisplayText = text;
         }
         catch(System::Exception^)
         {
-            m_pItem->SetText(L"");
+            this->DisplayText = System::String::Empty;
         }
     }
 
@@ -314,12 +312,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::String^ Cell::ToString()
     {
-        using namespace Ntreev::Windows::Forms::Grid;
-
-        if(this->Value == nullptr)
-            return System::String::Empty;
-        TypeDescriptorContextCore^ typeDescriptorContext = gcnew TypeDescriptorContextCore(this);
-        return m_column->TypeConverter->ConvertToString(typeDescriptorContext, this->Value);
+        return m_text;
     }
 
     bool Cell::IsReadOnly::get()
@@ -426,6 +419,28 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void Cell::WrongValue::set(bool value)
     {
         m_wrongValue = value;
+    }
+
+    System::String^ Cell::DisplayText::get()
+    {
+        return m_text;
+    }
+
+    void Cell::DisplayText::set(System::String^ value)
+    {
+        if(m_text != nullptr)
+            this->Row->m_textCapacity -= m_text->Length;
+
+        m_text = value;
+
+        if(m_text != nullptr)
+        {
+            this->Row->m_textCapacity += m_text->Length;
+            m_pItem->SetText(ToNativeString::Convert(value));
+        }
+
+        if(m_text == nullptr)
+            UpdateNativeText();
     }
 
     System::Drawing::Rectangle Cell::TextBound::get()

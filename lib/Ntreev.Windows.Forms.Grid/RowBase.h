@@ -82,9 +82,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property unsigned int VisibleIndex
+        property int VisibleIndex
         {
-            unsigned int get(); 
+            int get(); 
         }
 
         /// <summary>
@@ -102,9 +102,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property unsigned int DisplayIndex
+        property int DisplayIndex
         {
-            unsigned int get(); 
+            int get(); 
         }
 
         /// <summary>

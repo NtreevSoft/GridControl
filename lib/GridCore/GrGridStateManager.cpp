@@ -628,12 +628,16 @@ namespace GridStateClass
         {
         case GrKeys_Tab:
             {
-                if(modifierKeys & GrKeys_Shift)
-                    pMover->MoveLeft(GrSelectionRange_One);
-                else
-                    pMover->MoveRight(GrSelectionRange_One);
+                if((modifierKeys & (GrKeys_Control | GrKeys_Alt)) == 0)
+                {
+                    if(modifierKeys & GrKeys_Shift)
+                        pMover->MoveLeft(GrSelectionRange_One);
+                    else
+                        pMover->MoveRight(GrSelectionRange_One);
+                    return true;
+                }
             }
-            return true;
+            return false;
         case GrKeys_Left:
             {
                 IFocusable* pFocusable = m_pFocuser->Get();
@@ -765,8 +769,17 @@ namespace GridStateClass
             return true;
 
         int columnSplitter = m_pGridCore->GetColumnSplitter();
-        if(localLocation.x < columnSplitter || localLocation.x >= pHitted->GetWidth() - columnSplitter)
+
+        if(localLocation.x < columnSplitter || 
+            localLocation.x >= pHitted->GetWidth() - columnSplitter)
             return false;
+
+        if(pColumn->GetClipped() == true)
+        {
+            int x = localLocation.x + pColumn->GetX();
+            if(x >= m_pGridCore->GetDisplayRect().right - columnSplitter)
+                return false;
+        }
         return true;
     }
 
@@ -793,7 +806,7 @@ namespace GridStateClass
                 {
                 case GrSelectionType_Normal:
                     {
-                        m_pItemSelector->SelectItems(m_pColumn, GrSelectionType_Normal);
+                        m_pItemSelector->SelectColumn(m_pColumn, GrSelectionType_Normal);
                         m_pItemSelector->SetColumnAnchor(m_pColumn);
                         m_pFocuser->Set(m_pColumn);
 
@@ -804,7 +817,7 @@ namespace GridStateClass
                     break;
                 default:
                     {
-                        m_pItemSelector->SelectItems(m_pColumn, GrSelectionType_Add);
+                        m_pItemSelector->SelectColumn(m_pColumn, GrSelectionType_Add);
                         m_pFocuser->Set(m_pColumn);
                     }
                     break;
@@ -854,9 +867,9 @@ namespace GridStateClass
                     {
                         uint targetIndex;
                         if(hitTest.localHit.x < pTarget->GetWidth() / 2)
-                            targetIndex = pTarget->GetFreezableIndex();
+                            targetIndex = pTarget->GetFrozenIndex();
                         else
-                            targetIndex = pTarget->GetFreezableIndex() + 1;
+                            targetIndex = pTarget->GetFrozenIndex() + 1;
 
                         if(m_pColumn->GetFrozen() == false)
                         {
@@ -865,7 +878,7 @@ namespace GridStateClass
                             else
                                 m_targetType = TargetType_Frozen;
                         }
-                        else if(targetIndex != m_pColumn->GetFreezableIndex() + 1 && targetIndex != m_pColumn->GetFreezableIndex()) 
+                        else if(targetIndex != m_pColumn->GetFrozenIndex() + 1 && targetIndex != m_pColumn->GetFrozenIndex()) 
                         {
                             m_targetType = TargetType_Frozen;
                         }
@@ -1138,7 +1151,14 @@ namespace GridStateClass
             return NULL;
 
         int columnSplitter = m_pGridCore->GetColumnSplitter();
-        if(localLocation.x >= pColumn->GetWidth() - columnSplitter)
+        
+        if(pColumn->GetClipped() == true)
+        {
+            int x = localLocation.x + pColumn->GetX();
+            if(x >= m_pGridCore->GetDisplayRect().right - columnSplitter)
+                return pColumn;
+        }
+        else if(localLocation.x >= pColumn->GetWidth() - columnSplitter)
         {
             if(pColumn->GetResizable() == true)
                 return pColumn;
@@ -1449,7 +1469,7 @@ namespace GridStateClass
                     if(m_pItemSelector->CanSelect(m_pItem) == true)
                     {
                         if(m_pGridCore->GetFullRowSelect() == true)
-                            m_pItemSelector->SelectItems(m_pItem->GetDataRow(), GrSelectionType_Add);
+                            m_pItemSelector->SelectDataRow(m_pItem->GetDataRow(), GrSelectionType_Add);
                         else
                             m_pItemSelector->SelectItem(m_pItem, GrSelectionType_Add);
                         m_pItemSelector->SetAnchor(m_pItem);
@@ -1460,7 +1480,7 @@ namespace GridStateClass
             case GrSelectionType_Normal:
                 {
                     if(m_pGridCore->GetFullRowSelect() == true)
-                        m_pItemSelector->SelectItems(m_pItem->GetDataRow(), GrSelectionType_Normal);
+                        m_pItemSelector->SelectDataRow(m_pItem->GetDataRow(), GrSelectionType_Normal);
                     else
                         m_pItemSelector->SelectItem(m_pItem, GrSelectionType_Normal);
 
@@ -2010,7 +2030,7 @@ namespace GridStateClass
                         {
                             m_pItemSelector->SetSelectionGroup(pDataRow->GetSelectionGroup());
                             m_pItemSelector->SetRowAnchor(pDataRow);
-                            m_pItemSelector->SelectItems(pDataRow, GrSelectionType_Normal);
+                            m_pItemSelector->SelectDataRow(pDataRow, GrSelectionType_Normal);
                             m_pFocuser->Set(pDataRow);
                         }
                         break;
@@ -2018,7 +2038,7 @@ namespace GridStateClass
                         {
                             if(m_pItemSelector->CanSelect(pDataRow) == true)
                             {
-                                m_pItemSelector->SelectItems(pDataRow, GrSelectionType_Add);
+                                m_pItemSelector->SelectDataRow(pDataRow, GrSelectionType_Add);
                                 m_pFocuser->Set(pDataRow);
                             }
                         }
@@ -2081,7 +2101,7 @@ namespace GridStateClass
     bool RowResizing::GetHitTest(GrCell* pHitted, const GrPoint& localLocation)
     {
         GrRow* pRow = dynamic_cast<GrRow*>(pHitted);
-        if(pRow == NULL)
+        if(pRow == NULL || pRow->GetResizable() == false || m_pGridCore->GetRowResizable() == false)
             return false;
         return GetResizingRow(pRow, localLocation) != NULL;
     }
@@ -2207,5 +2227,4 @@ namespace GridStateClass
             m_pGridCore->Invalidate();
         }
     }
-
 } /*namespace GridStateClass*/

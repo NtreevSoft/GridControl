@@ -548,6 +548,11 @@ GrFont* GrGridCore::GetFont() const
 	return m_pFont;
 }
 
+GrPadding GrGridCore::GetPadding() const
+{
+    return m_padding;
+}
+
 void GrGridCore::SetForeColor(GrColor foreColor)
 {
 	if(m_foreColor == foreColor)
@@ -578,6 +583,14 @@ void GrGridCore::SetFont(GrFont* pFont)
 		return;
 	m_pFont = pFont;
 	OnFontChanged(&GrEventArgs::Empty);
+}
+
+void GrGridCore::SetPadding(GrPadding padding)
+{
+    if(m_padding == padding)
+        return;
+    m_padding = padding;
+    Invalidate();
 }
 
 int GrGridCore::GetGroupMargin() const
@@ -795,7 +808,10 @@ void GrGridCore::Invoke(std::wstring eventName, GrEventArgs* e)
 
 void GrGridCore::OnEditValue(GrEditEventArgs* e)
 {
+    e->GetItem()->LockColor(true);
+    m_pInvalidator->Invalidate();
     m_pGridWindow->OnEditValue(e);
+    e->GetItem()->LockColor(false);
     m_pInvalidator->Invalidate();
 }
 

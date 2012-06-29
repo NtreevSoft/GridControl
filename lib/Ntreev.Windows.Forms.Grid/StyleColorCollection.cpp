@@ -27,19 +27,21 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    StyleColorCollection::StyleColorCollection(std::vector<GrColor>* container)
-        : m_s(container)
+    StyleColorCollection::StyleColorCollection(std::vector<GrColor>* container, System::Drawing::Color color)
+        : m_s(container), m_defaultColor(color)
     {
 
     }
 
     void StyleColorCollection::RemoveAt(int index)
     {
+		Invalidate();
         m_s.RemoveAt(index);
     }
 
     void StyleColorCollection::Insert(int index, System::Drawing::Color item)
     {
+		Invalidate();
         m_s.Insert(index, item);
     }
 
@@ -50,6 +52,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void StyleColorCollection::Clear()
     {
+		Invalidate();
         m_s.Clear();
     }
 
@@ -57,9 +60,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         m_s.Add(item);
         if(this->GridControl != nullptr)
-        {
             this->GridControl->Invalidate();
-        }
     }
 
     int StyleColorCollection::IndexOf(System::Drawing::Color item)
@@ -69,6 +70,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool StyleColorCollection::Remove(System::Drawing::Color item)
     {
+		Invalidate();
         return m_s.Remove(item);
     }
 
@@ -85,6 +87,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void StyleColorCollection::default::set(int index, System::Drawing::Color item)
     {
         m_s[index] = item;
+		Invalidate();
     }
 
     int StyleColorCollection::Count::get()
@@ -109,11 +112,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void StyleColorCollection::Remove_System_Collections_IList(System::Object^ item)
     {
+		Invalidate();
         dynamic_cast<System::Collections::IList^>(%m_s)->Remove(item);
     }
 
     void StyleColorCollection::Insert_System_Collections_IList(int index, System::Object^ item)
     {
+		Invalidate();
         dynamic_cast<System::Collections::IList^>(%m_s)->Insert(index, item);
     }
 
@@ -129,8 +134,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     int StyleColorCollection::Add_System_Collections_IList(System::Object^ item)
     {
-        if(this->GridControl != nullptr)
-            this->GridControl->Invalidate();
+        Invalidate();
         return dynamic_cast<System::Collections::IList^>(%m_s)->Add(item);
     }
 
@@ -147,6 +151,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void StyleColorCollection::default_System_Collections_IList::set(int index, System::Object^ item)
     {
         dynamic_cast<System::Collections::IList^>(%m_s)[index] = item;
+		Invalidate();
     }
 
     System::Object^ StyleColorCollection::SyncRoot_System_Collections_ICollection::get()
@@ -163,4 +168,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         return dynamic_cast<System::Collections::IList^>(%m_s)->IsSynchronized;
     }
+
+	void StyleColorCollection::Invalidate()
+	{
+		if(this->GridControl != nullptr)
+            this->GridControl->Invalidate();
+	}
+
+	System::Drawing::Color StyleColorCollection::DefaultColor::get()
+	{
+		return m_defaultColor;
+	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

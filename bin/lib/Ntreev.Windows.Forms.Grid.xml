@@ -539,6 +539,11 @@ Row::IsSelected 의 값이 이미 true였다면 아무런 동작이 일어나지
 index가 0보다 작거나, <see cref="P:Ntreev.Windows.Forms.Grid.RowCollection.Count" />보다 클 경우
 </exception>
         </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.SetDefaultValue">
+            <summary>
+                <see cref="P:Ntreev.Windows.Forms.Grid.RowCollection.InsertionRow" />의 값들을 초기화 시킵니다.
+</summary>
+        </member>
         <member name="M:Ntreev.Windows.Forms.Grid.RowCollection.GetAt(System.Int32)">
             <summary>
 지정한 인덱스에 있는 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />를 가져옵니다.
@@ -1329,6 +1334,14 @@ Windows 메시지를 처리합니다.
 이벤트 데이터가 들어 있는 <see cref="T:System.EventArgs" />입니다.
 </param>
         </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnPaintBackground(System.Windows.Forms.PaintEventArgs)">
+            <summary>
+컨트롤의 배경을 그립니다.
+</summary>
+            <param name="e">
+이벤트 데이터가 들어 있는 <see cref="T:System.Windows.Forms.PaintEventArgs" />입니다.
+</param>
+        </member>
         <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnPaint(System.Windows.Forms.PaintEventArgs)">
             <summary>
                 <see cref="E:System.Windows.Forms.Control.Paint" /> 이벤트를 발생시킵니다.
@@ -1409,9 +1422,25 @@ Windows 메시지를 처리합니다.
 이벤트 데이터가 들어 있는 <see cref="T:Ntreev.Windows.Forms.Grid.CellEventArgs" />입니다.
 </param>
         </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnCellMouseLeave(Ntreev.Windows.Forms.Grid.CellEventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.GridControl.CellMouseLeave" /> 이벤트를 발생시킵니다.
+</summary>
+            <param name="e">
+이벤트 데이터가 들어 있는 <see cref="T:Ntreev.Windows.Forms.Grid.CellEventArgs" />입니다.
+</param>
+        </member>
         <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnCellMouseMove(Ntreev.Windows.Forms.Grid.CellMouseEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.GridControl.CellMouseMove" /> 이벤트를 발생시킵니다.
+</summary>
+            <param name="e">
+이벤트 데이터가 들어 있는 <see cref="T:Ntreev.Windows.Forms.Grid.CellMouseEventArgs" />입니다.
+</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnCellMouseEnter(Ntreev.Windows.Forms.Grid.CellEventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.GridControl.CellMouseEnter" /> 이벤트를 발생시킵니다.
 </summary>
             <param name="e">
 이벤트 데이터가 들어 있는 <see cref="T:Ntreev.Windows.Forms.Grid.CellEventArgs" />입니다.
@@ -1553,6 +1582,38 @@ Windows 메시지를 처리합니다.
 이벤트 데이터가 들어 있는 <see cref="T:System.EventArgs" />입니다.
 </param>
         </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnRowUnbinded(Ntreev.Windows.Forms.Grid.RowEventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.GridControl.RowUnbinded" /> 이벤트를 발생시킵니다.
+</summary>
+            <param name="e">
+이벤트 데이터가 들어 있는 <see cref="T:Ntreev.Windows.Forms.Grid.RowEventArgs" />입니다.
+</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnRowUnbinding(Ntreev.Windows.Forms.Grid.RowEventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.GridControl.RowUnbinding" /> 이벤트를 발생시킵니다.
+</summary>
+            <param name="e">
+이벤트 데이터가 들어 있는 <see cref="T:Ntreev.Windows.Forms.Grid.RowEventArgs" />입니다.
+</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnRowBinded(Ntreev.Windows.Forms.Grid.RowEventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.GridControl.RowBinded" /> 이벤트를 발생시킵니다.
+</summary>
+            <param name="e">
+이벤트 데이터가 들어 있는 <see cref="T:Ntreev.Windows.Forms.Grid.RowEventArgs" />입니다.
+</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnRowBinding(Ntreev.Windows.Forms.Grid.RowBindingEventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.GridControl.RowBinding" /> 이벤트를 발생시킵니다.
+</summary>
+            <param name="e">
+이벤트 데이터가 들어 있는 <see cref="T:Ntreev.Windows.Forms.Grid.RowBindingEventArgs" />입니다.
+</param>
+        </member>
         <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnRowRemoved(Ntreev.Windows.Forms.Grid.RowRemovedEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.GridControl.RowRemoved" /> 이벤트를 발생시킵니다.
@@ -1606,6 +1667,16 @@ Windows 메시지를 처리합니다.
 사용 중인 모든 리소스를 정리합니다.
 </summary>
         </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.GridControl.LineColorChanged">
+            <summary>
+                <see cref="P:Ntreev.Windows.Forms.Grid.GridControl.LineColor" /> 속성 값이 변경되면 발생합니다.
+</summary>
+        </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.GridControl.BackgroundColorChanged">
+            <summary>
+                <see cref="P:Ntreev.Windows.Forms.Grid.GridControl.BackgroundColor" /> 속성 값이 변경되면 발생합니다.
+</summary>
+        </member>
         <member name="E:Ntreev.Windows.Forms.Grid.GridControl.DataBindingComplete">
             <summary>
 데이터 바인딩이 종료되었을때 발생합니다.
@@ -1657,9 +1728,19 @@ Windows 메시지를 처리합니다.
 셀의 영역안에서 마우스가 눌러졌을때 발생합니다.
 </summary>
         </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.GridControl.CellMouseLeave">
+            <summary>
+마우스의 커서 위치가 셀의 영역안에서 밖으로 나갔을때 발생합니다.
+</summary>
+        </member>
         <member name="E:Ntreev.Windows.Forms.Grid.GridControl.CellMouseMove">
             <summary>
 셀의 영역안에서 마우스가 움직였을때 발생합니다.
+</summary>
+        </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.GridControl.CellMouseEnter">
+            <summary>
+마우스의 커서 위치가 셀의 영역안으로 들어갔을때 발생합니다.
 </summary>
         </member>
         <member name="E:Ntreev.Windows.Forms.Grid.GridControl.ColumnMouseMove">
@@ -1750,6 +1831,26 @@ Windows 메시지를 처리합니다.
 열들의 선택 범위가 변경되었을때 발생합니다.
 </summary>
         </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.GridControl.RowUnbinded">
+            <summary>
+행이 데이터 소스와 연결이 해제 된 후에 발생합니다.
+</summary>
+        </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.GridControl.RowUnbinding">
+            <summary>
+행이 데이터 소스와 연결이 해제 되기 전에 발생합니다.
+</summary>
+        </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.GridControl.RowBinded">
+            <summary>
+행이 데이터 소스와 연결 된 후에 발생합니다.
+</summary>
+        </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.GridControl.RowBinding">
+            <summary>
+행이 데이터 소스와 연결 되기 전에 발생합니다.
+</summary>
+        </member>
         <member name="E:Ntreev.Windows.Forms.Grid.GridControl.RowRemoved">
             <summary>
 행이 목록에서 제거된 후에 발생합니다.
@@ -1807,7 +1908,7 @@ IME 지원을 사용하도록 <see cref="P:System.Windows.Forms.Control.ImeMode"
         </member>
         <member name="P:Ntreev.Windows.Forms.Grid.GridControl.Style">
             <summary>
-스타일을 가져옵니다.
+스타일을 가져오거나 설정합니다.
 </summary>
         </member>
         <member name="P:Ntreev.Windows.Forms.Grid.GridControl.MultiSelect">
@@ -2172,6 +2273,11 @@ CellWordwrap 값이 true인 열에 대해서는 이 기능이 적용되지 않�
         <member name="M:Ntreev.Windows.Forms.Grid.GridControl.BringIntoView(Ntreev.Windows.Forms.Grid.Cell)">
             <summary>
 대상이 되는 셀이 화면내에 표시 될 수 있도록 스크롤을 조정합니다.
+</summary>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.GridControl.CloseEdit">
+            <summary>
+셀의 편집을 종료합니다.
 </summary>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.GridControl.EditCell(Ntreev.Windows.Forms.Grid.Cell,Ntreev.Windows.Forms.Grid.EditingReason)">
@@ -2989,6 +3095,34 @@ ColumnBinding 이벤트를 처리하는 메서드를 나타냅니다.
 ColumnBinding 이벤트의 데이터를 제공합니다.
 </summary>
         </member>
+        <member name="T:Ntreev.Windows.Forms.Grid.RowBindingEventHandler">
+            <summary>
+RowBinding 이벤트를 처리하는 메서드를 나타냅니다.
+</summary>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.RowBindingEventArgs.Cancel">
+            <summary>
+바인딩을 취소할 지에 대한 여부를 가져오거나 설정합니다.
+</summary>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.RowBindingEventArgs.Component">
+            <summary>
+새로운 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />의 인스턴스와 연결될 데이터의 정보를 가져옵니다.
+</summary>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.RowBindingEventArgs.#ctor(System.Object)">
+            <summary>
+                <see cref="T:Ntreev.Windows.Forms.Grid.RowBindingEventArgs" />클래스의 새 인스턴스를 초기화합니다.
+</summary>
+            <param name="component">
+새로운 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />의 인스턴스와 연결될 데이터의 정보입니다.
+</param>
+        </member>
+        <member name="T:Ntreev.Windows.Forms.Grid.RowBindingEventArgs">
+            <summary>
+RowBinding 이벤트의 데이터를 제공합니다.
+</summary>
+        </member>
         <member name="T:Ntreev.Windows.Forms.Grid.RowRemovedEventHandler">
             <summary>
 행이 제거된후 발생하는 이벤트를 처리하는 메서드를 나타냅니다.
@@ -3361,17 +3495,11 @@ index가 0보다 작거나, <see cref="P:Ntreev.Windows.Forms.Grid.Row.CellCount
             <summary>
 셀들의 배경색을 기본값으로 되돌립니다.
 </summary>
-            <remarks>
-기본값은 <see cref="P:Ntreev.Windows.Forms.Grid.Style.RowCellBackColors" /> 속성의 값입니다.
-</remarks>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.Row.ResetCellForeColor">
             <summary>
 셀들의 전경색을 기본값으로 되돌립니다.
 </summary>
-            <remarks>
-기본값은 <see cref="P:Ntreev.Windows.Forms.Grid.Style.RowCellForeColors" /> 속성의 값입니다.
-</remarks>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.Row.Select(Ntreev.Windows.Forms.Grid.SelectionType)">
             <summary>
@@ -4122,7 +4250,7 @@ e.Graphics.DrawRectangle(Pens.Black, textBound);
 셀의 글꼴을 가져오거나 설정합니다.
 </summary>
             <returns>
-셀의 글꼴을 나타내는 <see cref="T:System.Drawing.Font" />입니다. 기본값은 <see cref="P:Ntreev.Windows.Forms.Grid.Style.CellFont" /> 속성의 값입니다.
+셀의 글꼴을 나타내는 <see cref="T:System.Drawing.Font" />입니다.
 </returns>
         </member>
         <member name="P:Ntreev.Windows.Forms.Grid.CellBase.BackColor">
@@ -4130,7 +4258,7 @@ e.Graphics.DrawRectangle(Pens.Black, textBound);
 셀의 배경색을 가져오거나 설정합니다.
 </summary>
             <returns>
-셀의 배경색을 나타내는 <see cref="T:System.Drawing.Color" />입니다. 기본값은 <see cref="P:Ntreev.Windows.Forms.Grid.Style.CellBackColor" /> 속성의 값입니다.
+셀의 배경색을 나타내는 <see cref="T:System.Drawing.Color" />입니다.
 </returns>
         </member>
         <member name="P:Ntreev.Windows.Forms.Grid.CellBase.ForeColor">
@@ -4138,7 +4266,7 @@ e.Graphics.DrawRectangle(Pens.Black, textBound);
 셀의 전경색을 가져오거나 설정합니다.
 </summary>
             <returns>
-셀의 전경색을 나타내는 <see cref="T:System.Drawing.Color" />입니다. 기본값은 <see cref="P:Ntreev.Windows.Forms.Grid.Style.CellForeColor" /> 속성의 값입니다.
+셀의 전경색을 나타내는 <see cref="T:System.Drawing.Color" />입니다.
 </returns>
             <remarks>
 일반적으로 문자열의 색상을 나타냅니다.
@@ -4148,29 +4276,30 @@ e.Graphics.DrawRectangle(Pens.Black, textBound);
             <summary>
 셀의 배경색을 기본값으로 되돌립니다.
 </summary>
-            <remarks>
-기본값은 <see cref="P:Ntreev.Windows.Forms.Grid.Style.CellBackColor" /> 속성의 값입니다.
-</remarks>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.CellBase.ResetBackColor">
             <summary>
 셀의 배경색을 기본값으로 되돌립니다.
 </summary>
-            <remarks>
-기본값은 <see cref="P:Ntreev.Windows.Forms.Grid.Style.CellBackColor" /> 속성의 값입니다.
-</remarks>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.CellBase.ResetForeColor">
             <summary>
 셀의 전경색을 기본값으로 되돌립니다.
 </summary>
-            <remarks>
-기본값은 <see cref="P:Ntreev.Windows.Forms.Grid.Style.CellForeColor" /> 속성의 값입니다.
-</remarks>
         </member>
         <member name="T:Ntreev.Windows.Forms.Grid.CellBase">
             <summary>
 셀을 표시하기 위한 기본 방법을 제공합니다.
+</summary>
+        </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.Style.Disposed">
+            <summary>
+구성 요소가 삭제되는 경우 발생합니다.
+</summary>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.Style.Site">
+            <summary>
+열의 <see cref="T:System.ComponentModel.ISite" />를 가져오거나 설정합니다.
 </summary>
         </member>
         <member name="P:Ntreev.Windows.Forms.Grid.ICellBase.LineAlignment">

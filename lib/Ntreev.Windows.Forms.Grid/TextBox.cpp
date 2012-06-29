@@ -29,7 +29,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         : m_editorService(editorService)
     {
         this->BorderStyle = System::Windows::Forms::BorderStyle::None;
-        this->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::Append;
+        //this->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::Suggest;
+        this->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::None;
         this->AutoCompleteSource = System::Windows::Forms::AutoCompleteSource::CustomSource;
     }
 

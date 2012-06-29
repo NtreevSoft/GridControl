@@ -47,6 +47,10 @@ namespace SampleApplication
         {
             InitializeComponent();
 
+            Rectangle r = new Rectangle(0, 0, 100, 100);
+            r.Inflate(1, 1);
+
+            int qwer = 0;
             //this.gridControl1.Rows[0].ErrorDescription = "qwer";
             //this.gridControl1.Rows[0].Cells[0].ErrorDescription = "werwerwer";
 

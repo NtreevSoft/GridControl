@@ -496,10 +496,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
         GrEditingReason reason = e->GetReason();
         Ntreev::Windows::Forms::Grid::Cell^ cell = FromNative::Get(e->GetItem());
+        Ntreev::Windows::Forms::Grid::Row^ row = cell->Row;
 
         if(m_gridControl->InvokeEditBegun(cell) == false)
             return;
 
+        //m_gridControl->Refresh();
         TypeEditorForm^ form = gcnew TypeEditorForm(m_gridControl, cell, EditingReason(reason));
         m_gridControl->Update();
 
@@ -507,13 +509,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         {
             System::Object^ newValue = cell->Column->EditValueInternal(form, cell, cell->Value);
 
-            if(form->DialogResult != DialogResult::Cancel && 
-                newValue != nullptr && 
-                System::Object::Equals(newValue, cell->Value) == false)
+            if(form->DialogResult != DialogResult::Cancel && newValue != nullptr)
             {
-                cell->Value = newValue;
-                e->SetHandled(true);
-                m_gridControl->Update();
+                if(row != m_gridControl->InsertionRow && cell->Row->Index < 0)
+                    throw gcnew System::Exception("행이 삭제 되었을수도 있습니다.");
+
+                if(System::Object::Equals(newValue, cell->Value) == false)
+                {
+                    cell->Value = newValue;
+                    e->SetHandled(true);
+                    m_gridControl->Update();
+                }
             }
         }
         catch(System::Exception^ e1)
@@ -649,6 +655,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         pItemSelector->SelectedRowsChanged.Add(this, &WinFormGridCore::itemSelector_SelectedRowsChanged);
         pItemSelector->SelectedColumnsChanged.Add(this, &WinFormGridCore::itemSelector_SelectedColumnsChanged);
         pItemSelector->SelectionChanged.Add(this, &WinFormGridCore::itemSelector_SelectionChanged);
+
+        GrCaption* pCaption = GetCaptionRow();
+        pCaption->HeightChanged.Add(this, &WinFormGridCore::caption_HeightChanged);
     }
 
     void WinFormGridCore::OnItemMouseMove(GrItemMouseEventArgs* e)
@@ -675,23 +684,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     void WinFormGridCore::OnItemMouseEnter(GrItemMouseEventArgs* e)
     {
         GrGridCore::OnItemMouseEnter(e);
-        GrItem* pItem = e->GetItem();
-
-        try
-        {
-            Ntreev::Windows::Forms::Grid::Cell^ cell = FromNative::Get(pItem);
-            if(cell->ErrorDescription != System::String::Empty)
-                m_gridControl->ToolTip->Show(cell->ErrorDescription);
-        }
-        catch(System::Exception^)
-        {
-        }
+        m_gridControl->InvokeCellMouseEnter(FromNative::Get(e->GetItem()));
     }
 
     void WinFormGridCore::OnItemMouseLeave(GrItemMouseEventArgs* e)
     {
         GrGridCore::OnItemMouseLeave(e);
-        m_gridControl->ToolTip->Hide();
+        m_gridControl->InvokeCellMouseLeave(FromNative::Get(e->GetItem()));
     }
 
     void WinFormGridCore::OnRowMouseEnter(GrRowMouseEventArgs* e)
@@ -811,5 +810,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     void WinFormGridCore::itemSelector_SelectionChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
     {
         m_gridControl->InvokeSelectionChanged();
+    }
+
+    void WinFormGridCore::caption_HeightChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
+    {
+        if(m_gridControl->Site == nullptr)
+            return;
+
+        using namespace System::ComponentModel;
+        using namespace System::ComponentModel::Design;
+        IComponentChangeService^ service = dynamic_cast<IComponentChangeService^>(m_gridControl->GetInternalService(IComponentChangeService::typeid));
+        PropertyDescriptor^ propertyDescriptor = TypeDescriptor::GetProperties(m_gridControl)["Caption"];
+        service->OnComponentChanging(m_gridControl, propertyDescriptor);
+        service->OnComponentChanged(m_gridControl, propertyDescriptor, nullptr, nullptr);
     }
 } /*namespace Native*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -87,6 +87,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         this->GridControl->ClearSelection();
     }
 
+    bool SelectedColumnCollection::Contains(Ntreev::Windows::Forms::Grid::Column^ column)
+    {
+        return column->IsSelected == true;
+    }
+
     int SelectedColumnCollection::Count::get()
     {
         return (int)m_selectedColumns->size();
@@ -95,6 +100,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Column^>^ SelectedColumnCollection::GetEnumerator()
     {
         return gcnew Ntreev::Windows::Forms::Grid::SelectedColumnCollection::Enumerator(m_selectedColumns);
+    }
+
+    void SelectedColumnCollection::CopyTo(cli::array<Ntreev::Windows::Forms::Grid::Column^>^ array, int arrayIndex)
+    {
+        for each(Ntreev::Windows::Forms::Grid::Column^ item in this)
+        {
+            array->SetValue(item, arrayIndex++);
+        }
+    }
+
+    cli::array<Ntreev::Windows::Forms::Grid::Column^>^ SelectedColumnCollection::ToArray()
+    {
+        cli::array<Ntreev::Windows::Forms::Grid::Column^>^ array = gcnew cli::array<Ntreev::Windows::Forms::Grid::Column^>(this->Count);
+        this->CopyTo(array, 0);
+        return array;
     }
 
     System::Collections::IEnumerator^ SelectedColumnCollection::GetEnumerator_System_Collections_IEnumerable()
@@ -123,5 +143,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     int SelectedColumnCollection::Count_System_Collections_ICollection::get()
     {
         return this->Count;
+    }
+
+    bool SelectedColumnCollection::IsReadOnly_System_Collections_Generic_ICollection::get()
+    {
+        return false;
     }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

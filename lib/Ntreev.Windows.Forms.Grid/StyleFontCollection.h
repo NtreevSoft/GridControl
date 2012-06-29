@@ -34,6 +34,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         static GrFont* TtoS(System::Drawing::Font^ font);
     };
 
+	[System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.StyleFontCollectionEditor, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
     public ref class StyleFontCollection
         : Ntreev::Windows::Forms::Grid::GridObject
         , System::Collections::Generic::IList<System::Drawing::Font^>
@@ -70,9 +71,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     internal:
-        StyleFontCollection();
+        StyleFontCollection(std::vector<GrFont*>* container);
 
     private:
+		void Invalidate();
+
         virtual System::Collections::IEnumerator^ GetEnumerator_System_Collections_IEnumerable() sealed = System::Collections::IEnumerable::GetEnumerator;
         virtual System::Collections::Generic::IEnumerator<System::Drawing::Font^>^ GetEnumerator_System_Collections_Generic_IEnumerable_GetEnumerator() sealed
             = System::Collections::Generic::IEnumerable<System::Drawing::Font^>::GetEnumerator;

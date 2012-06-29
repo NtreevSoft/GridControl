@@ -67,19 +67,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return Current;
     }
 
-    RowCollection::ManagerEventDetach::ManagerEventDetach(Ntreev::Windows::Forms::Grid::RowCollection^ rowCollection)
-        : m_rowCollection(rowCollection)
+    RowCollection::ManagerEventDetach::ManagerEventDetach(RowCollection^ rows)
+        : m_rows(rows)
     {
-        m_rowCollection->m_manager->ListChanged -= m_rowCollection->m_listChangedEventHandler;
-        m_rowCollection->m_manager->CurrentChanged -= m_rowCollection->m_currentChangedEventHandler;
-        m_rowCollection->m_locked++;
+        m_rows->DetachManagerEvent();
     }
 
     RowCollection::ManagerEventDetach::~ManagerEventDetach()
     {
-        m_rowCollection->m_locked--;
-        m_rowCollection->m_manager->ListChanged += m_rowCollection->m_listChangedEventHandler;
-        m_rowCollection->m_manager->CurrentChanged += m_rowCollection->m_currentChangedEventHandler;
+        m_rows->AttachManagerEvent();
     }
 
     RowCollection::RowCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl) 
@@ -89,7 +85,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         m_listChangedEventHandler = gcnew System::ComponentModel::ListChangedEventHandler(this, &RowCollection::currencyManager_ListChanged);
         m_currentChangedEventHandler = gcnew System::EventHandler(this, &RowCollection::currencyManager_CurrentChanged);
-
+        
         gridControl->CurrencyManagerChanging += gcnew CurrencyManagerChangingEventHandler(this, &RowCollection::gridControl_CurrencyManagerChanging);
         gridControl->CurrencyManagerChanged += gcnew CurrencyManagerChangedEventHandler(this, &RowCollection::gridControl_CurrencyManagerChanged);
         gridControl->FocusedRowChanged += gcnew System::EventHandler(this, &RowCollection::gridControl_FocusedRowChanged);
@@ -100,18 +96,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void RowCollection::Bind(System::Object^ component, int componentIndex)
     {
         Ntreev::Windows::Forms::Grid::Row^ row;
+
         if(m_components->ContainsKey(component) == false)
         {
-            if(this->GridControl->InvokeRowInserting(component) == false)
+            if(this->GridControl->InvokeRowBinding(component) == false)
                 return;
 
-            row = gcnew Ntreev::Windows::Forms::Grid::Row(GridControl, m_pDataRowList->NewDataRow());
+            row = this->GridControl->CreateRow(m_pDataRowList->NewDataRow());
             m_pDataRowList->AddDataRow(row->NativeRef);
             m_components->Add(component, row);
 
             row->Component = component;
             row->ComponentIndex = componentIndex;
-            this->GridControl->InvokeRowInserted(row);
+            this->GridControl->InvokeRowBinded(row);
         }
         else
         {
@@ -129,9 +126,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         Ntreev::Windows::Forms::Grid::Row^ row = this->GetAt(componentIndex);
+        this->GridControl->InvokeRowUnbinding(row);
         m_pDataRowList->RemoveDataRow(row->NativeRef);
         m_components->Remove(row->Component);
-        this->GridControl->InvokeRowRemoved(gcnew RowRemovedEventArgs(componentIndex));
+        this->GridControl->InvokeRowUnbinded(row);
     }
 
     void RowCollection::SetItemsByDesigner(cli::array<System::Object^>^ values)
@@ -254,11 +252,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void RowCollection::gridControl_CurrencyManagerChanged(System::Object^ /*sender*/, Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventArgs^ e)
     {
-        if(m_manager != nullptr)
-        {
-            m_manager->ListChanged -= m_listChangedEventHandler;
-            m_manager->CurrentChanged -= m_currentChangedEventHandler;
-        }
+        DetachManagerEvent();
 
         m_manager = e->CurrecnyManager;
         m_components->Clear();
@@ -272,10 +266,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             Bind(item, componentIndex++);
         }
 
-        this->InsertionRow->SetDefaultValue(m_manager);
+        this->SetDefaultValue();
 
-        m_manager->ListChanged += m_listChangedEventHandler;
-        m_manager->CurrentChanged += m_currentChangedEventHandler;
+        AttachManagerEvent();
     }
 
     void RowCollection::gridControl_FocusedRowChanged(System::Object^ /*sender*/, System::EventArgs^ /*e*/)
@@ -290,6 +283,40 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             {
                 m_manager->Position = row->ComponentIndex;
             }
+        }
+    }
+
+    void RowCollection::SetDefaultValue()
+    {
+        ManagerEventDetach managerEventDeatch(this);
+
+        Ntreev::Windows::Forms::Grid::Row^ insertionRow = this->InsertionRow;
+
+        try
+        {
+            m_manager->AddNew();
+
+            for each(Ntreev::Windows::Forms::Grid::Cell^ cell in insertionRow->Cells)
+            {
+                Ntreev::Windows::Forms::Grid::Column^ column = cell->Column;
+                if(column->PropertyDescriptor == nullptr || column->DefaultValue != nullptr)
+                {
+                    cell->ValueCore = column->DefaultValue;
+                }
+                else
+                {
+                    cell->ValueCore = column->PropertyDescriptor->GetValue(m_manager->Current);
+                }
+                cell->UpdateNativeText();
+            }
+        }
+        catch(System::Exception^)
+        {
+
+        }
+        finally
+        {
+            m_manager->CancelCurrentEdit();
         }
     }
 
@@ -324,10 +351,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(item->Index != 0xffffffff)
             throw gcnew System::ArgumentException();
 
-        ManagerEventDetach managerEventDeatch(this);
-
         try
         {
+            ManagerEventDetach managerEventDeatch(this);
             m_manager->AddNew();
         }
         catch(System::Exception^)
@@ -338,8 +364,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::Object^ component = m_manager->Current;
         bool fromInsertion = item == this->InsertionRow;
 
+        if(fromInsertion == true)
+        {
+            item->ValueToSource(component);
+        }
+
         if(this->GridControl->InvokeRowInserting(component) == false)
         {
+            ManagerEventDetach managerEventDeatch(this);
             m_manager->CancelCurrentEdit();
         }
         else
@@ -349,11 +381,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 item->Component = component;
                 item->ComponentIndex = m_manager->List->Count - 1;
 
+                ManagerEventDetach managerEventDeatch(this);
                 m_manager->EndCurrentEdit();
             }
             catch(System::Exception^ e)
             {
                 item->Component = nullptr;
+                ManagerEventDetach managerEventDeatch(this);
                 m_manager->CancelCurrentEdit();
                 System::Windows::Forms::MessageBox::Show(e->Message);
                 return nullptr;
@@ -362,7 +396,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             m_pDataRowList->InsertDataRow(item->NativeRef, index);
 
             if(fromInsertion == true)
-                this->InsertionRow->SetDefaultValue(m_manager);
+                this->SetDefaultValue();
 
             this->GridControl->InvokeRowInserted(item);
         }
@@ -403,7 +437,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         try
         {
-            Ntreev::Windows::Forms::Grid::Row^ row = gcnew Row(GridControl, m_pDataRowList->NewDataRow());
+            Ntreev::Windows::Forms::Grid::Row^ row = this->GridControl->CreateRow(m_pDataRowList->NewDataRow());
             Insert(this->Count, row);
             return row;
         }
@@ -443,10 +477,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(item->Index == INVALID_INDEX)
             throw gcnew System::ArgumentException("이미 지워지거나 사용되지 않은 row입니다.");
 
-        ManagerEventDetach managerEventDeatch(this);
-
         if(this->GridControl->InvokeRowRemoving(item) == false)
             return false;
+
+        ManagerEventDetach managerEventDeatch(this);
 
         int index = m_manager->List->IndexOf(item->Component);
         if(index < 0)
@@ -488,7 +522,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         GrDataRow* pDataRow = m_pDataRowList->GetInsertionRow();
         Ntreev::Windows::Forms::Grid::Row^ row = Ntreev::Windows::Forms::Grid::FromNative::Get(pDataRow);
         if(row == nullptr)
-            row = gcnew Ntreev::Windows::Forms::Grid::Row(this->GridControl, pDataRow);
+            row = this->GridControl->CreateRow(pDataRow);
         return row;
     }
 
@@ -608,4 +642,29 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return false;
     }
 
+    void RowCollection::DetachManagerEvent()
+    {
+        if(m_lockRef == 0)
+        {
+            if(m_manager != nullptr)
+            {
+                m_manager->ListChanged -= m_listChangedEventHandler;
+                m_manager->CurrentChanged -= m_currentChangedEventHandler;
+            }
+        }
+        m_lockRef--;
+    }
+
+    void RowCollection::AttachManagerEvent()
+    {
+         m_lockRef++;
+        if(m_lockRef == 0)
+        {
+            if(m_manager != nullptr)
+            {
+                m_manager->ListChanged += m_listChangedEventHandler;
+                m_manager->CurrentChanged += m_currentChangedEventHandler;
+            }
+        }
+    }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

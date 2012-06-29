@@ -35,7 +35,7 @@ const GrPoint GrPoint::Empty;
 const GrSize GrSize::Empty;
 
 const GrPadding GrPadding::Empty;
-const GrPadding GrPadding::Default(3,3,3,3);
+const GrPadding GrPadding::Default(5,3,5,3);
 const GrRect GrRect::Empty;
 
 GrHitTest GrHitTest::Empty;
@@ -397,13 +397,13 @@ GrRect::operator System::Drawing::Rectangle () const
 #endif
 
 GrPadding::GrPadding()
-: left(0), top(0), right(0), bottom(0)
+    : left(0), top(0), right(0), bottom(0)
 {
 
 }
 
 GrPadding::GrPadding(int l, int t, int r, int b)
-: left(l), top(t), right(r), bottom(b)
+    : left(l), top(t), right(r), bottom(b)
 {
 
 }
@@ -444,7 +444,7 @@ bool GrPadding::operator != (const GrPadding& padding) const
 
 #ifdef _MANAGED
 GrPadding::GrPadding(System::Windows::Forms::Padding% padding)
-: left(padding.Left), top(padding.Top), right(padding.Right), bottom(padding.Bottom)
+    : left(padding.Left), top(padding.Top), right(padding.Right), bottom(padding.Bottom)
 {
 
 }
@@ -612,6 +612,8 @@ const GrColor GrColor::WhiteSmoke(255, 245, 245, 245, L"WhiteSmoke");
 const GrColor GrColor::Yellow(255, 255, 255, 0, L"Yellow");
 const GrColor GrColor::YellowGreen(255, 154, 205, 50, L"YellowGreen");
 
+const GrColor GrColor::DefaultLineColor(255, 208, 215, 229);
+
 GrColor::GrColor(int a, int r, int g, int b, const std::wstring& name)
     : name(name)
 {
@@ -623,7 +625,7 @@ GrColor::GrColor(int a, int r, int g, int b, const std::wstring& name)
 
     GrColor::namedColor.insert(std::map<std::wstring, const GrColor&>::value_type(name, *this));
 }
-    
+
 GrColor::GrColor()
     : value(0), name(L"Empty")
 {
@@ -664,6 +666,8 @@ void GrColor::operator *= (float f)
     R(R() * f);
     G(G() * f);
     B(B() * f);
+
+    this->name.clear();
 }
 
 GrColor GrColor::operator * (float f) const
@@ -748,6 +752,120 @@ const std::wstring& GrColor::GetName() const
     return this->name;
 }
 
+float GrColor::GetBrightness() const
+{
+    float num = this->R();
+    float num2 = this->G();
+    float num3 = this->B();
+    float num4 = num;
+    float num5 = num;
+    if (num2 > num4)
+    {
+        num4 = num2;
+    }
+    if (num3 > num4)
+    {
+        num4 = num3;
+    }
+    if (num2 < num5)
+    {
+        num5 = num2;
+    }
+    if (num3 < num5)
+    {
+        num5 = num3;
+    }
+    return ((num4 + num5) / 2.0f);
+
+}
+
+float GrColor::GetHue() const
+{
+    if ((this->r == this->g) && (this->g == this->b))
+    {
+        return 0.0f;
+    }
+    float num = this->R();
+    float num2 = this->G();
+    float num3 = this->B();
+    float num7 = 0.0f;
+    float num4 = num;
+    float num5 = num;
+    if (num2 > num4)
+    {
+        num4 = num2;
+    }
+    if (num3 > num4)
+    {
+        num4 = num3;
+    }
+    if (num2 < num5)
+    {
+        num5 = num2;
+    }
+    if (num3 < num5)
+    {
+        num5 = num3;
+    }
+    float num6 = num4 - num5;
+    if (num == num4)
+    {
+        num7 = (num2 - num3) / num6;
+    }
+    else if (num2 == num4)
+    {
+        num7 = 2.0f + ((num3 - num) / num6);
+    }
+    else if (num3 == num4)
+    {
+        num7 = 4.0f + ((num - num2) / num6);
+    }
+    num7 *= 60.0f;
+    if (num7 < 0.0f)
+    {
+        num7 += 360.0f;
+    }
+    return num7;
+
+}
+
+float GrColor::GetSaturation() const
+{
+    float num = this->R();
+    float num2 = this->G();
+    float num3 = this->B();
+    float num7 = 0.0f;
+    float num4 = num;
+    float num5 = num;
+    if (num2 > num4)
+    {
+        num4 = num2;
+    }
+    if (num3 > num4)
+    {
+        num4 = num3;
+    }
+    if (num2 < num5)
+    {
+        num5 = num2;
+    }
+    if (num3 < num5)
+    {
+        num5 = num3;
+    }
+    if (num4 == num5)
+    {
+        return num7;
+    }
+    float num6 = (num4 + num5) / 2.0f;
+    if (num6 <= 0.5f)
+    {
+        return ((num4 - num5) / (num4 + num5));
+    }
+    return ((num4 - num5) / ((2.0f - num4) - num5));
+}
+
+
 #ifdef _MANAGED
 GrColor::GrColor(System::Drawing::Color color)
 {
@@ -765,7 +883,7 @@ GrColor::GrColor(System::Drawing::Color color)
 GrColor::operator System::Drawing::Color ()
 {
     System::Drawing::Color color;
-    const wchar_t* d= this->name.c_str();
+    //const wchar_t* d = this->name.c_str();
     if(this->name.length() != 0)
         color = System::Drawing::Color::FromName(gcnew System::String(this->name.c_str()));
     else
@@ -858,4 +976,145 @@ GrHitTest::GrHitTest()
 {
     pHitted = NULL;
     localHit = GrPoint::Empty;
+}
+
+RGBHSL::HSL::HSL()
+{
+    _h = 0;
+    _s = 0;
+    _l = 0;
+}
+
+float RGBHSL::HSL::H() const
+{
+    return _h; 
+}
+
+void RGBHSL::HSL::H(float value)
+{
+    _h = value;
+    _h = _h > 1 ? 1 : _h < 0 ? 0 : _h;
+}
+
+float RGBHSL::HSL::S() const
+{
+    return _s; 
+}
+
+void RGBHSL::HSL::S(float value)
+{
+    _s = value;
+    _s = _s > 1 ? 1 : _s < 0 ? 0 : _s;
+}
+
+float RGBHSL::HSL::L() const
+{
+    return _l; 
+}
+
+void RGBHSL::HSL::L(float value)
+{
+    _l = value;
+    _l = _l > 1 ? 1 : _l < 0 ? 0 : _l;
+}
+
+GrColor RGBHSL::SetBrightness(const GrColor& c, float brightness)
+{
+    HSL hsl = RGB_to_HSL(c);
+    hsl.L(brightness);
+    return HSL_to_RGB(hsl);
+}
+
+GrColor RGBHSL::ModifyBrightness(const GrColor& c, float brightness)
+{
+    HSL hsl = RGB_to_HSL(c);
+    hsl.L(hsl.L() * brightness);
+    return HSL_to_RGB(hsl);
+}
+
+GrColor RGBHSL::SetSaturation(const GrColor& c, float Saturation)
+{
+    HSL hsl = RGB_to_HSL(c);
+    hsl.S(Saturation);
+    return HSL_to_RGB(hsl);
+}
+
+GrColor RGBHSL::ModifySaturation(const GrColor& c, float Saturation)
+{
+    HSL hsl = RGB_to_HSL(c);
+    hsl.S(hsl.S() * Saturation);
+    return HSL_to_RGB(hsl);
+}
+
+GrColor RGBHSL::SetHue(const GrColor& c, float Hue)
+{
+    HSL hsl = RGB_to_HSL(c);
+    hsl.H(Hue);
+    return HSL_to_RGB(hsl);
+}
+
+GrColor RGBHSL::ModifyHue(const GrColor& c, float Hue)
+{
+    HSL hsl = RGB_to_HSL(c);
+    hsl.H(hsl.H() * Hue);
+    return HSL_to_RGB(hsl);
+}
+
+GrColor RGBHSL::HSL_to_RGB(HSL hsl)
+{
+    float r = 0, g = 0, b = 0;
+    float temp1, temp2;
+
+    if (hsl.L() == 0)
+    {
+        r = g = b = 0;
+    }
+    else
+    {
+        if (hsl.S() == 0)
+        {
+            r = g = b = hsl.L();
+        }
+        else
+        {
+            temp2 = ((hsl.L() <= 0.5f) ? hsl.L() * (1.0f + hsl.S()) : hsl.L() + hsl.S() - (hsl.L() * hsl.S()));
+            temp1 = 2.0f * hsl.L() - temp2;
+
+            float t3[] = { hsl.H() + 1.0f / 3.0f, hsl.H(), hsl.H() - 1.0f / 3.0f };
+            float clr[] = { 0.0f, 0.0f, 0.0f };
+            for (int i = 0; i < 3; i++)
+            {
+                if (t3[i] < 0)
+                    t3[i] += 1.0f;
+                if (t3[i] > 1)
+                    t3[i] -= 1.0f;
+
+                if (6.0f * t3[i] < 1.0f)
+                    clr[i] = temp1 + (temp2 - temp1) * t3[i] * 6.0f;
+                else if (2.0f * t3[i] < 1.0f)
+                    clr[i] = temp2;
+                else if (3.0f * t3[i] < 2.0f)
+                    clr[i] = (temp1 + (temp2 - temp1) * ((2.0f / 3.0f) - t3[i]) * 6.0f);
+                else
+                    clr[i] = temp1;
+            }
+            r = clr[0];
+            g = clr[1];
+            b = clr[2];
+
+        }
+    }
+
+    return GrColor((int)(255 * r), (int)(255 * g), (int)(255 * b));
+}
+
+RGBHSL::HSL RGBHSL::RGB_to_HSL(const GrColor& c)
+{
+    HSL hsl;
+
+    hsl.H(c.GetHue() / 360.0f); // we store hue as 0-1 as opposed to 0-360
+    hsl.L(c.GetBrightness());
+    hsl.S(c.GetSaturation());
+
+    return hsl;
 }

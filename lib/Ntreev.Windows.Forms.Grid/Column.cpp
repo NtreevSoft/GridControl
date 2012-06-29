@@ -186,7 +186,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         GrItemSelector* pItemSelector = this->Selector;
         if(pItemSelector != nullptr)
-            pItemSelector->SelectItems(m_pColumn, (GrSelectionType)selectionType);
+            pItemSelector->SelectColumn(m_pColumn, (GrSelectionType)selectionType);
     }
 
     void Column::BringIntoView()
@@ -902,6 +902,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return true;
     }
 
+    bool Column::ShouldSerializeWidth()
+    {
+        return m_pColumn->ShouldSerializeWidth();
+    }
+
+    bool Column::ShouldSerializePriorityOnFrozen()
+    {
+        return m_pColumn->ShouldSerializePriorityOnFrozen();
+    }
+        
+    bool Column::ShouldSerializePriorityOnUnfrozen()
+    {
+        return m_pColumn->ShouldSerializePriorityOnUnfrozen();
+    }
+
     void Column::ResetTitle()
     {
         m_title = nullptr;
@@ -1042,6 +1057,26 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     System::ComponentModel::ISite^ Column::Site::get()
     {
         return m_site;
+    }
+
+    int Column::PriorityOnFrozen::get()
+    {
+        return m_pColumn->GetFreezablePriority();
+    }
+
+    void Column::PriorityOnFrozen::set(int value)
+    {
+        m_pColumn->SetFreezablePriority(value);
+    }
+
+    int Column::PriorityOnUnfrozen::get()
+    {
+        return m_pColumn->GetUnfreezablePriority();
+    }
+
+    void Column::PriorityOnUnfrozen::set(int value)
+    {
+        m_pColumn->SetUnfreezablePriority(value);
     }
 
     Design::TypeEditor^ Column::TypeEditor::get()

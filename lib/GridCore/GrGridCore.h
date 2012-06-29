@@ -121,11 +121,13 @@ public:
 	GrColor GetBackColor() const;
 	GrColor GetLineColor() const;
 	GrFont* GetFont() const;
+    GrPadding GetPadding() const;
 
 	void SetForeColor(GrColor foreColor);
 	void SetBackColor(GrColor backColor);
 	void SetLineColor(GrColor lineColor);
 	void SetFont(GrFont* pFont);
+    void SetPadding(GrPadding padding);
 
     int GetGroupMargin() const;
     void EditItem(GrItem* pItem, GrEditingReason reason);
@@ -262,6 +264,8 @@ private:
 	GrColor m_backColor;
 	GrColor m_lineColor;
     GrFont* m_pFont;
+    GrPadding m_padding;
+
     GrStyle* m_pStyle;
 
     int m_attachedCount;

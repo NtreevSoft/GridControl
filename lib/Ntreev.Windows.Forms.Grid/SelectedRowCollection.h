@@ -29,9 +29,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 선택된 행의 컬렉션을 나타냅니다.
     /// </summary>
-    public ref class SelectedRowCollection
+    public ref class SelectedRowCollection sealed
         : Ntreev::Windows::Forms::Grid::GridObject
-        , System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Row^>
+        , System::Collections::Generic::ICollection<Ntreev::Windows::Forms::Grid::Row^>
         , System::Collections::ICollection
     {
     private: // classes
@@ -108,6 +108,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         virtual System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Row^>^ GetEnumerator();
 
+        virtual bool Contains(Ntreev::Windows::Forms::Grid::Row^ row);
+
+        virtual void CopyTo(cli::array<Ntreev::Windows::Forms::Grid::Row^>^ array, int arrayIndex);
+
+        cli::array<Ntreev::Windows::Forms::Grid::Row^>^ ToArray();
+
     public: // properties
 
         /// <summary>
@@ -118,7 +124,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         property int Count
         {
-            int get();
+            virtual int get();
         }
 
         /// <summary>
@@ -163,6 +169,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property int Count_System_Collections_ICollection
         {
             virtual int get() sealed = System::Collections::ICollection::Count::get;
+        }
+
+        property bool IsReadOnly_System_Collections_Generic_ICollection
+        {
+            virtual bool get() sealed = System::Collections::Generic::ICollection<Ntreev::Windows::Forms::Grid::Row^>::IsReadOnly::get;
         }
 
     private: // variables

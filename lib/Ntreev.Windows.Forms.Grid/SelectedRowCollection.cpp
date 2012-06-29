@@ -98,6 +98,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         this->GridControl->ClearSelection();
     }
 
+    bool SelectedRowCollection::Contains(Ntreev::Windows::Forms::Grid::Row^ row)
+    {
+        return row->IsSelected == true;
+    }
 
     SelectedRowCollection::Enumerator::Enumerator(const GrSelectedRows* selectedRows)
         : m_selectedRows(selectedRows), m_index(0)
@@ -140,6 +144,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return safe_cast<Ntreev::Windows::Forms::Grid::Row^>(ref);
     }
 
+    void SelectedRowCollection::CopyTo(cli::array<Ntreev::Windows::Forms::Grid::Row^>^ array, int arrayIndex)
+    {
+        for each(Ntreev::Windows::Forms::Grid::Row^ item in this)
+        {
+            array->SetValue(item, arrayIndex++);
+        }
+    }
+
+    cli::array<Ntreev::Windows::Forms::Grid::Row^>^ SelectedRowCollection::ToArray()
+    {
+        cli::array<Ntreev::Windows::Forms::Grid::Row^>^ array = gcnew cli::array<Ntreev::Windows::Forms::Grid::Row^>(this->Count);
+        this->CopyTo(array, 0);
+        return array;
+    }
+
     System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Row^>^ SelectedRowCollection::GetEnumerator()
     {
         return gcnew Ntreev::Windows::Forms::Grid::SelectedRowCollection::Enumerator(m_selectedRows);
@@ -176,5 +195,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     int SelectedRowCollection::Count_System_Collections_ICollection::get()
     {
         return this->Count;
+    }
+
+    bool SelectedRowCollection::IsReadOnly_System_Collections_Generic_ICollection::get()
+    {
+        return false;
     }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

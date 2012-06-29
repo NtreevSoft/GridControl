@@ -270,6 +270,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
         static System::Drawing::Rectangle GetWindowRect(System::IntPtr handle);
         static System::IntPtr GetRootWindow(System::IntPtr handle);
+        static System::IntPtr GetOwnerWindow(System::IntPtr handle);
     };
 
     ref class ControlPainter : Ntreev::Windows::Forms::Grid::IControlPainter

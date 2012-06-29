@@ -23,21 +23,25 @@
 
 #include "StdAfx.h"
 #include "StyleFontCollection.h"
+#include "GridControl.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    StyleFontCollection::StyleFontCollection()
+    StyleFontCollection::StyleFontCollection(std::vector<GrFont*>* container)
+		: m_s(container)
     {
 
     }
 
     void StyleFontCollection::RemoveAt(int index)
     {
+		Invalidate();
         m_s.RemoveAt(index);
     }
 
     void StyleFontCollection::Insert(int index, System::Drawing::Font^ item)
     {
+		Invalidate();
         m_s.Insert(index, item);
     }
 
@@ -48,11 +52,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void StyleFontCollection::Clear()
     {
+		Invalidate();
         m_s.Clear();
     }
 
     void StyleFontCollection::Add(System::Drawing::Font^ item)
     {
+		Invalidate();
         m_s.Add(item);
     }
 
@@ -63,6 +69,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool StyleFontCollection::Remove(System::Drawing::Font^ item)
     {
+		Invalidate();
         return m_s.Remove(item);
     }
 
@@ -79,6 +86,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void StyleFontCollection::default::set(int index, System::Drawing::Font^ item)
     {
         m_s[index] = item;
+		Invalidate();
     }
 
     int StyleFontCollection::Count::get()
@@ -103,11 +111,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void StyleFontCollection::Remove_System_Collections_IList(System::Object^ item)
     {
+		Invalidate();
         dynamic_cast<System::Collections::IList^>(%m_s)->Remove(item);
     }
 
     void StyleFontCollection::Insert_System_Collections_IList(int index, System::Object^ item)
     {
+		Invalidate();
         dynamic_cast<System::Collections::IList^>(%m_s)->Insert(index, item);
     }
 
@@ -123,6 +133,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     int StyleFontCollection::Add_System_Collections_IList(System::Object^ item)
     {
+		Invalidate();
         return dynamic_cast<System::Collections::IList^>(%m_s)->Add(item);
     }
 
@@ -139,6 +150,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void StyleFontCollection::default_System_Collections_IList::set(int index, System::Object^ item)
     {
         dynamic_cast<System::Collections::IList^>(%m_s)[index] = item;
+		Invalidate();
     }
 
     System::Object^ StyleFontCollection::SyncRoot_System_Collections_ICollection::get()
@@ -155,4 +167,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         return dynamic_cast<System::Collections::IList^>(%m_s)->IsSynchronized;
     }
+
+	void StyleFontCollection::Invalidate()
+	{
+		if(this->GridControl != nullptr)
+			this->GridControl->Invalidate();
+	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

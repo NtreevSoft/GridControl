@@ -28,6 +28,8 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
+    ref class RowBuilder;
+
     /// <summary>
     /// 행을 나타냅니다.
     /// </summary>
@@ -88,17 +90,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <summary>
         /// 셀들의 전경색을 기본값으로 되돌립니다.
         /// </summary>
-        /// <remarks>
-        /// 기본값은 <see cref="Style::RowCellForeColors"/> 속성의 값입니다.
-        /// </remarks>
         void ResetCellForeColor();
 
         /// <summary>
         /// 셀들의 배경색을 기본값으로 되돌립니다.
         /// </summary>
-        /// <remarks>
-        /// 기본값은 <see cref="Style::RowCellBackColors"/> 속성의 값입니다.
-        /// </remarks>
         void ResetCellBackColor();
 
         /// <summary>
@@ -389,13 +385,26 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             bool get();
         }
 
+        property System::Object^ Component
+        {
+            System::Object^ get() { return m_component; }
+        internal:
+            void set(System::Object^);
+        }
+
     public: // events
+
+    public protected:
+        Row(Ntreev::Windows::Forms::Grid::RowBuilder^ rowBuilder);
+
+    protected: // methods
+        int GetCellsTextCapacity(); 
 
     internal: // methodss
 
         //Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
 
-        Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pDataRow);
+        //Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pDataRow);
 
         void AddEditedCell();
         void RemoveEditedCell();
@@ -406,17 +415,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         //void RefreshCells();
 
-        void SetDefaultValue(System::Windows::Forms::CurrencyManager^ manager);
+        //void SetDefaultValue(System::Windows::Forms::CurrencyManager^ manager);
 
         void ValueToSource(System::Object^ component);
 
     internal: // properties
-
-        property System::Object^ Component
-        {
-            System::Object^ get() { return m_component; }
-            void set(System::Object^);
-        }
 
         property int ComponentIndex
         {
@@ -428,6 +431,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             GrDataRow* get();
         }
+
+    internal: // variables
+        int m_textCapacity;
 
     private: // methods
 

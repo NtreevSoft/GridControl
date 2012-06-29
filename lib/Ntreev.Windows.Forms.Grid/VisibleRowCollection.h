@@ -29,7 +29,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 표시되는 행의 컬렉션을 나타냅니다.
     /// </summary>
-    public ref class VisibleRowCollection
+    public ref class VisibleRowCollection sealed
         : Ntreev::Windows::Forms::Grid::GridObject
         , System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::RowBase^>
         , System::Collections::ICollection

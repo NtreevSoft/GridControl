@@ -92,7 +92,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool CaptionRow::ShouldSerializeHeight()
     {
-        return m_pCaption->GetHeight() != GrRow::DefaultHeight;
+        return m_pCaption->ShouldSerializeHeight();
     }
 
     bool CaptionRow::ShouldSerializeText()

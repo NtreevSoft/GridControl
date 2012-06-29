@@ -51,6 +51,7 @@
 #include "About.h"
 #include "Tooltip.h"
 #include "ErrorDescriptor.h"
+#include "RowBuilder.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -103,6 +104,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_captionRow = gcnew Ntreev::Windows::Forms::Grid::CaptionRow(this, m_pGridCore->GetCaptionRow());
 		m_groupPanel = gcnew Ntreev::Windows::Forms::Grid::GroupPanel(this, m_pGridCore->GetGroupPanel());
 
+        m_rowBuilder = gcnew Ntreev::Windows::Forms::Grid::RowBuilder();
+
 #if _MSC_VER >= 1600
 #pragma warning(disable:4564)
 		m_defaultDataSource = gcnew System::Data::DataTable();
@@ -129,6 +132,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		OnCurrencyManagerChanging(gcnew CurrencyManagerChangingEventArgs(nullptr));
 		OnCurrencyManagerChanged(gcnew CurrencyManagerChangedEventArgs(nullptr));
 
+		this->Style = nullptr;
+
 		this->Columns->DeleteAll();
 
 		delete m_rowList;
@@ -149,6 +154,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		return true;
 	}
+
+    Ntreev::Windows::Forms::Grid::Row^ GridControl::NewRowFromBuilder(Ntreev::Windows::Forms::Grid::RowBuilder^ rowBuilder)
+    {
+        return gcnew Ntreev::Windows::Forms::Grid::Row(rowBuilder);
+    }
 
 #ifdef _DEBUG
 	void GridControl::OnInvalidated(System::Windows::Forms::InvalidateEventArgs^ e)
@@ -280,6 +290,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			e->Graphics->FillRectangle(%br, this->DisplayRectangle);
 		}
 	}
+
+    Ntreev::Windows::Forms::Grid::Row^ GridControl::CreateRow(GrDataRow* pDataRow)
+    {
+        m_rowBuilder->GridControl = this;
+        m_rowBuilder->NativeRef = pDataRow;
+        return NewRowFromBuilder(m_rowBuilder);
+    }
 
 	void GridControl::PostPaint(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle clipRectangle)
 	{
@@ -438,24 +455,30 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			}
 		}
 
-		CurrencyManagerChangingEventArgs e(manager);
-		OnCurrencyManagerChanging(%e);
+		CurrencyManagerChangingEventArgs e1(manager);
+		OnCurrencyManagerChanging(%e1);
 
-		if(e.Cancel == true)
+		if(e1.Cancel == true)
 		{
-			throw gcnew System::NotSupportedException(e.CancelReason);
+			throw gcnew System::NotSupportedException(e1.CancelReason);
 		}
 
-		if(m_manager != manager)
+        bool managerChanged = m_manager != manager;
+
+		if(managerChanged == true)
 			ClearCore(true);
 
 		m_dataSource = dataSource;
 		m_dataMember = dataMember;
 
-		OnCurrencyManagerChanged(gcnew CurrencyManagerChangedEventArgs(manager));
-		OnDataBindingComplete(System::EventArgs::Empty);
+        CurrencyManagerChangedEventArgs e2(manager);
+		OnCurrencyManagerChanged(%e2);
 
-		m_pGridCore->Invalidate();
+        if(managerChanged == true)
+        {
+		    OnDataBindingComplete(System::EventArgs::Empty);
+    		m_pGridCore->Invalidate();
+        }
 
 		//if(dataSource != nullptr && dataMember != System::String::Empty && manager == nullptr)
 		//{
@@ -761,6 +784,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_pGridCore->Invalidate();
 	}
 
+    void GridControl::OnEditClosed(System::EventArgs^ e)
+    {
+        this->EditClosed(this, e);
+    }
+
 	void GridControl::currencyManager_ListChanged(System::Object^ /*sender*/, System::ComponentModel::ListChangedEventArgs^ e)
 	{
 		switch(e->ListChangedType)
@@ -832,10 +860,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 					Ntreev::Windows::Forms::Grid::Row^ row = this->Rows->AddFromInsertion();
 					if(row != nullptr)
 					{
-						Ntreev::Windows::Forms::Grid::Cell^ cell = row->Cells[m_focusedCell->Column];
-						cell->Select(Ntreev::Windows::Forms::Grid::SelectionType::Normal);
-						cell->Focus();
-						cell->BringIntoView();
+						//Ntreev::Windows::Forms::Grid::Cell^ cell = row->Cells[m_focusedCell->Column];
+						//cell->Select(Ntreev::Windows::Forms::Grid::SelectionType::Normal);
+						//cell->Focus();
+						//cell->BringIntoView();
 
 					}
 				}
@@ -858,10 +886,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		if(m_pGridWindow->OnKeyDown((GrKeys)e->KeyCode) == true)
 		{
-			e->IsInputKey = true;
+			e->IsInputKey = false;
 			return;
 		}
-
 
 		switch(e->KeyCode)
 		{
@@ -911,7 +938,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			{
 				Ntreev::Windows::Forms::Grid::Column^ column = this->FocusedColumn;
 
-				if(column != nullptr)
+				if(column != nullptr && e->Control == false && e->Alt == false)
 				{
 					System::Char imeChar = Native::Methods::ImmGetVirtualKey(Handle);
 					Ntreev::Windows::Forms::Grid::EditingReason er(e->KeyValue);
@@ -958,7 +985,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void GridControl::OnKeyPress(System::Windows::Forms::KeyPressEventArgs^ e)
 	{
-		if(m_focusedCell != nullptr)
+        using namespace System::Windows::Forms;
+		if(m_focusedCell != nullptr && ((Control::ModifierKeys & (Keys::Control | Keys::Alt)) == Keys::None))
 		{
 			Ntreev::Windows::Forms::Grid::Column^ column = m_focusedCell->Column;
 			Ntreev::Windows::Forms::Grid::EditingReason reason(e->KeyChar);
@@ -1125,6 +1153,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		m_pGridCore->EditItem(cell->NativeRef, editBy.ToNative());
 	}
+
+    void GridControl::CloseEdit()
+    {
+        OnEditClosed(System::EventArgs::Empty);
+    }
 
 	void GridControl::ClearSelection()
 	{
@@ -1466,6 +1499,31 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		OnRowInserted(gcnew RowInsertedEventArgs(row));
 	}
 
+    bool GridControl::InvokeRowBinding(System::Object^ component)
+    {
+        RowBindingEventArgs e(component);
+        OnRowBinding(%e);
+        return e.Cancel != true;
+    }
+
+    void GridControl::InvokeRowBinded(Ntreev::Windows::Forms::Grid::Row^ row)
+    {
+        RowEventArgs e(row);
+        OnRowBinded(%e);
+    }
+
+    void GridControl::InvokeRowUnbinding(Ntreev::Windows::Forms::Grid::Row^ row)
+    {
+        RowEventArgs e(row);
+        OnRowUnbinding(%e);
+    }
+     
+    void GridControl::InvokeRowUnbinded(Ntreev::Windows::Forms::Grid::Row^ row)
+    {
+        RowEventArgs e(row);
+        OnRowUnbinded(%e);
+    }
+
 	bool GridControl::InvokeRowRemoving(Ntreev::Windows::Forms::Grid::Row^ row)
 	{
 		RowRemovingEventArgs e(row);
@@ -1568,11 +1626,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_pGridCore->Invalidate();
 	}
 
+    void GridControl::InvokeCellMouseEnter(Ntreev::Windows::Forms::Grid::Cell^ cell)
+	{
+		CellEventArgs e(cell);
+		OnCellMouseEnter(%e);
+	}
+
 	bool GridControl::InvokeCellMouseMove(Ntreev::Windows::Forms::Grid::Cell^ cell, System::Drawing::Point clientLocation)
 	{
 		CellMouseEventArgs e(cell, clientLocation);
 		OnCellMouseMove(%e);
 		return e.Handled;
+	}
+
+    void GridControl::InvokeCellMouseLeave(Ntreev::Windows::Forms::Grid::Cell^ cell)
+	{
+		CellEventArgs e(cell);
+		OnCellMouseLeave(%e);
 	}
 
 	void GridControl::InvokeCellClick(Ntreev::Windows::Forms::Grid::Cell^ cell)
@@ -1618,6 +1688,26 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		RowRemoved(this, e);
 	}
+
+    void GridControl::OnRowBinding(Ntreev::Windows::Forms::Grid::RowBindingEventArgs^ e)
+    {
+        RowBinding(this, e);
+    }
+
+    void GridControl::OnRowBinded(Ntreev::Windows::Forms::Grid::RowEventArgs^ e)
+    {
+        RowBinded(this, e);
+    }
+
+    void GridControl::OnRowUnbinding(Ntreev::Windows::Forms::Grid::RowEventArgs^ e)
+    {
+        RowUnbinding(this, e);
+    }
+
+    void GridControl::OnRowUnbinded(Ntreev::Windows::Forms::Grid::RowEventArgs^ e)
+    {
+        RowUnbinded(this, e);
+    }
 
 	void GridControl::OnSelectedRowsChanged(System::EventArgs^ e)
 	{
@@ -1740,9 +1830,30 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		ColumnMouseMove(this, e);
 	}
 
+    void GridControl::OnCellMouseEnter(Ntreev::Windows::Forms::Grid::CellEventArgs^ e)
+	{
+        try
+        {
+            Ntreev::Windows::Forms::Grid::Cell^ cell = e->Cell;
+            if(cell->ErrorDescription != System::String::Empty)
+                this->ToolTip->Show(cell->ErrorDescription);
+        }
+        catch(System::Exception^)
+        {
+        }
+        
+		CellMouseEnter(this, e);
+	}
+
 	void GridControl::OnCellMouseMove(Ntreev::Windows::Forms::Grid::CellMouseEventArgs^ e)
 	{
 		CellMouseMove(this, e);
+	}
+
+    void GridControl::OnCellMouseLeave(Ntreev::Windows::Forms::Grid::CellEventArgs^ e)
+	{
+        this->ToolTip->Hide();
+		CellMouseLeave(this, e);
 	}
 
 	void GridControl::OnCellClick(CellEventArgs^ e)
@@ -1792,12 +1903,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 			Ntreev::Windows::Forms::Grid::Column^ column = m_visibleColumnList->Count > 0 ? m_visibleColumnList[0] : nullptr;
 			Ntreev::Windows::Forms::Grid::Row^ row = m_visibleRowList->Count > 0 ? (Ntreev::Windows::Forms::Grid::Row^)m_visibleRowList[0] : nullptr;
-			if(column == nullptr || row == nullptr)
-				return;
-			GrItem* pItem = row->Cells[column]->NativeRef;
-			this->Selector->SelectItem(pItem, GrSelectionType_Normal);
-			this->Selector->SetAnchor(pItem);
-			this->Focuser->Set(pItem);
+			if(column != nullptr && row != nullptr)
+            {
+                GrItem* pItem = row->Cells[column]->NativeRef;
+                this->Selector->SelectItem(pItem, GrSelectionType_Normal);
+                this->Selector->SetAnchor(pItem);
+                this->Focuser->Set(pItem);
+            }
 		}
 		catch(System::Exception^)
 		{

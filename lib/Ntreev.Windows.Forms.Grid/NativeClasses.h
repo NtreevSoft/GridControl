@@ -223,6 +223,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         void itemSelector_SelectedColumnsChanged(GrObject* pSender, GrEventArgs* e);
         void itemSelector_SelectionChanged(GrObject* pSender, GrEventArgs* e);
 
+        void caption_HeightChanged(GrObject* pSender, GrEventArgs* e);
+
     public:
         gcroot<Ntreev::Windows::Forms::Grid::GridControl^> m_gridControl;
     };

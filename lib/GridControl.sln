@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ntreev.Windows.Forms.Grid", "Ntreev.Windows.Forms.Grid\GridControl.vcxproj", "{D4D0F372-7312-4B53-BCA9-EA27FD971B32}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9AD99441-A33A-4F97-A571-98ED82C95827} = {9AD99441-A33A-4F97-A571-98ED82C95827}
+		{861745B0-CE2E-4725-881A-FD0958DE602D} = {861745B0-CE2E-4725-881A-FD0958DE602D}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GridCore", "GridCore\GridCore.vcxproj", "{9AD99441-A33A-4F97-A571-98ED82C95827}"
 EndProject
@@ -13,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApplication", "Sample
 	ProjectSection(ProjectDependencies) = postProject
 		{8EB27EC4-86A3-44A7-9767-19C343709894} = {8EB27EC4-86A3-44A7-9767-19C343709894}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSourceApplication", "DataSourceApplication\DataSourceApplication.csproj", "{45CC3444-1B56-47FC-801C-C3B8996E0E00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -159,6 +165,32 @@ Global
 		{BE81D0F0-0D06-44CF-8C06-C16EC4B13D63}.Release|Win32.ActiveCfg = Release|Any CPU
 		{BE81D0F0-0D06-44CF-8C06-C16EC4B13D63}.Release|Win32.Build.0 = Release|Any CPU
 		{BE81D0F0-0D06-44CF-8C06-C16EC4B13D63}.Release|x86.ActiveCfg = Release|Any CPU
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Debug_Win32|Any CPU.ActiveCfg = Debug|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Debug_Win32|Mixed Platforms.ActiveCfg = Debug|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Debug_Win32|Mixed Platforms.Build.0 = Debug|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Debug_Win32|Win32.ActiveCfg = Debug|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Debug_Win32|x86.ActiveCfg = Debug|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Debug_Win32|x86.Build.0 = Debug|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Debug|Win32.ActiveCfg = Debug|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Debug|Win32.Build.0 = Debug|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Debug|x86.ActiveCfg = Debug|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Debug|x86.Build.0 = Debug|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Release_Win32|Any CPU.ActiveCfg = Release|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Release_Win32|Mixed Platforms.ActiveCfg = Release|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Release_Win32|Mixed Platforms.Build.0 = Release|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Release_Win32|Win32.ActiveCfg = Release|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Release_Win32|x86.ActiveCfg = Release|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Release_Win32|x86.Build.0 = Release|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Release|Any CPU.ActiveCfg = Release|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Release|Mixed Platforms.Build.0 = Release|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Release|Win32.ActiveCfg = Release|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Release|Win32.Build.0 = Release|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Release|x86.ActiveCfg = Release|x86
+		{45CC3444-1B56-47FC-801C-C3B8996E0E00}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

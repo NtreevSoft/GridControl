@@ -164,7 +164,27 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_newIndex = value;
     }
 
+    RowBindingEventArgs::RowBindingEventArgs(System::Object^ component)
+        : m_component(component), m_cancel(false)
+    {
 
+    }
+
+    System::Object^ RowBindingEventArgs::Component::get()
+    {
+        return m_component;
+    }
+
+    bool RowBindingEventArgs::Cancel::get()
+    {
+        return m_cancel;
+    }
+    
+    void RowBindingEventArgs::Cancel::set(bool value)
+    {
+        m_cancel = value;
+    }
+    
     ColumnBindingEventArgs::ColumnBindingEventArgs(System::ComponentModel::PropertyDescriptor^ propertyDescriptor, Ntreev::Windows::Forms::Grid::Column^ column)
         : m_propertyDescriptor(propertyDescriptor), m_column(column)
     {

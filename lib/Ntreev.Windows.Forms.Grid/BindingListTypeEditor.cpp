@@ -32,7 +32,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     BindingListTypeEditor::BindingListTypeEditor(System::Type^ dataType)
         : TypeEditor(dataType)
     {
-
+        
     }
 
     System::Object^ BindingListTypeEditor::EditValue(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value)

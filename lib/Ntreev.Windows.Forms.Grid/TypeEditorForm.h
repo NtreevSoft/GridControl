@@ -140,6 +140,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
         System::Drawing::Rectangle GetClipScreenRect(System::Windows::Forms::Control^ control);
 
+        void gridControl_EditClosed(System::Object^ sender, System::EventArgs^ e);
+
     private: // properties
 
         property System::ComponentModel::IContainer^ Container_System_ComponentModel_ITypeDescriptorContext

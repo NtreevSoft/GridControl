@@ -93,8 +93,8 @@ public:
     void SelectItems(const GrItems* pItems, GrSelectionType selectType);
     void SelectItems(GrItem* pBegin, GrItem* pEnd, GrSelectionType selectType);
     void SelectItems(GrIndexRange visibleColumnIndex, GrIndexRange visibleRowIndex, GrSelectionType selectType);
-    void SelectItems(GrColumn* pColumn, GrSelectionType selectType);
-    void SelectItems(GrDataRow* pDataRow, GrSelectionType selectType);
+    void SelectColumn(GrColumn* pColumn, GrSelectionType selectType);
+    void SelectDataRow(GrDataRow* pDataRow, GrSelectionType selectType);
     void SelectColumns(const GrColumns* pColumns, GrSelectionType selectType);
     void SelectColumns(GrColumn* pFrom, GrColumn* pTo, GrSelectionType selectType);
     void SelectDataRows(const GrDataRows* pDataRows, GrSelectionType selectType);
@@ -150,6 +150,9 @@ protected:
     void BeginSelection();
     void EndSelection();
 
+    void DoSelectDataRow(GrDataRow* pDataRow);
+    void DoDeselectDataRow(GrDataRow* pDataRow);
+
 private:
     void AddInvalidatedRectangle(const GrRect& rect);
 
@@ -160,11 +163,11 @@ private:
     void dataRowList_RowVisibleChanged(GrObject* pSender, GrEventArgs* e);
 
 private:
-    GrItems m_selectedItems;
+    //GrItems m_selectedItems;
     GrColumns m_selectedColumns;
     GrDataRows m_selectedRows;
 
-    GrItems m_oldSelectedItems;
+    //GrItems m_oldSelectedItems;
     GrColumns m_oldSelectedColumns;
     GrDataRows m_oldSelectedRows;
 
@@ -204,9 +207,9 @@ public:
     virtual ~GrTextUpdater();
 
     void AddTextBounds(GrCell* pCell);
-    void AddTextBounds(GrColumn* pColumn);
+    void AddTextBoundsByColumn(GrColumn* pColumn);
     void AddTextAlign(GrCell* pCell);
-    void AddTextAlign(GrColumn* pColumn);
+    void AddTextAlignByColumn(GrColumn* pColumn);
 
     void RemoveTextBounds(GrCell* pCell);
     void RemoveTextAlign(GrCell* pCell);

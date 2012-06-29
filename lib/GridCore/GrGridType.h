@@ -419,13 +419,17 @@ struct GrColor
 
     const std::wstring& GetName() const;
 
+    float GetBrightness() const;
+    float GetHue() const;
+    float GetSaturation() const;
+
 private:
     GrColor(int a, int r, int g, int b, const std::wstring& name);
 
     std::wstring name;
     static std::map<std::wstring, const GrColor&> namedColor;
 
-    
+
 #pragma warning(push)
 #pragma warning(disable:4201)
     union
@@ -580,6 +584,8 @@ public:
     static const GrColor WhiteSmoke;
     static const GrColor Yellow;
     static const GrColor YellowGreen;
+
+    static const GrColor DefaultLineColor;
 };
 
 struct GrFlag
@@ -947,4 +953,33 @@ enum GrDataRowInsertType
 {
     GrDataRowInsertType_New,
     GrDataRowInsertType_Insertion,
+};
+
+class RGBHSL
+{
+public:
+    class HSL
+    {
+        float _h;
+        float _s;
+        float _l;
+    public:
+        HSL();
+
+        float H() const;
+        void H(float value);
+        float S() const;
+        void S(float value);
+        float L() const;
+        void L(float value);
+    };
+
+    static GrColor SetBrightness(const GrColor& c, float brightness);
+    static GrColor ModifyBrightness(const GrColor& c, float brightness);
+    static GrColor SetSaturation(const GrColor& c, float Saturation);
+    static GrColor ModifySaturation(const GrColor& c, float Saturation);
+    static GrColor SetHue(const GrColor& c, float Hue);
+    static GrColor ModifyHue(const GrColor& c, float Hue);
+    static GrColor HSL_to_RGB(HSL hsl);
+    static HSL RGB_to_HSL(const GrColor& c);
 };

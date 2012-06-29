@@ -67,11 +67,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         ref class ManagerEventDetach
         {
         public:
-            ManagerEventDetach(Ntreev::Windows::Forms::Grid::RowCollection^ rowCollection);
+            ManagerEventDetach(RowCollection^ rows);
             ~ManagerEventDetach();
 
         private:
-            Ntreev::Windows::Forms::Grid::RowCollection^ m_rowCollection;
+            RowCollection^ m_rows;
         };
 
     public: // methods
@@ -220,6 +220,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </exception>
         Ntreev::Windows::Forms::Grid::Row^ GetAt(int index);
 
+        /// <summary>
+        /// <see cref="InsertionRow"/>의 값들을 초기화 시킵니다.
+        /// </summary>
+        void SetDefaultValue();
+
     public: // properties
         /// <summary>
         /// 지정한 인덱스에 있는 <see cref="Row"/>를 가져옵니다.
@@ -269,6 +274,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void Unbind(int componentIndex);
 
         void SetItemsByDesigner(cli::array<System::Object^>^ values);
+
+        void AttachManagerEvent();
+
+        void DetachManagerEvent();
 
     internal: // properties
 
@@ -357,8 +366,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private: // variables
-
-        int m_locked;
+        bool at;
+        int m_lockRef;
         GrDataRowList* m_pDataRowList;
         System::Windows::Forms::CurrencyManager^ m_manager;
         System::EventHandler^ m_currentChangedEventHandler;

@@ -27,6 +27,7 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
+	[System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.StyleColorCollectionEditor, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
     public ref class StyleColorCollection
         : Ntreev::Windows::Forms::Grid::GridObject
         , System::Collections::Generic::IList<System::Drawing::Color>
@@ -67,24 +68,26 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     internal:
-        StyleColorCollection(std::vector<GrColor>* container);
+        StyleColorCollection(std::vector<GrColor>* container, System::Drawing::Color color);
+
+	internal: // properties
+		property System::Drawing::Color DefaultColor
+		{
+			System::Drawing::Color get();
+		}
 
     private:
-        virtual System::Collections::IEnumerator^ GetEnumerator_System_Collections_IEnumerable() sealed = System::Collections::IEnumerable::GetEnumerator;
+		void Invalidate();
 
+        virtual System::Collections::IEnumerator^ GetEnumerator_System_Collections_IEnumerable() sealed = System::Collections::IEnumerable::GetEnumerator;
         virtual System::Collections::Generic::IEnumerator<System::Drawing::Color>^ GetEnumerator_System_Collections_Generic_IEnumerable_GetEnumerator() sealed
             = System::Collections::Generic::IEnumerable<System::Drawing::Color>::GetEnumerator;
 
         virtual void Remove_System_Collections_IList(System::Object^ item) sealed = System::Collections::IList::Remove;
-
         virtual void Insert_System_Collections_IList(int index, System::Object^ item) sealed = System::Collections::IList::Insert;
-
         virtual void CopyTo_System_Collections_ICollection(System::Array^ array, int arrayIndex) sealed = System::Collections::ICollection::CopyTo;
-
         virtual int IndexOf_System_Collections_IList(System::Object^ item) sealed = System::Collections::IList::IndexOf;
-
         virtual int Add_System_Collections_IList(System::Object^ item) sealed = System::Collections::IList::Add;
-
         virtual bool Contains_System_Collections_IList(System::Object^ item) sealed = System::Collections::IList::Contains;
 
     private:
@@ -111,5 +114,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     private:
         NativeCollection<System::Drawing::Color, GrColor> m_s;
+		System::Drawing::Color m_defaultColor;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

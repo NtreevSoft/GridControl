@@ -29,6 +29,11 @@
 
 #ifdef _MANAGED
 #include <vcclr.h>
+namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
+{
+    ref class Column;
+    ref class CaptionRow;
+} /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
 #endif
 
 static const unsigned int INVALID_INDEX = ((uint)-1);
@@ -57,6 +62,7 @@ class IDataRow;
 class IFocusable;
 
 typedef GrDataRow GrInsertionRow;
+typedef std::set<GrItem*> GrItems;
 
 typedef bool (*FuncSortRow)(GrGridCore* pGridCore, const GrRow* pRow1, const GrRow* pRow2, void* userData);
 
@@ -459,7 +465,7 @@ public:
 
     uint GetDisplayIndex() const;
     uint GetVisibleIndex() const;
-    uint GetFreezableIndex() const;
+    uint GetFrozenIndex() const;
     uint GetUnfrozenIndex() const;
     uint GetIndex() const;
     uint GetColumnID() const;
@@ -520,7 +526,11 @@ public:
     void SetTooltip(const wchar_t* tooltip);
     const wchar_t* GetTooltip() const;
 
-    int GetPriority() const;
+    int GetFreezablePriority() const;
+    int GetUnfreezablePriority() const;
+
+    void SetFreezablePriority(int priority);
+    void SetUnfreezablePriority(int priority);
 
     bool GetGrouped() const;
     void SetGrouped(bool b);
@@ -530,7 +540,6 @@ public:
     GrSort GetSortType() const;
     void SetSortComparer(GrSort sortType, FuncComparer comparer);
     FuncComparer GetSortComparer(GrSort sortType) const;
-
 
     virtual GrCellType GetCellType() const { return GrCellType_Column; }
     virtual int GetX() const;
@@ -569,14 +578,17 @@ protected:
 private:
     virtual ~GrColumn();
 
-    void SetPriority(int priority);
-
     void SetX(int x) { m_x = x; };
     void SetDisplayable(bool b);
     void SetDisplayIndex(uint index);
     void SetVisibleIndex(uint index);
     void SetIndex(uint index);
     void SetColumnID(uint index);
+
+    void AddSelection(GrItem* pItem);
+    void RemoveSelection(GrItem* pItem);
+    void ClearSelection();
+    void SetFullSelected();
 
 public:
     bool m_customItemPaint;
@@ -588,10 +600,13 @@ public:
 private:
     GrColumnList* m_pColumnList;
 
-    int m_selectedCells; friend class GrItemSelector;
-    int m_priority;
+    GrItems m_selectedCells; 
+    friend class GrItemSelector;
+    int m_freezablePriority;
+    int m_unfreezablePriority;
     int m_x;
     int m_width;
+    int m_fitWidth;
 
     int m_defaultWidth;
     int m_minWidth;
@@ -605,7 +620,7 @@ private:
     bool m_resizable;
     bool m_frozen;
     bool m_selected;
-    bool m_fullSelected;
+    //bool m_fullSelected;
     bool m_fitting;
     bool m_grouped;
 
@@ -642,6 +657,14 @@ private:
 
     friend class GrGroup;
     friend class GrColumnList;
+
+#ifdef _MANAGED
+    friend ref class Ntreev::Windows::Forms::Grid::Column;
+private:
+    bool ShouldSerializeWidth();
+    bool ShouldSerializePriorityOnFrozen();
+    bool ShouldSerializePriorityOnUnfrozen();
+#endif
 };
 
 enum GrRowUpdate 
@@ -663,7 +686,7 @@ public:
     virtual int GetHeight() const;
 
     void SetResizable(bool b);
-    bool GetResizable() const;
+    virtual bool GetResizable() const;
 
     void AdjustHeight();
 
@@ -780,10 +803,18 @@ public:
     virtual IFocusable* GetFocusable(GrColumn* pColumn) const = 0;
     virtual bool GetFullSelected() const { return false; }
 
+	virtual GrColor GetForeColor() const;
+    virtual GrColor GetBackColor() const;
+	virtual GrColor GetLineColor() const;
+    virtual GrFont* GetFont() const;
+
 protected:
     virtual void OnFitted();
     virtual void OnGridCoreAttached();
     virtual void OnHeightChanged();
+
+    GrColor GetCellBackColor() const;
+    GrColor GetCellLineColor() const;
 
 protected:
     GrDataRowList* m_pDataRowList;
@@ -832,9 +863,8 @@ public:
     virtual bool GetVisible() const;
     virtual void SetVisible(bool b);
 
-    virtual GrRowType GetRowType() const { return GetVisibleIndex() == INSERTION_ROW ? GrRowType_InsertionRow : GrRowType_DataRow; }
+    virtual GrRowType GetRowType() const { return GetDataRowID() == INSERTION_ROW ? GrRowType_InsertionRow : GrRowType_DataRow; }
     virtual GrFlag ToPaintStyle() const;
-    virtual GrColor GetPaintingBackColor() const;
     virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
 
     virtual IFocusable* GetFocusable(GrColumn* pColumn) const;
@@ -855,8 +885,11 @@ private:
     void AddItem(GrColumn* pColumn);
     void Reserve(uint count);
     void ClearItem();
-    void SetFocusedItem(bool b); // called by GrGridCore
 
+    void AddSelection(GrItem* pItem);
+    void RemoveSelection(GrItem* pItem);
+    void ClearSelection();
+    void SetFullSelected();
 
 private:
     _Items m_vecItems;
@@ -871,7 +904,9 @@ private:
     uint m_dataRowID;
 
 private: // friend variables;
-    uint m_selectedCells;
+    //uint m_selectedCells;
+    GrItems m_selectedCells;
+    bool m_selected;
 
     friend class GrItemSelector;
     friend class GrGridCore;
@@ -967,8 +1002,6 @@ private:
 
     friend class GrItemSelector;
 };
-
-typedef std::set<GrItem*> GrItems;
 
 class GrUpdatableRow : public GrRow
 {
@@ -1265,6 +1298,7 @@ public:
     void SetVisibleChanged();
     void SetWidthChanged();
 
+
     virtual bool ShouldClip(const GrRect& displayRect, uint horizontal, uint vertical) const;
     virtual void Clip(const GrRect& displayRect, uint horizontal, uint vertical);
     virtual int GetClipPriority() const { return 0; }
@@ -1288,6 +1322,11 @@ public:
 
     virtual int GetMinHeight() const { return GetHeight(); }
     virtual GrRect GetBounds() const;
+
+	virtual GrColor GetForeColor() const;
+    virtual GrColor GetBackColor() const;
+	virtual GrColor GetLineColor() const;
+    virtual GrFont* GetFont() const;
 
     virtual void Invoke(std::wstring eventName, GrEventArgs* e);
 
@@ -1448,6 +1487,11 @@ public:
     virtual GrRow* GetRow() const;
     virtual GrFlag ToPaintStyle() const;
 
+	virtual GrColor GetForeColor() const;
+    virtual GrColor GetBackColor() const;
+	virtual GrColor GetLineColor() const;
+    virtual GrFont* GetFont() const;
+
 private:
     virtual GrRect GetDisplayRect() const { return GetRect(); }
     virtual IDataRow* GetDataRow() const;
@@ -1503,6 +1547,7 @@ private:
 
 class GrCaption : public GrUpdatableRow
 {
+    typedef GrEvent<GrEventArgs, GrCaption> _GrEvent;
 public:
     GrCaption();
 
@@ -1519,8 +1564,17 @@ public:
     virtual bool GetVisible() const;
     void SetVisible(bool b);
 
+    virtual GrColor GetForeColor() const;
+	virtual GrColor GetBackColor() const;
+	virtual GrColor GetLineColor() const;
+	virtual GrFont* GetFont() const;
+
+    _GrEvent HeightChanged;
+
 protected:
     virtual void OnGridCoreAttached();
+    virtual void OnHeightChanged(GrEventArgs* e);
+    virtual void OnHeightChanged();
 
 private:
     void gridCore_FontChanged(GrObject* pSender, GrEventArgs* e);
@@ -1530,6 +1584,12 @@ private:
     GrVertAlign m_vertAlign;
 
     bool m_visible;
+
+#ifdef _MANAGED
+    friend ref class Ntreev::Windows::Forms::Grid::CaptionRow;
+private:
+    bool ShouldSerializeHeight();
+#endif
 };
 
 class GrGroupPanel : public GrUpdatableRow
@@ -1570,6 +1630,12 @@ public:
     virtual int GetMinHeight() const;
 
     virtual GrCell* HitTest(const GrPoint& location) const;
+
+    virtual GrColor GetForeColor() const;
+	virtual GrColor GetBackColor() const;
+	virtual GrColor GetLineColor() const;
+	virtual GrFont* GetFont() const;
+    virtual bool GetResizable() const { return false; }
 
     _GrEvent Changed;
     _GrGroupEvent Expanded;

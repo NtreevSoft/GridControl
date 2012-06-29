@@ -30,6 +30,7 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
+    [System::Drawing::ToolboxBitmapAttribute(Style::typeid)]
 	[System::ComponentModel::TypeConverterAttribute(System::ComponentModel::ExpandableObjectConverter::typeid)]
 	public ref class Style
 		: Ntreev::Windows::Forms::Grid::GridObject
@@ -61,13 +62,28 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		void ResetRowLineColor();
 		void ResetRowFont();
 
-		void ResetRowHighlightForeColor();
-		void ResetRowHighlightBackColor();
+        void ResetCaptionForeColor();
+		void ResetCaptionBackColor();
+		void ResetCaptionLineColor();
+		void ResetCaptionFont();
+
+        void ResetGroupPanelForeColor();
+		void ResetGroupPanelBackColor();
+		void ResetGroupPanelLineColor();
+		void ResetGroupPanelFont();
+
+		void ResetRowHighlightLineColor();
+		void ResetRowHighlightFillColor();
 
 		void ResetCellForeColors();
 		void ResetCellBackColors();
 		void ResetCellLineColors();
 		void ResetCellFonts();
+
+        void ResetGroupForeColors();
+		void ResetGroupBackColors();
+		void ResetGroupLineColors();
+		void ResetGroupFonts();
 
 	public: // properties
 
@@ -155,6 +171,62 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			void set(System::Drawing::Font^);
 		}
 
+        [System::ComponentModel::CategoryAttribute("Caption")]
+		property System::Drawing::Color CaptionForeColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
+
+		[System::ComponentModel::CategoryAttribute("Caption")]
+		property System::Drawing::Color CaptionBackColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
+
+		[System::ComponentModel::CategoryAttribute("Caption")]
+		property System::Drawing::Color CaptionLineColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
+
+		[System::ComponentModel::CategoryAttribute("Caption")]
+		property System::Drawing::Font^ CaptionFont
+		{
+			System::Drawing::Font^ get();
+			void set(System::Drawing::Font^);
+		}
+
+        [System::ComponentModel::CategoryAttribute("Group")]
+		property System::Drawing::Color GroupPanelForeColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
+
+		[System::ComponentModel::CategoryAttribute("Group")]
+		property System::Drawing::Color GroupPanelBackColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
+
+		[System::ComponentModel::CategoryAttribute("Group")]
+		property System::Drawing::Color GroupPanelLineColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color);
+		}
+
+		[System::ComponentModel::CategoryAttribute("Group")]
+		property System::Drawing::Font^ GroupPanelFont
+		{
+			System::Drawing::Font^ get();
+			void set(System::Drawing::Font^);
+		}
+
 		[System::ComponentModel::CategoryAttribute("Cell")]
 		property System::Drawing::Color SelectedForeColor
 		{
@@ -184,14 +256,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 
 		[System::ComponentModel::CategoryAttribute("Row")]
-		property System::Drawing::Color RowHighlightForeColor
+		property System::Drawing::Color RowHighlightLineColor
 		{
 			System::Drawing::Color get();
 			void set(System::Drawing::Color);
 		}
 
 		[System::ComponentModel::CategoryAttribute("Row")]
-		property System::Drawing::Color RowHighlightBackColor
+		property System::Drawing::Color RowHighlightFillColor
 		{
 			System::Drawing::Color get();
 			void set(System::Drawing::Color);
@@ -225,18 +297,25 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			StyleFontCollection^ get();
 		}
 
-		[System::ComponentModel::CategoryAttribute("Cell")]
+		[System::ComponentModel::CategoryAttribute("Group")]
+		[System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
+		property StyleColorCollection^ GroupForeColors
+		{
+			StyleColorCollection^ get();
+		}
+
+        [System::ComponentModel::CategoryAttribute("Group")]
 		[System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
 		property StyleColorCollection^ GroupBackColors
 		{
 			StyleColorCollection^ get(); 
 		}
 
-		[System::ComponentModel::CategoryAttribute("Group")]
+        [System::ComponentModel::CategoryAttribute("Group")]
 		[System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
-		property StyleColorCollection^ GroupForeColors
+		property StyleColorCollection^ GroupLineColors
 		{
-			StyleColorCollection^ get();
+			StyleColorCollection^ get(); 
 		}
 
 		[System::ComponentModel::CategoryAttribute("Group")]
@@ -307,13 +386,28 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		bool ShouldSerializeRowLineColor();
 		bool ShouldSerializeRowFont();
 
-		bool ShouldSerializeRowHighlightForeColor();
-		bool ShouldSerializeRowHighlightBackColor();
+        bool ShouldSerializeCaptionForeColor();
+		bool ShouldSerializeCaptionBackColor();
+		bool ShouldSerializeCaptionLineColor();
+		bool ShouldSerializeCaptionFont();
+
+        bool ShouldSerializeGroupPanelForeColor();
+		bool ShouldSerializeGroupPanelBackColor();
+		bool ShouldSerializeGroupPanelLineColor();
+		bool ShouldSerializeGroupPanelFont();
+
+		bool ShouldSerializeRowHighlightLineColor();
+		bool ShouldSerializeRowHighlightFillColor();
 
 		bool ShouldSerializeCellForeColors();
 		bool ShouldSerializeCellBackColors();
 		bool ShouldSerializeCellLineColors();
 		bool ShouldSerializeCellFonts();
+
+        bool ShouldSerializeGroupForeColors();
+		bool ShouldSerializeGroupBackColors();
+		bool ShouldSerializeGroupLineColors();
+		bool ShouldSerializeGroupFonts();
 
 		virtual System::Object^ GetService(System::Type^ serviceType) sealed = System::IServiceProvider::GetService;
 
@@ -326,6 +420,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		StyleColorCollection^ m_groupForeColors;
 		StyleColorCollection^ m_groupBackColors;
+        StyleColorCollection^ m_groupLineColors;
 		StyleFontCollection^ m_groupFonts;
 
 		GrStyle* m_pNativeStyle;

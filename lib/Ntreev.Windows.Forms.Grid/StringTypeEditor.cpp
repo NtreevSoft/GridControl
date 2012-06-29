@@ -115,6 +115,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         if(editorService->Result == System::Windows::Forms::DialogResult::Cancel || textBox->Text == oldText)
             return value;
 
+
         return converter->ConvertFromString(textBox->Text);
     }
 } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

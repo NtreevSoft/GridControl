@@ -261,21 +261,7 @@ void GrItemSelector::SelectItems(const GrItems* pItems, GrSelectionType selectTy
     {
     case GrSelectionType_Normal:
         {
-            GrItems difference;
-
-            if(m_selectedItems.size() > 0)
-            {
-                set_difference(
-                    m_selectedItems.begin(), m_selectedItems.end(), 
-                    pItems->begin(), pItems->end(), 
-                    inserter(difference, difference.begin())
-                    );
-
-                for_each(GrItems, difference, value)
-                {
-                    DoDeselect(value);
-                }
-            }
+           ClearSelection();
 
             for_each(GrItems, *pItems, value)
             {
@@ -364,19 +350,37 @@ void GrItemSelector::SelectItems(GrIndexRange visibleColumnIndex, GrIndexRange v
 
 void GrItemSelector::SelectDataRows(const GrDataRows* pDataRows, GrSelectionType selectType)
 {
-    GrColumnList* pColumnList = m_pGridCore->GetColumnList();
-
-    GrItems items;
-    for_each(GrDataRows, *pDataRows, value)
+    BeginSelection();
+    switch(selectType)
     {
-        for(uint i=0 ; i<pColumnList->GetVisibleColumnCount() ; i++)
+    case GrSelectionType_Normal:
         {
-            GrColumn* pColumn = pColumnList->GetVisibleColumn(i);
-            GrItem* pItem = value->GetItem(pColumn);
-            items.insert(pItem);
+            ClearSelection();
+
+            for_each(GrDataRows, *pDataRows, value)
+            {
+                DoSelectDataRow(value);
+            }
         }
+        break;
+    case GrSelectionType_Add:
+        {
+            for_each(GrDataRows, *pDataRows, value)
+            {
+                DoSelectDataRow(value);
+            }
+        }
+        break;
+    case GrSelectionType_Remove:
+        {
+            for_each(GrDataRows, *pDataRows, value)
+            {
+                DoDeselectDataRow(value);
+            }
+        }
+        break;
     }
-    SelectItems(&items, selectType);
+    EndSelection();
 }
 
 void GrItemSelector::SelectDataRows(GrDataRow* pFrom, GrDataRow* pTo, GrSelectionType selectType)
@@ -416,7 +420,7 @@ void GrItemSelector::SelectDataRows(IDataRow* pFrom, IDataRow* pTo, GrSelectionT
     SelectDataRows(&dataRows, selectType);
 }
 
-void GrItemSelector::SelectItems(GrDataRow* pDataRow, GrSelectionType selectType)
+void GrItemSelector::SelectDataRow(GrDataRow* pDataRow, GrSelectionType selectType)
 {
     GrDataRows dataRows;
     if(pDataRow)
@@ -457,7 +461,7 @@ void GrItemSelector::SelectColumns(GrColumn* pFrom, GrColumn* pTo, GrSelectionTy
     SelectColumns(&dataRows, selectType);
 }
 
-void GrItemSelector::SelectItems(GrColumn* pColumn, GrSelectionType selectType)
+void GrItemSelector::SelectColumn(GrColumn* pColumn, GrSelectionType selectType)
 {
     GrColumns dataColumns;
     if(pColumn)
@@ -481,12 +485,16 @@ void GrItemSelector::SelectAll()
 void GrItemSelector::ClearSelection()
 {
     BeginSelection();
-    GrItems items = m_selectedItems;
-    for_each(GrItems, items, value)
+    for_each(GrDataRows, m_selectedRows, value)
     {
-        DoDeselect(value);
+        DoDeselectDataRow(value);
     }
-    m_selectedItems.clear();
+
+    for_each(GrColumns, m_selectedColumns, value)
+    {
+        value->m_selected = false;
+        value->m_selectedCells.clear();
+    }
     m_selectedColumns.clear();
     m_selectedRows.clear();
     EndSelection();
@@ -494,7 +502,7 @@ void GrItemSelector::ClearSelection()
 
 void GrItemSelector::ResetVariables()
 {
-    m_selectedItems.clear();
+    //m_selectedItems.clear();
     m_selectedColumns.clear();
     m_selectedRows.clear();
 
@@ -505,7 +513,6 @@ void GrItemSelector::ResetVariables()
     m_pAnchorColumn = NULL;
     m_pAnchorDataRow = NULL;
 }
-
 
 const GrSelectedColumns* GrItemSelector::GetSelectedColumns() const
 {
@@ -597,22 +604,11 @@ void GrItemSelector::DoSelect(GrItem* pItem)
         return;
 
     pItem->m_selected = true;
+    pDataRow->AddSelection(pItem);
+    pColumn->AddSelection(pItem);
 
-    pColumn->m_selectedCells++;
-    pDataRow->m_selectedCells++;
-    if(pColumn->m_selectedCells > 0)
-    {
-        m_selectedColumns.insert(pColumn);
-        if(pColumn->GetDisplayable() == true)
-            AddInvalidatedRectangle(pColumn->GetRect());
-    }
-    if(pDataRow->m_selectedCells > 0 && pDataRow->GetRowType() != GrRowType_InsertionRow)
-    {
-        m_selectedRows.insert(pDataRow);
-        if(pDataRow->GetDisplayable() == true)
-            AddInvalidatedRectangle(pDataRow->GetRect());
-    }
-    m_selectedItems.insert(pItem);
+    m_selectedRows.insert(pDataRow);
+    m_selectedColumns.insert(pColumn);
 
     if(pItem->GetDisplayable() == true)
         AddInvalidatedRectangle(pItem->GetDisplayRect());
@@ -627,22 +623,14 @@ void GrItemSelector::DoDeselect(GrItem* pItem)
     GrDataRow* pDataRow = pItem->GetDataRow();
 
     pItem->m_selected = false;
+    pDataRow->RemoveSelection(pItem);
+    pColumn->RemoveSelection(pItem);
 
-    pColumn->m_selectedCells--;
-    pDataRow->m_selectedCells--;
-    if(pColumn->m_selectedCells == 0)
-    {
-        m_selectedColumns.erase(pColumn);
-        if(pColumn->GetDisplayable() == true)
-            AddInvalidatedRectangle(pColumn->GetRect());
-    }
-    if(pDataRow->m_selectedCells == 0)
-    {
+    if(pDataRow->GetSelected() == false)
         m_selectedRows.erase(pDataRow);
-        if(pDataRow->GetDisplayable() == true)
-            AddInvalidatedRectangle(pDataRow->GetRect());
-    }
-    m_selectedItems.erase(pItem);
+
+    if(pColumn->GetSelected() == false)
+        m_selectedColumns.erase(pColumn);
 
     if(pItem->GetDisplayable() == true)
         AddInvalidatedRectangle(pItem->GetDisplayRect());
@@ -654,7 +642,6 @@ void GrItemSelector::BeginSelection()
         return;
     m_oldSelectedColumns = m_selectedColumns;
     m_oldSelectedRows = m_selectedRows;
-    m_oldSelectedItems = m_selectedItems;
 
     m_invalidate.DoEmpty();
 }
@@ -664,22 +651,65 @@ void GrItemSelector::EndSelection()
     if(m_selectionLock == true)
         return;
 
+    bool changed = false;
     if(m_oldSelectedColumns != m_selectedColumns)
     {
         OnSelectedColumnsChanged(&GrEventArgs::Empty);
+        changed = true;
     }
 
     if(m_oldSelectedRows != m_selectedRows)
     {
         OnSelectedRowsChanged(&GrEventArgs::Empty);
+        changed = true;
     }
 
-    if(m_oldSelectedItems != m_selectedItems)
+    if(changed== true)
     {
         OnSelectionChanged(&GrEventArgs::Empty);
     }
 
     m_pGridCore->Invalidate(m_invalidate);
+}
+
+void GrItemSelector::DoSelectDataRow(GrDataRow* pDataRow)
+{
+    if(pDataRow->GetFullSelected() == true)
+        return;
+
+    if(pDataRow->GetSelectionGroup() != m_selectionGroup)
+        return;
+
+    m_selectedRows.insert(pDataRow);
+    pDataRow->SetFullSelected();
+
+    if(pDataRow->GetDisplayable() == true)
+    {
+        GrRect dataRowRect = pDataRow->GetRect();
+        dataRowRect.right = m_pGridCore->GetDisplayRect().right;
+        AddInvalidatedRectangle(dataRowRect);
+    }
+}
+
+void GrItemSelector::DoDeselectDataRow(GrDataRow* pDataRow)
+{
+    if(pDataRow->GetSelected() == false)
+        return;
+
+    for_each(std::set<GrItem*>, pDataRow->m_selectedCells, item)
+    {
+        item->m_selected = false;
+    }
+    
+    pDataRow->ClearSelection();
+    m_selectedRows.erase(pDataRow);
+
+    if(pDataRow->GetDisplayable() == true)
+    {
+        GrRect dataRowRect = pDataRow->GetRect();
+        dataRowRect.right = m_pGridCore->GetDisplayRect().right;
+        AddInvalidatedRectangle(dataRowRect);
+    }
 }
 
 void GrItemSelector::AddInvalidatedRectangle(const GrRect& rect)
@@ -841,7 +871,7 @@ void GrTextUpdater::AddTextBounds(GrCell* pCell)
     pCell->m_textBoundsChanged = true;
 }
 
-void GrTextUpdater::AddTextBounds(GrColumn* pColumn)
+void GrTextUpdater::AddTextBoundsByColumn(GrColumn* pColumn)
 {
     GrInsertionRow* pInsertionRow = m_pGridCore->GetInsertionRow();
     GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
@@ -866,7 +896,7 @@ void GrTextUpdater::AddTextAlign(GrCell* pCell)
     pCell->m_textAlignChanged = true;
 }
 
-void GrTextUpdater::AddTextAlign(GrColumn* pColumn)
+void GrTextUpdater::AddTextAlignByColumn(GrColumn* pColumn)
 {
     GrInsertionRow* pInsertionRow = m_pGridCore->GetInsertionRow();
     GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
@@ -976,7 +1006,7 @@ void GrFocusMover::FirstCell(GrSelectionRange range)
 
     if(pColumn->GetFrozen() == true)
     {
-        uint index = pColumn->GetFreezableIndex();
+        uint index = pColumn->GetFrozenIndex();
         if(index == 0)
             return;
 
@@ -1262,7 +1292,7 @@ void GrFocusMover::MoveLeft(GrSelectionRange range)
     if(range == GrSelectionRange_One)
     {
         if(m_pGridCore->GetFullRowSelect() == true)
-            m_pItemSelector->SelectItems(pDataRow, GrSelectionType_Normal);
+            m_pItemSelector->SelectDataRow(pDataRow, GrSelectionType_Normal);
         else
             m_pItemSelector->SelectItem(pFocused, GrSelectionType_Normal);
         m_pItemSelector->SetAnchor(pFocused);
@@ -1304,7 +1334,7 @@ void GrFocusMover::MoveRight(GrSelectionRange range)
     if(range == GrSelectionRange_One)
     {
         if(m_pGridCore->GetFullRowSelect() == true)
-            m_pItemSelector->SelectItems(pDataRow, GrSelectionType_Normal);
+            m_pItemSelector->SelectDataRow(pDataRow, GrSelectionType_Normal);
         else
             m_pItemSelector->SelectItem(pFocused, GrSelectionType_Normal);
         m_pItemSelector->SetAnchor(pFocused);
@@ -1348,7 +1378,7 @@ void GrFocusMover::SelectOne(IDataRow* pDataRow)
             pFocusItem = pRow->GetItem(pColumn);
 
             if(m_pGridCore->GetFullRowSelect() == true)
-                m_pItemSelector->SelectItems(pRow, GrSelectionType_Normal);
+                m_pItemSelector->SelectDataRow(pRow, GrSelectionType_Normal);
             else
                 m_pItemSelector->SelectItem(pFocusItem, GrSelectionType_Normal);
             m_pItemSelector->SetAnchor(pFocusItem);

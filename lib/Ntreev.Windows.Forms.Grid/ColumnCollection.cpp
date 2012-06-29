@@ -214,9 +214,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(existColumn == nullptr)
             column->HasLifeline = true;
 
-        if(this->GridControl->InvokeColumnInserting(column) == false)
-            return nullptr;
-
         if(column->GridControl == nullptr)
         {
             column->GridControl = GridControl;
@@ -230,7 +227,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             column->PropertyDescriptor = propertyDescriptor;
         }
 
-        this->GridControl->InvokeColumnInserted(column);
         this->GridControl->InvokeColumnBinded(column);
 
         return column;

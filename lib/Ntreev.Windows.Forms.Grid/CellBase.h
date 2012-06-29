@@ -40,25 +40,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <summary>
         /// 셀의 전경색을 기본값으로 되돌립니다.
         /// </summary>
-        /// <remarks>
-        /// 기본값은 <see cref="Style::CellForeColor"/> 속성의 값입니다.
-        /// </remarks>
         void ResetForeColor();
 
         /// <summary>
         /// 셀의 배경색을 기본값으로 되돌립니다.
         /// </summary>
-        /// <remarks>
-        /// 기본값은 <see cref="Style::CellBackColor"/> 속성의 값입니다.
-        /// </remarks>
         void ResetBackColor();
 
         /// <summary>
         /// 셀의 배경색을 기본값으로 되돌립니다.
         /// </summary>
-        /// <remarks>
-        /// 기본값은 <see cref="Style::CellBackColor"/> 속성의 값입니다.
-        /// </remarks>
         void ResetFont();
 
     public: // properties
@@ -67,7 +58,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀의 전경색을 가져오거나 설정합니다.
         /// </summary>
         /// <returns>
-        /// 셀의 전경색을 나타내는 <see cref="System::Drawing::Color"/>입니다. 기본값은 <see cref="Style::CellForeColor"/> 속성의 값입니다.
+        /// 셀의 전경색을 나타내는 <see cref="System::Drawing::Color"/>입니다.
         /// </returns>
         /// <remarks>
         /// 일반적으로 문자열의 색상을 나타냅니다.
@@ -84,7 +75,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀의 배경색을 가져오거나 설정합니다.
         /// </summary>
         /// <returns>
-        /// 셀의 배경색을 나타내는 <see cref="System::Drawing::Color"/>입니다. 기본값은 <see cref="Style::CellBackColor"/> 속성의 값입니다.
+        /// 셀의 배경색을 나타내는 <see cref="System::Drawing::Color"/>입니다.
         /// </returns>
         [System::ComponentModel::DescriptionAttribute("셀의 배경색을 가져오거나 설정합니다.")]
         [System::ComponentModel::CategoryAttribute("Appearance")]
@@ -98,7 +89,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀의 글꼴을 가져오거나 설정합니다.
         /// </summary>
         /// <returns>
-        /// 셀의 글꼴을 나타내는 <see cref="System::Drawing::Font"/>입니다. 기본값은 <see cref="Style::CellFont"/> 속성의 값입니다.
+        /// 셀의 글꼴을 나타내는 <see cref="System::Drawing::Font"/>입니다.
         /// </returns>
         [System::ComponentModel::CategoryAttribute("Appearance")]
         [System::ComponentModel::AmbientValueAttribute((System::String^)nullptr)]

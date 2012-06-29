@@ -26,7 +26,7 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    public ref class CellTagCollection
+    public ref class CellTagCollection sealed
         : System::Collections::IEnumerable
         , System::Collections::ICollection
     {

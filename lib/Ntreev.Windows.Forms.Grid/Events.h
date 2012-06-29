@@ -357,6 +357,52 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     public delegate void RowRemovedEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowRemovedEventArgs^ e);
 
     /// <summary>
+    /// RowBinding 이벤트의 데이터를 제공합니다.
+    /// </summary>
+    public ref class RowBindingEventArgs
+        : System::EventArgs
+    {
+    public: // methods
+
+        /// <summary>
+        /// <see cref="RowBindingEventArgs"/>클래스의 새 인스턴스를 초기화합니다.
+        /// </summary>
+        /// <param name="component">
+        /// 새로운 <see cref="Ntreev::Windows::Forms::Grid::Row"/>의 인스턴스와 연결될 데이터의 정보입니다.
+        /// </param>
+        RowBindingEventArgs(System::Object^ component);
+
+    public: // properties
+
+        /// <summary>
+        /// 새로운 <see cref="Ntreev::Windows::Forms::Grid::Row"/>의 인스턴스와 연결될 데이터의 정보를 가져옵니다.
+        /// </summary>
+        property System::Object^ Component
+        {
+            System::Object^ get();
+        }
+
+        /// <summary>
+        /// 바인딩을 취소할 지에 대한 여부를 가져오거나 설정합니다.
+        /// </summary>
+        property bool Cancel
+        {
+            bool get();
+            void set(bool);
+        }
+
+    private: // variables
+
+        System::Object^ m_component;
+        bool m_cancel;
+    };
+
+    /// <summary>
+    /// RowBinding 이벤트를 처리하는 메서드를 나타냅니다.
+    /// </summary>
+    public delegate void RowBindingEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowBindingEventArgs^ e);
+
+    /// <summary>
     /// ColumnBinding 이벤트의 데이터를 제공합니다.
     /// </summary>
     public ref class ColumnBindingEventArgs

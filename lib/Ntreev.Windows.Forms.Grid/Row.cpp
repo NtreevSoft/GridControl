@@ -29,6 +29,7 @@
 #include "ColumnCollection.h"
 #include "ErrorDescriptor.h"
 #include "FromNative.h"
+#include "RowBuilder.h"
 
 #include "GrGridCell.h"
 #include "GrGridCore.h"
@@ -36,8 +37,11 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    Row::Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pDataRow) 
-        : m_pDataRow(pDataRow), RowBase(gridControl, m_pDataRow), m_errorDescription(System::String::Empty)
+    //Row::Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pDataRow) 
+    //    : m_pDataRow(pDataRow), RowBase(gridControl, m_pDataRow), m_errorDescription(System::String::Empty)
+
+    Row::Row(Ntreev::Windows::Forms::Grid::RowBuilder^ rowBuilder)
+        : m_pDataRow(rowBuilder->NativeRef), RowBase(rowBuilder->GridControl, rowBuilder->NativeRef), m_errorDescription(System::String::Empty)
     {
         m_cells = gcnew Ntreev::Windows::Forms::Grid::CellCollection(this);
         m_componentIndex = -1;
@@ -52,26 +56,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         m_component = value;
 
-        if(IsBeingEdited == true)
-        {
-            EndEdit();
-        }
-        //else
-        {
-            for each(Ntreev::Windows::Forms::Grid::Column^ item in this->GridControl->Columns)
-            {
-                try
-                {
-                    Ntreev::Windows::Forms::Grid::Cell^ cell = NewCell(item);
-                    cell->UpdateNativeText();
-                }
-                catch(System::Exception^)
-                {
+        //if(IsBeingEdited == true)
+        //{
+        //    EndEdit();
+        //}
 
-                }
+        for each(Ntreev::Windows::Forms::Grid::Column^ item in this->GridControl->Columns)
+        {
+            try
+            {
+                Ntreev::Windows::Forms::Grid::Cell^ cell = NewCell(item);
+                cell->UpdateNativeText();
+            }
+            catch(System::Exception^)
+            {
+
             }
         }
-            
     }
 
     GrDataRow* Row::NativeRef::get()
@@ -286,12 +287,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Row::Select()
     {
-        this->Selector->SelectItems(m_pDataRow, GrSelectionType_Normal);
+        this->Selector->SelectDataRow(m_pDataRow, GrSelectionType_Normal);
     }
 
     void Row::Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType)
     {
-        this->Selector->SelectItems(m_pDataRow, (GrSelectionType)selectionType);
+        this->Selector->SelectDataRow(m_pDataRow, (GrSelectionType)selectionType);
     }
 
     void Row::ResetCellBackColor()
@@ -368,35 +369,35 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_pDataRow->GetItemFont() != nullptr;
     }
 
-    void Row::SetDefaultValue(System::Windows::Forms::CurrencyManager^ manager)
-    {
-        try
-        {
-            manager->AddNew();
+    //void Row::SetDefaultValue(System::Windows::Forms::CurrencyManager^ manager)
+    //{
+    //    try
+    //    {
+    //        manager->AddNew();
 
-            for each(Ntreev::Windows::Forms::Grid::Cell^ cell in this->Cells)
-            {
-                Ntreev::Windows::Forms::Grid::Column^ column = cell->Column;
-                if(column->PropertyDescriptor == nullptr || column->DefaultValue != nullptr)
-                {
-                    cell->ValueCore = column->DefaultValue;
-                }
-                else
-                {
-                    cell->ValueCore = column->PropertyDescriptor->GetValue(manager->Current);
-                }
-                cell->UpdateNativeText();
-            }
-        }
-        catch(System::Exception^)
-        {
+    //        for each(Ntreev::Windows::Forms::Grid::Cell^ cell in this->Cells)
+    //        {
+    //            Ntreev::Windows::Forms::Grid::Column^ column = cell->Column;
+    //            if(column->PropertyDescriptor == nullptr || column->DefaultValue != nullptr)
+    //            {
+    //                cell->ValueCore = column->DefaultValue;
+    //            }
+    //            else
+    //            {
+    //                cell->ValueCore = column->PropertyDescriptor->GetValue(manager->Current);
+    //            }
+    //            cell->UpdateNativeText();
+    //        }
+    //    }
+    //    catch(System::Exception^)
+    //    {
 
-        }
-        finally
-        {
-            manager->CancelCurrentEdit();
-        }
-    }
+    //    }
+    //    finally
+    //    {
+    //        manager->CancelCurrentEdit();
+    //    }
+    //}
 
     void Row::ValueToSource(System::Object^ component)
     {
@@ -417,5 +418,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 propertyDescriptor->SetValue(component, System::DBNull::Value);
             }
         }
+    }
+
+    int Row::GetCellsTextCapacity()
+    {
+        return m_textCapacity;
     }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -108,6 +108,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </exception>
         [System::ComponentModel::DescriptionAttribute("제목의 높이입니다.")]
         [System::ComponentModel::CategoryAttribute("Layout")]
+        [System::ComponentModel::SettingsBindableAttribute(true)]
         property int Height
         {
             virtual int get() new;

@@ -42,15 +42,16 @@ public:
 
     virtual void BeginPaint(void* hdc);
 
-    virtual void DrawRowSplitter(const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor);
+    virtual void DrawRowSplitter(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor);
     virtual void DrawDropDown(const GrRect& paintRect, GrControlState state);
     virtual void DrawModal(const GrRect& paintRect, GrControlState state);
-    virtual void DrawTreeGlyph(const GrRect& paintRect, bool opened);
+    virtual void DrawExpander(const GrRect& paintRect, GrControlState state, bool opened, const GrColor& foreColor, const GrColor& backColor);
     virtual void DrawSortGlyph(const GrRect& paintRect, GrSort sortType);
 
     virtual void DrawColumn(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor, const GrRect* pClipRect);
     virtual void DrawRow(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor, const GrRect* pClipRect);
     virtual void DrawItem(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor, const GrRect* pClipRectping = NULL);
+    virtual void DrawGroupHeader(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = NULL);
 #pragma push_macro("DrawText")
 #undef DrawText
     virtual void DrawText(GrFont* pFont, const wchar_t* text, int textLength, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect = NULL);
@@ -60,7 +61,6 @@ public:
 
     virtual void DrawResizingLine(int x1, int y1, int x2, int y2);
     virtual void DrawSplitterMovingLine(const GrRect& paintRect);
-    //virtual void DrawCellLine(int x1, int y1, int x2, int y2);
     virtual void DrawRectangle(const GrRect& rect, const GrColor& color);
     virtual void DrawLine(int x1, int y1, int x2, int y2, const GrColor& color);
 
@@ -72,7 +72,8 @@ public:
     virtual void ReleaseDevice(void* /*dc*/) {}
 
 private:
-    void DrawHeader(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor, const GrRect* pClipRect);
+    void DrawThemeHeader(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor, const GrRect* pClipRect);
+	void DrawGradientHeader(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor, const GrRect* pClipRect, bool focusedLine = false);
 
 private:
     HDC m_hdc;

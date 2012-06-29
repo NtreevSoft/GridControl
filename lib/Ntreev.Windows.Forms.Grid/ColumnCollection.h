@@ -31,7 +31,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// 열의 컬렉션을 나타냅니다.
     /// </summary>
     [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.ColumnCollectionEditor, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
-    public ref class ColumnCollection
+    public ref class ColumnCollection sealed
         : Ntreev::Windows::Forms::Grid::GridObject
         , System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Column^>
         , System::Collections::IList

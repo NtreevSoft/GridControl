@@ -52,6 +52,18 @@ namespace Ntreev.Windows.Forms.Grid.Design
             this.isMovable = column.IsMovable;
         }
 
+        public override void InitializeNewComponent(System.Collections.IDictionary defaultValues)
+        {
+            base.InitializeNewComponent(defaultValues);
+            System.Windows.Forms.MessageBox.Show("wer");
+        }
+
+        public override void InitializeExistingComponent(System.Collections.IDictionary defaultValues)
+        {
+            base.InitializeExistingComponent(defaultValues);
+            System.Windows.Forms.MessageBox.Show("wer1");
+        }
+
         public bool IsMovable
         {
             get { return this.isMovable; }

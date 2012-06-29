@@ -178,7 +178,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         /// <exception cref="System::ArgumentException">0보다 작은 수를 설정할때.</exception>
         [System::ComponentModel::CategoryAttribute("Layout")]
-        [System::ComponentModel::DefaultValueAttribute(100)]
         [System::ComponentModel::SettingsBindableAttribute(true)]
         property int Width
         {
@@ -706,6 +705,30 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             virtual void set(System::ComponentModel::ISite^ value) sealed;
         }
 
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
+        [System::ComponentModel::SettingsBindableAttribute(true)]
+        property int PriorityOnFrozen
+        {
+            int get();
+            void set(int);
+        }
+
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
+        [System::ComponentModel::SettingsBindableAttribute(true)]
+        property int PriorityOnUnfrozen
+        {
+            int get();
+            void set(int);
+        }
+
     public: // events
 
         /// <summary>
@@ -795,6 +818,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         bool ShouldSerializeDataType();
         bool ShouldSerializeTypeConverter();
         bool ShouldSerializeDefaultValue();
+        bool ShouldSerializeWidth();
+        bool ShouldSerializePriorityOnFrozen();
+        bool ShouldSerializePriorityOnUnfrozen();
 
         void ResetTitle();
         void ResetDataType();

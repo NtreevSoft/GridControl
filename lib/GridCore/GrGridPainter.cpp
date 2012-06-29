@@ -23,14 +23,59 @@
 
 #include "GrGridPainter.h"
 
-const GrStyle GrStyle::DefaultStyle;
+const GrStyle GrStyle::DefaultStyle(true);
 GrFont* const GrFont::Empty = NULL;
 
 GrStyle::GrStyle()
 {
     ForeColor = GrColor::Black;
     BackColor = GrColor::White;
-	LineColor = GrColor(208,215,229);
+	LineColor = GrColor::DefaultLineColor;
+    Font = GrFont::GetDefaultFont();
+
+    SelectedForeColor = GrColor::White;
+    SelectedBackColor = GrColor::CornflowerBlue;
+
+    FocusedForeColor = GrColor::White;
+    FocusedBackColor = GrColor::LightSkyBlue;
+
+	ColumnForeColor = GrColor::Empty;
+	ColumnBackColor = GrColor::Empty;
+	ColumnLineColor = GrColor::Empty;
+	ColumnFont = NULL;
+
+	RowForeColor = GrColor::Empty;
+	RowBackColor = GrColor::Empty;
+	RowLineColor = GrColor::Empty;
+	RowFont = NULL;
+
+    CaptionForeColor = GrColor::Empty;
+	CaptionBackColor = GrColor::Empty;
+	CaptionLineColor = GrColor::Empty;
+	CaptionFont = NULL;
+
+    GroupPanelForeColor = GrColor::Empty;
+	GroupPanelBackColor = GrColor::Empty;
+	GroupPanelLineColor = GrColor::Empty;
+	GroupPanelFont = NULL;
+
+    RowHighlightLineColor = GrColor::Black;
+    RowHighlightFillColor = GrColor::LightCyan;
+
+    //GroupBackColors.push_back(GrColor::LightSalmon);
+    //GroupBackColors.push_back(GrColor::PaleGreen);
+    //GroupBackColors.push_back(GrColor::SkyBlue);
+    //GroupBackColors.push_back(GrColor::LemonChiffon);
+    //GroupBackColors.push_back(GrColor::Plum);
+    //GroupBackColors.push_back(GrColor::Bisque);
+    //GroupBackColors.push_back(GrColor::Honeydew);
+}
+
+GrStyle::GrStyle(bool defaultStyle)
+{
+    ForeColor = GrColor::Black;
+    BackColor = GrColor::White;
+	LineColor = GrColor::DefaultLineColor;
     Font = GrFont::GetDefaultFont();
 
     SelectedForeColor = GrColor::White;
@@ -41,56 +86,205 @@ GrStyle::GrStyle()
 
 	ColumnForeColor = GrColor::Black;
 	ColumnBackColor = GrColor::White;
-	ColumnLineColor = GrColor(208,215,229);
+	ColumnLineColor = GrColor::DefaultLineColor;
 	ColumnFont = GrFont::GetDefaultFont();
 
 	RowForeColor = GrColor::Black;
 	RowBackColor = GrColor::White;
-	RowLineColor = GrColor(208,215,229);
+	RowLineColor = GrColor::DefaultLineColor;
 	RowFont = GrFont::GetDefaultFont();
 
-    RowHighlightForeColor = GrColor::Black;
-    RowHighlightBackColor = GrColor::LightCyan;
+    CaptionForeColor = GrColor::Black;
+	CaptionBackColor = GrColor::White;
+	CaptionLineColor = GrColor::DefaultLineColor;
+	CaptionFont = GrFont::GetDefaultFont();
 
-    GroupBackColors.push_back(GrColor::Red);
-    GroupBackColors.push_back(GrColor::Green);
-    GroupBackColors.push_back(GrColor::Blue);
-    GroupBackColors.push_back(GrColor::Yellow);
-    GroupBackColors.push_back(GrColor::Purple);
+    GroupPanelForeColor = GrColor::Black;
+	GroupPanelBackColor = GrColor::White;
+	GroupPanelLineColor = GrColor::DefaultLineColor;
+	GroupPanelFont = GrFont::GetDefaultFont();
+
+    RowHighlightLineColor = GrColor::Black;
+    RowHighlightFillColor = GrColor::LightCyan;
+
+    GroupForeColors.push_back(GrColor::Black);
+
+    GroupBackColors.push_back(GrColor::LightSalmon);
+    GroupBackColors.push_back(GrColor::PaleGreen);
     GroupBackColors.push_back(GrColor::SkyBlue);
+    GroupBackColors.push_back(GrColor::LemonChiffon);
+    GroupBackColors.push_back(GrColor::Plum);
+    GroupBackColors.push_back(GrColor::Bisque);
+    GroupBackColors.push_back(GrColor::Honeydew);
+
+    GroupLineColors.push_back(GrColor::DefaultLineColor);
+    GroupFonts.push_back(GrFont::GetDefaultFont());
+}
+
+GrColor GrStyle::GetColumnForeColor() const
+{
+    if(this->ColumnForeColor == GrColor::Empty)
+        return this->ForeColor;
+    return this->ColumnForeColor;
+}
+
+GrColor GrStyle::GetColumnBackColor() const
+{
+    if(this->ColumnBackColor == GrColor::Empty)
+        return this->BackColor;
+    return this->ColumnBackColor;
+}
+
+GrColor GrStyle::GetColumnLineColor() const
+{
+    if(this->ColumnLineColor == GrColor::Empty)
+        return this->LineColor;
+    return this->ColumnLineColor;
+}
+
+GrFont* GrStyle::GetColumnFont() const
+{
+    if(this->ColumnFont == NULL)
+        return this->Font;
+    return this->ColumnFont;
+}
+
+GrColor GrStyle::GetRowForeColor() const
+{
+    if(this->RowForeColor == GrColor::Empty)
+        return this->ForeColor;
+    return this->RowForeColor;
+}
+
+GrColor GrStyle::GetRowBackColor() const
+{
+    if(this->RowBackColor == GrColor::Empty)
+        return this->BackColor;
+    return this->RowBackColor;
+}
+
+GrColor GrStyle::GetRowLineColor() const
+{
+    if(this->RowLineColor == GrColor::Empty)
+        return this->LineColor;
+    return this->RowLineColor;
+}
+
+GrFont* GrStyle::GetRowFont() const
+{
+    if(this->RowFont == NULL)
+        return this->Font;
+    return this->RowFont;
+}
+
+GrColor GrStyle::GetCaptionForeColor() const
+{
+    if(this->CaptionForeColor == GrColor::Empty)
+        return this->ForeColor;
+    return this->CaptionForeColor;
+}
+
+GrColor GrStyle::GetCaptionBackColor() const
+{
+    if(this->CaptionBackColor == GrColor::Empty)
+        return this->BackColor;
+    return this->CaptionBackColor;
+}
+
+GrColor GrStyle::GetCaptionLineColor() const
+{
+    if(this->CaptionLineColor == GrColor::Empty)
+        return this->LineColor;
+    return this->CaptionLineColor;
+}
+
+GrFont* GrStyle::GetCaptionFont() const
+{
+    if(this->CaptionFont == NULL)
+        return this->Font;
+    return this->CaptionFont;
+}
+
+GrColor GrStyle::GetGroupPanelForeColor() const
+{
+    if(this->GroupPanelForeColor == GrColor::Empty)
+        return this->ForeColor;
+    return this->GroupPanelForeColor;
+}
+
+GrColor GrStyle::GetGroupPanelBackColor() const
+{
+    if(this->GroupPanelBackColor == GrColor::Empty)
+        return this->BackColor;
+    return this->GroupPanelBackColor;
+}
+
+GrColor GrStyle::GetGroupPanelLineColor() const
+{
+    if(this->GroupPanelLineColor == GrColor::Empty)
+        return this->LineColor;
+    return this->GroupPanelLineColor;
+}
+
+GrFont* GrStyle::GetGroupPanelFont() const
+{
+    if(this->GroupPanelFont == NULL)
+        return this->Font;
+    return this->GroupPanelFont;
 }
 
 GrColor GrStyle::GetItemForeColor(uint index) const
 {
-    return ItemForeColors[index % ItemForeColors.size()];
+    return this->ItemForeColors[index % ItemForeColors.size()];
 }
 
 GrColor GrStyle::GetItemBackColor(uint index) const
 {
-    return ItemBackColors[index % ItemBackColors.size()];
+    return this->ItemBackColors[index % ItemBackColors.size()];
 }
 
 GrColor GrStyle::GetItemLineColor(uint index) const
 {
-    return ItemLineColors[index % ItemLineColors.size()];
+    return this->ItemLineColors[index % ItemLineColors.size()];
 }
 
 GrFont* GrStyle::GetItemFont(uint index) const
 {
-    return ItemFonts[index % ItemFonts.size()];
+    return this->ItemFonts[index % ItemFonts.size()];
 }
 
 GrColor GrStyle::GetGroupForeColor(uint index) const
 {
-    return GroupForeColors[index % GroupForeColors.size()];
+    const GrColors& colors = 
+        this->GroupForeColors.size() == 0 ? 
+        GrStyle::DefaultStyle.GroupForeColors : this->GroupForeColors;
+
+    return colors[index % colors.size()];
 }
 
 GrColor GrStyle::GetGroupBackColor(uint index) const
 {
-    return GroupBackColors[index % GroupBackColors.size()];
+    const GrColors& colors = 
+        this->GroupBackColors.size() == 0 ? 
+        GrStyle::DefaultStyle.GroupBackColors : this->GroupBackColors;
+
+    return colors[index % colors.size()];
+}
+
+GrColor GrStyle::GetGroupLineColor(uint index) const
+{
+   const GrColors& colors = 
+        this->GroupLineColors.size() == 0 ? 
+        GrStyle::DefaultStyle.GroupLineColors : this->GroupLineColors;
+
+    return colors[index % colors.size()];
 }
 
 GrFont* GrStyle::GetGroupFont(uint index) const
 {
-    return GroupFonts[index % GroupFonts.size()];
+    const GrFonts& fonts = 
+        this->GroupFonts.size() == 0 ? 
+        GrStyle::DefaultStyle.GroupFonts : this->GroupFonts;
+
+    return fonts[index % fonts.size()];
 }

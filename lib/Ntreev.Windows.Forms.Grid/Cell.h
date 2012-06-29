@@ -350,6 +350,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             System::Drawing::Rectangle get();
         }
 
+        property System::String^ DisplayText
+        {
+            System::String^ get();
+            void set(System::String^);
+        }
+
     internal: // methods
 
         Cell(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrItem* pItem);
@@ -423,6 +429,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::String^ m_errorDescription;
         System::Object^ m_value;
         bool m_wrongValue;
+        bool dsaf;
+        System::String^ m_text;
 
         //static initonly System::Object^ NullValue = gcnew System::Object();
     };
