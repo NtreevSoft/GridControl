@@ -727,7 +727,21 @@ namespace GridStateClass
     void RootPressing::OnBegin(GrStateEventArgs* e)
     {
         m_pGridCore->SetMousePress(e->GetCell());
+     
         m_pItemSelector->SelectAll();
+
+        GrItem* pItem = NULL;
+        GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
+        GrColumnList* pColumnList = m_pGridCore->GetColumnList();
+
+        if(pDataRowList->GetVisibleDataRowCount() > 0 && pColumnList->GetVisibleColumnCount() > 0)
+        {
+            GrColumn* pColumn = pColumnList->GetVisibleColumn(0);
+            GrDataRow* pDataRow = pDataRowList->GetVisibleDataRow(0);
+            pItem = pDataRow->GetItem(pColumn);
+        }
+
+        m_pFocuser->Set(pItem);
     }
 
     void RootPressing::OnEnd(GrStateEventArgs* /*e*/)

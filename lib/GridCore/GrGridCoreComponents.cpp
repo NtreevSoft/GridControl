@@ -471,6 +471,8 @@ void GrItemSelector::SelectColumn(GrColumn* pColumn, GrSelectionType selectType)
 
 void GrItemSelector::SelectAll()
 {
+    BeginSelection();
+    ClearSelection();
     GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
     GrDataRows dataRows;
     for(uint i=0 ; i<pDataRowList->GetDataRowCount() ; i++)
@@ -480,6 +482,7 @@ void GrItemSelector::SelectAll()
     }
     SelectDataRows(&dataRows, GrSelectionType_Add);
     m_pGridCore->Invalidate();
+    EndSelection();
 }
 
 void GrItemSelector::ClearSelection()
@@ -497,6 +500,7 @@ void GrItemSelector::ClearSelection()
     }
     m_selectedColumns.clear();
     m_selectedRows.clear();
+    m_selectionGroup = 0;
     EndSelection();
 }
 
