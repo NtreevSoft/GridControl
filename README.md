@@ -3,7 +3,7 @@
 License
 -------
 
-Ntreev Grid for .Net 2.0.4646.22417
+Ntreev Grid for .Net 2.0.4646.26569
 https://github.com/NtreevSoft/GridControl
 
 Released under the MIT License.

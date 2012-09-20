@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4646.22417
+// Ntreev Grid for .Net 2.0.4646.26569
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -811,7 +811,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	}
 
-	void GridControl::style_Disposed(System::Object^ sender, System::EventArgs^ e)
+	void GridControl::style_Disposed(System::Object^ sender, System::EventArgs^ /*e*/)
 	{
 		if(sender == m_style)
 		{
@@ -1202,6 +1202,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void GridControl::ClearCore(bool dataSourceOnly)
 	{
+        m_pGridCore->Update(true);
+
 		ClearEventArgs e(dataSourceOnly);
 		OnClearing(%e);
 
