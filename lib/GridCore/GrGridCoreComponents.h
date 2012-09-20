@@ -157,6 +157,7 @@ private:
     void AddInvalidatedRectangle(const GrRect& rect);
 
     void ResetVariables();
+    void ClearSelectionCore();
 
     void gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
     void gridCore_Created(GrObject* pSender, GrEventArgs* e);

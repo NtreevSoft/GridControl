@@ -454,7 +454,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         for each(System::ComponentModel::PropertyDescriptor^ item in manager->GetItemProperties())
         {
             Ntreev::Windows::Forms::Grid::Column^ column = this[item->Name];
-            if(column == nullptr)
+            if(column == nullptr || column->HasLifeline == true)
                 continue;
 
             if(column->CanConvertFrom(item->PropertyType) == false)

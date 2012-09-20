@@ -261,7 +261,7 @@ void GrItemSelector::SelectItems(const GrItems* pItems, GrSelectionType selectTy
     {
     case GrSelectionType_Normal:
         {
-           ClearSelection();
+            ClearSelectionCore();
 
             for_each(GrItems, *pItems, value)
             {
@@ -355,7 +355,7 @@ void GrItemSelector::SelectDataRows(const GrDataRows* pDataRows, GrSelectionType
     {
     case GrSelectionType_Normal:
         {
-            ClearSelection();
+            ClearSelectionCore();
 
             for_each(GrDataRows, *pDataRows, value)
             {
@@ -487,6 +487,12 @@ void GrItemSelector::SelectAll()
 
 void GrItemSelector::ClearSelection()
 {
+    ClearSelectionCore();
+    m_selectionGroup = 0;
+}
+
+void GrItemSelector::ClearSelectionCore()
+{
     BeginSelection();
     for_each(GrDataRows, m_selectedRows, value)
     {
@@ -500,7 +506,7 @@ void GrItemSelector::ClearSelection()
     }
     m_selectedColumns.clear();
     m_selectedRows.clear();
-    m_selectionGroup = 0;
+    
     EndSelection();
 }
 
@@ -894,6 +900,10 @@ void GrTextUpdater::AddTextBoundsByColumn(GrColumn* pColumn)
 
 void GrTextUpdater::AddTextAlign(GrCell* pCell)
 {
+#ifdef _DEBUG
+    if(pCell->IsGridCoreAttached() == false)
+        throw std::exception();
+#endif
     if(pCell->m_textAlignChanged == true)
         return;
     m_vecTextAligns.push_back(pCell);

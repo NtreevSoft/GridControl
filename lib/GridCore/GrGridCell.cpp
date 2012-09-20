@@ -2137,7 +2137,8 @@ void GrDataRow::OnHeightAdjusted()
         return;
     for_each(_Items, m_vecItems, value)
     {
-        m_pTextUpdater->AddTextAlign(value);
+        if(value->IsGridCoreAttached() == true)
+            m_pTextUpdater->AddTextAlign(value);
     }
     m_pGridCore->Invalidate();
 }

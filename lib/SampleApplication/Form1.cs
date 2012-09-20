@@ -43,10 +43,12 @@ namespace SampleApplication
 
         NativeWindow2 n2 = new NativeWindow2();
 
+        
         public Form1()
         {
             InitializeComponent();
 
+            return;
             Rectangle r = new Rectangle(0, 0, 100, 100);
             r.Inflate(1, 1);
 
@@ -56,6 +58,13 @@ namespace SampleApplication
 
             //this.gridControl1.Rows[0][this.columnLinkLabel1] = "wow";
             //this.gridControl1.Update();
+
+            this.gridControl1.Clear();
+            DataSet dataSet = new DataSet();
+            dataSet.Tables.Add("table1").Columns.Add("column1");
+            this.gridControl1.DataSource = dataSet;
+            this.gridControl1.DataMember = "table1";
+            this.propertyGrid1.SelectedObject = this.gridControl1.DataSource;
         }
 
         public void SaveSettings()

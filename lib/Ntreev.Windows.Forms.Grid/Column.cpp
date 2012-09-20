@@ -168,6 +168,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             if(m_pColumn->GetIndex() != INVALID_INDEX)
             {
                 GrColumnList* pColumnList = m_pColumn->GetColumnList();
+                if(this->GridControl != nullptr)
+                    this->GridControl = nullptr;
                 pColumnList->RemoveColumn(m_pColumn);
             }
             m_pColumn->ManagedRef = nullptr;
