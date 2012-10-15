@@ -1,0 +1,465 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|x64">
+      <Configuration>Template</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>Ntreev.Windows.Forms.Grid</ProjectName>
+    <ProjectGuid>{D4D0F372-7312-4B53-BCA9-EA27FD971B32}</ProjectGuid>
+    <RootNamespace>GridControl</RootNamespace>
+    <Keyword>ManagedCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>Pure</CLRSupport>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>Pure</CLRSupport>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>Pure</CLRSupport>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>Pure</CLRSupport>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Default.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Default.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Template|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Default.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Default.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
+    <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)GridControl.snk</LinkKeyFile>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkIncremental>
+    <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)GridControl.snk</LinkKeyFile>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)GridControl.snk</LinkKeyFile>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)GridControl.snk</LinkKeyFile>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../GridCore;../GridPainterDC;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_STRONG_NAME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <OpenMPSupport>false</OpenMPSupport>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <Version>
+      </Version>
+      <EmbedManagedResourceFile>$(ProjectDir)Ntreev.Windows.Forms.Grid.GridControl.bmp;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Movable.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Add.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Remove.cur;%(EmbedManagedResourceFile)</EmbedManagedResourceFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+      <KeyContainer>GridControl</KeyContainer>
+    </Link>
+    <Xdcmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>$(OutDir)$(ProjectName).xml</OutputFile>
+    </Xdcmake>
+    <PostBuildEvent>
+      <Command>copy "$(TargetDir)$(TargetName).dll" "$(TargetDir)..\$(TargetName).dll"
+copy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)..\$(TargetName).pdb"
+
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../GridCore;../GridPainterDC;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_STRONG_NAME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <OpenMPSupport>false</OpenMPSupport>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <Version>
+      </Version>
+      <EmbedManagedResourceFile>$(ProjectDir)Ntreev.Windows.Forms.Grid.GridControl.bmp;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Movable.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Add.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Remove.cur;%(EmbedManagedResourceFile)</EmbedManagedResourceFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Xdcmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>$(OutDir)$(ProjectName).xml</OutputFile>
+    </Xdcmake>
+    <PostBuildEvent>
+      <Command>copy "$(TargetDir)$(TargetName).dll" "$(TargetDir)..\$(TargetName).dll"
+copy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)..\$(TargetName).pdb"
+
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>
+ %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>../GridCore;../GridPainterDC;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <EmbedManagedResourceFile>$(ProjectDir)Ntreev.Windows.Forms.Grid.GridControl.bmp;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Movable.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Add.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Remove.cur;%(EmbedManagedResourceFile)</EmbedManagedResourceFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+      <KeyContainer>GridControl</KeyContainer>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "$(TargetDir)$(TargetName).dll" "$(TargetDir)..\$(TargetName).dll"
+copy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)..\$(TargetName).pdb"
+copy "$(TargetDir)$(TargetName).xml" "$(TargetDir)..\$(TargetName).xml"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>
+ %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>../GridCore;../GridPainterDC;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <EmbedManagedResourceFile>$(ProjectDir)Ntreev.Windows.Forms.Grid.GridControl.bmp;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Movable.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Add.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Remove.cur;%(EmbedManagedResourceFile)</EmbedManagedResourceFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "$(TargetDir)$(TargetName).dll" "$(TargetDir)..\$(TargetName).dll"
+copy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)..\$(TargetName).pdb"
+copy "$(TargetDir)$(TargetName).xml" "$(TargetDir)..\$(TargetName).xml"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Data">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="mscorlib">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Xml">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="About.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="Attributes.h" />
+    <ClInclude Include="CaptionRow.h" />
+    <ClInclude Include="Cell.h" />
+    <ClInclude Include="CellBase.h" />
+    <ClInclude Include="CellCollection.h" />
+    <ClInclude Include="CellTagCollection.h" />
+    <ClInclude Include="Column.h" />
+    <ClInclude Include="ColumnCollection.h" />
+    <ClInclude Include="ColumnControl.h" />
+    <ClInclude Include="ColumnDropDown.h" />
+    <ClInclude Include="ColumnPainter.h" />
+    <ClInclude Include="DisplayableColumnCollection.h" />
+    <ClInclude Include="DisplayableRowCollection.h" />
+    <ClInclude Include="EditingReason.h" />
+    <ClInclude Include="ErrorDescriptor.h" />
+    <ClInclude Include="Events.h" />
+    <ClInclude Include="FromNative.h" />
+    <ClInclude Include="FrozenColumnCollection.h" />
+    <ClInclude Include="GridControl.h">
+      <FileType>CppControl</FileType>
+    </ClInclude>
+    <ClInclude Include="GridObject.h" />
+    <ClInclude Include="GroupPanel.h" />
+    <ClInclude Include="GroupRow.h" />
+    <ClInclude Include="GroupRowCollection.h" />
+    <ClInclude Include="ICell.h" />
+    <ClInclude Include="ICellBase.h" />
+    <ClInclude Include="IColumn.h" />
+    <ClInclude Include="IControlPainter.h" />
+    <ClInclude Include="ITextCacheProvider.h" />
+    <ClInclude Include="NativeCollection.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Row.h" />
+    <ClInclude Include="RowBase.h" />
+    <ClInclude Include="RowBaseCollection.h" />
+    <ClInclude Include="RowBuilder.h" />
+    <ClInclude Include="RowCollection.h" />
+    <ClInclude Include="SelectedColumnCollection.h" />
+    <ClInclude Include="SelectedRowCollection.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Style.h" />
+    <ClInclude Include="StyleColorCollection.h" />
+    <ClInclude Include="StyleFontCollection.h" />
+    <ClInclude Include="TimeTester.h" />
+    <ClInclude Include="ToolTip.h" />
+    <ClInclude Include="Types.h" />
+    <ClInclude Include="UnfrozenColumnCollection.h" />
+    <ClInclude Include="Utilities.h" />
+    <ClInclude Include="VisibleColumnCollection.h" />
+    <ClInclude Include="VisibleRowCollection.h" />
+    <ClInclude Include="BindingListTypeEditor.h" />
+    <ClInclude Include="BooleanTypeEditor.h" />
+    <ClInclude Include="DataTypeEditor.h" />
+    <ClInclude Include="DesignTypes.h" />
+    <ClInclude Include="EnumTypeEditor.h" />
+    <ClInclude Include="FlagTypeEditor.h" />
+    <ClInclude Include="IEditorService.h" />
+    <ClInclude Include="ListTypeEditor.h" />
+    <ClInclude Include="StringTypeEditor.h" />
+    <ClInclude Include="TypeEditor.h" />
+    <ClInclude Include="TypeEditorForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="CheckBox.h" />
+    <ClInclude Include="FlagControl.h">
+      <FileType>CppControl</FileType>
+    </ClInclude>
+    <ClInclude Include="ListBox.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="TextBox.h" />
+    <ClInclude Include="ColumnCheckBox.h" />
+    <ClInclude Include="ColumnComboBox.h" />
+    <ClInclude Include="Resources.h" />
+    <ClInclude Include="NativeClasses.h" />
+    <ClInclude Include="NativeUtilities.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="app.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Error.png" />
+    <None Include="InsertionRow.png" />
+    <None Include="InsertionRowFocused.png" />
+    <None Include="Ntreev.Windows.Forms.Grid.ColumnPainter.bmp" />
+    <None Include="Ntreev.Windows.Forms.Grid.Cursors.Add.cur" />
+    <None Include="Ntreev.Windows.Forms.Grid.Cursors.Movable.cur" />
+    <None Include="Ntreev.Windows.Forms.Grid.Cursors.Remove.cur" />
+    <None Include="Ntreev.Windows.Forms.Grid.GridControl.bmp" />
+    <None Include="RowEditing.png" />
+    <None Include="RowFocused.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.en.resx" />
+    <EmbeddedResource Include="Resources.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="About.resx">
+      <DependentUpon>About.h</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TypeEditorForm.resx">
+      <DependentUpon>TypeEditorForm.h</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FlagControl.resx">
+      <DependentUpon>FlagControl.h</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="About.cpp" />
+    <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="Attributes.cpp" />
+    <ClCompile Include="CaptionRow.cpp" />
+    <ClCompile Include="Cell.cpp" />
+    <ClCompile Include="CellBase.cpp" />
+    <ClCompile Include="CellCollection.cpp" />
+    <ClCompile Include="CellTagCollection.cpp" />
+    <ClCompile Include="Column.cpp" />
+    <ClCompile Include="ColumnCollection.cpp" />
+    <ClCompile Include="ColumnControl.cpp" />
+    <ClCompile Include="ColumnDropDown.cpp" />
+    <ClCompile Include="ColumnPainter.cpp" />
+    <ClCompile Include="DisplayableColumnCollection.cpp" />
+    <ClCompile Include="DisplayableRowCollection.cpp" />
+    <ClCompile Include="EditingReason.cpp" />
+    <ClCompile Include="ErrorDescriptor.cpp" />
+    <ClCompile Include="Events.cpp" />
+    <ClCompile Include="FromNative.cpp" />
+    <ClCompile Include="FrozenColumnCollection.cpp" />
+    <ClCompile Include="GridControl.cpp" />
+    <ClCompile Include="GridObject.cpp" />
+    <ClCompile Include="GroupPanel.cpp" />
+    <ClCompile Include="GroupRow.cpp" />
+    <ClCompile Include="GroupRowCollection.cpp" />
+    <ClCompile Include="NativeCollection.cpp" />
+    <ClCompile Include="Row.cpp" />
+    <ClCompile Include="RowBase.cpp" />
+    <ClCompile Include="RowBaseCollection.cpp" />
+    <ClCompile Include="RowBuilder.cpp" />
+    <ClCompile Include="RowCollection.cpp" />
+    <ClCompile Include="SelectedColumnCollection.cpp" />
+    <ClCompile Include="SelectedRowCollection.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Style.cpp" />
+    <ClCompile Include="StyleColorCollection.cpp" />
+    <ClCompile Include="StyleFontCollection.cpp" />
+    <ClCompile Include="TimeTester.cpp" />
+    <ClCompile Include="ToolTip.cpp" />
+    <ClCompile Include="UnfrozenColumnCollection.cpp" />
+    <ClCompile Include="Utilities.cpp" />
+    <ClCompile Include="VisibleColumnCollection.cpp" />
+    <ClCompile Include="VisibleRowCollection.cpp" />
+    <ClCompile Include="BindingListTypeEditor.cpp" />
+    <ClCompile Include="BooleanTypeEditor.cpp" />
+    <ClCompile Include="DataTypeEditor.cpp" />
+    <ClCompile Include="EnumTypeEditor.cpp" />
+    <ClCompile Include="FlagTypeEditor.cpp" />
+    <ClCompile Include="ListTypeEditor.cpp" />
+    <ClCompile Include="StringTypeEditor.cpp" />
+    <ClCompile Include="TypeEditor.cpp" />
+    <ClCompile Include="TypeEditorForm.cpp" />
+    <ClCompile Include="CheckBox.cpp" />
+    <ClCompile Include="FlagControl.cpp" />
+    <ClCompile Include="ListBox.cpp" />
+    <ClCompile Include="TextBox.cpp" />
+    <ClCompile Include="ColumnCheckBox.cpp" />
+    <ClCompile Include="ColumnComboBox.cpp" />
+    <ClCompile Include="NativeClasses.cpp" />
+    <ClCompile Include="NativeUtilities.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GridCore\GridCore.vcxproj">
+      <Project>{9ad99441-a33a-4f97-a571-98ed82c95827}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\GridPainterDC\GridPainterDC.vcxproj">
+      <Project>{861745b0-ce2e-4725-881a-fd0958de602d}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="app.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

@@ -139,7 +139,6 @@
     <ProjectReference Include="..\Ntreev.Windows.Forms.Grid\GridControl.vcxproj">
       <Project>{D4D0F372-7312-4B53-BCA9-EA27FD971B32}</Project>
       <Name>Ntreev.Windows.Forms.Grid</Name>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
