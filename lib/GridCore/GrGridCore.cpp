@@ -154,7 +154,6 @@ GrGridCore::GrGridCore(GrGridWindow* pGridWindow) : m_pGridWindow(pGridWindow)
     m_createdCell = 0;
     m_attachedCount = 0;
 
-    m_groupMargin = 0;
     m_updating = false;
 
     m_autoFitColumn = false;
@@ -225,7 +224,6 @@ GrGridCore::GrGridCore(GrGridWindow* pGridWindow) : m_pGridWindow(pGridWindow)
     m_pRootRow->AddChild(m_pSplitterRow);
     m_pRootRow->AddChild(m_pDataRowList);
 
-    m_pGroupPanel->Changed.Add(this, &GrGridCore::groupPanel_Changed);
     m_pColumnList->ColumnInserted.Add(this, &GrGridCore::columnList_ColumnInserted);
     m_pColumnList->ColumnRemoved.Add(this, &GrGridCore::columnList_ColumnRemoved);
     m_pColumnList->ColumnWidthChanged.Add(this, &GrGridCore::columnList_ColumnWidthChanged);
@@ -593,11 +591,6 @@ void GrGridCore::SetPadding(GrPadding padding)
     Invalidate();
 }
 
-int GrGridCore::GetGroupMargin() const
-{
-    return m_groupMargin;
-}
-
 bool GrGridCore::IsGrouped() const
 {
     return m_pGroupPanel->GetGroupCount() > 0 ? true : false;
@@ -606,7 +599,6 @@ bool GrGridCore::IsGrouped() const
 void GrGridCore::Clear()
 {
     Update(true);
-    m_groupMargin = 0;
     OnCleared(&GrEventArgs::Empty);
     Update(true);
     //int n = GrCell::m_snCreated;
@@ -858,15 +850,6 @@ void GrGridCore::OnRowMouseLeave(GrRowMouseEventArgs* e)
 void GrGridCore::OnFontChanged(GrEventArgs* e)
 {
     FontChanged(this, e);
-}
-
-void GrGridCore::groupPanel_Changed(GrObject* /*pSender*/, GrEventArgs* /*e*/)
-{
-    uint groupCount = m_pGroupPanel->GetGroupCount();
-    if(groupCount == 0)
-        m_groupMargin = 0;
-    else
-        m_groupMargin = (groupCount + 1) * DEF_GROUP_WIDTH;
 }
 
 void GrGridCore::OnCleared(GrEventArgs* e)

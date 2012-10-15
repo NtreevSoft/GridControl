@@ -28,6 +28,7 @@
 #include "GrGridCoreComponents.h"
 #include "GrGridStateManager.h"
 #include "GrGridWindow.h"
+#include "GrDataRowList.h"
 #include <map>
 
 class GrGridCore : public GrObject
@@ -129,7 +130,7 @@ public:
 	void SetFont(GrFont* pFont);
     void SetPadding(GrPadding padding);
 
-    int GetGroupMargin() const;
+    //int GetGroupMargin() const;
     void EditItem(GrItem* pItem, GrEditingReason reason);
     void BringIntoView(GrItem* pItem);
 
@@ -205,8 +206,6 @@ private:
     void columnList_ColumnVertAlignChanged(GrObject* pSender, GrColumnEventArgs* e);
     void columnList_ColumnPaddingChanged(GrObject* pSender, GrColumnEventArgs* e);
 
-    void groupPanel_Changed(GrObject* pSender, GrEventArgs* e);
-
     void BeginPaint();
     void EndPaint();
 
@@ -224,8 +223,6 @@ private:
     GrInvalidator* m_pInvalidator;
 
     GrRect m_displayRect;
-
-    int m_groupMargin;
 
     GrItemSelector* m_pItemSelector;
     GrFocuser* m_pFocuser;

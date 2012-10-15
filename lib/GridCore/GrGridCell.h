@@ -707,12 +707,12 @@ public:
     uint GetChildCount() const;
     GrRow* GetChild(uint index) const;
     GrRow* GetParent() const;
-    uint GetHierarchyLevel() const;
+    uint GetDepth() const;
 
     void SetFit();
     virtual void Paint(GrGridPainter* /*pPainter*/, const GrRect& /*clipRect*/) const {};
 
-    virtual void GetVisibleList(GrRowArray* pVisible) const;
+    //virtual void GetVisibleList(GrRowArray* pVisible) const;
     virtual GrRect GetBounds() const { return GetRect(); }
     virtual GrPadding GetPadding(bool /*inherited*/) const { return GrPadding::Default; }
 
@@ -727,6 +727,7 @@ public:
     static int DefaultHeight;
 
 protected:
+    virtual void OnGridCoreAttached();
     virtual void OnTextSizeChanged();
     virtual void OnHeightChanged();
     virtual void OnYChanged() {};
@@ -734,10 +735,8 @@ protected:
 
     virtual void OnFitted();
 
-    int CellStart() const;
-
     void InvalidateRow();
-    void SetChild(uint index, GrRow* pRow);
+    void UpdateDepth(GrRow* pRow);
 
 protected:
     bool m_visible;
@@ -745,7 +744,7 @@ protected:
 private:
     GrRowArray m_vecChilds;
     GrRow* m_pParent;
-    uint m_hierarchyLevel;
+    uint m_depth;
 
     int m_y;
     int m_height;
@@ -913,6 +912,26 @@ private: // friend variables;
     friend class GrDataRowList;
 };
 
+class GrGridCell;
+
+class GrGridRow : public IDataRow
+{
+public:
+    GrGridRow(GrGridCore* pChildGrid);
+
+    virtual IFocusable* GetFocusable(GrColumn* pColumn) const;
+
+    virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
+
+protected:
+    virtual void OnGridCoreAttached();
+
+
+private:
+    GrGridCell* m_pCell;
+    GrGridCore* m_pChildGrid;
+};
+
 typedef std::set<GrDataRow*> GrDataRows;
 
 class IFocusable
@@ -1003,6 +1022,31 @@ private:
     friend class GrItemSelector;
 };
 
+class GrGridCell : public GrCell, public IFocusable
+{
+public:
+    GrGridCell(GrGridRow* pGridRow, GrGridCore* pChildGrid);
+
+    virtual int GetX() const;
+    virtual int GetY() const;
+    virtual int GetWidth() const;
+    virtual int GetHeight() const;
+    virtual GrRow* GetRow() const;
+
+    virtual GrCellType GetCellType() const;
+    virtual bool GetVisible() const;
+    virtual bool GetDisplayable() const;
+    virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
+
+    virtual IDataRow* GetDataRow() const;
+
+private:
+    virtual GrRect GetDisplayRect() const { return GetRect(); }
+private:
+    GrGridRow* m_pGridRow;
+    GrGridCore* m_pChildGrid;
+};
+
 class GrUpdatableRow : public GrRow
 {
 public:
@@ -1079,168 +1123,6 @@ private:
             return p1->GetUpdatePriority() < p2->GetUpdatePriority();
         }
     };
-};
-
-class GrDataRowList : public GrUpdatableRow
-{
-    struct GrCache
-    {
-        int height;
-        bool expanded;
-    };
-
-    typedef std::vector<GrColumn*> _Columns;
-    typedef std::vector<GrDataRow*> _DataRows;
-    typedef std::vector<IDataRow*> _IDataRows;
-    typedef std::vector<GrGroupRow*> _GroupRows;
-    typedef std::map<std::wstring, GrCache> _MapCaches;
-
-    typedef GrEvent<GrEventArgs, GrDataRowList> _GrEvent;
-    typedef GrEvent<GrDataRowEventArgs, GrDataRowList> _GrDataRowEvent;
-    typedef GrEvent<GrDataRowInsertingEventArgs, GrDataRowList> _GrDataRowInsertingEvent;
-    typedef GrEvent<GrDataRowInsertedEventArgs, GrDataRowList> _GrDataRowInsertedEvent;
-
-public:
-    GrDataRowList();
-    virtual ~GrDataRowList();
-
-    void Reserve(uint reserve);
-
-    void AdjustRowHeight();
-    int GetRowWidth() const;
-    void SetRowWidth(int width);
-
-    uint GetVisibleRowCount() const;
-    IDataRow* GetVisibleRow(uint index) const;
-
-    uint GetVisibleDataRowCount() const;
-    GrDataRow* GetVisibleDataRow(uint index) const;
-
-    GrDataRow* NewDataRowFromInsertion();
-    GrDataRow* NewDataRow();
-
-    GrInsertionRow* GetInsertionRow() const;
-
-    void AddDataRow(GrDataRow* pDataRow);
-    void RemoveDataRow(GrDataRow* pDataRow);
-    void InsertDataRow(GrDataRow* pDataRow, uint index);
-    uint GetDataRowCount() const;
-    GrDataRow* GetDataRow(uint index) const;
-    void Clear();
-
-    uint GetDisplayableRowCount() const;
-    IDataRow* GetDisplayableRow(uint index) const;
-    int GetDisplayableBottom() const;
-
-    uint ClipFrom(uint visibleFrom) const;
-    uint ClipFrom(const GrRect& displayRect, uint visibleFrom) const;
-    uint ClipTo(uint visibleTo) const;
-    uint ClipTo(const GrRect& displayRect, uint visibleTo) const;
-    IDataRow* HitTest(int y) const;
-    GrIndexRange HitTest(int y, IDataRow* pRowAnchor) const;
-    void BringIntoView(IDataRow* pDataRow);
-
-    void Sort(GrColumn* pColumn);
-
-    void SetZeroBasedRowIndex(bool b);
-    bool GetZeroBasedRowIndex() const;
-
-    bool GetRowNumberVisible() const;
-    void SetRowNumberVisible(bool b);
-
-    void SetFitChanged();
-    void SetVisibleChanged();
-    void SetHeightChanged();
-    void SetListChanged();
-
-    _GrEvent VisibleChanged;
-
-    _GrDataRowInsertingEvent DataRowInserting;
-    _GrDataRowInsertedEvent DataRowInserted;
-    _GrDataRowEvent DataRowRemoved;
-
-    virtual GrRect GetBounds() const;
-    virtual bool ShouldClip(const GrRect& displayRect, uint horizontal, uint vertical) const;
-    virtual void Clip(const GrRect& displayRect, uint horizontal, uint vertical);
-    virtual int GetClipPriority() const { return 1; }
-    virtual bool ShouldUpdate() const;
-    virtual void Update(bool force = false);
-    virtual int GetUpdatePriority() const { return UPDATEPRIORITY_DATAROWLIST; }
-
-    virtual GrRowType GetRowType() const { return GrRowType_DataRowList; }
-    virtual GrCell* HitTest(const GrPoint& location) const;
-    virtual int GetWidth() const { return 0; }
-    virtual int GetHeight() const { return m_displayableHeight; }
-    virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
-
-protected:
-    virtual void OnGridCoreAttached();
-    virtual void OnYChanged();
-
-    virtual void OnDataRowInserting(GrDataRowInsertingEventArgs* e);
-    virtual void OnDataRowInserted(GrDataRowInsertedEventArgs* e);
-    virtual void OnDataRowRemoved(GrDataRowEventArgs* e);
-
-private:
-    GrGroupRow* CreateGroupRow(GrRow* pParent, GrColumn* pColumn, const std::wstring& itemText);
-    GrDataRow* CreateInsertionRow();
-    void BuildGroup(GrRow* pParent, uint groupLevel);
-    void BuildChildRowList();
-    void BuildVisibleRowList();
-    void RepositionVisibleRowList();
-    void BuildCache();
-    void DeleteObjects();
-    void UpdateVertScroll(const GrRect& displayRect);
-    
-    void groupPanel_Changed(GrObject* pSender, GrEventArgs* e);
-    void groupPanel_Expanded(GrObject* pSender, GrGroupEventArgs* e);
-    void groupPanel_SortChanged(GrObject* pSender, GrGroupEventArgs* e);
-    void gridCore_Created(GrObject* pSender, GrEventArgs* e);
-    void gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
-    void gridCore_FontChanged(GrObject* pSender, GrEventArgs* e);
-    void columnList_ColumnInserted(GrObject* pSender, GrColumnEventArgs* e);
-    void columnList_ColumnRemoved(GrObject* pSender, GrColumnEventArgs* e);
-    void columnList_ColumnSortTypeChanged(GrObject* pSender, GrColumnEventArgs* e);
-    void focuser_FocusedChanged(GrObject* pSender, GrFocusChangeArgs* e);
-
-private:
-    int m_rowWidth;
-
-    _DataRows m_vecDataRowsRemoved;
-    _DataRows m_vecDataRows;
-    _DataRows m_vecVisibleDataRows;
-    _IDataRows m_vecVisibleRows;
-    _IDataRows m_vecDisplayableRows;
-    _GroupRows m_vecGroupRows;
-
-    _MapCaches m_mapCache;
-    _Columns m_vecColumns;
-
-    uint m_usedGroupRow;
-    uint m_groupCount;
-    uint m_dataRowID;
-
-    int m_displayableBottom;
-    int m_visibleBottom;
-    int m_visibleHeight;
-    int m_displayableHeight;
-
-    GrIndexRange m_selectingRange;
-    GrDataRow* m_pFocusedDataRow;
-    GrRect m_bound;
-    GrDataRow* m_pInsertionRow;
-
-    bool m_visibleRowNumber;
-    bool m_zeroBasedRowIndex;
-
-    int m_clippedHeight;
-    uint m_clippedIndex;
-
-    // flags
-    bool m_listChanged;
-    bool m_visibleChanged;
-    bool m_fitChanged;
-    bool m_heightChanged;
 };
 
 class GrColumnList : public GrUpdatableRow

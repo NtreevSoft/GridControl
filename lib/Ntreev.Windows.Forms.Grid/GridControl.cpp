@@ -60,7 +60,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #ifdef _TIME_TEST
 		TimeTester timeTest("GridControl 생성자");
 #endif
-
 		m_pGridWindow = new Native::WinFormWindow(this);
 		m_pGridCore = new Native::WinFormGridCore(this, m_pGridWindow);
 		m_pGridCore->SetFont(GrFont::FromManaged(this->Font));

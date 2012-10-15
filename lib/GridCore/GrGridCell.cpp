@@ -35,21 +35,6 @@ int GrRow::DefaultHeight = 21;
 
 GrEventArgs GrEventArgs::Empty;
 
-//class SortColumn
-//{
-//public:
-//    bool operator () (const GrColumn* pColumn1, const GrColumn* pColumn2)
-//    {
-//        if(pColumn1->GetFrozen() == pColumn2->GetFrozen())
-//        {
-//            if(pColumn1->GetFreezablePriority() == pColumn2->GetFreezablePriority())
-//                return pColumn1->GetIndex() < pColumn2->GetIndex();
-//            return pColumn1->GetFreezablePriority() < pColumn2->GetFreezablePriority();
-//        }
-//        return pColumn2->GetFrozen() < pColumn1->GetFrozen();
-//    }
-//};
-
 class SortColumnOnFreezable
 {
 public:
@@ -557,7 +542,8 @@ bool GrColumnList::ShouldClip(const GrRect& displayRect, uint horizontal, uint /
 
 void GrColumnList::Clip(const GrRect& displayRect, uint horizontal, uint /*vertical*/)
 {
-    int x = GetX() + GetWidth() + m_pGridCore->GetGroupMargin();
+    GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
+    int x = pDataRowList->CellStart();
 
     for_each(_Columns, m_vecDisplayableColumns, value)
     {
@@ -898,10 +884,11 @@ void GrColumnList::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
     if(m_groupCount > 0)
     {
         GrStyle* pStyle = m_pGridCore->GetStyle();
+        GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
         GrColor backColor = pStyle != NULL ? pStyle->GetColumnBackColor() : m_pGridCore->GetBackColor();
         GrColor lineColor = pStyle != NULL ? pStyle->GetColumnLineColor() : m_pGridCore->GetLineColor();
         paintRect.left = paintRect.right;
-        paintRect.right = CellStart();
+        paintRect.right = pDataRowList->CellStart();
         pPainter->DrawColumn(0, paintRect, lineColor, backColor);
     }
 
@@ -1196,6 +1183,7 @@ bool GrCell::ContainsHorz(int x) const
         return false;
     return true;
 }
+
 bool GrCell::ContainsVert(int y) const
 {
     if(y < GetY() || y >= GetBottom())
@@ -2149,6 +2137,49 @@ void GrDataRow::OnHeightChanged()
     GrRootRow* pHeaderRow = dynamic_cast<GrRootRow*>(GetParent());
     if(pHeaderRow != NULL)
         pHeaderRow->SetHeightChanged();
+}
+
+GrGridRow::GrGridRow(GrGridCore* pChildGrid)
+    : m_pChildGrid(pChildGrid)
+{
+    m_pCell = new GrGridCell(this, pChildGrid);
+}
+
+IFocusable* GrGridRow::GetFocusable(GrColumn* pColumn) const 
+{
+    return m_pCell;
+}
+
+void GrGridRow::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
+{
+    GrRect paintRect = GetRect();
+    GrFlag paintStyle = ToPaintStyle();
+    GrColor foreColor = GetPaintingForeColor();
+    GrColor backColor = GetPaintingBackColor();
+
+    if(m_pGridCore->GetRowVisible() == true)
+    {
+        if(GetClipped() == true)
+            pPainter->DrawRow(paintStyle, paintRect, GetPaintingLineColor(), backColor, &clipRect);
+        else
+            pPainter->DrawRow(paintStyle, paintRect, GetPaintingLineColor(), backColor);
+
+        if(m_pDataRowList->GetRowNumberVisible() == true)
+        {
+            if(GetClipped() == true)
+                DrawText(pPainter, foreColor, paintRect, &clipRect);
+            else
+                DrawText(pPainter, foreColor, paintRect);
+        }
+    }
+
+    m_pCell->Paint(pPainter, clipRect);
+}
+
+void GrGridRow::OnGridCoreAttached()
+{
+    IDataRow::OnGridCoreAttached();
+    m_pGridCore->AttachObject(m_pCell);
 }
 
 GrColumn::GrColumn()
@@ -3108,7 +3139,8 @@ void GrColumnList::AdjustColumnWidth()
 
 void GrColumnList::RepositionColumnList()
 {
-    int x = GetX() + GetWidth() + m_pGridCore->GetGroupMargin();
+    GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
+    int x = pDataRowList->CellStart();
 
     for(uint i=0 ; i<GetFrozenColumnCount() ; i++)
     {
@@ -3301,6 +3333,16 @@ void GrRow::SetFit()
     OnFitted();
 }
 
+void GrRow::OnGridCoreAttached()
+{
+    GrCell::OnGridCoreAttached();
+
+    for_each(GrRowArray, m_vecChilds, value)
+    {
+        m_pGridCore->AttachObject(value);
+    }
+}
+
 void GrRow::OnTextSizeChanged()
 {
     GrCell::OnTextSizeChanged();
@@ -3359,7 +3401,7 @@ GrRow::GrRow()
 
     m_height = GrRow::DefaultHeight;
     m_pParent = NULL;
-    m_hierarchyLevel= 0;
+    m_depth= 0;
     m_fitting = false;
 }
 
@@ -3414,17 +3456,17 @@ GrCell* GrRow::HitTest(const GrPoint& location) const
     return const_cast<GrRow*>(this);
 }
 
-void GrRow::GetVisibleList(GrRowArray* pVisible) const
-{
-    if(GetVisible() == false)
-        return;
-    pVisible->push_back(const_cast<GrRow*>(this));
-    for(uint i=0 ; i<GetChildCount() ; i++)
-    {
-        const GrRow* pChild = GetChild(i);
-        pChild->GetVisibleList(pVisible);
-    }
-}
+//void GrRow::GetVisibleList(GrRowArray* pVisible) const
+//{
+//    if(GetVisible() == false)
+//        return;
+//    pVisible->push_back(const_cast<GrRow*>(this));
+//    for(uint i=0 ; i<GetChildCount() ; i++)
+//    {
+//        const GrRow* pChild = GetChild(i);
+//        pChild->GetVisibleList(pVisible);
+//    }
+//}
 
 GrDataRow::GrDataRow()
 {
@@ -3597,7 +3639,7 @@ void GrDataRow::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
     if(m_pGridCore->IsGrouped() == true)
     {
         paintRect.left = paintRect.right;
-        paintRect.right = CellStart();
+        paintRect.right = m_pDataRowList->CellStart();
         if(GetRowType() == GrRowType_InsertionRow)
             pPainter->DrawItem(0, paintRect, GetCellLineColor(), GetCellBackColor());
         else if(GetVisibleIndex() == m_pDataRowList->GetVisibleRowCount() - 1)
@@ -3632,12 +3674,6 @@ bool GrRow::GetResizable() const
     return m_resizable;
 }
 
-int GrRow::CellStart() const
-{
-    int start = GetX() + GetWidth();
-    return start + m_pGridCore->GetGroupMargin();
-}
-
 void GrRow::InvalidateRow()
 {
     if(m_pGridCore == NULL)
@@ -3647,11 +3683,6 @@ void GrRow::InvalidateRow()
     rect.Expand(2, 2, 2, 2);
 
     m_pGridCore->Invalidate(rect);
-}
-
-void GrRow::SetChild(uint index, GrRow* pRow)
-{
-    m_vecChilds[index] = pRow;
 }
 
 GrHorzAlign GrRow::GetTextHorzAlign() const
@@ -4462,7 +4493,21 @@ void GrRow::AddChild(GrRow* pRow)
 {
     m_vecChilds.push_back(pRow);
     pRow->m_pParent = this;
-    pRow->m_hierarchyLevel = m_hierarchyLevel + 1;
+    UpdateDepth(pRow);
+}
+
+void GrRow::UpdateDepth(GrRow* pRow)
+{
+    GrRow* pParent = pRow->GetParent();
+    if(pParent == NULL)
+        pRow->m_depth = 0;
+    else
+        pRow->m_depth = pParent->m_depth + 1;
+
+    for_each(GrRowArray, pRow->m_vecChilds, value)
+    {
+        UpdateDepth(value);
+    }
 }
 
 void GrRow::ReserveChild(uint reserve)
@@ -4475,7 +4520,7 @@ void GrRow::ClearChild()
     for_each(GrRowArray, m_vecChilds, value)
     {
         value->m_pParent = NULL;
-        value->m_hierarchyLevel = 0;
+        value->m_depth = 0;
     }
     m_vecChilds.clear();
 }
@@ -4485,9 +4530,9 @@ GrRow* GrRow::GetParent() const
     return m_pParent;
 }
 
-uint GrRow::GetHierarchyLevel() const
+uint GrRow::GetDepth() const
 {
-    return m_hierarchyLevel;
+    return m_depth;
 }
 
 void GrGroupRow::Expand(bool b)
@@ -4559,1123 +4604,7 @@ GrColumn* GrGroupRow::GetColumn() const
     return m_pColumn;
 }
 
-//GrInsertionRow::GrInsertionRow()
-//{
-//    SetText(L"☞");
-//    SetDisplayable(true);
-//}
-//
-//void GrInsertionRow::OnGridCoreAttached()
-//{
-//    GrDataRow::OnGridCoreAttached();
-//}
-//
-//void GrInsertionRow::OnHeightChanged()
-//{
-//    GrRow::OnHeightChanged();
-//    GrRootRow* pHeaderRow = dynamic_cast<GrRootRow*>(GetParent());
-//    if(pHeaderRow != NULL)
-//        pHeaderRow->SetHeightChanged();
-//}
-//
-//void GrInsertionRow::SetVisible(bool b)
-//{
-//    GrDataRow::SetVisible(b);
-//    GrRootRow* pHeaderList = dynamic_cast<GrRootRow*>(GetParent());
-//
-//    GrFocuser* pFocuser = m_pGridCore->GetFocuser();
-//    if(pFocuser->GetFocusedRow() == this)
-//        pFocuser->Set(IFocusable::Null);
-//
-//    if(GetSelected() == true)
-//    {
-//        GrItemSelector* pItemSelector = m_pGridCore->GetItemSelector();
-//        pItemSelector->SelectItems(this, GrSelectionType_Remove);
-//    }
-//
-//    pHeaderList->SetVisibleChanged();
-//}
 
-GrDataRowList::GrDataRowList()
-{
-    SetText(L"DataRowList");
-
-    m_rowWidth = 50;
-    m_displayableBottom = 0;
-
-    m_groupCount = 0;
-    m_usedGroupRow = 0;
-    m_pFocusedDataRow = NULL;
-    m_pInsertionRow = CreateInsertionRow();
-    m_dataRowID = 0;
-    m_displayableHeight = 0;
-    m_visibleRowNumber = true;
-    m_clippedIndex = INVALID_INDEX;
-    m_zeroBasedRowIndex = false;
-
-    m_listChanged = false;
-    m_visibleChanged = false;
-    m_fitChanged = false;
-}
-
-void GrDataRowList::OnGridCoreAttached()
-{
-    GrRow::OnGridCoreAttached();
-
-    m_vecDataRows.reserve(m_pGridCore->GetReservedRow());
-
-    GrGroupPanel* pGroupList = m_pGridCore->GetGroupPanel();
-
-    pGroupList->Changed.Add(this, &GrDataRowList::groupPanel_Changed);
-    pGroupList->Expanded.Add(this, &GrDataRowList::groupPanel_Expanded);
-    pGroupList->SortChanged.Add(this, &GrDataRowList::groupPanel_SortChanged);
-
-    GrFocuser* pFocuser = m_pGridCore->GetFocuser();
-    pFocuser->FocusChanged.Add(this, &GrDataRowList::focuser_FocusedChanged);
-
-    m_pGridCore->Cleared.Add(this, &GrDataRowList::gridCore_Cleared);
-    m_pGridCore->Created.Add(this, &GrDataRowList::gridCore_Created);
-    m_pGridCore->FontChanged.Add(this, &GrDataRowList::gridCore_FontChanged);
-
-    for_each(_DataRows, m_vecDataRows, value)
-    {
-        m_pGridCore->AttachObject(value);
-    }
-
-    for_each(_GroupRows, m_vecGroupRows, value)
-    {
-        m_pGridCore->AttachObject(value);
-    }
-
-    m_pGridCore->AttachObject(m_pInsertionRow);
-}
-
-void GrDataRowList::OnYChanged()
-{
-    RepositionVisibleRowList();
-}
-
-void GrDataRowList::OnDataRowInserting(GrDataRowInsertingEventArgs* e)
-{
-    DataRowInserting(this, e);
-}
-
-void GrDataRowList::OnDataRowInserted(GrDataRowInsertedEventArgs* e)
-{
-    SetListChanged();
-    m_pGridCore->Invalidate();
-
-    DataRowInserted(this, e);
-}
-
-void GrDataRowList::OnDataRowRemoved(GrDataRowEventArgs* e)
-{
-    GrDataRow* pDataRow = e->GetDataRow();
-
-    pDataRow->SetDataRowIndex(INVALID_INDEX);
-    pDataRow->SetSelected(false);
-
-    if(pDataRow->HasFocused() == true)
-        m_pGridCore->GetFocuser()->Set(IFocusable::Null);
-
-    m_pGridCore->Invalidate();
-
-    SetListChanged();
-    //Update(true);
-    m_pGridCore->Invalidate();
-
-    DataRowRemoved(this, e);
-}
-
-GrGroupRow* GrDataRowList::CreateGroupRow(GrRow* pParent, GrColumn* pColumn, const std::wstring& itemText)
-{
-    GrGroupRow* pGroupRow;
-    if(m_vecGroupRows.size() == m_usedGroupRow)
-    {
-        pGroupRow = new GrGroupRow();
-        m_vecGroupRows.push_back(pGroupRow);
-    }
-    else
-    {
-        pGroupRow = m_vecGroupRows[m_usedGroupRow];
-        pGroupRow->ClearChild();
-    }
-
-    pParent->AddChild(pGroupRow);
-
-    pGroupRow->SetTextVisible(false);
-    pGroupRow->SetReference(pColumn, itemText);
-    pGroupRow->m_groupLevel = 0;
-
-    _MapCaches::iterator itor = m_mapCache.find(pGroupRow->GetKey());
-    if(itor == m_mapCache.end())
-    {
-        const GrPadding padding = pGroupRow->GetPadding(true);
-        int height = GetPaintingFont()->GetHeight() + padding.GetVertical();
-        pGroupRow->SetHeight(height);
-        pGroupRow->Expand(true);
-    }
-    else
-    {
-        pGroupRow->SetHeight((*itor).second.height);
-        pGroupRow->Expand((*itor).second.expanded);
-    }
-
-    m_pGridCore->AttachObject(pGroupRow);
-
-    m_usedGroupRow++;
-    return pGroupRow;
-}
-
-GrDataRow* GrDataRowList::CreateInsertionRow()
-{
-    GrDataRow* pInsertionRow = new GrDataRow();
-    pInsertionRow->SetText(L"☞");
-    pInsertionRow->SetVisibleDataRowIndex(INSERTION_ROW);
-    pInsertionRow->SetVisibleIndex(INSERTION_ROW);
-    pInsertionRow->SetDisplayIndex(INSERTION_ROW);
-    pInsertionRow->SetDataRowID(INSERTION_ROW);
-    pInsertionRow->SetDisplayable(true);
-
-    return pInsertionRow;
-}
-
-GrDataRowList::~GrDataRowList()
-{
-    delete m_pInsertionRow;
-    DeleteObjects();
-}
-
-void GrDataRowList::BuildGroup(GrRow* pParent, uint groupLevel)
-{
-    GrGroupPanel* pGroupList = m_pGridCore->GetGroupPanel();
-    m_pGridCore->AttachObject(pGroupList);
-    GrColumn* pColumn = pGroupList->GetGroup(groupLevel)->GetColumn();
-
-    _DataRows vecSort;
-
-    FuncSortRow fnSort;
-    switch(pColumn->GetGroup()->GetSortType())
-    {
-    case GrSort_Up:
-        fnSort = GrSortFunc::SortDataRowSortUp;
-        break;
-    default:
-        fnSort = GrSortFunc::SortDataRowSortDown;
-        break;
-    }
-    pParent->Sort(fnSort, (void*)pColumn);
-
-    vecSort.reserve(pParent->GetChildCount());
-    for(uint i=0 ; i<pParent->GetChildCount() ; i++)
-    {
-        GrRow* pChild = pParent->GetChild(i);
-        if(pChild->GetRowType() == GrRowType_DataRow)
-            vecSort.push_back((GrDataRow*)pChild);
-    }
-
-    pParent->ClearChild();
-
-    std::wstring itemText;
-    _DataRows::iterator itor = vecSort.begin();
-    GrGroupRow* pGroupRow = NULL;
-
-    while(itor != vecSort.end())
-    {
-        GrDataRow* pRow = *itor;
-        GrItem* pItem = pRow->GetItem(pColumn);
-        std::wstring nextItemText = pItem->GetText();
-
-        if(itemText != nextItemText || itor == vecSort.begin())
-        {
-            itemText = nextItemText;
-            pGroupRow = CreateGroupRow(pParent, pColumn, itemText.c_str());
-        }
-        pGroupRow->AddChild(pRow);
-        itor++;
-    }
-
-    uint nextGroupLevel = groupLevel+1;
-    for(uint i=0 ; i<pParent->GetChildCount() ; i++)
-    {
-        GrGroupRow* pRow = (GrGroupRow*)pParent->GetChild(i);
-        pRow->ProcessAfterGroup();
-        if(nextGroupLevel < m_groupCount)
-            BuildGroup(pRow, nextGroupLevel);
-    }
-}
-
-void GrDataRowList::BuildCache()
-{
-    m_mapCache.clear();
-    for(uint i=0 ; i<m_usedGroupRow ; i++)
-    {
-        GrGroupRow* pGroupRow = m_vecGroupRows[i];
-
-        GrCache cache;
-        cache.height = pGroupRow->GetHeight();
-        cache.expanded = pGroupRow->IsExpanded();
-
-        m_mapCache.insert(_MapCaches::value_type(pGroupRow->m_key, cache));
-    }
-}
-
-void GrDataRowList::BuildChildRowList()
-{
-    ClearChild();
-
-    ReserveChild(m_vecDataRows.size());
-    for_each(_DataRows, m_vecDataRows, value)
-    {
-        AddChild(value);
-    }
-
-    if(m_groupCount == 0)
-    {
-        m_usedGroupRow = 0;
-        m_mapCache.clear();
-
-        GrColumn* pColumn = m_pGridCore->GetColumnList()->GetFirstSortColumn();
-        if(pColumn)
-            Sort(pColumn);
-        else
-            GrRow::Sort(GrSortFunc::SortDataRowSortNone, NULL);
-    }
-    else
-    {
-        BuildCache();
-        m_usedGroupRow = 0;
-        BuildGroup(this, 0);
-    }
-
-    SetVisibleChanged();
-}
-
-void GrDataRowList::AdjustRowHeight()
-{
-    for_each(_IDataRows, m_vecVisibleRows, value)
-    {
-        value->AdjustHeight();
-    }
-
-    GetInsertionRow()->AdjustHeight();
-
-    m_fitChanged = false;
-    m_heightChanged = true;
-
-    m_pGridCore->Invalidate();
-}
-
-void GrDataRowList::SetFitChanged()
-{
-    m_fitChanged = true;
-}
-
-void GrDataRowList::SetVisibleChanged()
-{
-    if(m_visibleChanged == false)
-    {
-        m_pGridCore->Invalidate();
-    }
-
-    m_visibleChanged = true;
-}
-
-void GrDataRowList::SetListChanged()
-{
-    if(m_listChanged == false)
-    {
-        m_pGridCore->Invalidate();
-    }
-    m_listChanged = true;
-}
-
-void GrDataRowList::SetHeightChanged()
-{
-    if(m_heightChanged == false)
-    {
-        m_pGridCore->Invalidate();
-    }
-    m_heightChanged = true;
-}
-
-void GrDataRowList::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
-{
-    for_each(_IDataRows, m_vecDisplayableRows, value)
-    {
-        int y = value->GetY();
-        int b = value->GetBottom();
-        if(y >= clipRect.bottom || b < clipRect.top)
-            continue;
-
-        value->Paint(pPainter, clipRect);
-    }
-
-    if(m_pFocusedDataRow != NULL && m_pFocusedDataRow->GetDisplayable() == true)
-    {
-        if(m_pGridCore->GetRowHighlight() == true && m_pGridCore->GetRowHighlightType() != GrRowHighlightType_Fill)
-        {
-            GrRect highlightRect = m_pFocusedDataRow->GetRect();
-            const GrStyle* pStyle = m_pGridCore->GetStyle();
-            if(pStyle == NULL)
-                pStyle = &GrStyle::DefaultStyle;
-            GrRect displayRect = m_pGridCore->GetDisplayRect();
-            highlightRect.top--;
-            highlightRect.right = m_pGridCore->GetColumnList()->GetBounds().right;
-            pPainter->DrawRectangle(highlightRect, pStyle->RowHighlightLineColor);
-        }
-    }
-}
-
-void GrDataRowList::Reserve(uint reserve)
-{
-    m_vecDataRows.reserve(reserve);
-}
-
-void GrDataRowList::groupPanel_Changed(GrObject* /*pSender*/, GrEventArgs* /*e*/)
-{
-    GrGroupPanel* pGroupList = m_pGridCore->GetGroupPanel();
-    m_groupCount = pGroupList->GetGroupCount();
-    m_clippedIndex = INVALID_INDEX;
-
-    BuildChildRowList();
-}
-
-void GrDataRowList::groupPanel_Expanded(GrObject* /*pSender*/, GrGroupEventArgs* e)
-{
-    GrColumn* pColumn = e->m_pGroup->GetColumn();
-    for_each(_GroupRows, m_vecGroupRows, value)
-    {
-        if(value->GetColumn() == pColumn)
-            value->Expand(e->m_pGroup->GetExpanded());
-    }
-    SetVisibleChanged();
-}
-
-void GrDataRowList::groupPanel_SortChanged(GrObject* /*pSender*/, GrGroupEventArgs* e)
-{
-    GrColumn* pColumn = e->m_pGroup->GetColumn();
-
-    std::set<GrRow*> parentRows;
-    for(uint i=0 ; i<m_usedGroupRow ; i++)
-    {
-        GrGroupRow* pGroupRow = m_vecGroupRows[i];
-
-        if(pGroupRow->GetColumn() == pColumn)
-            parentRows.insert(pGroupRow->GetParent());
-    }
-
-    for_each(std::set<GrRow*>, parentRows, value)
-    {
-        value->Sort(e->m_pGroup->GetSortType());
-    }
-    SetVisibleChanged();
-}
-
-void GrDataRowList::gridCore_Created(GrObject* /*pSender*/, GrEventArgs* /*e*/)
-{
-    GrColumnList* pColumnList = m_pGridCore->GetColumnList();
-    pColumnList->ColumnInserted.Add(this, &GrDataRowList::columnList_ColumnInserted);
-    pColumnList->ColumnRemoved.Add(this, &GrDataRowList::columnList_ColumnRemoved);
-    pColumnList->ColumnSortTypeChanged.Add(this, &GrDataRowList::columnList_ColumnSortTypeChanged);
-}
-
-void GrDataRowList::gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
-{
-    ClearChild();
-
-    m_groupCount = 0;
-    m_usedGroupRow = 0;
-    m_pFocusedDataRow = NULL;
-    m_dataRowID = 0;
-
-    GetInsertionRow()->ClearItem();
-
-    DeleteObjects();
-
-    m_vecVisibleDataRows.clear();
-    m_vecVisibleRows.clear();
-    m_vecDisplayableRows.clear();
-
-    m_mapCache.clear();
-    m_vecColumns.clear();
-}
-
-void GrDataRowList::gridCore_FontChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
-{
-    GrColumnList* pColumnList = m_pGridCore->GetColumnList();
-    _DataRows vecDataRows = m_vecDataRows;
-    vecDataRows.push_back(GetInsertionRow());
-
-    for_each(_DataRows, vecDataRows, value)
-    {
-        GrDataRow* pDataRow = value;
-        m_pTextUpdater->AddTextBounds(pDataRow);
-
-        for(uint i=0 ; i<pColumnList->GetColumnCount() ; i++)
-        {
-            GrColumn* pColumn = pColumnList->GetColumn(i);
-            GrItem* pItem = pDataRow->GetItem(pColumn);
-            m_pTextUpdater->AddTextBounds(pItem);
-        }
-    }
-
-    for_each(_GroupRows, m_vecGroupRows, value)
-    {
-        m_pTextUpdater->AddTextBounds(value);
-        m_pTextUpdater->AddTextBounds(value->GetLabel());
-    }
-}
-
-void GrDataRowList::columnList_ColumnInserted(GrObject* /*pSender*/, GrColumnEventArgs* e)
-{
-    GrColumn* pColumn = e->GetColumn();
-
-    if(pColumn->GetColumnID() >= m_vecColumns.size())
-    {
-        m_vecColumns.push_back(pColumn);
-    }
-
-    GetInsertionRow()->AddItem(pColumn);
-    for_each(_DataRows, m_vecDataRows, value)
-    {
-        value->AddItem(pColumn);
-    }
-
-    for_each(_DataRows, m_vecDataRowsRemoved, value)
-    {
-        value->AddItem(pColumn);
-    }
-}
-
-void GrDataRowList::columnList_ColumnRemoved(GrObject* /*pSender*/, GrColumnEventArgs* e)
-{
-    GrItem* pItem = GetInsertionRow()->GetItem(e->GetColumn());
-    m_pGridCore->DetachObject(pItem);
-
-    for_each(_DataRows, m_vecDataRows, value)
-    {
-        pItem = value->GetItem(e->GetColumn());
-        m_pGridCore->DetachObject(pItem);
-    }
-}
-
-void GrDataRowList::columnList_ColumnSortTypeChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
-{
-    GrColumn* pColumn = e->GetColumn();
-    Sort(pColumn);
-}
-
-void GrDataRowList::focuser_FocusedChanged(GrObject* pSender, GrFocusChangeArgs* /*e*/)
-{
-    GrFocuser* pFocuser = (GrFocuser*)pSender;
-    m_pFocusedDataRow = dynamic_cast<GrDataRow*>(pFocuser->GetFocusedRow());
-}
-
-void GrDataRowList::BuildVisibleRowList()
-{
-    GrRowArray vecVisibles;
-    vecVisibles.reserve(m_pGridCore->GetReservedRow());
-    GetVisibleList(&vecVisibles);
-
-    m_vecVisibleRows.clear();
-    m_vecVisibleRows.reserve(vecVisibles.size());
-    m_vecVisibleDataRows.clear();
-    m_vecVisibleDataRows.reserve(vecVisibles.size());
-
-    m_visibleHeight = 0;
-    for_each(GrRowArray, vecVisibles, value)
-    {
-        IDataRow* pDataRowBase = dynamic_cast<IDataRow*>(value.GetValue());
-        if(pDataRowBase == NULL)
-            continue;
-        GrDataRow* pDataRow = dynamic_cast<GrDataRow*>(pDataRowBase);
-        if(pDataRow)
-        {
-            pDataRow->SetVisibleDataRowIndex(m_vecVisibleDataRows.size());
-            m_vecVisibleDataRows.push_back(pDataRow);
-        }
-        pDataRowBase->SetVisibleIndex(m_vecVisibleRows.size());
-        m_vecVisibleRows.push_back(pDataRowBase);
-
-        m_visibleHeight += pDataRowBase->GetHeight();
-    }
-
-    for_each(_IDataRows, m_vecDisplayableRows, value)
-    {
-        value->SetDisplayable(false);
-        value->SetDisplayIndex(INVALID_INDEX);
-        value->SetClipped(false);
-    }
-
-    m_vecDisplayableRows.clear();
-    m_heightChanged = true;
-}
-
-void GrDataRowList::RepositionVisibleRowList()
-{
-    int y = GetY();
-    for_each(_IDataRows, m_vecVisibleRows, value)
-    {
-        y += value->GetHeight();
-    }
-    m_visibleBottom = y;
-    m_visibleHeight = m_visibleBottom - GetY();
-    m_clippedIndex = INVALID_INDEX;
-}
-
-bool GrDataRowList::ShouldUpdate() const
-{
-    return m_listChanged == true ||
-        m_visibleChanged == true ||
-        m_fitChanged == true ||
-        m_heightChanged == true;
-}
-
-void GrDataRowList::Update(bool force)
-{
-    if(m_listChanged == true || force == true)
-        BuildChildRowList();
-    if(m_visibleChanged == true)
-        BuildVisibleRowList();
-    if(m_fitChanged == true)
-        AdjustRowHeight();
-    if(m_heightChanged == true)
-        RepositionVisibleRowList();
-
-    m_listChanged = false;
-    m_visibleChanged = false;
-    m_fitChanged = false;
-    m_heightChanged = false;
-
-    bool visible = false;
-    if(GetVisibleRowCount() != 0)
-    {
-        visible = m_visibleBottom > m_pGridCore->GetDisplayRect().bottom ? true : false;
-    }
-
-    m_pGridCore->GetVertScroll()->SetVisible(visible);
-}
-
-uint GrDataRowList::GetVisibleDataRowCount() const
-{
-    return m_vecVisibleDataRows.size();
-}
-
-GrDataRow* GrDataRowList::GetVisibleDataRow(uint index) const
-{
-    if(index == INSERTION_ROW)
-        return GetInsertionRow();
-    if(index >= m_vecVisibleDataRows.size())
-        throw _Exception("잘못된 인덱스");
-    return m_vecVisibleDataRows[index];
-}
-
-int GrDataRowList::GetRowWidth() const
-{
-    return m_rowWidth;
-}
-
-void GrDataRowList::SetRowWidth(int width)
-{
-    m_rowWidth = width;
-}
-
-uint GrDataRowList::GetVisibleRowCount() const
-{
-    return m_vecVisibleRows.size();
-}
-
-IDataRow* GrDataRowList::GetVisibleRow(uint index) const
-{
-    if(index == INSERTION_ROW)
-        return m_pGridCore->GetInsertionRow();
-    if(index >= m_vecVisibleRows.size())
-        throw _Exception("잘못된 인덱스");
-    return m_vecVisibleRows[index];
-}
-
-void GrDataRowList::AddDataRow(GrDataRow* pDataRow)
-{
-    InsertDataRow(pDataRow, m_vecDataRows.size());
-}
-
-void GrDataRowList::InsertDataRow(GrDataRow* pDataRow, uint index)
-{
-    if(pDataRow->GetDataRowIndex() != INVALID_INDEX)
-        throw _Exception("이미 등록되어 있습니다");
-
-    GrDataRowInsertType insertType = pDataRow == m_pInsertionRow ? GrDataRowInsertType_Insertion : GrDataRowInsertType_New;
-
-    GrDataRowInsertingEventArgs e1(pDataRow, insertType);
-    OnDataRowInserting(&e1);
-
-    if(e1.GetCancel() == true)
-        return;
-
-    /*    if(pDataRow->GetDataRowID() == INVALID_INDEX)
-    {
-    pDataRow->SetDataRowID(m_dataRowID++);
-    pDataRow->Reserve(m_vecColumns.size());
-    for_each(_Columns, m_vecColumns, value)
-    {
-    pDataRow->AddItem(value);
-    }
-    }
-    else */if(pDataRow->GetDataRowID() == INSERTION_ROW)
-    {
-        pDataRow->SetDataRowID(m_dataRowID++);
-    }
-    else
-    {
-        _DataRows::iterator itor = find(m_vecDataRowsRemoved.begin(), m_vecDataRowsRemoved.end(), pDataRow);
-        m_vecDataRowsRemoved.erase(itor);
-    }
-
-    m_pGridCore->AttachObject(pDataRow);
-
-    _DataRows::iterator itor = m_vecDataRows.insert(m_vecDataRows.begin() + index, pDataRow);
-    index = std::min(index, m_vecDataRows.size());
-    for( ; itor != m_vecDataRows.end() ; itor++)
-    {
-        (*itor)->SetDataRowIndex(index++);
-    }
-
-    if(pDataRow == m_pInsertionRow)
-    {
-        m_pInsertionRow = CreateInsertionRow();
-        m_pGridCore->AttachObject(m_pInsertionRow);
-
-        m_pInsertionRow->Reserve(m_vecColumns.size());
-        for_each(_Columns, m_vecColumns, value)
-        {
-            m_pInsertionRow->AddItem(value);
-        }
-    }
-
-    GrDataRowInsertedEventArgs e2(pDataRow, insertType);
-    OnDataRowInserted(&e2);
-}
-
-void GrDataRowList::RemoveDataRow(GrDataRow* pDataRow)
-{
-    if(pDataRow->GetDataRowIndex() == INVALID_INDEX)
-        return;
-
-    _DataRows::iterator itor = std::find(m_vecDataRows.begin(), m_vecDataRows.end(), pDataRow);
-    if(itor == m_vecDataRows.end())
-        return;
-
-    uint dataRowIndex = pDataRow->GetDataRowIndex();
-    for(_DataRows::iterator next = itor + 1 ; next != m_vecDataRows.end() ; next++)
-    {
-        (*next)->SetDataRowIndex(dataRowIndex);
-        dataRowIndex++;
-    }
-
-    m_vecDataRowsRemoved.push_back(pDataRow);
-    m_vecDataRows.erase(itor);
-
-    GrDataRowEventArgs e(pDataRow);
-    OnDataRowRemoved(&e);
-}
-
-GrDataRow* GrDataRowList::NewDataRowFromInsertion()
-{
-    AddDataRow(m_pInsertionRow);
-    m_pGridCore->Update();
-
-    return m_pInsertionRow;
-}
-
-GrDataRow* GrDataRowList::NewDataRow()
-{
-    GrDataRow* pDataRow = new GrDataRow();
-    pDataRow->SetDataRowID(m_dataRowID++);
-    pDataRow->Reserve(m_vecColumns.size());
-    for_each(_Columns, m_vecColumns, value)
-    {
-        pDataRow->AddItem(value);
-    }
-    m_vecDataRowsRemoved.push_back(pDataRow);
-    return pDataRow;
-}
-
-uint GrDataRowList::GetDataRowCount() const
-{
-    return m_vecDataRows.size();
-}
-
-GrDataRow* GrDataRowList::GetDataRow(uint index) const
-{
-    if(index == INSERTION_ROW)
-        return m_pGridCore->GetInsertionRow();
-    return m_vecDataRows[index];
-}
-
-void GrDataRowList::Clear()
-{
-    for_each(_DataRows, m_vecDataRows, value)
-    {
-        value->SetDataRowIndex(INVALID_INDEX);
-    }
-
-    m_vecDataRowsRemoved.insert(m_vecDataRowsRemoved.end(), m_vecDataRows.begin(), m_vecDataRows.end());
-    m_vecDataRows.clear();
-
-    Update(true);
-    m_pGridCore->Invalidate();
-}
-
-void GrDataRowList::DeleteObjects()
-{
-    for_each(_DataRows, m_vecDataRows, value)
-    {
-        delete value;
-    }
-
-    for_each(_DataRows, m_vecDataRowsRemoved, value)
-    {
-        delete value;
-    }
-
-    for_each(_GroupRows, m_vecGroupRows, value)
-    {
-        delete value;
-    }
-
-    m_vecDataRows.clear();
-    m_vecDataRowsRemoved.clear();
-    m_vecGroupRows.clear();
-}
-
-uint GrDataRowList::GetDisplayableRowCount() const
-{
-    return m_vecDisplayableRows.size();
-}
-
-IDataRow* GrDataRowList::GetDisplayableRow(uint index) const
-{
-    assert(index < m_vecDisplayableRows.size());
-    return m_vecDisplayableRows[index];
-}
-
-int GrDataRowList::GetDisplayableBottom() const
-{
-    return m_displayableBottom;
-}
-
-IDataRow* GrDataRowList::HitTest(int y) const
-{
-    for_each(_IDataRows, m_vecDisplayableRows, value)
-    {
-        if(y >= value->GetY() && y < value->GetBottom())
-            return value;
-    }
-    return NULL;
-}
-
-GrIndexRange GrDataRowList::HitTest(int y, IDataRow* pRowAnchor) const
-{
-    const uint anchorIndex = pRowAnchor->GetVisibleIndex();
-    GrIndexRange indexRange;
-
-    if(pRowAnchor->GetRowType() == GrRowType_InsertionRow)
-    {
-        indexRange.SetRange(INSERTION_ROW, INSERTION_ROW+1);
-    }
-    else
-    {
-        if(y >= GetBottom())
-        {
-            uint displayCount = GetDisplayableRowCount();
-            IDataRow* pDataRow = GetDisplayableRow(displayCount - 1);
-            indexRange.SetRange(anchorIndex, pDataRow->GetVisibleIndex() + 1);
-        }
-        else if(y < GetY())
-        {
-            IDataRow* pFirst = GetDisplayableRow(0);
-            indexRange.SetRange(pFirst->GetVisibleIndex(), anchorIndex + 1);
-        }
-        else
-        {
-            uint index = 0;
-            IDataRow* pDataRow = HitTest(y);
-            if(pDataRow != NULL)
-                index = pDataRow->GetVisibleIndex();
-
-            if(index < anchorIndex)
-                indexRange.SetRange(index, anchorIndex + 1);
-            else
-                indexRange.SetRange(anchorIndex, index + 1);
-        } 
-    }
-
-    return indexRange;
-}
-
-void GrDataRowList::BringIntoView(IDataRow* pDataRow)
-{
-    if(pDataRow->ShouldBringIntoView() == false)
-        return;
-
-    Update();
-
-    GrRect dataRect = m_pGridCore->GetDataRect();
-    GrScroll* pVertScroll = m_pGridCore->GetVertScroll();
-
-    if(pDataRow->GetHeight() > dataRect.GetHeight())
-    {
-        pVertScroll->SetValue(pDataRow->GetVisibleIndex());
-    }
-    else
-    {
-        uint visibleIndex = pDataRow->GetVisibleIndex();
-
-        uint newValue;
-        if(visibleIndex < (uint)pVertScroll->GetValue())
-        {
-            newValue = visibleIndex;
-        }
-        else
-        {
-            newValue = ClipTo(visibleIndex);
-        }
-        pVertScroll->SetValue(newValue);
-    }
-    m_pGridCore->Invalidate();
-}
-
-GrRect GrDataRowList::GetBounds() const
-{
-    GrRect bound = m_bound;
-    bound.right = m_pGridCore->GetColumnList()->GetBounds().right;
-    return bound;
-}
-
-bool GrDataRowList::ShouldClip(const GrRect& displayRect, uint /*horizontal*/, uint vertical) const
-{
-    if(m_clippedIndex == vertical && displayRect.GetHeight() == m_clippedHeight)
-        return false;
-    return true;
-}
-
-void GrDataRowList::Clip(const GrRect& displayRect, uint /*horizontal*/, uint vertical)
-{
-    int displayY = GetY();
-
-    for_each(_IDataRows, m_vecDisplayableRows, value)
-    {
-        value->SetDisplayable(false);
-        value->SetDisplayIndex(INVALID_INDEX);
-        value->SetClipped(false);
-    }
-    m_vecDisplayableRows.clear();
-
-    uint displayIndex = 0;
-    for(uint i=vertical ; i<GetVisibleRowCount() ; i++)
-    {
-        IDataRow* pIDataRow = GetVisibleRow(i);
-
-        if(displayY >= displayRect.bottom)
-            break;
-
-        pIDataRow->SetY(displayY);
-        pIDataRow->SetDisplayable(true);
-        pIDataRow->SetDisplayIndex(displayIndex);
-
-        if(displayY + pIDataRow->GetHeight() >= displayRect.bottom)
-            pIDataRow->SetClipped(true);
-        else
-            pIDataRow->SetClipped(false);
-
-        m_vecDisplayableRows.push_back(pIDataRow);
-        displayY += pIDataRow->GetHeight();
-        displayIndex++;
-    }
-
-    m_bound.left = GetX();
-    m_bound.top = GetY();
-    m_bound.right = GetRight();
-    m_bound.bottom = displayY;
-
-    m_displayableHeight = displayY - GetY();
-    m_displayableBottom = std::min(displayRect.bottom, displayY);
-
-    if(m_clippedHeight != displayRect.GetHeight() || m_clippedIndex != vertical)
-        UpdateVertScroll(displayRect);
-
-    m_clippedHeight = displayRect.GetHeight();
-    m_clippedIndex = vertical;
-}
-
-void GrDataRowList::UpdateVertScroll(const GrRect& displayRect)
-{
-    GrScroll* pVertScroll = m_pGridCore->GetVertScroll();
-
-    if(pVertScroll->GetVisible() == false)
-        return;
-
-    const uint visibleRowCount = GetVisibleRowCount();
-    const int visibleHeight = m_visibleBottom - GetY();
-    const int displayableHeight = displayRect.bottom - GetY();
-
-    int countPerPage = 0;
-    int tempHeight = displayableHeight;
-    for(uint i=visibleRowCount-1 ; i<visibleRowCount ; i--)
-    {
-        const IDataRow* pDataRow = GetVisibleRow(i);
-        int rowHeight = pDataRow->GetHeight();
-        if(rowHeight < tempHeight)
-        {
-            countPerPage++;
-            tempHeight -= rowHeight;
-        }
-        else
-        {
-            break;
-        }
-    }
-    countPerPage = std::max(1, countPerPage);
-
-    int largeChange = (int)((float)visibleRowCount * (float)displayableHeight / (float)visibleHeight);
-    largeChange = std::max(1, largeChange);
-
-    pVertScroll->SetMinimum(0);
-    pVertScroll->SetMaximum(visibleRowCount - countPerPage + largeChange - 1);
-    pVertScroll->SetLargeChange(largeChange);
-}
-
-GrInsertionRow* GrDataRowList::GetInsertionRow() const
-{
-    return m_pInsertionRow;
-}
-
-uint GrDataRowList::ClipFrom(uint visibleFrom) const
-{
-    return ClipFrom(m_pGridCore->GetDisplayRect(), visibleFrom);
-}
-
-uint GrDataRowList::ClipFrom(const GrRect& displayRect, uint visibleFrom) const
-{
-    int displayHeight = displayRect.GetHeight() - GetY();
-    int displayY = displayHeight;
-    uint visibleTo = visibleFrom;
-
-    for(uint i=visibleFrom ; i<GetVisibleRowCount() ; i++)
-    {
-        IDataRow* pDataRow = GetVisibleRow(i);
-        displayY -= pDataRow->GetHeight();
-        if(displayY <= 0)
-            break;
-        visibleTo = i;
-    }
-    return visibleTo;
-}
-
-uint GrDataRowList::ClipTo(uint visibleTo) const
-{
-    return ClipTo(m_pGridCore->GetDisplayRect(), visibleTo);
-}
-
-uint GrDataRowList::ClipTo(const GrRect& displayRect, uint visibleTo) const
-{
-    int displayHeight = displayRect.GetHeight() - GetY();
-    int displayY = displayHeight;
-    uint visibleFrom = visibleTo;
-
-    for(uint i=visibleTo ; i<GetVisibleRowCount() ; i--)
-    {
-        IDataRow* pDataRow = GetVisibleRow(i);
-        displayY -= pDataRow->GetHeight();
-        if(displayY <= 0)
-            break;
-        visibleFrom = i;
-    }
-    return visibleFrom;
-}
-
-void GrDataRowList::SetZeroBasedRowIndex(bool b)
-{
-    if(m_zeroBasedRowIndex == b)
-        return;
-
-    m_zeroBasedRowIndex = b;
-
-    uint index = 0;
-    for_each(_DataRows, m_vecDataRows, value)
-    {
-        value->SetDataRowIndex(index);
-    }
-}
-
-bool GrDataRowList::GetZeroBasedRowIndex() const
-{
-    return m_zeroBasedRowIndex;
-}
-
-bool GrDataRowList::GetRowNumberVisible() const
-{
-    return m_visibleRowNumber;
-}
-
-void GrDataRowList::SetRowNumberVisible(bool b)
-{
-    m_visibleRowNumber = b;
-    m_pGridCore->Invalidate();
-}
-
-void GrDataRowList::Sort(GrColumn* pColumn)
-{
-    FuncSortRow fnSort = (FuncSortRow)pColumn->GetSortComparer(pColumn->GetSortType());
-    if(fnSort == NULL)
-    {
-        switch(pColumn->GetSortType())
-        {
-        case GrSort_Up:
-
-            fnSort = GrSortFunc::SortDataRowSortUp;
-            break;
-        case GrSort_Down:
-            fnSort = GrSortFunc::SortDataRowSortDown;
-            break;
-        default:
-            fnSort = GrSortFunc::SortDataRowSortNone;
-            break;
-        }
-    }
-
-    if(m_groupCount == 0)
-    {
-        GrRow::Sort(fnSort, (void*)pColumn);
-    }
-    else
-    {
-        for(uint i=0 ; i<m_usedGroupRow ; i++)
-        {
-            GrGroupRow* pGroupRow = m_vecGroupRows[i];
-            if(pGroupRow->GetGroupLevel() == m_groupCount - 1)
-                pGroupRow->Sort(fnSort, (void*)pColumn);
-        }
-    }
-    SetVisibleChanged();
-}
-
-GrCell* GrDataRowList::HitTest(const GrPoint& location) const
-{
-    GrCell* pHitted = GrUpdatableRow::HitTest(location);
-    if(pHitted == NULL)
-        return NULL;
-
-    for_each(_IDataRows, m_vecDisplayableRows, value)
-    {
-        GrCell* pSubHitted = value->HitTest(location);
-        if(pSubHitted != NULL)
-            return pSubHitted;
-    }
-
-    return NULL;
-}
 
 GrColumnSplitter::GrColumnSplitter(GrColumnList* pColumnList) : m_pColumnList(pColumnList)
 {
@@ -6344,4 +5273,60 @@ void GrUpdatableRow::OnHeightChanged()
         return;
     m_pGridCore->GetRootRow()->SetHeightChanged();
     m_pGridCore->Invalidate();
+}
+
+GrGridCell::GrGridCell(GrGridRow* pGridRow, GrGridCore* pChildGrid)
+    : m_pGridRow(pGridRow), m_pChildGrid(pChildGrid)
+{
+
+}
+
+int GrGridCell::GetX() const
+{
+    return m_pGridRow->GetRight();
+}
+
+int GrGridCell::GetY() const
+{
+    return m_pGridRow->GetY();
+}
+
+int GrGridCell::GetWidth() const
+{
+    return m_pGridCore->GetBounds().right - GetX();
+}
+
+int GrGridCell::GetHeight() const
+{
+    return m_pGridRow->GetHeight();
+}
+
+GrRow* GrGridCell::GetRow() const
+{
+    return m_pGridRow;
+}
+
+GrCellType GrGridCell::GetCellType() const
+{
+    return GrCellType_Unknown;
+}
+
+bool GrGridCell::GetVisible() const
+{
+    return m_pGridRow->GetVisible();
+}
+
+bool GrGridCell::GetDisplayable() const
+{
+    return m_pGridRow->GetDisplayable();
+}
+
+void GrGridCell::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
+{
+    //m_pChildGrid->Paint(pPainter, clipRect);
+}
+
+IDataRow* GrGridCell::GetDataRow() const
+{
+    return m_pGridRow;
 }
