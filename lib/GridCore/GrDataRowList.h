@@ -69,6 +69,7 @@ public:
     void SetRowNumberVisible(bool b);
 
     int CellStart() const;
+    uint GetMargin() const;
 
     void SetFitChanged();
     void SetVisibleChanged();
@@ -143,7 +144,7 @@ private:
     uint m_usedGroupRow;
     uint m_groupCount;
     uint m_dataRowID;
-    uint m_groupMargin;
+    uint m_margin;
 
     int m_displayableBottom;
     int m_visibleBottom;
@@ -157,6 +158,7 @@ private:
 
     bool m_visibleRowNumber;
     bool m_zeroBasedRowIndex;
+    bool m_updating;
 
     int m_clippedHeight;
     uint m_clippedIndex;

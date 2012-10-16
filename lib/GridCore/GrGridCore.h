@@ -29,6 +29,7 @@
 #include "GrGridStateManager.h"
 #include "GrGridWindow.h"
 #include "GrDataRowList.h"
+#include "GrColumnList.h"
 #include <map>
 
 class GrGridCore : public GrObject

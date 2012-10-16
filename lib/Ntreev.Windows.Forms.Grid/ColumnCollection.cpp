@@ -374,15 +374,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         switch(e->ListChangedType)
         {
-        case System::ComponentModel::ListChangedType::PropertyDescriptorAdded:
+        case ListChangedType::PropertyDescriptorAdded:
             {
                 if(m_manager->GetItemProperties()->Contains(e->PropertyDescriptor) == true)
                 {
-                    Bind(e->PropertyDescriptor);
+                    this->Bind(e->PropertyDescriptor);
                 }
             }
             break;
-        case System::ComponentModel::ListChangedType::PropertyDescriptorChanged:
+        case ListChangedType::PropertyDescriptorChanged:
             {
                 using namespace System::Windows::Forms;
                 using namespace System::Collections::Generic;
@@ -419,22 +419,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 }
             }
             break;
-        case System::ComponentModel::ListChangedType::PropertyDescriptorDeleted:
+        case ListChangedType::PropertyDescriptorDeleted:
             {
                 Ntreev::Windows::Forms::Grid::Column^ column = this[e->PropertyDescriptor->Name];
                 if(column != nullptr)
                 {
-                    Unbind(column);
+                    this->Unbind(column);
                 }
             }
             break;
-        case System::ComponentModel::ListChangedType::Reset:
+        case ListChangedType::Reset:
             {
                 PropertyDescriptorCollection^ props = m_manager->GetItemProperties();
 
                 for each(PropertyDescriptor^ item in props)
                 {
-                    Bind(item);
+                    this->Bind(item);
                 }
             }
             break;
@@ -491,7 +491,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         for each(System::ComponentModel::PropertyDescriptor^ item in m_manager->GetItemProperties())
         {
-            Bind(item);
+            this->Bind(item);
         }
 
         m_manager->ListChanged += m_listChangedEventHandler;
@@ -547,7 +547,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     int ColumnCollection::Add_System_Collections_IList(System::Object^ value)
     {
         int count = this->Count;
-        Add((Ntreev::Windows::Forms::Grid::Column^)value);
+        this->Add((Ntreev::Windows::Forms::Grid::Column^)value);
         return count;
     }
 
@@ -560,7 +560,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         for(int i=this->Count-1 ; i>=0 ; i--)
         {
-            RemoveAt(i);
+            this->RemoveAt(i);
         }
     }
 

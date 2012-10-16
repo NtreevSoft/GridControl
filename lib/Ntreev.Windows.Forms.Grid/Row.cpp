@@ -30,6 +30,7 @@
 #include "ErrorDescriptor.h"
 #include "FromNative.h"
 #include "RowBuilder.h"
+#include "NativeGridRow.h"
 
 #include "GrGridCell.h"
 #include "GrGridCore.h"
@@ -67,11 +68,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             {
                 Ntreev::Windows::Forms::Grid::Cell^ cell = NewCell(item);
                 cell->UpdateNativeText();
+
+                if(item->PropertyDescriptor->PropertyType == System::ComponentModel::IBindingList::typeid)
+                {
+                    Native::GrGridRow* pGridRow = new Native::GrGridRow(this->GridControl);
+                    m_pDataRow->AddChild(pGridRow);
+                    pGridRow->SetDataSource(cell->Value);
+                }
             }
             catch(System::Exception^)
             {
 
             }
+
+            
         }
     }
 

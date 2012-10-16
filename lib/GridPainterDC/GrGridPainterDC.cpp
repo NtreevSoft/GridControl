@@ -254,9 +254,16 @@ void GrGridPainterDC::DrawItem(GrFlag paintStyle, const GrRect& paintRect, const
 {
 	RECT2 rt = paintRect;
 
+    if(pClipRect != NULL)
+	{
+		if(rt.right > pClipRect->right)
+			rt.right = pClipRect->right;
+		if(rt.bottom > pClipRect->bottom)
+			rt.bottom = pClipRect->bottom;
+	}
+
     if(paintStyle.Has(GrPaintStyle_Focused) == true)
     {
-
         GrColor backColor1 = backColor;
 		GrColor backColor2 = RGBHSL::ModifyBrightness(backColor, 0.9f);
         TRIVERTEX vert[2];
@@ -287,9 +294,9 @@ void GrGridPainterDC::DrawItem(GrFlag paintStyle, const GrRect& paintRect, const
     }
     else
     {
-	HBRUSH hb = CreateSolidBrush(_RGB(backColor));
-	FillRect(m_hdc, &rt, hb);
-	DeleteObject(hb);
+        HBRUSH hb = CreateSolidBrush(_RGB(backColor));
+        FillRect(m_hdc, &rt, hb);
+        DeleteObject(hb);
     }
 
 	HPEN hPen = CreatePen(PS_SOLID, 1, _RGB(lineColor));

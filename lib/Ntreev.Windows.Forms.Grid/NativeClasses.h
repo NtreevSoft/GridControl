@@ -75,11 +75,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     private:
         void SetValue(int value, int scrollEventType);
+        bool SetValueCore(int value);
 
     private:
         gcroot<Ntreev::Windows::Forms::Grid::GridControl^> m_gridControl;
-        gcroot<System::Windows::Forms::ScrollProperties^> m_scroll;
+        //gcroot<System::Windows::Forms::ScrollProperties^> m_scroll;
         int m_type;
+        int m_min;
+        int m_max;
+        int m_value;
+        int m_smallChange;
+        int m_largeChange;
+        bool m_visible;
 
         static const int SB_LINEUP = 0;
         static const int SB_LINELEFT = 0;

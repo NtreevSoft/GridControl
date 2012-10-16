@@ -24,6 +24,7 @@
 #include "GrGridCore.h"
 #include "GrGridPainter.h"
 #include "GrGridInternal.h"
+#include "GrColumnList.h"
 #include <assert.h>
 
 const GrClickEditing GrGridCore::DefaultClickEditing = GrClickEditing_FocusedClick;

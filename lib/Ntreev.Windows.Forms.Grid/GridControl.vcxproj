@@ -283,6 +283,7 @@ copy "$(TargetDir)$(TargetName).xml" "$(TargetDir)..\$(TargetName).xml"
     <ClInclude Include="CellBase.h" />
     <ClInclude Include="CellCollection.h" />
     <ClInclude Include="CellTagCollection.h" />
+    <ClInclude Include="ChildGridControl.h" />
     <ClInclude Include="Column.h" />
     <ClInclude Include="ColumnCollection.h" />
     <ClInclude Include="ColumnControl.h" />
@@ -308,6 +309,7 @@ copy "$(TargetDir)$(TargetName).xml" "$(TargetDir)..\$(TargetName).xml"
     <ClInclude Include="IControlPainter.h" />
     <ClInclude Include="ITextCacheProvider.h" />
     <ClInclude Include="NativeCollection.h" />
+    <ClInclude Include="NativeGridRow.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Row.h" />
     <ClInclude Include="RowBase.h" />
@@ -395,6 +397,7 @@ copy "$(TargetDir)$(TargetName).xml" "$(TargetDir)..\$(TargetName).xml"
     <ClCompile Include="CellBase.cpp" />
     <ClCompile Include="CellCollection.cpp" />
     <ClCompile Include="CellTagCollection.cpp" />
+    <ClCompile Include="ChildGridControl.cpp" />
     <ClCompile Include="Column.cpp" />
     <ClCompile Include="ColumnCollection.cpp" />
     <ClCompile Include="ColumnControl.cpp" />
@@ -413,6 +416,7 @@ copy "$(TargetDir)$(TargetName).xml" "$(TargetDir)..\$(TargetName).xml"
     <ClCompile Include="GroupRow.cpp" />
     <ClCompile Include="GroupRowCollection.cpp" />
     <ClCompile Include="NativeCollection.cpp" />
+    <ClCompile Include="NativeGridRow.cpp" />
     <ClCompile Include="Row.cpp" />
     <ClCompile Include="RowBase.cpp" />
     <ClCompile Include="RowBaseCollection.cpp" />

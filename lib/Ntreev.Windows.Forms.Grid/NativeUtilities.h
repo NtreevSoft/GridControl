@@ -271,6 +271,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         static System::Drawing::Rectangle GetWindowRect(System::IntPtr handle);
         static System::IntPtr GetRootWindow(System::IntPtr handle);
         static System::IntPtr GetOwnerWindow(System::IntPtr handle);
+
+        static void SetScrollValue(System::IntPtr handle, int type, int value);
+        static void SetScrollRange(System::IntPtr handle, int type, int min, int max);
+        static void SetScrollPage(System::IntPtr handle, int type, int page);
+        static void SetScrollVisible(System::IntPtr handle, int type, bool visible);
     };
 
     ref class ControlPainter : Ntreev::Windows::Forms::Grid::IControlPainter

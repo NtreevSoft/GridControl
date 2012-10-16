@@ -128,7 +128,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     void WinFormInvalidator::Unlock()
     {
-
         m_lockRef--;
         if(m_lockRef < 0)
             throw gcnew System::Exception("Invalidator의 잠금해제 횟수가 잠금 횟수보다 큽니다.");
@@ -165,11 +164,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     WinFormScroll::WinFormScroll(gcroot<Ntreev::Windows::Forms::Grid::GridControl^> gridControl, int type)
         : m_gridControl(gridControl)
     {
-        if(type == 0)
-            m_scroll = m_gridControl->UserControl::HorizontalScroll;
-        else
-            m_scroll = m_gridControl->UserControl::VerticalScroll;
         m_type = type;
+        m_min = 0;
+        m_max = 100;
+        m_value = 0;
+        m_smallChange = 1;
+        m_largeChange = 10;
     }
 
     WinFormScroll::~WinFormScroll()
@@ -179,69 +179,73 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     int WinFormScroll::GetValue() const
     {
-        return m_scroll->Value;
+        return m_value;
     }
 
     void WinFormScroll::SetValue(int value)
     {
-        m_scroll->Value = value;
+        this->SetValueCore(value);
     }
 
     int WinFormScroll::GetSmallChange() const
     {
-        return m_scroll->SmallChange;
+        return m_smallChange;
     }
 
     void WinFormScroll::SetSmallChange(int value)
     {
-        m_scroll->SmallChange = value;
+        m_smallChange = value;
     }
 
     int WinFormScroll::GetLargeChange() const
     {
-        return m_scroll->LargeChange;
+        return m_largeChange;
     }
 
     void WinFormScroll::SetLargeChange(int value)
     {
-        m_scroll->LargeChange = value;
+        m_largeChange = value;
+        Native::Methods::SetScrollPage(m_gridControl->Handle, m_type, m_largeChange);
     }
 
     int WinFormScroll::GetMaximum() const
     {
-        return m_scroll->Maximum;
+        return m_max;
     }
 
     void WinFormScroll::SetMaximum(int value)
     {
-        m_scroll->Maximum = value;
+        m_max = value;
+        Native::Methods::SetScrollRange(m_gridControl->Handle, m_type, m_min, m_max);
     }
 
     int WinFormScroll::GetMinimum() const
     {
-        return m_scroll->Minimum;
+        return m_min;
     }
 
     void WinFormScroll::SetMinimum(int value)
     {
-        m_scroll->Minimum = value;
+        m_min = value;
+        Native::Methods::SetScrollRange(m_gridControl->Handle, m_type, m_min, m_max);
     }
 
     bool WinFormScroll::GetVisible() const
     {
-        return m_scroll->Visible;
+        return m_visible;
     }
 
     void WinFormScroll::SetVisible(bool value)
     {
-        m_scroll->Visible = value;
+        m_visible = value;
+        Native::Methods::SetScrollVisible(m_gridControl->Handle, m_type, m_visible);
     }
 
     void WinFormScroll::WndProc(System::IntPtr handle, System::IntPtr wParam)
     {
         using namespace System::Windows::Forms;
 
-        int nValue = m_scroll->Value; ;
+        int nValue = m_value;
 
         ScrollEventType ScrollType;
 
@@ -254,37 +258,37 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             break;
         case SB_LEFT:
             {
-                nValue = m_scroll->Minimum;
+                nValue = m_min;
                 ScrollType = ScrollEventType::First;
             }
             break;
         case SB_RIGHT:
             {
-                nValue = m_scroll->Maximum;
+                nValue = m_max;
                 ScrollType = ScrollEventType::Last;
             }
             break;
         case SB_LINELEFT:
             {
-                nValue -= m_scroll->SmallChange;
+                nValue -= m_smallChange;
                 ScrollType = ScrollEventType::SmallDecrement;
             }
             break;
         case SB_LINERIGHT:
             {
-                nValue += m_scroll->SmallChange;
+                nValue += m_smallChange;
                 ScrollType = ScrollEventType::SmallIncrement;
             }
             break;
         case SB_PAGELEFT:
             {
-                nValue -= m_scroll->LargeChange;
+                nValue -= m_largeChange;
                 ScrollType = ScrollEventType::LargeDecrement;
             }
             break;
         case SB_PAGERIGHT:
             {
-                nValue += m_scroll->LargeChange;
+                nValue += m_largeChange;
                 ScrollType = ScrollEventType::LargeIncrement;
             }
             break;
@@ -306,15 +310,25 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     {
         using namespace System::Windows::Forms;
 
-        int oldValue = m_scroll->Value;
-        int newValue = ValidateValue(value);
-
-        if(oldValue == newValue)
+        int oldValue = m_value;
+        if(this->SetValueCore(value) == false)
             return;
 
-        ScrollEventArgs se((ScrollEventType)scrollEventType, oldValue, newValue, (ScrollOrientation)m_type);
-        m_scroll->Value = newValue;
+        ScrollEventArgs se((ScrollEventType)scrollEventType, oldValue, m_value, (ScrollOrientation)m_type);
         m_gridControl->InvokeScroll(%se);
+    }
+
+    bool WinFormScroll::SetValueCore(int value)
+    {
+        int oldValue = m_value;
+        int newValue = this->ValidateValue(value);
+
+        if(oldValue == newValue)
+            return false;
+
+        m_value = newValue;
+        Native::Methods::SetScrollValue(m_gridControl->Handle, m_type, newValue);
+        return true;
     }
 
 

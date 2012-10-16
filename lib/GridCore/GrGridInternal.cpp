@@ -24,6 +24,7 @@
 #include "GrGridInternal.h"
 #include "GrGridPainter.h"
 #include "GrGridCore.h"
+#include "GrColumnList.h"
 #include <assert.h>
 #include <math.h>
 #include <memory.h>

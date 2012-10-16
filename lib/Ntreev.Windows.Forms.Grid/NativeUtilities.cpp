@@ -316,6 +316,36 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         return System::IntPtr(owner);
     }
 
+    void Methods::SetScrollValue(System::IntPtr handle, int type, int value)
+    {
+        HWND hwnd = (HWND)handle.ToPointer();
+        SetScrollPos(hwnd, type, value, TRUE);
+    }
+
+    void Methods::SetScrollRange(System::IntPtr handle, int type, int min, int max)
+    {
+        HWND hwnd = (HWND)handle.ToPointer();
+        ::SetScrollRange(hwnd, type, min, max, TRUE);
+    }
+
+    void Methods::SetScrollPage(System::IntPtr handle, int type, int page)
+    {
+        HWND hwnd = (HWND)handle.ToPointer();
+           
+        SCROLLINFO si;
+        si.cbSize = sizeof(SCROLLINFO);
+        si.fMask = SIF_PAGE;
+        si.nPage = page;
+        ::SetScrollInfo(hwnd, type, &si, TRUE);
+    }
+
+    void Methods::SetScrollVisible(System::IntPtr handle, int type, bool visible)
+    {
+        HWND hwnd = (HWND)handle.ToPointer();
+
+        ::ShowScrollBar(hwnd, type, visible == true ? TRUE : FALSE);
+    }
+
     ControlPainter::ControlPainter()
         : m_colorKey(RGB(0,128,128))
     {

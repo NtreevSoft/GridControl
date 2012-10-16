@@ -329,6 +329,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GrColumnList.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="GrDataRowList.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -510,6 +513,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GrColumnList.h" />
     <ClInclude Include="GrDataRowList.h" />
     <ClInclude Include="GrGridBase.h" />
     <ClInclude Include="GrGridCell.h" />

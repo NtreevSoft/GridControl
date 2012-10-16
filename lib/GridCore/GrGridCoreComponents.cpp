@@ -24,6 +24,7 @@
 #include "GrGridCoreComponents.h"
 #include "GrGridCore.h"
 #include "GrGridStateManager.h"
+#include "GrColumnList.h"
 #include <assert.h>
 
 #if _MSC_VER >= 1600
