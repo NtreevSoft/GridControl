@@ -248,6 +248,15 @@ void GrGridPainterDC::DrawExpander(const GrRect& paintRect, GrControlState state
 			LineTo(m_hdc, ptCenter.x, rt.bottom-2);
 		}
 	}
+
+    HPEN hPen = CreatePen(PS_SOLID, 1, _RGB(foreColor));
+	HGDIOBJ hOldPen = SelectObject(m_hdc, (HGDIOBJ)hPen);
+
+    MoveToEx(m_hdc, rt.right-1, rt.top, NULL);
+    LineTo(m_hdc, rt.right-1, rt.bottom-1);
+	
+	SelectObject(m_hdc, hOldPen);
+	DeleteObject(hPen);
 }
 
 void GrGridPainterDC::DrawItem(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor, const GrRect* pClipRect)

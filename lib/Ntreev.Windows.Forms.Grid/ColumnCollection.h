@@ -33,12 +33,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.ColumnCollectionEditor, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
     public ref class ColumnCollection sealed
         : Ntreev::Windows::Forms::Grid::GridObject
-        , System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Column^>
+        , System::Collections::Generic::IEnumerable<Column^>
         , System::Collections::IList
     {
     private: // classes
 
-        ref class Enumerator : System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Column^>
+        ref class Enumerator : System::Collections::Generic::IEnumerator<Column^>
         {
         public:
             Enumerator(GrColumnList* pColumnList);
@@ -46,9 +46,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             virtual bool MoveNext();
             virtual void Reset();
 
-            property Ntreev::Windows::Forms::Grid::Column^ Current
+            property Column^ Current
             {
-                virtual Ntreev::Windows::Forms::Grid::Column^ get();
+                virtual Column^ get();
             }
 
         private:
@@ -90,7 +90,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::ArgumentException">
         /// 추가할 열이 이미 존재하거나, 같은 이름을 가진 열이 컬렉션에 이미 존재하는 경우
         /// </exception>
-        void Add(Ntreev::Windows::Forms::Grid::Column^ item);
+        void Add(Column^ item);
 
         /// <summary>
         /// 컬렉션에 여러개의 새로운 열을 추가합니다.
@@ -104,7 +104,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::ArgumentException">
         /// 추가할 열이 이미 존재하거나, 같은 이름을 가진 열이 컬렉션에 이미 존재하는 경우
         /// </exception>
-        void AddRange(cli::array<Ntreev::Windows::Forms::Grid::Column^>^ values);
+        void AddRange(cli::array<Column^>^ values);
 
         /// <summary>
         /// 새로운 열의 인스턴스를 생성하고 컬렉션에 추가합니다.
@@ -112,7 +112,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 새로 생성된 <see cref="Column"/>의 인스턴스입니다.
         /// </returns>
-        Ntreev::Windows::Forms::Grid::Column^ Add();
+        Column^ Add();
 
         /// <summary>
         /// 새로운 열의 인스턴스를 생성하고 컬렉션에 추가합니다.
@@ -126,7 +126,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 새로 생성된 <see cref="Column"/>의 인스턴스입니다.
         /// </returns>
-        Ntreev::Windows::Forms::Grid::Column^ Add(System::String^ name);
+        Column^ Add(System::String^ name);
 
         /// <summary>
         /// 새로운 열의 인스턴스를 생성하고 컬렉션에 추가합니다.
@@ -143,7 +143,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 새로 생성된 <see cref="Column"/>의 인스턴스입니다.
         /// </returns>
-        Ntreev::Windows::Forms::Grid::Column^ Add(System::String^ name, System::Type^ type);
+        Column^ Add(System::String^ name, System::Type^ type);
 
         /// <summary>
         /// 컬렉션에 새로운 열을 삽입합니다.
@@ -164,7 +164,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::ArgumentException">
         /// 추가할 열이 이미 존재하거나, 같은 이름을 가진 열이 컬렉션에 이미 존재하는 경우
         /// </exception>
-        void Insert(int index, Ntreev::Windows::Forms::Grid::Column^ item);
+        void Insert(int index, Column^ item);
 
         /// <summary>
         /// 새로운 열의 인스턴스를 생성하고 컬렉션에 삽입합니다.
@@ -178,7 +178,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 새로 생성된 <see cref="Column"/>의 인스턴스입니다.
         /// </returns>
-        Ntreev::Windows::Forms::Grid::Column^ Insert(int index);
+        Column^ Insert(int index);
 
         /// <summary>
         /// 새로운 열의 인스턴스를 생성하고 컬렉션에 삽입합니다.
@@ -198,7 +198,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 새로 생성된 <see cref="Column"/>의 인스턴스입니다.
         /// </returns>
-        Ntreev::Windows::Forms::Grid::Column^ Insert(int index, System::String^ name);
+        Column^ Insert(int index, System::String^ name);
 
         /// <summary>
         /// 새로운 열의 인스턴스를 생성하고 컬렉션에 삽입합니다.
@@ -221,7 +221,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 새로 생성된 <see cref="Column"/>의 인스턴스입니다.
         /// </returns>
-        Ntreev::Windows::Forms::Grid::Column^ Insert(int index, System::String^ name, System::Type^ type);
+        Column^ Insert(int index, System::String^ name, System::Type^ type);
 
         /// <summary>
         /// 컬렉션에서 열을 제거합니다.
@@ -238,7 +238,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::ArgumentException">
         /// 이미 제거가 된 경우 또는 제거할 수 없는 열일 경우
         /// </exception>
-        void Remove(Ntreev::Windows::Forms::Grid::Column^ item);
+        void Remove(Column^ item);
 
         /// <summary>
         /// 컬렉션에서 지정된 위치의 열을 제거합니다.
@@ -266,7 +266,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 컬렉션에 포함되어 있지 않다면 -1을 반환합니다.
         /// </returns>
-        int IndexOf(Ntreev::Windows::Forms::Grid::Column^ item);
+        int IndexOf(Column^ item);
 
         /// <summary>
         /// 컬렉션에서 열이 포함되어 있는지 확인합니다.
@@ -277,7 +277,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 컬렉션에 포함되어있다면 true를, 그렇지 않다면 false를 반환합니다.
         /// </returns>
-        bool Contains(Ntreev::Windows::Forms::Grid::Column^ item);
+        bool Contains(Column^ item);
 
         /// <summary>
         /// 컬렉션을 반복하는 열거자를 가져옵니다.
@@ -285,7 +285,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 열거자를 나타내는 <see cref="System::Collections::Generic::IEnumerator"/>입니다.
         /// </returns>
-        virtual System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Column^>^ GetEnumerator();
+        virtual System::Collections::Generic::IEnumerator<Column^>^ GetEnumerator();
 
     public: // properties
 
@@ -301,9 +301,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::ArgumentOutOfRangeException">
         /// index가 0보다 작거나, <see cref="Count"/>보다 클 경우
         /// </exception>
-        property Ntreev::Windows::Forms::Grid::Column^ default[int]
+        property Column^ default[int]
         {
-            Ntreev::Windows::Forms::Grid::Column^ get(int index);
+            Column^ get(int index);
         }
 
         /// <summary>
@@ -326,9 +326,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 같은 이름의 열이 없을 경우 null을 반환합니다.
         /// </returns>
-        property Ntreev::Windows::Forms::Grid::Column^ default[System::String^]
+        property Column^ default[System::String^]
         {
-            Ntreev::Windows::Forms::Grid::Column^ get(System::String^ columnName);
+            Column^ get(System::String^ columnName);
         }
 
     private: // methods
@@ -394,24 +394,24 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     internal: // property
 
-        property Ntreev::Windows::Forms::Grid::Column^ default[GrColumn*] 
+        property Column^ default[GrColumn*] 
         {
-            Ntreev::Windows::Forms::Grid::Column^ get(GrColumn*); 
+            Column^ get(GrColumn*); 
         }
 
-        static Ntreev::Windows::Forms::Grid::Column^ CreateColumnInstance(System::IServiceProvider^ serviceProvider);
+        static Column^ CreateColumnInstance(System::IServiceProvider^ serviceProvider);
 
-        static Ntreev::Windows::Forms::Grid::Column^ CreateColumnInstance(System::IServiceProvider^ serviceProvider, System::Type^ columnType);
+        static Column^ CreateColumnInstance(System::IServiceProvider^ serviceProvider, System::Type^ columnType);
 
     private: // methods
 
-        Ntreev::Windows::Forms::Grid::Column^ CreateColumnInstance();
+        Column^ CreateColumnInstance();
 
         System::String^ NewColumnName();
 
-        Ntreev::Windows::Forms::Grid::Column^ Bind(System::ComponentModel::PropertyDescriptor^ propertyDescriptor);
+        Column^ Bind(System::ComponentModel::PropertyDescriptor^ propertyDescriptor);
 
-        void Unbind(Ntreev::Windows::Forms::Grid::Column^ column);
+        void Unbind(Column^ column);
 
         void currencyManager_ListChanged(System::Object^ sender, System::ComponentModel::ListChangedEventArgs^ e);
 

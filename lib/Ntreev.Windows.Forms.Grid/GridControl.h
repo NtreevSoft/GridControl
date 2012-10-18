@@ -48,7 +48,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <summary>
         /// 셀의 편집을 시작합니다.
         /// </summary>
-        void EditCell(Ntreev::Windows::Forms::Grid::Cell^ cell, Ntreev::Windows::Forms::Grid::EditingReason editBy);
+        void EditCell(Cell^ cell, Ntreev::Windows::Forms::Grid::EditingReason editBy);
 
         /// <summary>
         /// 셀의 편집을 종료합니다.
@@ -58,19 +58,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <summary>
         /// 대상이 되는 셀이 화면내에 표시 될 수 있도록 스크롤을 조정합니다.
         /// </summary>
-        void BringIntoView(Ntreev::Windows::Forms::Grid::Cell^ cell);
+        void BringIntoView(Cell^ cell);
 
         /// <summary>
         /// 대상이 되는 행이 화면내에 표시 될 수 있도록 수직 스크롤을 조정합니다.
         /// </summary>
         /// <param name="row">화면내에 표시하려 하는 <see cref="Row"/>의 인스턴스입니다.</param>
-        void BringIntoView(Ntreev::Windows::Forms::Grid::Row^ row);
+        void BringIntoView(Row^ row);
 
         /// <summary>
         /// 대상이 되는 열이 화면내에 표시 될 수 있도록 수평 스크롤을 조정합니다.
         /// </summary>
         /// <param name="column">화면내에 표시하려 하는 <see cref="Column"/>의 인스턴스입니다.</param>
-        void BringIntoView(Ntreev::Windows::Forms::Grid::Column^ column);
+        void BringIntoView(Column^ column);
 
         /// <summary>
         /// 모든 데이터를 삭제하고 그리드 컨트롤을 초기화 상태로 설정합니다.
@@ -102,7 +102,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 지정된 위치를 포함하는 <see cref="CellBase"/>입니다. 위치를 포함하는 <see cref="CellBase"/>이 없다면 null을 반환합니다.
         /// </returns>
-        Ntreev::Windows::Forms::Grid::CellBase^ GetAt(System::Drawing::Point pt);
+        CellBase^ GetAt(System::Drawing::Point pt);
 
         /// <summary>
         /// 지정된 위치를 포함하는 그리드 컨트롤의 셀을 검색합니다.
@@ -113,18 +113,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 지정된 위치를 포함하는 <see cref="Cell"/>입니다. 위치를 포함하는 <see cref="Cell"/>이 없다면 null을 반환합니다.
         /// </returns>
-        Ntreev::Windows::Forms::Grid::Cell^ GetCellAt(System::Drawing::Point pt);
+        Cell^ GetCellAt(System::Drawing::Point pt);
 
         /// <summary>
         /// 그리드 컨트롤에 대한 정보를 담은 대화상자를 모달 형태로 표시합니다.
         /// </summary>
         void ShowAbout();
 
+        Cell^ GetFirstVisibleCell();
+
 		virtual void ResetBackColor() override;
 
 		virtual void ResetForeColor() override;
 
 		void ResetBackgroundColor();
+
+        void ResetPaddingColor();
 
 		void ResetLineColor();
 
@@ -346,9 +350,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::Column^ FocusedColumn
+        property Column^ FocusedColumn
         {
-            Ntreev::Windows::Forms::Grid::Column^ get();
+            Column^ get();
         }
 
         /// <summary>
@@ -422,9 +426,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 삽입열은 새로 만들거나 삭제할 수 없습니다.
         /// </remarks>
         [System::ComponentModel::CategoryAttribute("Behavior")]
-        property Ntreev::Windows::Forms::Grid::Row^ InsertionRow
+        property Row^ InsertionRow
         {
-            Ntreev::Windows::Forms::Grid::Row^ get();
+            Row^ get();
         }
 
         /// <summary>
@@ -468,10 +472,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
         [System::ComponentModel::DefaultValueAttribute((System::String^)nullptr)]
-        property Ntreev::Windows::Forms::Grid::Cell^ FocusedCell
+        property Cell^ FocusedCell
         {
-            Ntreev::Windows::Forms::Grid::Cell^ get(); 
-            void set(Ntreev::Windows::Forms::Grid::Cell^);
+            Cell^ get(); 
+            void set(Cell^);
         }
 
         /// <summary>
@@ -483,9 +487,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::Cell^ EditingCell
+        property Cell^ EditingCell
         {
-            Ntreev::Windows::Forms::Grid::Cell^ get(); 
+            Cell^ get(); 
         }
 
         /// <summary>
@@ -804,6 +808,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		[System::ComponentModel::DescriptionAttribute("그리드가 포함되지 않는 여분의 배경색입니다.")]
         [System::ComponentModel::CategoryAttribute("Appearance")]
         property System::Drawing::Color BackgroundColor 
+        {
+            System::Drawing::Color get();
+            void set(System::Drawing::Color);
+        }
+
+        [System::ComponentModel::DescriptionAttribute("내부 간격의 색입니다.")]
+        [System::ComponentModel::CategoryAttribute("Appearance")]
+        property System::Drawing::Color PaddingColor 
         {
             System::Drawing::Color get();
             void set(System::Drawing::Color);
@@ -1361,6 +1373,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void raise(System::Object^ sender, System::EventArgs^ e) { if(m_eventBackgroundColorChanged != nullptr) m_eventBackgroundColorChanged->Invoke(sender, e); }
         }
 
+        /// <summary>
+        /// <see cref="Ntreev::Windows::Forms::Grid::GridControl::PaddingColor"/> 속성 값이 변경되면 발생합니다.
+        /// </summary>
+		[System::ComponentModel::CategoryAttribute("PropertyChanged")]
+        [System::ComponentModel::DescriptionAttribute("PaddingColor 값이 변경되면 발생합니다.")]
+        event System::EventHandler^ PaddingColorChanged
+        {
+            void add(System::EventHandler^ p) { m_eventPaddingColorChanged += p; }
+            void remove(System::EventHandler^ p) { m_eventPaddingColorChanged -= p; }
+        private:
+            void raise(System::Object^ sender, System::EventArgs^ e) { if(m_eventPaddingColorChanged != nullptr) m_eventPaddingColorChanged->Invoke(sender, e); }
+        }
+
 		/// <summary>
         /// <see cref="Ntreev::Windows::Forms::Grid::GridControl::LineColor"/> 속성 값이 변경되면 발생합니다.
         /// </summary>
@@ -1376,35 +1401,35 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     internal: // methods
 
-        bool InvokeValueChanging(Ntreev::Windows::Forms::Grid::Cell^ cell, System::Object^ value, System::Object^ oldValue);
-        void InvokeValueChanged(Ntreev::Windows::Forms::Grid::Cell^ cell);
+        bool InvokeValueChanging(Cell^ cell, System::Object^ value, System::Object^ oldValue);
+        void InvokeValueChanged(Cell^ cell);
         bool InvokeRowInserting(System::Object^ component);
-        void InvokeRowInserted(Ntreev::Windows::Forms::Grid::Row^ row);
+        void InvokeRowInserted(Row^ row);
         bool InvokeRowBinding(System::Object^ component);
-        void InvokeRowBinded(Ntreev::Windows::Forms::Grid::Row^ row);
-        void InvokeRowUnbinding(Ntreev::Windows::Forms::Grid::Row^ row);
-        void InvokeRowUnbinded(Ntreev::Windows::Forms::Grid::Row^ row);
-        bool InvokeRowRemoving(Ntreev::Windows::Forms::Grid::Row^ row);
+        void InvokeRowBinded(Row^ row);
+        void InvokeRowUnbinding(Row^ row);
+        void InvokeRowUnbinded(Row^ row);
+        bool InvokeRowRemoving(Row^ row);
         void InvokeRowRemoved(Ntreev::Windows::Forms::Grid::RowRemovedEventArgs^ e);
-        bool InvokeColumnInserting(Ntreev::Windows::Forms::Grid::Column^ column);
-        void InvokeColumnInserted(Ntreev::Windows::Forms::Grid::Column^ column);
-        Ntreev::Windows::Forms::Grid::Column^ InvokeColumnBinding(System::ComponentModel::PropertyDescriptor^ propertyDescriptor, Ntreev::Windows::Forms::Grid::Column^ existColumn);
-        void InvokeColumnBinded(Ntreev::Windows::Forms::Grid::Column^ column);
-        bool InvokeColumnMouseDown(Ntreev::Windows::Forms::Grid::Column^ column, System::Drawing::Point clientLocation);
-        bool InvokeColumnMouseUp(Ntreev::Windows::Forms::Grid::Column^ column, System::Drawing::Point clientLocation);
-        void InvokeColumnMouseEnter(Ntreev::Windows::Forms::Grid::Column^ column, System::Drawing::Point clientLocation);
-        bool InvokeColumnMouseMove(Ntreev::Windows::Forms::Grid::Column^ column, System::Drawing::Point clientLocation);
-        void InvokeColumnMouseLeave(Ntreev::Windows::Forms::Grid::Column^ column);
-        void InvokeColumnWidthChanged(Ntreev::Windows::Forms::Grid::Column^ column);
-        void InvokeColumnFrozenChanged(Ntreev::Windows::Forms::Grid::Column^ column);
-        bool InvokeEditBegun(Ntreev::Windows::Forms::Grid::Cell^ cell);
+        bool InvokeColumnInserting(Column^ column);
+        void InvokeColumnInserted(Column^ column);
+        Column^ InvokeColumnBinding(System::ComponentModel::PropertyDescriptor^ propertyDescriptor, Column^ existColumn);
+        void InvokeColumnBinded(Column^ column);
+        bool InvokeColumnMouseDown(Column^ column, System::Drawing::Point clientLocation);
+        bool InvokeColumnMouseUp(Column^ column, System::Drawing::Point clientLocation);
+        void InvokeColumnMouseEnter(Column^ column, System::Drawing::Point clientLocation);
+        bool InvokeColumnMouseMove(Column^ column, System::Drawing::Point clientLocation);
+        void InvokeColumnMouseLeave(Column^ column);
+        void InvokeColumnWidthChanged(Column^ column);
+        void InvokeColumnFrozenChanged(Column^ column);
+        bool InvokeEditBegun(Cell^ cell);
         void InvokeEditEnded(Ntreev::Windows::Forms::Grid::CellEventArgs^ e);
         void InvokeScroll(System::Windows::Forms::ScrollEventArgs^ e);
-        void InvokeCellMouseEnter(Ntreev::Windows::Forms::Grid::Cell^ cell);
-        bool InvokeCellMouseMove(Ntreev::Windows::Forms::Grid::Cell^ cell, System::Drawing::Point clientLocation);
-        void InvokeCellMouseLeave(Ntreev::Windows::Forms::Grid::Cell^ cell);
-        void InvokeCellClick(Ntreev::Windows::Forms::Grid::Cell^ cell);
-        void InvokeCellDoubleClick(Ntreev::Windows::Forms::Grid::Cell^ cell);
+        void InvokeCellMouseEnter(Cell^ cell);
+        bool InvokeCellMouseMove(Cell^ cell, System::Drawing::Point clientLocation);
+        void InvokeCellMouseLeave(Cell^ cell);
+        void InvokeCellClick(Cell^ cell);
+        void InvokeCellDoubleClick(Cell^ cell);
 
         System::Object^ GetInternalService(System::Type^ serviceType);
 
@@ -1414,9 +1439,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void InvokeSelectedColumnsChanged();
         void InvokeSelectionChanged();
 
+        GridControl^ InvokeNewChildGridControl(System::ComponentModel::PropertyDescriptor^ descriptor);
+
         bool DesignTimeHitTest(System::Drawing::Point globalLocation);
         void PostPaint(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle clipRectangle);
-        Ntreev::Windows::Forms::Grid::Row^ CreateRow(GrDataRow* pDataRow);
+        Row^ CreateRow(GrDataRow* pDataRow);
 
     internal: // properties
 
@@ -1934,6 +1961,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		virtual void OnBackgroundColorChanged(System::EventArgs^ e);
 
+        virtual void OnPaddingColorChanged(System::EventArgs^ e);
+
 		virtual void OnLineColorChanged(System::EventArgs^ e);
 
         ///// <summary>
@@ -1965,6 +1994,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         virtual bool ProcessCmdKey(System::Windows::Forms::Message% msg, System::Windows::Forms::Keys keyData) override;
 
+        virtual bool ProcessDialogKey(System::Windows::Forms::Keys keyData) override;
+
         /// <summary>
         /// 사용 가능한 다음 컨트롤을 선택하여 활성 컨트롤로 만듭니다.
         /// </summary>
@@ -1976,7 +2007,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         virtual bool ProcessTabKey(bool forward) override;
 
-        virtual Ntreev::Windows::Forms::Grid::Row^ NewRowFromBuilder(Ntreev::Windows::Forms::Grid::RowBuilder^ rowBuilder);
+        virtual Row^ NewRowFromBuilder(Ntreev::Windows::Forms::Grid::RowBuilder^ rowBuilder);
+
+        virtual GridControl^ NewChildGridControl(System::ComponentModel::PropertyDescriptor^ descriptor);
 
 #ifdef _DEBUG
         virtual void OnInvalidated(System::Windows::Forms::InvalidateEventArgs^ e) override;
@@ -1997,6 +2030,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         bool ShouldSerializeCaption();
 
         bool ShouldSerializeBackgroundColor();
+        bool ShouldSerializePaddingColor();
 		bool ShouldSerializeLineColor();
 		bool ShouldSerializeBackColor();
 		bool ShouldSerializeForeColor();
@@ -2010,6 +2044,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void currencyManager_ListChanged(System::Object^ sender, System::ComponentModel::ListChangedEventArgs^ e);
         void currencyManager_BindingComplete(System::Object^ sender, System::Windows::Forms::BindingCompleteEventArgs^ e);
 		void style_Disposed(System::Object^ sender, System::EventArgs^ e);
+        void childGridControl_PreviewKeyDown(System::Object^ sender, System::Windows::Forms::PreviewKeyDownEventArgs^ e);
 
     private: // variables
         System::Object^ m_dataSource;
@@ -2029,8 +2064,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         Ntreev::Windows::Forms::Grid::Style^ m_style;
 
-        Ntreev::Windows::Forms::Grid::Cell^ m_focusedCell;
-        Ntreev::Windows::Forms::Grid::Cell^ m_editingCell;
+        Cell^ m_focusedCell;
+        Cell^ m_editingCell;
         Ntreev::Windows::Forms::Grid::CaptionRow^ m_captionRow;
         Ntreev::Windows::Forms::Grid::GroupPanel^ m_groupPanel;
 
@@ -2044,10 +2079,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         Ntreev::Windows::Forms::Grid::ToolTip^ m_tooltips;
         System::DateTime m_buttonDownTime;
 
-        Ntreev::Windows::Forms::Grid::Column^ m_oldFocusedColumn;
+        Column^ m_oldFocusedColumn;
         Ntreev::Windows::Forms::Grid::RowBase^ m_oldFocusedRow;
 
         System::Drawing::Color m_backgroundColor;
+        System::Drawing::Color m_paddingColor;
 		System::Drawing::Color m_lineColor;
 		bool m_paintBackground;
 
@@ -2097,6 +2133,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::EventHandler^ m_eventDataBindingComplete;
 
 		System::EventHandler^ m_eventBackgroundColorChanged;
+        System::EventHandler^ m_eventPaddingColorChanged;
 		System::EventHandler^ m_eventLineColorChanged;
 
         Ntreev::Windows::Forms::Grid::CurrencyManagerChangingEventHandler^ m_eventCurrencyManagerChanging;

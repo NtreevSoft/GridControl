@@ -41,7 +41,7 @@ GrStateManager::GrStateManager()
     m_states.push_back(new RowResizing());
     m_states.push_back(new GroupInfoPressing());
     m_states.push_back(new GroupCellPressing());
-    m_states.push_back(new GroupExpandPressing()); 
+    m_states.push_back(new ExpanderPressing()); 
     m_states.push_back(new ItemPressing());
     m_states.push_back(new ItemButtonPressing());
     m_states.push_back(new ItemEditing());
@@ -1763,30 +1763,31 @@ namespace GridStateClass
         m_mouseDownPoint = GrPoint::Empty;
     }
 
-    GroupExpandPressing::GroupExpandPressing()
+    ExpanderPressing::ExpanderPressing()
     {
 
     }
 
-    bool GroupExpandPressing::GetHitTest(GrCell* pHitted, const GrPoint& localLocation)
+    bool ExpanderPressing::GetHitTest(GrCell* pHitted, const GrPoint& localLocation)
     {
-        GrGroupHeader* pGroupCell = dynamic_cast<GrGroupHeader*>(pHitted);
+        GrExpander* pGroupCell = dynamic_cast<GrExpander*>(pHitted);
         if(pGroupCell == NULL)
             return false;
 
-        return pGroupCell->HitMouseOverTest(localLocation) == GrMouseOverState_Control;
+        return true;
+        //return pGroupCell->HitMouseOverTest(localLocation) == GrMouseOverState_Control;
     }
 
-    void GroupExpandPressing::OnBegin(GrStateEventArgs* e)
+    void ExpanderPressing::OnBegin(GrStateEventArgs* e)
     {
-        GrGroupHeader* pGroupCell = dynamic_cast<GrGroupHeader*>(e->GetCell());
+        GrExpander* pGroupCell = dynamic_cast<GrExpander*>(e->GetCell());
 
-        m_pGroupRow = (GrGroupRow*)pGroupCell->GetRow();
+        m_pDataRow = (IDataRow*)pGroupCell->GetRow();
     }
 
-    void GroupExpandPressing::OnMouseUp(GrStateMouseEventArgs* /*e*/)
+    void ExpanderPressing::OnMouseUp(GrStateMouseEventArgs* /*e*/)
     {
-        m_pGroupRow->Expand(!m_pGroupRow->IsExpanded());
+        m_pDataRow->Expand(!m_pDataRow->IsExpanded());
         m_pGridCore->Invalidate();
     }
 

@@ -28,6 +28,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     ref class GridControl;
 
+    typedef GridControl _GridControl;
+
     namespace Native
     {
         class WinFormGridCore;

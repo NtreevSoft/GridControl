@@ -51,6 +51,7 @@ public:
     uint GetDisplayableRowCount() const;
     IDataRow* GetDisplayableRow(uint index) const;
     int GetDisplayableBottom() const;
+    int GetVisibleBottom() const;
 
     uint ClipFrom(uint visibleFrom) const;
     uint ClipFrom(const GrRect& displayRect, uint visibleFrom) const;

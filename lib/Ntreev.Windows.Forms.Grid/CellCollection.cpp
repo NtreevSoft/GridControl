@@ -86,7 +86,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         throw gcnew System::ArgumentException();
     }
 
-    Ntreev::Windows::Forms::Grid::Cell^ CellCollection::default::get(Ntreev::Windows::Forms::Grid::Column^ column)
+    Ntreev::Windows::Forms::Grid::Cell^ CellCollection::default::get(Column^ column)
     {
         if(column == nullptr)
             throw gcnew System::NullReferenceException();

@@ -88,6 +88,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_visibleColumnList = gcnew VisibleColumnCollection(this);
 		m_displayableColumnList = gcnew DisplayableColumnCollection(this);
 		m_backgroundColor = System::Drawing::SystemColors::Control;
+        m_paddingColor = System::Drawing::SystemColors::ActiveCaption;
 		m_lineColor = GrStyle::DefaultStyle.LineColor;
 
 		m_unfrozenColumnList = gcnew UnfrozenColumnCollection(this);
@@ -159,6 +160,30 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return gcnew Ntreev::Windows::Forms::Grid::Row(rowBuilder);
     }
 
+    GridControl^ GridControl::NewChildGridControl(System::ComponentModel::PropertyDescriptor^ descriptor)
+    {
+        GridControl^ control = dynamic_cast<GridControl^>(System::Activator::CreateInstance(this->GetType()));
+        control->PreviewKeyDown += gcnew System::Windows::Forms::PreviewKeyDownEventHandler(this, &GridControl::childGridControl_PreviewKeyDown);
+        control->Name = descriptor->Name;
+        control->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+        control->IsCaptionRowVisible = false;
+        control->IsGroupPanelVisible = false;
+        control->IsFrozingSplitterVisible = false;
+        control->Padding = System::Windows::Forms::Padding(10);
+        control->Visible = false;
+        control->AutoFitColumn = this->AutoFitColumn;
+        control->AutoFitRow = this->AutoFitRow;
+        control->ReadOnly = this->ReadOnly;
+        control->Font = this->Font;
+
+        return control;
+    }
+
+    void GridControl::childGridControl_PreviewKeyDown(System::Object^ sender, System::Windows::Forms::PreviewKeyDownEventArgs^ e)
+    {
+
+    }
+
 #ifdef _DEBUG
 	void GridControl::OnInvalidated(System::Windows::Forms::InvalidateEventArgs^ e)
 	{
@@ -180,6 +205,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		m_pGridWindow->OnGotFocus();
 		UserControl::OnGotFocus(e);
+
+        System::Console::WriteLine(this->Handle);
 	}
 
 	void GridControl::OnLostFocus(System::EventArgs^ e)
@@ -208,6 +235,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	}
 
 	void GridControl::OnBackgroundColorChanged(System::EventArgs^ e)
+	{
+		this->BackgroundColorChanged(this, e);
+		this->Invalidate();
+	}
+
+    void GridControl::OnPaddingColorChanged(System::EventArgs^ e)
 	{
 		this->BackgroundColorChanged(this, e);
 		this->Invalidate();
@@ -288,6 +321,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		else
 		{
 			SolidBrush br(m_backgroundColor);
+            SolidBrush br2(m_paddingColor);
+            e->Graphics->FillRectangle(%br2, e->ClipRectangle);
 			e->Graphics->FillRectangle(%br, this->DisplayRectangle);
 		}
 	}
@@ -536,10 +571,36 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		form->ShowDialog();
 	}
 
+    Cell^ GridControl::GetFirstVisibleCell()
+    {
+        Row^ firstRow;
+        if(this->InsertionRow->IsVisible == true)
+        {
+            firstRow = this->InsertionRow;
+        }
+        else if(this->Rows->Count > 0)
+        {
+            firstRow = this->Rows[0];
+        }
+
+        if(firstRow != nullptr && firstRow->Cells->Count > 0)
+        {
+            return firstRow->Cells[0];
+        }
+
+        return nullptr;
+    }
+
 	void GridControl::WndProc(System::Windows::Forms::Message% m)
 	{
 		switch(m.Msg)
 		{
+        case Native::WM::WM_SETFOCUS:
+        case Native::WM::WM_KILLFOCUS:
+            {
+                this->DefWndProc(m);
+            }
+            return;
 		case Native::WM::WM_HSCROLL:
 			{
 				Native::WinFormScroll* pScroll = (Native::WinFormScroll*)m_pGridCore->GetHorzScroll();
@@ -548,10 +609,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			return;
 		case Native::WM::WM_VSCROLL:
 			{
-
 				Native::WinFormScroll* pScroll = (Native::WinFormScroll*)m_pGridCore->GetVertScroll();
 				pScroll->WndProc(m.HWnd, m.WParam);
-
 			}
 			return;
 		}
@@ -582,6 +641,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		UserControl::OnMouseDown(e);
 		if(e->Button == System::Windows::Forms::MouseButtons::Left)
 			m_pGridWindow->OnMouseDown(e->Location);
+
+        Native::Methods::SetFocus(this->Handle);
 	}
 
 	void GridControl::OnMouseUp(System::Windows::Forms::MouseEventArgs^ e)
@@ -835,7 +896,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		case Keys::Down:
 		case Keys::Right:
 		case Keys::Left:
-			result = true;
+            {
+                //GridControl^ control = dynamic_cast<GridControl^>(this->Parent);
+                //if(control != nullptr)
+                //{
+                //    if(this->FocusedRow->VisibleIndex == this->VisibleRows->Count - 1)
+                //        return false;
+                //}
+			    result = true;
+            }
 			break;
 
 		default:
@@ -845,6 +914,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		return result;
 	}
+
+    bool GridControl::ProcessDialogKey(System::Windows::Forms::Keys keyData)
+    {
+        if(UserControl::ProcessDialogKey(keyData) == true)
+            return true;
+
+
+        return false;
+    }
 
 	bool GridControl::ProcessCmdKey(System::Windows::Forms::Message% msg, System::Windows::Forms::Keys keyData)
 	{
@@ -1050,6 +1128,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		OnFocusedCellChanged(gcnew CellEventArgs(m_focusedCell));
 	}
 
+    GridControl^ GridControl::InvokeNewChildGridControl(System::ComponentModel::PropertyDescriptor^ descriptor)
+    {
+        GridControl^ control = this->NewChildGridControl(descriptor);
+        control->Visible = false;
+        this->Controls->Add(control);
+        return control;
+    }
+
 	bool GridControl::ShouldSerializeColumns()
 	{
 		return this->Columns->Count != 0;
@@ -1075,6 +1161,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		this->BackgroundColor = System::Drawing::SystemColors::Control;
 	}
 
+    void GridControl::ResetPaddingColor()
+    {
+        this->PaddingColor = System::Drawing::SystemColors::ActiveCaption;
+    }
+
 	void GridControl::ResetLineColor()
 	{
 		this->LineColor = GrStyle::DefaultStyle.LineColor;
@@ -1099,6 +1190,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		return m_backgroundColor != System::Drawing::SystemColors::Control;
 	}
+
+    bool GridControl::ShouldSerializePaddingColor()
+    {
+        return m_paddingColor != System::Drawing::SystemColors::ActiveCaption;
+    }
 
 	bool GridControl::ShouldSerializeLineColor()
 	{
@@ -1153,7 +1249,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			return;
 
 		if(cell->IsFocused == false)
-			cell->IsFocused = true;
+            cell->Focus();
 
 		m_pGridCore->EditItem(cell->NativeRef, editBy.ToNative());
 	}
@@ -2004,6 +2100,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			return;
 		m_backgroundColor = value;
 		OnBackgroundColorChanged(System::EventArgs::Empty);
+	}
+
+    System::Drawing::Color GridControl::PaddingColor::get()
+	{
+        return m_paddingColor;
+	}
+
+	void GridControl::PaddingColor::set(System::Drawing::Color value)
+	{
+		if(m_paddingColor == value)
+			return;
+		m_paddingColor = value;
+		OnPaddingColorChanged(System::EventArgs::Empty);
 	}
 
 	System::Drawing::Color GridControl::LineColor::get()

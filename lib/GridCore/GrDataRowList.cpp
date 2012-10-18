@@ -446,7 +446,7 @@ void GrDataRowList::gridCore_FontChanged(GrObject* /*pSender*/, GrEventArgs* /*e
         }
     }
 
-    for_each(_GroupRows, m_vecGroupRows, value)
+    for(auto value : m_vecGroupRows)
     {
         m_pTextUpdater->AddTextBounds(value);
         m_pTextUpdater->AddTextBounds(value->GetLabel());
@@ -463,12 +463,12 @@ void GrDataRowList::columnList_ColumnInserted(GrObject* /*pSender*/, GrColumnEve
     }
 
     GetInsertionRow()->AddItem(pColumn);
-    for_each(_DataRows, m_vecDataRows, value)
+    for(auto value : m_vecDataRows)
     {
         value->AddItem(pColumn);
     }
 
-    for_each(_DataRows, m_vecDataRowsRemoved, value)
+    for(auto value : m_vecDataRowsRemoved)
     {
         value->AddItem(pColumn);
     }
@@ -479,7 +479,7 @@ void GrDataRowList::columnList_ColumnRemoved(GrObject* /*pSender*/, GrColumnEven
     GrItem* pItem = GetInsertionRow()->GetItem(e->GetColumn());
     m_pGridCore->DetachObject(pItem);
 
-    for_each(_DataRows, m_vecDataRows, value)
+    for(auto value : m_vecDataRows)
     {
         pItem = value->GetItem(e->GetColumn());
         m_pGridCore->DetachObject(pItem);
@@ -825,6 +825,11 @@ IDataRow* GrDataRowList::GetDisplayableRow(uint index) const
 int GrDataRowList::GetDisplayableBottom() const
 {
     return m_displayableBottom;
+}
+
+int GrDataRowList::GetVisibleBottom() const
+{
+    return m_visibleBottom;
 }
 
 IDataRow* GrDataRowList::HitTest(int y) const

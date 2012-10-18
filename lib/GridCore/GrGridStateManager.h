@@ -48,7 +48,7 @@ enum GrGridState
     GrGridState_RowResizing,
     GrGridState_GroupPressing,
     GrGridState_GroupHeaderPressing,
-    GrGridState_GroupExpandPressing,
+    GrGridState_ExpanderPressing,
     GrGridState_ItemPressing,
     GrGridState_ItemButtonPressing,
     GrGridState_ItemEditing,
@@ -469,10 +469,10 @@ namespace GridStateClass
         GrPoint m_mouseDownPoint;
     };
 
-    class GroupExpandPressing : public GrStateBase
+    class ExpanderPressing : public GrStateBase
     {
     public:
-        GroupExpandPressing();
+        ExpanderPressing();
 
         virtual bool GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
         virtual void OnBegin(GrStateEventArgs* e);
@@ -481,11 +481,11 @@ namespace GridStateClass
     public:
         virtual GrGridState GetState() const
         {
-            return GrGridState_GroupExpandPressing;
+            return GrGridState_ExpanderPressing;
         }
 
     private:
-        GrGroupRow* m_pGroupRow;
+        IDataRow* m_pDataRow;
     };
 
     class GroupCellPressing : public GrStateBase

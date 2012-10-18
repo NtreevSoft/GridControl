@@ -50,11 +50,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_index = 0;
     }
 
-    Ntreev::Windows::Forms::Grid::Column^ FrozenColumnCollection::Enumerator::Current::get()
+    Column^ FrozenColumnCollection::Enumerator::Current::get()
     {
         GrColumn* pColumn = m_pColumnList->GetFrozenColumn(m_index - 1);
         System::Object^ ref = pColumn->ManagedRef;
-        return safe_cast<Ntreev::Windows::Forms::Grid::Column^>(ref);
+        return safe_cast<Column^>(ref);
     }
 
     System::Object^ FrozenColumnCollection::Enumerator::Current_System_Collections_IEnumerator::get()
@@ -68,12 +68,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pColumnList = this->GridCore->GetColumnList();
     }
 
-    System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Column^>^ FrozenColumnCollection::GetEnumerator()
+    System::Collections::Generic::IEnumerator<Column^>^ FrozenColumnCollection::GetEnumerator()
     {
         return gcnew Ntreev::Windows::Forms::Grid::FrozenColumnCollection::Enumerator(m_pColumnList); 
     }
 
-    Ntreev::Windows::Forms::Grid::Column^ FrozenColumnCollection::default::get(int index)
+    Column^ FrozenColumnCollection::default::get(int index)
     {
         if((unsigned int)index >= m_pColumnList->GetFrozenColumnCount())
             throw gcnew System::ArgumentOutOfRangeException("index");
@@ -93,7 +93,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void FrozenColumnCollection::CopyT_System_Collections_ICollectiono(System::Array^ array, int index)
     {
-        for each(Ntreev::Windows::Forms::Grid::Column^ item in this)
+        for each(Column^ item in this)
         {
             array->SetValue(item, index++);
         }

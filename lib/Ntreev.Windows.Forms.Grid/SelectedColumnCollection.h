@@ -31,12 +31,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// </summary>
     public ref class SelectedColumnCollection sealed
         : Ntreev::Windows::Forms::Grid::GridObject
-        , System::Collections::Generic::ICollection<Ntreev::Windows::Forms::Grid::Column^>
+        , System::Collections::Generic::ICollection<Column^>
         , System::Collections::ICollection
     {
     private: // classes
 
-        ref class Enumerator : System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Column^>
+        ref class Enumerator : System::Collections::Generic::IEnumerator<Column^>
         {
         public:
             Enumerator(const GrSelectedColumns* selectedColumns);
@@ -44,9 +44,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             virtual bool MoveNext();
             virtual void Reset();
 
-            property Ntreev::Windows::Forms::Grid::Column^ Current
+            property Column^ Current
             {
-                virtual Ntreev::Windows::Forms::Grid::Column^ get();
+                virtual Column^ get();
             }
 
         private:
@@ -62,17 +62,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     public: // methods
 
-        virtual void Add(Ntreev::Windows::Forms::Grid::Column^ item);
+        virtual void Add(Column^ item);
 
-        virtual bool Remove(Ntreev::Windows::Forms::Grid::Column^ item);
+        virtual bool Remove(Column^ item);
 
         virtual void Clear();
 
-        virtual bool Contains(Ntreev::Windows::Forms::Grid::Column^ item);
+        virtual bool Contains(Column^ item);
 
-        virtual void CopyTo(cli::array<Ntreev::Windows::Forms::Grid::Column^>^ array, int arrayIndex);
+        virtual void CopyTo(cli::array<Column^>^ array, int arrayIndex);
 
-        cli::array<Ntreev::Windows::Forms::Grid::Column^>^ ToArray();
+        cli::array<Column^>^ ToArray();
 
     public: // properties
         /// <summary>
@@ -92,7 +92,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 열거자를 나타내는 <see cref="System::Collections::Generic::IEnumerator"/>입니다.
         /// </returns>
-        virtual System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Column^>^ GetEnumerator();
+        virtual System::Collections::Generic::IEnumerator<Column^>^ GetEnumerator();
 
     internal: // methods
 
@@ -123,7 +123,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         property bool IsReadOnly_System_Collections_Generic_ICollection
         {
-            virtual bool get() sealed = System::Collections::Generic::ICollection<Ntreev::Windows::Forms::Grid::Column^>::IsReadOnly::get;
+            virtual bool get() sealed = System::Collections::Generic::ICollection<Column^>::IsReadOnly::get;
         }
 
     private: // variables

@@ -47,7 +47,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_cells = gcnew Ntreev::Windows::Forms::Grid::CellCollection(this);
         m_componentIndex = -1;
 
-        for each(Ntreev::Windows::Forms::Grid::Column^ item in this->GridControl->Columns)
+        for each(Column^ item in this->GridControl->Columns)
         {
             NewCell(item);
         }
@@ -55,23 +55,24 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Row::Component::set(System::Object^ value)
     {
+        using namespace System::ComponentModel;
         m_component = value;
 
         //if(IsBeingEdited == true)
         //{
         //    EndEdit();
         //}
-
-        for each(Ntreev::Windows::Forms::Grid::Column^ item in this->GridControl->Columns)
+        for each(Column^ item in this->GridControl->Columns)
         {
             try
             {
                 Ntreev::Windows::Forms::Grid::Cell^ cell = NewCell(item);
                 cell->UpdateNativeText();
 
-                if(item->PropertyDescriptor->PropertyType == System::ComponentModel::IBindingList::typeid)
+                if(item->PropertyDescriptor != nullptr && item->PropertyDescriptor->PropertyType == IBindingList::typeid)
                 {
-                    Native::GrGridRow* pGridRow = new Native::GrGridRow(this->GridControl);
+                    Ntreev::Windows::Forms::Grid::GridControl^ childControl = this->GridControl->InvokeNewChildGridControl(item->PropertyDescriptor);
+                    Native::GrGridRow* pGridRow = new Native::GrGridRow(childControl);
                     m_pDataRow->AddChild(pGridRow);
                     pGridRow->SetDataSource(cell->Value);
                 }
@@ -80,8 +81,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             {
 
             }
-
-            
         }
     }
 
@@ -90,7 +89,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_pDataRow;
     }
 
-    Ntreev::Windows::Forms::Grid::Cell^ Row::NewCell(Ntreev::Windows::Forms::Grid::Column^ column)
+    Ntreev::Windows::Forms::Grid::Cell^ Row::NewCell(Column^ column)
     {
         GrItem* pItem = m_pDataRow->GetItem(column->NativeRef);
 
@@ -155,12 +154,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_cells[columnName]->Value = value;
     }
 
-    System::Object^ Row::default::get(Ntreev::Windows::Forms::Grid::Column^ column)
+    System::Object^ Row::default::get(Column^ column)
     {
         return m_cells[column]->Value;
     }
 
-    void Row::default::set(Ntreev::Windows::Forms::Grid::Column^ column, System::Object^ value)
+    void Row::default::set(Column^ column, System::Object^ value)
     {
         m_cells[column]->Value = value;
     }
@@ -387,7 +386,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     //        for each(Ntreev::Windows::Forms::Grid::Cell^ cell in this->Cells)
     //        {
-    //            Ntreev::Windows::Forms::Grid::Column^ column = cell->Column;
+    //            Column^ column = cell->Column;
     //            if(column->PropertyDescriptor == nullptr || column->DefaultValue != nullptr)
     //            {
     //                cell->ValueCore = column->DefaultValue;
@@ -413,7 +412,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         for each(Ntreev::Windows::Forms::Grid::Cell^ cell in this->Cells)
         {
-            Ntreev::Windows::Forms::Grid::Column^ column = cell->Column;
+            Column^ column = cell->Column;
             System::ComponentModel::PropertyDescriptor^ propertyDescriptor = column->PropertyDescriptor;
             if(propertyDescriptor == nullptr)
                 continue;

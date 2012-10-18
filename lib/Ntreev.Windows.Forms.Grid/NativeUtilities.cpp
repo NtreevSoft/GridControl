@@ -316,6 +316,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         return System::IntPtr(owner);
     }
 
+    System::IntPtr Methods::SetFocus(System::IntPtr handle)
+    {
+        HWND hwnd = (HWND)handle.ToPointer();
+        HWND hpre = ::SetFocus(hwnd);
+        return System::IntPtr(hpre);
+    }
+
     void Methods::SetScrollValue(System::IntPtr handle, int type, int value)
     {
         HWND hwnd = (HWND)handle.ToPointer();

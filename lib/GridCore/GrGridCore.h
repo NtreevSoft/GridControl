@@ -70,6 +70,7 @@ public:
     void SetDisplayRect(const GrRect& displayRect);
 
     GrRect GetBounds() const;
+    GrRect GetVisibleBounds() const;
     GrRect GetDataRect() const;
 
     bool GetAutoFitColumn() const;

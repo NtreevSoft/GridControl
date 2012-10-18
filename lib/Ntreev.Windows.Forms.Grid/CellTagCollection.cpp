@@ -81,12 +81,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_row->Cells[columnName]->Tag = value;
     }
 
-    System::Object^ CellTagCollection::default::get(Ntreev::Windows::Forms::Grid::Column^ column)
+    System::Object^ CellTagCollection::default::get(Column^ column)
     {
         return m_row->Cells[column]->Tag;
     }
 
-    void CellTagCollection::default::set(Ntreev::Windows::Forms::Grid::Column^ column, System::Object^ value)
+    void CellTagCollection::default::set(Column^ column, System::Object^ value)
     {
         m_row->Cells[column]->Tag = value;
     }

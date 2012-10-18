@@ -28,10 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.column1 = new Ntreev.Windows.Forms.Grid.Column();
-            this.column2 = new Ntreev.Windows.Forms.Grid.Column();
-            this.column3 = new Ntreev.Windows.Forms.Grid.Column();
-            this.column4 = new Ntreev.Windows.Forms.Grid.Column();
             this.gridControl1 = new Ntreev.Windows.Forms.Grid.GridControl();
             this.dataSet1 = new System.Data.DataSet();
             this.dataTable1 = new System.Data.DataTable();
@@ -47,39 +43,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataTable2)).BeginInit();
             this.SuspendLayout();
             // 
-            // column1
-            // 
-            this.column1.ColumnName = "Column1";
-            this.column1.PriorityOnFrozen = 3;
-            this.column1.PriorityOnUnfrozen = 3;
-            // 
-            // column2
-            // 
-            this.column2.ColumnName = "Column2";
-            this.column2.PriorityOnFrozen = 3;
-            this.column2.PriorityOnUnfrozen = 3;
-            // 
-            // column3
-            // 
-            this.column3.ColumnName = "Column3";
-            this.column3.PriorityOnFrozen = 3;
-            this.column3.PriorityOnUnfrozen = 3;
-            // 
-            // column4
-            // 
-            this.column4.ColumnName = "Relation1";
-            // 
             // gridControl1
             // 
             this.gridControl1.BackgroundColor = System.Drawing.SystemColors.ActiveCaption;
             this.gridControl1.CaptionRow.Height = 21;
-            this.gridControl1.Columns.AddRange(new Ntreev.Windows.Forms.Grid.Column[] {
-            this.column1,
-            this.column2,
-            this.column3,
-            this.column4});
-            this.gridControl1.DataMember = "Table1";
-            this.gridControl1.DataSource = this.dataSet1;
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridControl1.Location = new System.Drawing.Point(0, 0);
             this.gridControl1.Name = "gridControl1";
@@ -166,10 +133,6 @@
         #endregion
 
         private Ntreev.Windows.Forms.Grid.GridControl gridControl1;
-        private Ntreev.Windows.Forms.Grid.Column column1;
-        private Ntreev.Windows.Forms.Grid.Column column2;
-        private Ntreev.Windows.Forms.Grid.Column column3;
-        private Ntreev.Windows.Forms.Grid.Column column4;
         private System.Data.DataSet dataSet1;
         private System.Data.DataTable dataTable1;
         private System.Data.DataColumn dataColumn1;

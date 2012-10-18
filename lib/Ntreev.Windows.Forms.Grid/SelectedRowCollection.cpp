@@ -53,7 +53,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         item->IsSelected = true;
     }
 
-    void SelectedRowCollection::Add(Ntreev::Windows::Forms::Grid::Row^ row, Ntreev::Windows::Forms::Grid::Column^ focusColumn)
+    void SelectedRowCollection::Add(Ntreev::Windows::Forms::Grid::Row^ row, Column^ focusColumn)
     {
         Add(row);
 

@@ -31,12 +31,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// </summary>
     public ref class VisibleColumnCollection sealed
         : Ntreev::Windows::Forms::Grid::GridObject
-        , System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Column^>
+        , System::Collections::Generic::IEnumerable<Column^>
         , System::Collections::ICollection
     {
     private: // classes
 
-        ref class Enumerator : System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Column^>
+        ref class Enumerator : System::Collections::Generic::IEnumerator<Column^>
         {
         public:
             Enumerator(GrColumnList* pColumnList);
@@ -44,9 +44,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             virtual bool MoveNext();
             virtual void Reset();
 
-            property Ntreev::Windows::Forms::Grid::Column^ Current
+            property Column^ Current
             {
-                virtual Ntreev::Windows::Forms::Grid::Column^ get();
+                virtual Column^ get();
             }
 
         private:
@@ -68,7 +68,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 열거자를 나타내는 <see cref="System::Collections::Generic::IEnumerator"/>입니다.
         /// </returns>
-        virtual System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Column^>^ GetEnumerator();
+        virtual System::Collections::Generic::IEnumerator<Column^>^ GetEnumerator();
 
     public: // properties
 
@@ -84,9 +84,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::ArgumentOutOfRangeException">
         /// index가 0보다 작거나, <see cref="Count"/>보다 클 경우
         /// </exception>
-        property Ntreev::Windows::Forms::Grid::Column^ default[int]
+        property Column^ default[int]
         {
-            Ntreev::Windows::Forms::Grid::Column^ get(int index);
+            Column^ get(int index);
         }
 
         /// <summary>

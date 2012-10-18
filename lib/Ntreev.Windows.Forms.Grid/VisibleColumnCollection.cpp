@@ -50,7 +50,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_index = 0;
     }
 
-    Ntreev::Windows::Forms::Grid::Column^ VisibleColumnCollection::Enumerator::Current::get()
+    Column^ VisibleColumnCollection::Enumerator::Current::get()
     {
         GrColumn* pColumn = m_pColumnList->GetVisibleColumn(m_index - 1);
         return FromNative::Get(pColumn);
@@ -67,7 +67,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pColumnList = this->GridCore->GetColumnList();
     }
 
-    Ntreev::Windows::Forms::Grid::Column^ VisibleColumnCollection::default::get(int index)
+    Column^ VisibleColumnCollection::default::get(int index)
     {
         if((unsigned int)index >= m_pColumnList->GetVisibleColumnCount())
             throw gcnew System::ArgumentOutOfRangeException("index");
@@ -80,7 +80,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_pColumnList->GetVisibleColumnCount();
     }
 
-    System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Column^>^ VisibleColumnCollection::GetEnumerator()
+    System::Collections::Generic::IEnumerator<Column^>^ VisibleColumnCollection::GetEnumerator()
     {
         return gcnew Ntreev::Windows::Forms::Grid::VisibleColumnCollection::Enumerator(m_pColumnList);
     }
@@ -92,7 +92,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void VisibleColumnCollection::CopyTo_System_Collections_ICollection(System::Array^ array, int index)
     {
-        for each(Ntreev::Windows::Forms::Grid::Column^ item in this)
+        for each(Column^ item in this)
         {
             array->SetValue(item, index++);
         }

@@ -69,7 +69,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         //ToNativeString nativeText(text);
         wchar_t* strTooltip = new wchar_t[text->Length + 1];
-        wcscpy(strTooltip, ToNativeString::Convert(text));
+        wcscpy_s(strTooltip, text->Length + 1, ToNativeString::Convert(text));
         ti.lpszText = strTooltip;
         ::SendMessage((HWND)m_tooltip, TTM_SETTOOLINFO, 0, (LPARAM)&ti);
 

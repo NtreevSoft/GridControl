@@ -201,10 +201,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::NullReferenceException">
         /// 매개변수가 null일 경우
         /// </exception>
-        property System::Object^ default[Ntreev::Windows::Forms::Grid::Column^]
+        property System::Object^ default[Column^]
         {
-            System::Object^ get(Ntreev::Windows::Forms::Grid::Column^ column);
-            void set(Ntreev::Windows::Forms::Grid::Column^ column, System::Object^);
+            System::Object^ get(Column^ column);
+            void set(Column^ column, System::Object^);
         }
 
         /// <summary>
@@ -411,7 +411,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void AddErrorCell();
         void RemoveErrorCell();
 
-        Ntreev::Windows::Forms::Grid::Cell^ NewCell(Ntreev::Windows::Forms::Grid::Column^ column);
+        Ntreev::Windows::Forms::Grid::Cell^ NewCell(Column^ column);
 
         //void RefreshCells();
 

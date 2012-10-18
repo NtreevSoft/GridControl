@@ -30,6 +30,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     ref class Column;
     ref class Row;
 
+    typedef Column _Column;
+
     /// <summary>
     /// 셀을 나타내는 개체입니다.
     /// </summary>
@@ -83,7 +85,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <summary>
         /// 그리드 컨트롤에 대한 포커스 설정을 합니다.
         /// </summary>
-        void Focus();
+        bool Focus();
 
         /// <summary>
         /// 셀이 화면내에 표시될 수 있도록 스크롤을 조정합니다.
@@ -207,23 +209,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// 셀의 포커스 여부를 가져오거나 설정합니다.
+        /// 셀의 포커스 여부를 가져옵니다.
         /// </summary>
-        /// <remarks>
-        /// 포커스로 설정할 수 있는 셀은 그리드 컨트롤내에 한개만 설정될 수 있습니다. 속성의 값을 true를 설정했다면 이전의 포커스로 설정된 셀이 현재의 셀로 대체됩니다. 
-        /// 반대로 속성의 값을 false로 설정했다면 그리드 컨트롤내에서는 포커스로 설정된 셀이 없는 상태가 되어버립니다.
-        /// </remarks>
         /// <returns>
         /// 포커스로 설정되었다면 true를, 그렇지 않다면 false를 반환합니다.
         /// </returns>
-        /// <exception cref="System::InvalidOperationException">Cell.Row가 사용되지 않거나, 숨겨져 있을때 발생합니다.</exception>
-        [System::ComponentModel::CategoryAttribute("Behavior")]
-        [System::ComponentModel::DefaultValueAttribute(false)]
-        [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif 
         property bool IsFocused
         {
             bool get();
-            void set(bool);
         }
 
         /// <summary>

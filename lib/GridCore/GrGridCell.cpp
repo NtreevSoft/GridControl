@@ -173,8 +173,6 @@ IFocusable* GrFocusChangeArgs::GetFocusable() const
     return m_pFocusable; 
 }
 
-
-
 GrCell::GrCell()
     : m_padding(GrPadding::Default)
 {
@@ -1247,17 +1245,17 @@ bool GrDataRow::GetFullSelected() const
     //return false;
 }
 
-bool GrDataRow::GetVisible() const
-{
-    bool visible = GrRow::GetVisible();
-    if(visible == false)
-        return false;
-    GrGroupRow* pGroupRow = dynamic_cast<GrGroupRow*>(GetParent());
-    if(pGroupRow == NULL)
-        return visible;
-
-    return pGroupRow->IsExpanded();
-}
+//bool GrDataRow::GetVisible() const
+//{
+//    bool visible = GrRow::GetVisible();
+//    if(visible == false)
+//        return false;
+//    GrGroupRow* pGroupRow = dynamic_cast<GrGroupRow*>(GetParent());
+//    if(pGroupRow == NULL)
+//        return visible;
+//
+//    return pGroupRow->IsExpanded();
+//}
 
 void GrDataRow::SetVisibleDataRowIndex(uint index)
 {
@@ -1355,27 +1353,22 @@ int GrDataRow::GetMinHeight() const
     return height;
 }
 
-GrCell* GrDataRow::HitTest(const GrPoint& location) const
+GrCell* GrDataRow::OnHitTest(int x) const
 {
-    if(ContainsVert(location.y) == false)
-        return NULL;
-
     GrColumnList* pColumnList = m_pGridCore->GetColumnList();
     for(uint i=0 ; i<pColumnList->GetDisplayableColumnCount() ; i++)
     {
         GrColumn* pColumn = pColumnList->GetDisplayableColumn(i);
-        if(pColumn->ContainsHorz(location.x) == true)
+        if(pColumn->ContainsHorz(x) == true)
             return GetItem(pColumn);
     }
 
-    GrRect bound = pColumnList->GetColumnSplitter()->GetRect();
-    if(bound.Contains(location) == true)
-        return pColumnList->GetColumnSplitter();
+    GrColumnSplitter* pSplitter = pColumnList->GetColumnSplitter();
+    
+    if(pSplitter->ContainsHorz(x) == true)
+        return pSplitter;
 
-    if(ContainsHorz(location.x) == false)
-        return NULL;
-
-    return const_cast<GrDataRow*>(this);
+    return NULL;
 }
 
 void GrDataRow::OnHeightAdjusted()
@@ -1538,7 +1531,7 @@ void GrColumn::AddSelection(GrItem* pItem)
 {
     m_selectedCells.insert(pItem);
 }
-    
+
 void GrColumn::RemoveSelection(GrItem* pItem)
 {
     m_selectedCells.erase(pItem);
@@ -1551,7 +1544,7 @@ void GrColumn::ClearSelection()
     m_selectedCells.clear();
     m_selected = false;
 }
-    
+
 void GrColumn::SetFullSelected()
 {
     m_selected = true;
@@ -1792,6 +1785,8 @@ void GrColumn::SetWidth(int width)
     {
         GrColumnEventArgs e(this);
         m_pColumnList->Invoke(L"ColumnWidthChanged", &e);
+
+        m_pTextUpdater->AddTextBoundsByColumn(this);
     }
 }
 
@@ -2431,16 +2426,16 @@ class SortDesc
 {
 public:
     SortDesc(GrGridCore* pGridCore, FuncSortRow fn, void* userData) : 
-      m_pGridCore(pGridCore), m_fn(fn), m_userData(userData) {}
+        m_pGridCore(pGridCore), m_fn(fn), m_userData(userData) {}
 
-      bool operator () (const GrRow* pRow1, const GrRow* pRow2)
-      {
-          return (*m_fn)(m_pGridCore, pRow1, pRow2, m_userData);
-      }
+    bool operator () (const GrRow* pRow1, const GrRow* pRow2)
+    {
+        return (*m_fn)(m_pGridCore, pRow1, pRow2, m_userData);
+    }
 
-      GrGridCore* m_pGridCore;
-      FuncSortRow m_fn;
-      void* m_userData;
+    GrGridCore* m_pGridCore;
+    FuncSortRow m_fn;
+    void* m_userData;
 };
 
 void GrRow::Sort(FuncSortRow fnSort, void* userData)
@@ -2459,18 +2454,6 @@ GrCell* GrRow::HitTest(const GrPoint& location) const
 
     return const_cast<GrRow*>(this);
 }
-
-//void GrRow::GetVisibleList(GrRowArray* pVisible) const
-//{
-//    if(GetVisible() == false)
-//        return;
-//    pVisible->push_back(const_cast<GrRow*>(this));
-//    for(uint i=0 ; i<GetChildCount() ; i++)
-//    {
-//        const GrRow* pChild = GetChild(i);
-//        pChild->GetVisibleList(pVisible);
-//    }
-//}
 
 GrDataRow::GrDataRow()
 {
@@ -2521,7 +2504,7 @@ void GrDataRow::AddSelection(GrItem* pItem)
 {
     m_selectedCells.insert(pItem);
 }
-    
+
 void GrDataRow::RemoveSelection(GrItem* pItem)
 {
     m_selectedCells.erase(pItem);
@@ -2534,7 +2517,7 @@ void GrDataRow::ClearSelection()
     m_selectedCells.clear();
     m_selected = false;
 }
-    
+
 void GrDataRow::SetFullSelected()
 {
     m_selected = true;
@@ -2619,6 +2602,8 @@ GrFlag GrDataRow::ToPaintStyle() const
 
 void GrDataRow::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
 {
+    IDataRow::Paint(pPainter, clipRect);
+
     GrRect paintRect = GetRect();
     GrFlag paintStyle = ToPaintStyle();
     GrColor foreColor = GetPaintingForeColor();
@@ -2626,11 +2611,6 @@ void GrDataRow::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
 
     if(m_pGridCore->GetRowVisible() == true)
     {
-        if(GetClipped() == true)
-            pPainter->DrawRow(paintStyle, paintRect, GetPaintingLineColor(),backColor, &clipRect);
-        else
-            pPainter->DrawRow(paintStyle, paintRect, GetPaintingLineColor(), backColor);
-
         if(m_pDataRowList->GetRowNumberVisible() == true)
         {
             if(GetClipped() == true)
@@ -2638,18 +2618,6 @@ void GrDataRow::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
             else
                 DrawText(pPainter, foreColor, paintRect);
         }
-    }
-
-    if(m_pDataRowList->GetMargin() > 0)
-    {
-        paintRect.left = paintRect.right;
-        paintRect.right = m_pDataRowList->CellStart();
-        if(GetRowType() == GrRowType_InsertionRow)
-            pPainter->DrawItem(0, paintRect, GetCellLineColor(), GetCellBackColor());
-        else if(GetVisibleIndex() == m_pDataRowList->GetVisibleRowCount() - 1)
-            pPainter->DrawItem(0, paintRect, GetCellLineColor(), GetCellBackColor());
-        else
-            pPainter->DrawItem(GrPaintStyle_NoBottomLine, paintRect, GetCellLineColor(), GetCellBackColor(), &clipRect);
     }
 
     const GrColumnList* pColumnList = m_pGridCore->GetColumnList();
@@ -2706,6 +2674,9 @@ IDataRow::IDataRow() : m_pDataRowList(0)
     m_visibleIndex = 0;
     m_displayIndex = 0;
     m_selectionGroup = 0;
+    m_expanded = true;
+
+    m_pExpander = new GrExpander(this);
 }
 
 int IDataRow::GetY() const
@@ -2729,6 +2700,15 @@ int IDataRow::GetY() const
     }
 
     return GrRow::GetY();
+}
+
+bool IDataRow::GetVisible() const
+{
+    IDataRow* pParent = dynamic_cast<IDataRow*>(GetParent());
+    if(pParent == NULL)
+        return GrRow::GetVisible();
+
+    return pParent->IsExpanded();
 }
 
 void IDataRow::SetVisibleIndex(uint index)
@@ -2803,6 +2783,8 @@ void IDataRow::OnGridCoreAttached()
 {
     GrRow::OnGridCoreAttached();
     m_pDataRowList = m_pGridCore->GetDataRowList();
+    m_pGridCore->AttachObject(m_pExpander);
+    m_pDataRowList->SetHeightChanged();
 }
 
 void IDataRow::OnHeightChanged()
@@ -2812,20 +2794,32 @@ void IDataRow::OnHeightChanged()
         m_pDataRowList->SetHeightChanged();
 }
 
+void IDataRow::OnChildAdded(GrRow* pRow)
+{
+    GrRow::OnChildAdded(pRow);
+
+    m_pDataRowList->SetVisibleChanged();
+}
+
+GrCell* IDataRow::OnHitTest(int /*x*/) const 
+{
+    return NULL; 
+}
+
 GrColor IDataRow::GetCellBackColor() const
 {
     GrStyle* pStyle = m_pGridCore->GetStyle();
     if(pStyle != NULL)
         return pStyle->BackColor;
-   return m_pGridCore->GetBackColor();
+    return m_pGridCore->GetBackColor();
 }
- 
+
 GrColor IDataRow::GetCellLineColor() const
 {
     GrStyle* pStyle = m_pGridCore->GetStyle();
     if(pStyle != NULL)
         return pStyle->LineColor;
-   return m_pGridCore->GetLineColor();
+    return m_pGridCore->GetLineColor();
 }
 
 bool IDataRow::HasFocused() const
@@ -2834,6 +2828,24 @@ bool IDataRow::HasFocused() const
     if(pFocuser->GetFocusedRow() == this)
         return true;
     return false;
+}
+
+GrCell* IDataRow::HitTest(const GrPoint& location) const
+{
+    if(ContainsVert(location.y) == false)
+        return NULL;
+
+    if(m_pExpander->ContainsHorz(location.x) == true)
+        return m_pExpander;
+
+    GrCell* pCell = OnHitTest(location.x);
+    if(pCell != NULL)
+        return pCell;
+
+    if(ContainsHorz(location.x) == false)
+        return NULL;
+
+    return const_cast<IDataRow*>(this);
 }
 
 GrColor IDataRow::GetForeColor() const
@@ -2888,6 +2900,67 @@ GrFont* IDataRow::GetFont() const
     return GrRow::GetFont();
 }
 
+void IDataRow::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
+{
+    GrRect paintRect = GetRect();
+    GrFlag paintStyle = ToPaintStyle();
+    GrColor foreColor = GetPaintingForeColor();
+    GrColor backColor = GetPaintingBackColor();
+
+    if(m_pGridCore->GetRowVisible() == true)
+    {
+        if(GetClipped() == true)
+            pPainter->DrawRow(paintStyle, paintRect, GetPaintingLineColor(), backColor, &clipRect);
+        else
+            pPainter->DrawRow(paintStyle, paintRect, GetPaintingLineColor(), backColor);
+    }
+
+    if(m_pDataRowList->GetMargin() > 0)
+    {
+        paintRect.left = paintRect.right;
+        paintRect.right = m_pDataRowList->CellStart();
+        if(GetRowType() == GrRowType_InsertionRow)
+            pPainter->DrawItem(0, paintRect, GetCellLineColor(), GetCellBackColor());
+        else if(GetVisibleIndex() == m_pDataRowList->GetVisibleRowCount() - 1)
+            pPainter->DrawItem(0, paintRect, GetCellLineColor(), GetCellBackColor());
+        else
+            pPainter->DrawItem(GrPaintStyle_NoBottomLine, paintRect, GetCellLineColor(), GetCellBackColor(), &clipRect);
+    }
+
+    DrawExpander(pPainter, clipRect);
+}
+
+void IDataRow::Expand(bool b)
+{
+    if(m_expanded == b)
+        return;
+    if(m_pDataRowList != NULL)
+        m_pDataRowList->SetVisibleChanged();
+    m_expanded = b;
+}
+
+bool IDataRow::IsExpanded() const
+{
+    return m_expanded;
+}
+
+GrExpander* IDataRow::GetExpander() const
+{
+    return m_pExpander;
+}
+
+void IDataRow::DrawExpander(GrGridPainter* pPainter, const GrRect& clipRect) const
+{
+    if(m_pExpander->GetVisible() == false)
+        return;
+    m_pExpander->Paint(pPainter, clipRect);
+}
+
+uint IDataRow::GetDataDepth() const
+{
+    return GetDepth() - (m_pDataRowList->GetDepth() + 1);
+}
+
 GrRowSplitter::GrRowSplitter()
 {
     SetText(L"splitter");
@@ -2910,7 +2983,7 @@ int GrRowSplitter::GetWidth() const
 void GrRowSplitter::Paint(GrGridPainter* pPainter, const GrRect& /*clipRect*/) const
 {
     GrColumnList* pColumnList = m_pGridCore->GetColumnList();
-    
+
     GrStyle* pStyle = m_pGridCore->GetStyle();
     GrColor backColor = pStyle != NULL ? pStyle->GetRowBackColor() : m_pGridCore->GetBackColor();
     GrColor lineColor = pStyle != NULL ? pStyle->GetRowLineColor() : m_pGridCore->GetLineColor();
@@ -2926,7 +2999,6 @@ void GrRowSplitter::Paint(GrGridPainter* pPainter, const GrRect& /*clipRect*/) c
 GrGroupRow::GrGroupRow() 
 {
     m_groupLevel = 0;
-    m_expanded = true;
     m_pColumn = NULL;
 
     m_pLabel = new GrGroupHeader(this);
@@ -2944,50 +3016,101 @@ GrGroupHeader* GrGroupRow::GetLabel() const
 
 void GrGroupRow::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
 {
-    GrRect paintRect = GetRect();
-    if(paintRect.top > clipRect.bottom || paintRect.bottom <= clipRect.top)
-        return;
+    IDataRow::Paint(pPainter, clipRect);
+    //GrRect paintRect = GetRect();
+    //if(paintRect.top > clipRect.bottom || paintRect.bottom <= clipRect.top)
+    //    return;
 
-    if(m_pGridCore->GetRowVisible() == true)
-    {
-        GrColor backColor = GetPaintingBackColor();
-        GrFlag paintStyle = ToPaintStyle();
-        pPainter->DrawRow(paintStyle, paintRect, GetPaintingLineColor(), backColor);
-    }
+    //if(m_pGridCore->GetRowVisible() == true)
+    //{
+    //    GrColor backColor = GetPaintingBackColor();
+    //    GrFlag paintStyle = ToPaintStyle();
+    //    pPainter->DrawRow(paintStyle, paintRect, GetPaintingLineColor(), backColor);
+    //}
 
-    paintRect.left = paintRect.right;
-    paintRect.right = paintRect.left + m_groupLevel * DEF_GROUP_WIDTH;
+    //paintRect.left = paintRect.right;
+    //paintRect.right = paintRect.left + m_groupLevel * DEF_GROUP_WIDTH;
 
-    pPainter->DrawItem(GrPaintStyle_NoBottomLine | GrPaintStyle_NoRightLine, paintRect, GetCellLineColor(), GetCellBackColor());
+    //DrawExpander(pPainter, clipRect);
+
+    //pPainter->DrawItem(GrPaintStyle_NoBottomLine | GrPaintStyle_NoRightLine, paintRect, GetCellLineColor(), GetCellBackColor());
     m_pLabel->Paint(pPainter, clipRect);
 }
 
-bool GrGroupRow::GetVisible() const
-{
-    GrGroupRow* pParentGroupRow = dynamic_cast<GrGroupRow*>(GetParent());
-    if(pParentGroupRow == NULL)
-        return GrRow::GetVisible();
-
-    return pParentGroupRow->IsExpanded();
-}
+//bool GrGroupRow::GetVisible() const
+//{
+//    GrGroupRow* pParentGroupRow = dynamic_cast<GrGroupRow*>(GetParent());
+//    if(pParentGroupRow == NULL)
+//        return GrRow::GetVisible();
+//
+//    return pParentGroupRow->IsExpanded();
+//}
 
 IFocusable* GrGroupRow::GetFocusable(GrColumn* /*pColumn*/) const
 {
     return m_pLabel;
 }
 
-GrCell* GrGroupRow::HitTest(const GrPoint& location) const
+GrCell* GrGroupRow::OnHitTest(int x) const
 {
-    if(ContainsVert(location.y) == false)
-        return NULL;
-
-    if(m_pLabel->ContainsHorz(location.x) == true)
+    if(m_pLabel->ContainsHorz(x) == true)
         return m_pLabel;
+    return NULL;
+}
 
-    if(ContainsHorz(location.x) == false)
-        return NULL;
+void GrGroupRow::OnHeightChanged()
+{
+    IDataRow::OnHeightChanged();
+    SetTextAlignChanged();
+}
 
-    return const_cast<GrGroupRow*>(this);
+void GrGroupRow::OnUpdatePositionCell(int x, GrRect* pBounds)
+{
+    pBounds->left = x;
+    pBounds->right = m_pLabel->GetX() + m_pLabel->GetWidth();
+}
+
+void GrGroupRow::OnGridCoreAttached()
+{
+    IDataRow::OnGridCoreAttached();
+    m_pGridCore->AttachObject(m_pLabel);
+}
+
+void GrGroupRow::SetReference(GrColumn* pColumn, const std::wstring& itemText)
+{
+    m_pColumn = pColumn;
+    m_itemText = itemText;
+
+    m_key = pColumn->GetText();
+    m_key += L" | ";
+    m_key += itemText;
+}
+
+void GrGroupRow::ProcessAfterGroup()
+{
+    GrGroupRow* pParent = dynamic_cast<GrGroupRow*>(GetParent());
+    if(pParent)
+    {
+        m_groupLevel = pParent->m_groupLevel + 1;
+    }
+    else
+    {
+        m_groupLevel = 0;
+    }
+
+    std::wstring text = GetText();
+
+
+    //wchar_t itemText[30];
+    //swprintf(itemText, 30, L" - %d items", GetChildCount());
+    //text = m_itemText + itemText;
+    //m_pLabel->SetText(text.c_str());
+    m_pLabel->SetText(m_itemText.c_str());
+}
+
+GrColumn* GrGroupRow::GetColumn() const
+{
+    return m_pColumn;
 }
 
 GrCaption::GrCaption()
@@ -3316,7 +3439,6 @@ void GrGroupPanel::RemoveGroup(GrGroup* pGroup)
     Changed.Raise(this, &GrEventArgs::Empty);
 }
 
-
 GrColor GrGroupPanel::GetForeColor() const
 {
     GrColor color = GrUpdatableRow::GetForeColorCore();
@@ -3497,10 +3619,17 @@ void GrRow::AddChild(GrRow* pRow)
 {
     m_vecChilds.push_back(pRow);
     pRow->m_pParent = this;
+    OnChildAdded(pRow);
+}
+
+void GrRow::OnChildAdded(GrRow* pRow)
+{
     UpdateDepth(pRow);
 
     if(m_pGridCore != NULL)
+    {
         m_pGridCore->AttachObject(pRow);
+    }
 }
 
 void GrRow::UpdateDepth(GrRow* pRow)
@@ -3541,77 +3670,6 @@ uint GrRow::GetDepth() const
 {
     return m_depth;
 }
-
-void GrGroupRow::Expand(bool b)
-{
-    if(m_expanded == b)
-        return;
-    if(m_pDataRowList != NULL)
-        m_pDataRowList->SetVisibleChanged();
-    m_expanded = b;
-}
-
-bool GrGroupRow::IsExpanded() const
-{
-    return m_expanded;
-}
-
-void GrGroupRow::OnHeightChanged()
-{
-    IDataRow::OnHeightChanged();
-    SetTextAlignChanged();
-}
-
-void GrGroupRow::OnUpdatePositionCell(int x, GrRect* pBounds)
-{
-    pBounds->left = x;
-    pBounds->right = m_pLabel->GetX() + m_pLabel->GetWidth();
-}
-
-void GrGroupRow::OnGridCoreAttached()
-{
-    IDataRow::OnGridCoreAttached();
-    m_pGridCore->AttachObject(m_pLabel);
-}
-
-void GrGroupRow::SetReference(GrColumn* pColumn, const std::wstring& itemText)
-{
-    m_pColumn = pColumn;
-    m_itemText = itemText;
-
-    m_key = pColumn->GetText();
-    m_key += L" | ";
-    m_key += itemText;
-}
-
-void GrGroupRow::ProcessAfterGroup()
-{
-    GrGroupRow* pParent = dynamic_cast<GrGroupRow*>(GetParent());
-    if(pParent)
-    {
-        m_groupLevel = pParent->m_groupLevel + 1;
-    }
-    else
-    {
-        m_groupLevel = 0;
-    }
-
-    std::wstring text = GetText();
-
-
-    //wchar_t itemText[30];
-    //swprintf(itemText, 30, L" - %d items", GetChildCount());
-    //text = m_itemText + itemText;
-    //m_pLabel->SetText(text.c_str());
-    m_pLabel->SetText(m_itemText.c_str());
-}
-
-GrColumn* GrGroupRow::GetColumn() const
-{
-    return m_pColumn;
-}
-
-
 
 GrColumnSplitter::GrColumnSplitter(GrColumnList* pColumnList) : m_pColumnList(pColumnList)
 {
@@ -3770,7 +3828,8 @@ bool GrGroupHeader::GetDisplayable() const
 
 int GrGroupHeader::GetX() const
 {
-    return m_pRow->GetRect().right + (m_pRow->GetGroupLevel() * DEF_GROUP_WIDTH);
+    GrExpander* pExpander = m_pRow->GetExpander();
+    return pExpander->GetRight();
 }
 
 int GrGroupHeader::GetY() const
@@ -3802,31 +3861,13 @@ void GrGroupHeader::Paint(GrGridPainter* pPainter, const GrRect& /*clipRect*/) c
 {
     GrColumn* pColumn = m_pRow->GetColumn();
     GrRect paintRect = GetRect();
-    GrRect displayRect = m_pGridCore->GetDisplayRect();
-
-    paintRect.left += DEF_GROUP_WIDTH;
-    paintRect.right = std::min(paintRect.right, displayRect.right);
-
     GrFlag paintStyle = ToPaintStyle();
     GrColor backColor = pColumn->GetPaintingBackColor();
     GrColor foreColor = pColumn->GetPaintingForeColor();
     GrColor lineColor = pColumn->GetPaintingLineColor();
 
     pPainter->DrawGroupHeader(paintStyle, paintRect, lineColor, backColor);
-
     DrawText(pPainter, foreColor, paintRect);
-
-    GrRect glyphRect = paintRect;
-    glyphRect.left = GetX();
-    glyphRect.right = GetX() + DEF_GROUP_WIDTH;
-
-    GrStyle* pStyle = m_pGridCore->GetStyle();
-    if(pStyle != NULL)
-        backColor = pStyle->BackColor;
-    else 
-        backColor = m_pGridCore->GetBackColor();
-
-    pPainter->DrawExpander(glyphRect, (GrControlState)0, m_pRow->IsExpanded(), foreColor, backColor);
 }
 
 GrGroup::GrGroup(GrColumn* pColumn) 
@@ -3924,7 +3965,7 @@ int GrGroup::GetY() const
 
 int GrGroup::GetWidth() const
 {
-     GrFont* pFont = GetPaintingFont();
+    GrFont* pFont = GetPaintingFont();
     return GetTextBounds().GetWidth() + 
         (int)((pFont->GetHeight() + pFont->GetExternalLeading()) * 0.25f) + 
         GetPadding().GetHorizontal() + SortGlyphSize;
@@ -4046,6 +4087,16 @@ void GrRootRow::Clip(const GrRect& displayRect, uint horizontal, uint vertical)
     }
 }
 
+GrRect GrRootRow::GetVisibleBounds() const
+{
+    GrRect rect;
+    rect.left = this->GetX();
+    rect.top = this->GetY();
+    rect.right = m_pColumnList->GetVisibleRight();
+    rect.bottom = m_pDataRowList->GetVisibleBottom();
+    return rect;
+}
+
 void GrRootRow::BuildVisibleList()
 {
     m_vecVisibleRows.clear();
@@ -4152,6 +4203,7 @@ void GrRootRow::gridCore_Created(GrObject* /*pSender*/, GrEventArgs* /*e*/)
     std::sort(m_vecUpdatables.begin(), m_vecUpdatables.end(), SortUpdatable());
 
     m_pColumnList = m_pGridCore->GetColumnList();
+    m_pDataRowList = m_pGridCore->GetDataRowList();
     m_pInsertionRow = m_pGridCore->GetInsertionRow();
 
     m_pGridCore->GetDataRowList()->DataRowInserted.Add(this, &GrRootRow::dataRowList_DataRowInserted);
@@ -4290,5 +4342,61 @@ void GrUpdatableRow::OnHeightChanged()
         return;
     m_pGridCore->GetRootRow()->SetHeightChanged();
     m_pGridCore->Invalidate();
+}
+
+GrExpander::GrExpander(IDataRow* pDataRow)
+    : m_pDataRow(pDataRow)
+{
+
+}
+
+int GrExpander::GetX() const
+{
+    uint dataDepth = m_pDataRow->GetDataDepth();
+    return m_pDataRow->GetRight() + dataDepth * DEF_GROUP_WIDTH;
+}
+
+int GrExpander::GetY() const
+{
+    return m_pDataRow->GetY();
+}
+
+int GrExpander::GetWidth() const
+{
+    return DEF_GROUP_WIDTH;
+}
+
+int GrExpander::GetHeight() const
+{
+    return m_pDataRow->GetHeight();
+}
+
+GrRow* GrExpander::GetRow() const
+{
+    return m_pDataRow;
+}
+
+GrCellType GrExpander::GetCellType() const
+{
+    return GrCellType_Unknown;
+}
+
+bool GrExpander::GetVisible() const
+{
+    return m_pDataRow->GetVisible() && m_pDataRow->GetChildCount() > 0;
+}
+
+bool GrExpander::GetDisplayable() const
+{
+    return m_pDataRow->GetDisplayable();
+}
+
+void GrExpander::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
+{
+    GrRect paintRect = GetRect();
+    GrColor foreColor = GetPaintingLineColor();
+    GrColor backColor = GetPaintingBackColor();
+
+    pPainter->DrawExpander(paintRect, (GrControlState)0, true, foreColor, backColor);
 }
 

@@ -917,7 +917,6 @@ void GrTextUpdater::AddTextAlignByColumn(GrColumn* pColumn)
     GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
     AddTextAlign((GrCell*)pColumn);
 
-
     GrItem* pItem = pInsertionRow->GetItem(pColumn);
     AddTextAlign(pItem);
 

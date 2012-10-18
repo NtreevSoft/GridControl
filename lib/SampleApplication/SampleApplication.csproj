@@ -141,6 +141,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\NTG\INI3\trunk\common library\Ntreev.INI3.Library\Ntreev.INI3.Library.csproj">
+      <Project>{eb8e9874-54fa-4789-acc0-b25d8337b6c7}</Project>
+      <Name>Ntreev.INI3.Library</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ntreev.Windows.Forms.Grid.Design\Ntreev.Windows.Forms.Grid.Design.csproj">
       <Project>{8EB27EC4-86A3-44A7-9767-19C343709894}</Project>
       <Name>Ntreev.Windows.Forms.Grid.Design</Name>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ntreev.INI3.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,6 +15,12 @@ namespace SampleApplication
         public Form2()
         {
             InitializeComponent();
+
+            INIDataSet dataSet = new INIDataSet();
+            dataSet.ReadSchema(@"G:\NTG\INI3\data\test\xml\Item\ItemContent.xsd");
+            dataSet.ReadXml(@"G:\NTG\INI3\data\test\xml\Item\ItemContent.xml");
+
+            this.gridControl1.DataSource = dataSet.GetFirstPrimaryTable();
         }
     }
 }

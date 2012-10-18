@@ -56,7 +56,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_index = 0;
     }
 
-    Ntreev::Windows::Forms::Grid::Row^ RowCollection::Enumerator::Current::get()
+    Row^ RowCollection::Enumerator::Current::get()
     {
         GrDataRow* pDataRow = m_pDataRowList->GetDataRow(m_index - 1);
         return FromNative::Get(pDataRow);
@@ -90,12 +90,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         gridControl->CurrencyManagerChanged += gcnew CurrencyManagerChangedEventHandler(this, &RowCollection::gridControl_CurrencyManagerChanged);
         gridControl->FocusedRowChanged += gcnew System::EventHandler(this, &RowCollection::gridControl_FocusedRowChanged);
 
-        m_components = gcnew System::Collections::Generic::Dictionary<System::Object^, Ntreev::Windows::Forms::Grid::Row^>();
+        m_components = gcnew System::Collections::Generic::Dictionary<System::Object^, Row^>();
     }
 
     void RowCollection::Bind(System::Object^ component, int componentIndex)
     {
-        Ntreev::Windows::Forms::Grid::Row^ row;
+        Row^ row;
 
         if(m_components->ContainsKey(component) == false)
         {
@@ -125,7 +125,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             this->GetAt(i)->ComponentIndex--;
         }
 
-        Ntreev::Windows::Forms::Grid::Row^ row = this->GetAt(componentIndex);
+        Row^ row = this->GetAt(componentIndex);
         this->GridControl->InvokeRowUnbinding(row);
         m_pDataRowList->RemoveDataRow(row->NativeRef);
         m_components->Remove(row->Component);
@@ -137,7 +137,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         using namespace System::Collections::Generic;
         for each(System::Object^ item in values)
         {
-            Ntreev::Windows::Forms::Grid::Row^ row = dynamic_cast<Ntreev::Windows::Forms::Grid::Row^>(item);
+            Row^ row = dynamic_cast<Row^>(item);
 
             if(row->Index < 0)
             {
@@ -146,13 +146,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
     }
 
-    bool RowCollection::Contains(Ntreev::Windows::Forms::Grid::Row^ item)
+    bool RowCollection::Contains(Row^ item)
     {
         ArgumentTest(item);
         return item->Index != INVALID_INDEX;
     }
 
-    int RowCollection::IndexOf(Ntreev::Windows::Forms::Grid::Row^ item)
+    int RowCollection::IndexOf(Row^ item)
     {
         ArgumentTest(item);
         return item->Index;
@@ -177,8 +177,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             {
                 System::Object^ component = m_manager->List[e->NewIndex];
 
-                Ntreev::Windows::Forms::Grid::Row^ row = this[component];
-                System::Collections::Generic::List<Ntreev::Windows::Forms::Grid::Cell^> cells;
+                Row^ row = this[component];
+                System::Collections::Generic::List<Cell^> cells;
                 if(e->PropertyDescriptor == nullptr)
                 {
                     cells.AddRange(row->Cells);
@@ -188,7 +188,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                     cells.Add(row->Cells[e->PropertyDescriptor->Name]);
                 }
 
-                for each(Ntreev::Windows::Forms::Grid::Cell^ item in cells)
+                for each(Cell^ item in cells)
                 {
                     try
                     {
@@ -232,11 +232,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_manager->Position < 0)
             return;
 
-        Ntreev::Windows::Forms::Grid::Row^ focusedRow = dynamic_cast<Ntreev::Windows::Forms::Grid::Row^>(this->GridControl->FocusedRow);
+        Row^ focusedRow = dynamic_cast<Row^>(this->GridControl->FocusedRow);
         if(focusedRow != nullptr && focusedRow->ComponentIndex == m_manager->Position)
             return;
 
-        Ntreev::Windows::Forms::Grid::Row^ row = this[m_manager->Current];
+        Row^ row = this[m_manager->Current];
         if(row != nullptr)
         {
             row->Select();
@@ -275,7 +275,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         ManagerEventDetach managerEventDeatch(this);
 
-        Ntreev::Windows::Forms::Grid::Row^ row = dynamic_cast<Ntreev::Windows::Forms::Grid::Row^>(this->GridControl->FocusedRow);
+        Row^ row = dynamic_cast<Row^>(this->GridControl->FocusedRow);
 
         if(row != nullptr && row != this->InsertionRow)
         {
@@ -290,15 +290,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         ManagerEventDetach managerEventDeatch(this);
 
-        Ntreev::Windows::Forms::Grid::Row^ insertionRow = this->InsertionRow;
+        Row^ insertionRow = this->InsertionRow;
 
         try
         {
             m_manager->AddNew();
 
-            for each(Ntreev::Windows::Forms::Grid::Cell^ cell in insertionRow->Cells)
+            for each(Cell^ cell in insertionRow->Cells)
             {
-                Ntreev::Windows::Forms::Grid::Column^ column = cell->Column;
+                Column^ column = cell->Column;
                 if(column->PropertyDescriptor == nullptr || column->DefaultValue != nullptr)
                 {
                     cell->ValueCore = column->DefaultValue;
@@ -320,7 +320,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
     }
 
-    void RowCollection::ArgumentTest(Ntreev::Windows::Forms::Grid::Row^ item)
+    void RowCollection::ArgumentTest(Row^ item)
     {
         if(item == nullptr)
             throw gcnew System::ArgumentNullException("item");
@@ -337,12 +337,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             m_manager->RemoveAt(i);
     }
 
-    void RowCollection::Insert(int index, Ntreev::Windows::Forms::Grid::Row^ item)
+    void RowCollection::Insert(int index, Row^ item)
     {
-        InsertCore(index, item);
+        this->InsertCore(index, item);
     }
 
-    Ntreev::Windows::Forms::Grid::Row^ RowCollection::InsertCore(int index, Ntreev::Windows::Forms::Grid::Row^ item)
+    Row^ RowCollection::InsertCore(int index, Row^ item)
     {
         if(index < 0 || index > Count)
             throw gcnew System::ArgumentOutOfRangeException("index");
@@ -405,16 +405,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void RowCollection::RemoveAt(int index)
     {
-        Ntreev::Windows::Forms::Grid::Row^ row = this[index];
+        Row^ row = this[index];
         Remove(row);
     }
 
-    System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Row^>^ RowCollection::GetEnumerator()
+    System::Collections::Generic::IEnumerator<Row^>^ RowCollection::GetEnumerator()
     {
         return gcnew Ntreev::Windows::Forms::Grid::RowCollection::Enumerator(m_pDataRowList);
     }
 
-    Ntreev::Windows::Forms::Grid::Row^ RowCollection::default::get(int index)
+    Row^ RowCollection::default::get(int index)
     {
         if(index < 0 || index >= (int)m_pDataRowList->GetDataRowCount())
             throw gcnew System::ArgumentOutOfRangeException("index");
@@ -423,21 +423,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return FromNative::Get(pDataRow);
     }
 
-    void RowCollection::default::set(int /*index*/, Ntreev::Windows::Forms::Grid::Row^ /*value*/)
+    void RowCollection::default::set(int /*index*/, Row^ /*value*/)
     {
 
     }
 
-    Ntreev::Windows::Forms::Grid::Row^ RowCollection::GetAt(int index)
+    Row^ RowCollection::GetAt(int index)
     {
         return this[index];
     }
 
-    Ntreev::Windows::Forms::Grid::Row^ RowCollection::Add()
+    Row^ RowCollection::Add()
     {
         try
         {
-            Ntreev::Windows::Forms::Grid::Row^ row = this->GridControl->CreateRow(m_pDataRowList->NewDataRow());
+            Row^ row = this->GridControl->CreateRow(m_pDataRowList->NewDataRow());
             Insert(this->Count, row);
             return row;
         }
@@ -447,11 +447,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
     }
 
-    cli::array<Ntreev::Windows::Forms::Grid::Row^>^ RowCollection::Add(int count)
+    cli::array<Row^>^ RowCollection::Add(int count)
     {
         if(count <= 0)
             throw gcnew System::ArgumentOutOfRangeException("count", "생성 갯수는 0보다 커야 합니다.");
-        cli::array<Ntreev::Windows::Forms::Grid::Row^>^ rows = gcnew cli::array<Ntreev::Windows::Forms::Grid::Row^>(count);
+        cli::array<Row^>^ rows = gcnew cli::array<Row^>(count);
 
         for(int i=0 ; i<count ; i++)
         {
@@ -460,17 +460,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return rows;
     }
 
-    Ntreev::Windows::Forms::Grid::Row^ RowCollection::AddFromInsertion()
+    Row^ RowCollection::AddFromInsertion()
     {
         return InsertCore(this->Count, this->InsertionRow);
     }
 
-    void RowCollection::Add(Ntreev::Windows::Forms::Grid::Row^ item)
+    void RowCollection::Add(Row^ item)
     {
         Insert(this->Count, item);
     }
 
-    bool RowCollection::Remove(Ntreev::Windows::Forms::Grid::Row^ item)
+    bool RowCollection::Remove(Row^ item)
     {
         ArgumentTest(item);
 
@@ -517,23 +517,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
     }
 
-    Ntreev::Windows::Forms::Grid::Row^ RowCollection::InsertionRow::get()
+    Row^ RowCollection::InsertionRow::get()
     {
         GrDataRow* pDataRow = m_pDataRowList->GetInsertionRow();
-        Ntreev::Windows::Forms::Grid::Row^ row = Ntreev::Windows::Forms::Grid::FromNative::Get(pDataRow);
+        Row^ row = Ntreev::Windows::Forms::Grid::FromNative::Get(pDataRow);
         if(row == nullptr)
             row = this->GridControl->CreateRow(pDataRow);
         return row;
     }
 
-    Ntreev::Windows::Forms::Grid::Row^ RowCollection::default::get(GrDataRow* pDataRow)
+    Row^ RowCollection::default::get(GrDataRow* pDataRow)
     {
         return FromNative::Get(pDataRow);
     }
 
-    Ntreev::Windows::Forms::Grid::Row^ RowCollection::default::get(System::Object^ component)
+    Row^ RowCollection::default::get(System::Object^ component)
     {
-        for each(Ntreev::Windows::Forms::Grid::Row^ item in this)
+        for each(Row^ item in this)
         {
             if(item->Component == component)
                 return item;
@@ -554,13 +554,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     int RowCollection::Add_System_Collections_IList(System::Object^ value)
     {
         int count = this->Count;
-        Add((Ntreev::Windows::Forms::Grid::Row^)value);
+        Add((Row^)value);
         return count;
     }
 
     bool RowCollection::Contains_System_Collections_IList(System::Object^ value)
     {
-        return this->Contains((Ntreev::Windows::Forms::Grid::Row^)value);
+        return this->Contains((Row^)value);
     }
 
     void RowCollection::Clear_System_Collections_IList()
@@ -573,30 +573,30 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     int RowCollection::IndexOf_System_Collections_IList(System::Object^ value)
     {
-        return this->IndexOf((Ntreev::Windows::Forms::Grid::Row^)value);
+        return this->IndexOf((Row^)value);
     }
 
     void RowCollection::Insert_System_Collections_IList(int index, System::Object^ value)
     {
-        this->Insert(index, (Ntreev::Windows::Forms::Grid::Row^)value);
+        this->Insert(index, (Row^)value);
     }
 
     void RowCollection::Remove_System_Collections_IList(System::Object^ value)
     {
-        this->Remove((Ntreev::Windows::Forms::Grid::Row^)value);
+        this->Remove((Row^)value);
     }
 
     void RowCollection::CopyTo_System_Collections_ICollection(System::Array^ array, int index)
     {
-        for each(Ntreev::Windows::Forms::Grid::Row^ item in this)
+        for each(Row^ item in this)
         {
             array->SetValue(item, index++);
         }
     }
 
-    void RowCollection::CopyTo_System_Collections_Generic_ICollection(cli::array<Ntreev::Windows::Forms::Grid::Row^>^ array, int arrayIndex)
+    void RowCollection::CopyTo_System_Collections_Generic_ICollection(cli::array<Row^>^ array, int arrayIndex)
     {
-        for each(Ntreev::Windows::Forms::Grid::Row^ item in this)
+        for each(Row^ item in this)
         {
             array->SetValue(item, arrayIndex++);
         }

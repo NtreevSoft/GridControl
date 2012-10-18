@@ -1,15 +1,14 @@
 #include "stdafx.h"
 #include "NativeGridRow.h"
 #include "ChildGridControl.h"
+#include "NativeClasses.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Native
 {
-    GrGridRow::GrGridRow(Ntreev::Windows::Forms::Grid::GridControl^ parent)
+    GrGridRow::GrGridRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
     {
-        m_gridControl = gcnew ChildGridControl(this);
-        parent->Controls->Add(m_gridControl);
+        m_gridControl = gridControl;
         m_pCell = new GrGridCell(this, m_gridControl);
-        this->SetHeight(m_gridControl->Height);
     }
 
     IFocusable* GrGridRow::GetFocusable(GrColumn* pColumn) const 
@@ -40,7 +39,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             }
         }
 
-        m_pCell->Paint(pPainter, clipRect);
+        paintRect.left = paintRect.right;
+        paintRect.right = m_pCell->GetX();
+
+        pPainter->DrawItem(GrPaintStyle_NoBottomLine | GrPaintStyle_NoRightLine, paintRect, GetCellLineColor(), GetCellBackColor());
     }
 
     void GrGridRow::SetDisplayable(bool b)
@@ -49,25 +51,61 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         m_gridControl->Visible = b;
     }
 
+    int GrGridRow::GetMinHeight() const
+    {
+        return m_gridControl->DataRectangle.Height;
+    }
+
     void GrGridRow::SetDataSource(System::Object^ dataSource)
     {
         m_gridControl->DataSource = dataSource;
-        int height = m_gridControl->Height;
-        this->SetHeight(height);
-        int width = m_gridControl->Width;
+        m_gridControl->Update();
+
+
+        GrGridCore* pGridCore = m_gridControl->GridCore;
+
+        GrRect rect = pGridCore->GetVisibleBounds();
+        m_gridControl->Width = 500;
+        this->SetHeight(rect.GetHeight() + m_gridControl->Padding.Vertical + System::Windows::Forms::SystemInformation::HorizontalScrollBarHeight);
+        //int height = m_gridControl->Height;
+        //this->SetHeight(height);
+        //int width = m_gridControl->Width;
     }
 
     void GrGridRow::OnGridCoreAttached()
     {
         IDataRow::OnGridCoreAttached();
         m_pGridCore->AttachObject(m_pCell);
+        GrFocuser* pFocuser = m_pGridCore->GetFocuser();
+        pFocuser->FocusChanged.Add(this, &GrGridRow::focuser_FocusChanged);
     }
 
     void GrGridRow::OnYChanged()
     {
         IDataRow::OnYChanged();
-        m_gridControl->Location = GrPoint(this->GetRight(), this->GetY());
+        
+        m_gridControl->Location = GrPoint(m_pCell->GetX(), this->GetY());
         m_gridControl->Visible = true;
+    }
+
+    void GrGridRow::OnHeightChanged()
+    {
+        IDataRow::OnHeightChanged();
+        m_gridControl->Height = this->GetHeight();
+    }
+
+    void GrGridRow::focuser_FocusChanged(GrObject* pSender, GrFocusChangeArgs* e)
+    {
+        GrFocuser* pFocuser = (GrFocuser*)pSender;
+        IFocusable* pFocusable = pFocuser->Get();
+
+        if(pFocusable == m_pCell)
+        {
+            m_gridControl->Focus();
+            Cell^ cell = m_gridControl->GetFirstVisibleCell();
+            if(cell != nullptr)
+                cell->Focus();
+        }
     }
 
     GrGridCell::GrGridCell(GrGridRow* pGridRow, Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
@@ -78,7 +116,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     int GrGridCell::GetX() const
     {
-        return m_pGridRow->GetRight();
+        IDataRow* pParent = (IDataRow*)m_pGridRow->GetParent();
+        GrExpander* pExpander = pParent->GetExpander();
+        return pExpander->GetX();
     }
 
     int GrGridCell::GetY() const
@@ -118,6 +158,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     void GrGridCell::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
     {
+        
         //m_pChildGrid->Paint(pPainter, clipRect);
     }
 

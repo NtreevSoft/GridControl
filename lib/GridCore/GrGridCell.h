@@ -680,16 +680,13 @@ public:
     GrRow();
 
     void SetY(int y);
-    virtual int GetY() const;
-
     void SetHeight(int height);
-    virtual int GetHeight() const;
-
     void SetResizable(bool b);
-    virtual bool GetResizable() const;
-
     void AdjustHeight();
 
+    virtual int GetY() const;
+    virtual int GetHeight() const;
+    virtual bool GetResizable() const;
     virtual int GetMinHeight() const;
 
     virtual GrRow* GetRow() const { return const_cast<GrRow*>(this); }
@@ -712,7 +709,6 @@ public:
     void SetFit();
     virtual void Paint(GrGridPainter* /*pPainter*/, const GrRect& /*clipRect*/) const {};
 
-    //virtual void GetVisibleList(GrRowArray* pVisible) const;
     virtual GrRect GetBounds() const { return GetRect(); }
     virtual GrPadding GetPadding(bool /*inherited*/) const { return GrPadding::Default; }
 
@@ -732,6 +728,7 @@ protected:
     virtual void OnHeightChanged();
     virtual void OnYChanged() {};
     virtual void OnHeightAdjusted() {};
+    virtual void OnChildAdded(GrRow* pRow);
 
     virtual void OnFitted();
 
@@ -774,6 +771,26 @@ private:
     };
 };
 
+class GrExpander : public GrCell
+{
+public:
+    GrExpander(IDataRow* pDataRow);
+
+    virtual int GetX() const;
+    virtual int GetY() const;
+    virtual int GetWidth() const;
+    virtual int GetHeight() const;
+    virtual GrRow* GetRow() const;
+
+    virtual GrCellType GetCellType() const;
+    virtual bool GetVisible() const;
+    virtual bool GetDisplayable() const;
+    virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
+
+private:
+    IDataRow* m_pDataRow;
+};
+
 class IDataRow : public GrRow
 {
 public: 
@@ -782,8 +799,12 @@ public:
     virtual int GetY() const;
     virtual int GetWidth() const;
 
+    virtual bool GetVisible() const;
+
     virtual bool GetDisplayable() const;
     virtual void SetDisplayable(bool b);
+
+    virtual GrCell* HitTest(const GrPoint& location) const final;
 
     void SetVisibleIndex(uint index);
     uint GetVisibleIndex() const;
@@ -797,6 +818,12 @@ public:
     bool ShouldBringIntoView() const;
     bool HasFocused() const;
 
+    void Expand(bool b = true);
+    bool IsExpanded() const;
+    GrExpander* GetExpander() const;
+
+    uint GetDataDepth() const;
+
     unsigned int GetSelectionGroup() const { return m_selectionGroup; }
 
     virtual IFocusable* GetFocusable(GrColumn* pColumn) const = 0;
@@ -807,10 +834,17 @@ public:
 	virtual GrColor GetLineColor() const;
     virtual GrFont* GetFont() const;
 
+    virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
+
 protected:
     virtual void OnFitted();
     virtual void OnGridCoreAttached();
     virtual void OnHeightChanged();
+    virtual void OnChildAdded(GrRow* pRow);
+
+    virtual GrCell* OnHitTest(int x) const;
+
+    void DrawExpander(GrGridPainter* pPainter, const GrRect& clipRect) const;
 
     GrColor GetCellBackColor() const;
     GrColor GetCellLineColor() const;
@@ -819,11 +853,14 @@ protected:
     GrDataRowList* m_pDataRowList;
 
 private:
+    bool m_expanded;
     bool m_displayable;
     bool m_clipped;
     uint m_visibleIndex;
     uint m_displayIndex;
     int m_selectionGroup;
+
+    GrExpander* m_pExpander;
 };
 
 class GrDataRow : public IDataRow
@@ -859,7 +896,7 @@ public:
 
     virtual bool GetFullSelected() const;
 
-    virtual bool GetVisible() const;
+    //virtual bool GetVisible() const;
     virtual void SetVisible(bool b);
 
     virtual GrRowType GetRowType() const { return GetDataRowID() == INSERTION_ROW ? GrRowType_InsertionRow : GrRowType_DataRow; }
@@ -869,13 +906,13 @@ public:
     virtual IFocusable* GetFocusable(GrColumn* pColumn) const;
     virtual int GetMinHeight() const;
 
-    virtual GrCell* HitTest(const GrPoint& location) const;
-
 protected:
     virtual void OnGridCoreAttached();
     virtual void OnGridCoreDetached();
     virtual void OnHeightAdjusted();
     virtual void OnHeightChanged();
+
+    virtual GrCell* OnHitTest(int x) const;
 
 private:
     void SetVisibleDataRowIndex(uint index);
@@ -1034,6 +1071,8 @@ public:
     bool ShouldClip() const;
     void Clip(const GrRect& displayRect, uint horizontal, uint vertical);
 
+    GrRect GetVisibleBounds() const;
+
     virtual int GetX() const;
     virtual int GetY() const;
     virtual int GetWidth() const { return m_width; }
@@ -1067,6 +1106,7 @@ private:
 
     GrRect m_bound;
     GrColumnList* m_pColumnList;
+    GrDataRowList* m_pDataRowList;
     GrDataRow* m_pInsertionRow;
 
 private:
@@ -1177,19 +1217,13 @@ public:
 
     GrColumn* GetColumn() const;
 
-    void Expand(bool b = true);
-    bool IsExpanded() const;
-
     GrGroupHeader* GetLabel() const;
     uint GetGroupLevel() const { return m_groupLevel; }
 
     virtual GrRowType GetRowType() const { return GrRowType_GroupRow; }
     virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
 
-    virtual bool GetVisible() const;
     virtual IFocusable* GetFocusable(GrColumn* pColumn) const;
-
-    virtual GrCell* HitTest(const GrPoint& location) const;
 
     std::wstring GetKey() const { return m_key; }
 
@@ -1198,13 +1232,14 @@ protected:
     virtual void OnUpdatePositionCell(int x, GrRect* pBounds);
     virtual void OnGridCoreAttached();
 
+    virtual GrCell* OnHitTest(int x) const;
+
 private:
     void SetReference(GrColumn* pColumn, const std::wstring& itemText); // called by GrDataRowList;
     void ProcessAfterGroup(); // called by GrDataRowList;
     friend class GrDataRowList;
 
 private:
-    bool m_expanded;
     uint m_groupLevel;
 
     GrColumn* m_pColumn;

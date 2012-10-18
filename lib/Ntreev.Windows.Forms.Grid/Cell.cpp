@@ -97,7 +97,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     private: // variables
 
-        Ntreev::Windows::Forms::Grid::Column^ m_column;
+        Column^ m_column;
         Ntreev::Windows::Forms::Grid::Row^ m_row;
     };
 
@@ -112,7 +112,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_oldValue = System::DBNull::Value;
     }
 
-    Ntreev::Windows::Forms::Grid::Column^ Cell::Column::get()
+    Column^ Cell::Column::get()
     {
         return m_column;
     }
@@ -256,9 +256,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         this->Selector->SelectItem(m_pItem, (GrSelectionType)selectionType);
     }
 
-    void Cell::Focus()
+    bool Cell::Focus()
     {
         this->Focuser->Set(m_pItem);
+        return this->IsFocused;
     }
 
     void Cell::BringIntoView()
@@ -284,9 +285,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Cell::IsSelected::set(bool value)
     {
-        if(Row->Index == INVALID_INDEX)
+        if(this->Row->Index == INVALID_INDEX)
             throw gcnew System::InvalidOperationException();
-        if(Row->IsVisible == false)
+        if(this->Row->IsVisible == false)
             throw gcnew System::InvalidOperationException();
         m_pItem->SetSelected(value);
     }
@@ -294,15 +295,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     bool Cell::IsFocused::get()
     {
         return m_pItem->GetFocused();
-    }
-
-    void Cell::IsFocused::set(bool value)
-    {
-        if(Row->Index == INVALID_INDEX)
-            throw gcnew System::InvalidOperationException();
-        if(Row->IsVisible == false)
-            throw gcnew System::InvalidOperationException();
-        m_pItem->SetFocused(value);
     }
 
     bool Cell::IsMouseOvered::get()

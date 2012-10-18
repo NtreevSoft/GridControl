@@ -94,10 +94,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::ArgumentException">
         /// 열의 인스턴스롤 셀을 찾지 못하는 경우
         /// </exception>
-        property System::Object^ default[Ntreev::Windows::Forms::Grid::Column^]
+        property System::Object^ default[Column^]
         {
-            System::Object^ get(Ntreev::Windows::Forms::Grid::Column^ column);
-            void set(Ntreev::Windows::Forms::Grid::Column^ column, System::Object^ value);
+            System::Object^ get(Column^ column);
+            void set(Column^ column, System::Object^ value);
         }
 
         /// <summary>

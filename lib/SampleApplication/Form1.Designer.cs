@@ -176,7 +176,6 @@ namespace SampleApplication
             // 
             this.gridControl1.AutoFitColumn = true;
             this.gridControl1.AutoFitRow = true;
-            this.gridControl1.BackgroundColor = System.Drawing.SystemColors.ActiveCaption;
             this.gridControl1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.gridControl1.CaptionRow.Tag = "false";
             this.gridControl1.Columns.AddRange(new Ntreev.Windows.Forms.Grid.Column[] {
@@ -223,7 +222,6 @@ namespace SampleApplication
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.gridControl1.Rows.Count = 4;
             this.ResumeLayout(false);
 
         }

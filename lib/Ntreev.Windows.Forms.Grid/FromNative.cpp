@@ -45,12 +45,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     //    return cell;
     //}
 
-    Ntreev::Windows::Forms::Grid::Column^ FromNative::Get(GrColumn* pColumn)
+    Column^ FromNative::Get(GrColumn* pColumn)
     {
         if(pColumn == nullptr)
             return nullptr;
         System::Object^ ref = pColumn->ManagedRef;
-        return safe_cast<Ntreev::Windows::Forms::Grid::Column^>(ref);
+        return safe_cast<Column^>(ref);
     }
 
     Ntreev::Windows::Forms::Grid::RowBase^ FromNative::Get(IDataRow* pDataRow)

@@ -135,8 +135,8 @@
       <OutputFile>$(OutDir)$(ProjectName).xml</OutputFile>
     </Xdcmake>
     <PostBuildEvent>
-      <Command>copy "$(TargetDir)$(TargetName).dll" "$(TargetDir)..\$(TargetName).dll"
-copy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)..\$(TargetName).pdb"
+      <Command>copy "$(TargetDir)$(TargetName).dll" "$(SolutionDir)..\bin\$(TargetName).dll"
+copy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)..\bin\$(TargetName).pdb"
 
 </Command>
     </PostBuildEvent>

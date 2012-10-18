@@ -384,6 +384,11 @@ GrRect GrGridCore::GetBounds() const
     return m_pRootRow->GetBounds();
 }
 
+GrRect GrGridCore::GetVisibleBounds() const
+{
+    return m_pRootRow->GetVisibleBounds();
+}
+
 GrRect GrGridCore::GetDataRect() const
 {
     GrRect dataRect;

@@ -50,7 +50,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_index = 0;
     }
 
-    Ntreev::Windows::Forms::Grid::Column^ SelectedColumnCollection::Enumerator::Current::get()
+    Column^ SelectedColumnCollection::Enumerator::Current::get()
     {
         GrColumn* pColumn = (*m_selectedColumns)[m_index - 1];
         return FromNative::Get(pColumn);
@@ -67,14 +67,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     }
 
-    void SelectedColumnCollection::Add(Ntreev::Windows::Forms::Grid::Column^ item)
+    void SelectedColumnCollection::Add(Column^ item)
     {
         if(item->IsSelected == true)
             return;
         item->IsSelected = true;
     }
 
-    bool SelectedColumnCollection::Remove(Ntreev::Windows::Forms::Grid::Column^ item)
+    bool SelectedColumnCollection::Remove(Column^ item)
     {
         if(item->IsSelected == false)
             return false;
@@ -87,7 +87,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         this->GridControl->ClearSelection();
     }
 
-    bool SelectedColumnCollection::Contains(Ntreev::Windows::Forms::Grid::Column^ column)
+    bool SelectedColumnCollection::Contains(Column^ column)
     {
         return column->IsSelected == true;
     }
@@ -97,22 +97,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return (int)m_selectedColumns->size();
     }
 
-    System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Column^>^ SelectedColumnCollection::GetEnumerator()
+    System::Collections::Generic::IEnumerator<Column^>^ SelectedColumnCollection::GetEnumerator()
     {
         return gcnew Ntreev::Windows::Forms::Grid::SelectedColumnCollection::Enumerator(m_selectedColumns);
     }
 
-    void SelectedColumnCollection::CopyTo(cli::array<Ntreev::Windows::Forms::Grid::Column^>^ array, int arrayIndex)
+    void SelectedColumnCollection::CopyTo(cli::array<Column^>^ array, int arrayIndex)
     {
-        for each(Ntreev::Windows::Forms::Grid::Column^ item in this)
+        for each(Column^ item in this)
         {
             array->SetValue(item, arrayIndex++);
         }
     }
 
-    cli::array<Ntreev::Windows::Forms::Grid::Column^>^ SelectedColumnCollection::ToArray()
+    cli::array<Column^>^ SelectedColumnCollection::ToArray()
     {
-        cli::array<Ntreev::Windows::Forms::Grid::Column^>^ array = gcnew cli::array<Ntreev::Windows::Forms::Grid::Column^>(this->Count);
+        cli::array<Column^>^ array = gcnew cli::array<Column^>(this->Count);
         this->CopyTo(array, 0);
         return array;
     }
@@ -124,7 +124,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void SelectedColumnCollection::CopyTo_System_Collections_ICollection(System::Array^ array, int index)
     {
-        for each(Ntreev::Windows::Forms::Grid::Column^ item in this)
+        for each(Column^ item in this)
         {
             array->SetValue(item, index++);
         }

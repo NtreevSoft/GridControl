@@ -41,7 +41,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         //static Ntreev::Windows::Forms::Grid::Cell^ Get(GrItem* pItem, Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
 
-        static Ntreev::Windows::Forms::Grid::Column^ Get(GrColumn* pColumn);
+        static Column^ Get(GrColumn* pColumn);
 
         static Ntreev::Windows::Forms::Grid::RowBase^ Get(IDataRow* pDataRow);
 

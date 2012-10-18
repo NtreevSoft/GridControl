@@ -134,11 +134,6 @@ public:
         m_handlers.erase(itor);
     }
 
-#ifdef _MSC_VER
-private:
-#else
-public:
-#endif
     void Raise(GrObject* pSender, ARG* e) const
     {
         typename _Handlers::const_iterator itor = m_handlers.begin();
@@ -164,11 +159,7 @@ public:
 
 private:
     _Handlers m_handlers;
-
-#ifdef _MSC_VER 
     friend OWNER;
-#endif
-
 };
 
 class GrEventArgs : public GrObject

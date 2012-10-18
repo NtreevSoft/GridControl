@@ -43,7 +43,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     class CustomPaint
     {
     public:
-        CustomPaint(gcroot<Ntreev::Windows::Forms::Grid::Column^> column) : m_column(column)
+        CustomPaint(gcroot<Column^> column) : m_column(column)
         {
 
         }
@@ -64,7 +64,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             System::IntPtr hdc(pPainter->GetDevice());
             System::Drawing::Graphics^ g = System::Drawing::Graphics::FromHdc(hdc);
-            Ntreev::Windows::Forms::Grid::Column^ column = m_column;
+            Column^ column = m_column;
             ColumnPainter^ columnPainter = column->ColumnPainter;
             bool b = columnPainter->PaintBackground(g, paintRect, column);
             delete g;
@@ -76,7 +76,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             System::IntPtr hdc(pPainter->GetDevice());
             System::Drawing::Graphics^ g = System::Drawing::Graphics::FromHdc(hdc);
-            Ntreev::Windows::Forms::Grid::Column^ column = m_column;
+            Column^ column = m_column;
             ColumnPainter^ columnPainter = column->ColumnPainter;
             bool b = columnPainter->PaintContents(g, paintRect, column);
             delete g;
@@ -85,7 +85,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private:
-        gcroot<Ntreev::Windows::Forms::Grid::Column^> m_column;
+        gcroot<Column^> m_column;
     };
 
 

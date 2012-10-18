@@ -272,6 +272,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         static System::IntPtr GetRootWindow(System::IntPtr handle);
         static System::IntPtr GetOwnerWindow(System::IntPtr handle);
 
+        static System::IntPtr SetFocus(System::IntPtr handle);
+
         static void SetScrollValue(System::IntPtr handle, int type, int value);
         static void SetScrollRange(System::IntPtr handle, int type, int min, int max);
         static void SetScrollPage(System::IntPtr handle, int type, int page);
