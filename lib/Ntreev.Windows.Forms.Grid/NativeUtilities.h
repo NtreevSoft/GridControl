@@ -240,6 +240,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     {
     public: // methods
 
+        
+
         static System::IntPtr SendMessage(System::Windows::Forms::Message msg);
         static System::IntPtr SendMessage(System::IntPtr handle, WM message, System::IntPtr wParam, System::IntPtr lParam);
         static System::IntPtr PostMessage(System::Windows::Forms::Message msg);

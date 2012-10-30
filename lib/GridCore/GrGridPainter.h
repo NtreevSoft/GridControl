@@ -31,16 +31,16 @@
 
 enum GrPaintStyle
 {
-    GrPaintStyle_Default = 0,
-
     GrPaintStyle_Focused = 0x00000001,
     GrPaintStyle_Mouseover = 0x00000002,
     GrPaintStyle_Selected = 0x00000004,
     GrPaintStyle_Pressed = 0x00000008,
-    GrPaintStyle_NoBottomLine = 0x00010000,
-    GrPaintStyle_NoRightLine = 0x00020000,
+    GrPaintStyle_BottomLine = 0x00010000,
+    GrPaintStyle_RightLine = 0x00020000,
     GrPaintStyle_TopLine = 0x00040000,
     GrPaintStyle_LeftLine = 0x00080000,
+
+    GrPaintStyle_Default = GrPaintStyle_RightLine | GrPaintStyle_BottomLine,
 };
 
 class GrFont
@@ -163,16 +163,16 @@ public:
     virtual void DrawRowSplitter(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor) = 0;
     virtual void DrawDropDown(const GrRect& paintRect, GrControlState state) = 0;
     virtual void DrawModal(const GrRect& paintRect, GrControlState state) = 0;
-    virtual void DrawExpander(const GrRect& paintRect, GrControlState state, bool opened, const GrColor& foreColor, const GrColor& backColor) = 0;
+    virtual void DrawExpander(GrFlag paintStyle, const GrRect& paintRect, GrControlState state, bool opened, const GrColor& foreColor, const GrColor& backColor) = 0;
     virtual void DrawSortGlyph(const GrRect& paintRect, GrSort sortType) = 0;
 
-    virtual void DrawColumn(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = NULL) = 0;
-    virtual void DrawRow(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = NULL) = 0;
-    virtual void DrawItem(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = NULL) = 0;
-    virtual void DrawGroupHeader(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = NULL) = 0;
+    virtual void DrawColumn(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = nullptr) = 0;
+    virtual void DrawRow(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = nullptr) = 0;
+    virtual void DrawItem(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = nullptr) = 0;
+    virtual void DrawGroupHeader(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = nullptr) = 0;
 
-    virtual void DrawText(GrFont* pFont, const wchar_t* text, int textLength, const GrRect& paintRect, const GrColor& color , const GrRect* pClipRect = NULL) = 0;
-    virtual void DrawColumnText(GrFont* pFont, const wchar_t* text, int textLength, const GrRect& paintRect, const GrColor& color , const GrRect* pClipRect = NULL) = 0;
+    virtual void DrawText(GrFont* pFont, const wchar_t* text, int textLength, const GrRect& paintRect, const GrColor& color , const GrRect* pClipRect = nullptr) = 0;
+    virtual void DrawColumnText(GrFont* pFont, const wchar_t* text, int textLength, const GrRect& paintRect, const GrColor& color , const GrRect* pClipRect = nullptr) = 0;
 
     virtual void DrawResizingLine(int x1, int y1, int x2, int y2) = 0;
     virtual void DrawSplitterMovingLine(const GrRect& paintRect) = 0;

@@ -46,7 +46,7 @@ GrStateManager::GrStateManager()
     m_states.push_back(new ItemButtonPressing());
     m_states.push_back(new ItemEditing());
 
-    m_state = NULL;
+    m_state = nullptr;
     m_defaultState = m_states[0];
     m_dragging = false;
 }
@@ -64,7 +64,7 @@ GrStateManager::Invalidator::~Invalidator()
 
 GrStateManager::~GrStateManager()
 {
-    for_each(_States, m_states, value)
+    for(auto value : m_states)
     {
         delete value;
     }
@@ -76,7 +76,7 @@ void GrStateManager::OnGridCoreAttached()
 
     m_pGridWindow = m_pGridCore->GetGridWindow();
 
-    for_each(_States, m_states, value)
+    for(auto value : m_states)
     {
         m_pGridCore->AttachObject(value);
     }
@@ -87,30 +87,30 @@ void GrStateManager::OnGridCoreAttached()
 void GrStateManager::ChangeDefaultState()
 {
     if(m_state != m_defaultState)
-        ChangeState(m_defaultState, NULL, NULL);
+        ChangeState(m_defaultState, nullptr, nullptr);
 }
 
 void GrStateManager::OnMouseDown(const GrPoint& location, GrKeys modifierKeys)
 {
     Invalidator invalidator(m_pGridCore);
 
-    m_downState = NULL;
+    m_downState = nullptr;
     GrHitTest hitTest;
 
     if(m_pGridCore->HitTest(location, &hitTest) == true)
     {
         GrStateBase* hittedState = GetHitTest(hitTest.pHitted, hitTest.localHit);
-        if(hittedState == NULL)
+        if(hittedState == nullptr)
         {
             ChangeDefaultState();
             return;
         }
-        ChangeState(hittedState, hitTest.pHitted, NULL);
+        ChangeState(hittedState, hitTest.pHitted, nullptr);
         m_downState = m_state;
 
         if(m_state == hittedState)
         {
-            GrStateMouseEventArgs e(location, modifierKeys, hitTest.pHitted, hitTest.localHit, hittedState->GetState(), NULL);
+            GrStateMouseEventArgs e(location, modifierKeys, hitTest.pHitted, hitTest.localHit, hittedState->GetState(), nullptr);
             hittedState->OnMouseDown(&e);
 
             if(e.GetNextState() != hittedState->GetState())
@@ -139,7 +139,7 @@ void GrStateManager::OnMouseMove(const GrPoint& location, GrKeys modifierKeys, b
 
     if(pressed == true)
     {
-        if(m_state == NULL || m_state->GetDragable() == false)
+        if(m_state == nullptr || m_state->GetDragable() == false)
             return;
 
         if(m_dragging == false && m_dragRectangle.Contains(location) == false)
@@ -158,10 +158,10 @@ void GrStateManager::OnMouseMove(const GrPoint& location, GrKeys modifierKeys, b
     {
         GrCursor cursor = m_defaultState->GetCursor();
 
-        if(hitTest.pHitted != NULL)
+        if(hitTest.pHitted != nullptr)
         {
             GrStateBase* hittedState = GetHitTest(hitTest.pHitted, hitTest.localHit);
-            if(hittedState != NULL)
+            if(hittedState != nullptr)
                 cursor = hittedState->GetCursor();
         }
 
@@ -177,7 +177,7 @@ void GrStateManager::OnMouseUp(const GrPoint& location, GrKeys modifierKeys)
 {
     Invalidator invalidator(m_pGridCore);
 
-    if(m_state != NULL)
+    if(m_state != nullptr)
     {
         GrHitTest hitTest;
         m_pGridCore->HitTest(location, &hitTest);
@@ -202,7 +202,7 @@ void GrStateManager::OnMouseClick(const GrPoint& location, GrKeys modifierKeys)
 {
     Invalidator invalidator(m_pGridCore);
 
-    if(m_downState != NULL)
+    if(m_downState != nullptr)
     {
         GrHitTest hitTest;
         m_pGridCore->HitTest(location, &hitTest);
@@ -222,7 +222,7 @@ void GrStateManager::OnMouseDoubleClick(const GrPoint& location, GrKeys modifier
 {
     Invalidator invalidator(m_pGridCore);
 
-    if(m_downState != NULL)
+    if(m_downState != nullptr)
     {
         GrHitTest hitTest;
         m_pGridCore->HitTest(location, &hitTest);
@@ -241,7 +241,7 @@ void GrStateManager::OnMouseWheel(const GrPoint& location, GrKeys modifierKeys, 
 {
     Invalidator invalidator(m_pGridCore);
 
-    if(m_state != NULL)
+    if(m_state != nullptr)
     {
         GrMouseEventArgs e(location, modifierKeys, delta);
         m_state->OnMouseWheel(&e);
@@ -250,7 +250,7 @@ void GrStateManager::OnMouseWheel(const GrPoint& location, GrKeys modifierKeys, 
 
 void GrStateManager::OnPaint(GrGridPainter* pGridPainter)
 {
-    if(m_state != NULL)
+    if(m_state != nullptr)
         m_state->OnPaintAdornments(pGridPainter, m_pGridCore->GetDisplayRect());
 }
 
@@ -265,14 +265,14 @@ bool GrStateManager::OnKeyDown(GrKeys key, GrKeys modifierKeys)
             m_state->OnMouseDragEnd(true, GrHitTest::Empty);
             m_dragging = false;
 
-            GrStateMouseEventArgs e(GrPoint::Empty, modifierKeys, NULL, GrPoint::Empty, m_defaultState->GetState());
+            GrStateMouseEventArgs e(GrPoint::Empty, modifierKeys, nullptr, GrPoint::Empty, m_defaultState->GetState());
             m_state->OnMouseUp(&e);
 
             if(e.GetNextState() == m_defaultState->GetState())
                 ChangeState(e.GetNextState(), e.GetCell(), e.GetUserData());
         }
     }
-    else if(m_state != NULL)
+    else if(m_state != nullptr)
     {
         return m_state->OnKeyDown(key, modifierKeys);
     }
@@ -281,7 +281,7 @@ bool GrStateManager::OnKeyDown(GrKeys key, GrKeys modifierKeys)
 
 void GrStateManager::OnKeyUp(GrKeys key, GrKeys modifierKeys)
 {
-    if(m_state != NULL)
+    if(m_state != nullptr)
     {
         m_state->OnKeyUp(key, modifierKeys);
     }
@@ -305,9 +305,9 @@ bool GrStateManager::SetCursor()
 void GrStateManager::ChangeState(GrStateBase* state, GrCell* pHitted, void* userData)
 {
     GrStateBase* oldState = m_state;
-    if(oldState != NULL)
+    if(oldState != nullptr)
     {
-        GrStateEventArgs e(NULL, oldState->GetState(), NULL);
+        GrStateEventArgs e(nullptr, oldState->GetState(), nullptr);
         oldState->OnEnd(&e);
         if(e.GetNextState() != oldState->GetState())
         {
@@ -332,19 +332,19 @@ GrGridState GrStateManager::GetHitTest(const GrPoint& location)
     if(this->m_pGridCore->HitTest(location, &hitTest) == false)
         return GrGridState_Unknown;
     GrStateBase* base = GetHitTest(hitTest.pHitted, hitTest.localHit);
-    return base != NULL ? base->GetState() : GrGridState_Unknown;
+    return base != nullptr ? base->GetState() : GrGridState_Unknown;
 }
 
 GrStateBase* GrStateManager::GetHitTest(GrCell* pHitted, const GrPoint& localHitted)
 {
-    for_each(_States, m_states, value)
+    for(auto value : m_states)
     {
         if(value->GetHitTest(pHitted, localHitted) == true)
         {
             return value;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 GrStateBase::GrStateBase()
@@ -446,7 +446,7 @@ void GrStateBase::InvokeMouseEvent(GrCell* pOldCell, GrCell* pNewCell, GrStateMo
 {
     if(pOldCell == pNewCell)
     {
-        if(pNewCell != NULL)
+        if(pNewCell != nullptr)
         {
             switch(pNewCell->GetCellType())
             {
@@ -488,7 +488,7 @@ void GrStateBase::InvokeMouseEvent(GrCell* pOldCell, GrCell* pNewCell, GrStateMo
     else
     {
 
-        if(pOldCell != NULL)
+        if(pOldCell != nullptr)
         {
             switch(pOldCell->GetCellType())
             {
@@ -515,7 +515,7 @@ void GrStateBase::InvokeMouseEvent(GrCell* pOldCell, GrCell* pNewCell, GrStateMo
             }
         }
 
-        if(pNewCell != NULL)
+        if(pNewCell != nullptr)
         {
             switch(pNewCell->GetCellType())
             {
@@ -559,12 +559,11 @@ void GrStateBase::InvokeMouseEvent(GrCell* pOldCell, GrCell* pNewCell, GrStateMo
     }
 }
 
-
 namespace GridStateClass
 {
     Normal::Normal()
     {
-        m_pCell = NULL;
+        m_pCell = nullptr;
     }
 
     void Normal::OnGridCoreAttached()
@@ -575,7 +574,7 @@ namespace GridStateClass
 
     void Normal::gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
     {
-        m_pCell = NULL;
+        m_pCell = nullptr;
     }
 
     void Normal::OnBegin(GrStateEventArgs* /*e*/)
@@ -626,89 +625,90 @@ namespace GridStateClass
 
         switch(key)
         {
+        case GrKeys_Add:
+            {
+                IDataRow* pDataRow = m_pFocuser->GetFocusedRow();
+                if(pDataRow != nullptr)
+                {
+                    pDataRow->Expand(true);
+                    return true;
+                }
+            }
+            return false;
+        case GrKeys_Subtract:
+            {
+                IDataRow* pDataRow = m_pFocuser->GetFocusedRow();
+                if(pDataRow != nullptr)
+                {
+                    pDataRow->Expand(false);
+                    return true;
+                }
+            }
+            return false;
         case GrKeys_Tab:
             {
                 if((modifierKeys & (GrKeys_Control | GrKeys_Alt)) == 0)
                 {
                     if(modifierKeys & GrKeys_Shift)
-                        pMover->MoveLeft(GrSelectionRange_One);
-                    else
-                        pMover->MoveRight(GrSelectionRange_One);
-                    return true;
+                        return pMover->MoveLeft(GrSelectionRange_One);
+                    return pMover->MoveRight(GrSelectionRange_One);
                 }
             }
             return false;
         case GrKeys_Left:
             {
                 IFocusable* pFocusable = m_pFocuser->Get();
-                if(pFocusable != NULL)
+                if(pFocusable != nullptr)
                 {
-                    if(pFocusable->GetCellType() == GrCellType_GroupHeader)
+                    if((modifierKeys & GrKeys_Alt) != 0)
                     {
-                        GrGroupRow* pGrGroupRow = (GrGroupRow*)pFocusable->GetDataRow();
-                        pGrGroupRow->Expand(false);
+                        IDataRow* pDataRow = pFocusable->GetDataRow();
+                        pDataRow->Expand(false);
                     }
                     else
                     {
-                        pMover->MoveLeft(GrSelectionRange_One);
+                        return pMover->MoveLeft(GrSelectionRange_One);
                     }
                 }
             }
-            return true;
+            return false;
         case GrKeys_Up:
-            {
-                pMover->MoveUp(GrSelectionRange_One);
-            }
-            return true;
+            return pMover->MoveUp(GrSelectionRange_One);
+
         case GrKeys_Right:
             {
                 IFocusable* pFocusable = m_pFocuser->Get();
-                if(pFocusable != NULL)
+                if(pFocusable != nullptr)
                 {
-                    if(pFocusable->GetCellType() == GrCellType_GroupHeader)
+                    if((modifierKeys & GrKeys_Alt) != 0)
                     {
-                        GrGroupRow* pGrGroupRow = (GrGroupRow*)pFocusable->GetDataRow();
-                        pGrGroupRow->Expand(true);
+                        IDataRow* pDataRow = pFocusable->GetDataRow();
+                        pDataRow->Expand(true);
                     }
                     else
                     {
-                        pMover->MoveRight(GrSelectionRange_One);
+                        return pMover->MoveRight(GrSelectionRange_One);
                     }
                 }
             }
-            return true;
+            return false;
         case GrKeys_Down:
-            {
-                pMover->MoveDown(GrSelectionRange_One);
-            }
-            return true;
+            return pMover->MoveDown(GrSelectionRange_One);
 
         case GrKeys_End:
-            {
-                if(modifierKeys & GrKeys_Control)
-                    pMover->LastRow(selectionRange);
-                else
-                    pMover->LastCell(selectionRange);
-            }
-            return true;
+            if(modifierKeys & GrKeys_Control)
+                return pMover->LastRow(selectionRange);
+            return pMover->LastCell(selectionRange);
+
         case GrKeys_Home:
-            {
-                if(modifierKeys & GrKeys_Control)
-                    pMover->FirstRow(selectionRange);
-                else
-                    pMover->FirstCell(selectionRange);
-            }
-            return true;
+            if(modifierKeys & GrKeys_Control)
+                return pMover->FirstRow(selectionRange);
+            return pMover->FirstCell(selectionRange);
+
         case GrKeys_PageUp:
-            {
-                pMover->PageUp(selectionRange);
-            }
-            return true;
+            return pMover->PageUp(selectionRange);
         case GrKeys_PageDown:
-            {
-                pMover->PageDown(selectionRange);
-            }
-            return true;
+            return pMover->PageDown(selectionRange);
         default:
             return false;
         }
@@ -730,7 +730,7 @@ namespace GridStateClass
      
         m_pItemSelector->SelectAll();
 
-        GrItem* pItem = NULL;
+        GrItem* pItem = nullptr;
         GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
         GrColumnList* pColumnList = m_pGridCore->GetColumnList();
 
@@ -752,8 +752,8 @@ namespace GridStateClass
     ColumnPressing::ColumnPressing()
     {
         m_cursor = GrCursor_Default;
-        m_pColumn = NULL;
-        m_pOldDataColumn = NULL;
+        m_pColumn = nullptr;
+        m_pOldDataColumn = nullptr;
         m_handled = false;
         m_targetType = TargetType_Unknown;
 
@@ -825,7 +825,7 @@ namespace GridStateClass
                         m_pFocuser->Set(m_pColumn);
 
                         IDataRow* pFocusedRow = m_pFocuser->GetFocusedRow();
-                        if(pFocusedRow != NULL)
+                        if(pFocusedRow != nullptr)
                             m_pItemSelector->SetRowAnchor(pFocusedRow);
                     }
                     break;
@@ -857,7 +857,7 @@ namespace GridStateClass
     {
         m_cursor = GrCursor_No;
 
-        if(hitTest.pHitted == NULL)
+        if(hitTest.pHitted == nullptr)
             return;
 
         m_pTimer->SetMouseLocation(location);
@@ -904,7 +904,7 @@ namespace GridStateClass
                         if(targetIndex < m_pColumnList->GetFrozenColumnCount())
                             m_targetCell = m_pColumnList->GetFrozenColumn(targetIndex);
                         else
-                            m_targetCell = NULL;
+                            m_targetCell = nullptr;
                     }
                     else
                     {
@@ -933,7 +933,7 @@ namespace GridStateClass
                         if(targetIndex < m_pColumnList->GetUnfrozenColumnCount())
                             m_targetCell = m_pColumnList->GetUnfrozenColumn(targetIndex);
                         else
-                            m_targetCell = NULL;
+                            m_targetCell = nullptr;
                     }
                 }
             }
@@ -955,9 +955,9 @@ namespace GridStateClass
                 if(m_pColumn->GetGroupable() == false)
                     break;
 
-                if(m_pColumn->GetGrouped() == false && dynamic_cast<GrGroupPanel*>(hitTest.pHitted) != NULL)
+                if(m_pColumn->GetGrouped() == false && dynamic_cast<GrGroupPanel*>(hitTest.pHitted) != nullptr)
                 {
-                    m_targetCell = NULL;
+                    m_targetCell = nullptr;
                     m_targetType = TargetType_GroupList;
                 }
             }
@@ -1004,7 +1004,7 @@ namespace GridStateClass
                 break;
             case TargetType_GroupList:
                 {
-                    if(m_targetCell != NULL)
+                    if(m_targetCell != nullptr)
                     {
                         GrGroup* pTargetGroupInfo = (GrGroup*)m_targetCell;
                         GrGroup* pGroup = m_pColumn->GetGroup();
@@ -1060,7 +1060,7 @@ namespace GridStateClass
         case TargetType_Frozen:
             {
                 int x;
-                if(m_targetCell == NULL)
+                if(m_targetCell == nullptr)
                 {
                     x = m_pColumnList->GetColumnSplitter()->GetX();
                 }
@@ -1075,7 +1075,7 @@ namespace GridStateClass
         case TargetType_Unfrozen:
             {
                 int x;
-                if(m_targetCell == NULL)
+                if(m_targetCell == nullptr)
                 {
                     x = std::min(displayRect.right, m_pColumnList->GetBounds().right);
                 }
@@ -1089,7 +1089,7 @@ namespace GridStateClass
             break;
         case TargetType_GroupList:
             {
-                if(m_targetCell != NULL)
+                if(m_targetCell != nullptr)
                 {
                     int x = m_targetCell->GetX();
                     GrRect paintRect(x - padding, m_targetCell->GetY(), x + padding, m_targetCell->GetY() + m_targetCell->GetHeight());
@@ -1156,13 +1156,13 @@ namespace GridStateClass
             return false;
 
         GrColumn* pColumn = (GrColumn*)pHitted;
-        return GetResizingColumn(pColumn, localLocation) != NULL;
+        return GetResizingColumn(pColumn, localLocation) != nullptr;
     }
 
     GrColumn* ColumnResizing::GetResizingColumn(GrColumn* pColumn, const GrPoint& localLocation)
     {
         if(m_pGridCore->GetColumnResizable() == false)
-            return NULL;
+            return nullptr;
 
         int columnSplitter = m_pGridCore->GetColumnSplitter();
         
@@ -1188,7 +1188,7 @@ namespace GridStateClass
                     return pColumn;
             }
         }
-        return NULL;
+        return nullptr;
     }
 
     void ColumnResizing::OnMouseDown(GrStateMouseEventArgs* e)
@@ -1455,17 +1455,6 @@ namespace GridStateClass
                 GrIndexRange columnRange = m_pItemSelector->GetColumnSelections(m_pItem);
                 GrIndexRange rowRange = m_pItemSelector->GetRowSelections(m_pItem);
 
-                switch(m_pGridWindow->GetSelectionType())
-                {
-                case GrSelectionType_Add:
-                    break;
-                case GrSelectionType_Normal:
-                    m_pItemSelector->ClearSelection();
-                    break;
-                default:
-                    break;
-                }
-
                 if(rowRange != GrIndexRange::Empty)
                 {
                     m_pItemSelector->BeginSelecting();
@@ -1493,13 +1482,12 @@ namespace GridStateClass
                 break;
             case GrSelectionType_Normal:
                 {
+                    m_pItemSelector->SetSelectionGroup(m_pItem);
+                    m_pItemSelector->SetAnchor(m_pItem);
                     if(m_pGridCore->GetFullRowSelect() == true)
                         m_pItemSelector->SelectDataRow(m_pItem->GetDataRow(), GrSelectionType_Normal);
                     else
                         m_pItemSelector->SelectItem(m_pItem, GrSelectionType_Normal);
-
-                    m_pItemSelector->SetSelectionGroup(m_pItem);
-                    m_pItemSelector->SetAnchor(m_pItem);
                     m_pFocuser->Set(m_pItem);
 
                     if(m_pItem->GetReadOnly() == false)
@@ -1565,13 +1553,13 @@ namespace GridStateClass
         case GrSelectionType_Add:
             break;
         case GrSelectionType_Normal:
-            m_pItemSelector->ClearSelection();
+            //m_pItemSelector->ClearSelection();
             break;
         default:
             break;
         }
 
-        m_pGridCore->SetMouseOver(NULL, GrPoint::Empty);
+        m_pGridCore->SetMouseOver(nullptr, GrPoint::Empty);
         m_pTimer->Start();
     }
 
@@ -1664,7 +1652,7 @@ namespace GridStateClass
     bool ItemEditing::GetHitTest(GrCell* pHitted, const GrPoint& localLocation)
     {
         GrItem* pItem = dynamic_cast<GrItem*>(pHitted);
-        if(pItem == NULL || pItem->GetFocused() == false)
+        if(pItem == nullptr || pItem->GetFocused() == false)
             return false;
         GrEditingReason reason(localLocation);
         return m_pGridWindow->CanEdit(pItem, reason);
@@ -1676,7 +1664,7 @@ namespace GridStateClass
 
         GrEditingReason* pReason = (GrEditingReason*)e->GetUserData();
 
-        if(pReason != NULL && m_pItem != NULL)
+        if(pReason != nullptr && m_pItem != nullptr)
             e->SetNextState(OnBegin(*pReason));
     }
 
@@ -1771,7 +1759,7 @@ namespace GridStateClass
     bool ExpanderPressing::GetHitTest(GrCell* pHitted, const GrPoint& localLocation)
     {
         GrExpander* pGroupCell = dynamic_cast<GrExpander*>(pHitted);
-        if(pGroupCell == NULL)
+        if(pGroupCell == nullptr)
             return false;
 
         return true;
@@ -1799,7 +1787,7 @@ namespace GridStateClass
     bool GroupCellPressing::GetHitTest(GrCell* pHitted, const GrPoint& localLocation)
     {
         GrGroupHeader* pGroupCell = dynamic_cast<GrGroupHeader*>(pHitted);
-        if(pGroupCell == NULL)
+        if(pGroupCell == nullptr)
             return false;
 
         return pGroupCell->HitMouseOverTest(localLocation) == GrMouseOverState_In;
@@ -1911,7 +1899,7 @@ namespace GridStateClass
         GrCell* pHittedCell = hitTest.pHitted;
         m_cursor = GrCursor_No;
 
-        if(pHittedCell == NULL)
+        if(pHittedCell == nullptr)
             return;
 
         GrRow* pRow = pHittedCell->GetRow();
@@ -2043,7 +2031,7 @@ namespace GridStateClass
                     {
                     case GrSelectionType_Normal:
                         {
-                            m_pItemSelector->SetSelectionGroup(pDataRow->GetSelectionGroup());
+                            m_pItemSelector->SetSelectionGroup(pDataRow);
                             m_pItemSelector->SetRowAnchor(pDataRow);
                             m_pItemSelector->SelectDataRow(pDataRow, GrSelectionType_Normal);
                             m_pFocuser->Set(pDataRow);
@@ -2098,6 +2086,15 @@ namespace GridStateClass
             }
             break;
         default:
+            {
+                IDataRow* pDataRow = dynamic_cast<IDataRow*>(m_pRow);
+                if(pDataRow != nullptr)
+                {
+                    m_pItemSelector->ClearSelection();
+                    m_pFocuser->Set(pDataRow);
+                }
+                int qwer=0;
+            }
             break;
         }
         m_pGridCore->SetMousePress(m_pRow);
@@ -2116,9 +2113,9 @@ namespace GridStateClass
     bool RowResizing::GetHitTest(GrCell* pHitted, const GrPoint& localLocation)
     {
         GrRow* pRow = dynamic_cast<GrRow*>(pHitted);
-        if(pRow == NULL || pRow->GetResizable() == false || m_pGridCore->GetRowResizable() == false)
+        if(pRow == nullptr || pRow->GetResizable() == false || m_pGridCore->GetRowResizable() == false)
             return false;
-        return GetResizingRow(pRow, localLocation) != NULL;
+        return GetResizingRow(pRow, localLocation) != nullptr;
     }
 
     GrRow* RowResizing::GetResizingRow(GrRow* pRow, const GrPoint& localLocation)
@@ -2141,7 +2138,7 @@ namespace GridStateClass
                     return pDataRow;
             }
         }
-        return NULL;
+        return nullptr;
     }
 
     void RowResizing::OnMouseDown(GrStateMouseEventArgs* e)
@@ -2168,7 +2165,7 @@ namespace GridStateClass
             for(uint i=0 ; i<pDataRowList->GetVisibleRowCount() ; i++)
             {
                 GrDataRow* pDataRow = dynamic_cast<GrDataRow*>(pDataRowList->GetVisibleRow(i));
-                if(pDataRow == NULL)
+                if(pDataRow == nullptr)
                     continue;
                 if(pDataRow->GetFullSelected() == false)
                     continue;
@@ -2216,7 +2213,7 @@ namespace GridStateClass
                 for(uint i=0 ; i<pDataRowList->GetVisibleRowCount() ; i++)
                 {
                     GrDataRow* pDataRow = dynamic_cast<GrDataRow*>(pDataRowList->GetVisibleRow(i));
-                    if(pDataRow == NULL)
+                    if(pDataRow == nullptr)
                         continue;
                     if(pDataRow->GetFullSelected() == false)
                         continue;

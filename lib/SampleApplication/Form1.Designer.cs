@@ -106,7 +106,6 @@ namespace SampleApplication
             this.columnUITypeEditor1.ClickEditType = Ntreev.Windows.Forms.Grid.ClickEditType.SingClick;
             this.columnUITypeEditor1.ColumnName = "CheckBox";
             this.columnUITypeEditor1.DataType = typeof(bool);
-            this.columnUITypeEditor1.IsGrouped = true;
             // 
             // columnButton1
             // 

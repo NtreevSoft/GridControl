@@ -33,7 +33,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     }
 
-    GridObject::GridObject(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+    GridObject::GridObject(_GridControl^ gridControl)
         : m_gridControl(gridControl), 
         m_pGridCore(gridControl->GridCore), 
         m_pGridPainter(gridControl->GridPainter), 
@@ -57,12 +57,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
     }
 
-    Ntreev::Windows::Forms::Grid::GridControl^ GridObject::GridControl::get()
+    _GridControl^ GridObject::GridControl::get()
     {
         return m_gridControl; 
     }
 
-    void GridObject::GridControl::set(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+    void GridObject::GridControl::set(_GridControl^ gridControl)
     {
         if(gridControl != nullptr)
         {

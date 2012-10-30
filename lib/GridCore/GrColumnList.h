@@ -12,7 +12,6 @@ public:
     virtual ~GrColumnList();
 
     void Reserve(uint reserve);
-
     void AddColumn(GrColumn* pColumn);
     void RemoveColumn(GrColumn* pColumn);
     void InsertColumn(GrColumn* pColumn, uint index);
@@ -55,7 +54,6 @@ public:
     void SetFitChanged();
     void SetVisibleChanged();
     void SetWidthChanged();
-
 
     virtual bool ShouldClip(const GrRect& displayRect, uint horizontal, uint vertical) const;
     virtual void Clip(const GrRect& displayRect, uint horizontal, uint vertical);
@@ -134,8 +132,10 @@ protected:
 private:
     void groupPanel_Changed(GrObject* pSender, GrEventArgs* e);
     void gridCore_FocusChanged(GrObject* pSender, GrFocusChangeArgs* e);
+    void dataRowList_DataRowRemoved(GrObject* pSender, GrDataRowEventArgs* e);
     void gridCore_Cleared(GrObject* pSender, GrEventArgs* e);
     void gridCore_FontChanged(GrObject* pSender, GrEventArgs* e);
+    void gridCore_DisplayRectChanged(GrObject* pSender, GrEventArgs* e);
     void column_GroupChanged(GrObject* pSender, GrEventArgs* e);
 
 private:

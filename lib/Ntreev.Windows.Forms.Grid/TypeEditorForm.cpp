@@ -185,7 +185,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             delete m_gripperRenderer;
         }
 
-        m_gridControl->Focus();
+        m_gridControl->Select();
     }
 
     System::Drawing::Rectangle TypeEditorForm::GetClipScreenRect(System::Windows::Forms::Control^ control)

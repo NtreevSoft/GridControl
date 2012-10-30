@@ -24,7 +24,7 @@
 #include "GrGridPainter.h"
 
 const GrStyle GrStyle::DefaultStyle(true);
-GrFont* const GrFont::Empty = NULL;
+GrFont* const GrFont::Empty = nullptr;
 
 GrStyle::GrStyle()
 {
@@ -42,22 +42,22 @@ GrStyle::GrStyle()
 	ColumnForeColor = GrColor::Empty;
 	ColumnBackColor = GrColor::Empty;
 	ColumnLineColor = GrColor::Empty;
-	ColumnFont = NULL;
+	ColumnFont = nullptr;
 
 	RowForeColor = GrColor::Empty;
 	RowBackColor = GrColor::Empty;
 	RowLineColor = GrColor::Empty;
-	RowFont = NULL;
+	RowFont = nullptr;
 
     CaptionForeColor = GrColor::Empty;
 	CaptionBackColor = GrColor::Empty;
 	CaptionLineColor = GrColor::Empty;
-	CaptionFont = NULL;
+	CaptionFont = nullptr;
 
     GroupPanelForeColor = GrColor::Empty;
 	GroupPanelBackColor = GrColor::Empty;
 	GroupPanelLineColor = GrColor::Empty;
-	GroupPanelFont = NULL;
+	GroupPanelFont = nullptr;
 
     RowHighlightLineColor = GrColor::Black;
     RowHighlightFillColor = GrColor::LightCyan;
@@ -144,7 +144,7 @@ GrColor GrStyle::GetColumnLineColor() const
 
 GrFont* GrStyle::GetColumnFont() const
 {
-    if(this->ColumnFont == NULL)
+    if(this->ColumnFont == nullptr)
         return this->Font;
     return this->ColumnFont;
 }
@@ -172,7 +172,7 @@ GrColor GrStyle::GetRowLineColor() const
 
 GrFont* GrStyle::GetRowFont() const
 {
-    if(this->RowFont == NULL)
+    if(this->RowFont == nullptr)
         return this->Font;
     return this->RowFont;
 }
@@ -200,7 +200,7 @@ GrColor GrStyle::GetCaptionLineColor() const
 
 GrFont* GrStyle::GetCaptionFont() const
 {
-    if(this->CaptionFont == NULL)
+    if(this->CaptionFont == nullptr)
         return this->Font;
     return this->CaptionFont;
 }
@@ -228,7 +228,7 @@ GrColor GrStyle::GetGroupPanelLineColor() const
 
 GrFont* GrStyle::GetGroupPanelFont() const
 {
-    if(this->GroupPanelFont == NULL)
+    if(this->GroupPanelFont == nullptr)
         return this->Font;
     return this->GroupPanelFont;
 }

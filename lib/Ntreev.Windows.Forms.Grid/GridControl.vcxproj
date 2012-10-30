@@ -195,8 +195,7 @@ copy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)..\$(TargetName).pdb"
       <Culture>0x0412</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>../GridCore/bin/$(Configuration)/GridCore.lib;../GridPainterDC/bin/$(Configuration)/GridPainterDC.lib</AdditionalDependencies>
       <EmbedManagedResourceFile>$(ProjectDir)Ntreev.Windows.Forms.Grid.GridControl.bmp;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Movable.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Add.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Remove.cur;%(EmbedManagedResourceFile)</EmbedManagedResourceFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -204,11 +203,12 @@ copy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)..\$(TargetName).pdb"
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
       <KeyContainer>GridControl</KeyContainer>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetDir)$(TargetName).dll" "$(TargetDir)..\$(TargetName).dll"
-copy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)..\$(TargetName).pdb"
-copy "$(TargetDir)$(TargetName).xml" "$(TargetDir)..\$(TargetName).xml"
+      <Command>copy "$(TargetDir)$(TargetName).dll" "$(SolutionDir)..\bin\$(TargetName).dll"
+copy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)..\bin\$(TargetName).pdb"
+copy "$(TargetDir)$(TargetName).xml" "$(SolutionDir)..\bin\$(TargetName).xml"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -281,6 +281,7 @@ copy "$(TargetDir)$(TargetName).xml" "$(TargetDir)..\$(TargetName).xml"
     <ClInclude Include="CaptionRow.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="CellBase.h" />
+    <ClInclude Include="CellBuilder.h" />
     <ClInclude Include="CellCollection.h" />
     <ClInclude Include="CellTagCollection.h" />
     <ClInclude Include="ChildGridControl.h" />
@@ -289,6 +290,7 @@ copy "$(TargetDir)$(TargetName).xml" "$(TargetDir)..\$(TargetName).xml"
     <ClInclude Include="ColumnControl.h" />
     <ClInclude Include="ColumnDropDown.h" />
     <ClInclude Include="ColumnPainter.h" />
+    <ClInclude Include="GridRow.h" />
     <ClInclude Include="DisplayableColumnCollection.h" />
     <ClInclude Include="DisplayableRowCollection.h" />
     <ClInclude Include="EditingReason.h" />
@@ -395,6 +397,7 @@ copy "$(TargetDir)$(TargetName).xml" "$(TargetDir)..\$(TargetName).xml"
     <ClCompile Include="CaptionRow.cpp" />
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="CellBase.cpp" />
+    <ClCompile Include="CellBuilder.cpp" />
     <ClCompile Include="CellCollection.cpp" />
     <ClCompile Include="CellTagCollection.cpp" />
     <ClCompile Include="ChildGridControl.cpp" />
@@ -403,6 +406,7 @@ copy "$(TargetDir)$(TargetName).xml" "$(TargetDir)..\$(TargetName).xml"
     <ClCompile Include="ColumnControl.cpp" />
     <ClCompile Include="ColumnDropDown.cpp" />
     <ClCompile Include="ColumnPainter.cpp" />
+    <ClCompile Include="GridRow.cpp" />
     <ClCompile Include="DisplayableColumnCollection.cpp" />
     <ClCompile Include="DisplayableRowCollection.cpp" />
     <ClCompile Include="EditingReason.cpp" />

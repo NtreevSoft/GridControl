@@ -134,7 +134,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
                 if(msg.message == WM_QUIT)
                 {
                     form->DialogResult = DialogResult::Cancel;
-                    ::PostMessage(NULL, WM_QUIT, 0, 0);
+                    ::PostMessage(nullptr, WM_QUIT, 0, 0);
                     break;
                 }
 
@@ -248,7 +248,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     int Methods::VkKeyScan(System::Char word)
 #pragma pop_macro("VkKeyScan")
     {
-        return LOWORD((int)::VkKeyScanW(word));
+        short vkey = ::VkKeyScanW(word);
+        int retval = (vkey & 0xff);
+        int modifiers = vkey >> 8;
+        //if ((modifiers & 1) != 0) retval |= (int)System::Windows::Forms::Keys::Shift;
+        //if ((modifiers & 2) != 0) retval |= (int)System::Windows::Forms::Keys::Control;
+        //if ((modifiers & 4) != 0) retval |= (int)System::Windows::Forms::Keys::Alt;
+        return (int)retval;
+        //return (int)::VkKeyScanW(word);
+        //return LOWORD((int)::VkKeyScanW(word));
     }
 
     void Methods::keybd_event(int key)
@@ -264,7 +272,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     int Methods::GetFontInternalLeading(System::Drawing::Font^ font)
     {
         HFONT hFont = (HFONT)font->ToHfont().ToPointer();
-        HDC hdc = CreateCompatibleDC(NULL);
+        HDC hdc = CreateCompatibleDC(nullptr);
 
         HFONT hOldFont = (HFONT)SelectObject(hdc, hFont);
 
@@ -300,7 +308,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     {
         HWND hwnd = (HWND)handle.ToPointer();
         HWND parent = GetParent(hwnd);
-        while(parent != NULL) 
+        while(parent != nullptr) 
         {
             hwnd = parent;
             parent = GetParent(hwnd);
@@ -358,8 +366,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     {
         m_width = 500;
         m_height = 500;
-        m_dc = ::CreateCompatibleDC(NULL);
-        HBITMAP hBitmap = ::CreateBitmap(m_width, m_height, 1, 32, NULL);
+        m_dc = ::CreateCompatibleDC(nullptr);
+        HBITMAP hBitmap = ::CreateBitmap(m_width, m_height, 1, 32, nullptr);
         SelectObject((HDC)m_dc, hBitmap);
         SetBkMode((HDC)m_dc, TRANSPARENT);
 
@@ -373,7 +381,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         {
             m_width = System::Math::Max(m_width, paintRect.Width);
             m_height = System::Math::Max(m_height, paintRect.Height);
-            HBITMAP hh = CreateBitmap(m_width, m_height, 1, 32, NULL);
+            HBITMAP hh = CreateBitmap(m_width, m_height, 1, 32, nullptr);
             HGDIOBJ hOldBitmap = SelectObject((HDC)m_dc, hh);
             DeleteObject(hOldBitmap);
         }
@@ -393,7 +401,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         if (GetClipRgn(_hdc, restoreRegion ) != 1)
         {
             ::DeleteObject(restoreRegion);
-            restoreRegion = NULL;
+            restoreRegion = nullptr;
         }
 
         ::SelectClipRgn(_hdc, hRgn);
@@ -413,7 +421,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         {
             m_width = System::Math::Max(m_width, paintRect.Width);
             m_height = System::Math::Max(m_height, paintRect.Height);
-            HBITMAP hh = CreateBitmap(m_width, m_height, 1, 32, NULL);
+            HBITMAP hh = CreateBitmap(m_width, m_height, 1, 32, nullptr);
             HGDIOBJ hOldBitmap = SelectObject((HDC)m_dc, hh);
             DeleteObject(hOldBitmap);
         }
@@ -431,7 +439,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         if (GetClipRgn(_hdc, restoreRegion ) != 1)
         {
             DeleteObject(restoreRegion);
-            restoreRegion = NULL;
+            restoreRegion = nullptr;
         }
 
         ::SelectClipRgn(_hdc, hRgn);

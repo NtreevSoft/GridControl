@@ -1104,7 +1104,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         cli::array<System::String^>^ textCache = gcnew cli::array<System::String^>(texts.size());
 
         int i=0;
-        for_each(std::set<std::wstring>, texts, value)
+        for(auto value : texts)
         {
             const std::wstring t = value;
             textCache[i] = gcnew System::String(t.c_str());

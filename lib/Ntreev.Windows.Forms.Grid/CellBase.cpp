@@ -106,7 +106,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool CellBase::ShouldSerializePadding()
     {
-        return m_pCell->GetPadding(false) != GrPadding::Default;
+        return m_pCell->GetPaddingCore() != GrPadding::Default;
     }
 
     void CellBase::ResetPadding()
@@ -117,6 +117,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void CellBase::ResetFont()
     {
         m_pCell->SetFont(GrFont::Empty);
+    }
+
+    void CellBase::Invalidate()
+    {
+        m_pCell->Invalidate();
     }
 
     System::Windows::Forms::Padding CellBase::Padding::get()

@@ -165,6 +165,7 @@ public:
     _GrEvent Cleared;
     _GrEvent CapacityChanged;
     _GrEvent FontChanged;
+    _GrEvent DisplayRectChanged;
 
     _GrItemMouseEvent ItemMouseEnter;
     _GrItemMouseEvent ItemMouseMove;
@@ -179,6 +180,8 @@ public:
 protected:
     virtual void OnCleared(GrEventArgs* e);
     virtual void OnCapacityChanged(GrEventArgs* e);
+    virtual void OnFontChanged(GrEventArgs* e);
+    virtual void OnDisplayRectChanged(GrEventArgs* e);
 
     virtual void OnEditValue(GrEditEventArgs* e);
     virtual void OnItemMouseEnter(GrItemMouseEventArgs* e);
@@ -190,8 +193,6 @@ protected:
     virtual void OnRowMouseEnter(GrRowMouseEventArgs* e);
     virtual void OnRowMouseMove(GrRowMouseEventArgs* e);
     virtual void OnRowMouseLeave(GrRowMouseEventArgs* e);
-
-    virtual void OnFontChanged(GrEventArgs* e);
 
     virtual void PrePaint(GrGridPainter* pPainter, const GrRect& clipRect) const;
     virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;

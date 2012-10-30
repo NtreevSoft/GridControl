@@ -6,44 +6,50 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 {
     class GrGridCell;
 
-    ref class ChildGridProcesser
-    {
-    public:
-        ChildGridProcesser(GridControl^ gridControl)
-        {
-            m_gridControl->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &ChildGridProcesser::gridControl_KeyDown);
-        }
+    //ref class ChildGridProcesser
+    //{
+    //public:
+    //    ChildGridProcesser(GridControl^ gridControl)
+    //    {
+    //        m_gridControl->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &ChildGridProcesser::gridControl_KeyDown);
+    //    }
 
-    private:
-        void gridControl_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
-        {
-            int wqer = 0;
-        }
+    //private:
+    //    void gridControl_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
+    //    {
+    //        int wqer = 0;
+    //    }
 
-    private:
-        GridControl^ m_gridControl;
-    };
+    //private:
+    //    GridControl^ m_gridControl;
+    //};
 
     class GrGridRow : public IDataRow
     {
     public:
-        GrGridRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
+        GrGridRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pParent, System::Object^ value);
 
         virtual IFocusable* GetFocusable(GrColumn* pColumn) const;
 
         virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
-        virtual void SetDisplayable(bool b);
         virtual int GetMinHeight() const;
 
-        void SetDataSource(System::Object^ dataSource);
+        //void SetDataSource(System::Object^ dataSource);
+        bool SetFocus();
+        //bool KillFocus();
+
+        GridControl^ GetChildGrid() const { return m_gridControl; }
 
     protected:
         virtual void OnGridCoreAttached();
+        virtual void OnGridCoreDetached();
         virtual void OnYChanged();
         virtual void OnHeightChanged();
+        virtual void OnDisplayableChanged();
 
     private:
         void focuser_FocusChanged(GrObject* pSender, GrFocusChangeArgs* e);
+        void dataRowList_VisibleHeightChanged(GrObject* pSender, GrEventArgs* e);
 
     private:
         GrGridCell* m_pCell;
@@ -65,12 +71,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         virtual GrCellType GetCellType() const;
         virtual bool GetVisible() const;
         virtual bool GetDisplayable() const;
+        virtual GrFlag ToPaintStyle() const;
+        virtual GrPadding GetPadding() const;
+        virtual GrColor GetPaintingBackColor() const;
         virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
 
         virtual IDataRow* GetDataRow() const;
 
-    private:
+    protected:
+        virtual void OnGridCoreAttached();
+        virtual void OnGridCoreDetached();
         virtual GrRect GetDisplayRect() const { return GetRect(); }
+
+    private:
+        void gridCore_DisplayRectChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/);
+
     private:
         GrGridRow* m_pGridRow;
         gcroot<Ntreev::Windows::Forms::Grid::GridControl^> m_gridControl;

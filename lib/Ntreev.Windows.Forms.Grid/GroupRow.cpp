@@ -37,16 +37,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return Text; 
     }
 
-    bool GroupRow::IsExpanded::get()
-    {
-        return m_pGroupRow->IsExpanded();
-    }
-
-    void GroupRow::IsExpanded::set(bool value)
-    {
-        m_pGroupRow->Expand(value);
-    }
-
     System::String^ GroupRow::Text::get()
     {
         GrGroupHeader* pGroupHeader = m_pGroupRow->GetLabel();

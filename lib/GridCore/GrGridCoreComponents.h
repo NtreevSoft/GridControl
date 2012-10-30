@@ -33,6 +33,7 @@ class GrFocuser : public GrObject
 public:
     GrFocuser();
 
+    void Reset();
     void Set(IFocusable* pFocusable);
     void Set(GrColumn* pColumn);
     void Set(IDataRow* pDataRow);
@@ -106,12 +107,12 @@ public:
     const GrSelectedColumns*GetSelectedColumns() const;
     const GrSelectedRows* GetSelectedRows() const;
 
-    void LockSelectionUpdate();
-    void UnlockSelectionUpdate();
+    //void LockSelectionUpdate();
+    //void UnlockSelectionUpdate();
 
     bool CanSelect(IDataRow* pDataRow) const;
     bool CanSelect(GrItem* pItem) const;
-    void SetSelectionGroup(uint selectionGroup);
+    //void SetSelectionGroup(uint selectionGroup);
     void SetSelectionGroup(IDataRow* pDataRow);
     void SetSelectionGroup(GrItem* pItem);
 
@@ -176,9 +177,10 @@ private:
     GrSelectedColumns m_externalSelectedColumns;
     GrSelectedRows m_externalSelectedRows;
 
-    bool m_selectionLock;
-    bool m_selecting;
-    uint m_selectionGroup;
+    int m_selectionLock;
+    IDataRow* m_pSelectionGroup;
+    //int m_fullSelectedCount;
+    //uint m_selectionGroup;
 
     GrIndexRange m_columnSelecting;
     GrIndexRange m_rowSelecting;
@@ -249,16 +251,16 @@ class GrFocusMover : public GrObject
 public:
     GrFocusMover();
 
-    void FirstCell(GrSelectionRange range);
-    void LastCell(GrSelectionRange range);
-    void PageUp(GrSelectionRange range);
-    void PageDown(GrSelectionRange range);
-    void FirstRow(GrSelectionRange range);
-    void LastRow(GrSelectionRange range);
-    void MoveLeft(GrSelectionRange range);
-    void MoveUp(GrSelectionRange range);
-    void MoveRight(GrSelectionRange range);
-    void MoveDown(GrSelectionRange range);
+    bool FirstCell(GrSelectionRange range);
+    bool LastCell(GrSelectionRange range);
+    bool PageUp(GrSelectionRange range);
+    bool PageDown(GrSelectionRange range);
+    bool FirstRow(GrSelectionRange range);
+    bool LastRow(GrSelectionRange range);
+    bool MoveLeft(GrSelectionRange range);
+    bool MoveUp(GrSelectionRange range);
+    bool MoveRight(GrSelectionRange range);
+    bool MoveDown(GrSelectionRange range);
 
     void BringIntoView(IDataRow* pDataRow);
     void BringIntoView(GrColumn* pColumn);

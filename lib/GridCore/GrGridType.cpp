@@ -402,6 +402,12 @@ GrPadding::GrPadding()
 
 }
 
+GrPadding::GrPadding(int all)
+    : left(all), top(all), right(all), bottom(all)
+{
+
+}
+
 GrPadding::GrPadding(int l, int t, int r, int b)
     : left(l), top(t), right(r), bottom(b)
 {
@@ -974,7 +980,7 @@ ulong GrFlag::operator - (ulong flag) const
 
 GrHitTest::GrHitTest()
 {
-    pHitted = NULL;
+    pHitted = nullptr;
     localHit = GrPoint::Empty;
 }
 

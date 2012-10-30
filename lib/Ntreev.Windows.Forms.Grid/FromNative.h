@@ -32,6 +32,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     ref class CaptionRow;
     ref class GroupRow;
     ref class GridControl;
+    ref class GridRow;
+
+    namespace Native
+    {
+        class GrGridRow;
+    }
 
     ref class FromNative
     {
@@ -50,5 +56,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         static Ntreev::Windows::Forms::Grid::Row^ Get(GrDataRow* pDataRow);
 
         static Ntreev::Windows::Forms::Grid::CaptionRow^ Get(GrCaption* pCaption);
+
+        static Ntreev::Windows::Forms::Grid::GridRow^ Get(Native::GrGridRow* pGridRow);
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

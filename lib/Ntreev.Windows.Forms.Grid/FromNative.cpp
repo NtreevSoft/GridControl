@@ -28,6 +28,8 @@
 #include "Row.h"
 #include "GroupRow.h"
 #include "CaptionRow.h"
+#include "GridRow.h"
+#include "NativeGridRow.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -60,7 +62,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             return nullptr;
         }
 
-        if(pDataRow->GetRowType() == GrRowType_GroupRow)
+        Native::GrGridRow* pGridRow = dynamic_cast<Native::GrGridRow*>(pDataRow);
+        if(pGridRow != nullptr)
+        {
+            return Get(pGridRow);
+        }
+        else if(pDataRow->GetRowType() == GrRowType_GroupRow)
         {
             return Get((GrGroupRow*)pDataRow);
         }
@@ -94,5 +101,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         System::Object^ ref = pCaption->ManagedRef;
         return safe_cast<CaptionRow^>(ref);
+    }
+
+    Ntreev::Windows::Forms::Grid::GridRow^ FromNative::Get(Native::GrGridRow* pGridRow)
+    {
+        System::Object^ ref = pGridRow->ManagedRef;
+        if(ref == nullptr)
+        {
+            ref = gcnew GridRow(pGridRow);
+            pGridRow->ManagedRef = ref;
+        }
+
+        return safe_cast<GridRow^>(ref);
     }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -108,6 +108,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
             row->Component = component;
             row->ComponentIndex = componentIndex;
+            row->ProcessChildControl();
             this->GridControl->InvokeRowBinded(row);
         }
         else
@@ -130,6 +131,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pDataRowList->RemoveDataRow(row->NativeRef);
         m_components->Remove(row->Component);
         this->GridControl->InvokeRowUnbinded(row);
+        row->DetachChildControl();
     }
 
     void RowCollection::SetItemsByDesigner(cli::array<System::Object^>^ values)
@@ -393,11 +395,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 return nullptr;
             }
 
+            item->ProcessChildControl();
             m_pDataRowList->InsertDataRow(item->NativeRef, index);
 
             if(fromInsertion == true)
                 this->SetDefaultValue();
 
+            item->EndEdit();
             this->GridControl->InvokeRowInserted(item);
         }
         return item;
@@ -491,7 +495,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         RowRemovedEventArgs eRemoved(0);
         this->GridControl->InvokeRowRemoved(%eRemoved);
-
+        item->DetachChildControl();
         return true;
     }
 

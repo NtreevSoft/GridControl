@@ -29,6 +29,7 @@
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     ref class RowBuilder;
+    ref class CellBuilder;
 
     /// <summary>
     /// 행을 나타냅니다.
@@ -85,7 +86,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="selectionType">
         /// 행을 선택하기 위한 방법을 지정합니다.
         /// </param>
-        void Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType);
+        void Select(SelectionType selectionType);
 
         /// <summary>
         /// 셀들의 전경색을 기본값으로 되돌립니다.
@@ -109,7 +110,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::ArgumentOutOfRangeException">
         /// index가 0보다 작거나, <see cref="CellCount"/>보다 클 경우
         /// </exception>
-        Ntreev::Windows::Forms::Grid::Cell^ GetAt(int index);
+        Cell^ GetAt(int index);
 
     public: // properties
 
@@ -121,9 +122,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         [System::ComponentModel::DescriptionAttribute("셀들의 컬렉션입니다.")]
         [System::ComponentModel::CategoryAttribute("Appearance")]
-        property Ntreev::Windows::Forms::Grid::CellCollection^ Cells
+        property CellCollection^ Cells
         {
-            Ntreev::Windows::Forms::Grid::CellCollection^ get();
+            CellCollection^ get();
         }
 
         /// <summary>
@@ -134,9 +135,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         [System::ComponentModel::DescriptionAttribute("셀태그의 컬렉션입니다.")]
         [System::ComponentModel::CategoryAttribute("Appearance")]
-        property Ntreev::Windows::Forms::Grid::CellTagCollection^ CellTags
+        property CellTagCollection^ CellTags
         {
-            Ntreev::Windows::Forms::Grid::CellTagCollection^ get();
+            CellTagCollection^ get();
         }
 
         /// <summary>
@@ -395,10 +396,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     public: // events
 
     public protected:
-        Row(Ntreev::Windows::Forms::Grid::RowBuilder^ rowBuilder);
+        Row(RowBuilder^ rowBuilder);
 
     protected: // methods
         int GetCellsTextCapacity(); 
+
+        virtual Cell^ NewCellFromBuilder(CellBuilder^ builder);
 
     internal: // methodss
 
@@ -411,12 +414,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void AddErrorCell();
         void RemoveErrorCell();
 
-        Ntreev::Windows::Forms::Grid::Cell^ NewCell(Column^ column);
-
-        //void RefreshCells();
-
-        //void SetDefaultValue(System::Windows::Forms::CurrencyManager^ manager);
-
+        void ProcessChildControl();
+        void DetachChildControl();
+        Cell^ NewCell(Column^ column);
         void ValueToSource(System::Object^ component);
 
     internal: // properties
@@ -453,23 +453,4 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         bool m_editing;
         System::String^ m_errorDescription;
     };
-
-    ///// <summary>
-    ///// 새로운 행을 추가하기 위한 편집가능한 행을 제공합니다.
-    ///// </summary>
-    //public ref class InsertionRow
-    //    : Ntreev::Windows::Forms::Grid::Row
-    //{
-    //public: // methods
-
-    //    /// <summary>
-    //    /// 각 셀의 값을 기본값으로 설정합니다.
-    //    /// </summary>
-    //    void SetDefaultValue();
-
-    //internal: // methods
-
-    //    InsertionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrInsertionRow* pInsertionRow);
-
-    //};
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

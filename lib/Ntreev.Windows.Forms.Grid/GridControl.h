@@ -1439,7 +1439,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void InvokeSelectedColumnsChanged();
         void InvokeSelectionChanged();
 
-        GridControl^ InvokeNewChildGridControl(System::ComponentModel::PropertyDescriptor^ descriptor);
+        void InvokeNewChildGridControl(System::ComponentModel::PropertyDescriptor^ descriptor, Row^ row, System::Object^ value);
 
         bool DesignTimeHitTest(System::Drawing::Point globalLocation);
         void PostPaint(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle clipRectangle);
@@ -1908,14 +1908,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         virtual void OnKeyDown(System::Windows::Forms::KeyEventArgs^ e) override;
 
         /// <summary>
-        /// <see cref="KeyPress"/> 이벤트를 발생시킵니다.
-        /// </summary>
-        /// <param name="e">
-        /// 이벤트 데이터가 들어 있는 <see cref="System::Windows::Forms::KeyPressEventArgs"/>입니다.
-        /// </param>
-        virtual void OnKeyPress(System::Windows::Forms::KeyPressEventArgs^ e) override;
-
-        /// <summary>
         /// <see cref="FontChanged"/> 이벤트를 발생시킵니다.
         /// </summary>
         /// <param name="e">
@@ -1996,6 +1988,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         virtual bool ProcessDialogKey(System::Windows::Forms::Keys keyData) override;
 
+        virtual bool ProcessDialogChar(wchar_t charCode) override;
+
         /// <summary>
         /// 사용 가능한 다음 컨트롤을 선택하여 활성 컨트롤로 만듭니다.
         /// </summary>
@@ -2009,7 +2003,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         virtual Row^ NewRowFromBuilder(Ntreev::Windows::Forms::Grid::RowBuilder^ rowBuilder);
 
-        virtual GridControl^ NewChildGridControl(System::ComponentModel::PropertyDescriptor^ descriptor);
+        virtual GridControl^ NewChildGridControl(System::ComponentModel::PropertyDescriptor^ descriptor, Row^ row);
 
 #ifdef _DEBUG
         virtual void OnInvalidated(System::Windows::Forms::InvalidateEventArgs^ e) override;
@@ -2028,7 +2022,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         bool ShouldSerializeColumns();
         bool ShouldSerializeRows();
         bool ShouldSerializeCaption();
-
         bool ShouldSerializeBackgroundColor();
         bool ShouldSerializePaddingColor();
 		bool ShouldSerializeLineColor();
@@ -2044,7 +2037,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void currencyManager_ListChanged(System::Object^ sender, System::ComponentModel::ListChangedEventArgs^ e);
         void currencyManager_BindingComplete(System::Object^ sender, System::Windows::Forms::BindingCompleteEventArgs^ e);
 		void style_Disposed(System::Object^ sender, System::EventArgs^ e);
-        void childGridControl_PreviewKeyDown(System::Object^ sender, System::Windows::Forms::PreviewKeyDownEventArgs^ e);
+        void childGridControl_FocusedCellChanged(System::Object^ sender, CellEventArgs^ e);
+
+    private:
+        //property bool Selectable
+        //{
+        //    bool get();
+        //    void set(bool);
+        //}
 
     private: // variables
         System::Object^ m_dataSource;
@@ -2071,6 +2071,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         Native::WinFormGridCore* m_pGridCore;
         Native::WinFormWindow* m_pGridWindow;
+        Native::GrGridRow* m_pGridRow;
         GrColumnList* m_pColumnList;
         GrDataRowList* m_pDataRowList;
         GrGridPainter* m_pGridPainter;
@@ -2088,8 +2089,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		bool m_paintBackground;
 
         Ntreev::Windows::Forms::Grid::RowBuilder^ m_rowBuilder;
-
-
 
         // events
         Ntreev::Windows::Forms::Grid::ValueChangingEventHandler^ m_eventValueChanging;

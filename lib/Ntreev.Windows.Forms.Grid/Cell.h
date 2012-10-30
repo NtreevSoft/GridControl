@@ -24,6 +24,7 @@
 #pragma once
 #include "CellBase.h"
 #include "ICell.h"
+#include "CellBuilder.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -31,14 +32,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     ref class Row;
 
     typedef Column _Column;
+    typedef Row _Row;
 
     /// <summary>
     /// 셀을 나타내는 개체입니다.
     /// </summary>
     [System::ComponentModel::TypeConverterAttribute(System::ComponentModel::ExpandableObjectConverter::typeid)]
-    public ref class Cell
-        : Ntreev::Windows::Forms::Grid::CellBase
-        , Ntreev::Windows::Forms::Grid::ICell
+    public ref class Cell : CellBase, ICell
     {
     public: // methods
 
@@ -80,7 +80,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀을 선택합니다.
         /// </summary>
         /// <param name="selectionType">셀을 선택하는 방법을 지정하는 <see cref="Ntreev::Windows::Forms::Grid::SelectionType"/>입니다.</param>
-        void Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType);
+        void Select(SelectionType selectionType);
 
         /// <summary>
         /// 그리드 컨트롤에 대한 포커스 설정을 합니다.
@@ -136,9 +136,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::Column^ Column
+        property _Column^ Column
         {
-            Ntreev::Windows::Forms::Grid::Column^ get();
+            _Column^ get();
         }
 
         /// <summary>
@@ -168,9 +168,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::Row^ Row
+        property _Row^ Row
         {
-            Ntreev::Windows::Forms::Grid::Row^ get();
+            _Row^ get();
         }
 
         /// <summary>
@@ -317,24 +317,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <remarks>
         /// 모든 문자열이 다 들어갈 수 있는 사각형의 영역을 나타냅니다. 이 값은 <see cref="Bounds"/>위치의 상대값입니다.
         /// </remarks>
-        /// <example>
-        /// 이 예제는 마우스 커서를 기준으로 셀을 검색한뒤 셀의 문자열 출력 영역을 검은색 테두리로 표시하는 코드입니다.
-        /// <code>
-        /// private void gridControl1_Paint(object sender, PaintEventArgs e)
-        /// {
-        /// Point location = this.gridControl1.PointToClient(Cursor.Position);
-        /// Cell cell = this.gridControl1.GetCellAt(location);
-        ///
-        /// if (cell == null)
-        /// return;
-        ///
-        /// Rectangle textBound = cell.TextBound;
-        /// textBound.Offset(cell.DisplayRectangle.Location);
-        ///
-        /// e.Graphics.DrawRectangle(Pens.Black, textBound);
-        /// }
-        /// </code>
-        /// </example>
         /// <returns>
         /// 문자열이 출력되는 영역을 나타내늗 <see cref="System::Drawing::Rectangle"/>입니다.
         /// </returns>
@@ -356,7 +338,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     internal: // methods
 
-        Cell(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrItem* pItem);
+        Cell(_GridControl^ gridControl, GrItem* pItem);
 
         void UpdateNativeText();
 
@@ -395,6 +377,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void set(bool);
         }
 
+    protected:
+        Cell(CellBuilder^ builder);
+
     private: // methods
 
         bool ShouldSerializeValue();
@@ -411,15 +396,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             virtual System::Object^ get() sealed = ICell::Tag::get;
         }
 
-        property Ntreev::Windows::Forms::Grid::IColumn^ Column_ICell
+        property IColumn^ Column_ICell
         {
-            virtual Ntreev::Windows::Forms::Grid::IColumn^ get() sealed = ICell::Column::get;
+            virtual IColumn^ get() sealed = ICell::Column::get;
         }
 
     private: // variables
 
-        Ntreev::Windows::Forms::Grid::Column^ m_column;
-        Ntreev::Windows::Forms::Grid::Row^ m_row;
+        _Column^ m_column;
+        _Row^ m_row;
 
         GrItem* m_pItem;
         System::Object^ m_oldValue;

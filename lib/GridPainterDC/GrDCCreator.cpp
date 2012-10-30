@@ -38,7 +38,7 @@ GrFont* GrFont::GetDefaultFont()
 GrFont* GrFont::FromManaged(System::Drawing::Font^ font)
 {
 	if(font == nullptr)
-		return NULL;
+		return nullptr;
 	if(System::Windows::Forms::Control::DefaultFont == font)
 		return GetDefaultFont();
 	return GrFontCreator::Create(font->ToHfont().ToPointer());
@@ -46,7 +46,7 @@ GrFont* GrFont::FromManaged(System::Drawing::Font^ font)
 
 System::Drawing::Font^ GrFont::ToManaged(GrFont* pFont)
 {
-	if(pFont == NULL)
+	if(pFont == nullptr)
 		return nullptr;
 	if(pFont == GetDefaultFont())
 		return System::Windows::Forms::Control::DefaultFont;
@@ -96,7 +96,7 @@ GrFont* GrFontCreator::Create(void* fontHandle)
     //std::wstring fontName= GetFontKey(fontHandle);
     Fonts::const_iterator itor = m_fonts.find(fontHandle);
 
-    GrFont* pFont = NULL;
+    GrFont* pFont = nullptr;
     if(itor == m_fonts.end())
     {
         pFont = new GrFontDC(fontHandle);

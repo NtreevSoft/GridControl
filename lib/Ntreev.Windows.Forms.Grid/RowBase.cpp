@@ -69,9 +69,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return (int)m_pDataRow->GetVisibleIndex();
     }
 
-    bool RowBase::Focused::get()
+    bool RowBase::IsFocused::get()
     {
         return m_pDataRow->HasFocused();
+    }
+
+    bool RowBase::IsExpanded::get()
+    {
+        return m_pDataRow->IsExpanded();
+    }
+
+    void RowBase::IsExpanded::set(bool value)
+    {
+        m_pDataRow->Expand(value);
     }
 
     Ntreev::Windows::Forms::Grid::RowBaseCollection^ RowBase::Childs::get()

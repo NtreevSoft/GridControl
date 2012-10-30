@@ -349,6 +349,7 @@ public:
     GrColor GetBackColorCore() const;
 	GrColor GetLineColorCore() const;
 	GrFont*	GetFontCore() const;
+    GrPadding GetPaddingCore() const;
 
 	// text method
     const std::wstring& GetText() const;
@@ -361,9 +362,10 @@ public:
     bool GetTextVisible() const;
     bool GetTextClipped() const;
     void SetTextVisible(bool b);
+    void Invalidate();
 
     virtual GrFlag ToPaintStyle() const;
-    void DrawText(GrGridPainter* pPainter, GrColor foreColor, const GrRect& paintRect, const GrRect* pClipRect = NULL) const;
+    void DrawText(GrGridPainter* pPainter, GrColor foreColor, const GrRect& paintRect, const GrRect* pClipRect = nullptr) const;
 
     virtual GrHorzAlign GetTextHorzAlign() const;
     virtual GrVertAlign GetTextVertAlign() const;
@@ -374,12 +376,13 @@ public:
     virtual GrColor GetPaintingBackColor() const;
 	virtual GrColor GetPaintingLineColor() const;
     virtual GrFont* GetPaintingFont() const;
+    virtual GrPadding GetPaintingPadding() const;
 
     virtual GrColor GetForeColor() const;
     virtual GrColor GetBackColor() const;
 	virtual GrColor GetLineColor() const;
-    virtual GrPadding GetPadding(bool inherited = true) const;
     virtual GrFont* GetFont() const;
+    virtual GrPadding GetPadding() const;
 
     virtual int HitMouseOverTest(const GrPoint& localLocation) const;
 
@@ -394,8 +397,6 @@ protected:
 
     void SetTextBoundsChanged();
     void SetTextAlignChanged();
-
-    void Invalidate(bool thisOnly = true);
 
 public:
     void* Tag;
@@ -456,8 +457,8 @@ public:
     bool GetItemMultiline() const;
     const GrColor& GetItemForeColor() const;
     const GrColor& GetItemBackColor() const;
-    const GrPadding& GetItemPadding() const;
     GrFont* GetItemFont() const;
+    const GrPadding& GetItemPadding() const;
     int GetItemMinHeight() const;
     GrClickEditing GetItemClickEditing() const;
     bool GetItemTextVisible() const;
@@ -477,8 +478,8 @@ public:
     void SetItemMultiline(bool b);
     void SetItemForeColor(const GrColor& color);
     void SetItemBackColor(const GrColor& color);
-    void SetItemPadding(const GrPadding& padding);
     void SetItemFont(GrFont* pFont);
+    void SetItemPadding(const GrPadding& padding);
     void SetItemMinHeight(int height);
     void SetItemClickEditing(GrClickEditing clickEditing);
     void SetItemTextVisible(bool b);
@@ -506,6 +507,7 @@ public:
     bool GetSelecting() const;
 
     bool HasFocused() const;
+    void KillFocus();
 
     void AdjustWidth();
     void SetFit();
@@ -585,10 +587,10 @@ private:
     void SetIndex(uint index);
     void SetColumnID(uint index);
 
-    void AddSelection(GrItem* pItem);
-    void RemoveSelection(GrItem* pItem);
-    void ClearSelection();
-    void SetFullSelected();
+    //void AddSelection(GrItem* pItem);
+    //void RemoveSelection(GrItem* pItem);
+    //void ClearSelection();
+    //void SetFullSelected();
 
 public:
     bool m_customItemPaint;
@@ -600,7 +602,7 @@ public:
 private:
     GrColumnList* m_pColumnList;
 
-    GrItems m_selectedCells; 
+    //GrItems m_selectedCells; 
     friend class GrItemSelector;
     int m_freezablePriority;
     int m_unfreezablePriority;
@@ -619,8 +621,7 @@ private:
     bool m_movable;
     bool m_resizable;
     bool m_frozen;
-    bool m_selected;
-    //bool m_fullSelected;
+    int m_selected;
     bool m_fitting;
     bool m_grouped;
 
@@ -710,7 +711,7 @@ public:
     virtual void Paint(GrGridPainter* /*pPainter*/, const GrRect& /*clipRect*/) const {};
 
     virtual GrRect GetBounds() const { return GetRect(); }
-    virtual GrPadding GetPadding(bool /*inherited*/) const { return GrPadding::Default; }
+    virtual GrPadding GetPadding() const { return GrPadding::Default; }
 
     virtual void Sort(GrSort sortType);
     virtual void Sort(FuncSortRow fnSort, void* userData);
@@ -802,12 +803,14 @@ public:
     virtual bool GetVisible() const;
 
     virtual bool GetDisplayable() const;
-    virtual void SetDisplayable(bool b);
+
+    void SetDisplayable(bool b);
 
     virtual GrCell* HitTest(const GrPoint& location) const final;
 
     void SetVisibleIndex(uint index);
     uint GetVisibleIndex() const;
+    bool IsLastVisible() const;
 
     void SetDisplayIndex(uint index);
     uint GetDisplayIndex() const;
@@ -817,6 +820,7 @@ public:
 
     bool ShouldBringIntoView() const;
     bool HasFocused() const;
+    void KillFocus();
 
     void Expand(bool b = true);
     bool IsExpanded() const;
@@ -834,6 +838,7 @@ public:
 	virtual GrColor GetLineColor() const;
     virtual GrFont* GetFont() const;
 
+    virtual GrFlag ToPaintStyle() const;
     virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
 
 protected:
@@ -841,6 +846,7 @@ protected:
     virtual void OnGridCoreAttached();
     virtual void OnHeightChanged();
     virtual void OnChildAdded(GrRow* pRow);
+    virtual void OnDisplayableChanged();
 
     virtual GrCell* OnHitTest(int x) const;
 
@@ -886,6 +892,7 @@ public:
     uint GetVisibleDataRowIndex() const;
     uint GetDataRowIndex() const;
     uint GetDataRowID() const;
+    bool IsInsertionRow() const;
 
     GrColor GetItemBackColor() const;
     GrColor GetItemForeColor() const;
@@ -922,10 +929,10 @@ private:
     void Reserve(uint count);
     void ClearItem();
 
-    void AddSelection(GrItem* pItem);
-    void RemoveSelection(GrItem* pItem);
-    void ClearSelection();
-    void SetFullSelected();
+    //void AddSelection(GrItem* pItem);
+    //void RemoveSelection(GrItem* pItem);
+    //void ClearSelection();
+    //void SetFullSelected();
 
 private:
     _Items m_vecItems;
@@ -941,8 +948,8 @@ private:
 
 private: // friend variables;
     //uint m_selectedCells;
-    GrItems m_selectedCells;
-    bool m_selected;
+    //GrItems m_selectedCells;
+    int m_selected;
 
     friend class GrItemSelector;
     friend class GrGridCore;
@@ -1015,7 +1022,7 @@ public:
 
     virtual GrColor GetForeColor() const;
     virtual GrColor GetBackColor() const;
-    virtual GrPadding GetPadding(bool inherited = true) const;
+    virtual GrPadding GetPadding() const;
     virtual GrFont* GetFont() const;
 
     void LockColor(bool b);
@@ -1066,6 +1073,7 @@ public:
     void SetFitChanged();
     void SetHeightChanged();
 
+    bool ShouldUpdate() const;
     void Update(bool force = false);
 
     bool ShouldClip() const;
@@ -1092,6 +1100,7 @@ private:
     void RepositionVisibleList();
 
     void gridCore_Created(GrObject* pSender, GrEventArgs* e);
+    void gridCore_DisplayRectChanged(GrObject* pSender, GrEventArgs* e);
     void dataRowList_DataRowInserted(GrObject* pSender, GrDataRowInsertedEventArgs* e);
 
 private:

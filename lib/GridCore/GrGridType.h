@@ -69,128 +69,128 @@ static const int DEF_ICON_SIZE = 20;
 
 #endif
 
-template<typename T>
-class GrEnumerator 
-{
-public:
-    typedef typename T::value_type ValueType;
-    typedef typename T::size_type SizeType;
-    typedef typename T::const_iterator IteratorType;
+//template<typename T>
+//class GrEnumerator 
+//{
+//public:
+//    typedef typename T::value_type ValueType;
+//    typedef typename T::size_type SizeType;
+//    typedef typename T::const_iterator IteratorType;
+//
+//public:
+//    GrEnumerator(const T& container)
+//        : m_container(&container), m_iterator(m_container->begin())
+//    {
+//        m_index = (SizeType)-1;
+//    }
+//
+//    GrEnumerator(const GrEnumerator<T>& instance)
+//        : m_container(instance.m_container), m_iterator(m_container->begin())
+//    {
+//        m_index = (SizeType)-1;
+//    }
+//
+//    ValueType& GetValue()
+//    {
+//        return m_value;
+//    }
+//
+//    operator ValueType& ()
+//    {
+//        return m_value;
+//    }
+//
+//    ValueType& operator ->()
+//    {
+//        return m_value;
+//    }
+//
+//    bool Next()
+//    {
+//        if(m_iterator == m_container->end())
+//            return false;
+//        m_value = *m_iterator;
+//        m_iterator++;
+//        m_index++;
+//        return true;
+//    }
+//
+//    SizeType GetIndex() const
+//    {
+//        return m_index;
+//    }
+//
+//private:
+//    const T* m_container;
+//    IteratorType m_iterator;
+//    ValueType m_value;
+//    SizeType m_index;
+//}; 
+//
+//template<typename T, typename U>
+//class GrEnumerator< std::map<T, U> >
+//{
+//public:
+//    typedef typename std::map<T, U> ContainerType;
+//    typedef typename ContainerType::key_type KeyType;
+//    typedef typename ContainerType::mapped_type ValueType;
+//    typedef typename ContainerType::size_type SizeType;
+//    typedef typename ContainerType::iterator IteratorType;
+//
+//public:
+//    GrEnumerator(ContainerType& container)
+//        : m_container(&container), m_index((SizeType)-1), m_iterator(m_container->begin())
+//    {
+//
+//    }
+//
+//    operator ValueType& ()
+//    {
+//        return (*m_value).second;
+//    }
+//
+//    ValueType& operator ->() 
+//    {
+//        return (*m_value).second;
+//    }
+//
+//    bool Next()
+//    {
+//        if(m_iterator == m_container->end())
+//            return false;
+//        m_value = m_iterator;
+//        m_iterator++;
+//        m_index++;
+//        return true;
+//    }
+//
+//    KeyType& GetKey() const
+//    {
+//        return (*m_value).first;
+//    }
+//
+//    ValueType& GetValue() const
+//    {
+//        return (*m_value).second;
+//    }
+//
+//    SizeType GetIndex() const
+//    {
+//        return m_index;
+//    }
+//
+//private:
+//    ContainerType* m_container;
+//    IteratorType m_value;
+//    IteratorType m_iterator;
+//    SizeType m_index;
+//};
 
-public:
-    GrEnumerator(const T& container)
-        : m_container(&container), m_iterator(m_container->begin())
-    {
-        m_index = (SizeType)-1;
-    }
+//#define for_each(_container_type, _container_instance, _value_name) \
+//    for(GrEnumerator< _container_type > _value_name(_container_instance) ; _value_name.Next() == true ; )
 
-    GrEnumerator(const GrEnumerator<T>& instance)
-        : m_container(instance.m_container), m_iterator(m_container->begin())
-    {
-        m_index = (SizeType)-1;
-    }
-
-    ValueType& GetValue()
-    {
-        return m_value;
-    }
-
-    operator ValueType& ()
-    {
-        return m_value;
-    }
-
-    ValueType& operator ->()
-    {
-        return m_value;
-    }
-
-    bool Next()
-    {
-        if(m_iterator == m_container->end())
-            return false;
-        m_value = *m_iterator;
-        m_iterator++;
-        m_index++;
-        return true;
-    }
-
-    SizeType GetIndex() const
-    {
-        return m_index;
-    }
-
-private:
-    const T* m_container;
-    IteratorType m_iterator;
-    ValueType m_value;
-    SizeType m_index;
-}; 
-
-template<typename T, typename U>
-class GrEnumerator< std::map<T, U> >
-{
-public:
-    typedef typename std::map<T, U> ContainerType;
-    typedef typename ContainerType::key_type KeyType;
-    typedef typename ContainerType::mapped_type ValueType;
-    typedef typename ContainerType::size_type SizeType;
-    typedef typename ContainerType::iterator IteratorType;
-
-public:
-    GrEnumerator(ContainerType& container)
-        : m_container(&container), m_index((SizeType)-1), m_iterator(m_container->begin())
-    {
-
-    }
-
-    operator ValueType& ()
-    {
-        return (*m_value).second;
-    }
-
-    ValueType& operator ->() 
-    {
-        return (*m_value).second;
-    }
-
-    bool Next()
-    {
-        if(m_iterator == m_container->end())
-            return false;
-        m_value = m_iterator;
-        m_iterator++;
-        m_index++;
-        return true;
-    }
-
-    KeyType& GetKey() const
-    {
-        return (*m_value).first;
-    }
-
-    ValueType& GetValue() const
-    {
-        return (*m_value).second;
-    }
-
-    SizeType GetIndex() const
-    {
-        return m_index;
-    }
-
-private:
-    ContainerType* m_container;
-    IteratorType m_value;
-    IteratorType m_iterator;
-    SizeType m_index;
-};
-
-#define for_each(_container_type, _container_instance, _value_name) \
-    for(GrEnumerator< _container_type > _value_name(_container_instance) ; _value_name.Next() == true ; )
-
-#define for_each_map(_key_type, _value_type, _container_instance, _value_name) \
-    for(GrEnumerator< std::map<_key_type, _value_type> > _value_name(_container_instance) ; _value_name.Next() == true ; )
+//#define for_each_map(_key_type, _value_type, _container_instance, _value_name) \
+//    for(GrEnumerator< std::map<_key_type, _value_type> > _value_name(_container_instance) ; _value_name.Next() == true ; )
 
 enum GrControlState
 {
@@ -211,6 +211,7 @@ enum GrCellType
     GrCellType_Group,
     GrCellType_GroupHeader,
     GrCellType_Splitter,
+    GrCellType_Expander,
 
     GrCellType_Unknown,
 
@@ -362,6 +363,7 @@ struct GrRect
 struct GrPadding
 {
     GrPadding();
+    GrPadding(int all);
     GrPadding(int left, int top, int right, int bottom);
 
     int GetHorizontal() const;

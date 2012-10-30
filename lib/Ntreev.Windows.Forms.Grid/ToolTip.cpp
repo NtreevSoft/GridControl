@@ -43,12 +43,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_created == false)
         {
             HWND hwndParent = (HWND)handle.ToPointer();
-            HWND hTooltip = CreateWindowEx(NULL, TOOLTIPS_CLASS, NULL,
+            HWND hTooltip = CreateWindowEx(0, TOOLTIPS_CLASS, nullptr,
                 WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP | TTS_BALLOON,
                 CW_USEDEFAULT, CW_USEDEFAULT,
                 CW_USEDEFAULT, CW_USEDEFAULT,
-                hwndParent, NULL, NULL,
-                NULL);
+                hwndParent, nullptr, nullptr,
+                nullptr);
 
             SetWindowPos(hTooltip, HWND_TOPMOST,0, 0, 0, 0,
                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);

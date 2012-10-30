@@ -5,10 +5,27 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Native
 {
-    GrGridRow::GrGridRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+    GrGridRow::GrGridRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pParent, System::Object^ value)
     {
-        m_gridControl = gridControl;
+        m_gridControl = gridControl;        
         m_pCell = new GrGridCell(this, m_gridControl);
+
+        pParent->AddChild(this);
+
+        int borderSize = m_gridControl->Height - m_gridControl->ClientSize.Height;
+
+        m_gridControl->DataSource = value;
+        m_gridControl->Update();
+
+
+        GrGridCore* pGridCore = m_gridControl->GridCore;
+        GrRect rect = pGridCore->GetVisibleBounds();
+
+        GrDataRowList* pDataRowList = pGridCore->GetDataRowList();
+        pDataRowList->VisibleHeightChanged.Add(this, &GrGridRow::dataRowList_VisibleHeightChanged);
+
+        //this->SetHeight(rect.GetHeight() + m_gridControl->Padding.Vertical + borderSize/* + System::Windows::Forms::SystemInformation::HorizontalScrollBarHeight*/);
+        this->SetHeight(GetMinHeight());
     }
 
     IFocusable* GrGridRow::GetFocusable(GrColumn* pColumn) const 
@@ -42,35 +59,55 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         paintRect.left = paintRect.right;
         paintRect.right = m_pCell->GetX();
 
-        pPainter->DrawItem(GrPaintStyle_NoBottomLine | GrPaintStyle_NoRightLine, paintRect, GetCellLineColor(), GetCellBackColor());
-    }
+        pPainter->DrawItem(GrPaintStyle_BottomLine, paintRect, GetCellLineColor(), GetCellBackColor());
 
-    void GrGridRow::SetDisplayable(bool b)
-    {
-        IDataRow::SetDisplayable(b);
-        m_gridControl->Visible = b;
+        m_pCell->Paint(pPainter, clipRect);
     }
 
     int GrGridRow::GetMinHeight() const
     {
-        return m_gridControl->DataRectangle.Height;
-    }
-
-    void GrGridRow::SetDataSource(System::Object^ dataSource)
-    {
-        m_gridControl->DataSource = dataSource;
-        m_gridControl->Update();
-
-
+        int borderSize = m_gridControl->Height - m_gridControl->ClientSize.Height;
         GrGridCore* pGridCore = m_gridControl->GridCore;
-
         GrRect rect = pGridCore->GetVisibleBounds();
-        m_gridControl->Width = 500;
-        this->SetHeight(rect.GetHeight() + m_gridControl->Padding.Vertical + System::Windows::Forms::SystemInformation::HorizontalScrollBarHeight);
-        //int height = m_gridControl->Height;
-        //this->SetHeight(height);
-        //int width = m_gridControl->Width;
+
+        return rect.GetHeight() + m_gridControl->Padding.Vertical + borderSize + m_pCell->GetPadding().GetVertical();
     }
+
+    //void GrGridRow::SetDataSource(System::Object^ dataSource)
+    //{
+    //    m_gridControl->DataSource = dataSource;
+    //    m_gridControl->Update();
+
+    //    GrGridCore* pGridCore = m_gridControl->GridCore;
+    //    GrRect rect = pGridCore->GetVisibleBounds();
+    //    m_gridControl->Width = 500;
+    //    this->SetHeight(rect.GetHeight() + m_gridControl->Padding.Vertical + System::Windows::Forms::SystemInformation::HorizontalScrollBarHeight);
+    //    //int height = m_gridControl->Height;
+    //    //this->SetHeight(height);
+    //    //int width = m_gridControl->Width;
+    //}
+
+    bool GrGridRow::SetFocus()
+    {
+        if(m_gridControl->FocusedCell == nullptr)
+        {
+            m_gridControl->ClearSelection();
+            m_gridControl->FocusedCell = m_gridControl->GetFirstVisibleCell();
+            m_gridControl->Select();
+            return true;
+        }
+        return false;
+    }
+
+    //bool GrGridRow::KillFocus()
+    //{
+    //    if(m_gridControl->FocusedCell != nullptr)
+    //    {
+    //        m_gridControl->ClearSelection();
+    //        return true;
+    //    }
+    //    return false;
+    //}
 
     void GrGridRow::OnGridCoreAttached()
     {
@@ -80,18 +117,34 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         pFocuser->FocusChanged.Add(this, &GrGridRow::focuser_FocusChanged);
     }
 
+    void GrGridRow::OnGridCoreDetached()
+    {
+        GrFocuser* pFocuser = m_pGridCore->GetFocuser();
+        pFocuser->FocusChanged.Remove(this, &GrGridRow::focuser_FocusChanged);
+        m_pGridCore->DetachObject(m_pCell);
+        IDataRow::OnGridCoreDetached();
+    }
+
     void GrGridRow::OnYChanged()
     {
         IDataRow::OnYChanged();
-        
-        m_gridControl->Location = GrPoint(m_pCell->GetX(), this->GetY());
-        m_gridControl->Visible = true;
+        GrRect clientRect = m_pCell->GetClientRect();
+        m_gridControl->Location = clientRect.GetLocation() + m_pCell->GetLocation();
+        //m_gridControl->Visible = true;
     }
 
     void GrGridRow::OnHeightChanged()
     {
         IDataRow::OnHeightChanged();
-        m_gridControl->Height = this->GetHeight();
+        GrRect clientRect = m_pCell->GetClientRect();
+        m_gridControl->Size = clientRect.GetSize();
+        m_gridControl->Visible = this->GetDisplayable();
+    }
+
+    void GrGridRow::OnDisplayableChanged()
+    {
+        IDataRow::OnDisplayableChanged();
+        m_gridControl->Visible = this->GetDisplayable();
     }
 
     void GrGridRow::focuser_FocusChanged(GrObject* pSender, GrFocusChangeArgs* e)
@@ -101,11 +154,24 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
         if(pFocusable == m_pCell)
         {
-            m_gridControl->Focus();
-            Cell^ cell = m_gridControl->GetFirstVisibleCell();
-            if(cell != nullptr)
-                cell->Focus();
+            //m_gridControl->ClearSelection();
+            //if(m_gridControl->Focused == false)
+            //{
+            //    m_gridControl->FocusedCell = m_gridControl->GetFirstVisibleCell();
+            //}
+            //m_gridControl->Select();
         }
+        else
+        {
+            m_gridControl->ClearSelection();
+            //m_gridControl->FocusedCell = nullptr;
+        }
+    }
+
+    void GrGridRow::dataRowList_VisibleHeightChanged(GrObject* pSender, GrEventArgs* e)
+    {
+        m_gridControl->Visible = false;
+        this->SetFit();
     }
 
     GrGridCell::GrGridCell(GrGridRow* pGridRow, Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
@@ -128,7 +194,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     int GrGridCell::GetWidth() const
     {
-        return m_pGridCore->GetBounds().right - GetX();
+        GrRect displayRect = m_pGridCore->GetDisplayRect();
+        return displayRect.right - GetX();
     }
 
     int GrGridCell::GetHeight() const
@@ -156,14 +223,63 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         return m_pGridRow->GetDisplayable();
     }
 
+    GrFlag GrGridCell::ToPaintStyle() const
+    {
+        GrFlag flag = GrCell::ToPaintStyle();
+
+        //GrFocuser* pFocuser = m_pGridCore->GetFocuser();
+        //if(pFocuser->Get() == this)
+        //    flag += GrPaintStyle_Focused;
+        return flag;
+    }
+
+    GrColor GrGridCell::GetPaintingBackColor() const
+    {
+        GrColor color = GrCell::GetPaintingBackColor();
+        GrFocuser* pFocuser = m_pGridCore->GetFocuser();
+        if(pFocuser->Get() == this)
+        {
+            color = RGBHSL::ModifyBrightness(color, 0.95f);
+        }
+        return color;
+    }
+
     void GrGridCell::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
     {
-        
-        //m_pChildGrid->Paint(pPainter, clipRect);
+        GrRect paintRect = GetRect();
+        GrFlag paintStyle = ToPaintStyle();
+        GrColor backColor = GetPaintingBackColor();
+        GrColor foreColor = GetPaintingForeColor();
+
+        pPainter->DrawItem(paintStyle, paintRect, GetPaintingLineColor(), backColor);
     }
 
     IDataRow* GrGridCell::GetDataRow() const
     {
         return m_pGridRow;
+    }
+
+    GrPadding GrGridCell::GetPadding() const
+    {
+        GrFont* pFont = GetFont();
+        return GrPadding(pFont->GetHeight());
+    }
+
+    void GrGridCell::OnGridCoreAttached()
+    {
+        GrCell::OnGridCoreAttached();
+        m_pGridCore->DisplayRectChanged.Add(this, &GrGridCell::gridCore_DisplayRectChanged);
+    }
+
+    void GrGridCell::OnGridCoreDetached()
+    {
+        m_pGridCore->DisplayRectChanged.Remove(this, &GrGridCell::gridCore_DisplayRectChanged);
+        GrCell::OnGridCoreDetached();
+    }
+
+    void GrGridCell::gridCore_DisplayRectChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
+    {
+        GrRect clientRect = GetClientRect();
+        m_gridControl->Width = clientRect.GetWidth();
     }
 } /*namespace Native*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

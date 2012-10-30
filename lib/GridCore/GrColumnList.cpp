@@ -26,7 +26,7 @@ GrColumnList::GrColumnList()
 
     m_frozenCount = 0;
     m_groupCount = 0;
-    m_pSortColumn = NULL;
+    m_pSortColumn = nullptr;
     m_displayableRight = 0;
     m_columnID = 0;
 
@@ -49,18 +49,22 @@ void GrColumnList::OnGridCoreAttached()
     GrFocuser* pFocuser = m_pGridCore->GetFocuser();
     pFocuser->FocusChanged.Add(this, &GrColumnList::gridCore_FocusChanged);
 
+    GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
+    pDataRowList->DataRowRemoved.Add(this, &GrColumnList::dataRowList_DataRowRemoved);
+
     m_pGridCore->Cleared.Add(this, &GrColumnList::gridCore_Cleared);
     m_pGridCore->FontChanged.Add(this, &GrColumnList::gridCore_FontChanged);
+    m_pGridCore->DisplayRectChanged.Add(this, &GrColumnList::gridCore_DisplayRectChanged);
 }
 
 GrColumnList::~GrColumnList()
 {
-    for_each(_Columns, m_vecColumns, value)
+    for(auto value : m_vecColumns)
     {
         delete value;
     }
 
-    for_each(_Columns, m_vecColumnsRemoved, value)
+    for(auto value : m_vecColumnsRemoved)
     {
         delete value;
     }
@@ -163,6 +167,9 @@ void GrColumnList::RemoveColumn(GrColumn* pColumn)
         index++;
     }
 
+    pColumn->SetSelected(false);
+    pColumn->KillFocus();
+
     m_pGridCore->DetachObject(pColumn);
 
     pColumn->SetIndex(INVALID_INDEX);
@@ -189,7 +196,7 @@ GrColor GrColumnList::GetForeColor() const
         return color;
 
     GrStyle* pStyle = m_pGridCore->GetStyle();
-    if(pStyle != NULL)
+    if(pStyle != nullptr)
         return pStyle->GetRowForeColor();
 
     return GrUpdatableRow::GetForeColor();
@@ -202,7 +209,7 @@ GrColor GrColumnList::GetBackColor() const
         return color;
 
     GrStyle* pStyle = m_pGridCore->GetStyle();
-    if(pStyle != NULL)
+    if(pStyle != nullptr)
         return pStyle->GetRowBackColor();
 
     return GrUpdatableRow::GetBackColor();
@@ -215,7 +222,7 @@ GrColor GrColumnList::GetLineColor() const
         return color;
 
     GrStyle* pStyle = m_pGridCore->GetStyle();
-    if(pStyle != NULL)
+    if(pStyle != nullptr)
         return pStyle->GetRowLineColor();
 
     return GrUpdatableRow::GetLineColor();
@@ -224,11 +231,11 @@ GrColor GrColumnList::GetLineColor() const
 GrFont* GrColumnList::GetFont() const
 {
     GrFont* pFont = GrUpdatableRow::GetFontCore();
-    if(pFont != NULL)
+    if(pFont != nullptr)
         return pFont;
 
     GrStyle* pStyle = m_pGridCore->GetStyle();
-    if(pStyle != NULL)
+    if(pStyle != nullptr)
         return pStyle->GetRowFont();
 
     return GrUpdatableRow::GetFont();
@@ -241,12 +248,12 @@ uint GrColumnList::GetColumnCount() const
 
 GrColumn* GrColumnList::HitTest(int x) const
 {
-    for_each(_Columns, m_vecDisplayableColumns, value)
+    for(auto value : m_vecDisplayableColumns)
     {
         if(x >= value->GetX() && x < value->GetRight())
             return value;
     }
-    return NULL;
+    return nullptr;
 }
 
 GrIndexRange GrColumnList::HitTest(int x, GrColumn* pColumnAnchor) const
@@ -368,7 +375,7 @@ void GrColumnList::Clip(const GrRect& displayRect, uint horizontal, uint /*verti
     GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
     int x = pDataRowList->CellStart();
 
-    for_each(_Columns, m_vecDisplayableColumns, value)
+    for(auto value : m_vecDisplayableColumns)
     {
         value->SetDisplayable(false);
     }
@@ -395,7 +402,7 @@ void GrColumnList::Clip(const GrRect& displayRect, uint horizontal, uint /*verti
     {
         GrColumn* pColumn = GetVisibleColumn(i);
 
-        if(x >= displayRect.right)
+        if(x > displayRect.right)
             break;
 
         pColumn->SetX(x);
@@ -404,7 +411,7 @@ void GrColumnList::Clip(const GrRect& displayRect, uint horizontal, uint /*verti
 
         int width = pColumn->GetWidth();
 
-        if(x + width >= displayRect.right)
+        if(x + width > displayRect.right)
         {
             pColumn->SetClipped(true);
             x = displayRect.right;
@@ -519,7 +526,7 @@ bool GrColumnList::MoveToFrozen(GrColumn* pColumn, GrColumn* pWhere)
     _Columns vecFrozens;
     vecFrozens.reserve(GetColumnCount());
 
-    for_each(_Columns, m_vecColumns, value)
+    for(auto value : m_vecColumns)
     {
         if(value == pColumn)
             continue;
@@ -533,7 +540,7 @@ bool GrColumnList::MoveToFrozen(GrColumn* pColumn, GrColumn* pWhere)
     pColumn->m_frozen = true;
 
     int priority = 0;
-    for_each(_Columns, vecFrozens, value)
+    for(auto value : vecFrozens)
     {
         value->SetFreezablePriority(priority);
         priority++;
@@ -555,7 +562,7 @@ bool GrColumnList::MoveToUnfrozen(GrColumn* pColumn, GrColumn* pWhere)
     _Columns vecUnfrozens;
     vecUnfrozens.reserve(GetColumnCount());
 
-    for_each(_Columns, m_vecColumns, value)
+    for(auto value : m_vecColumns)
     {
         if(value == pColumn)
             continue;
@@ -570,7 +577,7 @@ bool GrColumnList::MoveToUnfrozen(GrColumn* pColumn, GrColumn* pWhere)
 
     int priority = 0;
 
-    for_each(_Columns, vecUnfrozens, value)
+    for(auto value : vecUnfrozens)
     {
         value->SetUnfreezablePriority(priority);
         priority++;
@@ -602,10 +609,15 @@ void GrColumnList::gridCore_FocusChanged(GrObject* /*pSender*/, GrFocusChangeArg
 
 }
 
+void GrColumnList::dataRowList_DataRowRemoved(GrObject* /*pSender*/, GrDataRowEventArgs* /*e*/)
+{
+    SetWidthChanged();
+}
+
 void GrColumnList::gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 {
     m_groupCount = 0;
-    m_pSortColumn = NULL;
+    m_pSortColumn = nullptr;
     m_frozenCount = 0;
     m_columnID = 0;
 
@@ -614,12 +626,12 @@ void GrColumnList::gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
     else
         m_displayableRight = GetRight();
 
-    for_each(_Columns, m_vecColumns, value)
+    for(auto value : m_vecColumns)
     {
         delete value;
     }
 
-    for_each(_Columns, m_vecColumnsRemoved, value)
+    for(auto value : m_vecColumnsRemoved)
     {
         value->SetColumnID(INVALID_INDEX);
     }
@@ -632,12 +644,17 @@ void GrColumnList::gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 void GrColumnList::gridCore_FontChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 {
     GrFont* pFont = GetPaintingFont();
-    int height = (int)(pFont->GetHeight() + pFont->GetExternalLeading()) + GetPadding(true).GetVertical();
+    int height = (int)(pFont->GetHeight() + pFont->GetExternalLeading()) + GetPadding().GetVertical();
     SetHeight(height);
-    for_each(_Columns, m_vecColumns, value)
+    for(auto value : m_vecColumns)
     {
         m_pTextUpdater->AddTextBounds(value);
     }
+}
+
+void GrColumnList::gridCore_DisplayRectChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
+{
+    SetWidthChanged();
 }
 
 void GrColumnList::Invoke(std::wstring eventName, GrEventArgs* e)
@@ -677,10 +694,10 @@ void GrColumnList::Invoke(std::wstring eventName, GrEventArgs* e)
 GrCell* GrColumnList::HitTest(const GrPoint& location) const
 {
     GrCell* pHitted = GrUpdatableRow::HitTest(location);
-    if(pHitted == NULL)
-        return NULL;
+    if(pHitted == nullptr)
+        return nullptr;
 
-    for_each(_Columns, m_vecDisplayableColumns, value)
+    for(auto value : m_vecDisplayableColumns)
     {
         int x = value->GetX();
         if(location.x >= x && location.x < x + value->GetWidth())
@@ -692,7 +709,7 @@ GrCell* GrColumnList::HitTest(const GrPoint& location) const
         return m_pColumnSplitter;
 
     if(ContainsHorz(location.x) == false)
-        return NULL;
+        return nullptr;
 
     return pHitted;
 }
@@ -709,11 +726,11 @@ void GrColumnList::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
     {
         GrStyle* pStyle = m_pGridCore->GetStyle();
         
-        GrColor backColor = pStyle != NULL ? pStyle->GetColumnBackColor() : m_pGridCore->GetBackColor();
-        GrColor lineColor = pStyle != NULL ? pStyle->GetColumnLineColor() : m_pGridCore->GetLineColor();
+        GrColor backColor = pStyle != nullptr ? pStyle->GetColumnBackColor() : m_pGridCore->GetBackColor();
+        GrColor lineColor = pStyle != nullptr ? pStyle->GetColumnLineColor() : m_pGridCore->GetLineColor();
         paintRect.left = paintRect.right;
         paintRect.right = pDataRowList->CellStart();
-        pPainter->DrawColumn(0, paintRect, lineColor, backColor);
+        pPainter->DrawColumn(GrPaintStyle_Default, paintRect, lineColor, backColor);
     }
 
     for(uint j=0 ; j<m_vecDisplayableColumns.size() ; j++)
@@ -748,7 +765,7 @@ void GrColumnList::BuildVisibleColumnList()
     _Columns vecFrozen, vecUnfrozen;
     vecFrozen.reserve(m_vecColumns.size());
     vecUnfrozen.reserve(m_vecColumns.size());
-    for_each(_Columns, m_vecColumns, value)
+    for(auto value : m_vecColumns)
     {
         value->SetDisplayable(false);
         value->SetDisplayIndex(INVALID_INDEX);
@@ -770,7 +787,7 @@ void GrColumnList::BuildVisibleColumnList()
     m_vecVisibleColumns.insert(m_vecVisibleColumns.end(), vecFrozen.begin(), vecFrozen.end());
     m_vecVisibleColumns.insert(m_vecVisibleColumns.end(), vecUnfrozen.begin(), vecUnfrozen.end());
     uint index = 0;
-    for_each(_Columns, m_vecVisibleColumns, value)
+    for(auto value : m_vecVisibleColumns)
     {
         value->SetVisibleIndex(index++);
     }
@@ -779,7 +796,7 @@ void GrColumnList::BuildVisibleColumnList()
 
 void GrColumnList::AdjustColumnWidth()
 {
-    for_each(_Columns, m_vecColumns, value)
+    for(auto value : m_vecColumns)
     {
         value->AdjustWidth();
     }

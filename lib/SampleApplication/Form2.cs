@@ -1,4 +1,5 @@
 ﻿using Ntreev.INI3.Data;
+using Ntreev.INI3.IO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,10 +18,26 @@ namespace SampleApplication
             InitializeComponent();
 
             INIDataSet dataSet = new INIDataSet();
-            dataSet.ReadSchema(@"G:\NTG\INI3\data\test\xml\Item\ItemContent.xsd");
-            dataSet.ReadXml(@"G:\NTG\INI3\data\test\xml\Item\ItemContent.xml");
+            dataSet.ReadSchema(@".\ItemContent.xsd");
+            dataSet.ReadXml(@".\ItemContent.xml");
+
+            //using(INIStringWriter sw = new INIStringWriter())
+            //{
+            //    dataSet.WriteXml(sw);
+            //    string s = sw.ToString();
+            //    int qwer = 0;
+            //}
+
+            //INIDataTable table = dataSet.Tables[1];
+            //INIDataRow row = table.NewRow("<ID>1</ID>");
+
+            //row["ID"] = 100;
+            //table.Rows.Add(row);
 
             this.gridControl1.DataSource = dataSet.GetFirstPrimaryTable();
+            this.dataGridView1.DataSource = dataSet.Tables[0];
+            this.dataGridView2.DataSource = dataSet.Tables[1];
+            this.dataGridView3.DataSource = dataSet.Tables[2];
         }
     }
 }

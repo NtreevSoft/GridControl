@@ -1,5 +1,5 @@
 //=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4646.22417
+// Ntreev Grid for .Net 2.0.4478.19833
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -21,33 +21,16 @@
 //=====================================================================================================================
 
 
-#pragma once
+#include "StdAfx.h"
+#include "CellBuilder.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    ref class CaptionRow;
-    ref class GroupRow;
-    ref class GroupPanel;
-    ref class ColumnCollection;
-    ref class VisibleColumnCollection;
-    ref class DisplayableColumnCollection;
-    ref class FrozenColumnCollection;
-    ref class UnfrozenColumnCollection;
-    ref class RowCollection;
-    ref class VisibleRowCollection;
-    ref class DisplayableRowCollection;
-    ref class SelectedRowCollection;
-    ref class SelectedColumnCollection;
-    ref class GroupRowCollection;
-    ref class ErrorDescriptor;
-    ref class ToolTip;
-    ref class RowBuilder;
-
-    value class EditingReason;
-
-    namespace Native
+    CellBuilder::CellBuilder()
     {
-        class WinFormWindow;
-        class GrGridRow;
+
     }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
+
+
+

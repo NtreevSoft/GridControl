@@ -52,7 +52,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <see cref="GridObject"/>클래스의 새 인스턴스를 초기화합니다.
         /// </summary>
         /// <param name="gridControl">종속될 그리드 컨트롤의 인스턴스입니다.</param>
-        GridObject(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
+        GridObject(_GridControl^ gridControl);
 
     public: // properties
         /// <summary>
@@ -66,11 +66,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::GridControl^ GridControl 
+        property _GridControl^ GridControl 
         {
-            virtual Ntreev::Windows::Forms::Grid::GridControl^ get() sealed;
+            virtual _GridControl^ get() sealed;
         internal:
-            void set(Ntreev::Windows::Forms::Grid::GridControl^);
+            void set(_GridControl^);
         }
 
     internal: // methods
@@ -104,6 +104,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         GrGridPainter* m_pGridPainter;
         GrItemSelector* m_pItemSelector;
         GrFocuser* m_pFocuser;
-        Ntreev::Windows::Forms::Grid::GridControl^ m_gridControl;
+        _GridControl^ m_gridControl;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

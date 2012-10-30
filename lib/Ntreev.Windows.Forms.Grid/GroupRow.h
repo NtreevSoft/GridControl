@@ -41,12 +41,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     public: // properties
 
-        property bool IsExpanded
-        {
-            bool get();
-            void set(bool);
-        }
-
         property System::String^ Text
         {
             System::String^ get();

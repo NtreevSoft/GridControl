@@ -30,8 +30,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// 제목을 표시하는 개체입니다.
     /// </summary>
     [System::ComponentModel::TypeConverterAttribute(System::ComponentModel::ExpandableObjectConverter::typeid)]
-    public ref class CaptionRow
-        : Ntreev::Windows::Forms::Grid::CellBase
+    public ref class CaptionRow : CellBase
     {
     public: // methods
 
@@ -117,7 +116,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     internal: // methods
 
-        CaptionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrCaption* pCaption);
+        CaptionRow(_GridControl^ gridControl, GrCaption* pCaption);
 
     private: // methods
 

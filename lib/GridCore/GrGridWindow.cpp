@@ -179,7 +179,7 @@ void GrGridWindow::OnMouseEnter()
 
 void GrGridWindow::OnMouseLeave()
 {
-    m_pGridCore->SetMouseOver(NULL, GrPoint::Empty);
+    m_pGridCore->SetMouseOver(nullptr, GrPoint::Empty);
 }
 
 bool GrGridWindow::OnKeyDown(GrKeys key)
@@ -214,6 +214,7 @@ void GrGridWindow::OnUpdate()
 
 void GrGridWindow::OnPaint(void* painterDevice, const GrRect& clipping)
 {
+    m_pGridCore->Update();
     GrGridPainter* pPainter = GetGridPainter();
     pPainter->BeginPaint(painterDevice);
     m_pGridCore->BeginPaint();

@@ -45,13 +45,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     /*GrFont* WinFormFontManager::FromManagedFont(System::Drawing::Font^ font)
     {
         if(font == nullptr)
-            return NULL;
+            return nullptr;
         return GrFontCreator::Create(font->ToHfont().ToPointer());
     }
 
     System::Drawing::Font^ WinFormFontManager::ToManagedFont(GrFont* pFont)
     {
-        if(pFont == NULL)
+        if(pFont == nullptr)
             return nullptr;
         if(pFont == m_pDefaultfont)
             return System::Windows::Forms::Control::DefaultFont;
@@ -633,13 +633,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     //GrFont* WinFormWindow::FromManagedFont(System::Drawing::Font^ font)
     //{
     // if(font == nullptr)
-    // return NULL;
+    // return nullptr;
     // return GrFontCreator::Create(font->ToHfont().ToPointer());
     //}
 
     //System::Drawing::Font^ WinFormWindow::ToManagedFont(GrFont* pFont)
     //{
-    // if(pFont == NULL)
+    // if(pFont == nullptr)
     // return nullptr;
     // if(pFont == m_pDefaultfont)
     // return System::Windows::Forms::Control::DefaultFont;

@@ -279,7 +279,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         m_pColumnList->Update(true);
 
-        for_each(std::vector<GrColumn*>, groupings, value)
+        for(auto value : groupings)
         {
             value->SetGrouped(false);
         }
@@ -293,7 +293,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 m_pColumnList->AddColumn(column->NativeRef);
         }
 
-        for_each(std::vector<GrColumn*>, groupings, value)
+        for(auto value : groupings)
         {
             if(value->GetIndex() == INVALID_INDEX)
                 continue;

@@ -34,7 +34,7 @@ class GrMouseOverer : public GrObject
 public:
     GrMouseOverer()
     {
-        m_pMouseOvered = NULL;
+        m_pMouseOvered = nullptr;
     }
 
     bool SetMouseOver(GrCell* pCell, const GrPoint& localLocation)
@@ -45,9 +45,9 @@ public:
 
         if(success == true)
         {
-            if(m_pMouseOvered != NULL)
+            if(m_pMouseOvered != nullptr)
                 m_pGridCore->Invalidate(m_pMouseOvered->GetRect());
-            if(pCell != NULL)
+            if(pCell != nullptr)
                 m_pGridCore->Invalidate(pCell->GetRect());
         }
 
@@ -62,7 +62,7 @@ public:
         if(m_mouseOverState != state)
         {
             success = true;
-            if(m_pMouseOvered != NULL)
+            if(m_pMouseOvered != nullptr)
                 m_pGridCore->Invalidate(m_pMouseOvered->GetRect());
         }
         m_mouseOverState = state;
@@ -89,7 +89,7 @@ protected:
 private:
     void gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
     {
-        m_pMouseOvered = NULL;
+        m_pMouseOvered = nullptr;
         m_mouseOverState = 0;
     }
 
@@ -103,14 +103,14 @@ class GrMousePresser : public GrObject
 public:
     GrMousePresser()
     {
-        m_pMousePressed = NULL;
+        m_pMousePressed = nullptr;
     }
 
     void SetMousePress(GrCell* pCell)
     {
-        if(m_pMousePressed != NULL)
+        if(m_pMousePressed != nullptr)
             m_pGridCore->Invalidate(m_pMousePressed->GetRect());
-        if(pCell != NULL)
+        if(pCell != nullptr)
             m_pGridCore->Invalidate(pCell->GetRect());
 
         m_pMousePressed = pCell;
@@ -118,9 +118,9 @@ public:
 
     void SetMouseUnpress()
     {
-        if(m_pMousePressed != NULL)
+        if(m_pMousePressed != nullptr)
             m_pGridCore->Invalidate(m_pMousePressed->GetRect());
-        m_pMousePressed = NULL;
+        m_pMousePressed = nullptr;
     }
 
     GrCell* GetMousePress() const
@@ -138,7 +138,7 @@ protected:
 private:
     void gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
     {
-        m_pMousePressed = NULL;
+        m_pMousePressed = nullptr;
     }
 
 private:
@@ -185,7 +185,7 @@ GrGridCore::GrGridCore(GrGridWindow* pGridWindow) : m_pGridWindow(pGridWindow)
 	m_backColor = GrStyle::DefaultStyle.BackColor;
 	m_lineColor = GrStyle::DefaultStyle.LineColor;
     m_pFont = GrStyle::DefaultStyle.Font;
-    m_pStyle = NULL;
+    m_pStyle = nullptr;
 
     m_pItemSelector = new GrItemSelectorInternal();
     m_pFocuser = new GrFocuserInternal();
@@ -254,7 +254,7 @@ GrGridCore::~GrGridCore()
     delete m_pFocuser;
     delete m_pItemSelector;
 
-	if(m_pStyle != NULL)
+	if(m_pStyle != nullptr)
 		delete m_pStyle;
 
     if(m_createdCell != 0)
@@ -360,6 +360,19 @@ bool GrGridCore::Update(bool force)
     m_pTextUpdater->UpdateTextBounds();
     m_pTextUpdater->UpdateTextAlign();
 
+    int i=0;
+    while(m_pRootRow->ShouldUpdate() == true)
+    {
+        m_pTextUpdater->UpdateTextBounds();
+        m_pRootRow->Update(force);
+        m_pTextUpdater->UpdateTextBounds();
+        m_pTextUpdater->UpdateTextAlign();
+        i++;
+
+        System::Console::Write("횟수");
+        System::Console::WriteLine(i);
+    }
+
     m_updating = false;
     return true;
 }
@@ -374,9 +387,7 @@ void GrGridCore::SetDisplayRect(const GrRect& displayRect)
     if(m_displayRect == displayRect)
         return;
     m_displayRect = displayRect;
-    m_pRootRow->SetHeightChanged();
-    m_pColumnList->SetWidthChanged();
-    Invalidate();
+    OnDisplayRectChanged(&GrEventArgs::Empty);
 }
 
 GrRect GrGridCore::GetBounds() const
@@ -713,7 +724,7 @@ GrStyle* GrGridCore::GetStyle() const
 
 void GrGridCore::AttachObject(GrObject* pObject)
 {
-    if(pObject->m_pGridCore != NULL)
+    if(pObject->m_pGridCore != nullptr)
         return;
     pObject->m_pGridCore = this;
     pObject->OnGridCoreAttached();
@@ -723,10 +734,10 @@ void GrGridCore::AttachObject(GrObject* pObject)
 
 void GrGridCore::DetachObject(GrObject* pObject)
 {
-    if(pObject->m_pGridCore == NULL)
+    if(pObject->m_pGridCore == nullptr)
         return;
     pObject->OnGridCoreDetached();
-    pObject->m_pGridCore = NULL;
+    pObject->m_pGridCore = nullptr;
     m_attachedCount--;
 }
 
@@ -744,7 +755,7 @@ void GrGridCore::EditItem(GrItem* pItem, GrEditingReason reason)
 
 void GrGridCore::BringIntoView(GrItem* pItem)
 {
-    if(pItem == NULL)
+    if(pItem == nullptr)
         return;
 
     Update();
@@ -858,6 +869,12 @@ void GrGridCore::OnFontChanged(GrEventArgs* e)
     FontChanged(this, e);
 }
 
+void GrGridCore::OnDisplayRectChanged(GrEventArgs* e)
+{
+    DisplayRectChanged(this, e);
+    Invalidate();
+}
+
 void GrGridCore::OnCleared(GrEventArgs* e)
 {
     Cleared(this, e);
@@ -963,7 +980,7 @@ bool GrGridCore::HitTest(const GrPoint& location, GrHitTest* pHitTest) const
 {
     GrCell* pCell = m_pRootRow->HitTest(location);
 
-    if(pCell != NULL)
+    if(pCell != nullptr)
     {
         pHitTest->pHitted = pCell;
         pHitTest->localHit = location - pCell->GetLocation();

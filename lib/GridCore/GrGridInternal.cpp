@@ -121,9 +121,8 @@ void GrTextUtil::DoMultilineWordWrap(_TextLines* pLines, const std::wstring& cel
     int pos=0;
     GrLineDesc cl;
     memset(&cl, 0, sizeof(GrLineDesc));
-    for_each(WordList, words, itor)
+    for(auto value : words)
     {
-        WordList::value_type& value = itor.GetValue();
         if(cl.width + value.validWidth > cellWidth || cellText.at(value.pos) == L'\n')
         {
             pLines->push_back(cl);
@@ -141,7 +140,7 @@ void GrTextUtil::DoMultilineWordWrap(_TextLines* pLines, const std::wstring& cel
 
 GrSelectionTimer::GrSelectionTimer()
 {
-    m_pTimer = NULL;
+    m_pTimer = nullptr;
     m_horzEnable = true;
     m_vertEnable = true;
 
@@ -154,7 +153,7 @@ GrSelectionTimer::GrSelectionTimer()
 
 GrSelectionTimer::~GrSelectionTimer()
 {
-    if(m_pTimer != NULL)
+    if(m_pTimer != nullptr)
         m_pGridCore->GetGridWindow()->DestroyTimer(m_pTimer);
 }
 
@@ -365,7 +364,7 @@ void GrSelectionTimer::timer_Elapsed(GrObject* /*pSender*/, GrElapsedEventArgs* 
 
 GrFocuserInternal::GrFocuserInternal()
 {
-    m_pFocusing = NULL;
+    m_pFocusing = nullptr;
 }
 
 void GrFocuserInternal::SetFocusing(IFocusable* pFocusable)
@@ -373,14 +372,14 @@ void GrFocuserInternal::SetFocusing(IFocusable* pFocusable)
     if(m_pFocusing == pFocusable)
         return;
 
-    if(m_pFocusing != NULL && m_pFocusing->GetDisplayable() == true)
+    if(m_pFocusing != nullptr && m_pFocusing->GetDisplayable() == true)
     {
         m_pGridCore->Invalidate(m_pFocusing->GetDisplayRect());
     }
 
     m_pFocusing = pFocusable;
 
-    if(pFocusable != NULL && pFocusable->GetDisplayable() == true)
+    if(pFocusable != nullptr && pFocusable->GetDisplayable() == true)
     {
         m_pGridCore->Invalidate(pFocusable->GetDisplayRect());
     }
@@ -398,7 +397,7 @@ void GrFocuserInternal::OnGridCoreAttached()
 
 void GrFocuserInternal::gridCore_Cleared(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 {
-    m_pFocusing = NULL;
+    m_pFocusing = nullptr;
 }
 
 void GrFocuserInternal::gridCore_Created(GrObject* /*pSender*/, GrEventArgs* /*e*/)
@@ -412,7 +411,7 @@ void GrFocuserInternal::OnFocusChanging(GrFocusChangeArgs* e)
     if(m_pGridCore->GetMultiSelect() == false)
     {
         IFocusable* pFocusable = e->GetFocusable();
-        if(pFocusable != NULL)
+        if(pFocusable != nullptr)
         {
             GrItemSelectorInternal* pItemSelector = dynamic_cast<GrItemSelectorInternal*>(m_pGridCore->GetItemSelector());
             pItemSelector->Select(pFocusable);
@@ -429,10 +428,10 @@ IFocusable* GrFocuserInternal::GetFocusing() const
 
 void GrFocuserInternal::itemSelector_SelectingEnd(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 {
-    if(m_pFocusing != NULL)
+    if(m_pFocusing != nullptr)
     {
         Set(m_pFocusing);
-        m_pFocusing = NULL;
+        m_pFocusing = nullptr;
     }
 }
 
@@ -464,7 +463,7 @@ void GrItemSelectorInternal::EndSelecting(GrSelectionType selectionType)
     for(uint y=m_rowSelecting.GetMinValue() ; y<m_rowSelecting.GetMaxValue() ; y++)
     {
         GrDataRow* pDataRow = dynamic_cast<GrDataRow*>(pDataRowList->GetVisibleRow(y));
-        if(pDataRow == NULL)
+        if(pDataRow == nullptr)
             continue;
         for(uint x=m_columnSelecting.GetMinValue() ; x<m_columnSelecting.GetMaxValue() ; x++)
         {
@@ -568,13 +567,13 @@ void GrItemSelectorInternal::SetRowSelectingRange(GrIndexRange visibleRange)
 void GrItemSelectorInternal::Select(IFocusable* pFocusable)
 {
     GrItem* pFocusedItem = dynamic_cast<GrItem*>(pFocusable);
-    if(pFocusedItem == NULL)
+    if(pFocusedItem == nullptr)
         return;
 
     BeginSelection();
     ClearSelection();
 
-    if(pFocusedItem != NULL)
+    if(pFocusedItem != nullptr)
     {
         if(m_pGridCore->GetFullRowSelect() == true)
         {
@@ -605,7 +604,7 @@ void GrItemSelectorInternal::Selecting(IFocusable* pFocusable)
         return;
 
     GrItem* pItem = dynamic_cast<GrItem*>(pFocusable);
-    if(pItem != NULL)
+    if(pItem != nullptr)
     {
         GrColumn* pColumn = pItem->GetColumn();
         GrDataRow* pDataRow = pItem->GetDataRow();

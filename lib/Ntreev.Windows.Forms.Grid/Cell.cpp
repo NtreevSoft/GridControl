@@ -101,7 +101,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         Ntreev::Windows::Forms::Grid::Row^ m_row;
     };
 
-    Cell::Cell(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrItem* pItem)
+    Cell::Cell(CellBuilder^ builder)
+        : CellBase(builder->GridControl, builder->NativeRef), m_pItem(builder->NativeRef), m_errorDescription(System::String::Empty)
+    {
+        m_column = FromNative::Get(m_pItem->GetColumn());
+        m_row = FromNative::Get(m_pItem->GetDataRow());
+
+        m_pItem->ManagedRef = this;
+        m_value = System::DBNull::Value;
+        m_oldValue = System::DBNull::Value;
+    }
+
+    Cell::Cell(_GridControl^ gridControl, GrItem* pItem)
         : CellBase(gridControl, pItem), m_pItem(pItem), m_errorDescription(System::String::Empty)
     {
         m_column = FromNative::Get(pItem->GetColumn());
@@ -458,7 +469,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return this->Tag;
     }
 
-    Ntreev::Windows::Forms::Grid::IColumn^ Cell::Column_ICell::get()
+    IColumn^ Cell::Column_ICell::get()
     {
         return this->Column;
     }

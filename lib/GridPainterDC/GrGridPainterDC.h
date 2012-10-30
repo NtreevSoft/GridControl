@@ -45,18 +45,18 @@ public:
     virtual void DrawRowSplitter(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor);
     virtual void DrawDropDown(const GrRect& paintRect, GrControlState state);
     virtual void DrawModal(const GrRect& paintRect, GrControlState state);
-    virtual void DrawExpander(const GrRect& paintRect, GrControlState state, bool opened, const GrColor& foreColor, const GrColor& backColor);
+    virtual void DrawExpander(GrFlag paintStyle, const GrRect& paintRect, GrControlState state, bool opened, const GrColor& foreColor, const GrColor& backColor);
     virtual void DrawSortGlyph(const GrRect& paintRect, GrSort sortType);
 
     virtual void DrawColumn(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor, const GrRect* pClipRect);
     virtual void DrawRow(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor, const GrRect* pClipRect);
-    virtual void DrawItem(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor, const GrRect* pClipRectping = NULL);
-    virtual void DrawGroupHeader(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = NULL);
+    virtual void DrawItem(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor, const GrRect* pClipRectping = nullptr);
+    virtual void DrawGroupHeader(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor, const GrRect* pClipRect = nullptr);
 #pragma push_macro("DrawText")
 #undef DrawText
-    virtual void DrawText(GrFont* pFont, const wchar_t* text, int textLength, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect = NULL);
+    virtual void DrawText(GrFont* pFont, const wchar_t* text, int textLength, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect = nullptr);
 #pragma pop_macro("DrawText")
-    virtual void DrawColumnText(GrFont* pFont, const wchar_t* text, int textLength, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect = NULL);
+    virtual void DrawColumnText(GrFont* pFont, const wchar_t* text, int textLength, const GrRect& paintRect, const GrColor& color, const GrRect* pClipRect = nullptr);
     virtual void DrawTooltip(const GrRect& paintRect);
 
     virtual void DrawResizingLine(int x1, int y1, int x2, int y2);

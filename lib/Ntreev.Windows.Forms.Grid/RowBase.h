@@ -118,9 +118,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property bool Focused
+        property bool IsFocused
         {
             bool get(); 
+        }
+
+        property bool IsExpanded
+        {
+            bool get();
+            void set(bool);
         }
 
         /// <summary>

@@ -30,10 +30,10 @@ class GrGridCore;
 class GrObject
 {
 public:
-    GrObject() : m_pGridCore(NULL) {}
+    GrObject() : m_pGridCore(nullptr) {}
     virtual ~GrObject() {}
 
-    bool IsGridCoreAttached() const { return m_pGridCore != NULL; }
+    bool IsGridCoreAttached() const { return m_pGridCore != nullptr; }
 
 protected:
     virtual void OnGridCoreAttached() {};

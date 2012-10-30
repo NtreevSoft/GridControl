@@ -82,6 +82,7 @@ public:
     _GrDataRowInsertingEvent DataRowInserting;
     _GrDataRowInsertedEvent DataRowInserted;
     _GrDataRowEvent DataRowRemoved;
+    _GrEvent VisibleHeightChanged;
 
     virtual GrRect GetBounds() const;
     virtual bool ShouldClip(const GrRect& displayRect, uint horizontal, uint vertical) const;
@@ -104,6 +105,7 @@ protected:
     virtual void OnDataRowInserting(GrDataRowInsertingEventArgs* e);
     virtual void OnDataRowInserted(GrDataRowInsertedEventArgs* e);
     virtual void OnDataRowRemoved(GrDataRowEventArgs* e);
+    virtual void OnVisibleHeightChanged(GrEventArgs* e);
 
 private:
     GrGroupRow* CreateGroupRow(GrRow* pParent, GrColumn* pColumn, const std::wstring& itemText);

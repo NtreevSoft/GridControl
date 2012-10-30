@@ -27,10 +27,13 @@
 #include "Cell.h"
 #include "Column.h"
 #include "ColumnCollection.h"
+#include "RowBaseCollection.h"
 #include "ErrorDescriptor.h"
 #include "FromNative.h"
 #include "RowBuilder.h"
+#include "CellBuilder.h"
 #include "NativeGridRow.h"
+#include "GridRow.h"
 
 #include "GrGridCell.h"
 #include "GrGridCore.h"
@@ -55,7 +58,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Row::Component::set(System::Object^ value)
     {
-        using namespace System::ComponentModel;
         m_component = value;
 
         //if(IsBeingEdited == true)
@@ -66,16 +68,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             try
             {
-                Ntreev::Windows::Forms::Grid::Cell^ cell = NewCell(item);
+                Cell^ cell = NewCell(item);
                 cell->UpdateNativeText();
-
-                if(item->PropertyDescriptor != nullptr && item->PropertyDescriptor->PropertyType == IBindingList::typeid)
-                {
-                    Ntreev::Windows::Forms::Grid::GridControl^ childControl = this->GridControl->InvokeNewChildGridControl(item->PropertyDescriptor);
-                    Native::GrGridRow* pGridRow = new Native::GrGridRow(childControl);
-                    m_pDataRow->AddChild(pGridRow);
-                    pGridRow->SetDataSource(cell->Value);
-                }
             }
             catch(System::Exception^)
             {
@@ -84,20 +78,55 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
     }
 
+    void Row::ProcessChildControl()
+    {
+        using namespace System::ComponentModel;
+
+        for each(Column^ item in this->GridControl->Columns)
+        {
+            if(item->PropertyDescriptor != nullptr && item->PropertyDescriptor->PropertyType == IBindingList::typeid)
+            {
+                this->GridControl->InvokeNewChildGridControl(item->PropertyDescriptor, this, this[item]);
+            }
+        }
+    }
+
+    void Row::DetachChildControl()
+    {
+        for each(RowBase^ item in this->Childs)
+        {
+            GridRow^ gridRow = dynamic_cast<GridRow^>(item);
+            if(gridRow == nullptr)
+                continue;
+
+            this->GridControl->Controls->Remove(gridRow->ChildGrid);
+        }
+    }
+
     GrDataRow* Row::NativeRef::get()
     {
         return m_pDataRow;
     }
 
-    Ntreev::Windows::Forms::Grid::Cell^ Row::NewCell(Column^ column)
+    Cell^ Row::NewCell(Column^ column)
     {
         GrItem* pItem = m_pDataRow->GetItem(column->NativeRef);
 
-        Ntreev::Windows::Forms::Grid::Cell^ cell = FromNative::Get(pItem);
+        Cell^ cell = FromNative::Get(pItem);
         if(cell == nullptr)
-            cell = gcnew Ntreev::Windows::Forms::Grid::Cell(this->GridControl, pItem);
+        {
+            CellBuilder builder;
+            builder.GridControl = this->GridControl;
+            builder.NativeRef = pItem;
+            cell = this->NewCellFromBuilder(%builder);
+        }
 
         return cell;
+    }
+
+    Cell^ Row::NewCellFromBuilder(CellBuilder^ builder)
+    {
+        return gcnew Cell(builder->GridControl, builder->NativeRef);
     }
 
     System::String^ Row::ToString()
