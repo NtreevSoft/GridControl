@@ -28,6 +28,7 @@
 #include "GridControl.h"
 #include "FromNative.h"
 #include "ErrorDescriptor.h"
+#include "CellBuilder.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {

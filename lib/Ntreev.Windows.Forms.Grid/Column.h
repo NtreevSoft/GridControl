@@ -39,12 +39,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     [System::ComponentModel::ToolboxItemAttribute(false)]
     [System::ComponentModel::DesignTimeVisibleAttribute(false)]
     [System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.ColumnDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
-    public ref class Column
-        : Ntreev::Windows::Forms::Grid::CellBase
-        , Ntreev::Windows::Forms::Grid::IColumn
+    public ref class Column : CellBase, IColumn, ITextCacheProvider
         , System::ComponentModel::IComponent
         , System::IServiceProvider
-        , Ntreev::Windows::Forms::Grid::ITextCacheProvider
     {
     public: // methods
 

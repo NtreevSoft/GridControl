@@ -10,6 +10,8 @@ class GrColumnList : public GrUpdatableRow
 public:
     GrColumnList();
     virtual ~GrColumnList();
+    
+    GrColumnList& operator=(const GrColumnList&) {}
 
     void Reserve(uint reserve);
     void AddColumn(GrColumn* pColumn);
@@ -103,6 +105,11 @@ public:
     _GrColumnMouseEvent ColumnMouseLeave;
     _GrColumnMouseEvent ColumnMouseDown;
     _GrColumnMouseEvent ColumnMouseUp;
+
+
+    const std::vector<GrColumn*>& Columns;
+    const std::vector<GrColumn*>& Visibles;
+    const std::vector<GrColumn*>& Displayables;
 
 protected:
     virtual void OnGridCoreAttached();

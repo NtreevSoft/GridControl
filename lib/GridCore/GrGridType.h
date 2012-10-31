@@ -327,8 +327,10 @@ struct GrRect
     void Offset(int x, int y);
     void Offset(const GrPoint& offset);
 
+    void Expand(int all);
     void Expand(int left, int top, int right, int bottom);
     void Expand(const GrPadding& padding);
+    void Contract(int all);
     void Contract(int left, int top, int right, int bottom);
     void Contract(const GrPadding& padding);
 

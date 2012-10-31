@@ -25,6 +25,14 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
+    ref class GridControl;
+
+    interface class ICellBase;
+    interface class ICell;
+    interface class IColumn;
+
+    ref class GridObject;
+
     ref class CaptionRow;
     ref class GroupRow;
     ref class GroupPanel;
@@ -41,13 +49,38 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     ref class GroupRowCollection;
     ref class ErrorDescriptor;
     ref class ToolTip;
+    ref class Style;
+    ref class CellBase;
+    ref class Cell;
+    ref class RowBase;
+    ref class Row;
+    ref class Column;
+
     ref class RowBuilder;
+    ref class CellBuilder;
+
+    enum class RowHighlightType;
 
     value class EditingReason;
 
     namespace Native
     {
         class WinFormWindow;
+        class WinFormGridCore;
         class GrGridRow;
     }
+
+    typedef GridControl _GridControl;
+    typedef GridObject _GridObject;
+
+    typedef ToolTip _ToolTip;
+    typedef Style _Style;
+    typedef CaptionRow _CaptionRow;
+    typedef GroupPanel _GroupPanel;
+    typedef ErrorDescriptor _ErrorDescriptor;
+
+    typedef RowHighlightType _RowHighlightType;
+    typedef Column _Column;
+    typedef Row _Row;
+
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

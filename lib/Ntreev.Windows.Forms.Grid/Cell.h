@@ -24,16 +24,9 @@
 #pragma once
 #include "CellBase.h"
 #include "ICell.h"
-#include "CellBuilder.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    ref class Column;
-    ref class Row;
-
-    typedef Column _Column;
-    typedef Row _Row;
-
     /// <summary>
     /// 셀을 나타내는 개체입니다.
     /// </summary>

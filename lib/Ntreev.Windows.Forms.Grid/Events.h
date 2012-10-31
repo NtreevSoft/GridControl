@@ -22,16 +22,23 @@
 
 
 #pragma once
-#include "Cell.h"
-#include "Row.h"
+//#include "Cell.h"
+//#include "Row.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
+    ref class Cell;
+    ref class Row;
+    ref class Column;
+
+    typedef Cell _Cell;
+    typedef Row _Row;
+    typedef Column _Column;
+
     /// <summary>
     /// <see cref="Ntreev::Windows::Forms::Grid::Cell"/>과 관련된 이벤트의 데이터를 제공합니다.
     /// </summary>
-    public ref class CellEventArgs
-        : System::EventArgs
+    public ref class CellEventArgs : System::EventArgs
     {
     public: // methods
 
@@ -41,33 +48,32 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="cell">
         /// 이벤트의 대상이 되는 <see cref="Ntreev::Windows::Forms::Grid::Cell"/>의 인스턴스입니다.
         /// </param>
-        CellEventArgs(Ntreev::Windows::Forms::Grid::Cell^ cell);
+        CellEventArgs(_Cell^ cell);
 
     public: // proeprties
 
         /// <summary>
         /// 이벤트의 대상이 되는 <see cref="Ntreev::Windows::Forms::Grid::Cell"/>을 가져옵니다.
         /// </summary>
-        property Ntreev::Windows::Forms::Grid::Cell^ Cell
+        property _Cell^ Cell
         {
-            Ntreev::Windows::Forms::Grid::Cell^ get();
+            _Cell^ get();
         }
 
     private: // variables
 
-        Ntreev::Windows::Forms::Grid::Cell^ m_cell;
+        _Cell^ m_cell;
     };
 
     /// <summary>
     /// <see cref="Ntreev::Windows::Forms::Grid::Cell"/>과 관련된 이벤트를 처리하는 메서드를 나타냅니다.
     /// </summary>
-    public delegate void CellEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::CellEventArgs^ e);
+    public delegate void CellEventHandler(System::Object^ sender, CellEventArgs^ e);
 
     /// <summary>
     /// 값 변경 이벤트의 관련된 데이터를 제공합니다.
     /// </summary>
-    public ref class ValueChangingEventArgs
-        : Ntreev::Windows::Forms::Grid::CellEventArgs
+    public ref class ValueChangingEventArgs : CellEventArgs
     {
     public: // methods
 
@@ -83,7 +89,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="oldValue">
         /// 변경되기 이전의 값입니다.
         /// </param>
-        ValueChangingEventArgs(Ntreev::Windows::Forms::Grid::Cell^ cell, System::Object^ newValue, System::Object^ oldValue);
+        ValueChangingEventArgs(_Cell^ cell, System::Object^ newValue, System::Object^ oldValue);
 
     public: // properties
 
@@ -125,13 +131,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 값 변경 이벤트를 처리하는 메서드를 나타냅니다.
     /// </summary>
-    public delegate void ValueChangingEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::ValueChangingEventArgs^ e);
+    public delegate void ValueChangingEventHandler(System::Object^ sender, ValueChangingEventArgs^ e);
 
     /// <summary>
     /// <see cref="Ntreev::Windows::Forms::Grid::Row"/>와 관련된 이벤트의 데이터를 제공합니다.
     /// </summary>
-    public ref class RowEventArgs
-        : System::EventArgs
+    public ref class RowEventArgs : System::EventArgs
     {
     public: // methods
 
@@ -141,18 +146,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="row">
         /// 이벤트의 대상이 되는 <see cref="Ntreev::Windows::Forms::Grid::Row"/>의 인스턴스입니다.
         /// </param>
-        RowEventArgs(Ntreev::Windows::Forms::Grid::Row^ row);
+        RowEventArgs(_Row^ row);
 
     public: // properties
 
         /// <summary>
         /// 이벤트의 대상이 되는 <see cref="Ntreev::Windows::Forms::Grid::Row"/>을 가져옵니다.
         /// </summary>
-        property Ntreev::Windows::Forms::Grid::Row^ Row
+        property _Row^ Row
         {
-            Ntreev::Windows::Forms::Grid::Row^ get();
+            _Row^ get();
         internal:
-            void set(Ntreev::Windows::Forms::Grid::Row^ value);
+            void set(_Row^ value);
         }
 
     internal: // methods
@@ -161,13 +166,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     private: // variables
 
-        Ntreev::Windows::Forms::Grid::Row^ m_row;
+        _Row^ m_row;
     };
 
     /// <summary>
     /// <see cref="Ntreev::Windows::Forms::Grid::Row"/>와 관련된 이벤트를 처리하는 메서드를 나타냅니다.
     /// </summary>
-    public delegate void RowEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowEventArgs^ e);
+    public delegate void RowEventHandler(System::Object^ sender, RowEventArgs^ e);
 
     /// <summary>
     /// 새로운 행이 추가되는 이벤트의 데이터를 제공합니다.
@@ -225,29 +230,28 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 새로운 행이 추가되는 이벤트를 처리하는 메서드를 나타냅니다.
     /// </summary>
-    public delegate void RowInsertingEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowInsertingEventArgs^ e);
+    public delegate void RowInsertingEventHandler(System::Object^ sender, RowInsertingEventArgs^ e);
 
     /// <summary>
     /// 새로운 행이 추가되는 이벤트의 데이터를 제공합니다.
     /// </summary>
-    public ref class RowInsertedEventArgs
-        : System::EventArgs
+    public ref class RowInsertedEventArgs : System::EventArgs
     {
     public: // methods
 
         /// <summary>
         /// <see cref="Ntreev::Windows::Forms::Grid::RowInsertingEventArgs"/>클래스의 새 인스턴스를 초기화합니다.
         /// </summary>
-        RowInsertedEventArgs(Ntreev::Windows::Forms::Grid::Row^ row);
+        RowInsertedEventArgs(_Row^ row);
 
     public: // properties
 
         /// <summary>
         /// 새로 추가된 행을 가져옵니다.
         /// </summary>
-        property Ntreev::Windows::Forms::Grid::Row^ Row
+        property _Row^ Row
         {
-            Ntreev::Windows::Forms::Grid::Row^ get();
+            _Row^ get();
         }
 
         /// <summary>
@@ -263,19 +267,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     private: // variables
 
-        Ntreev::Windows::Forms::Grid::Row^ m_row;
+        _Row^ m_row;
     };
 
     /// <summary>
     /// 새로운 행이 추가되는 이벤트를 처리하는 메서드를 나타냅니다.
     /// </summary>
-    public delegate void RowInsertedEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowInsertedEventArgs^ e);
+    public delegate void RowInsertedEventHandler(System::Object^ sender, RowInsertedEventArgs^ e);
 
     /// <summary>
     /// 행이 제거되는 이벤트의 데이터를 제공합니다.
     /// </summary>
-    public ref class RowRemovingEventArgs
-        : Ntreev::Windows::Forms::Grid::RowEventArgs
+    public ref class RowRemovingEventArgs : RowEventArgs
     {
     public: // methods
 
@@ -285,7 +288,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="row">
         /// 이벤트의 대상이 되는 <see cref="Ntreev::Windows::Forms::Grid::Row"/>의 인스턴스입니다.
         /// </param>
-        RowRemovingEventArgs(Ntreev::Windows::Forms::Grid::Row^ row);
+        RowRemovingEventArgs(_Row^ row);
 
     public: // properties
 
@@ -309,13 +312,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 행이 제거되는 이벤트를 처리하는 메서드를 나타냅니다.
     /// </summary>
-    public delegate void RowRemovingEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowRemovingEventArgs^ e);
+    public delegate void RowRemovingEventHandler(System::Object^ sender, RowRemovingEventArgs^ e);
 
     /// <summary>
     /// 행이 제거된후 발생하는 이벤트의 데이터를 제공합니다.
     /// </summary>
-    public ref class RowRemovedEventArgs
-        : System::EventArgs
+    public ref class RowRemovedEventArgs : System::EventArgs
     {
     public: // methods
 
@@ -354,13 +356,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 행이 제거된후 발생하는 이벤트를 처리하는 메서드를 나타냅니다.
     /// </summary>
-    public delegate void RowRemovedEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowRemovedEventArgs^ e);
+    public delegate void RowRemovedEventHandler(System::Object^ sender, RowRemovedEventArgs^ e);
 
     /// <summary>
     /// RowBinding 이벤트의 데이터를 제공합니다.
     /// </summary>
-    public ref class RowBindingEventArgs
-        : System::EventArgs
+    public ref class RowBindingEventArgs : System::EventArgs
     {
     public: // methods
 
@@ -400,13 +401,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// RowBinding 이벤트를 처리하는 메서드를 나타냅니다.
     /// </summary>
-    public delegate void RowBindingEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowBindingEventArgs^ e);
+    public delegate void RowBindingEventHandler(System::Object^ sender, RowBindingEventArgs^ e);
 
     /// <summary>
     /// ColumnBinding 이벤트의 데이터를 제공합니다.
     /// </summary>
-    public ref class ColumnBindingEventArgs
-        : System::EventArgs
+    public ref class ColumnBindingEventArgs : System::EventArgs
     {
     public: // methods
 
@@ -419,7 +419,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="column">
         /// 연견될 <see cref="Ntreev::Windows::Forms::Grid::Column"/>의 인스턴스입니다.
         /// </param>
-        ColumnBindingEventArgs(System::ComponentModel::PropertyDescriptor^ propertyDescriptor, Ntreev::Windows::Forms::Grid::Column^ column);
+        ColumnBindingEventArgs(System::ComponentModel::PropertyDescriptor^ propertyDescriptor, _Column^ column);
 
     public: // properties
 
@@ -437,28 +437,27 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <remarks>
         /// 이 속성의 값이 null일 경우 기본형태의 <see cref="Ntreev::Windows::Forms::Grid::Column"/>이 생성됩니다.
         /// </remarks>
-        property Ntreev::Windows::Forms::Grid::Column^ BindingColumn
+        property _Column^ BindingColumn
         {
-            Ntreev::Windows::Forms::Grid::Column^ get();
-            void set(Ntreev::Windows::Forms::Grid::Column^ value);
+            _Column^ get();
+            void set(_Column^ value);
         }
 
     private: // variables
 
         System::ComponentModel::PropertyDescriptor^ m_propertyDescriptor;
-        Ntreev::Windows::Forms::Grid::Column^ m_column;
+        _Column^ m_column;
     };
 
     /// <summary>
     /// ColumnBinding 이벤트를 처리하는 메서드를 나타냅니다.
     /// </summary>
-    public delegate void ColumnBindingEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::ColumnBindingEventArgs^ e);
+    public delegate void ColumnBindingEventHandler(System::Object^ sender, ColumnBindingEventArgs^ e);
 
     /// <summary>
     /// <see cref="Ntreev::Windows::Forms::Grid::Column"/>과 관련된 이벤트의 데이터를 제공합니다.
     /// </summary>
-    public ref class ColumnEventArgs
-        : System::EventArgs
+    public ref class ColumnEventArgs : System::EventArgs
     {
     public: // methods
 
@@ -468,33 +467,32 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="column">
         /// 이벤트의 대상이 되는 <see cref="Ntreev::Windows::Forms::Grid::Column"/>의 인스턴스입니다.
         /// </param>
-        ColumnEventArgs(Ntreev::Windows::Forms::Grid::Column^ column);
+        ColumnEventArgs(_Column^ column);
 
     public: // properties
 
         /// <summary>
         /// 이벤트의 대상이 되는 <see cref="Ntreev::Windows::Forms::Grid::Column"/>을 가져옵니다.
         /// </summary>
-        property Ntreev::Windows::Forms::Grid::Column^ Column
+        property _Column^ Column
         {
-            Ntreev::Windows::Forms::Grid::Column^ get();
+            _Column^ get();
         }
 
     private: // variables
 
-        Ntreev::Windows::Forms::Grid::Column^ m_column;
+        _Column^ m_column;
     };
 
     /// <summary>
     /// <see cref="Ntreev::Windows::Forms::Grid::Column"/>과 관련된 이벤트를 처리하는 메서드를 나타냅니다.
     /// </summary>
-    public delegate void ColumnEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::ColumnEventArgs^ e);
+    public delegate void ColumnEventHandler(System::Object^ sender, ColumnEventArgs^ e);
 
     /// <summary>
     /// 새로운 열이 추가되는 이벤트의 데이터를 제공합니다.
     /// </summary>
-    public ref class ColumnInsertingEventArgs
-        : Ntreev::Windows::Forms::Grid::ColumnEventArgs
+    public ref class ColumnInsertingEventArgs : ColumnEventArgs
     {
     public: // methods
 
@@ -504,7 +502,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="column">
         /// 새로 추가될 <see cref="Ntreev::Windows::Forms::Grid::Column"/>의 인스턴스입니다.
         /// </param>
-        ColumnInsertingEventArgs(Ntreev::Windows::Forms::Grid::Column^ column);
+        ColumnInsertingEventArgs(_Column^ column);
 
     public: // properties
 
@@ -528,13 +526,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 새로운 열이 추가되는 이벤트를 처리하는 메서드를 나타냅니다.
     /// </summary>
-    public delegate void ColumnInsertingEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::ColumnInsertingEventArgs^ e);
+    public delegate void ColumnInsertingEventHandler(System::Object^ sender, ColumnInsertingEventArgs^ e);
 
     /// <summary>
     /// 마우스 이벤트중 <see cref="Ntreev::Windows::Forms::Grid::Column"/>과 관련된 이벤트의 데이터를 제공합니다.
     /// </summary>
-    public ref class ColumnMouseEventArgs
-        : Ntreev::Windows::Forms::Grid::ColumnEventArgs
+    public ref class ColumnMouseEventArgs : ColumnEventArgs
     {
     public: // methods
 
@@ -547,7 +544,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="location">
         /// 이벤트가 발생한 시점의 마우스의 위치입니다. 마우스의 위치는 Column기준의 지역좌표입니다.
         /// </param>
-        ColumnMouseEventArgs(Ntreev::Windows::Forms::Grid::Column^ column, System::Drawing::Point location);
+        ColumnMouseEventArgs(_Column^ column, System::Drawing::Point location);
 
     public: // properties
 
@@ -600,13 +597,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 마우스 이벤트중 <see cref="Ntreev::Windows::Forms::Grid::Column"/>과 관련된 이벤트를 처리하는 메서드를 나타냅니다.
     /// </summary>
-    public delegate void ColumnMouseEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::ColumnMouseEventArgs^ e);
+    public delegate void ColumnMouseEventHandler(System::Object^ sender, ColumnMouseEventArgs^ e);
 
     /// <summary>
     /// 마우스 이벤트중 <see cref="Ntreev::Windows::Forms::Grid::Cell"/>과 관련된 이벤트의 데이터를 제공합니다.
     /// </summary>
-    public ref class CellMouseEventArgs
-        : Ntreev::Windows::Forms::Grid::CellEventArgs
+    public ref class CellMouseEventArgs : CellEventArgs
     {
     public: // methods
 
@@ -619,7 +615,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="location">
         /// 이벤트가 발생한 시점의 마우스의 위치입니다. 마우스의 위치는 Cell기준의 지역좌표입니다.
         /// </param>
-        CellMouseEventArgs(Ntreev::Windows::Forms::Grid::Cell^ cell, System::Drawing::Point location);
+        CellMouseEventArgs(_Cell^ cell, System::Drawing::Point location);
 
     public: // properties
 
@@ -672,13 +668,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 마우스 이벤트중 <see cref="Ntreev::Windows::Forms::Grid::Cell"/>과 관련된 이벤트를 처리하는 메서드를 나타냅니다.
     /// </summary>
-    public delegate void CellMouseEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::CellMouseEventArgs^ e);
+    public delegate void CellMouseEventHandler(System::Object^ sender, CellMouseEventArgs^ e);
 
     /// <summary>
     /// 편집을 취소할 수 있는 이벤트의 데이터를 제공합니다.
     /// </summary>
-    public ref class EditBegunEventArgs
-        : Ntreev::Windows::Forms::Grid::CellEventArgs
+    public ref class EditBegunEventArgs : CellEventArgs
     {
     public: // methods
 
@@ -688,7 +683,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="cell">
         /// 편집이 되는 <see cref="Ntreev::Windows::Forms::Grid::Cell"/>의 인스턴스입니다.
         /// </param>
-        EditBegunEventArgs(Ntreev::Windows::Forms::Grid::Cell^ cell);
+        EditBegunEventArgs(_Cell^ cell);
 
     public: // properties
 
@@ -712,13 +707,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 편집을 취소할 수 있는 이벤트를 처리하는 메서드를 나타냅니다.
     /// </summary>
-    public delegate void EditBegunEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::EditBegunEventArgs^ e);
+    public delegate void EditBegunEventHandler(System::Object^ sender, EditBegunEventArgs^ e);
 
     /// <summary>
     /// 데이터가 초기화 되는 이벤트의 데이터를 제공합니다.
     /// </summary>
-    public ref class ClearEventArgs
-        : System::EventArgs
+    public ref class ClearEventArgs : System::EventArgs
     {
     public: // methods
 
@@ -751,10 +745,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 데이터가 초기화 되는 이벤트를 처리하는 메서드를 나타냅니다.
     /// </summary>
-    public delegate void ClearEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::ClearEventArgs^ e);
+    public delegate void ClearEventHandler(System::Object^ sender, ClearEventArgs^ e);
 
-    ref class CurrencyManagerChangedEventArgs
-        : System::EventArgs
+    ref class CurrencyManagerChangedEventArgs : System::EventArgs
     {
     public: // methods
 
@@ -772,7 +765,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::Windows::Forms::CurrencyManager^ m_manager;
     };
 
-    delegate void CurrencyManagerChangedEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventArgs^ e);
+    delegate void CurrencyManagerChangedEventHandler(System::Object^ sender, CurrencyManagerChangedEventArgs^ e);
 
     ref class CurrencyManagerChangingEventArgs
         : Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventArgs
@@ -796,5 +789,5 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         bool m_cancel;
     };
 
-    delegate void CurrencyManagerChangingEventHandler(System::Object^ sender, Ntreev::Windows::Forms::Grid::CurrencyManagerChangingEventArgs^ e);
+    delegate void CurrencyManagerChangingEventHandler(System::Object^ sender, CurrencyManagerChangingEventArgs^ e);
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

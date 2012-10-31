@@ -449,6 +449,35 @@ bool GrCell::ContainsVert(int y) const
     return true;
 }
 
+bool GrCell::IntersectsHorzWith(int left, int right) const
+{
+    if(GetX() > right || GetRight() <= left)
+        return false;
+    return true;
+}
+
+bool GrCell::IntersectsHorzWith(const GrRect& rect) const
+{
+    return IntersectsHorzWith(rect.left, rect.right);
+}
+
+bool GrCell::IntersectsVertWith(int top, int bottom) const
+{
+    if(GetY() > bottom || GetBottom() <= top)
+        return false;
+    return true;
+}
+
+bool GrCell::IntersectsVertWith(const GrRect& rect) const
+{
+    return IntersectsVertWith(rect.top, rect.bottom);
+}
+
+bool GrCell::IntersectsWith(const GrRect& rect) const
+{
+    return IntersectsHorzWith(rect.left, rect.right) && IntersectsVertWith(rect.top, rect.bottom);
+}
+
 const std::wstring& GrCell::GetText() const
 {
     return m_text;
@@ -866,7 +895,6 @@ void GrItem::LockColor(bool b)
     if(m_colorLocked == b)
         return;
     m_colorLocked = b;
-    Invalidate();
 }
 
 bool GrItem::GetFocused() const
@@ -1191,16 +1219,16 @@ void GrItem::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
     }
 }
 
+void GrItem::Invalidate()
+{
+    GrCell::Invalidate();
+}
+
 GrItem* GrDataRow::GetItem(const GrColumn* pColumn) const
 {
     uint columnID = pColumn->GetColumnID();
     assert(columnID < m_vecItems.size());
     return m_vecItems[columnID];
-}
-
-GrItem* GrDataRow::GetItem(const GrItem* pOtherItem) const
-{
-    return GetItem(pOtherItem->GetColumn());
 }
 
 bool GrDataRow::GetReadOnly() const
@@ -1529,32 +1557,14 @@ bool GrColumn::GetFullSelected() const
 {
     if(m_pGridCore == nullptr)
         return false;
-    int visibles = (int)m_pGridCore->GetDataRowList()->GetDataRowCount();
+    GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
+    if(pDataRowList->GetInsertionRow()->GetSelected() == true)
+        return false;
+    int visibles = (int)pDataRowList->GetDataRowCount();
+    if(visibles == 0)
+        return false;
     return m_selected == visibles;
 }
-
-//void GrColumn::AddSelection(GrItem* pItem)
-//{
-//    m_selectedCells.insert(pItem);
-//}
-//
-//void GrColumn::RemoveSelection(GrItem* pItem)
-//{
-//    m_selectedCells.erase(pItem);
-//    if(m_selectedCells.size() == 0)
-//        m_selected = false;
-//}
-//
-//void GrColumn::ClearSelection()
-//{
-//    m_selectedCells.clear();
-//    m_selected = false;
-//}
-
-//void GrColumn::SetFullSelected()
-//{
-//    m_selected = true;
-//}
 
 bool GrColumn::HasFocused() const
 {
@@ -3920,6 +3930,11 @@ void GrGroupHeader::Paint(GrGridPainter* pPainter, const GrRect& /*clipRect*/) c
 
     pPainter->DrawGroupHeader(paintStyle, paintRect, lineColor, backColor);
     DrawText(pPainter, foreColor, paintRect);
+}
+
+void GrGroupHeader::Invalidate()
+{
+    GrCell::Invalidate();
 }
 
 GrGroup::GrGroup(GrColumn* pColumn) 

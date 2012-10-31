@@ -21,6 +21,9 @@ namespace SampleApplication
             dataSet.ReadSchema(@".\ItemContent.xsd");
             dataSet.ReadXml(@".\ItemContent.xml");
 
+            this.gridControl1.CellMouseEnter += gridControl1_CellMouseEnter;
+            this.gridControl1.CellMouseLeave += gridControl1_CellMouseLeave;
+
             //using(INIStringWriter sw = new INIStringWriter())
             //{
             //    dataSet.WriteXml(sw);
@@ -38,6 +41,22 @@ namespace SampleApplication
             this.dataGridView1.DataSource = dataSet.Tables[0];
             this.dataGridView2.DataSource = dataSet.Tables[1];
             this.dataGridView3.DataSource = dataSet.Tables[2];
+        }
+
+        void gridControl1_CellMouseLeave(object sender, Ntreev.Windows.Forms.Grid.CellEventArgs e)
+        {
+            Rectangle bounds = e.Cell.Bounds;
+            bounds.Inflate(2, 2);
+            bounds.Height += this.Font.Height;
+            this.Invalidate(bounds);
+        }
+
+        void gridControl1_CellMouseEnter(object sender, Ntreev.Windows.Forms.Grid.CellEventArgs e)
+        {
+            Rectangle bounds = e.Cell.Bounds;
+            bounds.Inflate(2, 2);
+            bounds.Height += this.Font.Height;
+            this.Invalidate(bounds);
         }
     }
 }

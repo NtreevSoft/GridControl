@@ -24,7 +24,7 @@
 #pragma once
 #include "GridObject.h"
 #include "ICellBase.h"
-#include "Style.h"
+//#include "Style.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {

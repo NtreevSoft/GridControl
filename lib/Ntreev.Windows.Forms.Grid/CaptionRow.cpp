@@ -27,7 +27,7 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    CaptionRow::CaptionRow(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrCaption* pCaption) 
+    CaptionRow::CaptionRow(_GridControl^ gridControl, GrCaption* pCaption) 
         : CellBase(gridControl, pCaption), m_pCaption(pCaption)
     {
         this->Text = Properties::Resources::GetString("CaptionRow.Text");

@@ -22,32 +22,31 @@
 
 
 #pragma once
-#include "Cell.h"
+#include "GridObject.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     /// <summary>
     /// 셀의 컬렉션을 나타냅니다.
     /// </summary>
-    public ref class CellCollection
-        : Ntreev::Windows::Forms::Grid::GridObject
-        , System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::Cell^>
+    public ref class CellCollection : GridObject
+        , System::Collections::Generic::IEnumerable<Cell^>
         , System::Collections::ICollection
     {
     private: // classes
 
-        ref class Enumerator : System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Cell^>
+        ref class Enumerator : System::Collections::Generic::IEnumerator<Cell^>
         {
         public:
-            Enumerator(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pDataRow, GrColumnList* pColumnList);
+            Enumerator(_GridControl^ gridControl, GrDataRow* pDataRow, GrColumnList* pColumnList);
             ~Enumerator();
             virtual bool MoveNext();
             virtual void Reset();
 
         public:
-            property Ntreev::Windows::Forms::Grid::Cell^ Current
+            property Cell^ Current
             {
-                virtual Ntreev::Windows::Forms::Grid::Cell^ get();
+                virtual Cell^ get();
             }
 
         private:
@@ -71,7 +70,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 열거자를 나타내는 <see cref="System::Collections::Generic::IEnumerator"/>입니다.
         /// </returns>
-        virtual System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::Cell^>^ GetEnumerator() sealed;
+        virtual System::Collections::Generic::IEnumerator<Cell^>^ GetEnumerator() sealed;
 
     public: // properties
 
@@ -84,9 +83,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::ArgumentException">
         /// 열의 이름으로 셀을 찾지 못하는 경우
         /// </exception>
-        property Ntreev::Windows::Forms::Grid::Cell^ default[System::String^]
+        property Cell^ default[System::String^]
         {
-            Ntreev::Windows::Forms::Grid::Cell^ get(System::String^ columnName);
+            Cell^ get(System::String^ columnName);
         }
 
         /// <summary>
@@ -104,9 +103,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::ArgumentException">
         /// 열의 인스턴스롤 셀을 찾지 못하는 경우
         /// </exception>
-        property Ntreev::Windows::Forms::Grid::Cell^ default[Column^]
+        property Cell^ default[Column^]
         {
-            Ntreev::Windows::Forms::Grid::Cell^ get(Column^ column);
+            Cell^ get(Column^ column);
         }
 
         /// <summary>
@@ -121,9 +120,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::ArgumentOutOfRangeException">
         /// 인덱스가 0보다 작거나, <see cref="Count"/>보다 클 경우
         /// </exception>
-        property Ntreev::Windows::Forms::Grid::Cell^ default[int]
+        property Cell^ default[int]
         {
-            Ntreev::Windows::Forms::Grid::Cell^ get(int index);
+            Cell^ get(int index);
         }
 
         /// <summary>
@@ -166,9 +165,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     internal: // properties
 
-        property Ntreev::Windows::Forms::Grid::Cell^ default[GrColumn*]
+        property Cell^ default[GrColumn*]
         {
-            Ntreev::Windows::Forms::Grid::Cell^ get(GrColumn* pColumn);
+            Cell^ get(GrColumn* pColumn);
         }
 
     private: // variables

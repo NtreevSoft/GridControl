@@ -23,5 +23,5 @@
 
 //// native c++ precompiled header
 #include "GrGridCore.h"
-
+#include "GridControlPreDeclaration.h"
 #include "stdafx.h"

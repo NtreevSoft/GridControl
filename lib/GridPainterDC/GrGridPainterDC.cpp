@@ -323,13 +323,13 @@ void GrGridPainterDC::DrawItem(GrFlag paintStyle, const GrRect& paintRect, const
 	HPEN hPen = CreatePen(PS_SOLID, 1, _RGB(lineColor));
 	HGDIOBJ hOldPen = SelectObject(m_hdc, (HGDIOBJ)hPen);
 
-	if(paintStyle.Has(GrPaintStyle_RightLine) == true)
+	if(paintStyle.Has(GrPaintStyle_RightLine) == true && paintRect.right <= rt.right)
 	{
 		MoveToEx(m_hdc, rt.right-1, rt.top, nullptr);
 		LineTo(m_hdc, rt.right-1, rt.bottom-1);
 	}
 
-	if(paintStyle.Has(GrPaintStyle_BottomLine) == true)
+	if(paintStyle.Has(GrPaintStyle_BottomLine) == true && paintRect.bottom <= rt.bottom)
 	{
 		MoveToEx(m_hdc, rt.left, rt.bottom-1, nullptr);
 		LineTo(m_hdc, rt.right, rt.bottom-1);

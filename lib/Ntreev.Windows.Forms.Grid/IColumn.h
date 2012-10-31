@@ -26,11 +26,16 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
+    enum class SortType;
+    enum class ColumnState;
+
+    typedef SortType _SortType;
+    typedef ColumnState _ColumnState;
+
     /// <summary>
     /// 열을 나타내기위한 속성을 정의합니다.
     /// </summary>
-    public interface class IColumn
-        : Ntreev::Windows::Forms::Grid::ICellBase
+    public interface class IColumn : ICellBase
     {
         /// <summary>
         /// 표시할 열의 제목을 가져옵니다.
@@ -264,9 +269,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 열의 정렬방식을 나타내는 <see cref="SortType"/>입니다.
         /// </returns>
-        property Ntreev::Windows::Forms::Grid::SortType SortType
+        property _SortType SortType
         {
-            Ntreev::Windows::Forms::Grid::SortType get();
+            _SortType get();
         }
 
         /// <summary>
@@ -319,9 +324,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 마우스 커서에 대한 열의 상태를 나타내는 <see cref="ColumnState"/>입니다.
         /// </returns>
-        property Ntreev::Windows::Forms::Grid::ColumnState ColumnState
+        property _ColumnState ColumnState
         {
-            Ntreev::Windows::Forms::Grid::ColumnState get();
+            _ColumnState get();
         }
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

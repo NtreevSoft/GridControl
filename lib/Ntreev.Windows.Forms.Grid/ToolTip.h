@@ -93,4 +93,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         bool m_showed;
     };
+
+    typedef ToolTip _ToolTip;
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

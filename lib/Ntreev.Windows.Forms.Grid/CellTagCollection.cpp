@@ -26,6 +26,7 @@
 #include "CellCollection.h"
 #include "Column.h"
 #include "Row.h"
+#include "Cell.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {

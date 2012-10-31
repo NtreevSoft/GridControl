@@ -23,12 +23,10 @@
 
 #pragma once
 #include "ICellBase.h"
-#include "IColumn.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    public interface class ICell
-        : Ntreev::Windows::Forms::Grid::ICellBase
+    public interface class ICell : ICellBase
     {
         property System::Object^ Value
         {
@@ -40,9 +38,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             System::Object^ get();
         }
 
-        property Ntreev::Windows::Forms::Grid::IColumn^ Column
+        property IColumn^ Column
         {
-            Ntreev::Windows::Forms::Grid::IColumn^ get();
+            IColumn^ get();
         }
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

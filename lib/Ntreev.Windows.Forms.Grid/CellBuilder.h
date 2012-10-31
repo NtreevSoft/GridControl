@@ -27,15 +27,13 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    ref class GridControl;
-
     public ref class CellBuilder sealed
     {
     internal:
         CellBuilder();
 
     internal:
-        property Ntreev::Windows::Forms::Grid::GridControl^ GridControl;
+        property _GridControl^ GridControl;
         property GrItem* NativeRef;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -75,6 +75,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         virtual GrPadding GetPadding() const;
         virtual GrColor GetPaintingBackColor() const;
         virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
+        virtual void Invalidate();
 
         virtual IDataRow* GetDataRow() const;
 

@@ -254,6 +254,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         pPainter->DrawItem(paintStyle, paintRect, GetPaintingLineColor(), backColor);
     }
 
+    void GrGridCell::Invalidate()
+    {
+        GrCell::Invalidate();
+    }
+
     IDataRow* GrGridCell::GetDataRow() const
     {
         return m_pGridRow;

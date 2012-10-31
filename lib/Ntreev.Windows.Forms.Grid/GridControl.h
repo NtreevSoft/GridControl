@@ -23,7 +23,7 @@
 
 #pragma once
 #include "Events.h"
-#include "GridControlPreDeclaration.h"
+#include "Types.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -48,7 +48,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <summary>
         /// 셀의 편집을 시작합니다.
         /// </summary>
-        void EditCell(Cell^ cell, Ntreev::Windows::Forms::Grid::EditingReason editBy);
+        void EditCell(Cell^ cell, EditingReason editBy);
 
         /// <summary>
         /// 셀의 편집을 종료합니다.
@@ -258,9 +258,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::DescriptionAttribute("제목을 설정할 수 있는 인터페이스를 제공합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
-        property Ntreev::Windows::Forms::Grid::CaptionRow^ CaptionRow
+        property _CaptionRow^ CaptionRow
         {
-            Ntreev::Windows::Forms::Grid::CaptionRow^ get(); 
+            _CaptionRow^ get(); 
         }
 
         /// <summary>
@@ -272,9 +272,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::DescriptionAttribute("그룹핑 표시에 대한 인터페이스를 제공합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
-        property Ntreev::Windows::Forms::Grid::GroupPanel^ GroupPanel
+        property _GroupPanel^ GroupPanel
         {
-            Ntreev::Windows::Forms::Grid::GroupPanel^ get(); 
+            _GroupPanel^ get(); 
         }
 
         /// <summary>
@@ -283,9 +283,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::DescriptionAttribute("열의 목록을 가져옵니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
-        property Ntreev::Windows::Forms::Grid::ColumnCollection^ Columns
+        property ColumnCollection^ Columns
         {
-            Ntreev::Windows::Forms::Grid::ColumnCollection^ get();
+            ColumnCollection^ get();
         }
 
         /// <summary>
@@ -297,9 +297,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::VisibleColumnCollection^ VisibleColumns
+        property VisibleColumnCollection^ VisibleColumns
         {
-            Ntreev::Windows::Forms::Grid::VisibleColumnCollection^ get();
+            VisibleColumnCollection^ get();
         }
 
         /// <summary>
@@ -310,9 +310,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::DisplayableColumnCollection^ DisplayableColumns
+        property DisplayableColumnCollection^ DisplayableColumns
         {
-            Ntreev::Windows::Forms::Grid::DisplayableColumnCollection^ get();
+            DisplayableColumnCollection^ get();
         }
 
         /// <summary>
@@ -323,9 +323,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::FrozenColumnCollection^ FrozenColumns
+        property FrozenColumnCollection^ FrozenColumns
         {
-            Ntreev::Windows::Forms::Grid::FrozenColumnCollection^ get();
+            FrozenColumnCollection^ get();
         }
 
         /// <summary>
@@ -336,9 +336,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::UnfrozenColumnCollection^ UnfrozenColumns
+        property UnfrozenColumnCollection^ UnfrozenColumns
         {
-            Ntreev::Windows::Forms::Grid::UnfrozenColumnCollection^ get();
+            UnfrozenColumnCollection^ get();
         }
 
         /// <summary>
@@ -363,9 +363,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::SelectedColumnCollection^ SelectedColumns
+        property SelectedColumnCollection^ SelectedColumns
         {
-            Ntreev::Windows::Forms::Grid::SelectedColumnCollection^ get();
+            SelectedColumnCollection^ get();
         }
 
         /// <summary>
@@ -374,9 +374,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DescriptionAttribute("행의 목록을 가져옵니다.")]
         [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
-        property Ntreev::Windows::Forms::Grid::RowCollection^ Rows
+        property RowCollection^ Rows
         {
-            Ntreev::Windows::Forms::Grid::RowCollection^ get();
+            RowCollection^ get();
         }
 
         /// <summary>
@@ -387,9 +387,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::GroupRowCollection^ GroupRows
+        property GroupRowCollection^ GroupRows
         {
-            Ntreev::Windows::Forms::Grid::GroupRowCollection^ get();
+            GroupRowCollection^ get();
         }
 
         /// <summary>
@@ -400,9 +400,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::VisibleRowCollection^ VisibleRows
+        property VisibleRowCollection^ VisibleRows
         {
-            Ntreev::Windows::Forms::Grid::VisibleRowCollection^ get();
+            VisibleRowCollection^ get();
         }
 
         /// <summary>
@@ -413,9 +413,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::DisplayableRowCollection^ DisplayableRows
+        property DisplayableRowCollection^ DisplayableRows
         {
-            Ntreev::Windows::Forms::Grid::DisplayableRowCollection^ get();
+            DisplayableRowCollection^ get();
         }
 
         /// <summary>
@@ -442,9 +442,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::SelectedRowCollection^ SelectedRows
+        property SelectedRowCollection^ SelectedRows
         {
-            Ntreev::Windows::Forms::Grid::SelectedRowCollection^ get();
+            SelectedRowCollection^ get();
         } 
 
         /// <summary>
@@ -456,9 +456,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::RowBase^ FocusedRow
+        property RowBase^ FocusedRow
         {
-            Ntreev::Windows::Forms::Grid::RowBase^ get(); 
+            RowBase^ get(); 
         } 
 
         /// <summary>
@@ -496,9 +496,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 툴팁을 사용할 수 있는 인터페이스를 가져옵니다.
         /// </summary>
         [System::ComponentModel::BrowsableAttribute(false)]
-        property Ntreev::Windows::Forms::Grid::ToolTip^ ToolTip
+        property _ToolTip^ ToolTip
         {
-            Ntreev::Windows::Forms::Grid::ToolTip^ get();
+            _ToolTip^ get();
         }
 
         /// <summary>
@@ -726,11 +726,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("포커스된 행의 강조 표시 방법을 설정합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
-        [System::ComponentModel::DefaultValueAttribute(Ntreev::Windows::Forms::Grid::RowHighlightType::Fill)]
-        property Ntreev::Windows::Forms::Grid::RowHighlightType RowHighlightType
+        [System::ComponentModel::DefaultValueAttribute(_RowHighlightType::Fill)]
+        property _RowHighlightType RowHighlightType
         {
-            Ntreev::Windows::Forms::Grid::RowHighlightType get();
-            void set(Ntreev::Windows::Forms::Grid::RowHighlightType);
+            _RowHighlightType get();
+            void set(_RowHighlightType);
         }
 
         /// <summary>
@@ -763,10 +763,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		[System::ComponentModel::DefaultValueAttribute((System::String^)nullptr)]
         [System::ComponentModel::CategoryAttribute("Appearance")]
 		[System::ComponentModel::TypeConverter(StyleConverter::typeid)]
-        property Ntreev::Windows::Forms::Grid::Style^ Style
+        property _Style^ Style
         {
-            Ntreev::Windows::Forms::Grid::Style^ get();
-            void set(Ntreev::Windows::Forms::Grid::Style^);
+            _Style^ get();
+            void set(_Style^);
         }
 
 #ifdef _DEBUG
@@ -844,10 +844,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("셀의 값이 변경되기 전에 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
-        event Ntreev::Windows::Forms::Grid::ValueChangingEventHandler^ ValueChanging
+        event ValueChangingEventHandler^ ValueChanging
         {
-            void add(Ntreev::Windows::Forms::Grid::ValueChangingEventHandler^ p) { m_eventValueChanging += p; }
-            void remove(Ntreev::Windows::Forms::Grid::ValueChangingEventHandler^ p) { m_eventValueChanging -= p; }
+            void add(ValueChangingEventHandler^ p) { m_eventValueChanging += p; }
+            void remove(ValueChangingEventHandler^ p) { m_eventValueChanging -= p; }
         private:
             void raise(System::Object^ sender, ValueChangingEventArgs^ e) { if(m_eventValueChanging != nullptr) m_eventValueChanging->Invoke(sender, e); }
         }
@@ -857,12 +857,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("셀의 값이 변경된 후에 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
-        event Ntreev::Windows::Forms::Grid::CellEventHandler^ ValueChanged
+        event CellEventHandler^ ValueChanged
         {
-            void add(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventValueChanged += p; }
-            void remove(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventValueChanged -= p; }
+            void add(CellEventHandler^ p) { m_eventValueChanged += p; }
+            void remove(CellEventHandler^ p) { m_eventValueChanged -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::CellEventArgs^ e) { if(m_eventValueChanged != nullptr) m_eventValueChanged->Invoke(sender, e); }
+            void raise(System::Object^ sender, CellEventArgs^ e) { if(m_eventValueChanged != nullptr) m_eventValueChanged->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -873,12 +873,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("행이 삽입되기 전에 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Row")]
-        event Ntreev::Windows::Forms::Grid::RowInsertingEventHandler^ RowInserting
+        event RowInsertingEventHandler^ RowInserting
         {
-            void add(Ntreev::Windows::Forms::Grid::RowInsertingEventHandler^ p) { m_eventRowInserting += p; }
-            void remove(Ntreev::Windows::Forms::Grid::RowInsertingEventHandler^ p) { m_eventRowInserting -= p; }
+            void add(RowInsertingEventHandler^ p) { m_eventRowInserting += p; }
+            void remove(RowInsertingEventHandler^ p) { m_eventRowInserting -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowInsertingEventArgs^ e) { if(m_eventRowInserting != nullptr) m_eventRowInserting->Invoke(sender, e); }
+            void raise(System::Object^ sender, RowInsertingEventArgs^ e) { if(m_eventRowInserting != nullptr) m_eventRowInserting->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -886,12 +886,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("행이 삽입된 후에 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Row")]
-        event Ntreev::Windows::Forms::Grid::RowInsertedEventHandler^ RowInserted
+        event RowInsertedEventHandler^ RowInserted
         {
-            void add(Ntreev::Windows::Forms::Grid::RowInsertedEventHandler^ p) { m_eventRowInserted += p; }
-            void remove(Ntreev::Windows::Forms::Grid::RowInsertedEventHandler^ p) { m_eventRowInserted -= p; }
+            void add(RowInsertedEventHandler^ p) { m_eventRowInserted += p; }
+            void remove(RowInsertedEventHandler^ p) { m_eventRowInserted -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowInsertedEventArgs^ e) { if(m_eventRowInserted != nullptr) m_eventRowInserted->Invoke(sender, e); }
+            void raise(System::Object^ sender, RowInsertedEventArgs^ e) { if(m_eventRowInserted != nullptr) m_eventRowInserted->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -902,12 +902,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("열이 목록에서 제거되기 전에 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Row")]
-        event Ntreev::Windows::Forms::Grid::RowRemovingEventHandler^ RowRemoving
+        event RowRemovingEventHandler^ RowRemoving
         {
-            void add(Ntreev::Windows::Forms::Grid::RowRemovingEventHandler^ p) { m_eventRowRemoving += p; }
-            void remove(Ntreev::Windows::Forms::Grid::RowRemovingEventHandler^ p) { m_eventRowRemoving -= p; }
+            void add(RowRemovingEventHandler^ p) { m_eventRowRemoving += p; }
+            void remove(RowRemovingEventHandler^ p) { m_eventRowRemoving -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowRemovingEventArgs^ e) { if(m_eventRowRemoving != nullptr) m_eventRowRemoving->Invoke(sender, e); }
+            void raise(System::Object^ sender, RowRemovingEventArgs^ e) { if(m_eventRowRemoving != nullptr) m_eventRowRemoving->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -915,12 +915,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("행이 목록에서 제거된 후에 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Row")]
-        event Ntreev::Windows::Forms::Grid::RowRemovedEventHandler^ RowRemoved
+        event RowRemovedEventHandler^ RowRemoved
         {
-            void add(Ntreev::Windows::Forms::Grid::RowRemovedEventHandler^ p) { m_eventRowRemoved += p; }
-            void remove(Ntreev::Windows::Forms::Grid::RowRemovedEventHandler^ p) { m_eventRowRemoved -= p; }
+            void add(RowRemovedEventHandler^ p) { m_eventRowRemoved += p; }
+            void remove(RowRemovedEventHandler^ p) { m_eventRowRemoved -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowRemovedEventArgs^ e) { if(m_eventRowRemoved != nullptr) m_eventRowRemoved->Invoke(sender, e); }
+            void raise(System::Object^ sender, RowRemovedEventArgs^ e) { if(m_eventRowRemoved != nullptr) m_eventRowRemoved->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -928,12 +928,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("행이 데이터 소스와 연결 되기 전에 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Row")]
-        event Ntreev::Windows::Forms::Grid::RowBindingEventHandler^ RowBinding
+        event RowBindingEventHandler^ RowBinding
         {
-            void add(Ntreev::Windows::Forms::Grid::RowBindingEventHandler^ p) { m_eventRowBinding += p; }
-            void remove(Ntreev::Windows::Forms::Grid::RowBindingEventHandler^ p) { m_eventRowBinding -= p; }
+            void add(RowBindingEventHandler^ p) { m_eventRowBinding += p; }
+            void remove(RowBindingEventHandler^ p) { m_eventRowBinding -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowBindingEventArgs^ e) { if(m_eventRowBinding != nullptr) m_eventRowBinding->Invoke(sender, e); }
+            void raise(System::Object^ sender, RowBindingEventArgs^ e) { if(m_eventRowBinding != nullptr) m_eventRowBinding->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -941,12 +941,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("행이 데이터 소스와 연결 된 후에 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Row")]
-        event Ntreev::Windows::Forms::Grid::RowEventHandler^ RowBinded
+        event RowEventHandler^ RowBinded
         {
-            void add(Ntreev::Windows::Forms::Grid::RowEventHandler^ p) { m_eventRowBinded += p; }
-            void remove(Ntreev::Windows::Forms::Grid::RowEventHandler^ p) { m_eventRowBinded -= p; }
+            void add(RowEventHandler^ p) { m_eventRowBinded += p; }
+            void remove(RowEventHandler^ p) { m_eventRowBinded -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowEventArgs^ e) { if(m_eventRowBinded != nullptr) m_eventRowBinded->Invoke(sender, e); }
+            void raise(System::Object^ sender, RowEventArgs^ e) { if(m_eventRowBinded != nullptr) m_eventRowBinded->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -954,12 +954,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("행이 데이터 소스와 연결이 해제 되기 전에 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Row")]
-        event Ntreev::Windows::Forms::Grid::RowEventHandler^ RowUnbinding
+        event RowEventHandler^ RowUnbinding
         {
-            void add(Ntreev::Windows::Forms::Grid::RowEventHandler^ p) { m_eventRowUnbinding += p; }
-            void remove(Ntreev::Windows::Forms::Grid::RowEventHandler^ p) { m_eventRowUnbinding -= p; }
+            void add(RowEventHandler^ p) { m_eventRowUnbinding += p; }
+            void remove(RowEventHandler^ p) { m_eventRowUnbinding -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowEventArgs^ e) { if(m_eventRowUnbinding != nullptr) m_eventRowUnbinding->Invoke(sender, e); }
+            void raise(System::Object^ sender, RowEventArgs^ e) { if(m_eventRowUnbinding != nullptr) m_eventRowUnbinding->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -967,12 +967,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("행이 데이터 소스와 연결이 해제 된 후에 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Row")]
-        event Ntreev::Windows::Forms::Grid::RowEventHandler^ RowUnbinded
+        event RowEventHandler^ RowUnbinded
         {
-            void add(Ntreev::Windows::Forms::Grid::RowEventHandler^ p) { m_eventRowUnbinded += p; }
-            void remove(Ntreev::Windows::Forms::Grid::RowEventHandler^ p) { m_eventRowUnbinded -= p; }
+            void add(RowEventHandler^ p) { m_eventRowUnbinded += p; }
+            void remove(RowEventHandler^ p) { m_eventRowUnbinded -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowEventArgs^ e) { if(m_eventRowUnbinded != nullptr) m_eventRowUnbinded->Invoke(sender, e); }
+            void raise(System::Object^ sender, RowEventArgs^ e) { if(m_eventRowUnbinded != nullptr) m_eventRowUnbinded->Invoke(sender, e); }
         }
 
 
@@ -1046,12 +1046,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("셀의 포커스가 변경되었을대 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Focus")]
-        event Ntreev::Windows::Forms::Grid::CellEventHandler^ FocusedCellChanged
+        event CellEventHandler^ FocusedCellChanged
         {
-            void add(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventFocusedCellChanged += p; }
-            void remove(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventFocusedCellChanged -= p; }
+            void add(CellEventHandler^ p) { m_eventFocusedCellChanged += p; }
+            void remove(CellEventHandler^ p) { m_eventFocusedCellChanged -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::CellEventArgs^ e) { if(m_eventFocusedCellChanged != nullptr) m_eventFocusedCellChanged->Invoke(sender, e); }
+            void raise(System::Object^ sender, CellEventArgs^ e) { if(m_eventFocusedCellChanged != nullptr) m_eventFocusedCellChanged->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1062,12 +1062,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("열이 삽입되기 전에 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Column")]
-        event Ntreev::Windows::Forms::Grid::ColumnInsertingEventHandler^ ColumnInserting
+        event ColumnInsertingEventHandler^ ColumnInserting
         {
-            void add(Ntreev::Windows::Forms::Grid::ColumnInsertingEventHandler^ p) { m_eventColumnInserting += p; }
-            void remove(Ntreev::Windows::Forms::Grid::ColumnInsertingEventHandler^ p) { m_eventColumnInserting -= p; }
+            void add(ColumnInsertingEventHandler^ p) { m_eventColumnInserting += p; }
+            void remove(ColumnInsertingEventHandler^ p) { m_eventColumnInserting -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::ColumnInsertingEventArgs^ e) { if(m_eventColumnInserting != nullptr) m_eventColumnInserting->Invoke(sender, e); }
+            void raise(System::Object^ sender, ColumnInsertingEventArgs^ e) { if(m_eventColumnInserting != nullptr) m_eventColumnInserting->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1075,12 +1075,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("열이 삽입된 후에 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Column")]
-        event Ntreev::Windows::Forms::Grid::ColumnEventHandler^ ColumnInserted
+        event ColumnEventHandler^ ColumnInserted
         {
-            void add(Ntreev::Windows::Forms::Grid::ColumnEventHandler^ p) { m_eventColumnInserted += p; }
-            void remove(Ntreev::Windows::Forms::Grid::ColumnEventHandler^ p) { m_eventColumnInserted -= p; }
+            void add(ColumnEventHandler^ p) { m_eventColumnInserted += p; }
+            void remove(ColumnEventHandler^ p) { m_eventColumnInserted -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::ColumnEventArgs^ e) { if(m_eventColumnInserted != nullptr) m_eventColumnInserted->Invoke(sender, e); }
+            void raise(System::Object^ sender, ColumnEventArgs^ e) { if(m_eventColumnInserted != nullptr) m_eventColumnInserted->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1088,12 +1088,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("열이 데이터 소스와 연결되기 전에 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Column")]
-        event Ntreev::Windows::Forms::Grid::ColumnBindingEventHandler^ ColumnBinding
+        event ColumnBindingEventHandler^ ColumnBinding
         {
-            void add(Ntreev::Windows::Forms::Grid::ColumnBindingEventHandler^ p) { m_eventColumnBinding += p; }
-            void remove(Ntreev::Windows::Forms::Grid::ColumnBindingEventHandler^ p) { m_eventColumnBinding -= p; }
+            void add(ColumnBindingEventHandler^ p) { m_eventColumnBinding += p; }
+            void remove(ColumnBindingEventHandler^ p) { m_eventColumnBinding -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::ColumnBindingEventArgs^ e) { if(m_eventColumnBinding != nullptr) m_eventColumnBinding->Invoke(sender, e); }
+            void raise(System::Object^ sender, ColumnBindingEventArgs^ e) { if(m_eventColumnBinding != nullptr) m_eventColumnBinding->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1101,12 +1101,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("열이 데이터 소스와 연결된 후에 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Column")]
-        event Ntreev::Windows::Forms::Grid::ColumnEventHandler^ ColumnBinded
+        event ColumnEventHandler^ ColumnBinded
         {
-            void add(Ntreev::Windows::Forms::Grid::ColumnEventHandler^ p) { m_eventColumnBinded += p; }
-            void remove(Ntreev::Windows::Forms::Grid::ColumnEventHandler^ p) { m_eventColumnBinded -= p; }
+            void add(ColumnEventHandler^ p) { m_eventColumnBinded += p; }
+            void remove(ColumnEventHandler^ p) { m_eventColumnBinded -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::ColumnEventArgs^ e) { if(m_eventColumnBinded != nullptr) m_eventColumnBinded->Invoke(sender, e); }
+            void raise(System::Object^ sender, ColumnEventArgs^ e) { if(m_eventColumnBinded != nullptr) m_eventColumnBinded->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1114,12 +1114,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("열의 너비가 변경되었을때 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Column")]
-        event Ntreev::Windows::Forms::Grid::ColumnEventHandler^ ColumnWidthChanged
+        event ColumnEventHandler^ ColumnWidthChanged
         {
-            void add(Ntreev::Windows::Forms::Grid::ColumnEventHandler^ p) { m_eventColumnWidthChanged += p; }
-            void remove(Ntreev::Windows::Forms::Grid::ColumnEventHandler^ p) { m_eventColumnWidthChanged -= p; }
+            void add(ColumnEventHandler^ p) { m_eventColumnWidthChanged += p; }
+            void remove(ColumnEventHandler^ p) { m_eventColumnWidthChanged -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::ColumnEventArgs^ e) { if(m_eventColumnWidthChanged != nullptr) m_eventColumnWidthChanged->Invoke(sender, e); }
+            void raise(System::Object^ sender, ColumnEventArgs^ e) { if(m_eventColumnWidthChanged != nullptr) m_eventColumnWidthChanged->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1127,12 +1127,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("열의 Frozen속성이 변경되었을때 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Column")]
-        event Ntreev::Windows::Forms::Grid::ColumnEventHandler^ ColumnFrozenChanged
+        event ColumnEventHandler^ ColumnFrozenChanged
         {
-            void add(Ntreev::Windows::Forms::Grid::ColumnEventHandler^ p) { m_eventColumnFrozenChanged += p; }
-            void remove(Ntreev::Windows::Forms::Grid::ColumnEventHandler^ p) { m_eventColumnFrozenChanged -= p; }
+            void add(ColumnEventHandler^ p) { m_eventColumnFrozenChanged += p; }
+            void remove(ColumnEventHandler^ p) { m_eventColumnFrozenChanged -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::ColumnEventArgs^ e) { if(m_eventColumnFrozenChanged != nullptr) m_eventColumnFrozenChanged->Invoke(sender, e); }
+            void raise(System::Object^ sender, ColumnEventArgs^ e) { if(m_eventColumnFrozenChanged != nullptr) m_eventColumnFrozenChanged->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1140,12 +1140,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("마우스의 커서 위치가 열의 영역안으로 들어갔을때 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Column")]
-        event Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ ColumnMouseEnter
+        event ColumnMouseEventHandler^ ColumnMouseEnter
         {
-            void add(Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ p) { m_eventColumnMouseEnter += p; }
-            void remove(Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ p) { m_eventColumnMouseEnter -= p; }
+            void add(ColumnMouseEventHandler^ p) { m_eventColumnMouseEnter += p; }
+            void remove(ColumnMouseEventHandler^ p) { m_eventColumnMouseEnter -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::ColumnMouseEventArgs^ e) { if(m_eventColumnMouseEnter != nullptr) m_eventColumnMouseEnter->Invoke(sender, e); }
+            void raise(System::Object^ sender, ColumnMouseEventArgs^ e) { if(m_eventColumnMouseEnter != nullptr) m_eventColumnMouseEnter->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1153,12 +1153,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("마우스의 커서 위치가 열의 영역밖으로 나갔을때 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Column")]
-        event Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ ColumnMouseLeave
+        event ColumnMouseEventHandler^ ColumnMouseLeave
         {
-            void add(Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ p) { m_eventColumnMouseLeave += p; }
-            void remove(Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ p) { m_eventColumnMouseLeave -= p; }
+            void add(ColumnMouseEventHandler^ p) { m_eventColumnMouseLeave += p; }
+            void remove(ColumnMouseEventHandler^ p) { m_eventColumnMouseLeave -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::ColumnMouseEventArgs^ e) { if(m_eventColumnMouseLeave != nullptr) m_eventColumnMouseLeave->Invoke(sender, e); }
+            void raise(System::Object^ sender, ColumnMouseEventArgs^ e) { if(m_eventColumnMouseLeave != nullptr) m_eventColumnMouseLeave->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1166,12 +1166,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("열의 영역안에서 마우스의 좌측버튼이 눌러졌을때 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Column")]
-        event Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ ColumnMouseDown
+        event ColumnMouseEventHandler^ ColumnMouseDown
         {
-            void add(Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ p) { m_eventColumnMouseDown += p; }
-            void remove(Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ p) { m_eventColumnMouseDown -= p; }
+            void add(ColumnMouseEventHandler^ p) { m_eventColumnMouseDown += p; }
+            void remove(ColumnMouseEventHandler^ p) { m_eventColumnMouseDown -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::ColumnMouseEventArgs^ e) { if(m_eventColumnMouseDown != nullptr) m_eventColumnMouseDown->Invoke(sender, e); }
+            void raise(System::Object^ sender, ColumnMouseEventArgs^ e) { if(m_eventColumnMouseDown != nullptr) m_eventColumnMouseDown->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1179,12 +1179,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("열의 영역안에서 마우스의 좌측버튼이 띄워졌을때 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Column")]
-        event Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ ColumnMouseUp
+        event ColumnMouseEventHandler^ ColumnMouseUp
         {
-            void add(Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ p) { m_eventColumnMouseUp += p; }
-            void remove(Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ p) { m_eventColumnMouseUp -= p; }
+            void add(ColumnMouseEventHandler^ p) { m_eventColumnMouseUp += p; }
+            void remove(ColumnMouseEventHandler^ p) { m_eventColumnMouseUp -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::ColumnMouseEventArgs^ e) { if(m_eventColumnMouseUp != nullptr) m_eventColumnMouseUp->Invoke(sender, e); }
+            void raise(System::Object^ sender, ColumnMouseEventArgs^ e) { if(m_eventColumnMouseUp != nullptr) m_eventColumnMouseUp->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1192,12 +1192,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("마우스의 커서 위치가 열의 영역안에서 움직였을때 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Column")]
-        event Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ ColumnMouseMove
+        event ColumnMouseEventHandler^ ColumnMouseMove
         {
-            void add(Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ p) { m_eventColumnMouseMove += p; }
-            void remove(Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ p) { m_eventColumnMouseMove -= p; }
+            void add(ColumnMouseEventHandler^ p) { m_eventColumnMouseMove += p; }
+            void remove(ColumnMouseEventHandler^ p) { m_eventColumnMouseMove -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::ColumnMouseEventArgs^ e) { if(m_eventColumnMouseMove != nullptr) m_eventColumnMouseMove->Invoke(sender, e); }
+            void raise(System::Object^ sender, ColumnMouseEventArgs^ e) { if(m_eventColumnMouseMove != nullptr) m_eventColumnMouseMove->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1205,12 +1205,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("마우스의 커서 위치가 셀의 영역안으로 들어갔을때 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
-        event Ntreev::Windows::Forms::Grid::CellEventHandler^ CellMouseEnter
+        event CellEventHandler^ CellMouseEnter
         {
-            void add(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventCellMouseEnter += p; }
-            void remove(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventCellMouseEnter -= p; }
+            void add(CellEventHandler^ p) { m_eventCellMouseEnter += p; }
+            void remove(CellEventHandler^ p) { m_eventCellMouseEnter -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::CellEventArgs^ e) { if(m_eventCellMouseEnter != nullptr) m_eventCellMouseEnter->Invoke(sender, e); }
+            void raise(System::Object^ sender, CellEventArgs^ e) { if(m_eventCellMouseEnter != nullptr) m_eventCellMouseEnter->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1218,12 +1218,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("셀의 영역안에서 마우스가 움직였을때 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
-        event Ntreev::Windows::Forms::Grid::CellMouseEventHandler^ CellMouseMove
+        event CellMouseEventHandler^ CellMouseMove
         {
-            void add(Ntreev::Windows::Forms::Grid::CellMouseEventHandler^ p) { m_eventCellMouseMove += p; }
-            void remove(Ntreev::Windows::Forms::Grid::CellMouseEventHandler^ p) { m_eventCellMouseMove -= p; }
+            void add(CellMouseEventHandler^ p) { m_eventCellMouseMove += p; }
+            void remove(CellMouseEventHandler^ p) { m_eventCellMouseMove -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::CellMouseEventArgs^ e) { if(m_eventCellMouseMove != nullptr) m_eventCellMouseMove->Invoke(sender, e); }
+            void raise(System::Object^ sender, CellMouseEventArgs^ e) { if(m_eventCellMouseMove != nullptr) m_eventCellMouseMove->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1231,12 +1231,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("마우스의 커서 위치가 셀의 영역안에서 밖으로 나갔을때 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
-        event Ntreev::Windows::Forms::Grid::CellEventHandler^ CellMouseLeave
+        event CellEventHandler^ CellMouseLeave
         {
-            void add(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventCellMouseLeave += p; }
-            void remove(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventCellMouseLeave -= p; }
+            void add(CellEventHandler^ p) { m_eventCellMouseLeave += p; }
+            void remove(CellEventHandler^ p) { m_eventCellMouseLeave -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::CellEventArgs^ e) { if(m_eventCellMouseLeave != nullptr) m_eventCellMouseLeave->Invoke(sender, e); }
+            void raise(System::Object^ sender, CellEventArgs^ e) { if(m_eventCellMouseLeave != nullptr) m_eventCellMouseLeave->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1244,12 +1244,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("셀의 영역안에서 마우스가 눌러졌을때 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
-        event Ntreev::Windows::Forms::Grid::CellEventHandler^ CellClick
+        event CellEventHandler^ CellClick
         {
-            void add(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventCellClick += p; }
-            void remove(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventCellClick -= p; }
+            void add(CellEventHandler^ p) { m_eventCellClick += p; }
+            void remove(CellEventHandler^ p) { m_eventCellClick -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::CellEventArgs^ e) { if(m_eventCellClick != nullptr) m_eventCellClick->Invoke(sender, e); }
+            void raise(System::Object^ sender, CellEventArgs^ e) { if(m_eventCellClick != nullptr) m_eventCellClick->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1260,12 +1260,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </remakrs>
         [System::ComponentModel::DescriptionAttribute("셀의 영역안에서 마우스가 두번 눌러졌을때 발생합니다. 셀이 읽기 전용일때만 동작합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
-        event Ntreev::Windows::Forms::Grid::CellEventHandler^ CellDoubleClick
+        event CellEventHandler^ CellDoubleClick
         {
-            void add(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventCellDoubleClick += p; }
-            void remove(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventCellDoubleClick -= p; }
+            void add(CellEventHandler^ p) { m_eventCellDoubleClick += p; }
+            void remove(CellEventHandler^ p) { m_eventCellDoubleClick -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::CellEventArgs^ e) { if(m_eventCellDoubleClick != nullptr) m_eventCellDoubleClick->Invoke(sender, e); }
+            void raise(System::Object^ sender, CellEventArgs^ e) { if(m_eventCellDoubleClick != nullptr) m_eventCellDoubleClick->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1276,12 +1276,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </remarks>
         [System::ComponentModel::DescriptionAttribute("셀의 편집이 시작됬을때 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
-        event Ntreev::Windows::Forms::Grid::EditBegunEventHandler^ EditBegun
+        event EditBegunEventHandler^ EditBegun
         {
-            void add(Ntreev::Windows::Forms::Grid::EditBegunEventHandler^ p) { m_eventEditBegun += p; }
-            void remove(Ntreev::Windows::Forms::Grid::EditBegunEventHandler^ p) { m_eventEditBegun -= p; }
+            void add(EditBegunEventHandler^ p) { m_eventEditBegun += p; }
+            void remove(EditBegunEventHandler^ p) { m_eventEditBegun -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::EditBegunEventArgs^ e) { if(m_eventEditBegun != nullptr) m_eventEditBegun->Invoke(sender, e); }
+            void raise(System::Object^ sender, EditBegunEventArgs^ e) { if(m_eventEditBegun != nullptr) m_eventEditBegun->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1289,12 +1289,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("셀의 편집이 종료됬을때 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
-        event Ntreev::Windows::Forms::Grid::CellEventHandler^ EditEnded
+        event CellEventHandler^ EditEnded
         {
-            void add(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventEditEnded += p; }
-            void remove(Ntreev::Windows::Forms::Grid::CellEventHandler^ p) { m_eventEditEnded -= p; }
+            void add(CellEventHandler^ p) { m_eventEditEnded += p; }
+            void remove(CellEventHandler^ p) { m_eventEditEnded -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::CellEventArgs^ e) { if(m_eventEditEnded != nullptr) m_eventEditEnded->Invoke(sender, e); }
+            void raise(System::Object^ sender, CellEventArgs^ e) { if(m_eventEditEnded != nullptr) m_eventEditEnded->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1302,12 +1302,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("모든 데이터가 삭제되기 전에 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
-        event Ntreev::Windows::Forms::Grid::ClearEventHandler^ Clearing
+        event ClearEventHandler^ Clearing
         {
-            void add(Ntreev::Windows::Forms::Grid::ClearEventHandler^ p) { m_eventClearing += p; }
-            void remove(Ntreev::Windows::Forms::Grid::ClearEventHandler^ p) { m_eventClearing -= p; }
+            void add(ClearEventHandler^ p) { m_eventClearing += p; }
+            void remove(ClearEventHandler^ p) { m_eventClearing -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::ClearEventArgs^ e) { if(m_eventClearing != nullptr) m_eventClearing->Invoke(sender, e); }
+            void raise(System::Object^ sender, ClearEventArgs^ e) { if(m_eventClearing != nullptr) m_eventClearing->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1315,12 +1315,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("모든 데이터가 삭제된 후에 발생합니다.")]
         [System::ComponentModel::CategoryAttribute("Behavior")]
-        event Ntreev::Windows::Forms::Grid::ClearEventHandler^ Cleared
+        event ClearEventHandler^ Cleared
         {
-            void add(Ntreev::Windows::Forms::Grid::ClearEventHandler^ p) { m_eventCleared += p; }
-            void remove(Ntreev::Windows::Forms::Grid::ClearEventHandler^ p) { m_eventCleared -= p; }
+            void add(ClearEventHandler^ p) { m_eventCleared += p; }
+            void remove(ClearEventHandler^ p) { m_eventCleared -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::ClearEventArgs^ e) { if(m_eventCleared != nullptr) m_eventCleared->Invoke(sender, e); }
+            void raise(System::Object^ sender, ClearEventArgs^ e) { if(m_eventCleared != nullptr) m_eventCleared->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1361,7 +1361,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
 		/// <summary>
-        /// <see cref="Ntreev::Windows::Forms::Grid::GridControl::BackgroundColor"/> 속성 값이 변경되면 발생합니다.
+        /// <see cref="BackgroundColor"/> 속성 값이 변경되면 발생합니다.
         /// </summary>
 		[System::ComponentModel::CategoryAttribute("PropertyChanged")]
         [System::ComponentModel::DescriptionAttribute("BackgroundColor 값이 변경되면 발생합니다.")]
@@ -1374,7 +1374,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// <see cref="Ntreev::Windows::Forms::Grid::GridControl::PaddingColor"/> 속성 값이 변경되면 발생합니다.
+        /// <see cref="PaddingColor"/> 속성 값이 변경되면 발생합니다.
         /// </summary>
 		[System::ComponentModel::CategoryAttribute("PropertyChanged")]
         [System::ComponentModel::DescriptionAttribute("PaddingColor 값이 변경되면 발생합니다.")]
@@ -1387,7 +1387,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
 		/// <summary>
-        /// <see cref="Ntreev::Windows::Forms::Grid::GridControl::LineColor"/> 속성 값이 변경되면 발생합니다.
+        /// <see cref="LineColor"/> 속성 값이 변경되면 발생합니다.
         /// </summary>
 		[System::ComponentModel::CategoryAttribute("PropertyChanged")]
         [System::ComponentModel::DescriptionAttribute("LineColor 값이 변경되면 발생합니다.")]
@@ -1410,7 +1410,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void InvokeRowUnbinding(Row^ row);
         void InvokeRowUnbinded(Row^ row);
         bool InvokeRowRemoving(Row^ row);
-        void InvokeRowRemoved(Ntreev::Windows::Forms::Grid::RowRemovedEventArgs^ e);
+        void InvokeRowRemoved(RowRemovedEventArgs^ e);
         bool InvokeColumnInserting(Column^ column);
         void InvokeColumnInserted(Column^ column);
         Column^ InvokeColumnBinding(System::ComponentModel::PropertyDescriptor^ propertyDescriptor, Column^ existColumn);
@@ -1423,7 +1423,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void InvokeColumnWidthChanged(Column^ column);
         void InvokeColumnFrozenChanged(Column^ column);
         bool InvokeEditBegun(Cell^ cell);
-        void InvokeEditEnded(Ntreev::Windows::Forms::Grid::CellEventArgs^ e);
+        void InvokeEditEnded(CellEventArgs^ e);
         void InvokeScroll(System::Windows::Forms::ScrollEventArgs^ e);
         void InvokeCellMouseEnter(Cell^ cell);
         bool InvokeCellMouseMove(Cell^ cell, System::Drawing::Point clientLocation);
@@ -1467,27 +1467,27 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             GrFocuser* get();
         }
 
-        property Ntreev::Windows::Forms::Grid::ErrorDescriptor^ ErrorDescriptor
+        property _ErrorDescriptor^ ErrorDescriptor
         {
-            Ntreev::Windows::Forms::Grid::ErrorDescriptor^ get();
+            _ErrorDescriptor^ get();
         }
 
     internal: // events
 
-        event Ntreev::Windows::Forms::Grid::CurrencyManagerChangingEventHandler^ CurrencyManagerChanging
+        event CurrencyManagerChangingEventHandler^ CurrencyManagerChanging
         {
-            void add(Ntreev::Windows::Forms::Grid::CurrencyManagerChangingEventHandler^ p) { m_eventCurrencyManagerChanging += p; }
-            void remove(Ntreev::Windows::Forms::Grid::CurrencyManagerChangingEventHandler^ p) { m_eventCurrencyManagerChanging -= p; }
+            void add(CurrencyManagerChangingEventHandler^ p) { m_eventCurrencyManagerChanging += p; }
+            void remove(CurrencyManagerChangingEventHandler^ p) { m_eventCurrencyManagerChanging -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::CurrencyManagerChangingEventArgs^ e) { if(m_eventCurrencyManagerChanging != nullptr) m_eventCurrencyManagerChanging->Invoke(sender, e); }
+            void raise(System::Object^ sender, CurrencyManagerChangingEventArgs^ e) { if(m_eventCurrencyManagerChanging != nullptr) m_eventCurrencyManagerChanging->Invoke(sender, e); }
         }
 
-        event Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventHandler^ CurrencyManagerChanged
+        event CurrencyManagerChangedEventHandler^ CurrencyManagerChanged
         {
-            void add(Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventHandler^ p) { m_eventCurrencyManagerChanged += p; }
-            void remove(Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventHandler^ p) { m_eventCurrencyManagerChanged -= p; }
+            void add(CurrencyManagerChangedEventHandler^ p) { m_eventCurrencyManagerChanged += p; }
+            void remove(CurrencyManagerChangedEventHandler^ p) { m_eventCurrencyManagerChanged -= p; }
         private:
-            void raise(System::Object^ sender, Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventArgs^ e) { if(m_eventCurrencyManagerChanged != nullptr) m_eventCurrencyManagerChanged->Invoke(sender, e); }
+            void raise(System::Object^ sender, CurrencyManagerChangedEventArgs^ e) { if(m_eventCurrencyManagerChanged != nullptr) m_eventCurrencyManagerChanged->Invoke(sender, e); }
         }
 
         event System::EventHandler^ EditClosed
@@ -1521,15 +1521,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="CellEventArgs"/>입니다.
         /// </param>
-        virtual void OnValueChanged(Ntreev::Windows::Forms::Grid::CellEventArgs^ e);
+        virtual void OnValueChanged(CellEventArgs^ e);
 
         /// <summary>
         /// <see cref="RowInserting"/> 이벤트를 발생시킵니다.
         /// </summary>
         /// <param name="e">
-        /// 이벤트 데이터가 들어 있는 <see cref="Ntreev::Windows::Forms::Grid::RowInsertingEventArgs"/>입니다.
+        /// 이벤트 데이터가 들어 있는 <see cref="RowInsertingEventArgs"/>입니다.
         /// </param>
-        virtual void OnRowInserting(Ntreev::Windows::Forms::Grid::RowInsertingEventArgs^ e);
+        virtual void OnRowInserting(RowInsertingEventArgs^ e);
 
         /// <summary>
         /// <see cref="RowInserted"/> 이벤트를 발생시킵니다.
@@ -1537,7 +1537,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="RowEventArgs"/>입니다.
         /// </param>
-        virtual void OnRowInserted(Ntreev::Windows::Forms::Grid::RowInsertedEventArgs^ e);
+        virtual void OnRowInserted(RowInsertedEventArgs^ e);
 
         /// <summary>
         /// <see cref="RowRemoving"/> 이벤트를 발생시킵니다.
@@ -1545,7 +1545,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="RowRemovingEventArgs"/>입니다.
         /// </param>
-        virtual void OnRowRemoving(Ntreev::Windows::Forms::Grid::RowRemovingEventArgs^ e);
+        virtual void OnRowRemoving(RowRemovingEventArgs^ e);
 
         /// <summary>
         /// <see cref="RowRemoved"/> 이벤트를 발생시킵니다.
@@ -1553,7 +1553,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="RowRemovedEventArgs"/>입니다.
         /// </param>
-        virtual void OnRowRemoved(Ntreev::Windows::Forms::Grid::RowRemovedEventArgs^ e);
+        virtual void OnRowRemoved(RowRemovedEventArgs^ e);
 
         /// <summary>
         /// <see cref="RowBinding"/> 이벤트를 발생시킵니다.
@@ -1561,7 +1561,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="RowBindingEventArgs"/>입니다.
         /// </param>
-        virtual void OnRowBinding(Ntreev::Windows::Forms::Grid::RowBindingEventArgs^ e);
+        virtual void OnRowBinding(RowBindingEventArgs^ e);
 
         /// <summary>
         /// <see cref="RowBinded"/> 이벤트를 발생시킵니다.
@@ -1569,7 +1569,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="RowEventArgs"/>입니다.
         /// </param>
-        virtual void OnRowBinded(Ntreev::Windows::Forms::Grid::RowEventArgs^ e);
+        virtual void OnRowBinded(RowEventArgs^ e);
 
         /// <summary>
         /// <see cref="RowUnbinding"/> 이벤트를 발생시킵니다.
@@ -1577,7 +1577,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="RowEventArgs"/>입니다.
         /// </param>
-        virtual void OnRowUnbinding(Ntreev::Windows::Forms::Grid::RowEventArgs^ e);
+        virtual void OnRowUnbinding(RowEventArgs^ e);
 
         /// <summary>
         /// <see cref="RowUnbinded"/> 이벤트를 발생시킵니다.
@@ -1585,7 +1585,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="RowEventArgs"/>입니다.
         /// </param>
-        virtual void OnRowUnbinded(Ntreev::Windows::Forms::Grid::RowEventArgs^ e);
+        virtual void OnRowUnbinded(RowEventArgs^ e);
 
         /// <summary>
         /// <see cref="SelectedColumnsChanged"/> 이벤트를 발생시킵니다.
@@ -1633,7 +1633,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="CellEventArgs"/>입니다.
         /// </param>
-        virtual void OnFocusedCellChanged(Ntreev::Windows::Forms::Grid::CellEventArgs^ e);
+        virtual void OnFocusedCellChanged(CellEventArgs^ e);
 
         /// <summary>
         /// <see cref="ColumnInserting"/> 이벤트를 발생시킵니다.
@@ -1641,7 +1641,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="ColumnInsertingEventArgs"/>입니다.
         /// </param>
-        virtual void OnColumnInserting(Ntreev::Windows::Forms::Grid::ColumnInsertingEventArgs^ e);
+        virtual void OnColumnInserting(ColumnInsertingEventArgs^ e);
 
         /// <summary>
         /// <see cref="ColumnInserted"/> 이벤트를 발생시킵니다.
@@ -1649,7 +1649,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="ColumnEventArgs"/>입니다.
         /// </param>
-        virtual void OnColumnInserted(Ntreev::Windows::Forms::Grid::ColumnEventArgs^ e);
+        virtual void OnColumnInserted(ColumnEventArgs^ e);
 
         /// <summary>
         /// <see cref="ColumnBinding"/> 이벤트를 발생시킵니다.
@@ -1657,7 +1657,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="ColumnBindingEventArgs"/>입니다.
         /// </param>
-        virtual void OnColumnBinding(Ntreev::Windows::Forms::Grid::ColumnBindingEventArgs^ e);
+        virtual void OnColumnBinding(ColumnBindingEventArgs^ e);
 
         /// <summary>
         /// <see cref="ColumnBinded"/> 이벤트를 발생시킵니다.
@@ -1665,7 +1665,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="ColumnEventArgs"/>입니다.
         /// </param>
-        virtual void OnColumnBinded(Ntreev::Windows::Forms::Grid::ColumnEventArgs^ e);
+        virtual void OnColumnBinded(ColumnEventArgs^ e);
 
         /// <summary>
         /// <see cref="ColumnWidthChanged"/> 이벤트를 발생시킵니다.
@@ -1673,7 +1673,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="ColumnEventArgs"/>입니다.
         /// </param>
-        virtual void OnColumnWidthChanged(Ntreev::Windows::Forms::Grid::ColumnEventArgs^ e);
+        virtual void OnColumnWidthChanged(ColumnEventArgs^ e);
 
         /// <summary>
         /// <see cref="ColumnFrozenChanged"/> 이벤트를 발생시킵니다.
@@ -1681,7 +1681,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="ColumnEventArgs"/>입니다.
         /// </param>
-        virtual void OnColumnFrozenChanged(Ntreev::Windows::Forms::Grid::ColumnEventArgs^ e);
+        virtual void OnColumnFrozenChanged(ColumnEventArgs^ e);
 
         /// <summary>
         /// <see cref="ColumnMouseEnter"/> 이벤트를 발생시킵니다.
@@ -1689,7 +1689,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="ColumnMouseEventArgs"/>입니다.
         /// </param>
-        virtual void OnColumnMouseEnter(Ntreev::Windows::Forms::Grid::ColumnMouseEventArgs^ e);
+        virtual void OnColumnMouseEnter(ColumnMouseEventArgs^ e);
 
         /// <summary>
         /// <see cref="ColumnMouseLeave"/> 이벤트를 발생시킵니다.
@@ -1697,7 +1697,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="ColumnMouseEventArgs"/>입니다.
         /// </param>
-        virtual void OnColumnMouseLeave(Ntreev::Windows::Forms::Grid::ColumnMouseEventArgs^ e);
+        virtual void OnColumnMouseLeave(ColumnMouseEventArgs^ e);
 
         /// <summary>
         /// <see cref="ColumnMouseDown"/> 이벤트를 발생시킵니다.
@@ -1705,7 +1705,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="ColumnMouseEventArgs"/>입니다.
         /// </param>
-        virtual void OnColumnMouseDown(Ntreev::Windows::Forms::Grid::ColumnMouseEventArgs^ e);
+        virtual void OnColumnMouseDown(ColumnMouseEventArgs^ e);
 
         /// <summary>
         /// <see cref="ColumnMouseUp"/> 이벤트를 발생시킵니다.
@@ -1713,7 +1713,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="ColumnMouseEventArgs"/>입니다.
         /// </param>
-        virtual void OnColumnMouseUp(Ntreev::Windows::Forms::Grid::ColumnMouseEventArgs^ e);
+        virtual void OnColumnMouseUp(ColumnMouseEventArgs^ e);
 
         /// <summary>
         /// <see cref="ColumnMouseMove"/> 이벤트를 발생시킵니다.
@@ -1721,7 +1721,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="ColumnMouseEventArgs"/>입니다.
         /// </param>
-        virtual void OnColumnMouseMove(Ntreev::Windows::Forms::Grid::ColumnMouseEventArgs^ e);
+        virtual void OnColumnMouseMove(ColumnMouseEventArgs^ e);
 
         /// <summary>
         /// <see cref="CellMouseEnter"/> 이벤트를 발생시킵니다.
@@ -1729,7 +1729,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="CellEventArgs"/>입니다.
         /// </param>
-        virtual void OnCellMouseEnter(Ntreev::Windows::Forms::Grid::CellEventArgs^ e);
+        virtual void OnCellMouseEnter(CellEventArgs^ e);
 
         /// <summary>
         /// <see cref="CellMouseMove"/> 이벤트를 발생시킵니다.
@@ -1737,7 +1737,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="CellMouseEventArgs"/>입니다.
         /// </param>
-        virtual void OnCellMouseMove(Ntreev::Windows::Forms::Grid::CellMouseEventArgs^ e);
+        virtual void OnCellMouseMove(CellMouseEventArgs^ e);
 
         /// <summary>
         /// <see cref="CellMouseLeave"/> 이벤트를 발생시킵니다.
@@ -1745,7 +1745,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="CellEventArgs"/>입니다.
         /// </param>
-        virtual void OnCellMouseLeave(Ntreev::Windows::Forms::Grid::CellEventArgs^ e);
+        virtual void OnCellMouseLeave(CellEventArgs^ e);
 
         /// <summary>
         /// <see cref="CellClick"/> 이벤트를 발생시킵니다.
@@ -1753,7 +1753,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="CellEventArgs"/>입니다.
         /// </param>
-        virtual void OnCellClick(Ntreev::Windows::Forms::Grid::CellEventArgs^ e);
+        virtual void OnCellClick(CellEventArgs^ e);
 
         /// <summary>
         /// <see cref="CellDoubleClick"/> 이벤트를 발생시킵니다.
@@ -1761,7 +1761,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="CellEventArgs"/>입니다.
         /// </param>
-        virtual void OnCellDoubleClick(Ntreev::Windows::Forms::Grid::CellEventArgs^ e);
+        virtual void OnCellDoubleClick(CellEventArgs^ e);
 
         /// <summary>
         /// <see cref="EditBegun"/> 이벤트를 발생시킵니다.
@@ -1769,7 +1769,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="EditBegunEventArgs"/>입니다.
         /// </param>
-        virtual void OnEditBegun(Ntreev::Windows::Forms::Grid::EditBegunEventArgs^ e);
+        virtual void OnEditBegun(EditBegunEventArgs^ e);
 
         /// <summary>
         /// <see cref="EditEnded"/> 이벤트를 발생시킵니다.
@@ -1777,7 +1777,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="CellEventArgs"/>입니다.
         /// </param>
-        virtual void OnEditEnded(Ntreev::Windows::Forms::Grid::CellEventArgs^ e);
+        virtual void OnEditEnded(CellEventArgs^ e);
 
         /// <summary>
         /// <see cref="Clearing"/> 이벤트를 발생시킵니다.
@@ -1785,7 +1785,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="System::EventArgs"/>입니다.
         /// </param>
-        virtual void OnClearing(Ntreev::Windows::Forms::Grid::ClearEventArgs^ e);
+        virtual void OnClearing(ClearEventArgs^ e);
 
         /// <summary>
         /// <see cref="Cleared"/> 이벤트를 발생시킵니다.
@@ -1793,7 +1793,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="e">
         /// 이벤트 데이터가 들어 있는 <see cref="System::EventArgs"/>입니다.
         /// </param>
-        virtual void OnCleared(Ntreev::Windows::Forms::Grid::ClearEventArgs^ e);
+        virtual void OnCleared(ClearEventArgs^ e);
 
         /// <summary>
         /// <see cref="DataSourceChanged"/> 이벤트를 발생시킵니다.
@@ -2001,7 +2001,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         virtual bool ProcessTabKey(bool forward) override;
 
-        virtual Row^ NewRowFromBuilder(Ntreev::Windows::Forms::Grid::RowBuilder^ rowBuilder);
+        virtual Row^ NewRowFromBuilder(RowBuilder^ rowBuilder);
 
         virtual GridControl^ NewChildGridControl(System::ComponentModel::PropertyDescriptor^ descriptor, Row^ row);
 
@@ -2011,8 +2011,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #endif
 
     private: // methods
-        void OnCurrencyManagerChanging(Ntreev::Windows::Forms::Grid::CurrencyManagerChangingEventArgs^ e);
-        void OnCurrencyManagerChanged(Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventArgs^ e);
+        void OnCurrencyManagerChanging(CurrencyManagerChangingEventArgs^ e);
+        void OnCurrencyManagerChanged(CurrencyManagerChangedEventArgs^ e);
         void OnEditClosed(System::EventArgs^ e);
 
         void PaintRowState(System::Drawing::Graphics^ g);
@@ -2039,35 +2039,30 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		void style_Disposed(System::Object^ sender, System::EventArgs^ e);
         void childGridControl_FocusedCellChanged(System::Object^ sender, CellEventArgs^ e);
 
-    private:
-        //property bool Selectable
-        //{
-        //    bool get();
-        //    void set(bool);
-        //}
+    private: // methods
 
     private: // variables
         System::Object^ m_dataSource;
         System::String^ m_dataMember;
 
-        initonly Ntreev::Windows::Forms::Grid::ColumnCollection^ m_columnList;
-        initonly Ntreev::Windows::Forms::Grid::VisibleColumnCollection^ m_visibleColumnList;
-        initonly Ntreev::Windows::Forms::Grid::DisplayableColumnCollection^ m_displayableColumnList;
-        initonly Ntreev::Windows::Forms::Grid::FrozenColumnCollection^ m_frozenColumnList;
-        initonly Ntreev::Windows::Forms::Grid::UnfrozenColumnCollection^ m_unfrozenColumnList;
-        initonly Ntreev::Windows::Forms::Grid::RowCollection^ m_rowList;
-        initonly Ntreev::Windows::Forms::Grid::VisibleRowCollection^ m_visibleRowList;
-        initonly Ntreev::Windows::Forms::Grid::DisplayableRowCollection^ m_displayableRowList;
-        initonly Ntreev::Windows::Forms::Grid::SelectedRowCollection^ m_selectedRows;
-        initonly Ntreev::Windows::Forms::Grid::SelectedColumnCollection^ m_selectedColumns;
-        initonly Ntreev::Windows::Forms::Grid::GroupRowCollection^ m_groupRows;
+        initonly ColumnCollection^ m_columnList;
+        initonly VisibleColumnCollection^ m_visibleColumnList;
+        initonly DisplayableColumnCollection^ m_displayableColumnList;
+        initonly FrozenColumnCollection^ m_frozenColumnList;
+        initonly UnfrozenColumnCollection^ m_unfrozenColumnList;
+        initonly RowCollection^ m_rowList;
+        initonly VisibleRowCollection^ m_visibleRowList;
+        initonly DisplayableRowCollection^ m_displayableRowList;
+        initonly SelectedRowCollection^ m_selectedRows;
+        initonly SelectedColumnCollection^ m_selectedColumns;
+        initonly GroupRowCollection^ m_groupRows;
 
-        Ntreev::Windows::Forms::Grid::Style^ m_style;
+        _Style^ m_style;
 
         Cell^ m_focusedCell;
         Cell^ m_editingCell;
-        Ntreev::Windows::Forms::Grid::CaptionRow^ m_captionRow;
-        Ntreev::Windows::Forms::Grid::GroupPanel^ m_groupPanel;
+        _CaptionRow^ m_captionRow;
+        _GroupPanel^ m_groupPanel;
 
         Native::WinFormGridCore* m_pGridCore;
         Native::WinFormWindow* m_pGridWindow;
@@ -2076,57 +2071,57 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         GrDataRowList* m_pDataRowList;
         GrGridPainter* m_pGridPainter;
 
-        Ntreev::Windows::Forms::Grid::ErrorDescriptor^ m_errorDescriptor;
-        Ntreev::Windows::Forms::Grid::ToolTip^ m_tooltips;
+        _ErrorDescriptor^ m_errorDescriptor;
+        _ToolTip^ m_tooltips;
         System::DateTime m_buttonDownTime;
 
         Column^ m_oldFocusedColumn;
-        Ntreev::Windows::Forms::Grid::RowBase^ m_oldFocusedRow;
+        RowBase^ m_oldFocusedRow;
 
         System::Drawing::Color m_backgroundColor;
         System::Drawing::Color m_paddingColor;
 		System::Drawing::Color m_lineColor;
 		bool m_paintBackground;
 
-        Ntreev::Windows::Forms::Grid::RowBuilder^ m_rowBuilder;
+        RowBuilder^ m_rowBuilder;
 
         // events
-        Ntreev::Windows::Forms::Grid::ValueChangingEventHandler^ m_eventValueChanging;
-        Ntreev::Windows::Forms::Grid::CellEventHandler^ m_eventValueChanged;
-        Ntreev::Windows::Forms::Grid::RowInsertingEventHandler^ m_eventRowInserting;
-        Ntreev::Windows::Forms::Grid::RowInsertedEventHandler^ m_eventRowInserted;
-        Ntreev::Windows::Forms::Grid::RowRemovingEventHandler^ m_eventRowRemoving;
-        Ntreev::Windows::Forms::Grid::RowRemovedEventHandler^ m_eventRowRemoved;
-        Ntreev::Windows::Forms::Grid::RowBindingEventHandler^ m_eventRowBinding;
-        Ntreev::Windows::Forms::Grid::RowEventHandler^ m_eventRowBinded;
-        Ntreev::Windows::Forms::Grid::RowEventHandler^ m_eventRowUnbinding;
-        Ntreev::Windows::Forms::Grid::RowEventHandler^ m_eventRowUnbinded;
+        ValueChangingEventHandler^ m_eventValueChanging;
+        CellEventHandler^ m_eventValueChanged;
+        RowInsertingEventHandler^ m_eventRowInserting;
+        RowInsertedEventHandler^ m_eventRowInserted;
+        RowRemovingEventHandler^ m_eventRowRemoving;
+        RowRemovedEventHandler^ m_eventRowRemoved;
+        RowBindingEventHandler^ m_eventRowBinding;
+        RowEventHandler^ m_eventRowBinded;
+        RowEventHandler^ m_eventRowUnbinding;
+        RowEventHandler^ m_eventRowUnbinded;
         System::EventHandler^ m_eventSelectedColumnsChanged;
         System::EventHandler^ m_eventSelectedRowsChanged;
         System::EventHandler^ m_eventSelectionChanged;
         System::EventHandler^ m_eventFocusedColumnChanged;
         System::EventHandler^ m_eventFocusedRowChanged;
-        Ntreev::Windows::Forms::Grid::CellEventHandler^ m_eventFocusedCellChanged;
-        Ntreev::Windows::Forms::Grid::ColumnInsertingEventHandler^ m_eventColumnInserting;
-        Ntreev::Windows::Forms::Grid::ColumnEventHandler^ m_eventColumnInserted;
-        Ntreev::Windows::Forms::Grid::ColumnBindingEventHandler^ m_eventColumnBinding;
-        Ntreev::Windows::Forms::Grid::ColumnEventHandler^ m_eventColumnBinded;
-        Ntreev::Windows::Forms::Grid::ColumnEventHandler^ m_eventColumnWidthChanged;
-        Ntreev::Windows::Forms::Grid::ColumnEventHandler^ m_eventColumnFrozenChanged;
-        Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ m_eventColumnMouseEnter;
-        Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ m_eventColumnMouseLeave;
-        Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ m_eventColumnMouseDown;
-        Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ m_eventColumnMouseUp;
-        Ntreev::Windows::Forms::Grid::ColumnMouseEventHandler^ m_eventColumnMouseMove;
-        Ntreev::Windows::Forms::Grid::CellEventHandler^ m_eventCellMouseEnter;
-        Ntreev::Windows::Forms::Grid::CellMouseEventHandler^ m_eventCellMouseMove;
-        Ntreev::Windows::Forms::Grid::CellEventHandler^ m_eventCellMouseLeave;
-        Ntreev::Windows::Forms::Grid::CellEventHandler^ m_eventCellClick;
-        Ntreev::Windows::Forms::Grid::CellEventHandler^ m_eventCellDoubleClick;
-        Ntreev::Windows::Forms::Grid::EditBegunEventHandler^ m_eventEditBegun;
-        Ntreev::Windows::Forms::Grid::CellEventHandler^ m_eventEditEnded;
-        Ntreev::Windows::Forms::Grid::ClearEventHandler^ m_eventClearing;
-        Ntreev::Windows::Forms::Grid::ClearEventHandler^ m_eventCleared;
+        CellEventHandler^ m_eventFocusedCellChanged;
+        ColumnInsertingEventHandler^ m_eventColumnInserting;
+        ColumnEventHandler^ m_eventColumnInserted;
+        ColumnBindingEventHandler^ m_eventColumnBinding;
+        ColumnEventHandler^ m_eventColumnBinded;
+        ColumnEventHandler^ m_eventColumnWidthChanged;
+        ColumnEventHandler^ m_eventColumnFrozenChanged;
+        ColumnMouseEventHandler^ m_eventColumnMouseEnter;
+        ColumnMouseEventHandler^ m_eventColumnMouseLeave;
+        ColumnMouseEventHandler^ m_eventColumnMouseDown;
+        ColumnMouseEventHandler^ m_eventColumnMouseUp;
+        ColumnMouseEventHandler^ m_eventColumnMouseMove;
+        CellEventHandler^ m_eventCellMouseEnter;
+        CellMouseEventHandler^ m_eventCellMouseMove;
+        CellEventHandler^ m_eventCellMouseLeave;
+        CellEventHandler^ m_eventCellClick;
+        CellEventHandler^ m_eventCellDoubleClick;
+        EditBegunEventHandler^ m_eventEditBegun;
+        CellEventHandler^ m_eventEditEnded;
+        ClearEventHandler^ m_eventClearing;
+        ClearEventHandler^ m_eventCleared;
         System::EventHandler^ m_eventDataSourceChanged;
         System::EventHandler^ m_eventDataMemberChanged;
         System::EventHandler^ m_eventDataBindingComplete;
@@ -2135,8 +2130,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::EventHandler^ m_eventPaddingColorChanged;
 		System::EventHandler^ m_eventLineColorChanged;
 
-        Ntreev::Windows::Forms::Grid::CurrencyManagerChangingEventHandler^ m_eventCurrencyManagerChanging;
-        Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventHandler^ m_eventCurrencyManagerChanged;
+        CurrencyManagerChangingEventHandler^ m_eventCurrencyManagerChanging;
+        CurrencyManagerChangedEventHandler^ m_eventCurrencyManagerChanged;
         System::EventHandler^ m_eventEditClosed;
 
         System::Windows::Forms::CurrencyManager^ m_manager;
@@ -2158,7 +2153,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		ref class StyleConverter : System::ComponentModel::ReferenceConverter
 		{
 		public:
-			StyleConverter() : ReferenceConverter(Ntreev::Windows::Forms::Grid::Style::typeid) {}
+			StyleConverter() : ReferenceConverter(_Style::typeid) {}
 		};
 
         System::ComponentModel::ListChangedEventHandler^ m_listChangedEventHandler;

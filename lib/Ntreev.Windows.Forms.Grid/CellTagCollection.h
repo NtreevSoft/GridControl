@@ -22,7 +22,6 @@
 
 
 #pragma once
-#include "Cell.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -152,11 +151,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     internal: // methods 
 
-        CellTagCollection(Ntreev::Windows::Forms::Grid::Row^ row);
+        CellTagCollection(Row^ row);
 
     private: // variables
 
-        Ntreev::Windows::Forms::Grid::Row^ m_row;
+        Row^ m_row;
         GrColumnList* m_pColumnList;
     }; 
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

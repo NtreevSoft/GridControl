@@ -26,6 +26,7 @@
 #include "ICell.h"
 #include "NativeUtilities.h"
 #include "GridControl.h"
+#include "Cell.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {

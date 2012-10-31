@@ -45,14 +45,14 @@ void GrDataRowList::OnGridCoreAttached()
     m_pGridCore->Created.Add(this, &GrDataRowList::gridCore_Created);
     m_pGridCore->FontChanged.Add(this, &GrDataRowList::gridCore_FontChanged);
 
-    for(auto value : m_vecDataRows)
+    for(auto item : m_vecDataRows)
     {
-        m_pGridCore->AttachObject(value);
+        m_pGridCore->AttachObject(item);
     }
 
-    for(auto value : m_vecGroupRows)
+    for(auto item : m_vecGroupRows)
     {
-        m_pGridCore->AttachObject(value);
+        m_pGridCore->AttachObject(item);
     }
 
     m_pGridCore->AttachObject(m_pInsertionRow);
@@ -115,7 +115,7 @@ GrGroupRow* GrDataRowList::CreateGroupRow(GrRow* pParent, GrColumn* pColumn, con
     pGroupRow->SetReference(pColumn, itemText);
     pGroupRow->m_groupLevel = 0;
 
-    _MapCaches::iterator itor = m_mapCache.find(pGroupRow->GetKey());
+    auto itor = m_mapCache.find(pGroupRow->GetKey());
     if(itor == m_mapCache.end())
     {
         const GrPadding padding = pGroupRow->GetPadding();
@@ -125,8 +125,8 @@ GrGroupRow* GrDataRowList::CreateGroupRow(GrRow* pParent, GrColumn* pColumn, con
     }
     else
     {
-        pGroupRow->SetHeight((*itor).second.height);
-        pGroupRow->Expand((*itor).second.expanded);
+        pGroupRow->SetHeight(itor->second.height);
+        pGroupRow->Expand(itor->second.expanded);
     }
 
     m_pGridCore->AttachObject(pGroupRow);
@@ -196,7 +196,7 @@ void GrDataRowList::BuildGroup(GrRow* pParent, uint groupLevel)
     pParent->ClearChild();
 
     std::wstring itemText;
-    _DataRows::iterator itor = vecSort.begin();
+    auto itor = vecSort.begin();
     GrGroupRow* pGroupRow = nullptr;
 
     while(itor != vecSort.end())
@@ -1052,10 +1052,10 @@ uint GrDataRowList::ClipTo(const GrRect& displayRect, uint visibleTo) const
     int displayY = displayHeight;
     uint visibleFrom = visibleTo;
 
-    for(uint i=visibleTo ; i<GetVisibleRowCount() ; i--)
+    for(uint i=visibleTo ; i<m_vecVisibleRows.size() ; i--)
     {
-        IDataRow* pDataRow = GetVisibleRow(i);
-        displayY -= pDataRow->GetHeight();
+        IDataRow* item = m_vecVisibleRows[i];
+        displayY -= item->GetHeight();
         if(displayY <= 0)
             break;
         visibleFrom = i;
@@ -1071,9 +1071,9 @@ void GrDataRowList::SetZeroBasedRowIndex(bool b)
     m_zeroBasedRowIndex = b;
 
     uint index = 0;
-    for(auto value : m_vecDataRows)
+    for(auto item : m_vecDataRows)
     {
-        value->SetDataRowIndex(index++);
+        item->SetDataRowIndex(index++);
     }
 }
 
@@ -1135,9 +1135,9 @@ GrCell* GrDataRowList::HitTest(const GrPoint& location) const
     if(pHitted == nullptr)
         return nullptr;
 
-    for(auto value : m_vecDisplayableRows)
+    for(auto item : m_vecDisplayableRows)
     {
-        GrCell* pSubHitted = value->HitTest(location);
+        GrCell* pSubHitted = item->HitTest(location);
         if(pSubHitted != nullptr)
             return pSubHitted;
     }

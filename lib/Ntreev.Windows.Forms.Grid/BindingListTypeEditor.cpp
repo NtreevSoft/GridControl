@@ -25,6 +25,8 @@
 #include "stdafx.h"
 #include "BindingListTypeEditor.h"
 #include "GridControl.h"
+#include "Utilities.h"
+#include "IColumn.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design
 {

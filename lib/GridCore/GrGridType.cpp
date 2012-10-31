@@ -324,6 +324,14 @@ void GrRect::Offset(const GrPoint& offset)
     Offset(offset.x, offset.y);
 }
 
+void GrRect::Expand(int all)
+{
+    this->left -= all;
+    this->top -= all;
+    this->right += all;
+    this->bottom += all;
+}
+
 void GrRect::Expand(int left, int top, int right, int bottom)
 {
     this->left -= left;
@@ -335,6 +343,14 @@ void GrRect::Expand(int left, int top, int right, int bottom)
 void GrRect::Expand(const GrPadding& padding)
 {
     Expand(padding.left, padding.top, padding.right, padding.bottom);
+}
+
+void GrRect::Contract(int all)
+{
+    this->left += all;
+    this->top += all;
+    this->right -= all;
+    this->bottom -= all;
 }
 
 void GrRect::Contract(int left, int top, int right, int bottom)

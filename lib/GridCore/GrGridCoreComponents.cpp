@@ -182,11 +182,11 @@ void GrFocuser::Invalidate(IFocusable* pFocusable)
     {
         rect = pDataRow->GetRect();
         rect.right = m_pGridCore->GetDisplayRect().right;
-        rect.Expand(2, 2, 2, 2);
+        rect.Expand(2);
     }
     else
     {
-        rect = pFocusable->GetDisplayRect();
+        pFocusable->Invalidate();
         m_pGridCore->Invalidate(pDataRow->GetRect());
 
         if(m_pLastFocusedColumn != nullptr)

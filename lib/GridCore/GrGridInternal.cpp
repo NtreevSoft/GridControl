@@ -374,14 +374,14 @@ void GrFocuserInternal::SetFocusing(IFocusable* pFocusable)
 
     if(m_pFocusing != nullptr && m_pFocusing->GetDisplayable() == true)
     {
-        m_pGridCore->Invalidate(m_pFocusing->GetDisplayRect());
+        m_pFocusing->Invalidate();
     }
 
     m_pFocusing = pFocusable;
 
     if(pFocusable != nullptr && pFocusable->GetDisplayable() == true)
     {
-        m_pGridCore->Invalidate(pFocusable->GetDisplayRect());
+        pFocusable->Invalidate();
     }
 
     GrItemSelectorInternal* pItemSelector = dynamic_cast<GrItemSelectorInternal*>(m_pGridCore->GetItemSelector());

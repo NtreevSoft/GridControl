@@ -327,6 +327,12 @@ public:
     bool Contains(const GrPoint& point) const;
     bool ContainsHorz(int x) const;
     bool ContainsVert(int y) const;
+    bool IntersectsHorzWith(int left, int right) const;
+    bool IntersectsHorzWith(const GrRect& rect) const;
+    bool IntersectsVertWith(int top, int bottom) const;
+    bool IntersectsVertWith(const GrRect& rect) const;
+    bool IntersectsWith(const GrRect& rect) const;
+
     bool GetMouseOvered() const;
     bool GetMousePressed() const;
     int GetMouseOverState() const;
@@ -362,7 +368,7 @@ public:
     bool GetTextVisible() const;
     bool GetTextClipped() const;
     void SetTextVisible(bool b);
-    void Invalidate();
+    virtual void Invalidate();
 
     virtual GrFlag ToPaintStyle() const;
     void DrawText(GrGridPainter* pPainter, GrColor foreColor, const GrRect& paintRect, const GrRect* pClipRect = nullptr) const;
@@ -587,11 +593,6 @@ private:
     void SetIndex(uint index);
     void SetColumnID(uint index);
 
-    //void AddSelection(GrItem* pItem);
-    //void RemoveSelection(GrItem* pItem);
-    //void ClearSelection();
-    //void SetFullSelected();
-
 public:
     bool m_customItemPaint;
 
@@ -602,7 +603,6 @@ public:
 private:
     GrColumnList* m_pColumnList;
 
-    //GrItems m_selectedCells; 
     friend class GrItemSelector;
     int m_freezablePriority;
     int m_unfreezablePriority;
@@ -799,15 +799,11 @@ public:
 
     virtual int GetY() const;
     virtual int GetWidth() const;
-
     virtual bool GetVisible() const;
-
     virtual bool GetDisplayable() const;
-
-    void SetDisplayable(bool b);
-
     virtual GrCell* HitTest(const GrPoint& location) const final;
 
+    void SetDisplayable(bool b);
     void SetVisibleIndex(uint index);
     uint GetVisibleIndex() const;
     bool IsLastVisible() const;
@@ -828,7 +824,7 @@ public:
 
     uint GetDataDepth() const;
 
-    unsigned int GetSelectionGroup() const { return m_selectionGroup; }
+    uint GetSelectionGroup() const { return m_selectionGroup; }
 
     virtual IFocusable* GetFocusable(GrColumn* pColumn) const = 0;
     virtual bool GetFullSelected() const { return false; }
@@ -878,9 +874,7 @@ protected:
     virtual ~GrDataRow();
 
 public:
-
     GrItem* GetItem(const GrColumn* pColumn) const;
-    GrItem* GetItem(const GrItem* pOtherItem) const;
 
     bool GetReadOnly() const;
     void SetReadOnly(bool b = true);
@@ -903,7 +897,6 @@ public:
 
     virtual bool GetFullSelected() const;
 
-    //virtual bool GetVisible() const;
     virtual void SetVisible(bool b);
 
     virtual GrRowType GetRowType() const { return GetDataRowID() == INSERTION_ROW ? GrRowType_InsertionRow : GrRowType_DataRow; }
@@ -929,11 +922,6 @@ private:
     void Reserve(uint count);
     void ClearItem();
 
-    //void AddSelection(GrItem* pItem);
-    //void RemoveSelection(GrItem* pItem);
-    //void ClearSelection();
-    //void SetFullSelected();
-
 private:
     _Items m_vecItems;
     bool m_readOnly;
@@ -947,16 +935,12 @@ private:
     uint m_dataRowID;
 
 private: // friend variables;
-    //uint m_selectedCells;
-    //GrItems m_selectedCells;
     int m_selected;
 
     friend class GrItemSelector;
     friend class GrGridCore;
     friend class GrDataRowList;
 };
-
-typedef std::set<GrDataRow*> GrDataRows;
 
 class IFocusable
 {
@@ -965,6 +949,7 @@ public:
     virtual GrRect GetDisplayRect() const = 0;
     virtual bool GetDisplayable() const = 0;
     virtual GrCellType GetCellType() const = 0;
+    virtual void Invalidate() = 0;
 
     static IFocusable* Null;
 };
@@ -1012,6 +997,7 @@ public:
 
     virtual bool GetDisplayable() const;
     virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
+    virtual void Invalidate();
 
     virtual GrRow* GetRow() const;
 
@@ -1129,13 +1115,12 @@ private:
     };
 };
 
-
-
 class GrColumnSplitter : public GrCell
 {
-public:
+private:
     GrColumnSplitter(GrColumnList* pColumnList);
 
+public:
     virtual GrCellType GetCellType() const { return GrCellType_Splitter; }
     virtual int GetX() const;
     virtual int GetY() const;
@@ -1201,6 +1186,7 @@ public:
     virtual int HitMouseOverTest(const GrPoint& localLocation) const;
     virtual bool GetDisplayable() const;
     virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
+    virtual void Invalidate();
 
     virtual GrRow* GetRow() const;
     virtual GrFlag ToPaintStyle() const;

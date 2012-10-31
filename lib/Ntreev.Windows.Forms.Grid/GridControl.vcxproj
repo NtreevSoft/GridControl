@@ -284,12 +284,12 @@ copy "$(TargetDir)$(TargetName).xml" "$(TargetDir)..\$(TargetName).xml"
     <ClInclude Include="CellBuilder.h" />
     <ClInclude Include="CellCollection.h" />
     <ClInclude Include="CellTagCollection.h" />
-    <ClInclude Include="ChildGridControl.h" />
     <ClInclude Include="Column.h" />
     <ClInclude Include="ColumnCollection.h" />
     <ClInclude Include="ColumnControl.h" />
     <ClInclude Include="ColumnDropDown.h" />
     <ClInclude Include="ColumnPainter.h" />
+    <ClInclude Include="GridControlPreDeclaration.h" />
     <ClInclude Include="GridRow.h" />
     <ClInclude Include="DisplayableColumnCollection.h" />
     <ClInclude Include="DisplayableRowCollection.h" />
@@ -400,7 +400,6 @@ copy "$(TargetDir)$(TargetName).xml" "$(TargetDir)..\$(TargetName).xml"
     <ClCompile Include="CellBuilder.cpp" />
     <ClCompile Include="CellCollection.cpp" />
     <ClCompile Include="CellTagCollection.cpp" />
-    <ClCompile Include="ChildGridControl.cpp" />
     <ClCompile Include="Column.cpp" />
     <ClCompile Include="ColumnCollection.cpp" />
     <ClCompile Include="ColumnControl.cpp" />

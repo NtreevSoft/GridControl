@@ -23,6 +23,8 @@
 
 #include "StdAfx.h"
 #include "Events.h"
+#include "Cell.h"
+#include "Row.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
