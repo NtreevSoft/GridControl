@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "NativeGridRow.h"
-#include "ChildGridControl.h"
 #include "NativeClasses.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Native

@@ -202,16 +202,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return gcnew Ntreev::Windows::Forms::Grid::ColumnCollection::Enumerator(m_pColumnList);
     }
 
-    Column^ ColumnCollection::Bind(System::ComponentModel::PropertyDescriptor^ propertyDescriptor)
+    void ColumnCollection::Bind(System::ComponentModel::PropertyDescriptor^ propertyDescriptor)
     {
         using namespace System::ComponentModel;
 
         Column^ existColumn = this[propertyDescriptor->Name];
         Column^ column = this->GridControl->InvokeColumnBinding(propertyDescriptor, existColumn);
-        if(column == nullptr)
+        if(column == nullptr && this->GridControl->ColumnBindingCreation != ColumnBindingCreation::None)
         {
             column = CreateColumnInstance();
         }
+
+        if(column == nullptr)
+            return;
 
         if(existColumn == nullptr)
             column->HasLifeline = true;
@@ -232,9 +235,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(propertyDescriptor->PropertyType == IBindingList::typeid)
             column->IsVisible = false;
 
-        this->GridControl->InvokeColumnBinded(column);
+        if(column->HasLifeline == true && this->GridControl->ColumnBindingCreation == ColumnBindingCreation::Hidden)
+            column->IsVisible = false;
 
-        return column;
+        this->GridControl->InvokeColumnBinded(column);
     }
 
     void ColumnCollection::Unbind(Column^ column)

@@ -96,17 +96,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_currentIndex = (m_currentIndex + 1) % Count;
     }
 
-    Ntreev::Windows::Forms::Grid::ToolTip::ToolTipItem^ ToolTip::ToolTipItemCollection::Current::get()
+    ToolTip::ToolTipItem^ ToolTip::ToolTipItemCollection::Current::get()
     {
         return default[m_currentIndex];
     }
 
-    Ntreev::Windows::Forms::Grid::ToolTip::ToolTipItem^ ToolTip::ToolTipItemCollection::Previous::get()
+    ToolTip::ToolTipItem^ ToolTip::ToolTipItemCollection::Previous::get()
     {
         return default[m_previousIndex];
     }
 
-    ToolTip::ToolTip(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, int count)
+    ToolTip::ToolTip(_GridControl^ gridControl, int count)
         : GridObject(gridControl)
     {
         for(int i=0 ; i<count ; i++)

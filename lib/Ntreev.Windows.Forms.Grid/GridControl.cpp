@@ -84,7 +84,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         m_dataSource = nullptr;
         m_dataMember = System::String::Empty;
-
+        m_columnBindingCreation = _ColumnBindingCreation::Create;
 
         m_tooltips = gcnew Ntreev::Windows::Forms::Grid::ToolTip(this, 3);
         m_errorDescriptor = gcnew Ntreev::Windows::Forms::Grid::ErrorDescriptor(this);
@@ -215,6 +215,26 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         UserControl::OnGotFocus(e);
 
         System::Console::WriteLine(this->Handle);
+    }
+
+    void GridControl::OnEnter(System::EventArgs^ e)
+    {
+        UserControl::OnEnter(e);
+
+        if(this->FocusedRow == this->InsertionRow)
+        {
+            this->Rows->BeginInsertion();
+        }
+    }
+
+    void GridControl::OnLeave(System::EventArgs^ e)
+    {
+        UserControl::OnLeave(e);
+
+        if(this->FocusedRow == this->InsertionRow)
+        {
+            this->Rows->EndInsertion();
+        }
     }
 
     void GridControl::OnLostFocus(System::EventArgs^ e)
@@ -737,6 +757,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_captionRow->Text = value;
     }
 
+    _ColumnBindingCreation GridControl::ColumnBindingCreation::get()
+    {
+        return m_columnBindingCreation;
+    }
+
+    void GridControl::ColumnBindingCreation::set(_ColumnBindingCreation value)
+    {
+        if(m_columnBindingCreation == value)
+            return;
+        m_columnBindingCreation = value;
+    }
+    
     System::Object^ GridControl::DataSource::get()
     {
         return m_dataSource;
@@ -924,7 +956,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         using namespace System::Windows::Forms;
 
-        Keys key = keyData & Keys::KeyCode;
+        //Keys key = keyData & Keys::KeyCode;
 
         //switch (key)
         //{
@@ -982,8 +1014,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                             //cell->Select(SelectionType::Normal);
                             //cell->Focus();
                             //cell->BringIntoView();
-                            return true;
                         }
+                        return true;
                     }
                 }
                 break;
@@ -1070,7 +1102,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 }
                 else
                 {
-                    break;
+                    return true;
                 }
 
                 this->Invalidate(false);
@@ -1715,7 +1747,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GridControl::InvokeValueChanged(Ntreev::Windows::Forms::Grid::Cell^ cell)
     {
-        m_manager->EndCurrentEdit();
+        //m_manager->EndCurrentEdit();
         OnValueChanged(gcnew CellEventArgs(cell));
     }
 
@@ -1958,12 +1990,24 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GridControl::OnFocusedRowChanged(System::EventArgs^ e)
     {
-        Ntreev::Windows::Forms::Grid::Row^ row = dynamic_cast<Ntreev::Windows::Forms::Grid::Row^>(m_oldFocusedRow);
+        Row^ row = dynamic_cast<Row^>(m_oldFocusedRow);
         if(row != nullptr)
         {
             if(row->IsBeingEdited == true)
             {
                 row->EndEdit();
+            }
+        }
+
+        if(m_manager != nullptr)
+        {
+            if(this->FocusedRow == this->InsertionRow)
+            {
+                this->Rows->BeginInsertion();
+            }
+            else if(m_oldFocusedRow == this->InsertionRow)
+            {
+                this->Rows->EndInsertion();
             }
         }
 

@@ -585,7 +585,6 @@ void GrItemSelector::SetSelectionGroup(IDataRow* pDataRow)
 
 void GrItemSelector::SetSelectionGroup(GrItem* pItem)
 {
-    
     SetSelectionGroup(pItem->GetDataRow());
 }
 

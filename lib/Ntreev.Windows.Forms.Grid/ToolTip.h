@@ -29,8 +29,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// <summary>
     /// 툴팁을 보이거나 감추는 기능을 제공합니다.
     /// </summary>
-    public ref class ToolTip
-        : Ntreev::Windows::Forms::Grid::GridObject
+    public ref class ToolTip : GridObject
     {
     private: // classes
 
@@ -47,21 +46,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             bool m_created;
         };
 
-        ref class ToolTipItemCollection : System::Collections::Generic::List<Ntreev::Windows::Forms::Grid::ToolTip::ToolTipItem^>
+        ref class ToolTipItemCollection : System::Collections::Generic::List<ToolTipItem^>
         {
         public: // methods
             ToolTipItemCollection();
             void MoveNext();
 
         public: // properties
-            property Ntreev::Windows::Forms::Grid::ToolTip::ToolTipItem^ Current
+            property ToolTipItem^ Current
             {
-                Ntreev::Windows::Forms::Grid::ToolTip::ToolTipItem^ get();
+                ToolTipItem^ get();
             }
 
-            property Ntreev::Windows::Forms::Grid::ToolTip::ToolTipItem^ Previous
+            property ToolTipItem^ Previous
             {
-                Ntreev::Windows::Forms::Grid::ToolTip::ToolTipItem^ get();
+                ToolTipItem^ get();
             }
 
         private: // variables
@@ -87,12 +86,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     internal: // methods
 
-        ToolTip(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, int count);
+        ToolTip(_GridControl^ gridControl, int count);
 
     private: // variables
 
         bool m_showed;
     };
-
-    typedef ToolTip _ToolTip;
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -9,11 +9,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
     }
 
-    Ntreev::Windows::Forms::Grid::GridControl^ GridRow::ChildGrid::get()
+    _GridControl^ GridRow::ChildGrid::get()
     {
         return m_pGridRow->GetChildGrid();
     }
-
-
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
 

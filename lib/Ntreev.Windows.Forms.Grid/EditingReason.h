@@ -65,9 +65,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 편집 시작 방식을 나타내는 <see cref="EditingReasonType"/>입니다.
         /// </returns>
-        property Ntreev::Windows::Forms::Grid::EditingReasonType ReasonType
+        property EditingReasonType ReasonType
         {
-            Ntreev::Windows::Forms::Grid::EditingReasonType get(); 
+            EditingReasonType get(); 
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     private: // variables
 
-        Ntreev::Windows::Forms::Grid::EditingReasonType reasonType;
+        EditingReasonType reasonType;
         System::Object^ data;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

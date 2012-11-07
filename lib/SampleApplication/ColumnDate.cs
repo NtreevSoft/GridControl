@@ -34,10 +34,7 @@ namespace SampleApplication
     {
         public override ViewType ViewType
         {
-            get
-            {
-                return ViewType.Text;
-            }
+            get { return ViewType.Text; }
         }
 
         public ColumnDate()

@@ -409,7 +409,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         System::String^ NewColumnName();
 
-        Column^ Bind(System::ComponentModel::PropertyDescriptor^ propertyDescriptor);
+        void Bind(System::ComponentModel::PropertyDescriptor^ propertyDescriptor);
 
         void Unbind(Column^ column);
 

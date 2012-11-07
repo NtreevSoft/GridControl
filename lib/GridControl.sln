@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApplication", "Sample
 		{8EB27EC4-86A3-44A7-9767-19C343709894} = {8EB27EC4-86A3-44A7-9767-19C343709894}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ntreev.INI3.Library", "..\..\..\NTG\INI3\trunk\common library\Ntreev.INI3.Library\Ntreev.INI3.Library.csproj", "{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ntreev.Snowflaker.Library", "..\..\..\NTG\INI3\trunk\common library\Ntreev.Snowflaker.Library\Ntreev.Snowflaker.Library.csproj", "{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

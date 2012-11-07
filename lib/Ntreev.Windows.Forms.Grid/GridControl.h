@@ -147,6 +147,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void set(System::String^);
         }
 
+        [System::ComponentModel::CategoryAttribute("Data")]
+        [System::ComponentModel::DefaultValueAttribute(_ColumnBindingCreation::Create)]
+        property _ColumnBindingCreation ColumnBindingCreation
+        {
+            _ColumnBindingCreation get();
+            void set(_ColumnBindingCreation);
+        }
+
         /// <summary>
         /// 그리드 컨트롤을 채울 데이터 소스를 가져오거나 설정합니다.
         /// </summary>
@@ -373,7 +381,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         [System::ComponentModel::CategoryAttribute("Behavior")]
         [System::ComponentModel::DescriptionAttribute("행의 목록을 가져옵니다.")]
-        [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Content)]
+        [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
         property RowCollection^ Rows
         {
             RowCollection^ get();
@@ -1939,6 +1947,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </param>
         virtual void OnGotFocus(System::EventArgs^ e) override;
 
+        virtual void OnEnter(System::EventArgs^ e) override;
+
+        virtual void OnLeave(System::EventArgs^ e) override;
+
         /// <summary>
         /// <see cref="Layout"/> 이벤트를 발생시킵니다.
         /// </summary>
@@ -2044,6 +2056,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     private: // variables
         System::Object^ m_dataSource;
         System::String^ m_dataMember;
+        _ColumnBindingCreation m_columnBindingCreation;
 
         initonly ColumnCollection^ m_columnList;
         initonly VisibleColumnCollection^ m_visibleColumnList;

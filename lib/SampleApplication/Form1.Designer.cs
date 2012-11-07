@@ -148,7 +148,6 @@ namespace SampleApplication
             // 
             this.columnRadio2.ColumnName = "Radio";
             this.columnRadio2.DataType = typeof(bool);
-            this.columnRadio2.DefaultValue = false;
             // 
             // columnLinkLabel1
             // 

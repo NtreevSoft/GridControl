@@ -22,15 +22,14 @@
 
 
 #pragma once
-#include "Column.h"
+#include "GridObject.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     /// <summary>
     /// 화면에 표시되는 열의 컬렉션을 나타냅니다.
     /// </summary>
-    public ref class DisplayableColumnCollection sealed
-        : Ntreev::Windows::Forms::Grid::GridObject
+    public ref class DisplayableColumnCollection sealed : GridObject
         , System::Collections::Generic::IEnumerable<Column^>
         , System::Collections::ICollection
     {
@@ -103,7 +102,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     internal: // methods
 
-        DisplayableColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
+        DisplayableColumnCollection(_GridControl^ gridControl);
 
     private: // methods
 

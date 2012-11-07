@@ -25,10 +25,11 @@
 #include "GroupRowCollection.h"
 #include "GridControl.h"
 #include "FromNative.h"
+#include "GroupRow.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    GroupRowCollection::Enumerator::Enumerator(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+    GroupRowCollection::Enumerator::Enumerator(_GridControl^ gridControl)
         : GridObject(gridControl)
     {
         m_index = 0;
@@ -56,7 +57,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_index = 0;
     }
 
-    Ntreev::Windows::Forms::Grid::GroupRow^ GroupRowCollection::Enumerator::Current::get()
+    GroupRow^ GroupRowCollection::Enumerator::Current::get()
     {
         GrDataRowList* pDataRowList = this->GridCore->GetDataRowList();
         GrGroupRow* pGroupRow = (GrGroupRow*)pDataRowList->GetChild(m_index - 1);
@@ -69,18 +70,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return this->Current; 
     }
 
-    GroupRowCollection::GroupRowCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+    GroupRowCollection::GroupRowCollection(_GridControl^ gridControl)
         : GridObject(gridControl)
     {
         m_pDataRowList = this->GridCore->GetDataRowList();
     }
 
-    System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::GroupRow^>^ GroupRowCollection::GetEnumerator()
+    System::Collections::Generic::IEnumerator<GroupRow^>^ GroupRowCollection::GetEnumerator()
     {
         return gcnew Ntreev::Windows::Forms::Grid::GroupRowCollection::Enumerator(this->GridControl); 
     }
 
-    Ntreev::Windows::Forms::Grid::GroupRow^ GroupRowCollection::default::get(int index)
+    GroupRow^ GroupRowCollection::default::get(int index)
     {
         if(index >= this->Count)
             throw gcnew System::ArgumentOutOfRangeException("index");
@@ -89,9 +90,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return FromNative::Get(pGroupRow);
     }
 
-    Ntreev::Windows::Forms::Grid::GroupRow^ GroupRowCollection::default::get(System::String^ text)
+    GroupRow^ GroupRowCollection::default::get(System::String^ text)
     {
-        for each(Ntreev::Windows::Forms::Grid::GroupRow^ item in this)
+        for each(GroupRow^ item in this)
         {
             if(item->Text == text)
                 return item;
@@ -114,7 +115,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GroupRowCollection::CopyTo_System_Collections_ICollection(System::Array^ array, int index)
     {
-        for each(Ntreev::Windows::Forms::Grid::GroupRow^ item in this)
+        for each(GroupRow^ item in this)
         {
             array->SetValue(item, index++);
         }

@@ -26,26 +26,29 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    EditingReason::EditingReason(System::Drawing::Point pt)
-        : data(pt), reasonType(Ntreev::Windows::Forms::Grid::EditingReasonType::Mouse)
+    using namespace System::Drawing;
+    using namespace System::Windows::Forms;
+
+    EditingReason::EditingReason(Point pt)
+        : data(pt), reasonType(EditingReasonType::Mouse)
     {
 
     }
 
-    EditingReason::EditingReason(System::Windows::Forms::Keys key)
-        : data(key), reasonType(Ntreev::Windows::Forms::Grid::EditingReasonType::Key)
+    EditingReason::EditingReason(Keys key)
+        : data(key), reasonType(EditingReasonType::Key)
     {
 
     }
 
     EditingReason::EditingReason(System::Char charKey)
-        : data(charKey), reasonType(Ntreev::Windows::Forms::Grid::EditingReasonType::Char)
+        : data(charKey), reasonType(EditingReasonType::Char)
     {
 
     }
 
     EditingReason::EditingReason(int keyValue)
-        : data(keyValue), reasonType(Ntreev::Windows::Forms::Grid::EditingReasonType::Ime)
+        : data(keyValue), reasonType(EditingReasonType::Ime)
     {
 
     }
@@ -58,10 +61,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             data = nullptr;
             break;
         case GrEditingType_Mouse:
-            data = (System::Drawing::Point)reason.location;
+            data = (Point)reason.location;
             break;
         case GrEditingType_Key:
-            data = (System::Windows::Forms::Keys)reason.key;
+            data = (Keys)reason.key;
             break;
         case GrEditingType_Char:
             data = (System::Char)reason.character;
@@ -71,7 +74,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             break;
         }
 
-        reasonType = (Ntreev::Windows::Forms::Grid::EditingReasonType)reason.editingType;
+        reasonType = (EditingReasonType)reason.editingType;
     }
 
     GrEditingReason EditingReason::ToNative()
@@ -80,16 +83,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         switch(reasonType)
         {
-        case Ntreev::Windows::Forms::Grid::EditingReasonType::Mouse:
+        case EditingReasonType::Mouse:
             reason.location = this->Location;
             break;
-        case Ntreev::Windows::Forms::Grid::EditingReasonType::Key:
+        case EditingReasonType::Key:
             reason.key = (GrKeys)this->Key;
             break;
-        case Ntreev::Windows::Forms::Grid::EditingReasonType::Char:
+        case EditingReasonType::Char:
             reason.character = (wchar_t)this->Char;
             break;
-        case Ntreev::Windows::Forms::Grid::EditingReasonType::Ime:
+        case EditingReasonType::Ime:
             reason.keyValue = this->KeyValue;
             break;
         }
@@ -103,14 +106,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return reasonType;
     }
 
-    System::Drawing::Point EditingReason::Location::get()
+    Point EditingReason::Location::get()
     {
-        return (System::Drawing::Point)data;
+        return (Point)data;
     }
 
-    System::Windows::Forms::Keys EditingReason::Key::get()
+    Keys EditingReason::Key::get()
     {
-        return (System::Windows::Forms::Keys)data;
+        return (Keys)data;
     }
 
     System::Char EditingReason::Char::get()

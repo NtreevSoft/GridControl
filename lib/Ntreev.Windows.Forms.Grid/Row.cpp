@@ -28,6 +28,8 @@
 #include "Column.h"
 #include "ColumnCollection.h"
 #include "RowBaseCollection.h"
+#include "CellCollection.h"
+#include "CellTagCollection.h"
 #include "ErrorDescriptor.h"
 #include "FromNative.h"
 #include "RowBuilder.h"
@@ -41,13 +43,10 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    //Row::Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pDataRow) 
-    //    : m_pDataRow(pDataRow), RowBase(gridControl, m_pDataRow), m_errorDescription(System::String::Empty)
-
-    Row::Row(Ntreev::Windows::Forms::Grid::RowBuilder^ rowBuilder)
+    Row::Row(RowBuilder^ rowBuilder)
         : m_pDataRow(rowBuilder->NativeRef), RowBase(rowBuilder->GridControl, rowBuilder->NativeRef), m_errorDescription(System::String::Empty)
     {
-        m_cells = gcnew Ntreev::Windows::Forms::Grid::CellCollection(this);
+        m_cells = gcnew CellCollection(this);
         m_componentIndex = -1;
 
         for each(Column^ item in this->GridControl->Columns)
@@ -281,7 +280,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
             for each(Ntreev::Windows::Forms::Grid::Cell^ cell in m_cells)
             {
-                cell->CancelEdit();
+                cell->CancelEditInternal();
             }
 
             if(m_editedCount < 0)
@@ -292,6 +291,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             m_editedCount = 0;
             m_editing = false;
         }
+
+        this->Refresh();
     }
 
     void Row::EndEdit()
@@ -303,7 +304,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
             for each(Ntreev::Windows::Forms::Grid::Cell^ cell in m_cells)
             {
-                cell->EndEdit();
+                cell->EndEditInternal();
             }
 
             if(m_editedCount < 0)
@@ -314,6 +315,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             m_editedCount = 0;
             m_editing = false;
         }
+
+        this->Refresh();
     }
 
     void Row::BringIntoView()
@@ -437,26 +440,29 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     //    }
     //}
 
-    void Row::ValueToSource(System::Object^ component)
+    void Row::Refresh()
     {
-        for each(Ntreev::Windows::Forms::Grid::Cell^ cell in this->Cells)
+        for each(Column^ item in this->GridControl->Columns)
         {
-            Column^ column = cell->Column;
-            System::ComponentModel::PropertyDescriptor^ propertyDescriptor = column->PropertyDescriptor;
-            if(propertyDescriptor == nullptr)
-                continue;
-
-            System::Object^ value = column->ConvertToSource(cell->Value);
             try
             {
-                propertyDescriptor->SetValue(component, value);
+                Cell^ cell = NewCell(item);
+                cell->UpdateNativeText();
             }
-            catch(System::Exception^ /*e*/)
+            catch(System::Exception^)
             {
-                propertyDescriptor->SetValue(component, System::DBNull::Value);
+
             }
         }
     }
+
+    //void Row::ValueToSource(System::Object^ component)
+    //{
+    //    for each(Ntreev::Windows::Forms::Grid::Cell^ cell in this->Cells)
+    //    {
+    //        cell->ValueCore = cell->Value;
+    //    }
+    //}
 
     int Row::GetCellsTextCapacity()
     {

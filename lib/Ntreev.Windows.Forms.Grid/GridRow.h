@@ -1,6 +1,5 @@
 #pragma once
 #include "RowBase.h"
-#include "GridControl.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -15,9 +14,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         GridRow(Native::GrGridRow* pGridRow);
 
     public:
-        property Ntreev::Windows::Forms::Grid::GridControl^ ChildGrid
+        property _GridControl^ ChildGrid
         {
-            Ntreev::Windows::Forms::Grid::GridControl^ get();
+            _GridControl^ get();
         }
 
     private:

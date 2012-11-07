@@ -499,23 +499,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             virtual int get() sealed; 
         }
 
-        /// <summary>
-        /// 셀의 기본값을 가져오거나 설정합니다.
-        /// </summary>
-        /// <returns>
-        /// 셀의 기본값을 나타내는 <see cref="System::Object"/>입니다.
-        /// </returns>
-        /// <remarks>
-        /// 이 속성의 사용 목적은 새로운 행을 추가 하기 위하여 제공되는 삽입열에 기본값을 제공하기 위해서입니다. 
-        /// 데이터 타입에 대한 검사가 없으므로, 가급적 <see cref="DataType"/>과 같은 타입의 개체를 사용하시기 바랍니다.
-        /// </remarks>
-        [System::ComponentModel::TypeConverterAttribute("Ntreev.Windows.Forms.Grid.Design.ValueConverter, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
-        [System::ComponentModel::CategoryAttribute("Data")]
-        property System::Object^ DefaultValue
-        {
-            virtual System::Object^ get() sealed;
-            void set(System::Object^);
-        }
+        ///// <summary>
+        ///// 셀의 기본값을 가져오거나 설정합니다.
+        ///// </summary>
+        ///// <returns>
+        ///// 셀의 기본값을 나타내는 <see cref="System::Object"/>입니다.
+        ///// </returns>
+        ///// <remarks>
+        ///// 이 속성의 사용 목적은 새로운 행을 추가 하기 위하여 제공되는 삽입열에 기본값을 제공하기 위해서입니다. 
+        ///// 데이터 타입에 대한 검사가 없으므로, 가급적 <see cref="DataType"/>과 같은 타입의 개체를 사용하시기 바랍니다.
+        ///// </remarks>
+        //[System::ComponentModel::TypeConverterAttribute("Ntreev.Windows.Forms.Grid.Design.ValueConverter, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+        //[System::ComponentModel::CategoryAttribute("Data")]
+        //property System::Object^ DefaultValue
+        //{
+        //    virtual System::Object^ get() sealed;
+        //    void set(System::Object^);
+        //}
 
         /// <summary>
         /// 열을 그릴수 있는 개체를 가져오거나 설정합니다.

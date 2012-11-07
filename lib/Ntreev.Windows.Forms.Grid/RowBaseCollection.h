@@ -22,23 +22,22 @@
 
 
 #pragma once
-#include "RowBase.h"
+#include "GridObject.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     /// <summary>
     /// 스크롤 되는 열의 컬렉션을 나타냅니다.
     /// </summary>
-    public ref class RowBaseCollection sealed
-        : Ntreev::Windows::Forms::Grid::GridObject
-        , System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::RowBase^>
+    public ref class RowBaseCollection sealed : GridObject
+        , System::Collections::Generic::IEnumerable<RowBase^>
         , System::Collections::ICollection
     {
     private: // classes
 
         ref class Enumerator 
             : Ntreev::Windows::Forms::Grid::GridObject
-            , System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::RowBase^>
+            , System::Collections::Generic::IEnumerator<RowBase^>
         {
         public:
             Enumerator(IDataRow* pDataRow);
@@ -46,9 +45,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             virtual bool MoveNext();
             virtual void Reset();
 
-            property Ntreev::Windows::Forms::Grid::RowBase^ Current
+            property RowBase^ Current
             {
-                virtual Ntreev::Windows::Forms::Grid::RowBase^ get();
+                virtual RowBase^ get();
             }
 
         private:
@@ -70,7 +69,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 열거자를 나타내는 <see cref="System::Collections::Generic::IEnumerator"/>입니다.
         /// </returns>
-        virtual System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::RowBase^>^ GetEnumerator();
+        virtual System::Collections::Generic::IEnumerator<RowBase^>^ GetEnumerator();
 
     public: // properties
 
@@ -86,9 +85,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::ArgumentOutOfRangeException">
         /// index가 0보다 작거나, <see cref="Count"/>보다 클 경우
         /// </exception>
-        property Ntreev::Windows::Forms::Grid::RowBase^ default[int]
+        property RowBase^ default[int]
         {
-            Ntreev::Windows::Forms::Grid::RowBase^ get(int index);
+            RowBase^ get(int index);
         }
 
         /// <summary>

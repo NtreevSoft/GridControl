@@ -23,8 +23,8 @@
 
 #include "StdAfx.h"
 #include "DisplayableColumnCollection.h"
-#include "GridControl.h"
 #include "FromNative.h"
+#include "Column.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -62,7 +62,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return Current;
     }
 
-    DisplayableColumnCollection::DisplayableColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+    DisplayableColumnCollection::DisplayableColumnCollection(_GridControl^ gridControl)
         : GridObject(gridControl)
     {
         m_pColumnList = this->GridCore->GetColumnList();
@@ -83,7 +83,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::Collections::Generic::IEnumerator<Column^>^ DisplayableColumnCollection::GetEnumerator()
     {
-        return gcnew Ntreev::Windows::Forms::Grid::DisplayableColumnCollection::Enumerator(m_pColumnList); 
+        return gcnew DisplayableColumnCollection::Enumerator(m_pColumnList); 
     }
 
     System::Collections::IEnumerator^ DisplayableColumnCollection::GetEnumerator_System_Collections_IEnumerable()

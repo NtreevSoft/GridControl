@@ -28,19 +28,21 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
+    using namespace System::Drawing;
+    using namespace System::Windows::Forms;
 
-    CellEventArgs::CellEventArgs(Ntreev::Windows::Forms::Grid::Cell^ cell) 
+    CellEventArgs::CellEventArgs(_Cell^ cell) 
         : m_cell(cell) 
     { 
 
     }
 
-    Ntreev::Windows::Forms::Grid::Cell^ CellEventArgs::Cell::get()
+    _Cell^ CellEventArgs::Cell::get()
     {
         return m_cell;
     }
 
-    ValueChangingEventArgs::ValueChangingEventArgs(Ntreev::Windows::Forms::Grid::Cell^ cell, System::Object^ newValue, System::Object^ oldValue) 
+    ValueChangingEventArgs::ValueChangingEventArgs(_Cell^ cell, System::Object^ newValue, System::Object^ oldValue) 
         : CellEventArgs(cell), m_cancel(false), m_newValue(newValue), m_oldValue(oldValue)
     {
 
@@ -66,18 +68,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_oldValue; 
     }
 
-    RowEventArgs::RowEventArgs(Ntreev::Windows::Forms::Grid::Row^ row)
+    RowEventArgs::RowEventArgs(_Row^ row)
         : m_row(row)
     {
 
     }
 
-    Ntreev::Windows::Forms::Grid::Row^ RowEventArgs::Row::get()
+    _Row^ RowEventArgs::Row::get()
     {
         return m_row; 
     }
 
-    void RowEventArgs::Row::set(Ntreev::Windows::Forms::Grid::Row^ value) 
+    void RowEventArgs::Row::set(_Row^ value) 
     {
         m_row = value; 
     }
@@ -118,13 +120,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     }
 
-    RowInsertedEventArgs::RowInsertedEventArgs(Ntreev::Windows::Forms::Grid::Row^ row)
+    RowInsertedEventArgs::RowInsertedEventArgs(_Row^ row)
         : m_row(row)
     {
 
     }
 
-    Ntreev::Windows::Forms::Grid::Row^ RowInsertedEventArgs::Row::get()
+    _Row^ RowInsertedEventArgs::Row::get()
     {
         return m_row; 
     } 
@@ -134,7 +136,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_row->Component;
     }
 
-    RowRemovingEventArgs::RowRemovingEventArgs(Ntreev::Windows::Forms::Grid::Row^ row) 
+    RowRemovingEventArgs::RowRemovingEventArgs(_Row^ row) 
         : RowEventArgs(row), m_cancel(false)
     {
 
@@ -187,7 +189,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_cancel = value;
     }
     
-    ColumnBindingEventArgs::ColumnBindingEventArgs(System::ComponentModel::PropertyDescriptor^ propertyDescriptor, Ntreev::Windows::Forms::Grid::Column^ column)
+    ColumnBindingEventArgs::ColumnBindingEventArgs(System::ComponentModel::PropertyDescriptor^ propertyDescriptor, _Column^ column)
         : m_propertyDescriptor(propertyDescriptor), m_column(column)
     {
 
@@ -198,27 +200,27 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_propertyDescriptor;
     }
 
-    Ntreev::Windows::Forms::Grid::Column^ ColumnBindingEventArgs::BindingColumn::get()
+    _Column^ ColumnBindingEventArgs::BindingColumn::get()
     {
         return m_column;
     }
 
-    void ColumnBindingEventArgs::BindingColumn::set(Ntreev::Windows::Forms::Grid::Column^ value)
+    void ColumnBindingEventArgs::BindingColumn::set(_Column^ value)
     {
         m_column = value;
     }
 
-    ColumnEventArgs::ColumnEventArgs(Ntreev::Windows::Forms::Grid::Column^ column)
+    ColumnEventArgs::ColumnEventArgs(_Column^ column)
         : m_column(column)
     {
     }
 
-    Ntreev::Windows::Forms::Grid::Column^ ColumnEventArgs::Column::get()
+    _Column^ ColumnEventArgs::Column::get()
     {
         return m_column; 
     } 
 
-    ColumnInsertingEventArgs::ColumnInsertingEventArgs(Ntreev::Windows::Forms::Grid::Column^ column)
+    ColumnInsertingEventArgs::ColumnInsertingEventArgs(_Column^ column)
         : ColumnEventArgs(column), m_cancel(false)
     {
 
@@ -234,7 +236,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_cancel;
     }
 
-    ColumnMouseEventArgs::ColumnMouseEventArgs(Ntreev::Windows::Forms::Grid::Column^ column, System::Drawing::Point location)
+    ColumnMouseEventArgs::ColumnMouseEventArgs(_Column^ column, Point location)
         : ColumnEventArgs(column), m_location(location), m_handled(false)
     {
 
@@ -265,7 +267,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_handled = value;
     } 
 
-    CellMouseEventArgs::CellMouseEventArgs(Ntreev::Windows::Forms::Grid::Cell^ cell, System::Drawing::Point location)
+    CellMouseEventArgs::CellMouseEventArgs(_Cell^ cell, Point location)
         : CellEventArgs(cell), m_location(location), m_handled(false)
     {
 
@@ -296,7 +298,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_handled = value;
     } 
 
-    EditBegunEventArgs::EditBegunEventArgs(Ntreev::Windows::Forms::Grid::Cell^ cell)
+    EditBegunEventArgs::EditBegunEventArgs(_Cell^ cell)
         : m_cancel(false), CellEventArgs(cell)
     {
 
@@ -323,18 +325,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_dataSourceOnly;
     }
 
-    CurrencyManagerChangedEventArgs::CurrencyManagerChangedEventArgs(System::Windows::Forms::CurrencyManager^ currencyManager)
+    CurrencyManagerChangedEventArgs::CurrencyManagerChangedEventArgs(CurrencyManager^ currencyManager)
         : m_manager(currencyManager)
     {
 
     }
 
-    System::Windows::Forms::CurrencyManager^ CurrencyManagerChangedEventArgs::CurrecnyManager::get()
+    CurrencyManager^ CurrencyManagerChangedEventArgs::CurrecnyManager::get()
     {
         return m_manager;
     }
 
-    CurrencyManagerChangingEventArgs::CurrencyManagerChangingEventArgs(System::Windows::Forms::CurrencyManager^ currencyManager)
+    CurrencyManagerChangingEventArgs::CurrencyManagerChangingEventArgs(CurrencyManager^ currencyManager)
         : m_cancel(false), CurrencyManagerChangedEventArgs(currencyManager)
     {
         this->CancelReason = System::String::Empty;

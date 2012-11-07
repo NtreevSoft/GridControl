@@ -49,7 +49,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_index = 0;
     }
 
-    Ntreev::Windows::Forms::Grid::RowBase^ RowBaseCollection::Enumerator::Current::get()
+    RowBase^ RowBaseCollection::Enumerator::Current::get()
     {
         IDataRow* pDataRow = (IDataRow*)m_pDataRow->GetChild(m_index - 1);
         return FromNative::Get(pDataRow);
@@ -66,12 +66,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         
     }
 
-    System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::RowBase^>^ RowBaseCollection::GetEnumerator()
+    System::Collections::Generic::IEnumerator<RowBase^>^ RowBaseCollection::GetEnumerator()
     {
-        return gcnew Ntreev::Windows::Forms::Grid::RowBaseCollection::Enumerator(m_pDataRow); 
+        return gcnew RowBaseCollection::Enumerator(m_pDataRow); 
     }
 
-    Ntreev::Windows::Forms::Grid::RowBase^ RowBaseCollection::default::get(int index)
+    RowBase^ RowBaseCollection::default::get(int index)
     {
         if(index >= this->Count)
             throw gcnew System::ArgumentOutOfRangeException("index");

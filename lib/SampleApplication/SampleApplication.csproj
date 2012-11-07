@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SampleApplication</RootNamespace>
     <AssemblyName>SampleApplication</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -38,19 +38,21 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\lib\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\lib\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -78,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColumnButton.cs" />
+    <Compile Include="ColumnDataTypes.cs" />
     <Compile Include="ColumnDate.cs" />
     <Compile Include="ColumnLinkLabel.cs" />
     <Compile Include="ColumnNumeric.cs" />
@@ -94,6 +97,12 @@
     <Compile Include="Form2.Designer.cs">
       <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form3.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form3.Designer.cs">
+      <DependentUpon>Form3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -101,6 +110,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form3.resx">
+      <DependentUpon>Form3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -113,6 +125,10 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
+    <None Include="ItemContent.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -141,18 +157,23 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\NTG\INI3\trunk\common library\Ntreev.INI3.Library\Ntreev.INI3.Library.csproj">
+    <ProjectReference Include="..\..\..\..\NTG\INI3\trunk\common library\Ntreev.Snowflaker.Library\Ntreev.Snowflaker.Library.csproj">
       <Project>{eb8e9874-54fa-4789-acc0-b25d8337b6c7}</Project>
-      <Name>Ntreev.INI3.Library</Name>
+      <Name>Ntreev.Snowflaker.Library</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ntreev.Windows.Forms.Grid.Design\Ntreev.Windows.Forms.Grid.Design.csproj">
-      <Project>{8EB27EC4-86A3-44A7-9767-19C343709894}</Project>
+      <Project>{8eb27ec4-86a3-44a7-9767-19c343709894}</Project>
       <Name>Ntreev.Windows.Forms.Grid.Design</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ntreev.Windows.Forms.Grid\GridControl.vcxproj">
-      <Project>{D4D0F372-7312-4B53-BCA9-EA27FD971B32}</Project>
+      <Project>{d4d0f372-7312-4b53-bca9-ea27fd971b32}</Project>
       <Name>Ntreev.Windows.Forms.Grid</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ItemContent.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

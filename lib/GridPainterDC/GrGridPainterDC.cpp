@@ -142,10 +142,12 @@ GrGridPainterDC::GrGridPainterDC(HWND hWnd)
 	lb.lbColor = RGB(125,125,125); 
 	lb.lbHatch = 0; 
 	DWORD Style[] = {1,1};
-	m_hSizingPen = ExtCreatePen(PS_GEOMETRIC|PS_USERSTYLE|PS_ENDCAP_FLAT, 1, &lb, 2, Style);
+	//m_hSizingPen = ExtCreatePen(PS_GEOMETRIC|PS_USERSTYLE|PS_ENDCAP_FLAT, 1, &lb, 2, Style);
+    m_hSizingPen = CreatePen(PS_SOLID, 1, RGB(133,151,188));
 
 	lb.lbColor = RGB(50,50,50);
-	m_hFocusedPen = ExtCreatePen(PS_GEOMETRIC|PS_USERSTYLE|PS_ENDCAP_FLAT, 1, &lb, 2, Style);
+	//m_hFocusedPen = ExtCreatePen(PS_GEOMETRIC|PS_USERSTYLE|PS_ENDCAP_FLAT, 1, &lb, 2, Style);
+    m_hFocusedPen = CreatePen(PS_SOLID, 1, RGB(133,151,188));
 
 	lb.lbStyle = BS_HATCHED; 
 	lb.lbColor = RGB(0,0,0); 

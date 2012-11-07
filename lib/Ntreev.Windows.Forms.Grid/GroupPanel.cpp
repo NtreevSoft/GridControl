@@ -27,7 +27,7 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    GroupPanel::GroupPanel(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrGroupPanel* pGroupPanel) 
+    GroupPanel::GroupPanel(_GridControl^ gridControl, GrGroupPanel* pGroupPanel) 
         : CellBase(gridControl, pGroupPanel), m_pGroupPanel(pGroupPanel)
     {
         this->Text = Properties::Resources::GetString("GroupPanel.Text");

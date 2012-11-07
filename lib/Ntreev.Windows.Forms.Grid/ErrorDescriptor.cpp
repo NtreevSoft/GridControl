@@ -29,12 +29,17 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    ErrorDescriptor::ErrorDescriptor(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+    using namespace System::Timers;
+    using namespace System::Drawing;
+    using namespace System::Drawing::Drawing2D;
+    using namespace System::Collections::Generic;
+
+    ErrorDescriptor::ErrorDescriptor(_GridControl^ gridControl)
         : GridObject(gridControl)
     {
-        m_cells = gcnew System::Collections::Generic::List<Ntreev::Windows::Forms::Grid::Cell^>();
-        m_rows = gcnew System::Collections::Generic::List<Ntreev::Windows::Forms::Grid::Row^>();
-        m_timer = gcnew System::Timers::Timer();
+        m_cells = gcnew List<Cell^>();
+        m_rows = gcnew List<Row^>();
+        m_timer = gcnew Timer();
         m_timer->Elapsed += gcnew System::Timers::ElapsedEventHandler(this, &ErrorDescriptor::errorTimer_Elapsed);
         m_timer->Interval = 300;
         m_errorCount = 0;
@@ -43,7 +48,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         this->GridControl->VisibleChanged += gcnew System::EventHandler(this, &ErrorDescriptor::gridControl_VisibleChanged);
     }
 
-    void ErrorDescriptor::Add(Ntreev::Windows::Forms::Grid::Cell^ cell)
+    void ErrorDescriptor::Add(Cell^ cell)
     {
         m_cells->Add(cell);
         m_errorCount = 0;
@@ -54,14 +59,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
     }
 
-    void ErrorDescriptor::Remove(Ntreev::Windows::Forms::Grid::Cell^ cell)
+    void ErrorDescriptor::Remove(Cell^ cell)
     {
         m_cells->Remove(cell);
         if(m_cells->Count == 0)
             m_errorCount = 0;
     }
 
-    void ErrorDescriptor::Add(Ntreev::Windows::Forms::Grid::Row^ row)
+    void ErrorDescriptor::Add(Row^ row)
     {
         m_rows->Add(row);
         m_errorCount = 0;
@@ -72,14 +77,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
     }
 
-    void ErrorDescriptor::Remove(Ntreev::Windows::Forms::Grid::Row^ row)
+    void ErrorDescriptor::Remove(Row^ row)
     {
         m_rows->Remove(row);
         if(m_rows->Count == 0)
             m_errorCount = 0;
     }
 
-    void ErrorDescriptor::errorTimer_Elapsed(System::Object^ /*sender*/, System::Timers::ElapsedEventArgs^ /*e*/)
+    void ErrorDescriptor::errorTimer_Elapsed(System::Object^ /*sender*/, ElapsedEventArgs^ /*e*/)
     {
         m_errorCount++;
         if(m_errorCount > 8)
@@ -90,7 +95,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         this->GridControl->Invalidate();
     }
 
-    void ErrorDescriptor::gridControl_Cleared(System::Object^ /*sender*/, Ntreev::Windows::Forms::Grid::ClearEventArgs^ /*e*/)
+    void ErrorDescriptor::gridControl_Cleared(System::Object^ /*sender*/, ClearEventArgs^ /*e*/)
     {
         m_cells->Clear();
         m_rows->Clear();
@@ -114,20 +119,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
     }
 
-    void ErrorDescriptor::Paint(System::Drawing::Graphics^ g)
+    void ErrorDescriptor::Paint(Graphics^ g)
     {
         if(m_errorCount % 2 != 0)
             return;
 
-        System::Drawing::Bitmap^ errorBitmap = _Resources::Error;
-        System::Drawing::Pen^ pen = gcnew System::Drawing::Pen(System::Drawing::Color::Firebrick, 2);
-        pen->Alignment = System::Drawing::Drawing2D::PenAlignment::Inset;
-        for each(Ntreev::Windows::Forms::Grid::Cell^ cell in m_cells)
+        Bitmap^ errorBitmap = _Resources::Error;
+        Pen^ pen = gcnew Pen(Color::Firebrick, 2);
+        pen->Alignment = PenAlignment::Inset;
+        for each(Cell^ cell in m_cells)
         {
             if(cell->IsDisplayable == false)
                 continue;
 
-            System::Drawing::Rectangle bounds = cell->Bounds;
+            Rectangle bounds = cell->Bounds;
             bounds.Width--;
             bounds.Height--;
             g->DrawRectangle(pen, bounds);
@@ -135,20 +140,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             g->DrawImage(errorBitmap, bounds.Left + 3, bounds.Top + 3, errorBitmap->Width, errorBitmap->Height);
         }
 
-        for each(Ntreev::Windows::Forms::Grid::Row^ row in m_rows)
+        for each(Row^ row in m_rows)
         {
             if(row->IsDisplayable == false)
                 continue;
 
-            System::Drawing::Rectangle bounds = row->Bounds;
+            Rectangle bounds = row->Bounds;
             bounds.Width = this->GridCore->GetColumnList()->GetBounds().GetWidth();
             bounds.Height--;
             g->DrawRectangle(pen, bounds);
 
             bounds = row->Bounds;
-
             g->DrawImage(errorBitmap, bounds.Left + 3, bounds.Top + 3, errorBitmap->Width, errorBitmap->Height);
-
         }
         delete pen;
     }

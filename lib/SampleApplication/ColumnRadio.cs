@@ -35,7 +35,6 @@ namespace SampleApplication
         public ColumnRadio()
         {
             this.DataType = typeof(bool);
-            this.DefaultValue = false;
 
             this.Control.Click += new EventHandler(Control_Click);
         }

@@ -22,33 +22,32 @@
 
 
 #pragma once
-#include "GroupRow.h"
+#include "GridObject.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     /// <summary>
     /// 스크롤 되는 열의 컬렉션을 나타냅니다.
     /// </summary>
-    public ref class GroupRowCollection sealed
-        : Ntreev::Windows::Forms::Grid::GridObject
-        , System::Collections::Generic::IEnumerable<Ntreev::Windows::Forms::Grid::GroupRow^>
+    public ref class GroupRowCollection sealed : GridObject
+        , System::Collections::Generic::IEnumerable<GroupRow^>
         , System::Collections::ICollection
     {
     private: // classes
 
         ref class Enumerator 
             : Ntreev::Windows::Forms::Grid::GridObject
-            , System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::GroupRow^>
+            , System::Collections::Generic::IEnumerator<GroupRow^>
         {
         public:
-            Enumerator(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
+            Enumerator(_GridControl^ gridControl);
             ~Enumerator();
             virtual bool MoveNext();
             virtual void Reset();
 
-            property Ntreev::Windows::Forms::Grid::GroupRow^ Current
+            property GroupRow^ Current
             {
-                virtual Ntreev::Windows::Forms::Grid::GroupRow^ get();
+                virtual GroupRow^ get();
             }
 
         private:
@@ -69,7 +68,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 열거자를 나타내는 <see cref="System::Collections::Generic::IEnumerator"/>입니다.
         /// </returns>
-        virtual System::Collections::Generic::IEnumerator<Ntreev::Windows::Forms::Grid::GroupRow^>^ GetEnumerator();
+        virtual System::Collections::Generic::IEnumerator<GroupRow^>^ GetEnumerator();
 
     public: // properties
 
@@ -85,9 +84,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::ArgumentOutOfRangeException">
         /// index가 0보다 작거나, <see cref="Count"/>보다 클 경우
         /// </exception>
-        property Ntreev::Windows::Forms::Grid::GroupRow^ default[int]
+        property GroupRow^ default[int]
         {
-            Ntreev::Windows::Forms::Grid::GroupRow^ get(int index);
+            GroupRow^ get(int index);
         }
 
         /// <summary>
@@ -99,9 +98,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 지정된 문자열을 가진 <see cref="GroupRow"/>를 반환합니다. 찾지 못한다면 null을 반환합니다.
         /// </returns>
-        property Ntreev::Windows::Forms::Grid::GroupRow^ default[System::String^]
+        property GroupRow^ default[System::String^]
         {
-            Ntreev::Windows::Forms::Grid::GroupRow^ get(System::String^ text);
+            GroupRow^ get(System::String^ text);
         }
 
         /// <summary>
@@ -117,7 +116,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     internal: // methods
 
-        GroupRowCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
+        GroupRowCollection(_GridControl^ gridControl);
 
     private: // methods
 

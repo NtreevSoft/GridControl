@@ -190,4 +190,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         Ime,
     };
+
+    public enum class ColumnBindingCreation : int
+    {
+        /// <summary>
+        /// 데이터 소스 바인딩시 해당 열을 생성하지 않습니다.
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// 데이터 소스 바인딩시 해당 열이 없다면 생성합니다.
+        /// </summary>
+        Create,
+
+        /// <summary>
+        /// 데이터 소스 바인딩시 해당 열이 없다면 생성하지만 보여지지 않도록 설정합니다.
+        /// </summary>
+        Hidden,
+    };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

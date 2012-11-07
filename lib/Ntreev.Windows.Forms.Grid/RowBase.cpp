@@ -30,7 +30,7 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    RowBase::RowBase(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, IDataRow* pDataRow)
+    RowBase::RowBase(_GridControl^ gridControl, IDataRow* pDataRow)
         : CellBase(gridControl, pDataRow), m_pDataRow(pDataRow)
     {
 
@@ -84,16 +84,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pDataRow->Expand(value);
     }
 
-    Ntreev::Windows::Forms::Grid::RowBaseCollection^ RowBase::Childs::get()
+    RowBaseCollection^ RowBase::Childs::get()
     {
         if(m_childs == nullptr)
         {
-            m_childs = gcnew Ntreev::Windows::Forms::Grid::RowBaseCollection(m_pDataRow);
+            m_childs = gcnew RowBaseCollection(m_pDataRow);
         }
         return m_childs;
     }
 
-    Ntreev::Windows::Forms::Grid::RowBase^ RowBase::Parent::get()
+    RowBase^ RowBase::Parent::get()
     {
         IDataRow* pParent = dynamic_cast<IDataRow*>(m_pDataRow->GetParent());
         if(pParent == nullptr)

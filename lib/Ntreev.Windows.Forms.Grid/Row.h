@@ -23,20 +23,14 @@
 
 #pragma once
 #include "RowBase.h"
-#include "CellCollection.h"
-#include "CellTagCollection.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    ref class RowBuilder;
-    ref class CellBuilder;
-
     /// <summary>
     /// 행을 나타냅니다.
     /// </summary>
     [System::ComponentModel::TypeConverterAttribute(System::ComponentModel::ExpandableObjectConverter::typeid)]
-    public ref class Row 
-        : Ntreev::Windows::Forms::Grid::RowBase
+    public ref class Row : RowBase
     {
     public: // methods
 
@@ -417,7 +411,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void ProcessChildControl();
         void DetachChildControl();
         Cell^ NewCell(Column^ column);
-        void ValueToSource(System::Object^ component);
+        //void ValueToSource(System::Object^ component);
+        void Refresh();
 
     internal: // properties
 

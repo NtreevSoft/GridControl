@@ -339,7 +339,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         System::Object^ ValidateValue(System::Object^ value);
 
-        void SetDefaultValue();
+        bool CancelEditInternal();
+
+        bool EndEditInternal();
 
     internal: // properties
 

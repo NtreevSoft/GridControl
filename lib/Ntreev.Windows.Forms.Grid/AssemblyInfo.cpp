@@ -58,7 +58,7 @@ using namespace System::Security::Permissions;
 //[assembly:AssemblyFileVersion("2.0.4646.26569")];
 
 
-[assembly:AssemblyVersionAttribute("2.0.*")];
+[assembly:AssemblyVersionAttribute("2.0.5.1")];
 
 [assembly:ComVisible(false)];
 

@@ -25,38 +25,22 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    ref class Cell;
-    ref class Column;
-    ref class RowBase;
-    ref class Row;
-    ref class CaptionRow;
-    ref class GroupRow;
-    ref class GridControl;
-    ref class GridRow;
-
-    namespace Native
-    {
-        class GrGridRow;
-    }
-
     ref class FromNative
     {
     public: // methods
 
-        static Ntreev::Windows::Forms::Grid::Cell^ Get(GrItem* pItem);
-
-        //static Ntreev::Windows::Forms::Grid::Cell^ Get(GrItem* pItem, Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
+        static Cell^ Get(GrItem* pItem);
 
         static Column^ Get(GrColumn* pColumn);
 
-        static Ntreev::Windows::Forms::Grid::RowBase^ Get(IDataRow* pDataRow);
+        static RowBase^ Get(IDataRow* pDataRow);
 
-        static Ntreev::Windows::Forms::Grid::GroupRow^ Get(GrGroupRow* pGroupRow);
+        static GroupRow^ Get(GrGroupRow* pGroupRow);
 
-        static Ntreev::Windows::Forms::Grid::Row^ Get(GrDataRow* pDataRow);
+        static Row^ Get(GrDataRow* pDataRow);
 
-        static Ntreev::Windows::Forms::Grid::CaptionRow^ Get(GrCaption* pCaption);
+        static CaptionRow^ Get(GrCaption* pCaption);
 
-        static Ntreev::Windows::Forms::Grid::GridRow^ Get(Native::GrGridRow* pGridRow);
+        static GridRow^ Get(Native::GrGridRow* pGridRow);
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

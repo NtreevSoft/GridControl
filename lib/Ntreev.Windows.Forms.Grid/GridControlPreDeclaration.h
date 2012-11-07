@@ -33,9 +33,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     ref class GridObject;
 
+    ref class CellBase;
+    ref class Cell;
+    ref class RowBase;
+    ref class Row;
     ref class CaptionRow;
     ref class GroupRow;
+    ref class GridRow;
     ref class GroupPanel;
+    ref class Column;
+
+    ref class CellTagCollection;
+    ref class CellCollection;
     ref class ColumnCollection;
     ref class VisibleColumnCollection;
     ref class DisplayableColumnCollection;
@@ -47,19 +56,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     ref class SelectedRowCollection;
     ref class SelectedColumnCollection;
     ref class GroupRowCollection;
+
     ref class ErrorDescriptor;
     ref class ToolTip;
     ref class Style;
-    ref class CellBase;
-    ref class Cell;
-    ref class RowBase;
-    ref class Row;
-    ref class Column;
+    
 
     ref class RowBuilder;
     ref class CellBuilder;
 
     enum class RowHighlightType;
+    enum class ColumnBindingCreation;
+    enum class ViewType;
 
     value class EditingReason;
 
@@ -80,6 +88,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     typedef ErrorDescriptor _ErrorDescriptor;
 
     typedef RowHighlightType _RowHighlightType;
+    typedef ColumnBindingCreation _ColumnBindingCreation;
+    typedef ViewType _ViewType;
     typedef Column _Column;
     typedef Row _Row;
 

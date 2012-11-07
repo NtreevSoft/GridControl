@@ -33,19 +33,11 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    Ntreev::Windows::Forms::Grid::Cell^ FromNative::Get(GrItem* pItem)
+    Cell^ FromNative::Get(GrItem* pItem)
     {
         System::Object^ ref = pItem->ManagedRef;
         return safe_cast<Ntreev::Windows::Forms::Grid::Cell^>(ref);
     }
-
-    //Ntreev::Windows::Forms::Grid::Cell^ FromNative::Get(GrItem* pItem, Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
-    //{
-    //    Ntreev::Windows::Forms::Grid::Cell^ cell = Get(pItem);
-    //    if(cell == nullptr)
-    //        cell = gcnew Ntreev::Windows::Forms::Grid::Cell(gridControl, pItem);
-    //    return cell;
-    //}
 
     Column^ FromNative::Get(GrColumn* pColumn)
     {
@@ -55,7 +47,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return safe_cast<Column^>(ref);
     }
 
-    Ntreev::Windows::Forms::Grid::RowBase^ FromNative::Get(IDataRow* pDataRow)
+    RowBase^ FromNative::Get(IDataRow* pDataRow)
     {
         if(pDataRow == nullptr)
         {
@@ -79,31 +71,31 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return nullptr;
     }
 
-    Ntreev::Windows::Forms::Grid::GroupRow^ FromNative::Get(GrGroupRow* pGroupRow)
+    GroupRow^ FromNative::Get(GrGroupRow* pGroupRow)
     {
         System::Object^ ref = pGroupRow->ManagedRef;
         if(ref == nullptr)
         {
-            ref = gcnew Ntreev::Windows::Forms::Grid::GroupRow(pGroupRow);
+            ref = gcnew GroupRow(pGroupRow);
             pGroupRow->ManagedRef = ref;
         }
 
-        return safe_cast<Ntreev::Windows::Forms::Grid::GroupRow^>(ref);
+        return safe_cast<GroupRow^>(ref);
     }
 
-    Ntreev::Windows::Forms::Grid::Row^ FromNative::Get(GrDataRow* pDataRow)
+    Row^ FromNative::Get(GrDataRow* pDataRow)
     {
         System::Object^ ref = pDataRow->ManagedRef;
-        return safe_cast<Ntreev::Windows::Forms::Grid::Row^>(ref);
+        return safe_cast<Row^>(ref);
     }
 
-    Ntreev::Windows::Forms::Grid::CaptionRow^ FromNative::Get(GrCaption* pCaption)
+    CaptionRow^ FromNative::Get(GrCaption* pCaption)
     {
         System::Object^ ref = pCaption->ManagedRef;
         return safe_cast<CaptionRow^>(ref);
     }
 
-    Ntreev::Windows::Forms::Grid::GridRow^ FromNative::Get(Native::GrGridRow* pGridRow)
+    GridRow^ FromNative::Get(Native::GrGridRow* pGridRow)
     {
         System::Object^ ref = pGridRow->ManagedRef;
         if(ref == nullptr)

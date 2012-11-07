@@ -109,8 +109,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_row = FromNative::Get(m_pItem->GetDataRow());
 
         m_pItem->ManagedRef = this;
-        m_value = System::DBNull::Value;
-        m_oldValue = System::DBNull::Value;
+        m_value = nullptr;
+        m_oldValue = nullptr;
     }
 
     Cell::Cell(_GridControl^ gridControl, GrItem* pItem)
@@ -120,8 +120,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_row = FromNative::Get(pItem->GetDataRow());
 
         m_pItem->ManagedRef = this;
-        m_value = System::DBNull::Value;
-        m_oldValue = System::DBNull::Value;
+        m_value = nullptr;
+        m_oldValue = nullptr;
     }
 
     Column^ Cell::Column::get()
@@ -161,20 +161,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(this->GridControl->InvokeValueChanging(this, value, oldValue) == false)
             return;
 
+        this->ValueCore = value;
+
         if(m_row->IsBeingEdited == true)
         {
-            if(m_oldValue == System::DBNull::Value)
+            if(m_oldValue == nullptr)
             {
                 m_row->AddEditedCell();
                 m_oldValue = oldValue;
             }
         }
 
-        this->ValueCore = value;
-
         this->GridControl->InvokeValueChanged(this);
-
-        UpdateNativeText(value);
+        this->Row->Refresh();
     }
 
     void Cell::UpdateNativeText()
@@ -231,9 +230,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return typeConverter->ConvertFrom(typeDescriptorContext, System::Windows::Forms::Application::CurrentCulture, value);
     }
 
-    bool Cell::CancelEdit()
+    bool Cell::CancelEditInternal()
     {
-        if(m_oldValue == System::DBNull::Value)
+        if(m_oldValue == nullptr)
             return false;
 
         m_row->RemoveEditedCell();
@@ -242,25 +241,39 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             this->ValueCore = m_oldValue;
             UpdateNativeText();
         }
-        m_oldValue = System::DBNull::Value;
+        m_oldValue = nullptr;
         return true;
     }
 
-    bool Cell::EndEdit()
+    bool Cell::EndEditInternal()
     {
-        if(m_oldValue == System::DBNull::Value)
+        if(m_oldValue == nullptr)
             return false;
 
-        if(m_value != System::DBNull::Value)
+        if(m_value != nullptr)
         {
             System::Object^ value = m_value;
-            m_value = System::DBNull::Value;
+            m_value = nullptr;
             this->ValueCore = value;
         }
 
         m_row->RemoveEditedCell();
-        m_oldValue = System::DBNull::Value;
+        m_oldValue = nullptr;
         return true;
+    }
+
+    bool Cell::CancelEdit()
+    {
+        bool result = this->CancelEditInternal();
+        this->Row->Refresh();
+        return result;
+    }
+
+    bool Cell::EndEdit()
+    {
+        bool result = this->EndEditInternal();
+        this->Row->Refresh();
+        return result;
     }
 
     void Cell::Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType)
@@ -279,15 +292,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         this->GridControl->BringIntoView(this);
     }
 
-    void Cell::SetDefaultValue()
-    {
-        this->ValueCore = this->Column->DefaultValue;
-        UpdateNativeText();
-    }
+    //void Cell::SetDefaultValue()
+    //{
+    //    this->ValueCore = this->Column->DefaultValue;
+    //    UpdateNativeText();
+    //}
 
     bool Cell::IsEdited::get()
     { 
-        return m_oldValue != System::DBNull::Value ? true : false;
+        return m_oldValue != nullptr ? true : false;
     }
 
     bool Cell::IsSelected::get()
@@ -367,13 +380,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::Object^ Cell::ValueCore::get()
     {
+        using namespace System::ComponentModel;
+
         if(m_wrongValue == true)
             return nullptr;
-        System::ComponentModel::PropertyDescriptor^ propertyDescriptor = this->Column->PropertyDescriptor;
+
+        PropertyDescriptor^ propertyDescriptor = this->Column->PropertyDescriptor;
         System::Object^ component = this->Row->Component;
+
         if(propertyDescriptor == nullptr || component == nullptr)
         {
-            if(m_value == System::DBNull::Value)
+            if(m_value == nullptr)
                 return nullptr;
             return m_value;
         }
@@ -383,8 +400,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Cell::ValueCore::set(System::Object^ value)
     {
-        System::ComponentModel::PropertyDescriptor^ propertyDescriptor = this->Column->PropertyDescriptor;
+        using namespace System::ComponentModel;
+
+        PropertyDescriptor^ propertyDescriptor = this->Column->PropertyDescriptor;
         System::Object^ component = this->Row->Component;
+
         if(propertyDescriptor == nullptr || component == nullptr)
         {
             m_value = value;
@@ -394,12 +414,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             value = this->Column->ConvertToSource(value);
             try
             {
-                propertyDescriptor->SetValue(this->Row->Component, value);
+                //if(propertyDescriptor->ShouldSerializeValue(component) == false)
+                    propertyDescriptor->SetValue(component, value);
             }
             catch(System::Exception^ e)
             {
                 if(value == nullptr)
-                    propertyDescriptor->SetValue(this->Row->Component, System::DBNull::Value);
+                    propertyDescriptor->SetValue(component, System::DBNull::Value);
                 else
                     throw e;
             }
@@ -454,6 +475,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Cell::ShouldSerializeValue()
     {
+        using namespace System::ComponentModel;
+        PropertyDescriptor^ propertyDescriptor = this->Column->PropertyDescriptor;
+
+        if(propertyDescriptor != nullptr)
+        {
+            return propertyDescriptor->ShouldSerializeValue(this->Row->Component);
+        }
+
         if(this->ValueCore == nullptr || this->ValueCore->ToString() == "")
             return false;
 

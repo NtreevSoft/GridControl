@@ -1,8 +1,3 @@
-#include "StdAfx.h"
-#include "RowBuilder.h"
-
-
-
 //=====================================================================================================================
 // Ntreev Grid for .Net 2.0.4478.19833
 // https://github.com/NtreevSoft/GridControl
@@ -24,6 +19,10 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //=====================================================================================================================
+
+
+#include "StdAfx.h"
+#include "RowBuilder.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {

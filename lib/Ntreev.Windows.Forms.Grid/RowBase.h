@@ -28,8 +28,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
     ref class RowBaseCollection;
 
-    public ref class RowBase abstract
-        : Ntreev::Windows::Forms::Grid::CellBase 
+    public ref class RowBase abstract : CellBase 
     {
     public: // methods
 
@@ -137,9 +136,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::RowBaseCollection^ Childs
+        property RowBaseCollection^ Childs
         {
-            Ntreev::Windows::Forms::Grid::RowBaseCollection^ get();
+            RowBaseCollection^ get();
         }
 
         /// <summary>
@@ -150,14 +149,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #else
         [System::ComponentModel::BrowsableAttribute(false)]
 #endif
-        property Ntreev::Windows::Forms::Grid::RowBase^ Parent
+        property RowBase^ Parent
         {
-            Ntreev::Windows::Forms::Grid::RowBase^ get();
+            RowBase^ get();
         }
 
     internal: // methods
 
-        RowBase(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, IDataRow* pDataRow);
+        RowBase(_GridControl^ gridControl, IDataRow* pDataRow);
 
         RowBase(IDataRow* pDataRow);
 
@@ -168,6 +167,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     private: // variables
 
         IDataRow* m_pDataRow;
-        Ntreev::Windows::Forms::Grid::RowBaseCollection^ m_childs;
+        RowBaseCollection^ m_childs;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

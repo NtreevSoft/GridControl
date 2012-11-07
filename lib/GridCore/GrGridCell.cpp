@@ -1540,6 +1540,9 @@ void GrColumn::SetSelected(bool b)
 {
     if(m_pGridCore == nullptr)
         return;
+    
+    if(GetSelected() == b)
+        return;
 
     GrItemSelector* pItemSelector = m_pGridCore->GetItemSelector();
     if(b == true)
