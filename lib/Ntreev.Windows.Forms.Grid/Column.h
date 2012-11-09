@@ -401,9 +401,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::InvalidOperationException">
         /// 그리드 컨트롤에 바인딩 된 후에 값을 설정하려고 할때.
         /// </exception>
-        /// <remarks>
-        /// 속성 변경시 <see cref="DefaultValue"/>와 <see cref="TypeConverter"/>의 값은 초기화 됩니다.
-        /// </remarks>
         [System::ComponentModel::EditorAttribute("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", System::Drawing::Design::UITypeEditor::typeid)]
         [System::ComponentModel::CategoryAttribute("Data")]
         property System::Type^ DataType

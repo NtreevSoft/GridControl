@@ -780,6 +780,8 @@ GrDataRow* GrDataRowList::GetDataRow(uint index) const
 
 void GrDataRowList::Clear()
 {
+    m_pGridCore->GetItemSelector()->ClearSelection();
+    m_pGridCore->GetFocuser()->Reset();
     for(auto value : m_vecDataRows)
     {
         value->SetDataRowIndex(INVALID_INDEX);

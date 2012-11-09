@@ -441,7 +441,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
                 //if(pItem->GetControlVisible() == true)
                 // paintRect.Width -= pItem->GetControlRect().GetWidth();
-                column->PaintValue(graphics, paintRect, cell, cell->Value);
+                column->PaintValue(graphics, paintRect, cell, cell->DisplayValue);
             }
         }
     }

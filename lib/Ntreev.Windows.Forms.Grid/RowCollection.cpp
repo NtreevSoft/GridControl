@@ -115,6 +115,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         else
         {
             row = m_components[component];
+            m_pDataRowList->AddDataRow(row->NativeRef);
             row->Component = component;
             row->ComponentIndex = componentIndex;
         }

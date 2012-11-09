@@ -168,7 +168,8 @@ namespace Ntreev.Windows.Forms.Grid.Design
             {
                 foreach (Assembly item in this.referenceAssemblies)
                 {
-                    AddTypeToTreeView(item, false, filter);
+                    if(item != null)
+                        AddTypeToTreeView(item, false, filter);
                 }
             }
 

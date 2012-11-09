@@ -62,7 +62,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return Current; 
     }
 
-    ColumnCollection::ServiceProvider::ServiceProvider(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+    ColumnCollection::ServiceProvider::ServiceProvider(_GridControl^ gridControl)
         : m_gridControl(gridControl)
     {
 
@@ -73,12 +73,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_gridControl->GetInternalService(serviceType); 
     }
 
-    ColumnCollection::ColumnCollection(Ntreev::Windows::Forms::Grid::GridControl^ gridControl)
+    ColumnCollection::ColumnCollection(_GridControl^ gridControl)
         : GridObject(gridControl)
     {
+        using namespace System::ComponentModel;
+
         m_pColumnList = this->GridCore->GetColumnList();
 
-        m_listChangedEventHandler = gcnew System::ComponentModel::ListChangedEventHandler(this, &ColumnCollection::currencyManager_ListChanged);
+        m_listChangedEventHandler = gcnew ListChangedEventHandler(this, &ColumnCollection::currencyManager_ListChanged);
 
         gridControl->CurrencyManagerChanging += gcnew CurrencyManagerChangingEventHandler(this, &ColumnCollection::gridControl_CurrencyManagerChanging);
         gridControl->CurrencyManagerChanged += gcnew CurrencyManagerChangedEventHandler(this, &ColumnCollection::gridControl_CurrencyManagerChanged);
@@ -199,7 +201,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::Collections::Generic::IEnumerator<Column^>^ ColumnCollection::GetEnumerator()
     {
-        return gcnew Ntreev::Windows::Forms::Grid::ColumnCollection::Enumerator(m_pColumnList);
+        return gcnew ColumnCollection::Enumerator(m_pColumnList);
     }
 
     void ColumnCollection::Bind(System::ComponentModel::PropertyDescriptor^ propertyDescriptor)
@@ -340,6 +342,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         using namespace System::ComponentModel;
         using namespace System::ComponentModel::Design;
+
         if(serviceProvider != nullptr)
         {
             IDesignerHost^ designerHost = dynamic_cast<IDesignerHost^>(serviceProvider->GetService(IDesignerHost::typeid));
@@ -380,6 +383,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         using namespace System::ComponentModel;
         using namespace System::ComponentModel::Design;
+        using namespace System::Windows::Forms;
+        using namespace System::Collections::Generic;
 
         switch(e->ListChangedType)
         {
@@ -393,9 +398,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             break;
         case ListChangedType::PropertyDescriptorChanged:
             {
-                using namespace System::Windows::Forms;
-                using namespace System::Collections::Generic;
-
                 CurrencyManager^ currencyManager = dynamic_cast<CurrencyManager^>(sender);
 
                 List<Column^>^ boundColumns = gcnew List<Column^>();
@@ -406,9 +408,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                         boundColumns->Add(item);
                 }
 
-                System::ComponentModel::PropertyDescriptor^ changedPropertyDescriptor = nullptr;
+                PropertyDescriptor^ changedPropertyDescriptor = nullptr;
 
-                for each(System::ComponentModel::PropertyDescriptor^ item in currencyManager->GetItemProperties())
+                for each(PropertyDescriptor^ item in currencyManager->GetItemProperties())
                 {
                     Column^ column = this[item->Name];
                     if(column != nullptr)
@@ -488,6 +490,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void ColumnCollection::gridControl_CurrencyManagerChanged(System::Object^ /*sender*/, Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventArgs^ e)
     {
+        using namespace System::ComponentModel;
+
         if(m_manager != nullptr)
         {
             m_manager->ListChanged -= m_listChangedEventHandler;
@@ -498,7 +502,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_manager == nullptr)
             return;
 
-        for each(System::ComponentModel::PropertyDescriptor^ item in m_manager->GetItemProperties())
+        for each(PropertyDescriptor^ item in m_manager->GetItemProperties())
         {
             this->Bind(item);
         }

@@ -110,7 +110,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         m_pItem->ManagedRef = this;
         m_value = nullptr;
-        m_oldValue = nullptr;
+        m_oldValue = Cell::NullValue;
+        m_displayValue = Cell::NullValue;
     }
 
     Cell::Cell(_GridControl^ gridControl, GrItem* pItem)
@@ -121,7 +122,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         m_pItem->ManagedRef = this;
         m_value = nullptr;
-        m_oldValue = nullptr;
+        m_oldValue = Cell::NullValue;
+        m_displayValue = Cell::NullValue;
     }
 
     Column^ Cell::Column::get()
@@ -165,7 +167,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         if(m_row->IsBeingEdited == true)
         {
-            if(m_oldValue == nullptr)
+            if(m_oldValue == Cell::NullValue)
             {
                 m_row->AddEditedCell();
                 m_oldValue = oldValue;
@@ -197,11 +199,29 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             {
                 text = m_column->TypeConverter->ConvertToString(typeDescriptorContext, value);
             }
-            this->DisplayText = text;
+            this->UpdateNativeText(text);
         }
         catch(System::Exception^)
         {
-            this->DisplayText = System::String::Empty;
+            this->UpdateNativeText(System::String::Empty);
+        }
+    }
+
+    void Cell::UpdateNativeText(System::String^ text)
+    {
+        if(m_text != nullptr)
+            this->Row->m_textCapacity -= m_text->Length;
+
+        m_text = text;
+
+        if(m_text != nullptr)
+        {
+            this->Row->m_textCapacity += m_text->Length;
+            m_pItem->SetText(ToNativeString::Convert(m_text));
+        }
+        else
+        {
+            m_pItem->SetText(L"");
         }
     }
 
@@ -232,22 +252,26 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Cell::CancelEditInternal()
     {
-        if(m_oldValue == nullptr)
+        if(m_oldValue == Cell::NullValue)
             return false;
 
         m_row->RemoveEditedCell();
         if(m_wrongValue == false)
         {
-            this->ValueCore = m_oldValue;
+            if(this->GridControl->InvokeValueChanging(this, m_oldValue, this->ValueCore) == true)
+            {
+                this->ValueCore = m_oldValue;
+                this->GridControl->InvokeValueChanged(this);
+            }
             UpdateNativeText();
         }
-        m_oldValue = nullptr;
+        m_oldValue = Cell::NullValue;
         return true;
     }
 
     bool Cell::EndEditInternal()
     {
-        if(m_oldValue == nullptr)
+        if(m_oldValue == Cell::NullValue)
             return false;
 
         if(m_value != nullptr)
@@ -258,7 +282,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         m_row->RemoveEditedCell();
-        m_oldValue = nullptr;
+        m_oldValue = Cell::NullValue;
         return true;
     }
 
@@ -300,7 +324,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Cell::IsEdited::get()
     { 
-        return m_oldValue != nullptr ? true : false;
+        return m_oldValue != Cell::NullValue ? true : false;
     }
 
     bool Cell::IsSelected::get()
@@ -453,19 +477,33 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Cell::DisplayText::set(System::String^ value)
     {
-        if(m_text != nullptr)
-            this->Row->m_textCapacity -= m_text->Length;
+        using namespace System::ComponentModel;
 
-        m_text = value;
+        this->UpdateNativeText(value);
 
-        if(m_text != nullptr)
+        if(System::String::IsNullOrEmpty(m_text) == true)
         {
-            this->Row->m_textCapacity += m_text->Length;
-            m_pItem->SetText(ToNativeString::Convert(value));
+            m_displayValue = Cell::NullValue;
         }
+        else
+        {
+            TypeConverter^ converter = this->Column->TypeConverter;
+            try
+            {
+                m_displayValue = converter->ConvertFromString(m_text);
+            }
+            catch(System::Exception^ /*e*/)
+            {
+                m_displayValue = Cell::NullValue;
+            }
+        }
+    }
 
-        if(m_text == nullptr)
-            UpdateNativeText();
+    System::Object^ Cell::DisplayValue::get()
+    {
+        if(m_displayValue == Cell::NullValue)
+            return this->ValueCore;
+        return m_displayValue;
     }
 
     System::Drawing::Rectangle Cell::TextBound::get()
