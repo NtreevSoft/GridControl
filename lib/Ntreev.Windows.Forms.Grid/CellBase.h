@@ -173,7 +173,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #endif
         property int Width
         {
-            virtual int get() sealed;
+            virtual int get();
         }
 
 #ifdef _DEBUG
@@ -183,7 +183,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #endif
         property int Height
         {
-            virtual int get() sealed;
+            virtual int get();
         }
 
 #ifdef _DEBUG

@@ -329,9 +329,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Column::Width::set(int width)
     {
-        if(width < 0)
-            throw gcnew System::ArgumentOutOfRangeException("width", "width는 0보다 커야 합니다.");
-
         m_pColumn->SetWidth(width);
     }
 
@@ -342,10 +339,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Column::MinWidth::set(int width)
     {
-        if(width < 0)
-            throw gcnew System::ArgumentOutOfRangeException("width", "width는 0보다 커야 합니다.");
-        if(width > MaxWidth)
-            throw gcnew System::ArgumentOutOfRangeException("width", "width가 최대 너비보다 큽니다.");
         m_pColumn->SetMinWidth(width);
     }
 
@@ -356,10 +349,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Column::MaxWidth::set(int width)
     {
-        if(width < 0)
-            throw gcnew System::ArgumentOutOfRangeException("width", "width는 0보다 커야 합니다.");
-        if(width < MinWidth)
-            throw gcnew System::ArgumentOutOfRangeException("width", "width가 최소 너비보다 작습니다.");
         m_pColumn->SetMaxWidth(width);
     }
 
@@ -525,6 +514,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     int Column::VisibleIndex::get()
     {
         return (int)m_pColumn->GetVisibleIndex();
+    }
+
+    void Column::VisibleIndex::set(int value)
+    {
+        m_pColumn->SetVisibleIndex((uint)value);
+
+        if(this->GridControl != nullptr)
+        {
+            this->GridControl->Update();
+        }
     }
 
     int Column::DisplayIndex::get()
@@ -909,15 +908,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_pColumn->ShouldSerializeWidth();
     }
 
-    bool Column::ShouldSerializePriorityOnFrozen()
-    {
-        return m_pColumn->ShouldSerializePriorityOnFrozen();
-    }
-        
-    bool Column::ShouldSerializePriorityOnUnfrozen()
-    {
-        return m_pColumn->ShouldSerializePriorityOnUnfrozen();
-    }
+    //bool Column::ShouldSerializePriorityOnFrozen()
+    //{
+    //    return m_pColumn->ShouldSerializePriorityOnFrozen();
+    //}
+    //    
+    //bool Column::ShouldSerializePriorityOnUnfrozen()
+    //{
+    //    return m_pColumn->ShouldSerializePriorityOnUnfrozen();
+    //}
 
     void Column::ResetTitle()
     {
@@ -1061,25 +1060,25 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_site;
     }
 
-    int Column::PriorityOnFrozen::get()
-    {
-        return m_pColumn->GetFreezablePriority();
-    }
+    //int Column::PriorityOnFrozen::get()
+    //{
+    //    return m_pColumn->GetFreezablePriority();
+    //}
 
-    void Column::PriorityOnFrozen::set(int value)
-    {
-        m_pColumn->SetFreezablePriority(value);
-    }
+    //void Column::PriorityOnFrozen::set(int value)
+    //{
+    //    m_pColumn->SetFreezablePriority(value);
+    //}
 
-    int Column::PriorityOnUnfrozen::get()
-    {
-        return m_pColumn->GetUnfreezablePriority();
-    }
+    //int Column::Priority::get()
+    //{
+    //    return m_pColumn->GetPriority();
+    //}
 
-    void Column::PriorityOnUnfrozen::set(int value)
-    {
-        m_pColumn->SetUnfreezablePriority(value);
-    }
+    //void Column::Priority::set(int value)
+    //{
+    //    m_pColumn->SetPriority(value);
+    //}
 
     Design::TypeEditor^ Column::TypeEditor::get()
     {

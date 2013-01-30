@@ -465,11 +465,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         
         this->Activate();
 
-        PreProcessEvent(control);
+        this->PreProcessEvent(control);
 
         System::Collections::ArrayList dd;
         Native::Methods::DoEvents(dd);
-        PostProcessEvent(control);
+        this->PostProcessEvent(control);
 
         if(dd.Count > 0)
         {

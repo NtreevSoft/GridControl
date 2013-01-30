@@ -132,6 +132,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		void ResetLineColor();
 
+        System::Windows::Forms::DialogResult ShowMessage(System::String^ text);
+
+        System::Windows::Forms::DialogResult ShowMessage(System::String^ text, System::Windows::Forms::MessageBoxButtons buttons);
+
+        System::Windows::Forms::DialogResult ShowMessage(System::String^ text, System::String^ caption, System::Windows::Forms::MessageBoxButtons buttons);
+
+        System::Windows::Forms::DialogResult ShowMessage(System::String^ text, System::String^ caption, System::Windows::Forms::MessageBoxButtons buttons, System::Windows::Forms::MessageBoxIcon icon);
+
     public: // properties
 
         /// <summary>
@@ -193,37 +201,37 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void set(System::String^);
         }
 
-        /// <summary>
-        /// 열의 너비조절을 수행하기 위한 열과 열 사이의 감지영역입니다.
-        /// </summary>
-        /// <remarks>
-        /// 마우스 드래깅을 이용하여 열의 너비조절을 하기 위하여 커서가 해당 영역 안에 있는지 확인하게 됩니다.
-        /// 열과 열 사이를 기준으로 -/+ 속성값 만큼의 너비안에 커서가 들어가게 되면 마우스 클릭시 열의 너비 조절을 할 수 있습니다.
-        /// </remarks>
-        [System::ComponentModel::DescriptionAttribute("열의 너비조절을 수행하기 위한 열과 열 사이의 감지영역을 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior")]
-        [System::ComponentModel::DefaultValueAttribute(10)]
-        property int ColumnSplitter
-        {
-            int get();
-            void set(int); 
-        }
+        ///// <summary>
+        ///// 열의 너비조절을 수행하기 위한 열과 열 사이의 감지영역입니다.
+        ///// </summary>
+        ///// <remarks>
+        ///// 마우스 드래깅을 이용하여 열의 너비조절을 하기 위하여 커서가 해당 영역 안에 있는지 확인하게 됩니다.
+        ///// 열과 열 사이를 기준으로 -/+ 속성값 만큼의 너비안에 커서가 들어가게 되면 마우스 클릭시 열의 너비 조절을 할 수 있습니다.
+        ///// </remarks>
+        //[System::ComponentModel::DescriptionAttribute("열의 너비조절을 수행하기 위한 열과 열 사이의 감지영역을 설정합니다.")]
+        //[System::ComponentModel::CategoryAttribute("Behavior")]
+        //[System::ComponentModel::DefaultValueAttribute(10)]
+        //property int ColumnSplitter
+        //{
+        //    int get();
+        //    void set(int); 
+        //}
 
-        /// <summary>
-        /// 행의 높이조절을 수행하기 위한 행과 행 사이의 감지영역입니다.
-        /// </summary>
-        /// <remarks>
-        /// 마우스 드래깅을 이용하여 행의 높이조절을 하기 위하여 커서가 해당 영역 안에 있는지 확인하게 됩니다.
-        /// 행과 행 사이를 기준으로 -/+ 속성값 만큼의 높이안에 커서가 들어가게 되면 마우스 클릭시 행의 높이 조절을 할 수 있습니다.
-        /// </remarks>
-        [System::ComponentModel::DescriptionAttribute("행의 높이조절을 수행하기 위한 행과 행 사이의 감지영역을 설정합니다.")]
-        [System::ComponentModel::CategoryAttribute("Behavior")]
-        [System::ComponentModel::DefaultValueAttribute(3)]
-        property int RowSplitter
-        {
-            int get();
-            void set(int);
-        }
+        ///// <summary>
+        ///// 행의 높이조절을 수행하기 위한 행과 행 사이의 감지영역입니다.
+        ///// </summary>
+        ///// <remarks>
+        ///// 마우스 드래깅을 이용하여 행의 높이조절을 하기 위하여 커서가 해당 영역 안에 있는지 확인하게 됩니다.
+        ///// 행과 행 사이를 기준으로 -/+ 속성값 만큼의 높이안에 커서가 들어가게 되면 마우스 클릭시 행의 높이 조절을 할 수 있습니다.
+        ///// </remarks>
+        //[System::ComponentModel::DescriptionAttribute("행의 높이조절을 수행하기 위한 행과 행 사이의 감지영역을 설정합니다.")]
+        //[System::ComponentModel::CategoryAttribute("Behavior")]
+        //[System::ComponentModel::DefaultValueAttribute(3)]
+        //property int RowSplitter
+        //{
+        //    int get();
+        //    void set(int);
+        //}
 
         /// <summary>
         /// 열의 너비를 자동적으로 조절되는지에 대한 여부를 가져오거나 설정합니다.
@@ -837,6 +845,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void set(System::Drawing::Color);
         }
 
+        [System::ComponentModel::BrowsableAttribute(false)]
+        [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+        property Ntreev::Windows::Forms::Grid::MessageBoxCallback^ MessageBoxCallback
+        {
+            Ntreev::Windows::Forms::Grid::MessageBoxCallback^ get();
+            void set(Ntreev::Windows::Forms::Grid::MessageBoxCallback^);
+        }
+
 #ifdef _TIME_TEST
         [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
         property bool Rendering;
@@ -932,6 +948,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
+        /// 행의 내용이 변경된 경우에 발생합니다.
+        /// </summary>
+        [System::ComponentModel::DescriptionAttribute("행의 내용이 변경된 경우에 발생합니다.")]
+        [System::ComponentModel::CategoryAttribute("Row")]
+        event RowEventHandler^ RowChanged
+        {
+            void add(RowEventHandler^ p) { m_eventRowChanged += p; }
+            void remove(RowEventHandler^ p) { m_eventRowChanged -= p; }
+        private:
+            void raise(System::Object^ sender, RowEventArgs^ e) { if(m_eventRowChanged != nullptr) m_eventRowChanged->Invoke(sender, e); }
+        }
+
+        /// <summary>
         /// 행이 데이터 소스와 연결 되기 전에 발생합니다.
         /// </summary>
         [System::ComponentModel::DescriptionAttribute("행이 데이터 소스와 연결 되기 전에 발생합니다.")]
@@ -982,7 +1011,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         private:
             void raise(System::Object^ sender, RowEventArgs^ e) { if(m_eventRowUnbinded != nullptr) m_eventRowUnbinded->Invoke(sender, e); }
         }
-
 
         /// <summary>
         /// 열들의 선택 범위가 변경되었을때 발생합니다.
@@ -1419,6 +1447,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void InvokeRowUnbinded(Row^ row);
         bool InvokeRowRemoving(Row^ row);
         void InvokeRowRemoved(RowRemovedEventArgs^ e);
+        void InvokeRowChanged(Row^ row);
         bool InvokeColumnInserting(Column^ column);
         void InvokeColumnInserted(Column^ column);
         Column^ InvokeColumnBinding(System::ComponentModel::PropertyDescriptor^ propertyDescriptor, Column^ existColumn);
@@ -1562,6 +1591,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이벤트 데이터가 들어 있는 <see cref="RowRemovedEventArgs"/>입니다.
         /// </param>
         virtual void OnRowRemoved(RowRemovedEventArgs^ e);
+
+        /// <summary>
+        /// <see cref="RowChanged"/> 이벤트를 발생시킵니다.
+        /// </summary>
+        /// <param name="e">
+        /// 이벤트 데이터가 들어 있는 <see cref="RowEventArgs"/>입니다.
+        /// </param>
+        virtual void OnRowChanged(RowEventArgs^ e);
 
         /// <summary>
         /// <see cref="RowBinding"/> 이벤트를 발생시킵니다.
@@ -2051,6 +2088,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		void style_Disposed(System::Object^ sender, System::EventArgs^ e);
         void childGridControl_FocusedCellChanged(System::Object^ sender, CellEventArgs^ e);
 
+        System::Windows::Forms::DialogResult DefaultShowMessage(System::String^ text, System::String^ caption, System::Windows::Forms::MessageBoxButtons buttons, System::Windows::Forms::MessageBoxIcon icon);
+
     private: // methods
 
     private: // variables
@@ -2095,6 +2134,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::Drawing::Color m_paddingColor;
 		System::Drawing::Color m_lineColor;
 		bool m_paintBackground;
+        bool m_disposing;
 
         RowBuilder^ m_rowBuilder;
 
@@ -2105,6 +2145,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         RowInsertedEventHandler^ m_eventRowInserted;
         RowRemovingEventHandler^ m_eventRowRemoving;
         RowRemovedEventHandler^ m_eventRowRemoved;
+        RowEventHandler^ m_eventRowChanged;
         RowBindingEventHandler^ m_eventRowBinding;
         RowEventHandler^ m_eventRowBinded;
         RowEventHandler^ m_eventRowUnbinding;
@@ -2151,6 +2192,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::Windows::Forms::CurrencyManager^ m_defaultManager;
         System::Data::DataTable^ m_defaultDataSource;
         int m_dataBindingRef;
+
+        Ntreev::Windows::Forms::Grid::MessageBoxCallback^ m_messageBoxCallback;
+        Ntreev::Windows::Forms::Grid::MessageBoxCallback^ m_defaultMessageBoxCallback;
 
 		System::EventHandler^ m_styleDisposedEventHandler;
 

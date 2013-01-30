@@ -117,7 +117,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void ColumnDropDown<TControl>::CloseDropDown()
     {
         if(m_editorService == nullptr)
-            throw gcnew System::NotImplementedException();
+            return;
 
         m_editorService->Close();
     }

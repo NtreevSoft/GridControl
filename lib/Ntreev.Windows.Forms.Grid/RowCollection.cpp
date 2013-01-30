@@ -111,27 +111,32 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             row->ComponentIndex = componentIndex;
             row->ProcessChildControl();
             this->GridControl->InvokeRowBinded(row);
+            this->GridControl->InvokeRowChanged(row);
         }
         else
         {
+            if(this->GridControl->InvokeRowBinding(component) == false)
+                return;
+
             row = m_components[component];
             m_pDataRowList->AddDataRow(row->NativeRef);
             row->Component = component;
             row->ComponentIndex = componentIndex;
+
+            row->ProcessChildControl();
+            this->GridControl->InvokeRowBinded(row);
+            this->GridControl->InvokeRowChanged(row);
         }
     }
 
     void RowCollection::Unbind(int componentIndex)
     {
-        if(componentIndex >= this->Count)
-            return;
-
-        for(int i = componentIndex + 1 ; i<this->Count ; i++)
+        Row^ row = GetByComponentIndex(componentIndex);
+        for(int i = row->Index + 1 ; i<this->Count ; i++)
         {
             this->GetAt(i)->ComponentIndex--;
         }
 
-        Row^ row = this->GetAt(componentIndex);
         this->GridControl->InvokeRowUnbinding(row);
         m_pDataRowList->RemoveDataRow(row->NativeRef);
         m_components->Remove(row->Component);
@@ -213,6 +218,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                         item->UpdateNativeText();
                     }
                 }
+
+                this->GridControl->InvokeRowChanged(row);
             }
             break;
         case System::ComponentModel::ListChangedType::ItemMoved:
@@ -223,6 +230,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         case System::ComponentModel::ListChangedType::Reset:
             {
                 m_pDataRowList->Clear();
+                m_components->Clear();
                 for each(System::Object^ item in m_manager->List)
                 {
                     Bind(item, this->Count);
@@ -295,6 +303,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void RowCollection::BeginInsertion()
     {
+        if(this->InsertionRow->Component != nullptr)
+            return;
+
         ManagerEventDetach managerEventDeatch(this);
 
         m_manager->AddNew();
@@ -305,8 +316,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         ManagerEventDetach managerEventDeatch(this);
 
-        m_manager->CancelCurrentEdit();
         this->InsertionRow->Component = nullptr;
+        m_manager->CancelCurrentEdit();
+    }
+
+    Row^ RowCollection::GetByComponentIndex(int index)
+    {
+        for each(Row^ item in this)
+        {
+            if(item->ComponentIndex == index)
+                return item;
+        }
+        return nullptr;
     }
 
     void RowCollection::ArgumentTest(Row^ item)
@@ -360,15 +381,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         if(this->GridControl->InvokeRowInserting(item->Component) == false)
         {
-            ManagerEventDetach managerEventDeatch(this);
-            m_manager->CancelCurrentEdit();
+            if(isNew == true)
+            {
+                item->Component = nullptr;
+                ManagerEventDetach managerEventDeatch(this);
+                m_manager->CancelCurrentEdit();
+            }
         }
         else
         {
             try
             {
                 item->ComponentIndex = m_manager->List->Count - 1;
-
                 ManagerEventDetach managerEventDeatch(this);
                 m_manager->EndCurrentEdit();
             }
@@ -380,7 +404,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                     ManagerEventDetach managerEventDeatch(this);
                     m_manager->CancelCurrentEdit();
                 }
-                System::Windows::Forms::MessageBox::Show(e->Message);
+                this->GridControl->ShowMessage(e->Message);
                 return nullptr;
             }
 
@@ -391,6 +415,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             item->Refresh();
             this->GridControl->InvokeRowInserted(item);
             this->InsertionRow->Refresh();
+            this->GridControl->InvokeRowChanged(item);
         }
         return item;
     }

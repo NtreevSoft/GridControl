@@ -36,6 +36,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
         virtual void OnKeyDown(System::Windows::Forms::KeyEventArgs^ e) override;
 
+        virtual void OnKeyPress(System::Windows::Forms::KeyPressEventArgs^ e) override;
+
     private: // variables
 
         Ntreev::Windows::Forms::Grid::Design::IEditorService^ m_editorService;

@@ -345,6 +345,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         bool EndEditInternal();
 
+        void SourceValueToLocal(System::Object^ component);
+
+        void LocalValueToSource(System::Object^ component);
+
     internal: // properties
 
         property GrItem* NativeRef
@@ -366,6 +370,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property System::Object^ SourceValue
         {
             System::Object^ get();
+            void set(System::Object^);
         }
 
         property bool WrongValue
@@ -377,6 +382,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property System::Object^ DisplayValue
         {
             System::Object^ get();
+        }
+
+        property bool HasSourceValue
+        {
+            bool get();
         }
 
     protected:

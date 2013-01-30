@@ -111,6 +111,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         m_rowBuilder = gcnew Ntreev::Windows::Forms::Grid::RowBuilder();
 
+        m_defaultMessageBoxCallback = gcnew Ntreev::Windows::Forms::Grid::MessageBoxCallback(this, &GridControl::DefaultShowMessage);
+
 #if _MSC_VER >= 1600
 #pragma warning(disable:4564)
         m_defaultDataSource = gcnew System::Data::DataTable();
@@ -134,6 +136,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_pGridCore == nullptr)
             return;
 
+        m_disposing = true;
+
         OnCurrencyManagerChanging(gcnew CurrencyManagerChangingEventArgs(nullptr));
         OnCurrencyManagerChanged(gcnew CurrencyManagerChangedEventArgs(nullptr));
 
@@ -153,6 +157,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             delete m_pGridPainter;
             m_pGridPainter = nullptr;
         }
+
+        m_disposing = false;
     }
 
     bool GridControl::ProcessTabKey(bool /*forward*/)
@@ -293,6 +299,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
             clipping.right = System::Math::Min(clipping.right, this->DisplayRectangle.Right);
             clipping.bottom = System::Math::Min(clipping.bottom, this->DisplayRectangle.Bottom); 
+
 
             System::IntPtr hdc = e->Graphics->GetHdc();
             try
@@ -439,8 +446,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                     paintRect.X -= (DEF_ICON_SIZE + column->CellPadding.Left);
                 }
 
-                //if(pItem->GetControlVisible() == true)
-                // paintRect.Width -= pItem->GetControlRect().GetWidth();
+                if(pItem->GetClipped() == true)
+                    paintRect.Intersect(clipRectangle);
                 column->PaintValue(graphics, paintRect, cell, cell->DisplayValue);
             }
         }
@@ -591,6 +598,43 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         UserControl::Update();
     }
 
+    Ntreev::Windows::Forms::Grid::MessageBoxCallback^ GridControl::MessageBoxCallback::get()
+    {
+        if(m_messageBoxCallback == nullptr)
+            return m_defaultMessageBoxCallback;
+        return m_messageBoxCallback;
+    }
+
+    void GridControl::MessageBoxCallback::set(Ntreev::Windows::Forms::Grid::MessageBoxCallback^ value)
+    {
+        m_messageBoxCallback = value;
+    }
+
+    DialogResult GridControl::ShowMessage(System::String^ text)
+    {
+        return this->ShowMessage(text, MessageBoxButtons::OK);
+    }
+
+    DialogResult GridControl::ShowMessage(System::String^ text, MessageBoxButtons buttons)
+    {
+        return this->ShowMessage(text, System::String::Empty, buttons);
+    }
+
+    DialogResult GridControl::ShowMessage(System::String^ text, System::String^ caption, MessageBoxButtons buttons)
+    {
+        return this->ShowMessage(text, caption, buttons, MessageBoxIcon::None);
+    }
+
+    DialogResult GridControl::ShowMessage(System::String^ text, System::String^ caption, MessageBoxButtons buttons, MessageBoxIcon icon)
+    {
+        return this->MessageBoxCallback(text, caption, buttons, icon);
+    }
+
+    DialogResult GridControl::DefaultShowMessage(System::String^ text, System::String^ caption, MessageBoxButtons buttons, MessageBoxIcon icon)
+    {
+        return MessageBox::Show(text, caption, buttons, icon);
+    }
+            
     Ntreev::Windows::Forms::Grid::CellBase^ GridControl::GetAt(System::Drawing::Point pt)
     {
         GrHitTest hitTest;
@@ -824,25 +868,25 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pGridCore->SetAutoFitRow(value); 
     }
 
-    int GridControl::ColumnSplitter::get()
-    {
-        return m_pGridCore->GetColumnSplitter(); 
-    }
+    //int GridControl::ColumnSplitter::get()
+    //{
+    //    return m_pGridCore->GetColumnSplitter(); 
+    //}
 
-    void GridControl::ColumnSplitter::set(int value)
-    {
-        m_pGridCore->SetColumnSplitter(value);
-    }
+    //void GridControl::ColumnSplitter::set(int value)
+    //{
+    //    m_pGridCore->SetColumnSplitter(value);
+    //}
 
-    int GridControl::RowSplitter::get()
-    {
-        return m_pGridCore->GetRowSplitter(); 
-    }
+    //int GridControl::RowSplitter::get()
+    //{
+    //    return m_pGridCore->GetRowSplitter(); 
+    //}
 
-    void GridControl::RowSplitter::set(int value)
-    {
-        m_pGridCore->SetRowSplitter(value);
-    }
+    //void GridControl::RowSplitter::set(int value)
+    //{
+    //    m_pGridCore->SetRowSplitter(value);
+    //}
 
     ColumnCollection^ GridControl::Columns::get()
     {
@@ -1005,7 +1049,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 return true;
             case Keys::Enter:
                 {
-                    if(this->InsertionRow->IsFocused == true)
+                    if(this->ReadOnly == false && this->InsertionRow->IsFocused == true)
                     {
                         Ntreev::Windows::Forms::Grid::Row^ row = this->Rows->AddFromInsertion();
                         if(row != nullptr)
@@ -1057,6 +1101,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         case Keys::Enter:
             {
                 if(m_focusedCell != nullptr && m_focusedCell->Row != this->InsertionRow)
+                {
+                    this->EditCell(m_focusedCell, EditingReason(keyData));
+                    return true;
+                }
+            }
+            break;
+        case (Keys::Down | Keys::Alt):
+            {
+                if(m_focusedCell != nullptr && m_focusedCell->Column->GetEditStyle() == Design::EditStyle::DropDown)
                 {
                     this->EditCell(m_focusedCell, EditingReason(keyData));
                     return true;
@@ -1262,6 +1315,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GridControl::InvokeFocusChanged()
     {
+        if(m_disposing == true)
+            return;
+
         GrItem* pFocusedItem = this->Focuser->GetItem();
 
         if(pFocusedItem == nullptr)
@@ -1655,6 +1711,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool GridControl::ReadOnly::get()
     {
+        GridControl^ parent = dynamic_cast<GridControl^>(this->Parent);
+        if(parent != nullptr && parent->ReadOnly == true)
+            return true;
         return m_pGridCore->GetReadOnly();
     }
 
@@ -1788,7 +1847,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         OnRowUnbinded(%e);
     }
 
-    bool GridControl::InvokeRowRemoving(Ntreev::Windows::Forms::Grid::Row^ row)
+    bool GridControl::InvokeRowRemoving(Row^ row)
     {
         RowRemovingEventArgs e(row);
         OnRowRemoving(%e);
@@ -1798,6 +1857,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void GridControl::InvokeRowRemoved(RowRemovedEventArgs^ e)
     {
         OnRowRemoved(e);
+    }
+
+    void GridControl::InvokeRowChanged(Row^ row)
+    {
+        OnRowChanged(gcnew RowEventArgs(row));
     }
 
     bool GridControl::InvokeColumnInserting(Column^ column)
@@ -1953,6 +2017,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         RowRemoved(this, e);
     }
 
+    void GridControl::OnRowChanged(RowEventArgs^ e)
+    {
+        RowChanged(this, e);
+    }
+
     void GridControl::OnRowBinding(Ntreev::Windows::Forms::Grid::RowBindingEventArgs^ e)
     {
         RowBinding(this, e);
@@ -1993,7 +2062,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         Row^ row = dynamic_cast<Row^>(m_oldFocusedRow);
         if(row != nullptr)
         {
-            if(row->IsBeingEdited == true)
+            if(row->IsBeingEdited == true && row != this->InsertionRow)
             {
                 row->EndEdit();
             }
@@ -2182,6 +2251,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             if(column != nullptr && row != nullptr)
             {
                 GrItem* pItem = row->Cells[column]->NativeRef;
+                this->Selector->SetSelectionGroup(pItem);
                 this->Selector->SelectItem(pItem, GrSelectionType_Normal);
                 this->Selector->SetAnchor(pItem);
                 this->Focuser->Set(pItem);

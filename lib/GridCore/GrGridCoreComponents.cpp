@@ -1435,7 +1435,7 @@ void GrFocusMover::SelectOne(IDataRow* pDataRow)
                 pColumn = m_pColumnList->GetVisibleColumn(0);
             }
             pFocusItem = pRow->GetItem(pColumn);
-
+            m_pItemSelector->SetSelectionGroup(pDataRow);
             if(m_pGridCore->GetFullRowSelect() == true)
                 m_pItemSelector->SelectDataRow(pRow, GrSelectionType_Normal);
             else
@@ -1451,7 +1451,7 @@ void GrFocusMover::SelectOne(IDataRow* pDataRow)
         }
         break;
     }
-    m_pItemSelector->SetSelectionGroup(pDataRow);
+    
 }
 
 void GrFocusMover::SelectMulti(IDataRow* pBegin, IDataRow* pEnd)

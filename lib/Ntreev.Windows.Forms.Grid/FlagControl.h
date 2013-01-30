@@ -88,7 +88,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             this->buttonOk->Name = L"buttonOk";
             this->buttonOk->Size = System::Drawing::Size(55, 23);
             this->buttonOk->TabIndex = 0;
-            this->buttonOk->Text = L"&Ok";
+            this->buttonOk->Text = L"&OK";
             this->buttonOk->UseVisualStyleBackColor = true;
             this->buttonOk->Click += gcnew System::EventHandler(this, &FlagControl::buttonOk_Click);
             // 
@@ -99,7 +99,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             this->buttonCancel->Name = L"buttonCancel";
             this->buttonCancel->Size = System::Drawing::Size(55, 23);
             this->buttonCancel->TabIndex = 1;
-            this->buttonCancel->Text = L"&Cancle";
+            this->buttonCancel->Text = L"&Cancel";
             this->buttonCancel->UseVisualStyleBackColor = true;
             this->buttonCancel->Click += gcnew System::EventHandler(this, &FlagControl::buttonCancel_Click);
             // 
@@ -110,7 +110,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             this->Controls->Add(this->buttonCancel);
             this->Controls->Add(this->buttonOk);
             this->Name = L"FlagControl";
-            this->Padding = System::Windows::Forms::Padding(5);
+            this->Padding = System::Windows::Forms::Padding(5, 5, 5, 5);
             this->Size = System::Drawing::Size(165, 194);
             this->ResumeLayout(false);
 

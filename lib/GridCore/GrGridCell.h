@@ -472,10 +472,12 @@ public:
 
     uint GetDisplayIndex() const;
     uint GetVisibleIndex() const;
+    void SetVisibleIndex(uint index);
     uint GetFrozenIndex() const;
     uint GetUnfrozenIndex() const;
     uint GetIndex() const;
     uint GetColumnID() const;
+    int GetResizingMargin() const;
 
     void SetItemType(GrItemType type);
     void SetItemHorzAlign(GrHorzAlign horzAlign);
@@ -534,12 +536,6 @@ public:
     void SetTooltip(const wchar_t* tooltip);
     const wchar_t* GetTooltip() const;
 
-    int GetFreezablePriority() const;
-    int GetUnfreezablePriority() const;
-
-    void SetFreezablePriority(int priority);
-    void SetUnfreezablePriority(int priority);
-
     bool GetGrouped() const;
     void SetGrouped(bool b);
     GrGroup* GetGroup() const;
@@ -589,7 +585,6 @@ private:
     void SetX(int x) { m_x = x; };
     void SetDisplayable(bool b);
     void SetDisplayIndex(uint index);
-    void SetVisibleIndex(uint index);
     void SetIndex(uint index);
     void SetColumnID(uint index);
 
@@ -604,8 +599,6 @@ private:
     GrColumnList* m_pColumnList;
 
     friend class GrItemSelector;
-    int m_freezablePriority;
-    int m_unfreezablePriority;
     int m_x;
     int m_width;
     int m_fitWidth;
@@ -627,6 +620,7 @@ private:
 
     uint m_displayIndex;
     uint m_visibleIndex;
+    uint m_visibleIndexCore;
     uint m_selectedIndex;
     uint m_index;
     uint m_columnID;
@@ -659,12 +653,19 @@ private:
     friend class GrGroup;
     friend class GrColumnList;
 
+    class SortColumnByVisible
+    {
+    public:
+        bool operator () (const GrColumn*, const GrColumn*);
+    };
+
+
 #ifdef _MANAGED
     friend ref class Ntreev::Windows::Forms::Grid::Column;
 private:
     bool ShouldSerializeWidth();
-    bool ShouldSerializePriorityOnFrozen();
-    bool ShouldSerializePriorityOnUnfrozen();
+    //bool ShouldSerializePriorityOnFrozen();
+    //bool ShouldSerializePriorityOnUnfrozen();
 #endif
 };
 
@@ -706,6 +707,7 @@ public:
     GrRow* GetChild(uint index) const;
     GrRow* GetParent() const;
     uint GetDepth() const;
+    int GetResizingMargin() const;
 
     void SetFit();
     virtual void Paint(GrGridPainter* /*pPainter*/, const GrRect& /*clipRect*/) const {};

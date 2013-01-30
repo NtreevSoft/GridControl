@@ -208,4 +208,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         Hidden,
     };
+
+    public delegate System::Windows::Forms::DialogResult MessageBoxCallback(System::String^ text, System::String^ caption, System::Windows::Forms::MessageBoxButtons buttons, System::Windows::Forms::MessageBoxIcon icon);
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

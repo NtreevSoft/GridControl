@@ -95,6 +95,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     private: // methods
 
+        void listBox_PreviewKeyDown(System::Object^ sender, System::Windows::Forms::PreviewKeyDownEventArgs^ e);
         void listBox_OnMouseMove(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
         void listBox_OnMouseClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
         void listBox_OnVisibleChanged(System::Object^ sender, System::EventArgs^ e);

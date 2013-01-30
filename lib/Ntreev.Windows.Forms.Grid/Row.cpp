@@ -51,23 +51,28 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         for each(Column^ item in this->GridControl->Columns)
         {
-            NewCell(item);
+            this->NewCell(item);
         }
     }
 
     void Row::Component::set(System::Object^ value)
     {
+        System::Object^ oldComponent = m_component;
         m_component = value;
 
-        //if(IsBeingEdited == true)
-        //{
-        //    EndEdit();
-        //}
         for each(Column^ item in this->GridControl->Columns)
         {
             try
             {
-                Cell^ cell = NewCell(item);
+                Cell^ cell = this->NewCell(item);
+                if(value != nullptr)
+                {
+                    cell->LocalValueToSource(value);
+                }
+                else
+                {
+                    cell->SourceValueToLocal(oldComponent);
+                }
                 cell->UpdateNativeText();
             }
             catch(System::Exception^)
@@ -137,7 +142,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         return this->Cells[index];
     }
-
+    
     Ntreev::Windows::Forms::Grid::CellCollection^ Row::Cells::get()
     {
         return m_cells;
@@ -317,6 +322,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         this->Refresh();
+        this->GridControl->InvokeRowChanged(this);
     }
 
     void Row::BringIntoView()
@@ -338,12 +344,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Row::ResetCellBackColor()
     {
-        CellBackColor = System::Drawing::Color::Empty;
+        this->CellBackColor = System::Drawing::Color::Empty;
     }
 
     void Row::ResetCellForeColor()
     {
-        CellForeColor = System::Drawing::Color::Empty;
+        this->CellForeColor = System::Drawing::Color::Empty;
     }
 
     System::Drawing::Color Row::CellBackColor::get()
@@ -410,36 +416,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_pDataRow->GetItemFont() != nullptr;
     }
 
-    //void Row::SetDefaultValue(System::Windows::Forms::CurrencyManager^ manager)
-    //{
-    //    try
-    //    {
-    //        manager->AddNew();
-
-    //        for each(Ntreev::Windows::Forms::Grid::Cell^ cell in this->Cells)
-    //        {
-    //            Column^ column = cell->Column;
-    //            if(column->PropertyDescriptor == nullptr || column->DefaultValue != nullptr)
-    //            {
-    //                cell->ValueCore = column->DefaultValue;
-    //            }
-    //            else
-    //            {
-    //                cell->ValueCore = column->PropertyDescriptor->GetValue(manager->Current);
-    //            }
-    //            cell->UpdateNativeText();
-    //        }
-    //    }
-    //    catch(System::Exception^)
-    //    {
-
-    //    }
-    //    finally
-    //    {
-    //        manager->CancelCurrentEdit();
-    //    }
-    //}
-
     void Row::Refresh()
     {
         for each(Column^ item in this->GridControl->Columns)
@@ -455,14 +431,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             }
         }
     }
-
-    //void Row::ValueToSource(System::Object^ component)
-    //{
-    //    for each(Ntreev::Windows::Forms::Grid::Cell^ cell in this->Cells)
-    //    {
-    //        cell->ValueCore = cell->Value;
-    //    }
-    //}
 
     int Row::GetCellsTextCapacity()
     {

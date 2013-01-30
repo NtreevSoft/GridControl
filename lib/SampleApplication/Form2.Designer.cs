@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.columnID = new Ntreev.Windows.Forms.Grid.Column();
             this.gridControl1 = new Ntreev.Windows.Forms.Grid.GridControl();
             this.dataSet1 = new System.Data.DataSet();
             this.dataTable1 = new System.Data.DataTable();
@@ -53,16 +54,27 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
+            // columnID
+            // 
+            this.columnID.ColumnName = "ID";
+            this.columnID.DataType = typeof(int);
+            this.columnID.VisibleIndex = 0;
+            // 
             // gridControl1
             // 
             this.gridControl1.AutoFitColumn = true;
             this.gridControl1.AutoFitRow = true;
             this.gridControl1.BackgroundColor = System.Drawing.SystemColors.ActiveCaption;
+            this.gridControl1.Columns.AddRange(new Ntreev.Windows.Forms.Grid.Column[] {
+            this.columnID});
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridControl1.Location = new System.Drawing.Point(3, 3);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.Size = new System.Drawing.Size(355, 484);
             this.gridControl1.TabIndex = 0;
+            this.gridControl1.ColumnBinding += new Ntreev.Windows.Forms.Grid.ColumnBindingEventHandler(this.gridControl1_ColumnBinding);
+            this.gridControl1.RowChanged += new Ntreev.Windows.Forms.Grid.RowEventHandler(this.gridControl1_RowChanged);
+            this.gridControl1.RowInserting += new Ntreev.Windows.Forms.Grid.RowInsertingEventHandler(this.gridControl1_RowInserting);
             // 
             // dataSet1
             // 
@@ -226,5 +238,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.DataGridView dataGridView3;
         private System.Windows.Forms.DataGridView dataGridView2;
+        private Ntreev.Windows.Forms.Grid.Column columnID;
     }
 }

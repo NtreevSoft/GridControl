@@ -258,6 +258,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void ColumnCollection::DeleteAll()
     {
+        this->GridControl->FocusedCell = nullptr;
+
         while(this->Count > 0)
         {
             Column^ column = this[this->Count - 1];

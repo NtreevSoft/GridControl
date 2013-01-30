@@ -209,6 +209,10 @@ copy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)..\$(TargetName).pdb"
       <Command>copy "$(TargetDir)$(TargetName).dll" "$(SolutionDir)..\bin\$(TargetName).dll"
 copy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)..\bin\$(TargetName).pdb"
 copy "$(TargetDir)$(TargetName).xml" "$(SolutionDir)..\bin\$(TargetName).xml"
+
+copy "$(TargetDir)$(TargetName).dll" "G:\NTG\Crema\trunk\common library\RefAssemblies\$(TargetName).dll"
+copy "$(TargetDir)$(TargetName).pdb" "G:\NTG\Crema\trunk\common library\RefAssemblies\$(TargetName).pdb"
+copy "$(TargetDir)$(TargetName).xml" "G:\NTG\Crema\trunk\common library\RefAssemblies\$(TargetName).xml"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

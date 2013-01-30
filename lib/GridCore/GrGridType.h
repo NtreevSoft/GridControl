@@ -429,8 +429,10 @@ struct GrColor
 
 private:
     GrColor(int a, int r, int g, int b, const std::wstring& name);
+    void UpdateName();
 
     std::wstring name;
+    bool isNamed;
     static std::map<std::wstring, const GrColor&> namedColor;
 
 

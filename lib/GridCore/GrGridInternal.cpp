@@ -55,7 +55,7 @@ void GrTextUtil::DoMultiline(_TextLines* pLines, const std::wstring& cellText, c
 
     while(pos != cellText.length())
     {
-        wchar_t s = cellText.at(pos);
+        wchar_t s = cellText.at(pos++);
         int charWidth = pFont->GetCharacterWidth(s);
         if(s == L'\n')
         {
@@ -69,7 +69,6 @@ void GrTextUtil::DoMultiline(_TextLines* pLines, const std::wstring& cellText, c
             cl.width += charWidth;
             cl.length++;
         }
-        pos++;
     }
 
     pLines->push_back(cl);

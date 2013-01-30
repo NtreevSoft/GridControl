@@ -173,10 +173,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 열의 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
         /// </returns>
-        /// <exception cref="System::ArgumentException">0보다 작은 수를 설정할때.</exception>
         [System::ComponentModel::CategoryAttribute("Layout")]
         [System::ComponentModel::SettingsBindableAttribute(true)]
-        property int Width
+        property int Width 
         {
             int get() new;
             void set(int);
@@ -188,9 +187,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 열의 최소 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
         /// </returns>
-        /// <exception cref="System::ArgumentException">0보다 작거나 최대 너비보다 큰 수를 설정할때.</exception>
         [System::ComponentModel::CategoryAttribute("Layout")]
-        [System::ComponentModel::DefaultValueAttribute(30)]
+        [System::ComponentModel::DefaultValueAttribute(0)]
         property int MinWidth
         {
             virtual int get() sealed;
@@ -203,9 +201,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 열의 최대 너비를 나타내는 <see cref="System::Int32"/>형태의 정수값입니다.
         /// </returns>
-        /// <exception cref="System::ArgumentException">0보다 작거나 최소 너비보다 작은 수를 설정할때.</exception>
         [System::ComponentModel::CategoryAttribute("Layout")]
-        [System::ComponentModel::DefaultValueAttribute(10000)]
+        [System::ComponentModel::DefaultValueAttribute(0)]
         property int MaxWidth
         {
             virtual int get() sealed;
@@ -464,7 +461,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::BrowsableAttribute(false)]
         property int VisibleIndex
         {
-            virtual int get() sealed; 
+            virtual int get() sealed;
+            void set(int);
         }
 
         /// <summary>
@@ -699,29 +697,29 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             virtual void set(System::ComponentModel::ISite^ value) sealed;
         }
 
-#ifdef _DEBUG
-        [System::ComponentModel::CategoryAttribute("Debug")]
-#else
-        [System::ComponentModel::BrowsableAttribute(false)]
-#endif
-        [System::ComponentModel::SettingsBindableAttribute(true)]
-        property int PriorityOnFrozen
-        {
-            int get();
-            void set(int);
-        }
-
-#ifdef _DEBUG
-        [System::ComponentModel::CategoryAttribute("Debug")]
-#else
-        [System::ComponentModel::BrowsableAttribute(false)]
-#endif
-        [System::ComponentModel::SettingsBindableAttribute(true)]
-        property int PriorityOnUnfrozen
-        {
-            int get();
-            void set(int);
-        }
+//#ifdef _DEBUG
+//        [System::ComponentModel::CategoryAttribute("Debug")]
+//#else
+//        [System::ComponentModel::BrowsableAttribute(false)]
+//#endif
+//        [System::ComponentModel::SettingsBindableAttribute(true)]
+//        property int PriorityOnFrozen
+//        {
+//            int get();
+//            void set(int);
+//        }
+//
+//#ifdef _DEBUG
+//        [System::ComponentModel::CategoryAttribute("Debug")]
+//#else
+//        [System::ComponentModel::BrowsableAttribute(false)]
+//#endif
+//        [System::ComponentModel::SettingsBindableAttribute(true)]
+//        property int Priority
+//        {
+//            int get();
+//            void set(int);
+//        }
 
     public: // events
 
@@ -747,17 +745,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         virtual bool CanEdit(Ntreev::Windows::Forms::Grid::ICell^ cell, Ntreev::Windows::Forms::Grid::EditingReason reason);
 
-        virtual Design::EditStyle GetEditStyle();
-
         virtual void OnGridControlAttached() {};
 
         virtual void OnGridControlDetached() {};
-
-    public protected: // methods
-
-        virtual void OnGridControlAttachedInternal() override;
-
-        virtual void OnGridControlDetachedInternal() override;
 
     internal: // methods
 
@@ -774,6 +764,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::Object^ ConvertFromSource(System::Object^ value);
 
         System::Object^ ConvertToSource(System::Object^ value);
+
+        virtual void OnGridControlAttachedInternal() override;
+
+        virtual void OnGridControlDetachedInternal() override;
+
+        virtual Design::EditStyle GetEditStyle();
 
     internal: // properties
 
@@ -813,8 +809,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         bool ShouldSerializeTypeConverter();
         bool ShouldSerializeDefaultValue();
         bool ShouldSerializeWidth();
-        bool ShouldSerializePriorityOnFrozen();
-        bool ShouldSerializePriorityOnUnfrozen();
+        //bool ShouldSerializePriorityOnFrozen();
+        //bool ShouldSerializePriorityOnUnfrozen();
 
         void ResetTitle();
         void ResetDataType();

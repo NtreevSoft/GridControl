@@ -492,7 +492,7 @@ void GrPadding::operator = (System::Windows::Forms::Padding% padding)
 
 std::map<std::wstring, const GrColor&> GrColor::namedColor;
 
-const GrColor GrColor::Empty(0, 0, 0, 0, L"Empty");
+const GrColor GrColor::Empty;
 const GrColor GrColor::AliceBlue(255, 240, 248, 255, L"AliceBlue");
 const GrColor GrColor::AntiqueWhite(255, 250, 235, 215, L"AntiqueWhite");
 const GrColor GrColor::Aqua(255, 0, 255, 255, L"Aqua");
@@ -637,7 +637,7 @@ const GrColor GrColor::YellowGreen(255, 154, 205, 50, L"YellowGreen");
 const GrColor GrColor::DefaultLineColor(255, 208, 215, 229);
 
 GrColor::GrColor(int a, int r, int g, int b, const std::wstring& name)
-    : name(name)
+    : name(name), isNamed(true)
 {
     const int maxValue = (int)0xff;
     this->a = (byte)std::min(a, maxValue);
@@ -649,9 +649,9 @@ GrColor::GrColor(int a, int r, int g, int b, const std::wstring& name)
 }
 
 GrColor::GrColor()
-    : value(0), name(L"Empty")
+    : value(0), name(L"0"), isNamed(false)
 {
-    //RGB(255,255,255)
+    
 }
 
 GrColor::GrColor(int argb)
@@ -660,6 +660,7 @@ GrColor::GrColor(int argb)
     this->r = GetRValue(argb);
     this->g = GetGValue(argb);
     this->b = GetBValue(argb);
+    this->UpdateName();
 }
 
 GrColor::GrColor(int a, int r, int g, int b)
@@ -669,6 +670,7 @@ GrColor::GrColor(int a, int r, int g, int b)
     this->r = (byte)std::min(r, maxValue);
     this->g = (byte)std::min(g, maxValue);
     this->b = (byte)std::min(b, maxValue);
+    this->UpdateName();
 }
 
 GrColor::GrColor(int r, int g, int b)
@@ -678,6 +680,7 @@ GrColor::GrColor(int r, int g, int b)
     this->r = (byte)std::min(r, maxValue);
     this->g = (byte)std::min(g, maxValue);
     this->b = (byte)std::min(b, maxValue);
+    this->UpdateName();
 }
 
 void GrColor::operator *= (float f)
@@ -689,7 +692,7 @@ void GrColor::operator *= (float f)
     G(G() * f);
     B(B() * f);
 
-    this->name.clear();
+    this->UpdateName();
 }
 
 GrColor GrColor::operator * (float f) const
@@ -720,6 +723,9 @@ bool GrColor::operator != (const GrColor& color) const
 
 bool GrColor::operator == (const GrColor& color) const
 {
+    return this->name == color.name;
+    const wchar_t* d = this->name.c_str();
+    const wchar_t* q = color.name.c_str();
     if(this->name.length() == 0 && color.name.length() == 0)
         return value == color.value;
     return _wcsicmp(this->name.c_str(), color.name.c_str()) == 0;
@@ -749,24 +755,28 @@ void GrColor::A(float value)
 {
     value *= 255.0f;
     a = value > 255.0f ? 0xff : (byte)value;
+    this->UpdateName();
 }
 
 void GrColor::R(float value)
 {
     value *= 255.0f;
     r = value > 255.0f ? 0xff : (byte)value;
+    this->UpdateName();
 }
 
 void GrColor::G(float value)
 {
     value *= 255.0f;
     g = value > 255.0f ? 0xff : (byte)value;
+    this->UpdateName();
 }
 
 void GrColor::B(float value)
 {
     value *= 255.0f;
     b = value > 255.0f ? 0xff : (byte)value;
+    this->UpdateName();
 }
 
 const std::wstring& GrColor::GetName() const
@@ -887,6 +897,14 @@ float GrColor::GetSaturation() const
     return ((num4 - num5) / ((2.0f - num4) - num5));
 }
 
+void GrColor::UpdateName()
+{
+    wchar_t text[10];
+    swprintf_s(text, 10, L"%x", this->value);
+    this->name = text;
+    this->isNamed = false;
+}
+
 
 #ifdef _MANAGED
 GrColor::GrColor(System::Drawing::Color color)
@@ -895,7 +913,7 @@ GrColor::GrColor(System::Drawing::Color color)
     r = color.R;
     g = color.G;
     b = color.B;
-    if(color.IsNamedColor == true)
+    this->isNamed = color.IsNamedColor;
     {
         pin_ptr<const wchar_t> unmngStr = PtrToStringChars(color.Name);
         this->name = (const wchar_t*)unmngStr;
@@ -904,18 +922,18 @@ GrColor::GrColor(System::Drawing::Color color)
 
 GrColor::operator System::Drawing::Color ()
 {
-    System::Drawing::Color color;
-    //const wchar_t* d = this->name.c_str();
-    if(this->name.length() != 0)
-        color = System::Drawing::Color::FromName(gcnew System::String(this->name.c_str()));
-    else
-        color = System::Drawing::Color::FromArgb(a, r, g, b);
-    return color;
+
+    if(this->isNamed == true)
+    {
+        System::Drawing::Color c  =System::Drawing::Color::FromName(gcnew System::String(this->name.c_str()));
+        return c;
+    }
+    return System::Drawing::Color::FromArgb(a, r, g, b);
 }
 
 GrColor::operator System::Drawing::Color () const
 {
-    if(this->name.length() != 0)
+    if(this->isNamed == true)
         return System::Drawing::Color::FromName(gcnew System::String(this->name.c_str()));
     return System::Drawing::Color::FromArgb(a, r, g, b);
 }

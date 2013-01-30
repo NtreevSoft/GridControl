@@ -30,6 +30,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using System.Threading;
+using Ntreev.Windows.Forms.Grid;
 
 namespace SampleApplication
 {
@@ -48,23 +51,55 @@ namespace SampleApplication
         {
             InitializeComponent();
 
-            return;
-            Rectangle r = new Rectangle(0, 0, 100, 100);
-            r.Inflate(1, 1);
+            List<Type> types = new List<Type>();
+            types.Add(typeof(int));
+            types.Add(typeof(bool));
+            types.Add(typeof(string));
+            types.Add(typeof(float));
+            types.Add(typeof(short));
+            types.Add(typeof(byte));
+            types.Add(typeof(long));
 
-            int qwer = 0;
-            //this.gridControl1.Rows[0].ErrorDescription = "qwer";
-            //this.gridControl1.Rows[0].Cells[0].ErrorDescription = "werwerwer";
-
-            //this.gridControl1.Rows[0][this.columnLinkLabel1] = "wow";
-            //this.gridControl1.Update();
-
-            this.gridControl1.Clear();
+            this.columnDataTypes1.DataSource = types;
             DataSet dataSet = new DataSet();
-            dataSet.Tables.Add("table1").Columns.Add("column1");
-            this.gridControl1.DataSource = dataSet;
-            this.gridControl1.DataMember = "table1";
-            this.propertyGrid1.SelectedObject = this.gridControl1.DataSource;
+            dataSet.Tables.Add("table-1").Columns.Add("column1");
+
+            this.gridControl1.RowChanged += gridControl1_RowChanged;
+        }
+
+        void gridControl1_ValueChanging(object sender, Ntreev.Windows.Forms.Grid.ValueChangingEventArgs e)
+        {
+            return;
+            if (e.Cell.Tag != null)
+                return;
+            e.Cancel = true;
+            object value = e.Cell.Value;
+            bool b = false;
+            if (value != null)
+                b = (bool)value;
+            b = !b;
+            e.Cell.DisplayText = b.ToString();
+
+            Action<Cell, bool> d = new Action<Cell, bool>((c, b2) =>
+                {
+                    Thread.Sleep(10000);
+                    this.gridControl1.BeginInvoke((Action<Cell, bool>)((c3, b3) => 
+                    {
+                        c3.Tag = new object();
+                        c3.Value = b3;
+                        c3.DisplayText = null;
+                        c3.Tag = null;
+                        
+                    }), c, b2);
+
+                });
+
+            d.BeginInvoke(e.Cell, b, null, null);
+        }
+
+        void gridControl1_RowChanged(object sender, Ntreev.Windows.Forms.Grid.RowEventArgs e)
+        {
+            //e.Row.CellBackColor = Color.Red;
         }
 
         public void SaveSettings()

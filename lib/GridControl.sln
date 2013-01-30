@@ -18,9 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApplication", "Sample
 		{8EB27EC4-86A3-44A7-9767-19C343709894} = {8EB27EC4-86A3-44A7-9767-19C343709894}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ntreev.Snowflaker.Library", "..\..\..\NTG\INI3\trunk\common library\Ntreev.Snowflaker.Library\Ntreev.Snowflaker.Library.csproj", "{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ntreev.Snowflaker.Grid", "..\..\..\NTG\INI3\trunk\common library\Ntreev.Snowflaker.Grid\Ntreev.Snowflaker.Grid.csproj", "{37CC6409-A977-4922-B5A4-F560546544BC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ntreev.Crema.Library", "..\..\..\NTG\Crema\trunk\common library\Ntreev.Crema.Library\Ntreev.Crema.Library.csproj", "{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -195,30 +193,6 @@ Global
 		{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}.Release|Win32.ActiveCfg = Release|Any CPU
 		{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}.Release|x86.ActiveCfg = Release|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Debug_Win32|Any CPU.ActiveCfg = Debug|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Debug_Win32|Any CPU.Build.0 = Debug|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Debug_Win32|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Debug_Win32|Mixed Platforms.Build.0 = Debug|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Debug_Win32|Win32.ActiveCfg = Debug|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Debug_Win32|x86.ActiveCfg = Debug|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Release_Win32|Any CPU.ActiveCfg = Release|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Release_Win32|Any CPU.Build.0 = Release|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Release_Win32|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Release_Win32|Mixed Platforms.Build.0 = Release|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Release_Win32|Win32.ActiveCfg = Release|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Release_Win32|x86.ActiveCfg = Release|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Release|Win32.ActiveCfg = Release|Any CPU
-		{37CC6409-A977-4922-B5A4-F560546544BC}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

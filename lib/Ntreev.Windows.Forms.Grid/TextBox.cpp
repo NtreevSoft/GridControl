@@ -23,6 +23,7 @@
 
 #include "StdAfx.h"
 #include "TextBox.h"
+
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design { namespace Controls
 {
     TextBox::TextBox(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService)
@@ -36,25 +37,28 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     void TextBox::OnKeyDown(System::Windows::Forms::KeyEventArgs^ e)
     {
-        System::Windows::Forms::TextBox::OnKeyDown(e);
         switch(e->KeyCode)
         {
         case System::Windows::Forms::Keys::Enter:
-            if(this->Multiline == true)
+            if(this->Multiline == true && e->Alt == true)
             {
-                if(e->Control == true)
-                {
-                    m_editorService->Close();
-                    e->SuppressKeyPress = true;
-                }
+                this->SelectedText = "\r\n";
+                return;
             }
-            else
-            {
-                m_editorService->Close();
-                e->SuppressKeyPress = true;
-            }
+            e->Handled = true;
             break;
         }
+        System::Windows::Forms::TextBox::OnKeyDown(e);
     }
+
+    void TextBox::OnKeyPress(System::Windows::Forms::KeyPressEventArgs^ e)
+      {
+          if ((e->KeyChar == 13) || (e->KeyChar == 27))
+          {
+              e->Handled = true;
+          }
+
+          System::Windows::Forms::TextBox::OnKeyPress(e);
+      }
 
 } /*namespace Controls*/ } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

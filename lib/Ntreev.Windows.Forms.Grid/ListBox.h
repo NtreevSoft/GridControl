@@ -57,5 +57,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
         Ntreev::Windows::Forms::Grid::Design::IEditorService^ m_editorService;
         System::Object^ m_value;
+        System::Type^ m_dataType;
     };
 } /*namespace Controls*/ } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

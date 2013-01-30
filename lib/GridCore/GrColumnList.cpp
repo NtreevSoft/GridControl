@@ -26,19 +26,19 @@
 #include "GrGridCore.h"
 #include <assert.h>
 
-bool GrColumnList::SortColumnOnFreezable::operator () (const GrColumn* pColumn1, const GrColumn* pColumn2)
-{
-    if(pColumn1->GetFreezablePriority() == pColumn2->GetFreezablePriority())
-        return pColumn1->GetIndex() < pColumn2->GetIndex();
-    return pColumn1->GetFreezablePriority() < pColumn2->GetFreezablePriority();
-}
-
-bool GrColumnList::SortColumnOnUnfreezable::operator () (const GrColumn* pColumn1, const GrColumn* pColumn2)
-{
-    if(pColumn1->GetUnfreezablePriority() == pColumn2->GetUnfreezablePriority())
-        return pColumn1->GetIndex() < pColumn2->GetIndex();
-    return pColumn1->GetUnfreezablePriority() < pColumn2->GetUnfreezablePriority();
-}
+//bool GrColumnList::SortColumnOnFreezable::operator () (const GrColumn* pColumn1, const GrColumn* pColumn2)
+//{
+//    if(pColumn1->GetFreezablePriority() == pColumn2->GetFreezablePriority())
+//        return pColumn1->GetIndex() < pColumn2->GetIndex();
+//    return pColumn1->GetFreezablePriority() < pColumn2->GetFreezablePriority();
+//}
+//
+//bool GrColumnList::SortColumnOnUnfreezable::operator () (const GrColumn* pColumn1, const GrColumn* pColumn2)
+//{
+//    if(pColumn1->GetPriority() == pColumn2->GetPriority())
+//        return pColumn1->GetIndex() < pColumn2->GetIndex();
+//    return pColumn1->GetPriority() < pColumn2->GetPriority();
+//}
 
 GrColumnList::GrColumnList()
     : Columns(m_vecColumns), Visibles(m_vecVisibleColumns), Displayables(m_vecDisplayableColumns)
@@ -168,8 +168,8 @@ void GrColumnList::InsertColumn(GrColumn* pColumn, uint index)
         (*itor)->SetIndex(index++);
     }
 
-    pColumn->m_freezablePriority = pColumn->GetIndex();
-    pColumn->m_unfreezablePriority = pColumn->GetIndex();
+    //pColumn->m_freezablePriority = pColumn->GetIndex();
+    //pColumn->m_priority = pColumn->GetIndex();
 
     m_pGridCore->AttachObject(pColumn);
 
@@ -408,12 +408,27 @@ void GrColumnList::Clip(const GrRect& displayRect, uint horizontal, uint /*verti
     for(uint i=0 ; i<m_frozenCount ; i++)
     {
         GrColumn* pColumn = GetVisibleColumn(i);
+
+        if(x > displayRect.right)
+            break;
+
         pColumn->SetX(x);
         pColumn->SetDisplayable(true);
         pColumn->SetDisplayIndex(m_vecDisplayableColumns.size());
-        pColumn->SetClipped(false);
 
-        x += pColumn->GetWidth();
+        int width = pColumn->GetWidth();
+
+        if(x + width > displayRect.right)
+        {
+            pColumn->SetClipped(true);
+            x = displayRect.right;
+        }
+        else
+        {
+            pColumn->SetClipped(false);
+            x += width;
+        }
+
         m_vecDisplayableColumns.push_back(pColumn);
     }
 
@@ -445,8 +460,8 @@ void GrColumnList::Clip(const GrRect& displayRect, uint horizontal, uint /*verti
             pColumn->SetClipped(false);
             x += width;
         }
-        m_vecDisplayableColumns.push_back(pColumn);
 
+        m_vecDisplayableColumns.push_back(pColumn);
     }
 
     m_displayableRight = x;
@@ -539,78 +554,78 @@ uint GrColumnList::ClipTo(const GrRect& displayRect, uint visibleTo) const
     return visibleFrom;
 }
 
-bool GrColumnList::MoveToFrozen(GrColumn* pColumn, GrColumn* pWhere)
-{
-    if(pWhere && pWhere->GetFrozen() == false)
-        return false;
-
-    if(pColumn == pWhere)
-        return false;
-
-    _Columns vecFrozens;
-    vecFrozens.reserve(GetColumnCount());
-
-    for(auto value : m_vecColumns)
-    {
-        if(value == pColumn)
-            continue;
-        vecFrozens.push_back(value);
-    }
-
-    std::sort(vecFrozens.begin(), vecFrozens.end(), SortColumnOnFreezable());
-
-    _Columns::iterator itorWhere = std::find(vecFrozens.begin(), vecFrozens.end(), pWhere);
-    vecFrozens.insert(itorWhere, pColumn);
-    pColumn->m_frozen = true;
-
-    int priority = 0;
-    for(auto value : vecFrozens)
-    {
-        value->SetFreezablePriority(priority);
-        priority++;
-    }
-
-    SetVisibleChanged();
-
-    return true;
-}
-
-bool GrColumnList::MoveToUnfrozen(GrColumn* pColumn, GrColumn* pWhere)
-{
-    if(pWhere && pWhere->GetFrozen() == true)
-        return false;
-
-    if(pColumn == pWhere)
-        return false;
-
-    _Columns vecUnfrozens;
-    vecUnfrozens.reserve(GetColumnCount());
-
-    for(auto value : m_vecColumns)
-    {
-        if(value == pColumn)
-            continue;
-        vecUnfrozens.push_back(value);
-    }
-
-    std::sort(vecUnfrozens.begin(), vecUnfrozens.end(), SortColumnOnUnfreezable());
-
-    _Columns::iterator itorWhere = std::find(vecUnfrozens.begin(), vecUnfrozens.end(), pWhere);
-    vecUnfrozens.insert(itorWhere, pColumn);
-    pColumn->m_frozen = false;
-
-    int priority = 0;
-
-    for(auto value : vecUnfrozens)
-    {
-        value->SetUnfreezablePriority(priority);
-        priority++;
-    }
-
-    SetVisibleChanged();
-
-    return true;
-}
+//bool GrColumnList::MoveToFrozen(GrColumn* pColumn, GrColumn* pWhere)
+//{
+//    if(pWhere && pWhere->GetFrozen() == false)
+//        return false;
+//
+//    if(pColumn == pWhere)
+//        return false;
+//
+//    _Columns vecFrozens;
+//    vecFrozens.reserve(GetColumnCount());
+//
+//    for(auto value : m_vecColumns)
+//    {
+//        if(value == pColumn)
+//            continue;
+//        vecFrozens.push_back(value);
+//    }
+//
+//    std::sort(vecFrozens.begin(), vecFrozens.end(), SortColumnOnFreezable());
+//
+//    _Columns::iterator itorWhere = std::find(vecFrozens.begin(), vecFrozens.end(), pWhere);
+//    vecFrozens.insert(itorWhere, pColumn);
+//    pColumn->m_frozen = true;
+//
+//    int priority = 0;
+//    for(auto value : vecFrozens)
+//    {
+//        value->SetFreezablePriority(priority);
+//        priority++;
+//    }
+//
+//    SetVisibleChanged();
+//
+//    return true;
+//}
+//
+//bool GrColumnList::MoveToUnfrozen(GrColumn* pColumn, GrColumn* pWhere)
+//{
+//    if(pWhere && pWhere->GetFrozen() == true)
+//        return false;
+//
+//    if(pColumn == pWhere)
+//        return false;
+//
+//    _Columns vecUnfrozens;
+//    vecUnfrozens.reserve(GetColumnCount());
+//
+//    for(auto value : m_vecColumns)
+//    {
+//        if(value == pColumn)
+//            continue;
+//        vecUnfrozens.push_back(value);
+//    }
+//
+//    std::sort(vecUnfrozens.begin(), vecUnfrozens.end(), SortColumnOnUnfreezable());
+//
+//    _Columns::iterator itorWhere = std::find(vecUnfrozens.begin(), vecUnfrozens.end(), pWhere);
+//    vecUnfrozens.insert(itorWhere, pColumn);
+//    pColumn->m_frozen = false;
+//
+//    int priority = 0;
+//
+//    for(auto value : vecUnfrozens)
+//    {
+//        value->SetPriority(priority);
+//        priority++;
+//    }
+//
+//    SetVisibleChanged();
+//
+//    return true;
+//}
 
 void GrColumnList::column_GroupChanged(GrObject* pSender, GrEventArgs* /*e*/)
 {
@@ -786,9 +801,11 @@ void GrColumnList::BuildVisibleColumnList()
     m_vecDisplayableColumns.clear();
 
     m_frozenCount = 0;
-    _Columns vecFrozen, vecUnfrozen;
-    vecFrozen.reserve(m_vecColumns.size());
-    vecUnfrozen.reserve(m_vecColumns.size());
+    _Columns visibleCores, visibles;
+    visibleCores.reserve(m_vecColumns.size());
+    visibles.reserve(m_vecColumns.size());
+
+    uint i=0;
     for(auto value : m_vecColumns)
     {
         value->SetDisplayable(false);
@@ -797,23 +814,32 @@ void GrColumnList::BuildVisibleColumnList()
 
         if(value->GetVisible() == false)
             continue;
+
         if(value->GetFrozen() == true)
-            vecFrozen.push_back(value);
+            m_frozenCount++;
+
+        if(value->m_visibleIndex == INVALID_INDEX)
+            visibleCores.push_back(value);
         else
-            vecUnfrozen.push_back(value);
+            visibles.push_back(value);
+        //m_vecVisibleColumns.push_back(value);
+    }
+    std::sort(visibleCores.begin(), visibleCores.end(), GrColumn::SortColumnByVisible());
+    uint index = 0;
+    for(auto value : visibleCores)
+    {
+        value->m_visibleIndexCore = index++;
     }
 
-    m_frozenCount = vecFrozen.size();
+    m_vecVisibleColumns.insert(m_vecVisibleColumns.end(), visibleCores.begin(), visibleCores.end());
+    m_vecVisibleColumns.insert(m_vecVisibleColumns.end(), visibles.begin(), visibles.end());
 
-    std::sort(vecFrozen.begin(), vecFrozen.end(), SortColumnOnFreezable());
-    std::sort(vecUnfrozen.begin(), vecUnfrozen.end(), SortColumnOnUnfreezable());
-
-    m_vecVisibleColumns.insert(m_vecVisibleColumns.end(), vecFrozen.begin(), vecFrozen.end());
-    m_vecVisibleColumns.insert(m_vecVisibleColumns.end(), vecUnfrozen.begin(), vecUnfrozen.end());
-    uint index = 0;
+    std::sort(m_vecVisibleColumns.begin(), m_vecVisibleColumns.end(), GrColumn::SortColumnByVisible());
+    index = 0;
     for(auto value : m_vecVisibleColumns)
     {
-        value->SetVisibleIndex(index++);
+        value->m_visibleIndexCore = index++;
+        value->m_visibleIndex = INVALID_INDEX;
     }
     m_widthChanged = true;
 }

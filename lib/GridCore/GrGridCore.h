@@ -79,10 +79,10 @@ public:
     void GetAutoFitColumnType(GrAutoFitColumnType value);
     bool GetAutoFitRow() const;
     void SetAutoFitRow(bool b);
-    int GetColumnSplitter() const;
-    void SetColumnSplitter(int value);
-    int GetRowSplitter() const;
-    void SetRowSplitter(int value);
+    //int GetColumnResizingMargin() const;
+    //void SetColumnResizingMargin(int value);
+    //int GetRowResizingMargin() const;
+    //void SetRowResizingMargin(int value);
     bool GetInsertionRowVisible() const;
     void SetInsertionRowVisible(bool b);
     bool GetRowHighlight() const;

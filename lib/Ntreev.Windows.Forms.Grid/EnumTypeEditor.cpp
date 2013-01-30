@@ -42,8 +42,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         listBox->ForeColor = cell->ForeColor;
         listBox->Font = cell->Font;
 
+        delete listBox->CreateGraphics();
         listBox->Size = listBox->PreferredSize;
 
+        if(listBox->Height > listBox->ItemHeight * 10)
+        {
+            listBox->Height = listBox->ItemHeight * 10;
+            editorService->IsDropDownResizable = true;
+        }
         editorService->DropDownControl(listBox);
         return listBox->Value;;
     }

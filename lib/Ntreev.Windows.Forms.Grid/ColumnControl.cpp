@@ -189,9 +189,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void ColumnControl<TControl>::CloseControl()
     {
         if(m_editorService == nullptr)
-            throw gcnew System::NotImplementedException();
+            return;
 
         m_editorService->Close();
+    }
+
+     generic<class TControl> where TControl : System::Windows::Forms::Control
+        Ntreev::Windows::Forms::Grid::Design::EditStyle ColumnControl<TControl>::GetEditStyle()
+    {
+        return Ntreev::Windows::Forms::Grid::Design::EditStyle::Control;
     }
 
     generic<class TControl> where TControl : System::Windows::Forms::Control

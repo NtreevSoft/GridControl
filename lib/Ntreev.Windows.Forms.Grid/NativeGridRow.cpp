@@ -169,7 +169,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     void GrGridRow::dataRowList_VisibleHeightChanged(GrObject* pSender, GrEventArgs* e)
     {
-        m_gridControl->Visible = false;
+        //m_gridControl->Visible = false;
         this->SetFit();
     }
 

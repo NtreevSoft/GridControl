@@ -106,7 +106,6 @@ GrGroupRow* GrDataRowList::CreateGroupRow(GrRow* pParent, GrColumn* pColumn, con
     else
     {
         pGroupRow = m_vecGroupRows[m_usedGroupRow];
-        pGroupRow->ClearChild();
     }
 
     pParent->AddChild(pGroupRow);
@@ -263,6 +262,11 @@ void GrDataRowList::BuildChildRowList()
     else
     {
         BuildCache();
+
+        for(auto value : m_vecGroupRows)
+        {
+            value->ClearChild();
+        }
         m_usedGroupRow = 0;
         BuildGroup(this, 0);
     }
@@ -936,12 +940,8 @@ void GrDataRowList::Clip(const GrRect& displayRect, uint /*horizontal*/, uint ve
 {
     int displayY = GetY();
 
-    for(auto item : m_vecDisplayableRows)
-    {
-        item->SetDisplayable(false);
-        item->SetDisplayIndex(INVALID_INDEX);
-        item->SetClipped(false);
-    }
+    std::set<IDataRow*> oldDisplayableRows(m_vecDisplayableRows.begin(), m_vecDisplayableRows.end());
+    
     m_vecDisplayableRows.clear();
 
     uint displayIndex = 0;
@@ -962,6 +962,15 @@ void GrDataRowList::Clip(const GrRect& displayRect, uint /*horizontal*/, uint ve
         m_vecDisplayableRows.push_back(item);
         displayY += item->GetHeight();
         displayIndex++;
+
+        oldDisplayableRows.erase(item);
+    }
+
+    for(auto item : oldDisplayableRows)
+    {
+        item->SetDisplayable(false);
+        item->SetDisplayIndex(INVALID_INDEX);
+        item->SetClipped(false);
     }
 
     m_bound.left = GetX();

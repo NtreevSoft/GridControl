@@ -160,7 +160,7 @@ GrGridCore::GrGridCore(GrGridWindow* pGridWindow) : m_pGridWindow(pGridWindow)
     m_autoFitColumn = false;
     m_autoFitColumnType = GrAutoFitColumnType_ColumnIncluded;
     m_autoFitRow = false;
-    m_columnSplitterWidth= 10;
+    m_columnSplitterWidth = 10;
     m_rowSplitterHeight = 3;
 
     m_reservedColumn = 0;
@@ -922,25 +922,25 @@ void GrGridCore::GetAutoFitColumnType(GrAutoFitColumnType value)
     }
 }
 
-void GrGridCore::SetColumnSplitter(int value)
-{
-    m_columnSplitterWidth = value;
-}
-
-void GrGridCore::SetRowSplitter(int value)
-{
-    m_rowSplitterHeight = value;
-}
-
-int GrGridCore::GetColumnSplitter() const
-{
-    return m_columnSplitterWidth;
-}
-
-int GrGridCore::GetRowSplitter() const
-{
-    return m_rowSplitterHeight;
-}
+//void GrGridCore::SetColumnResizingMargin(int value)
+//{
+//    m_columnSplitterWidth = value;
+//}
+//
+//void GrGridCore::SetRowSplitter(int value)
+//{
+//    m_rowSplitterHeight = value;
+//}
+//
+//int GrGridCore::GetColumnResizingMargin() const
+//{
+//    return m_columnSplitterWidth;
+//}
+//
+//int GrGridCore::GetRowSplitter() const
+//{
+//    return m_rowSplitterHeight;
+//}
 
 bool GrGridCore::GetFullRowSelect() const
 {

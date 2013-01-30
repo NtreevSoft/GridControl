@@ -41,8 +41,8 @@ public:
 
     GrColumn* GetFirstSortColumn() const;
 
-    bool MoveToFrozen(GrColumn* pColumn, GrColumn* pWhere);
-    bool MoveToUnfrozen(GrColumn* pColumn, GrColumn* pWhere);
+    //bool MoveToFrozen(GrColumn* pColumn, GrColumn* pWhere);
+    //bool MoveToUnfrozen(GrColumn* pColumn, GrColumn* pWhere);
 
     uint ClipFrom(uint visibleFrom) const;
     uint ClipFrom(const GrRect& displayRect, uint visibleFrom) const;

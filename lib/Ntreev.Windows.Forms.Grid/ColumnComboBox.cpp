@@ -39,6 +39,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         listBox->BorderStyle = BorderStyle::None;
         //listBox->IntegralHeight = false;
 
+        listBox->PreviewKeyDown += gcnew PreviewKeyDownEventHandler(this, &ColumnComboBox::listBox_PreviewKeyDown);
         listBox->MouseMove += gcnew MouseEventHandler(this, &ColumnComboBox::listBox_OnMouseMove);
         listBox->MouseClick += gcnew MouseEventHandler(this, &ColumnComboBox::listBox_OnMouseClick);
         listBox->VisibleChanged += gcnew System::EventHandler(this, &ColumnComboBox::listBox_OnVisibleChanged);
@@ -81,9 +82,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         return m_nMaxDropDownItems;
     }
 
+    void ColumnComboBox::listBox_PreviewKeyDown(System::Object^ sender, System::Windows::Forms::PreviewKeyDownEventArgs^ e)
+    {
+        if(e->KeyCode == System::Windows::Forms::Keys::Enter)
+        {
+            System::Windows::Forms::ListBox^ control = this->Control;
+            if(control->SelectedItem != nullptr)
+                m_value = control->SelectedItem;
+        }
+    }
+
     void ColumnComboBox::listBox_OnMouseMove(System::Object^ /*sender*/, System::Windows::Forms::MouseEventArgs^ e)
     {
         int selIndex = this->Control->IndexFromPoint(e->Location);
+        if(selIndex < 0)
+            return;
         this->Control->SelectedIndex = selIndex;
     }
 
@@ -97,10 +110,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     void ColumnComboBox::listBox_OnVisibleChanged(System::Object^ /*sender*/, System::EventArgs^ /*e*/)
     {
-        if(this->Control->Visible == false)
-            this->Control->SelectedIndex = -1;
-        else
-            this->Control->SelectedItem = m_value;
+        //if(this->Control->Visible == false)
+        //    this->Control->SelectedIndex = -1;
+        //else
+        //    this->Control->SelectedItem = m_value;
     }
 
     bool ColumnComboBox::ShouldSerializeMaxDropDownItems()

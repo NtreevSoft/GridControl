@@ -40,6 +40,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         using namespace System::ComponentModel;
         ITypeDescriptorContext^ context = dynamic_cast<ITypeDescriptorContext^>(editorService->GetService(ITypeDescriptorContext::typeid));
         editorService->IsDropDownResizable = m_typeEditor->IsDropDownResizable;
+
+        if(value == System::DBNull::Value)
+        {
+            System::Object^ newValue = m_typeEditor->EditValue(context, editorService, nullptr);
+            if(newValue == nullptr)
+                return System::DBNull::Value;
+            return newValue;
+        }
         return m_typeEditor->EditValue(context, editorService, value);
     }
 

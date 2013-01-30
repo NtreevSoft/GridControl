@@ -39,16 +39,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
         if(dataType->IsEnum == true)
         {
-            for each(System::Object^ item in System::Enum::GetValues(dataType))
+            for each(System::String^ item in System::Enum::GetNames(dataType))
             {
                 this->Items->Add(item);
             }
+
+            if(value != nullptr)
+                this->SelectedItem = value->ToString();
         }
         else if(dataType->IsArray == true)
         {
-
+            throw gcnew System::NotImplementedException();
         }
-        this->SelectedItem = value;
+
+        m_dataType = dataType;
     }
 
     System::Object^ ListBox::Value::get()
@@ -90,6 +94,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     void ListBox::UpdateValue()
     {
         if(this->SelectedItem != nullptr)
-            m_value = this->SelectedItem;
+        {
+            if(m_dataType->IsEnum == true)
+            {
+                m_value = System::Enum::Parse(m_dataType, (System::String^)this->SelectedItem);
+            }
+        }
     }
 } /*namespace Controls*/ } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

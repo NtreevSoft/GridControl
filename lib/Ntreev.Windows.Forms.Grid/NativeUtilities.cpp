@@ -203,6 +203,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             msg.WParam = System::IntPtr((int)message.wParam);
             msg.LParam = System::IntPtr((int)message.lParam);
 
+
             //Control^ sontrol = Control::FromHandle(msg.HWnd);
             //if(sontrol != nullptr)
             //{
@@ -226,8 +227,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
                 continue;
             }
 
-
-            //System::Diagnostics::Trace::WriteLine((Native::WM)msg.Msg);
             if(Application::FilterMessage(msg) == false)
             {
                 Control^ control = Control::FromHandle(msg.HWnd);
@@ -340,6 +339,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     void Methods::SetScrollRange(System::IntPtr handle, int type, int min, int max)
     {
         HWND hwnd = (HWND)handle.ToPointer();
+
+        int oldmin, oldmax;
+        ::GetScrollRange(hwnd, type, &oldmin, &oldmax);
+        if(oldmin == min && oldmax == max)
+            return;
         ::SetScrollRange(hwnd, type, min, max, TRUE);
     }
 
@@ -377,41 +381,34 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     void ControlPainter::TransparentBlt(System::IntPtr hdc, System::Windows::Forms::Control^ control, System::Drawing::Rectangle paintRect, System::Object^ /*value*/)
     {
         HDC _hdc = (HDC)hdc.ToPointer();
-        if(m_width < paintRect.Width || m_height < paintRect.Height)
-        {
-            m_width = System::Math::Max(m_width, paintRect.Width);
-            m_height = System::Math::Max(m_height, paintRect.Height);
-            HBITMAP hh = CreateBitmap(m_width, m_height, 1, 32, nullptr);
-            HGDIOBJ hOldBitmap = SelectObject((HDC)m_dc, hh);
-            DeleteObject(hOldBitmap);
-        }
-
         HWND hControl = (HWND)control->Handle.ToPointer();
 
-        RECT r;
-        SetRect(&r, 0, 0, m_width, m_height);
-        HBRUSH hBrush = CreateSolidBrush(RGB(240,240,240));
-        FillRect((HDC)m_dc, &r, (HBRUSH)hBrush);
-        DeleteObject(hBrush);
-
-        SendMessage(hControl, WM_PRINT, (WPARAM)m_dc, PRF_CLIENT|PRF_CHILDREN);
+        int sgm = SetGraphicsMode(_hdc, GM_ADVANCED);
+        XFORM form, form2;
+        GetWorldTransform(_hdc, &form);
+        form2 = form;
+        form2 .eDx = paintRect.X;
+        form2 .eDy = paintRect.Y;
+        BOOL b = SetWorldTransform(_hdc, &form2);
 
         HRGN hRgn = CreateRectRgn(paintRect.X, paintRect.Y, paintRect.Right, paintRect.Bottom);
         HRGN restoreRegion = CreateRectRgn( 0, 0, 0, 0 );
         if (GetClipRgn(_hdc, restoreRegion ) != 1)
         {
-            ::DeleteObject(restoreRegion);
+            DeleteObject(restoreRegion);
             restoreRegion = nullptr;
         }
 
         ::SelectClipRgn(_hdc, hRgn);
 
-        ::TransparentBlt(_hdc, paintRect.X + control->Left, paintRect.Y + control->Top, control->Width, control->Height, (HDC)m_dc,
-            0, 0, control->Width, control->Height, m_colorKey);
+        SendMessage(hControl, WM_PRINT, (WPARAM)_hdc, PRF_CLIENT|PRF_CHILDREN);
 
         ::SelectClipRgn(_hdc, restoreRegion);
         ::DeleteObject(hRgn);
         ::DeleteObject(restoreRegion);
+        
+        SetWorldTransform(_hdc, &form);
+        SetGraphicsMode(_hdc, sgm);
     }
 
     void ControlPainter::BitBlt(System::IntPtr hdc, System::Windows::Forms::Control^ control, System::Drawing::Rectangle paintRect, System::Object^ /*value*/)

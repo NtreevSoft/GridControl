@@ -532,13 +532,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
                 {
                     cell->Value = newValue;
                     e->SetHandled(true);
-                    m_gridControl->Update();
+                    
                 }
+                m_gridControl->Refresh();
             }
         }
         catch(System::Exception^ e1)
         {
-            System::Windows::Forms::MessageBox::Show(e1->Message);
+            m_gridControl->ShowMessage(e1->Message, "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
             cell->CancelEdit();
         }
         finally
@@ -717,7 +718,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         try
         {
             Ntreev::Windows::Forms::Grid::Row^ row = FromNative::Get(pDataRow);
-            if(row->ErrorDescription != System::String::Empty)
+            if(row != nullptr && row->ErrorDescription != System::String::Empty)
                 m_gridControl->ToolTip->Show(row->ErrorDescription);
         }
         catch(System::Exception^)

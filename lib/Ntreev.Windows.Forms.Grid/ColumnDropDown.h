@@ -103,9 +103,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         virtual System::Object^ EditValue(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value) override sealed;
 
-        virtual Ntreev::Windows::Forms::Grid::Design::EditStyle GetEditStyle() override sealed;
-
         void CloseDropDown();
+
+    internal: // methods
+
+        virtual Ntreev::Windows::Forms::Grid::Design::EditStyle GetEditStyle() override sealed;
 
     private: // variables
 

@@ -122,6 +122,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         virtual void OnGridControlDetached() override;
 
+    internal: // methods
+
+        virtual Ntreev::Windows::Forms::Grid::Design::EditStyle GetEditStyle() override sealed;
+
     private: // methods
 
         void gridControl_CellMouseMove(System::Object^ sender, Ntreev::Windows::Forms::Grid::CellMouseEventArgs^ e);

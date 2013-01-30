@@ -36,6 +36,31 @@ int GrRow::DefaultHeight = 21;
 
 GrEventArgs GrEventArgs::Empty;
 
+
+bool GrColumn::SortColumnByVisible::operator () (const GrColumn* c1, const GrColumn* c2)
+{
+    if(c1->m_frozen == c2->m_frozen)
+    {
+        uint v1, v2;
+
+        if(c1->m_visibleIndex != INVALID_INDEX)
+            v1 = c1->m_visibleIndex * 1000 + 1;
+        else
+            v1 = c1->m_visibleIndexCore * 1000 + 2;
+
+        if(c2->m_visibleIndex != INVALID_INDEX)
+            v2 = c2->m_visibleIndex * 1000 + 1;
+        else
+            v2 = c2->m_visibleIndexCore * 1000 + 2;
+
+        if(v1 == v2)
+            return c1->m_index < c2->m_index;
+        return v1 < v2;
+    }
+
+    return c1->m_frozen > c2->m_frozen;
+}
+
 GrMouseEventArgs::GrMouseEventArgs(const GrPoint& location, GrKeys modifierKeys)
     : m_location(location), m_modifierKeys(modifierKeys), m_delta(0)
 {
@@ -184,6 +209,10 @@ GrCell::GrCell()
     m_textAlignChanged = false;
     m_textClipped = false;
     m_textVisible = true;
+
+    m_backColor = GrColor::Empty;
+    m_foreColor = GrColor::Empty;
+	m_lineColor = GrColor::Empty;
 
     Tag = nullptr;
 }
@@ -1133,10 +1162,8 @@ GrFont* GrItem::GetFont() const
 GrPadding GrItem::GetPadding() const
 {
     GrPadding padding = GrCell::GetPaddingCore();
-    if(padding != GrPadding::Empty)
-        return padding;
-
-    padding = m_pColumn->GetItemPadding();
+    if(padding == GrPadding::Empty)
+        padding = m_pColumn->GetItemPadding();
     if(m_pColumn->GetItemIcon() == true)
         padding.left += (DEF_ICON_SIZE + padding.left);
 
@@ -1442,19 +1469,20 @@ GrColumn::GrColumn()
     m_grouped = false;
 
     m_visibleIndex = INVALID_INDEX;
+    m_visibleIndexCore = INVALID_INDEX;
     m_displayIndex = INVALID_INDEX;
     m_index = INVALID_INDEX;
     m_columnID = INVALID_INDEX;
 
     m_x = 0;
     m_width = 100;
-    m_minWidth = 30;
-    m_maxWidth = 10000;
+    m_minWidth = 0;
+    m_maxWidth = 0;
     m_sortType = GrSort_None;
     m_fitWidth = 0;
 
-    m_freezablePriority = GetID();
-    m_unfreezablePriority = GetID();
+    //m_freezablePriority = GetID();
+    //m_priority = GetID();
 
     m_itemType = GrItemType_Control;
     m_itemTypeShow = GrItemTypeShow_SelectedOnly;
@@ -1584,39 +1612,39 @@ void GrColumn::KillFocus()
     m_pGridCore->GetFocuser()->Reset();
 }
 
-int GrColumn::GetFreezablePriority() const
-{
-    return m_freezablePriority;
-}
-
-int GrColumn::GetUnfreezablePriority() const
-{
-    return m_unfreezablePriority;
-}
-
-void GrColumn::SetFreezablePriority(int priority)
-{
-    if(m_freezablePriority == priority) 
-        return;
-    m_freezablePriority = priority;
-    if(m_pColumnList != nullptr)
-    {
-        GrColumnEventArgs e(this);
-        m_pColumnList->Invoke(L"ColumnFrozenChanged", &e);
-    }
-}
-
-void GrColumn::SetUnfreezablePriority(int priority)
-{
-    if(m_unfreezablePriority == priority)
-        return;
-    m_unfreezablePriority = priority;
-    if(m_pColumnList != nullptr)
-    {
-        GrColumnEventArgs e(this);
-        m_pColumnList->Invoke(L"ColumnFrozenChanged", &e);
-    }
-}
+//int GrColumn::GetFreezablePriority() const
+//{
+//    return m_freezablePriority;
+//}
+//
+//int GrColumn::GetPriority() const
+//{
+//    return m_priority;
+//}
+//
+//void GrColumn::SetFreezablePriority(int priority)
+//{
+//    if(m_freezablePriority == priority) 
+//        return;
+//    m_freezablePriority = priority;
+//    if(m_pColumnList != nullptr)
+//    {
+//        GrColumnEventArgs e(this);
+//        m_pColumnList->Invoke(L"ColumnFrozenChanged", &e);
+//    }
+//}
+//
+//void GrColumn::SetPriority(int priority)
+//{
+//    if(m_priority == priority)
+//        return;
+//    m_priority = priority;
+//    if(m_pColumnList != nullptr)
+//    {
+//        GrColumnEventArgs e(this);
+//        m_pColumnList->Invoke(L"ColumnFrozenChanged", &e);
+//    }
+//}
 
 bool GrColumn::GetGrouped() const
 {
@@ -1662,23 +1690,25 @@ uint GrColumn::GetDisplayIndex() const
 void GrColumn::SetVisibleIndex(uint index)
 {
     m_visibleIndex = index;
+    if(m_pColumnList != nullptr)
+        m_pColumnList->SetVisibleChanged();
 }
 
 uint GrColumn::GetVisibleIndex() const
 {
-    return m_visibleIndex;
+    return m_visibleIndexCore;
 }
 
 uint GrColumn::GetFrozenIndex() const
 {
     assert(m_frozen == true);
-    return m_visibleIndex;
+    return m_visibleIndexCore;
 }
 
 uint GrColumn::GetUnfrozenIndex() const
 {
     assert(m_frozen == false);
-    return m_visibleIndex - m_pGridCore->GetColumnList()->GetFrozenColumnCount();
+    return m_visibleIndexCore - m_pGridCore->GetColumnList()->GetFrozenColumnCount();
 }
 
 uint GrColumn::GetIndex() const
@@ -1696,6 +1726,18 @@ uint GrColumn::GetColumnID() const
     return m_columnID;
 }
 
+int GrColumn::GetResizingMargin() const
+{
+    GrFont* pFont = GetPaintingFont();
+    int margin = (int)((float)pFont->GetHeight() * 0.75f);
+
+    int width = this->GetWidth();
+    if(margin * 3 > width)
+        margin = (int)((float)width / 3.0f);
+
+    return margin;
+}
+
 void GrColumn::SetColumnID(uint id)
 {
     m_columnID = id;
@@ -1709,15 +1751,15 @@ bool GrColumn::ShouldSerializeWidth()
     return m_width != m_fitWidth;
 }
 
-bool GrColumn::ShouldSerializePriorityOnFrozen()
-{
-    return m_freezablePriority != (int)GetIndex();
-}
-
-bool GrColumn::ShouldSerializePriorityOnUnfrozen()
-{
-    return m_unfreezablePriority != (int)GetIndex();
-}
+//bool GrColumn::ShouldSerializePriorityOnFrozen()
+//{
+//    return m_freezablePriority != (int)GetIndex();
+//}
+//
+//bool GrColumn::ShouldSerializePriorityOnUnfrozen()
+//{
+//    return m_priority != (int)GetIndex();
+//}
 #endif
 
 void GrColumn::SetClipped(bool b)
@@ -1799,8 +1841,10 @@ bool GrColumn::GetGroupable() const
 
 void GrColumn::SetWidth(int width) 
 { 
-    width = std::max(width, m_minWidth);
-    width = std::min(width, m_maxWidth);
+    if(m_minWidth != 0)
+        width = std::max(width, m_minWidth);
+    if(m_maxWidth != 0)
+        width = std::min(width, m_maxWidth);
 
     if(m_width == width)
         return;
@@ -1818,12 +1862,24 @@ void GrColumn::SetWidth(int width)
 
 void GrColumn::SetMinWidth(int minWidth)
 {
+    if(minWidth < 0)
+        minWidth = 0;
+
     m_minWidth = minWidth;
+
+    if(m_width < m_minWidth)
+        SetWidth(m_minWidth);
 }
 
 void GrColumn::SetMaxWidth(int maxWidth)
 {
+    if(maxWidth < 0)
+        maxWidth = 0;
+
     m_maxWidth = maxWidth;
+
+    if(m_width > maxWidth)
+        SetWidth(maxWidth);
 }
 
 int GrColumn::GetMinWidth() const
@@ -1905,6 +1961,9 @@ void GrColumn::AdjustWidth()
 
     if(GetItemType() != GrItemType_Control)
         width += DEF_CONTROL_WIDTH;
+    
+    if(m_maxWidth != 0)
+        width = std::min(width, m_maxWidth);
 
     m_fitWidth = m_width = width;
     m_fitting = false;
@@ -2493,6 +2552,9 @@ GrDataRow::GrDataRow()
     m_pItemFont = nullptr;
     m_dataRowIndex = INVALID_INDEX;
     m_dataRowID = INVALID_INDEX;
+
+    m_itemBackColor = GrColor::Empty;
+    m_itemForeColor = GrColor::Empty;
 }
 
 void GrDataRow::OnGridCoreAttached()
@@ -2990,8 +3052,6 @@ void IDataRow::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
 void IDataRow::Expand(bool b)
 {
     if(m_expanded == b)
-        return;
-    if(GetChildCount() == 0)
         return;
     if(m_pDataRowList != nullptr)
         m_pDataRowList->SetVisibleChanged();
@@ -3713,6 +3773,7 @@ void GrRow::UpdateDepth(GrRow* pRow)
 
 void GrRow::ReserveChild(uint reserve)
 {
+    m_vecChilds.clear();
     m_vecChilds.reserve(reserve);
 }
 
@@ -3734,6 +3795,18 @@ GrRow* GrRow::GetParent() const
 uint GrRow::GetDepth() const
 {
     return m_depth;
+}
+
+int GrRow::GetResizingMargin() const
+{
+    GrFont* pFont = GetPaintingFont();
+    int margin = (int)((float)pFont->GetHeight() * 0.25f);
+
+    int height = this->GetHeight();
+    if(margin * 3 > height)
+        margin = (int)((float)height / 3.0f);
+
+    return margin;
 }
 
 GrColumnSplitter::GrColumnSplitter(GrColumnList* pColumnList) : m_pColumnList(pColumnList)

@@ -782,16 +782,16 @@ namespace GridStateClass
         if(pColumn->GetResizable() == false)
             return true;
 
-        int columnSplitter = m_pGridCore->GetColumnSplitter();
+        int margin = pColumn->GetResizingMargin();
 
-        if(localLocation.x < columnSplitter || 
-            localLocation.x >= pHitted->GetWidth() - columnSplitter)
+        if(localLocation.x < margin || 
+            localLocation.x >= pHitted->GetWidth() - margin)
             return false;
 
         if(pColumn->GetClipped() == true)
         {
             int x = localLocation.x + pColumn->GetX();
-            if(x >= m_pGridCore->GetDisplayRect().right - columnSplitter)
+            if(x >= m_pGridCore->GetDisplayRect().right - margin)
                 return false;
         }
         return true;
@@ -994,12 +994,27 @@ namespace GridStateClass
             {
             case TargetType_Frozen:
                 {
-                    m_pColumnList->MoveToFrozen(m_pColumn, (GrColumn*)m_targetCell);
+                    GrColumn* pTarget = (GrColumn*)m_targetCell;
+                    uint index = m_pColumnList->GetFrozenColumnCount();
+                    if(pTarget != nullptr)
+                        index = pTarget->GetVisibleIndex();
+
+                    m_pColumn->SetVisibleIndex(index);
+                    m_pColumn->SetFrozen(true);
+
+                    //m_pColumnList->MoveToFrozen(m_pColumn, (GrColumn*)m_targetCell);
                 }
                 break;
             case TargetType_Unfrozen:
                 {
-                    m_pColumnList->MoveToUnfrozen(m_pColumn, (GrColumn*)m_targetCell);
+                    uint index = m_pColumnList->GetVisibleColumnCount();
+                    GrColumn* pTarget = (GrColumn*)m_targetCell;
+                    if(pTarget != nullptr)
+                        index = pTarget->GetVisibleIndex();
+
+                    m_pColumn->SetVisibleIndex(index);
+                    m_pColumn->SetFrozen(false);
+                    //m_pColumnList->MoveToUnfrozen(m_pColumn, (GrColumn*)m_targetCell);
                 }
                 break;
             case TargetType_GroupList:
@@ -1164,20 +1179,24 @@ namespace GridStateClass
         if(m_pGridCore->GetColumnResizable() == false)
             return nullptr;
 
-        int columnSplitter = m_pGridCore->GetColumnSplitter();
+        int margin = pColumn->GetResizingMargin();
+
+        int width = pColumn->GetWidth();
+        if(margin * 3 > width)
+            margin = (int)((float)width / 3.0f);
         
         if(pColumn->GetClipped() == true)
         {
             int x = localLocation.x + pColumn->GetX();
-            if(x >= m_pGridCore->GetDisplayRect().right - columnSplitter)
+            if(x >= m_pGridCore->GetDisplayRect().right - margin)
                 return pColumn;
         }
-        else if(localLocation.x >= pColumn->GetWidth() - columnSplitter)
+        else if(localLocation.x >= pColumn->GetWidth() - margin)
         {
             if(pColumn->GetResizable() == true)
                 return pColumn;
         }
-        else if(localLocation.x < columnSplitter)
+        else if(localLocation.x < margin)
         {
             uint index = pColumn->GetVisibleIndex();
             if((int)index > 0)
@@ -1200,7 +1219,11 @@ namespace GridStateClass
         m_resizingStart = columnRect.right;
         m_resizingLocation = columnRect.right;
         m_resizingMin = columnRect.left + m_pColumn->GetMinWidth();
-        m_resizingMax = columnRect.left + m_pColumn->GetMaxWidth();
+
+        if(m_pColumn->GetMaxWidth() == 0)
+            m_resizingMax = INT_MAX;
+        else
+            m_resizingMax = columnRect.left + m_pColumn->GetMaxWidth();
 
         m_downX = e->GetX();
     }
@@ -2001,7 +2024,9 @@ namespace GridStateClass
     {
         if(pHitted->GetCellType() != GrCellType_Row)
             return false;
-        if(localLocation.y < m_pGridCore->GetRowSplitter() || localLocation.y >= pHitted->GetHeight() - m_pGridCore->GetRowSplitter())
+        GrRow* pRow = (GrRow*)pHitted;
+        int margin = pRow->GetResizingMargin();
+        if(localLocation.y < margin || localLocation.y >= pHitted->GetHeight() - margin)
             return false;
         return true;
     }
@@ -2120,14 +2145,14 @@ namespace GridStateClass
 
     GrRow* RowResizing::GetResizingRow(GrRow* pRow, const GrPoint& localLocation)
     {
-        int rowSplitter = m_pGridCore->GetRowSplitter();
+        int margin = pRow->GetResizingMargin();
 
-        if(localLocation.y >= pRow->GetHeight() - rowSplitter)
+        if(localLocation.y >= pRow->GetHeight() - margin)
         {
             if(pRow->GetResizable() == true)
                 return pRow;
         }
-        else if(localLocation.y < rowSplitter)
+        else if(localLocation.y < margin)
         {
             IDataRow* pDataRow = dynamic_cast<IDataRow*>(pRow);
             if(pDataRow && (int)pDataRow->GetVisibleIndex() > 0)
