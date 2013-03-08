@@ -134,20 +134,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pCell->SetPadding(value); 
     }
 
-    void CellBase::OnBackColorChanged(System::EventArgs^ e)
-    {
-        BackColorChanged(this, e);
-    }
+    //void CellBase::OnBackColorChanged(System::EventArgs^ e)
+    //{
+    //    BackColorChanged(this, e);
+    //}
 
-    void CellBase::OnForeColorChanged(System::EventArgs^ e)
-    {
-        ForeColorChanged(this, e);
-    }
+    //void CellBase::OnForeColorChanged(System::EventArgs^ e)
+    //{
+    //    ForeColorChanged(this, e);
+    //}
 
-    void CellBase::OnFontChanged(System::EventArgs^ e)
-    {
-        FontChanged(this, e);
-    }
+    //void CellBase::OnFontChanged(System::EventArgs^ e)
+    //{
+    //    FontChanged(this, e);
+    //}
 
     System::Drawing::Color CellBase::DisplayBackColor::get()
     {
@@ -219,7 +219,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_pCell->GetBottom();
     }
 
-    void CellBase::ForeColorChanged::add(System::EventHandler^ p)
+ /*   void CellBase::ForeColorChanged::add(System::EventHandler^ p)
     {
         m_eventForeColorChanged += p; 
     }
@@ -271,7 +271,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             m_eventFontChanged->Invoke(sender, e); 
         } 
-    }
+    }*/
 
     System::Drawing::Color CellBase::PaintingForeColor_ICellBase::get()
     {

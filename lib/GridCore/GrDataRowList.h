@@ -159,6 +159,9 @@ private:
     GrRect m_bound;
     GrDataRow* m_pInsertionRow;
 
+    GrDataRow* m_pItems;
+    int m_itemsCount;
+
     bool m_visibleRowNumber;
     bool m_zeroBasedRowIndex;
     bool m_updating;

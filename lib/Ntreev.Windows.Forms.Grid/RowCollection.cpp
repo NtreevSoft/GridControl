@@ -115,17 +115,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
         else
         {
-            if(this->GridControl->InvokeRowBinding(component) == false)
-                return;
+            //if(this->GridControl->InvokeRowBinding(component) == false)
+            //    return;
 
             row = m_components[component];
-            m_pDataRowList->AddDataRow(row->NativeRef);
+            //m_pDataRowList->AddDataRow(row->NativeRef);
             row->Component = component;
             row->ComponentIndex = componentIndex;
 
-            row->ProcessChildControl();
-            this->GridControl->InvokeRowBinded(row);
-            this->GridControl->InvokeRowChanged(row);
+            //row->ProcessChildControl();
+            //this->GridControl->InvokeRowBinded(row);
+            //this->GridControl->InvokeRowChanged(row);
         }
     }
 
@@ -404,7 +404,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                     ManagerEventDetach managerEventDeatch(this);
                     m_manager->CancelCurrentEdit();
                 }
-                this->GridControl->ShowMessage(e->Message);
+                this->GridControl->ShowMessage(e->Message, "Error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
                 return nullptr;
             }
 

@@ -1476,7 +1476,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void InvokeSelectedColumnsChanged();
         void InvokeSelectionChanged();
 
-        void InvokeNewChildGridControl(System::ComponentModel::PropertyDescriptor^ descriptor, Row^ row, System::Object^ value);
+        GridControl^ InvokeNewChildGridControl(Native::GrGridRow* pGridRow);
 
         bool DesignTimeHitTest(System::Drawing::Point globalLocation);
         void PostPaint(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle clipRectangle);
@@ -2135,6 +2135,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		System::Drawing::Color m_lineColor;
 		bool m_paintBackground;
         bool m_disposing;
+        bool m_isEditing;
 
         RowBuilder^ m_rowBuilder;
 

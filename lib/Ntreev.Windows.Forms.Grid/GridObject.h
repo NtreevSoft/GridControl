@@ -94,10 +94,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     private: // variables
 
-        Native::WinFormGridCore* m_pGridCore;
-        GrGridPainter* m_pGridPainter;
-        GrItemSelector* m_pItemSelector;
-        GrFocuser* m_pFocuser;
+        //Native::WinFormGridCore* m_pGridCore;
+        //GrGridPainter* m_pGridPainter;
+        //GrItemSelector* m_pItemSelector;
+        //GrFocuser* m_pFocuser;
         _GridControl^ m_gridControl;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

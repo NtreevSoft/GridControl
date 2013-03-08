@@ -62,6 +62,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     GridControl::GridControl()
     {
+        int siz = sizeof(GrRect);
+    int s = sizeof(GrItem);
+    int ces = sizeof(GrCell);
+    int c = sizeof(GrColor);
+    int ws = sizeof(std::wstring);
+    int rs = sizeof(GrDataRow);
+    int cs = sizeof(GrColumn);
+
 #ifdef _TIME_TEST
         TimeTester timeTest("GridControl 생성자");
 #endif
@@ -75,6 +83,27 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         m_pColumnList = m_pGridCore->GetColumnList();
         m_pDataRowList = m_pGridCore->GetDataRowList();
+
+
+        //new GrItem[120*18000];
+        //for(int i=0 ; i<18000 ; i++)
+        //{
+        //    new GrItem[120];
+        //}
+        //int qwr=0;
+        //m_pGridCore->Reserve(120, 18000);
+
+        //for(int i=0 ; i<120 ; i++)
+        //{
+        //    GrColumn* c = new GrColumn();
+        //    m_pColumnList->AddColumn(c);
+        //}
+
+        //for(int i=0 ; i<18000 ; i++)
+        //{
+        //    GrDataRow* pDataRow = m_pDataRowList->NewDataRow();
+        //    //m_pDataRowList->AddDataRow(pDataRow);
+        //}
 
         m_pGridCore->SetDisplayRect(this->DisplayRectangle);
 
@@ -241,10 +270,47 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             this->Rows->EndInsertion();
         }
+        else 
+        {
+            //Row^ row = dynamic_cast<Row^>(this->FocusedRow);
+            //if(row != nullptr)
+            //{
+            //    try
+            //    {
+            //        m_manager->EndCurrentEdit();
+            //        row->EndEdit();
+            //    }
+            //    catch(System::Exception^ e)
+            //    {
+            //        m_manager->CancelCurrentEdit();
+            //        row->CancelEdit();
+            //        this->ShowMessage(e->Message, "Error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
+            //    }
+            //}
+        }
     }
 
     void GridControl::OnLostFocus(System::EventArgs^ e)
     {
+        if(this->EditingCell == nullptr && this->FocusedRow != this->InsertionRow)
+        {
+            Row^ row = dynamic_cast<Row^>(this->FocusedRow);
+            if(row != nullptr)
+            {
+                try
+                {
+                    m_manager->EndCurrentEdit();
+                    row->EndEdit();
+                }
+                catch(System::Exception^ e)
+                {
+                    m_manager->CancelCurrentEdit();
+                    row->CancelEdit();
+                    this->ShowMessage(e->Message, "Error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
+                }
+            }
+        }
+
         m_pGridWindow->OnLostFocus();
         UserControl::OnLostFocus(e);
     }
@@ -377,32 +443,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         m_errorDescriptor->Paint(graphics);
     }
-
-    //void GridControl::PaintColumnControl(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle clipRectangle, Column^ column, GrDataRow* pDataRow)
-    //{
-    //    int y = pDataRow->GetY();
-    //    int b = y + pDataRow->GetHeight();
-    //    if(y > clipRectangle.Bottom || b <= clipRectangle.Top)
-    //        return;
-
-    //    GrItem* pItem = pDataRow->GetItem(column->NativeRef);
-    //    Cell^ cell = FromNative::Get(pItem);
-    //    if(cell->WrongValue == true)
-    //        return;
-
-    //    System::Drawing::Rectangle paintRect = pItem->GetClientRect();
-    //    paintRect.Offset(pItem->GetLocation());
-
-    //    if(column->ViewType == ViewType::Icon)
-    //    {
-    //        paintRect.Width = DEF_ICON_SIZE;
-    //        paintRect.X -= (DEF_ICON_SIZE + column->CellPadding.Left);
-    //    }
-
-    //    //if(pItem->GetControlVisible() == true)
-    //    // paintRect.Width -= pItem->GetControlRect().GetWidth();
-    //    column->PaintValue(graphics, paintRect, cell, cell->Value);
-    //}
 
     void GridControl::PaintColumnControls(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle clipRectangle)
     {
@@ -634,7 +674,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         return MessageBox::Show(text, caption, buttons, icon);
     }
-            
+
     Ntreev::Windows::Forms::Grid::CellBase^ GridControl::GetAt(System::Drawing::Point pt)
     {
         GrHitTest hitTest;
@@ -812,7 +852,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             return;
         m_columnBindingCreation = value;
     }
-    
+
     System::Object^ GridControl::DataSource::get()
     {
         return m_dataSource;
@@ -867,26 +907,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         m_pGridCore->SetAutoFitRow(value); 
     }
-
-    //int GridControl::ColumnSplitter::get()
-    //{
-    //    return m_pGridCore->GetColumnSplitter(); 
-    //}
-
-    //void GridControl::ColumnSplitter::set(int value)
-    //{
-    //    m_pGridCore->SetColumnSplitter(value);
-    //}
-
-    //int GridControl::RowSplitter::get()
-    //{
-    //    return m_pGridCore->GetRowSplitter(); 
-    //}
-
-    //void GridControl::RowSplitter::set(int value)
-    //{
-    //    m_pGridCore->SetRowSplitter(value);
-    //}
 
     ColumnCollection^ GridControl::Columns::get()
     {
@@ -952,7 +972,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         if(m_manager != nullptr)
         {
-            m_pGridCore->Reserve(m_manager->GetItemProperties()->Count, m_manager ->List->Count);
+            m_pGridCore->Reserve(m_manager->GetItemProperties()->Count, m_manager->List->Count);
             m_manager->ListChanged += m_listChangedEventHandler;
             m_manager->BindingComplete += m_bindingCompleteEventHandler;
 
@@ -1342,16 +1362,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         OnFocusedCellChanged(gcnew CellEventArgs(m_focusedCell));
     }
 
-    void GridControl::InvokeNewChildGridControl(System::ComponentModel::PropertyDescriptor^ descriptor, Row^ row, System::Object^ value)
+    GridControl^ GridControl::InvokeNewChildGridControl(GrGridRow* pGridRow)
     {
         using namespace Native;
+
+        System::ComponentModel::PropertyDescriptor^ descriptor = pGridRow->GetPropertyDescriptor();
+        Row^ row = pGridRow->GetParentRow();
 
         GridControl^ control = this->NewChildGridControl(descriptor, row);
         control->Visible = false;
         control->Name = descriptor->Name;
         this->Controls->Add(control);
         control->FocusedCellChanged += gcnew CellEventHandler(this, &GridControl::childGridControl_FocusedCellChanged);
-        control->m_pGridRow = new GrGridRow(control, row->NativeRef, value);
+        control->m_pGridRow = pGridRow;
+
+        return control;
     }
 
     bool GridControl::ShouldSerializeColumns()
@@ -1469,7 +1494,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(cell->IsFocused == false)
             cell->Focus();
 
-        m_pGridCore->EditItem(cell->NativeRef, editBy.ToNative());
+        try
+        {
+            m_isEditing = true;
+            bool focused = this->Focused;
+            m_pGridCore->EditItem(cell->NativeRef, editBy.ToNative());
+            if(focused == true)
+                this->Focus();
+        }
+        finally
+        {
+            m_isEditing = false;
+        }
     }
 
     void GridControl::CloseEdit()
@@ -2060,11 +2096,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void GridControl::OnFocusedRowChanged(System::EventArgs^ e)
     {
         Row^ row = dynamic_cast<Row^>(m_oldFocusedRow);
+        
         if(row != nullptr)
         {
             if(row->IsBeingEdited == true && row != this->InsertionRow)
             {
-                row->EndEdit();
+                try
+                {
+                    m_manager->EndCurrentEdit();
+                    row->EndEdit();
+                }
+                catch(System::Exception^ e)
+                {
+                    m_manager->CancelCurrentEdit();
+                    row->CancelEdit();
+                    this->ShowMessage(e->Message, "Error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
+                }
             }
         }
 
@@ -2179,7 +2226,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         try
         {
-            Ntreev::Windows::Forms::Grid::Cell^ cell = e->Cell;
+            Cell^ cell = e->Cell;
             if(cell->ErrorDescription != System::String::Empty)
                 this->ToolTip->Show(cell->ErrorDescription);
         }

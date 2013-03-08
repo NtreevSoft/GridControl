@@ -24,6 +24,10 @@ GrDataRowList::GrDataRowList()
     m_listChanged = false;
     m_visibleChanged = false;
     m_fitChanged = false;
+    m_updating = false;
+
+    m_pItems = nullptr;
+    m_itemsCount = 0;;
 }
 
 void GrDataRowList::OnGridCoreAttached()
@@ -353,6 +357,7 @@ void GrDataRowList::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
 void GrDataRowList::Reserve(uint reserve)
 {
     m_vecDataRows.reserve(reserve);
+    m_vecDataRowsRemoved.reserve(reserve);
 }
 
 void GrDataRowList::groupPanel_Changed(GrObject* /*pSender*/, GrEventArgs* /*e*/)
@@ -437,23 +442,25 @@ void GrDataRowList::gridCore_FontChanged(GrObject* /*pSender*/, GrEventArgs* /*e
     _DataRows vecDataRows = m_vecDataRows;
     vecDataRows.push_back(GetInsertionRow());
 
+    GrTextUpdater* pTextUpdater = m_pGridCore->GetTextUpdater();
+
     for(auto value : vecDataRows)
     {
         GrDataRow* pDataRow = value;
-        m_pTextUpdater->AddTextBounds(pDataRow);
+        pTextUpdater->AddTextBounds(pDataRow);
 
         for(uint i=0 ; i<pColumnList->GetColumnCount() ; i++)
         {
             GrColumn* pColumn = pColumnList->GetColumn(i);
             GrItem* pItem = pDataRow->GetItem(pColumn);
-            m_pTextUpdater->AddTextBounds(pItem);
+            pTextUpdater->AddTextBounds(pItem);
         }
     }
 
     for(auto value : m_vecGroupRows)
     {
-        m_pTextUpdater->AddTextBounds(value);
-        m_pTextUpdater->AddTextBounds(value->GetLabel());
+        pTextUpdater->AddTextBounds(value);
+        pTextUpdater->AddTextBounds(value->GetLabel());
     }
 }
 
@@ -542,6 +549,8 @@ void GrDataRowList::BuildVisibleRowList()
     else
         m_margin = (temp - 1) * DEF_GROUP_WIDTH;
 
+    std::set<IDataRow*> oldVisibles(m_vecVisibleRows.begin(), m_vecVisibleRows.end());
+
     m_vecVisibleRows.clear();
     m_vecVisibleRows.reserve(vecVisibles.size());
     m_vecVisibleDataRows.clear();
@@ -560,6 +569,13 @@ void GrDataRowList::BuildVisibleRowList()
         }
         pDataRowBase->SetVisibleIndex(m_vecVisibleRows.size());
         m_vecVisibleRows.push_back(pDataRowBase);
+
+        oldVisibles.erase(pDataRowBase);
+    }
+
+    for(auto value : oldVisibles)
+    {
+        value->SetVisibleIndex(INVALID_INDEX);
     }
 
     for(auto value : m_vecDisplayableRows)

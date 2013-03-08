@@ -43,17 +43,55 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
+    using namespace System::ComponentModel;
+
     Row::Row(RowBuilder^ rowBuilder)
         : m_pDataRow(rowBuilder->NativeRef), RowBase(rowBuilder->GridControl, rowBuilder->NativeRef), m_errorDescription(System::String::Empty)
     {
-        m_cells = gcnew CellCollection(this);
+        //m_cells = gcnew CellCollection(this);
         m_componentIndex = -1;
 
-        for each(Column^ item in this->GridControl->Columns)
-        {
-            this->NewCell(item);
-        }
+        //for each(Column^ item in this->GridControl->Columns)
+        //{
+        //    this->NewCell(item);
+        //}
+
+        m_cellErrorDescriptions = gcnew System::Collections::Generic::Dictionary<Cell^, System::String^>();
     }
+
+    //void Row::SourceValueToLocal(System::Object^ component)
+    //{
+    //    PropertyDescriptor^ propertyDescriptor = this->Column->PropertyDescriptor;
+    //    if(propertyDescriptor == nullptr)
+    //        return;
+
+    //    if(component == nullptr)
+    //    {
+    //        m_value = nullptr;
+    //    }
+    //    else
+    //    {
+    //        System::Object^ value = propertyDescriptor->GetValue(component);
+    //        m_value = this->Column->ConvertFromSource(value);
+    //    }
+    //}
+
+    //void Row::LocalValueToSource(System::Object^ component)
+    //{
+    //    PropertyDescriptor^ propertyDescriptor = this->Column->PropertyDescriptor;
+    //    if(propertyDescriptor == nullptr)
+    //        return;
+
+    //    System::Object^ value = propertyDescriptor->GetValue(component);
+
+    //    if(ValueChecker::IsNullOrDBNull(value) == true && ValueChecker::IsNullOrDBNull(m_value) == false)
+    //    {
+    //        value = this->Column->ConvertToSource(m_value);
+    //        propertyDescriptor->SetValue(component, value);
+    //    }
+
+    //    m_value = nullptr;        
+    //}
 
     void Row::Component::set(System::Object^ value)
     {
@@ -90,7 +128,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             if(item->PropertyDescriptor != nullptr && item->PropertyDescriptor->PropertyType == IBindingList::typeid)
             {
-                this->GridControl->InvokeNewChildGridControl(item->PropertyDescriptor, this, this[item]);
+                Native::GrGridRow* pChildRow = new Native::GrGridRow(this->GridControl, item->PropertyDescriptor, this, this[item]);
+                m_pDataRow->AddChild(pChildRow);
+                //this->GridControl->InvokeNewChildGridControl(item->PropertyDescriptor, this, this[item]);
             }
         }
     }
@@ -104,6 +144,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 continue;
 
             this->GridControl->Controls->Remove(gridRow->ChildGrid);
+            delete gridRow->ChildGrid;
         }
     }
 
@@ -145,6 +186,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     
     Ntreev::Windows::Forms::Grid::CellCollection^ Row::Cells::get()
     {
+        if(m_cells == nullptr)
+        {
+            m_cells = gcnew CellCollection(this);
+        }
         return m_cells;
     }
 
@@ -159,7 +204,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     int Row::CellCount::get()
     {
-        return m_cells->Count;
+        return this->Cells->Count;
     }
 
     unsigned int Row::RowID::get()
@@ -169,12 +214,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::Object^ Row::default::get(int index)
     {
-        return m_cells[index]->Value;
+        return this->Cells[index]->Value;
     }
 
     void Row::default::set(int index, System::Object^ value)
     {
-        m_cells[index]->Value = value;
+        this->Cells[index]->Value = value;
     }
 
     System::Object^ Row::default::get(System::String^ columnName)
@@ -189,12 +234,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::Object^ Row::default::get(Column^ column)
     {
-        return m_cells[column]->Value;
+        return this->Cells[column]->Value;
     }
 
     void Row::default::set(Column^ column, System::Object^ value)
     {
-        m_cells[column]->Value = value;
+        this->Cells[column]->Value = value;
     }
 
     bool Row::IsVisible::get()
@@ -418,6 +463,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Row::Refresh()
     {
+        //return;
         for each(Column^ item in this->GridControl->Columns)
         {
             try
@@ -430,6 +476,76 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
             }
         }
+    }
+
+    System::String^ Row::GetErrorDescription(Cell^ cell)
+    {
+        if(m_cellErrorDescriptions->ContainsKey(cell) == false)
+            return System::String::Empty;
+
+        return m_cellErrorDescriptions[cell];
+    }
+     
+    void Row::SetErrorDescription(Cell^ cell, System::String^ text)
+    {
+        if(text == nullptr)
+            text = System::String::Empty;
+
+        if(this->GetErrorDescription(cell) == text)
+            return;
+
+        m_cellErrorDescriptions[cell] = text;
+
+        if(m_errorDescription == System::String::Empty)
+        {
+            this->GridControl->ErrorDescriptor->Remove(this);
+            this->RemoveErrorCell();
+        }
+        else
+        {
+            this->GridControl->ErrorDescriptor->Add(this);
+            this->AddErrorCell();
+        }
+    }
+
+    System::Object^ Row::GetSourceValue(Column^ column)
+    {
+        PropertyDescriptor^ propertyDescriptor = column->PropertyDescriptor;
+
+        if(propertyDescriptor == nullptr || m_component == nullptr)
+            throw gcnew System::ArgumentException();
+        System::Object^ value = propertyDescriptor->GetValue(m_component);
+        return column->ConvertFromSource(value);
+    }
+
+    void Row::SetSourceValue(Column^ column, System::Object^ value)
+    {
+        PropertyDescriptor^ propertyDescriptor = column->PropertyDescriptor;
+        
+        if(propertyDescriptor->IsReadOnly == false)
+        {
+            value = column->ConvertToSource(value);
+            try
+            {
+                //if(propertyDescriptor->ShouldSerializeValue(component) == false)
+                    propertyDescriptor->SetValue(m_component, value);
+            }
+            catch(System::Exception^ e)
+            {
+                if(value == nullptr)
+                    propertyDescriptor->SetValue(m_component, System::DBNull::Value);
+                else
+                    throw e;
+            }
+        }
+    }
+
+    bool Row::HasSourceValue(Column^ column)
+    {
+        PropertyDescriptor^ propertyDescriptor = column->PropertyDescriptor;
+        if(propertyDescriptor == nullptr || m_component == nullptr)
+            return false;
+        return true;
     }
 
     int Row::GetCellsTextCapacity()

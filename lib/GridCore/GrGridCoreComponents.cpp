@@ -883,13 +883,12 @@ GrTextUpdater::GrTextUpdater()
 {
     m_nBaseCapacity = 50;
     m_vecTextBounds.reserve(m_nBaseCapacity);
-    m_vecTextAligns.reserve(m_nBaseCapacity);
+    //m_vecTextAligns.reserve(m_nBaseCapacity);
 }
 
 GrTextUpdater::~GrTextUpdater()
 {
 }
-
 
 void GrTextUpdater::OnGridCoreAttached()
 {
@@ -907,7 +906,7 @@ void GrTextUpdater::gridCore_CapacityChanged(GrObject* /*pSender*/, GrEventArgs*
 {
     uint capacity = m_pGridCore->GetReservedColumn() * m_pGridCore->GetReservedRow() + m_nBaseCapacity;
     m_vecTextBounds.reserve(capacity);
-    m_vecTextAligns.reserve(capacity);
+    //m_vecTextAligns.reserve(capacity);
 }
 
 void GrTextUpdater::AddTextBounds(GrCell* pCell)
@@ -951,7 +950,7 @@ void GrTextUpdater::AddTextAlign(GrCell* pCell)
 #endif
     if(pCell->m_textAlignChanged == true)
         return;
-    m_vecTextAligns.push_back(pCell);
+    //m_vecTextAligns.push_back(pCell);
     pCell->m_textAlignChanged = true;
 }
 
@@ -984,12 +983,12 @@ void GrTextUpdater::RemoveTextBounds(GrCell* pCell)
 
 void GrTextUpdater::RemoveTextAlign(GrCell* pCell)
 {
-    GrCells::iterator itor = std::find(m_vecTextAligns.begin(), m_vecTextAligns.end(), pCell);
-    if(itor != m_vecTextAligns.end())
-    {
-        pCell->m_textAlignChanged = false;
-        m_vecTextAligns.erase(itor);
-    }
+    //GrCells::iterator itor = std::find(m_vecTextAligns.begin(), m_vecTextAligns.end(), pCell);
+    //if(itor != m_vecTextAligns.end())
+    //{
+    //    pCell->m_textAlignChanged = false;
+    //    m_vecTextAligns.erase(itor);
+    //}
 }
 
 void GrTextUpdater::UpdateTextBounds()
@@ -999,23 +998,23 @@ void GrTextUpdater::UpdateTextBounds()
         value->ComputeTextBounds();
         value->m_textBoundsChanged = false;
 
-        if(value->m_textAlignChanged == false)
-        {
-            m_vecTextAligns.push_back(value);
-            value->m_textAlignChanged = true;
-        }
+        //if(value->m_textAlignChanged == false)
+        //{
+        //    m_vecTextAligns.push_back(value);
+        //    value->m_textAlignChanged = true;
+        //}
     }
     m_vecTextBounds.clear();
 }
 
 void GrTextUpdater::UpdateTextAlign()
 {
-    for(auto value : m_vecTextAligns)
-    {
-        value->AlignText();
-        value->m_textAlignChanged = false;
-    }
-    m_vecTextAligns.clear();
+    //for(auto value : m_vecTextAligns)
+    //{
+    //    value->AlignText();
+    //    value->m_textAlignChanged = false;
+    //}
+    //m_vecTextAligns.clear();
 }
 
 GrFocusMover::GrFocusMover()

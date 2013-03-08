@@ -781,7 +781,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         property GrColumn* NativeRef
         {
-            GrColumn* get() { return m_pColumn; }
+            GrColumn* get() new { return m_pColumn; }
         }
 
         property Design::TypeEditor^ TypeEditor

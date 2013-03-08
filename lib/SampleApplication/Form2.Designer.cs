@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.columnID = new Ntreev.Windows.Forms.Grid.Column();
             this.gridControl1 = new Ntreev.Windows.Forms.Grid.GridControl();
             this.dataSet1 = new System.Data.DataSet();
             this.dataTable1 = new System.Data.DataTable();
@@ -54,19 +53,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
-            // columnID
-            // 
-            this.columnID.ColumnName = "ID";
-            this.columnID.DataType = typeof(int);
-            this.columnID.VisibleIndex = 0;
-            // 
             // gridControl1
             // 
             this.gridControl1.AutoFitColumn = true;
             this.gridControl1.AutoFitRow = true;
             this.gridControl1.BackgroundColor = System.Drawing.SystemColors.ActiveCaption;
-            this.gridControl1.Columns.AddRange(new Ntreev.Windows.Forms.Grid.Column[] {
-            this.columnID});
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridControl1.Location = new System.Drawing.Point(3, 3);
             this.gridControl1.Name = "gridControl1";
@@ -238,6 +229,5 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.DataGridView dataGridView3;
         private System.Windows.Forms.DataGridView dataGridView2;
-        private Ntreev.Windows.Forms.Grid.Column columnID;
-    }
+     }
 }

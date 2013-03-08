@@ -291,6 +291,9 @@ struct GrSize
     operator System::Drawing::Size () const;
 #endif
 
+    bool operator == (const GrSize& size) const;
+    bool operator != (const GrSize& size) const;
+
     int width;
     int height;
 

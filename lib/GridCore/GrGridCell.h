@@ -301,8 +301,8 @@ struct GrLineDesc
     int textBegin;
     int length;
     int width;
-    int x;
-    int y;
+    //int x;
+    //int y;
 };
 
 typedef std::vector<GrLineDesc> _TextLines;
@@ -341,7 +341,7 @@ public:
     GrRect GetRect() const;
     GrPoint GetLocation() const;
     GrSize GetSize() const;
-    uint GetID() const;
+    //uint GetID() const;
     int GetBottom() const { return GetY() + GetHeight(); }
     int GetRight() const { return GetX() + GetWidth(); }
 
@@ -362,8 +362,8 @@ public:
     void SetText(const std::wstring& text);
     uint GetTextLineCount() const;
     const GrLineDesc& GetTextLine(uint index) const;
-    const GrRect& GetTextBounds() const;
-    void AlignText();
+    GrSize GetTextBounds() const;
+    GrPoint AlignText(const GrLineDesc& line, int index, int count) const;
     void ComputeTextBounds();
     bool GetTextVisible() const;
     bool GetTextClipped() const;
@@ -404,32 +404,26 @@ protected:
     void SetTextBoundsChanged();
     void SetTextAlignChanged();
 
-public:
-    void* Tag;
-
-protected:
-    class GrTextUpdater* m_pTextUpdater;
-
 private:
-    std::wstring m_text;
+    std::wstring* m_text;
+    class GrTextLayout* m_layout;
 
-    _TextLines m_vecTextLine;
-    GrRect m_textBounds;
+    struct GrStyleData
+    {
+        GrStyleData() : m_pFont(nullptr), m_padding(GrPadding::Default) {}
+        GrColor m_backColor;
+        GrColor m_foreColor;
+        GrColor m_lineColor;
+        GrFont* m_pFont;
+        GrPadding m_padding;
+    };
 
-    GrColor m_backColor;
-    GrColor m_foreColor;
-	GrColor m_lineColor;
-    GrFont* m_pFont;
-
-    GrPadding m_padding;
-    uint m_id;
+    GrStyleData* m_pStyleData;
 
     bool m_textBoundsChanged;
     bool m_textAlignChanged;
-    bool m_textClipped;
     bool m_textVisible;
-
-    static uint m_snID;
+    
     friend class GrGridCore;
     friend class GrTextUpdater;
 
@@ -438,7 +432,6 @@ public:
     gcroot<System::Object^> ManagedRef;
 #endif
 };
-
 
 typedef std::vector<GrRow*> GrRowArray;
 
@@ -722,6 +715,8 @@ public:
     void ReserveChild(uint reserve);
     void ClearChild();
 
+    uint GetID() const { return m_id; }
+
 public:
     static int DefaultHeight;
 
@@ -745,6 +740,7 @@ private:
     GrRowArray m_vecChilds;
     GrRow* m_pParent;
     uint m_depth;
+    uint m_id;
 
     int m_y;
     int m_height;
@@ -752,6 +748,7 @@ private:
     bool m_resizable;
     bool m_fitting;
 
+    static uint m_snID;
     friend class GrGridCore;
 
 private:
@@ -845,6 +842,7 @@ protected:
     virtual void OnHeightChanged();
     virtual void OnChildAdded(GrRow* pRow);
     virtual void OnDisplayableChanged();
+    virtual void OnVisibleChanged();
 
     virtual GrCell* OnHitTest(int x) const;
 
@@ -936,6 +934,9 @@ private:
     uint m_dataRowIndex;
     uint m_dataRowID;
 
+    GrItem* m_pItems;
+    int m_itemsCount;
+
 private: // friend variables;
     int m_selected;
 
@@ -959,6 +960,7 @@ public:
 class GrItem : public GrCell, public IFocusable
 {
 public:
+    GrItem();
     GrItem(GrColumn* pColumn, GrDataRow* pDataRow);
 
     GrRect GetControlRect() const;
@@ -973,9 +975,6 @@ public:
     void SetReadOnly(bool b);
     void SetSelected(bool b);
     void SetFocused(bool b);
-
-    const std::wstring& GetErrorDescription() const;
-    void SetErrorDescription(const std::wstring& errorDescription);
 
     bool ShouldBringIntoView() const;
     int GetMinHeight() const;
@@ -1029,8 +1028,8 @@ private:
     bool m_readOnly;
     bool m_selected;
     bool m_colorLocked;
-    std::wstring m_errorDescription;
 
+    friend class GrDataRow;
     friend class GrItemSelector;
 };
 

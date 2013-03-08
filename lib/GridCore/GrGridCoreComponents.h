@@ -229,7 +229,7 @@ private:
 
 private:
     GrCells m_vecTextBounds;
-    GrCells m_vecTextAligns;
+    //GrCells m_vecTextAligns;
 
     uint m_nBaseCapacity;
 };

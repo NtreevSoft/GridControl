@@ -414,6 +414,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         //void ValueToSource(System::Object^ component);
         void Refresh();
 
+        System::String^ GetErrorDescription(Cell^ cell);
+        void SetErrorDescription(Cell^ cell, System::String^ text);
+
     internal: // properties
 
         property int ComponentIndex
@@ -424,7 +427,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         property GrDataRow* NativeRef
         {
-            GrDataRow* get();
+            GrDataRow* get() new;
         }
 
     internal: // variables
@@ -435,6 +438,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         bool ShouldSerializeCellForeColor();
         bool ShouldSerializeCellBackColor();
         bool ShouldSerializeCellFont();
+
+        System::Object^ GetSourceValue(Column^ column);
+        void SetSourceValue(Column^ column, System::Object^ value);
+        bool HasSourceValue(Column^ column);
 
     private: // variables
 
@@ -447,5 +454,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         int m_errorCell;
         bool m_editing;
         System::String^ m_errorDescription;
+
+        System::Collections::Generic::Dictionary<Cell^, System::String^>^ m_cellErrorDescriptions;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

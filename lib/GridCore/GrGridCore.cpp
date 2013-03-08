@@ -369,8 +369,10 @@ bool GrGridCore::Update(bool force)
         m_pTextUpdater->UpdateTextAlign();
         i++;
 
+#ifdef _MANAGED
         System::Console::Write("횟수");
         System::Console::WriteLine(i);
+#endif
     }
 
     m_updating = false;

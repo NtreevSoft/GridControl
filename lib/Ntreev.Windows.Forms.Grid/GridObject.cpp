@@ -34,11 +34,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     }
 
     GridObject::GridObject(_GridControl^ gridControl)
-        : m_gridControl(gridControl), 
-        m_pGridCore(gridControl->GridCore), 
-        m_pGridPainter(gridControl->GridPainter), 
-        m_pItemSelector(m_pGridCore->GetItemSelector()),
-        m_pFocuser(m_pGridCore->GetFocuser())
+        : m_gridControl(gridControl)
+        //, 
+        //m_pGridCore(gridControl->GridCore), 
+        //m_pGridPainter(gridControl->GridPainter), 
+        //m_pItemSelector(m_pGridCore->GetItemSelector()),
+        //m_pFocuser(m_pGridCore->GetFocuser())
     {
 
 
@@ -50,10 +51,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(pGridCore != nullptr)
         {
             m_gridControl = pGridCore->m_gridControl; 
-            m_pGridCore = pGridCore; 
-            m_pGridPainter = m_gridControl->GridPainter;
-            m_pItemSelector = m_pGridCore->GetItemSelector();
-            m_pFocuser = m_pGridCore->GetFocuser();
+            //m_pGridCore = pGridCore; 
+            //m_pGridPainter = m_gridControl->GridPainter;
+            //m_pItemSelector = m_pGridCore->GetItemSelector();
+            //m_pFocuser = m_pGridCore->GetFocuser();
         }
     }
 
@@ -67,10 +68,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(gridControl != nullptr)
         {
             m_gridControl = gridControl;
-            m_pGridCore = gridControl->GridCore;
-            m_pGridPainter = gridControl->GridPainter;
-            m_pItemSelector = m_pGridCore->GetItemSelector();
-            m_pFocuser = m_pGridCore->GetFocuser();
+            //m_pGridCore = gridControl->GridCore;
+            //m_pGridPainter = gridControl->GridPainter;
+            //m_pItemSelector = m_pGridCore->GetItemSelector();
+            //m_pFocuser = m_pGridCore->GetFocuser();
 
             OnGridControlAttachedInternal();
         }
@@ -79,10 +80,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             OnGridControlDetachedInternal();
 
             m_gridControl = nullptr;
-            m_pGridCore = nullptr;
-            m_pGridPainter = nullptr;
-            m_pItemSelector = nullptr;
-            m_pFocuser = nullptr;
+            //m_pGridCore = nullptr;
+            //m_pGridPainter = nullptr;
+            //m_pItemSelector = nullptr;
+            //m_pFocuser = nullptr;
         }
     }
 
@@ -98,16 +99,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     GrGridCore* GridObject::GridCore::get()
     {
-        return m_pGridCore;
+        return m_gridControl->GridCore;
     }
 
     GrItemSelector* GridObject::Selector::get() 
     {
-        return m_pItemSelector; 
+        return m_gridControl->GridCore->GetItemSelector(); 
     }
 
     GrFocuser* GridObject::Focuser::get() 
     {
-        return m_pFocuser; 
+        return m_gridControl->GridCore->GetFocuser(); 
     }
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

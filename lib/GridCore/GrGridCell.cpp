@@ -29,13 +29,75 @@
 #include <assert.h>
 #include <limits.h>
 
+class GrTextLayout
+{
+public:
+    GrTextLayout()
+        : pLines(nullptr), linesCount(0)
+    {
+
+    }
+
+    ~GrTextLayout()
+    {
+        if(pLines != nullptr)
+            delete [] pLines;
+    }
+
+    unsigned short width;
+    unsigned short height;
+    unsigned short lineHeight;
+    unsigned short y;
+
+    GrLineDesc* pLines;
+    int linesCount;
+};
+
+struct tbinfo_fixed
+{
+    GrFont* pFont;
+    const std::wstring* text;
+    bool multiline;
+
+    bool operator < (const tbinfo_fixed& t) const
+    {
+        return this->hash() < t.hash();
+    }
+
+private:
+    int hash() const
+    {
+        return (int)pFont ^ (int)text ^ (int)multiline;
+    }
+};
+
+struct tbinfo
+{
+    GrFont* pFont;
+    const std::wstring* text;
+    bool multiline : 1;
+    bool wordwrap : 1;
+    int width : 14;
+
+    bool operator < (const tbinfo& t) const
+    {
+        return this->hash() < t.hash();
+    }
+
+private:
+    int hash() const
+    {
+        return (int)pFont ^ (int)text ^ (int)multiline ^ (int)wordwrap ^ (int)width;
+    }
+};
+
+std::map<tbinfo, GrTextLayout*> textLayouts;
+std::map<tbinfo_fixed, GrTextLayout*> textLayouts_f;
+
 IFocusable* IFocusable::Null = 0;
-uint GrCell::m_snID = 0;
-
+uint GrRow::m_snID = 0;
 int GrRow::DefaultHeight = 21;
-
 GrEventArgs GrEventArgs::Empty;
-
 
 bool GrColumn::SortColumnByVisible::operator () (const GrColumn* c1, const GrColumn* c2)
 {
@@ -199,22 +261,13 @@ IFocusable* GrFocusChangeArgs::GetFocusable() const
 }
 
 GrCell::GrCell()
-    : m_padding(GrPadding::Default)
 {
-    m_pFont = nullptr;
-    m_id = m_snID++;
-    m_pTextUpdater = nullptr;
-
     m_textBoundsChanged = false;
     m_textAlignChanged = false;
-    m_textClipped = false;
     m_textVisible = true;
-
-    m_backColor = GrColor::Empty;
-    m_foreColor = GrColor::Empty;
-	m_lineColor = GrColor::Empty;
-
-    Tag = nullptr;
+    m_text = nullptr;
+    m_layout = nullptr;
+    m_pStyleData = nullptr;
 }
 
 GrCell::~GrCell()
@@ -222,12 +275,6 @@ GrCell::~GrCell()
 #ifdef _MANAGED
     ManagedRef = nullptr;
 #endif
-}
-
-void GrCell::SetPadding(const GrPadding& padding)
-{
-    m_padding = padding;
-    SetTextBoundsChanged();
 }
 
 GrRect GrCell::GetRect() const
@@ -264,20 +311,22 @@ GrSize GrCell::GetSize() const
 
 uint GrCell::GetTextLineCount() const
 {
-    return m_vecTextLine.size();
+    return m_layout->linesCount;
 }
 
 const GrLineDesc& GrCell::GetTextLine(uint index) const
 {
-    return m_vecTextLine[index];
+    return m_layout->pLines[index];
 }
 
-const GrRect& GrCell::GetTextBounds() const
+GrSize GrCell::GetTextBounds() const
 {
-    return m_textBounds;
+    if(m_layout == nullptr)
+        return GrSize::Empty;
+    return GrSize(m_layout->width, m_layout->height);
 }
 
-void GrCell::AlignText()
+GrPoint GrCell::AlignText(const GrLineDesc& line, int index, int count) const
 {
     GrFont* pFont = GetPaintingFont();
     GrPoint startLocation;
@@ -287,9 +336,9 @@ void GrCell::AlignText()
 
     int lineHeight = pFont->GetHeight() + pFont->GetExternalLeading();
 
-    for(uint i=0 ; i<m_vecTextLine.size() ; i++)
-    {
-        GrLineDesc& cl = m_vecTextLine[i];
+    //for(uint i=0 ; i<m_vecTextLine.size() ; i++)
+    //{
+    //    GrLineDesc& cl = m_vecTextLine[i];
 
         switch(GetTextHorzAlign())
         {
@@ -297,10 +346,10 @@ void GrCell::AlignText()
             startLocation.x = 0;
             break;
         case GrHorzAlign_Center:
-            startLocation.x = (width - cl.width) / 2;
+            startLocation.x = (width - line.width) / 2;
             break;
         case GrHorzAlign_Right:
-            startLocation.x = width - cl.width;
+            startLocation.x = width - line.width;
             break;
         default:
             break;
@@ -309,62 +358,116 @@ void GrCell::AlignText()
         switch(GetTextVertAlign())
         {
         case GrVertAlign_Top:
-            startLocation.y = i * lineHeight;
+            startLocation.y = index * lineHeight;
             break;
         case GrVertAlign_Center:
-            startLocation.y = (height - GetTextLineCount() * lineHeight) / 2 + i * lineHeight;
+            startLocation.y = (height - count * lineHeight) / 2 + index * lineHeight;
             break;
         case GrVertAlign_Bottom:
-            startLocation.y = height - ((i+1) * lineHeight);
+            startLocation.y = height - ((index+1) * lineHeight);
             break;
         default:
             break;
         }
 
         if(height < lineHeight)
-            startLocation.y = i * lineHeight;
+            startLocation.y = index * lineHeight;
 
-        cl.x = startLocation.x + padding.left;
-        cl.y = startLocation.y + padding.top;
+        return GrPoint(startLocation.x + padding.left, startLocation.y + padding.top);
 
-        if(i==0)
-        {
-            m_textBounds.SetLocation(cl.x, cl.y);
-        }
-    }
+        //if(i==0)
+        //{
+        //    m_textBounds.SetLocation(cl.x, cl.y);
+        //}
+    //}
 }
 
 void GrCell::ComputeTextBounds()
 {
+    tbinfo_fixed ti_f;
+    tbinfo ti;
+    if(GetTextWordWrap() == false)
+    {
+        
+        ti_f.pFont = GetPaintingFont();
+        ti_f.text = m_text;
+        ti_f.multiline = GetTextMulitiline();
+
+        auto itor = textLayouts_f.find(ti_f);
+
+        if(itor != textLayouts_f.end())
+        {
+            m_layout = itor->second;
+            return;
+        }
+    }
+    else
+    {
+        
+        ti.pFont = GetPaintingFont();
+        ti.text = m_text;
+        ti.multiline = GetTextMulitiline();
+        ti.wordwrap = GetTextWordWrap();
+        ti.width = GetWidth();
+
+        auto itor = textLayouts.find(ti);
+
+        if(itor != textLayouts.end())
+        {
+            m_layout = itor->second;
+            return;
+        }
+    }
+
+
     GrFont* pFont = GetPaintingFont();
     if(pFont == nullptr)
         GetPaintingFont();
     GrPadding padding = GetPadding();
-    m_vecTextLine.clear();
+
+
+    if(m_layout != nullptr)
+        delete  m_layout;
+
+    m_layout = new GrTextLayout();
+    //if(m_textDesc != nullptr)
+    //    delete [] m_textDesc;
 
     int maxWidth = 0;
     int maxHeight = 0;
-    GrRect oldTextBounds = m_textBounds;
+    GrSize oldTextBounds = GetTextBounds();
 
-    if(m_text.length() > 0)
+    if(GetText().length() > 0)
     {
         int cellWidth = GetWidth() - (padding.left + padding.right);
 
         if(GetTextMulitiline() == false)
         {
-            GrLineDesc textLine;
-            GrTextUtil::SingleLine(&textLine, m_text, pFont);
-            m_vecTextLine.push_back(textLine);
+            m_layout->pLines = new GrLineDesc[1];
+            m_layout->linesCount = 1;
+            //m_textDesc = new GrLineDesc[1];
+            //m_textLineCount = 1;
+            GrTextUtil::SingleLine(&m_layout->pLines[0], GetText(), pFont);
+            //m_vecTextLine.push_back(textLine);
         }
         else
         {
-            GrTextUtil::MultiLine(&m_vecTextLine, m_text, cellWidth, pFont, GetTextWordWrap());
+            _TextLines lines;
+            GrTextUtil::MultiLine(&lines, GetText(), cellWidth, pFont, GetTextWordWrap());
+
+            m_layout->linesCount = 1;
+            m_layout->pLines = new GrLineDesc[m_layout->linesCount];
+            
+            
+            //m_textLineCount = lines.size();
+            //m_textDesc = new GrLineDesc[m_textLineCount];
+            memcpy(m_layout->pLines, &lines[0], sizeof(GrLineDesc) * m_layout->linesCount);
         }
 
-        for(auto value : m_vecTextLine)
+        for(int i=0 ; i<m_layout->linesCount ; i++)
         {
-            const GrLineDesc& lineDesc = value;
-            maxWidth = std::max(maxWidth, lineDesc.width);
+            const GrLineDesc& lineDesc = m_layout->pLines[i];
+            maxWidth = std::max(maxWidth, (int)lineDesc.width);
             maxHeight += pFont->GetHeight() + pFont->GetExternalLeading();
         }
     }
@@ -373,14 +476,26 @@ void GrCell::ComputeTextBounds()
         maxHeight = pFont->GetHeight() + pFont->GetExternalLeading();
     }
 
-    if(maxWidth + (padding.left + padding.right) > GetWidth() || 
-        maxHeight + padding.top + padding.bottom > GetHeight())
-        m_textClipped = true;
-    else
-        m_textClipped = false;
+    m_layout->width = maxWidth;
+    m_layout->height = maxHeight;
 
-    m_textBounds.SetSize(GrSize(maxWidth, maxHeight));
-    if(m_textBounds != oldTextBounds)
+    if(GetTextWordWrap() == false)
+    {
+        textLayouts_f.insert(std::pair<tbinfo_fixed, GrTextLayout*>(ti_f, m_layout));
+    }
+    else
+    {
+        textLayouts.insert(std::pair<tbinfo, GrTextLayout*>(ti, m_layout));
+    }
+
+    //if(maxWidth + (padding.left + padding.right) > GetWidth() || 
+    //    maxHeight + padding.top + padding.bottom > GetHeight())
+    //    m_textClipped = true;
+    //else
+    //    m_textClipped = false;
+
+    //m_textBounds = GrSize(maxWidth, maxHeight);
+    if(GetTextBounds() != oldTextBounds)
         OnTextSizeChanged();
 }
 
@@ -396,7 +511,12 @@ void GrCell::SetTextVisible(bool b)
 
 bool GrCell::GetTextClipped() const
 {
-    return m_textClipped;
+    GrPadding padding = GetPaintingPadding();
+    
+    if(m_layout->width + (padding.left + padding.right) > GetWidth() || 
+        m_layout->height + padding.top + padding.bottom > GetHeight())
+        return true;
+    return false;
 }
 
 void GrCell::DrawText(GrGridPainter* pPainter, GrColor foreColor, const GrRect& paintRect, const GrRect* pClipRect) const
@@ -409,10 +529,12 @@ void GrCell::DrawText(GrGridPainter* pPainter, GrColor foreColor, const GrRect& 
     for(uint i=0 ; i<GetTextLineCount() ; i++)
     {
         const GrLineDesc& cl = GetTextLine(i);
-        textRect.left = paintRect.left + cl.x;
-        textRect.top = paintRect.top + cl.y;
-        textRect.right = paintRect.left + cl.x + cl.width;
-        textRect.bottom = paintRect.top + cl.y + pFont->GetHeight();
+
+        GrPoint offset = AlignText(cl, i, GetTextLineCount());
+        textRect.left = paintRect.left + offset.x;
+        textRect.top = paintRect.top + offset.y;
+        textRect.right = paintRect.left + offset.x + cl.width;
+        textRect.bottom = paintRect.top + offset.y + pFont->GetHeight();
         if(textRect.top > paintRect.bottom || textRect.bottom <= paintRect.top)
             continue;
 
@@ -444,18 +566,18 @@ void GrCell::OnTextSizeChanged()
 void GrCell::OnGridCoreAttached()
 {
     GrObject::OnGridCoreAttached();
-    m_pTextUpdater = m_pGridCore->GetTextUpdater();
-    m_pTextUpdater->AddTextBounds(this);
-    m_pTextUpdater->AddTextAlign(this);
+    GrTextUpdater* pTextUpdater = m_pGridCore->GetTextUpdater();
+    pTextUpdater->AddTextBounds(this);
+    pTextUpdater->AddTextAlign(this);
 }
 
 void GrCell::OnGridCoreDetached()
 {
+    GrTextUpdater* pTextUpdater = m_pGridCore->GetTextUpdater();
     if(m_textAlignChanged == true)
-        m_pTextUpdater->RemoveTextAlign(this);
+        pTextUpdater->RemoveTextAlign(this);
     if(m_textBoundsChanged == true)
-        m_pTextUpdater->RemoveTextBounds(this);
-    m_pTextUpdater = nullptr;
+        pTextUpdater->RemoveTextBounds(this);
     GrObject::OnGridCoreDetached();
 }
 
@@ -507,24 +629,72 @@ bool GrCell::IntersectsWith(const GrRect& rect) const
     return IntersectsHorzWith(rect.left, rect.right) && IntersectsVertWith(rect.top, rect.bottom);
 }
 
+int get_hash_code(const wchar_t* chPtr)
+{
+    int num = 0x15051505;
+    int num2 = num;
+    int* numPtr = ( int* ) chPtr;
+    int len = wcslen(chPtr);
+    for ( int i = len; i > 0; i -= 4 )
+    {
+        num = ( ( ( num << 5 ) + num ) + ( num >> 0x1b ) ) ^ numPtr[ 0 ];
+        if ( i <= 2 )
+            break;
+        num2 = ( ( ( num2 << 5 ) + num2 ) + ( num2 >> 0x1b) ) ^ numPtr[ 1 ];
+        numPtr += 2;
+    }
+    return num + ( num2 * 0x5d588b65 );
+}
+
+std::map<int, std::wstring> s_texts;
+
 const std::wstring& GrCell::GetText() const
 {
-    return m_text;
+    static std::wstring empty_string(L"");
+
+    if(m_text == nullptr)
+        return empty_string;
+
+    return *m_text;
 }
 
 void GrCell::SetText(const std::wstring& text)
 {
-    if(m_text.compare(text) == 0)
-        return;
-    m_text = text;
+    int textCode = get_hash_code(text.c_str());
+
+    auto itor = s_texts.find(textCode);
+
+    if(itor == s_texts.end())
+    {
+        auto var = s_texts.insert(std::pair<int, std::wstring>(textCode, text));
+        m_text = &var.first->second;
+    }
+    else
+    {
+        m_text = &itor->second;
+    }
+    
     OnTextChanged();
 }
 
+//const std::wstring& GrCell::GetText() const
+//{
+//    return m_text;
+//}
+//
+//void GrCell::SetText(const std::wstring& text)
+//{
+//    m_text = text;
+//    
+//    OnTextChanged();
+//}
+
 void GrCell::SetTextBoundsChanged()
 {
-    if(m_pTextUpdater != nullptr)
+    if(m_pGridCore != nullptr)
     {
-        m_pTextUpdater->AddTextBounds(this);
+        GrTextUpdater* pTextUpdater = m_pGridCore->GetTextUpdater();
+        pTextUpdater->AddTextBounds(this);
         if(GetDisplayable() == true)
         {
             Invalidate();
@@ -534,9 +704,10 @@ void GrCell::SetTextBoundsChanged()
 
 void GrCell::SetTextAlignChanged()
 {
-    if(m_pTextUpdater != nullptr)
+    if(m_pGridCore != nullptr)
     {
-        m_pTextUpdater->AddTextAlign(this);
+        GrTextUpdater* pTextUpdater = m_pGridCore->GetTextUpdater();
+        pTextUpdater->AddTextAlign(this);
         if(GetDisplayable() == true)
         {
             Invalidate();
@@ -599,8 +770,8 @@ GrPadding GrCell::GetPaintingPadding() const
 
 GrColor GrCell::GetForeColor() const
 {
-    if(m_foreColor != GrColor::Empty)
-        return m_foreColor;
+    if(GetForeColorCore() != GrColor::Empty)
+        return GetForeColorCore();
 
     if(m_pGridCore != nullptr)
     {
@@ -614,8 +785,8 @@ GrColor GrCell::GetForeColor() const
 
 GrColor GrCell::GetBackColor() const
 {
-    if(m_backColor != GrColor::Empty)
-        return m_backColor;
+    if(GetBackColorCore() != GrColor::Empty)
+        return GetBackColorCore();
 
     if(m_pGridCore != nullptr)
     {
@@ -629,8 +800,8 @@ GrColor GrCell::GetBackColor() const
 
 GrColor GrCell::GetLineColor() const
 {
-    if(m_lineColor != GrColor::Empty)
-        return m_lineColor;
+    if(GetLineColorCore() != GrColor::Empty)
+        return GetLineColorCore();
 
     if(m_pGridCore != nullptr)
     {
@@ -644,8 +815,8 @@ GrColor GrCell::GetLineColor() const
 
 GrFont* GrCell::GetFont() const
 {
-    if(m_pFont != nullptr)
-        return m_pFont;
+    if(GetFontCore() != nullptr)
+        return GetFontCore();
 
     if(m_pGridCore != nullptr)
     {
@@ -654,37 +825,49 @@ GrFont* GrCell::GetFont() const
             return pStyle->Font;
         return m_pGridCore->GetFont();
     }
-    return m_pFont;
+    return GetFontCore();
 } 
 
 GrPadding GrCell::GetPadding() const
 {
-    return m_padding;
+    if(m_pStyleData == nullptr)
+        return GrPadding::Default;
+    return m_pStyleData->m_padding;
 }
 
 GrColor GrCell::GetForeColorCore() const
 {
-    return m_foreColor;
+    if(m_pStyleData == nullptr)
+        return GrColor::Empty;
+    return m_pStyleData->m_foreColor;
 }
 
 GrColor GrCell::GetBackColorCore() const
 {
-    return m_backColor;
+    if(m_pStyleData == nullptr)
+        return GrColor::Empty;
+    return m_pStyleData->m_backColor;
 }
 
 GrColor GrCell::GetLineColorCore() const
 {
-    return m_lineColor;
+    if(m_pStyleData == nullptr)
+        return GrColor::Empty;
+    return m_pStyleData->m_lineColor;
 }
 
 GrFont*	GrCell::GetFontCore() const
 {
-    return m_pFont;
+    if(m_pStyleData == nullptr)
+        return nullptr;
+    return m_pStyleData->m_pFont;
 }
 
 GrPadding GrCell::GetPaddingCore() const
 {
-    return m_padding;
+    if(m_pStyleData == nullptr)
+        return GrPadding::Default;
+    return m_pStyleData->m_padding;
 }
 
 GrFlag GrCell::ToPaintStyle() const
@@ -697,34 +880,55 @@ GrFlag GrCell::ToPaintStyle() const
     return flag;
 }
 
-uint GrCell::GetID() const
+//uint GrCell::GetID() const
+//{
+//    return m_id;
+//}
+
+void GrCell::SetPadding(const GrPadding& padding)
 {
-    return m_id;
+    if(m_pStyleData == nullptr)
+        m_pStyleData = new GrStyleData();
+
+    m_pStyleData->m_padding = padding;
+    SetTextBoundsChanged();
 }
 
 void GrCell::SetBackColor(const GrColor& color)
 {
-    m_backColor = color;
+    if(m_pStyleData == nullptr)
+        m_pStyleData = new GrStyleData();
+
+    m_pStyleData->m_backColor = color;
     Invalidate();
 }
 
 void GrCell::SetForeColor(const GrColor& color)
 { 
-    m_foreColor = color;
+    if(m_pStyleData == nullptr)
+        m_pStyleData = new GrStyleData();
+
+    m_pStyleData->m_foreColor = color;
     Invalidate();
 }
 
 void GrCell::SetLineColor(const GrColor& color)
 {
-    m_lineColor = color;
+    if(m_pStyleData == nullptr)
+        m_pStyleData = new GrStyleData();
+
+    m_pStyleData->m_lineColor = color;
     Invalidate();
 }
 
 void GrCell::SetFont(GrFont* pFont)
 {
-    if(m_pFont == pFont)
+    if(m_pStyleData == nullptr)
+        m_pStyleData = new GrStyleData();
+
+    if(m_pStyleData->m_pFont == pFont)
         return;
-    m_pFont = pFont;
+    m_pStyleData->m_pFont = pFont;
     SetTextBoundsChanged();
 }
 
@@ -755,6 +959,15 @@ bool GrCell::GetMousePressed() const
     if(m_pGridCore == nullptr)
         return false;
     return m_pGridCore->GetMousePress() == this;
+}
+
+GrItem::GrItem()
+{
+    m_pColumn = nullptr;
+    m_pDataRow = nullptr;
+    m_readOnly = false;
+    m_selected = false;
+    m_colorLocked= false;
 }
 
 GrItem::GrItem(GrColumn* pColumn, GrDataRow* pDataRow)
@@ -907,18 +1120,6 @@ void GrItem::SetFocused(bool b)
         pFocuser->Set(IFocusable::Null);
 }
 
-const std::wstring& GrItem::GetErrorDescription() const
-{
-    return m_errorDescription;
-}
-
-void GrItem::SetErrorDescription(const std::wstring& errorDescription)
-{
-    if(m_errorDescription.compare(errorDescription) == 0)
-        return;
-    m_errorDescription = errorDescription;
-}
-
 void GrItem::LockColor(bool b)
 {
     if(m_colorLocked == b)
@@ -986,7 +1187,7 @@ bool GrItem::ShouldBringIntoView() const
 
 int GrItem::GetMinHeight() const
 {
-    int itemHeight = std::max(GetTextBounds().GetHeight(), m_pColumn->GetItemMinHeight());
+    int itemHeight = std::max(GetTextBounds().height, m_pColumn->GetItemMinHeight());
     itemHeight += GetPadding().GetVertical();
     return itemHeight;
 }
@@ -1201,6 +1402,8 @@ void GrItem::OnTextSizeChanged()
 
 void GrItem::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
 {
+    int s = textLayouts.size();
+    int s1 = textLayouts_f.size();
     GrRect paintRect = GetRect();
 
     if(paintRect.left >= clipRect.right || paintRect.right < clipRect.left)
@@ -1299,18 +1502,6 @@ bool GrDataRow::GetFullSelected() const
     int visibleColumns = (int)m_pGridCore->GetColumnList()->GetVisibleColumnCount();
     return m_selected == visibleColumns;
 }
-
-//bool GrDataRow::GetVisible() const
-//{
-//    bool visible = GrRow::GetVisible();
-//    if(visible == false)
-//        return false;
-//    GrGroupRow* pGroupRow = dynamic_cast<GrGroupRow*>(GetParent());
-//    if(pGroupRow == nullptr)
-//        return visible;
-//
-//    return pGroupRow->IsExpanded();
-//}
 
 void GrDataRow::SetVisibleDataRowIndex(uint index)
 {
@@ -1434,12 +1625,14 @@ GrCell* GrDataRow::OnHitTest(int x) const
 void GrDataRow::OnHeightAdjusted()
 {
     IDataRow::OnHeightAdjusted();
-    if(m_pTextUpdater == nullptr)
+    if(m_pGridCore == nullptr)
         return;
+
+    GrTextUpdater* pTextUpdater = m_pGridCore->GetTextUpdater();
     for(auto value : m_vecItems)
     {
         if(value->IsGridCoreAttached() == true)
-            m_pTextUpdater->AddTextAlign(value);
+            pTextUpdater->AddTextAlign(value);
     }
     m_pGridCore->Invalidate();
 }
@@ -1454,6 +1647,12 @@ void GrDataRow::OnHeightChanged()
 
 GrColumn::GrColumn()
 {
+    int siz = sizeof(GrRect);
+    int s = sizeof(GrItem);
+    int c = sizeof(GrColor);
+    int ws = sizeof(std::wstring);
+    int rs = sizeof(GrDataRow);
+    int cs = sizeof(GrColumn);
     m_pColumnList = nullptr;
     m_visible = true;
     m_readOnly = false;
@@ -1612,40 +1811,6 @@ void GrColumn::KillFocus()
     m_pGridCore->GetFocuser()->Reset();
 }
 
-//int GrColumn::GetFreezablePriority() const
-//{
-//    return m_freezablePriority;
-//}
-//
-//int GrColumn::GetPriority() const
-//{
-//    return m_priority;
-//}
-//
-//void GrColumn::SetFreezablePriority(int priority)
-//{
-//    if(m_freezablePriority == priority) 
-//        return;
-//    m_freezablePriority = priority;
-//    if(m_pColumnList != nullptr)
-//    {
-//        GrColumnEventArgs e(this);
-//        m_pColumnList->Invoke(L"ColumnFrozenChanged", &e);
-//    }
-//}
-//
-//void GrColumn::SetPriority(int priority)
-//{
-//    if(m_priority == priority)
-//        return;
-//    m_priority = priority;
-//    if(m_pColumnList != nullptr)
-//    {
-//        GrColumnEventArgs e(this);
-//        m_pColumnList->Invoke(L"ColumnFrozenChanged", &e);
-//    }
-//}
-
 bool GrColumn::GetGrouped() const
 {
     return m_grouped;
@@ -1744,6 +1909,7 @@ void GrColumn::SetColumnID(uint id)
 }
 
 #ifdef _MANAGED
+
 bool GrColumn::ShouldSerializeWidth()
 {
     if(m_width == 100)
@@ -1751,15 +1917,6 @@ bool GrColumn::ShouldSerializeWidth()
     return m_width != m_fitWidth;
 }
 
-//bool GrColumn::ShouldSerializePriorityOnFrozen()
-//{
-//    return m_freezablePriority != (int)GetIndex();
-//}
-//
-//bool GrColumn::ShouldSerializePriorityOnUnfrozen()
-//{
-//    return m_priority != (int)GetIndex();
-//}
 #endif
 
 void GrColumn::SetClipped(bool b)
@@ -1856,7 +2013,8 @@ void GrColumn::SetWidth(int width)
         GrColumnEventArgs e(this);
         m_pColumnList->Invoke(L"ColumnWidthChanged", &e);
 
-        m_pTextUpdater->AddTextBoundsByColumn(this);
+        GrTextUpdater* pTextUpdater = m_pGridCore->GetTextUpdater();
+        pTextUpdater->AddTextBoundsByColumn(this);
     }
 }
 
@@ -1939,7 +2097,7 @@ void GrColumn::AdjustWidth()
     int width = m_minWidth;
     if(m_pGridCore->GetAutoFitColumnType() == GrAutoFitColumnType_ColumnIncluded)
     {
-        int columnWidth = GetTextBounds().GetWidth() + GetPadding().GetHorizontal();
+        int columnWidth = GetTextBounds().width + GetPadding().GetHorizontal();
         width = std::max(m_minWidth, columnWidth);
     }
 
@@ -1947,7 +2105,7 @@ void GrColumn::AdjustWidth()
     {
         GrDataRow* pDataRow = pDataRowList->GetVisibleDataRow(i);
         GrItem* pItem = pDataRow->GetItem(this);
-        int itemWidth = pItem->GetTextBounds().GetWidth() + pItem->GetPadding().GetHorizontal();
+        int itemWidth = pItem->GetTextBounds().width + pItem->GetPadding().GetHorizontal();
         width = std::max(width, itemWidth);
     }
 
@@ -1955,7 +2113,7 @@ void GrColumn::AdjustWidth()
     {
         GrDataRow* pDataRow = m_pGridCore->GetInsertionRow();
         GrItem* pItem = pDataRow->GetItem(this);
-        int itemWidth = pItem->GetTextBounds().GetWidth() + pItem->GetPadding().GetHorizontal();
+        int itemWidth = pItem->GetTextBounds().width + pItem->GetPadding().GetHorizontal();
         width = std::max(width, itemWidth);
     }
 
@@ -2434,7 +2592,7 @@ void GrRow::OnTextSizeChanged()
 {
     GrCell::OnTextSizeChanged();
 
-    if(m_pGridCore->GetAutoFitRow() == true && GetHeight() != GetTextBounds().GetHeight())
+    if(m_pGridCore->GetAutoFitRow() == true && GetHeight() != GetTextBounds().height)
     {
         SetFit();
     }
@@ -2454,7 +2612,7 @@ int GrRow::GetMinHeight() const
 {
     GrFont* pFont = GetPaintingFont();
     int minHeight1 = pFont->GetHeight() + pFont->GetExternalLeading();
-    int minHeight2 = GetTextBounds().GetHeight() + GetPadding().GetVertical();
+    int minHeight2 = GetTextBounds().height + GetPadding().GetVertical();
     if(minHeight2 < minHeight1)
         return minHeight1;
     return minHeight2;
@@ -2482,6 +2640,7 @@ void GrRow::AdjustHeight()
 
 GrRow::GrRow() 
 {
+    m_id = m_snID++;
     m_y = 0;
     m_visible = true;
     m_resizable = true;
@@ -2555,6 +2714,9 @@ GrDataRow::GrDataRow()
 
     m_itemBackColor = GrColor::Empty;
     m_itemForeColor = GrColor::Empty;
+
+    m_pItems = nullptr;
+    m_itemsCount = 0;
 }
 
 void GrDataRow::OnGridCoreAttached()
@@ -2586,34 +2748,13 @@ void GrDataRow::ClearItem()
 {
     for(auto value : m_vecItems)
     {
-        delete value;
+        if(value < m_pItems || value >= m_pItems + m_itemsCount)
+            delete value;
     }
     m_vecItems.clear();
+    delete [] m_pItems;
+    m_itemsCount = 0;
 }
-
-//void GrDataRow::AddSelection(GrItem* pItem)
-//{
-//    m_selectedCells.insert(pItem);
-//}
-//
-//void GrDataRow::RemoveSelection(GrItem* pItem)
-//{
-//    m_selectedCells.erase(pItem);
-//    if(m_selectedCells.size() == 0)
-//        m_selected = false;
-//}
-//
-//void GrDataRow::ClearSelection()
-//{
-//    m_selectedCells.clear();
-//    m_selected = false;
-//}
-
-//void GrDataRow::SetFullSelected()
-//{
-//    m_selected = true;
-//    m_selectedCells.clear();
-//}
 
 GrDataRow::~GrDataRow()
 {
@@ -2626,7 +2767,17 @@ void GrDataRow::AddItem(GrColumn* pColumn)
     GrItem* pItem = nullptr;
     if(columnID >= m_vecItems.size())
     {
-        pItem = new GrItem(pColumn, this);
+        if((int)columnID < m_itemsCount)
+        {
+            pItem = m_pItems + columnID;
+            pItem->m_pColumn = pColumn;
+            pItem->m_pDataRow = this;
+        }
+        else
+        {
+            pItem = new GrItem(pColumn, this);
+        }
+        
         m_vecItems.push_back(pItem);
     }
     else
@@ -2641,6 +2792,8 @@ void GrDataRow::AddItem(GrColumn* pColumn)
 void GrDataRow::Reserve(uint count)
 {
     m_vecItems.reserve(count);
+    m_itemsCount = count;
+    m_pItems = new GrItem[count];
 }
 
 void GrDataRow::SetVisible(bool b)
@@ -2804,6 +2957,7 @@ bool IDataRow::GetVisible() const
 void IDataRow::SetVisibleIndex(uint index)
 {
     m_visibleIndex = index;
+    OnVisibleChanged();
 }
 
 uint IDataRow::GetVisibleIndex() const
@@ -2901,6 +3055,11 @@ void IDataRow::OnChildAdded(GrRow* pRow)
 }
 
 void IDataRow::OnDisplayableChanged()
+{
+
+}
+
+void IDataRow::OnVisibleChanged()
 {
 
 }
@@ -3140,34 +3299,8 @@ GrGroupHeader* GrGroupRow::GetLabel() const
 void GrGroupRow::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
 {
     IDataRow::Paint(pPainter, clipRect);
-    //GrRect paintRect = GetRect();
-    //if(paintRect.top > clipRect.bottom || paintRect.bottom <= clipRect.top)
-    //    return;
-
-    //if(m_pGridCore->GetRowVisible() == true)
-    //{
-    //    GrColor backColor = GetPaintingBackColor();
-    //    GrFlag paintStyle = ToPaintStyle();
-    //    pPainter->DrawRow(paintStyle, paintRect, GetPaintingLineColor(), backColor);
-    //}
-
-    //paintRect.left = paintRect.right;
-    //paintRect.right = paintRect.left + m_groupLevel * DEF_GROUP_WIDTH;
-
-    //DrawExpander(pPainter, clipRect);
-
-    //pPainter->DrawItem(GrPaintStyle_BottomLine | GrPaintStyle_RightLine, paintRect, GetCellLineColor(), GetCellBackColor());
     m_pLabel->Paint(pPainter, clipRect);
 }
-
-//bool GrGroupRow::GetVisible() const
-//{
-//    GrGroupRow* pParentGroupRow = dynamic_cast<GrGroupRow*>(GetParent());
-//    if(pParentGroupRow == nullptr)
-//        return GrRow::GetVisible();
-//
-//    return pParentGroupRow->IsExpanded();
-//}
 
 IFocusable* GrGroupRow::GetFocusable(GrColumn* /*pColumn*/) const
 {
@@ -3379,7 +3512,8 @@ void GrCaption::OnHeightChanged()
 
 void GrCaption::gridCore_FontChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 {
-    m_pTextUpdater->AddTextBounds(this);
+    GrTextUpdater* pTextUpdater = m_pGridCore->GetTextUpdater();
+    pTextUpdater->AddTextBounds(this);
 }
 
 #ifdef _MANAGED
@@ -3671,11 +3805,12 @@ void GrGroupPanel::gridCore_Created(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 
 void GrGroupPanel::gridCore_FontChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
 {
-    m_pTextUpdater->AddTextBounds(this);
+    GrTextUpdater* pTextUpdater = m_pGridCore->GetTextUpdater();
+    pTextUpdater->AddTextBounds(this);
 
     for(auto value : m_vecGroups)
     {
-        m_pTextUpdater->AddTextBounds(value);
+        pTextUpdater->AddTextBounds(value);
     }
 }
 
@@ -4093,7 +4228,7 @@ void GrGroup::SetGroupLevelCore(uint level)
 
 void GrGroup::SetText()
 {
-    GrCell::SetText(m_pColumn->GetText());
+    GrCell::SetText(m_pColumn->GetText().c_str());
 }
 
 int GrGroup::GetX() const
@@ -4109,7 +4244,7 @@ int GrGroup::GetY() const
 int GrGroup::GetWidth() const
 {
     GrFont* pFont = GetPaintingFont();
-    return GetTextBounds().GetWidth() + 
+    return GetTextBounds().width + 
         (int)((pFont->GetHeight() + pFont->GetExternalLeading()) * 0.25f) + 
         GetPadding().GetHorizontal() + SortGlyphSize;
 }

@@ -105,47 +105,49 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     };
 
     Cell::Cell(CellBuilder^ builder)
-        : CellBase(builder->GridControl, builder->NativeRef), m_pItem(builder->NativeRef), m_errorDescription(System::String::Empty)
+        : CellBase(builder->GridControl, builder->NativeRef)
     {
-        m_column = FromNative::Get(m_pItem->GetColumn());
-        m_row = FromNative::Get(m_pItem->GetDataRow());
+        //m_column = FromNative::Get(m_pItem->GetColumn());
+        //m_row = FromNative::Get(m_pItem->GetDataRow());
 
-        m_pItem->ManagedRef = this;
         m_value = nullptr;
         m_oldValue = Cell::NullValue;
         m_displayValue = Cell::NullValue;
+
+        //this->NativeRef->ManagedRef = this;
     }
 
     Cell::Cell(_GridControl^ gridControl, GrItem* pItem)
-        : CellBase(gridControl, pItem), m_pItem(pItem), m_errorDescription(System::String::Empty)
+        : CellBase(gridControl, pItem)
     {
-        m_column = FromNative::Get(pItem->GetColumn());
-        m_row = FromNative::Get(pItem->GetDataRow());
+        //m_column = FromNative::Get(pItem->GetColumn());
+        //m_row = FromNative::Get(pItem->GetDataRow());
 
-        m_pItem->ManagedRef = this;
         m_value = nullptr;
         m_oldValue = Cell::NullValue;
         m_displayValue = Cell::NullValue;
+
+        //this->NativeRef->ManagedRef = this;
     }
 
     Column^ Cell::Column::get()
     {
-        return m_column;
+        return FromNative::Get(this->NativeRef->GetColumn());
     }
 
     unsigned int Cell::ColumnID::get()
     {
-        return m_column->ColumnID;
+        return this->Column->ColumnID;
     }
 
     Ntreev::Windows::Forms::Grid::Row^ Cell::Row::get()
     {
-        return m_row;
+        return FromNative::Get(this->NativeRef->GetDataRow());
     }
 
     unsigned int Cell::RowID::get()
     {
-        return m_row->RowID;
+        return this->Row->RowID;
     }
 
     System::Object^ Cell::Value::get()
@@ -167,11 +169,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         this->ValueCore = value;
 
-        if(m_row->IsBeingEdited == true)
+        if(this->Row->IsBeingEdited == true)
         {
             if(m_oldValue == Cell::NullValue)
             {
-                m_row->AddEditedCell();
+                this->Row->AddEditedCell();
                 m_oldValue = oldValue;
             }
         }
@@ -199,7 +201,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             }
             else if(value != nullptr && value != System::DBNull::Value)
             {
-                text = m_column->TypeConverter->ConvertToString(typeDescriptorContext, value);
+                text = this->Column->TypeConverter->ConvertToString(typeDescriptorContext, value);
 
                 if(this->Column->CellMultiline == true)
                     text = text->Replace("\r\n", "\n");
@@ -222,11 +224,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_text != nullptr)
         {
             this->Row->m_textCapacity += m_text->Length;
-            m_pItem->SetText(ToNativeString::Convert(m_text));
+            this->NativeRef->SetText(ToNativeString::Convert(m_text));
         }
         else
         {
-            m_pItem->SetText(L"");
+            this->NativeRef->SetText(L"");
         }
     }
 
@@ -260,7 +262,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_oldValue == Cell::NullValue)
             return false;
 
-        m_row->RemoveEditedCell();
+        this->Row->RemoveEditedCell();
         if(m_wrongValue == false)
         {
             if(this->GridControl->InvokeValueChanging(this, m_oldValue, this->ValueCore) == true)
@@ -286,7 +288,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             this->ValueCore = value;
         }
 
-        m_row->RemoveEditedCell();
+        this->Row->RemoveEditedCell();
         m_oldValue = Cell::NullValue;
         return true;
     }
@@ -341,12 +343,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Cell::Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType)
     {
-        this->Selector->SelectItem(m_pItem, (GrSelectionType)selectionType);
+        this->Selector->SelectItem(this->NativeRef, (GrSelectionType)selectionType);
     }
 
     bool Cell::Focus()
     {
-        this->Focuser->Set(m_pItem);
+        this->Focuser->Set(this->NativeRef);
         return this->IsFocused;
     }
 
@@ -368,7 +370,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Cell::IsSelected::get()
     {
-        return m_pItem->GetSelected();
+        return this->NativeRef->GetSelected();
     }
 
     void Cell::IsSelected::set(bool value)
@@ -377,17 +379,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             throw gcnew System::InvalidOperationException();
         if(this->Row->IsVisible == false)
             throw gcnew System::InvalidOperationException();
-        m_pItem->SetSelected(value);
+        this->NativeRef->SetSelected(value);
     }
 
     bool Cell::IsFocused::get()
     {
-        return m_pItem->GetFocused();
+        return this->NativeRef->GetFocused();
     }
 
     bool Cell::IsMouseOvered::get()
     {
-        return m_pItem->GetMouseOvered();
+        return this->NativeRef->GetMouseOvered();
     }
 
     System::String^ Cell::ToString()
@@ -397,12 +399,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Cell::IsReadOnly::get()
     {
-        return m_pItem->GetReadOnly();
+        return this->NativeRef->GetReadOnly();
     }
 
     void Cell::IsReadOnly::set(bool value)
     {
-        m_pItem->SetReadOnly(value);
+        this->NativeRef->SetReadOnly(value);
     }
 
     bool Cell::IsBeingEdited::get()
@@ -412,33 +414,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Cell::IsSelecting::get()
     {
-        return m_pItem->IsItemSelecting();
+        return this->NativeRef->IsItemSelecting();
     }
 
     System::String^ Cell::ErrorDescription::get()
     {
-        return m_errorDescription;
+        return this->Row->GetErrorDescription(this);
     }
 
     void Cell::ErrorDescription::set(System::String^ value)
     {
-        if(value == nullptr)
-            value = System::String::Empty;
-
-        if(m_errorDescription == value)
-            return;
-
-        m_errorDescription = value;
-        if(m_errorDescription == System::String::Empty)
-        {
-            this->GridControl->ErrorDescriptor->Remove(this);
-            this->Row->RemoveErrorCell();
-        }
-        else
-        {
-            this->GridControl->ErrorDescriptor->Add(this);
-            this->Row->AddErrorCell();
-        }
+        this->Row->SetErrorDescription(this, value);
     }
 
     System::Object^ Cell::ValueCore::get()
@@ -555,7 +541,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::Drawing::Rectangle Cell::TextBound::get()
     {
-        return m_pItem->GetTextBounds();
+        GrSize size = this->NativeRef->GetTextBounds();
+        return System::Drawing::Rectangle(0, 0, size.width, size.height);
     }
 
     bool Cell::ShouldSerializeValue()

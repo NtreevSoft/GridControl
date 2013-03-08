@@ -687,7 +687,7 @@ void GrColumnList::gridCore_FontChanged(GrObject* /*pSender*/, GrEventArgs* /*e*
     SetHeight(height);
     for(auto value : m_vecColumns)
     {
-        m_pTextUpdater->AddTextBounds(value);
+        m_pGridCore->GetTextUpdater()->AddTextBounds(value);
     }
 }
 

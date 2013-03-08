@@ -17,13 +17,28 @@ namespace SampleApplication
         {
             InitializeComponent();
 
+            //for (int i = 0; i < 120; i++)
+            //{
+            //    this.gridControl1.Columns.Add();
+            //}
+
+            //this.gridControl1.Rows.Add(18000);
+            //return;
+
             INIDataSet dataSet = new INIDataSet();
             //dataSet.ReadXmlSchema(@".\ItemContent.xsd");
             //dataSet.ReadXml(@".\ItemContent.xml");
 
-            dataSet.ReadXmlSchema(@"F:\Crema\repositories\cherry\xml\Mina26\Combat_abc.xsd");
+            string xsdPath = @"F:\Crema\test\xml\Excel Test\RealPlayer.xsd";
+            string xmlPath = @"F:\Crema\test\xml\Excel Test\RealPlayer.xml";
+            //string xsdPath = @"F:\Crema\Battle3Manager.xsd";
+            //string xmlPath = @"F:\Crema\Battle3Manager.xml";
+            
+            //"F:\Crema\test\xml\Excel Test\RealPlayer.xsd"
+
+            dataSet.ReadXmlSchema(xsdPath);
             //dataSet.ReadXmlSchema(@"G:\NTG\Crema\data\test\xml\Root\Root\wow\NtreevSoft.xsd");
-            dataSet.ReadXml(@"F:\Crema\repositories\cherry\xml\Mina26\Combat_abc.xml");
+            dataSet.ReadXml(xmlPath);
             //dataSet.ReadXml(@"G:\NTG\Crema\data\test\xml\Root\Root\wow\NtreevSoft.xml");
 
             //this.gridControl1.ColumnBindingCreation = Ntreev.Windows.Forms.Grid.ColumnBindingCreation.None;
@@ -36,14 +51,47 @@ namespace SampleApplication
             //    table.Columns.Remove(q);
             //}
 
-            table.Columns.Add();
+            //table.Columns.Add();
+
+
+            
            
             this.gridControl1.DataSource = dataSet.GetFirstPrimaryTable();
-            this.columnID.VisibleIndex = 1000;
-            this.columnID.IsFrozen = true;
-            this.dataGridView1.DataSource = dataSet.Tables[0];
-            this.dataGridView2.DataSource = dataSet.Tables[1];
+            int qwer = 0;
+            //for (int i = 0; i < 10000; i++)
+            //{
+            //    var row = table.NewRow();
+            //    row["ID"] = i;
+            //    table.Rows.Add(row);
+            //}
+
+            //this.columnID.VisibleIndex = 1000;
+            //this.columnID.IsFrozen = true;
+            try
+            {
+                this.dataGridView1.DataSource = dataSet.Tables[0];
+            }
+            catch
+            {
+
+            }
+
+            try
+            {
+                this.dataGridView2.DataSource = dataSet.Tables[1];
+            }
+            catch
+            {
+
+            }
+
+            //this.gridControl1.Clear();
             //this.dataGridView3.DataSource = dataSet.Tables[2];
+        }
+
+        void d_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
 

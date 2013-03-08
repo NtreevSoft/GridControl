@@ -353,7 +353,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         property GrItem* NativeRef
         {
-            GrItem* get() { return m_pItem; } 
+            GrItem* get() new { return (GrItem*)CellBase::NativeRef; } 
         }
 
         property bool IsSelecting
@@ -415,18 +415,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     private: // variables
 
-        _Column^ m_column;
-        _Row^ m_row;
-
-        GrItem* m_pItem;
+        //GrItem* m_pItem;
         System::Object^ m_oldValue;
-
-        System::String^ m_errorDescription;
         System::Object^ m_value;
-        bool m_wrongValue;
-        bool dsaf;
         System::String^ m_text;
         System::Object^ m_displayValue;
+        bool m_wrongValue;
 
         static System::Object^ NullValue = gcnew System::Object();
 

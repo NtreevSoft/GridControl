@@ -134,6 +134,21 @@ GrSize::GrSize(int width, int height) : width(width), height(height)
 
 }
 
+bool GrSize::operator == (const GrSize& size) const
+{
+    if(width != size.width || height != size.height)
+        return false;
+    return true;
+}
+
+bool GrSize::operator != (const GrSize& size) const
+{
+    if(width != size.width || height != size.height)
+        return true;
+    return false;
+}
+
+
 #ifdef _MANAGED
 GrSize::GrSize(System::Drawing::Size size) : width(size.Width), height(size.Height)
 {
