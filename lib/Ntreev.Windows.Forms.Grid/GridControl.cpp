@@ -62,14 +62,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     GridControl::GridControl()
     {
-        int siz = sizeof(GrRect);
-    int s = sizeof(GrItem);
-    int ces = sizeof(GrCell);
-    int c = sizeof(GrColor);
-    int ws = sizeof(std::wstring);
-    int rs = sizeof(GrDataRow);
-    int cs = sizeof(GrColumn);
-
 #ifdef _TIME_TEST
         TimeTester timeTest("GridControl 생성자");
 #endif
@@ -1544,14 +1536,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GridControl::Clear()
     {
-        OnCurrencyManagerChanging(gcnew CurrencyManagerChangingEventArgs(m_defaultManager));
-        ClearCore(false);
+        m_disposing = true;
+        try
+        {
+            OnCurrencyManagerChanging(gcnew CurrencyManagerChangingEventArgs(m_defaultManager));
+            ClearCore(false);
 
-        m_dataSource = nullptr;
-        m_dataMember = System::String::Empty;
-        m_manager = nullptr;
+            m_dataSource = nullptr;
+            m_dataMember = System::String::Empty;
+            m_manager = nullptr;
 
-        OnCurrencyManagerChanged(gcnew CurrencyManagerChangedEventArgs(m_defaultManager));
+            OnCurrencyManagerChanged(gcnew CurrencyManagerChangedEventArgs(m_defaultManager));
+        }
+        finally
+        {
+            m_disposing = false;
+        }
     }
 
     void GridControl::ClearCore(bool dataSourceOnly)

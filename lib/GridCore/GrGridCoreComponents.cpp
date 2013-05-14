@@ -723,6 +723,7 @@ void GrItemSelector::DoSelectDataRow(GrDataRow* pDataRow)
             m_selectedColumns.insert(pColumn);
         pColumn->m_selected++;
     }
+
     m_selectedRows.insert(pDataRow);
 
     if(pDataRow->GetDisplayable() == true)
@@ -981,14 +982,9 @@ void GrTextUpdater::RemoveTextBounds(GrCell* pCell)
     }
 }
 
-void GrTextUpdater::RemoveTextAlign(GrCell* pCell)
+void GrTextUpdater::RemoveTextAlign(GrCell* /*pCell*/)
 {
-    //GrCells::iterator itor = std::find(m_vecTextAligns.begin(), m_vecTextAligns.end(), pCell);
-    //if(itor != m_vecTextAligns.end())
-    //{
-    //    pCell->m_textAlignChanged = false;
-    //    m_vecTextAligns.erase(itor);
-    //}
+    
 }
 
 void GrTextUpdater::UpdateTextBounds()
@@ -997,24 +993,13 @@ void GrTextUpdater::UpdateTextBounds()
     {
         value->ComputeTextBounds();
         value->m_textBoundsChanged = false;
-
-        //if(value->m_textAlignChanged == false)
-        //{
-        //    m_vecTextAligns.push_back(value);
-        //    value->m_textAlignChanged = true;
-        //}
     }
     m_vecTextBounds.clear();
 }
 
 void GrTextUpdater::UpdateTextAlign()
 {
-    //for(auto value : m_vecTextAligns)
-    //{
-    //    value->AlignText();
-    //    value->m_textAlignChanged = false;
-    //}
-    //m_vecTextAligns.clear();
+
 }
 
 GrFocusMover::GrFocusMover()

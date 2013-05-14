@@ -32,6 +32,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     typedef SortType _SortType;
     typedef ColumnState _ColumnState;
 
+    interface class IDisplayTextConverter;
+
     /// <summary>
     /// 열을 나타내기위한 속성을 정의합니다.
     /// </summary>
@@ -237,6 +239,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
+        /// 데이터 소스와 바인딩이 되었는지에 대한 여부를 가져옵니다.
+        /// </summary>
+        /// <returns>
+        /// 데이터 소스와 바인딩이 되었다면 true를, 그렇지 않다면 false를 반환합니다.
+        /// </returns>
+        property bool IsBinded
+        {
+            bool get();
+        }
+
+        /// <summary>
         /// 데이터 소스에 의해 바인딩 될 경우에 데이터 소스에서 지정한 데이터 타입을 가져옵니다.
         /// </summary>
         /// <returns>
@@ -261,6 +274,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property System::ComponentModel::TypeConverter^ TypeConverter
         {
             System::ComponentModel::TypeConverter^ get();
+        }
+
+        property IDisplayTextConverter^ DisplayTextConverter
+        {
+            IDisplayTextConverter^ get();
         }
 
         /// <summary>

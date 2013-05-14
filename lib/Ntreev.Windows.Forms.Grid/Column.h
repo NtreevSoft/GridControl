@@ -27,6 +27,7 @@
 #include "TypeEditor.h"
 #include "IColumn.h"
 #include "ITextCacheProvider.h"
+#include "IDisplayTextConverter.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -62,6 +63,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 열을 선택하기 위한 방법을 지정합니다.
         /// </param>
         void Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType);
+
+        /// <summary>
+        /// 열 범위내에 있는 셀의 값을 강제로 다시 표시합니다.
+        /// </summary>
+        void Refresh();
 
         /// <summary>
         /// 열이 화면에 표시되도록 스크롤을 조정합니다.
@@ -378,6 +384,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
+        /// 데이터 소스와 바인딩이 되었는지에 대한 여부를 가져옵니다.
+        /// </summary>
+        /// <returns>
+        /// 데이터 소스와 바인딩이 되었다면 true를, 그렇지 않다면 false를 반환합니다.
+        /// </returns>
+        [System::ComponentModel::BrowsableAttribute(false)]
+        property bool IsBinded
+        {
+            virtual bool get() sealed;
+        }
+
+        /// <summary>
         /// 데이터 소스에 의해 바인딩 될 경우에 데이터 소스에서 지정한 데이터 타입을 가져옵니다.
         /// </summary>
         /// <returns>
@@ -421,6 +439,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             virtual System::ComponentModel::TypeConverter^ get() sealed;
             void set(System::ComponentModel::TypeConverter^);
+        }
+
+        [System::ComponentModel::BrowsableAttribute(false)]
+        [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+        property IDisplayTextConverter^ DisplayTextConverter
+        {
+            virtual IDisplayTextConverter^ get() sealed;
+            void set(IDisplayTextConverter^);
         }
 
         /// <summary>
@@ -793,6 +819,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     private: // methods
 
+        static Column();
+
         virtual System::Object^ GetService(System::Type^ serviceType) sealed = System::IServiceProvider::GetService
         {
             if(m_site != nullptr)
@@ -858,6 +886,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::ComponentModel::ISite^ m_site;
 
         class CustomPaint* m_pCustomPaint;
+        IDisplayTextConverter^ m_displayTextConverter;
         GrColumn* m_pColumn;
+
+        static IDisplayTextConverter^ baseDisplayTextConverter;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

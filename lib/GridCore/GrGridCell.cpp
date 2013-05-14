@@ -340,45 +340,45 @@ GrPoint GrCell::AlignText(const GrLineDesc& line, int index, int count) const
     //{
     //    GrLineDesc& cl = m_vecTextLine[i];
 
-        switch(GetTextHorzAlign())
-        {
-        case GrHorzAlign_Left:
-            startLocation.x = 0;
-            break;
-        case GrHorzAlign_Center:
-            startLocation.x = (width - line.width) / 2;
-            break;
-        case GrHorzAlign_Right:
-            startLocation.x = width - line.width;
-            break;
-        default:
-            break;
-        }
+    switch(GetTextHorzAlign())
+    {
+    case GrHorzAlign_Left:
+        startLocation.x = 0;
+        break;
+    case GrHorzAlign_Center:
+        startLocation.x = (width - line.width) / 2;
+        break;
+    case GrHorzAlign_Right:
+        startLocation.x = width - line.width;
+        break;
+    default:
+        break;
+    }
 
-        switch(GetTextVertAlign())
-        {
-        case GrVertAlign_Top:
-            startLocation.y = index * lineHeight;
-            break;
-        case GrVertAlign_Center:
-            startLocation.y = (height - count * lineHeight) / 2 + index * lineHeight;
-            break;
-        case GrVertAlign_Bottom:
-            startLocation.y = height - ((index+1) * lineHeight);
-            break;
-        default:
-            break;
-        }
+    switch(GetTextVertAlign())
+    {
+    case GrVertAlign_Top:
+        startLocation.y = index * lineHeight;
+        break;
+    case GrVertAlign_Center:
+        startLocation.y = (height - count * lineHeight) / 2 + index * lineHeight;
+        break;
+    case GrVertAlign_Bottom:
+        startLocation.y = height - ((index+1) * lineHeight);
+        break;
+    default:
+        break;
+    }
 
-        if(height < lineHeight)
-            startLocation.y = index * lineHeight;
+    if(height < lineHeight)
+        startLocation.y = index * lineHeight;
 
-        return GrPoint(startLocation.x + padding.left, startLocation.y + padding.top);
+    return GrPoint(startLocation.x + padding.left, startLocation.y + padding.top);
 
-        //if(i==0)
-        //{
-        //    m_textBounds.SetLocation(cl.x, cl.y);
-        //}
+    //if(i==0)
+    //{
+    //    m_textBounds.SetLocation(cl.x, cl.y);
+    //}
     //}
 }
 
@@ -386,9 +386,9 @@ void GrCell::ComputeTextBounds()
 {
     tbinfo_fixed ti_f;
     tbinfo ti;
+    GrSize oldTextBounds = GetTextBounds();
     if(GetTextWordWrap() == false)
     {
-        
         ti_f.pFont = GetPaintingFont();
         ti_f.text = m_text;
         ti_f.multiline = GetTextMulitiline();
@@ -398,12 +398,13 @@ void GrCell::ComputeTextBounds()
         if(itor != textLayouts_f.end())
         {
             m_layout = itor->second;
+            if(GetTextBounds() != oldTextBounds)
+                OnTextSizeChanged();
             return;
         }
     }
     else
     {
-        
         ti.pFont = GetPaintingFont();
         ti.text = m_text;
         ti.multiline = GetTextMulitiline();
@@ -415,6 +416,8 @@ void GrCell::ComputeTextBounds()
         if(itor != textLayouts.end())
         {
             m_layout = itor->second;
+            if(GetTextBounds() != oldTextBounds)
+                OnTextSizeChanged();
             return;
         }
     }
@@ -425,17 +428,11 @@ void GrCell::ComputeTextBounds()
         GetPaintingFont();
     GrPadding padding = GetPadding();
 
-
-    if(m_layout != nullptr)
-        delete  m_layout;
-
     m_layout = new GrTextLayout();
-    //if(m_textDesc != nullptr)
-    //    delete [] m_textDesc;
 
     int maxWidth = 0;
     int maxHeight = 0;
-    GrSize oldTextBounds = GetTextBounds();
+
 
     if(GetText().length() > 0)
     {
@@ -457,8 +454,8 @@ void GrCell::ComputeTextBounds()
 
             m_layout->linesCount = 1;
             m_layout->pLines = new GrLineDesc[m_layout->linesCount];
-            
-            
+
+
             //m_textLineCount = lines.size();
             //m_textDesc = new GrLineDesc[m_textLineCount];
             memcpy(m_layout->pLines, &lines[0], sizeof(GrLineDesc) * m_layout->linesCount);
@@ -476,8 +473,8 @@ void GrCell::ComputeTextBounds()
         maxHeight = pFont->GetHeight() + pFont->GetExternalLeading();
     }
 
-    m_layout->width = maxWidth;
-    m_layout->height = maxHeight;
+    m_layout->width = (unsigned short)maxWidth;
+    m_layout->height = (unsigned short)maxHeight;
 
     if(GetTextWordWrap() == false)
     {
@@ -512,7 +509,7 @@ void GrCell::SetTextVisible(bool b)
 bool GrCell::GetTextClipped() const
 {
     GrPadding padding = GetPaintingPadding();
-    
+
     if(m_layout->width + (padding.left + padding.right) > GetWidth() || 
         m_layout->height + padding.top + padding.bottom > GetHeight())
         return true;
@@ -673,7 +670,6 @@ void GrCell::SetText(const std::wstring& text)
     {
         m_text = &itor->second;
     }
-    
     OnTextChanged();
 }
 
@@ -866,7 +862,7 @@ GrFont*	GrCell::GetFontCore() const
 GrPadding GrCell::GetPaddingCore() const
 {
     if(m_pStyleData == nullptr)
-        return GrPadding::Default;
+        return GrPadding::Empty;
     return m_pStyleData->m_padding;
 }
 
@@ -1081,7 +1077,11 @@ bool GrItem::GetVisible() const
 bool GrItem::GetReadOnly() const
 {
     if(m_pDataRow->GetDataRowID() == INSERTION_ROW)
+    {
+        if(m_readOnly == true)
+            return true;
         return m_pDataRow->GetReadOnly();
+    }
     return (m_pColumn->GetReadOnly() == true || m_pDataRow->GetReadOnly() == true || m_readOnly == true);
 }
 
@@ -1402,8 +1402,6 @@ void GrItem::OnTextSizeChanged()
 
 void GrItem::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
 {
-    int s = textLayouts.size();
-    int s1 = textLayouts_f.size();
     GrRect paintRect = GetRect();
 
     if(paintRect.left >= clipRect.right || paintRect.right < clipRect.left)
@@ -1615,7 +1613,7 @@ GrCell* GrDataRow::OnHitTest(int x) const
     }
 
     GrColumnSplitter* pSplitter = pColumnList->GetColumnSplitter();
-    
+
     if(pSplitter->ContainsHorz(x) == true)
         return pSplitter;
 
@@ -1647,12 +1645,6 @@ void GrDataRow::OnHeightChanged()
 
 GrColumn::GrColumn()
 {
-    int siz = sizeof(GrRect);
-    int s = sizeof(GrItem);
-    int c = sizeof(GrColor);
-    int ws = sizeof(std::wstring);
-    int rs = sizeof(GrDataRow);
-    int cs = sizeof(GrColumn);
     m_pColumnList = nullptr;
     m_visible = true;
     m_readOnly = false;
@@ -1767,7 +1759,7 @@ void GrColumn::SetSelected(bool b)
 {
     if(m_pGridCore == nullptr)
         return;
-    
+
     if(GetSelected() == b)
         return;
 
@@ -2119,7 +2111,7 @@ void GrColumn::AdjustWidth()
 
     if(GetItemType() != GrItemType_Control)
         width += DEF_CONTROL_WIDTH;
-    
+
     if(m_maxWidth != 0)
         width = std::min(width, m_maxWidth);
 
@@ -2752,7 +2744,11 @@ void GrDataRow::ClearItem()
             delete value;
     }
     m_vecItems.clear();
-    delete [] m_pItems;
+    if(m_pItems != nullptr)
+    {
+        delete [] m_pItems;
+        m_pItems = nullptr;
+    }
     m_itemsCount = 0;
 }
 
@@ -2777,7 +2773,7 @@ void GrDataRow::AddItem(GrColumn* pColumn)
         {
             pItem = new GrItem(pColumn, this);
         }
-        
+
         m_vecItems.push_back(pItem);
     }
     else
@@ -2793,6 +2789,8 @@ void GrDataRow::Reserve(uint count)
 {
     m_vecItems.reserve(count);
     m_itemsCount = count;
+    if(count == 0)
+        throw std::exception();
     m_pItems = new GrItem[count];
 }
 
@@ -3262,18 +3260,11 @@ int GrRowSplitter::GetWidth() const
 
 void GrRowSplitter::Paint(GrGridPainter* pPainter, const GrRect& /*clipRect*/) const
 {
-    GrColumnList* pColumnList = m_pGridCore->GetColumnList();
-
     GrColor backColor = GetPaintingBackColor();
     GrColor lineColor = GetPaintingLineColor();
     GrRect paintRect = GetRect();
-    //paintRect.right = paintRect.left + pColumnList->GetWidth();
 
     pPainter->DrawRowSplitter(GrPaintStyle_BottomLine, paintRect, lineColor, backColor);
-
-    //paintRect.left = paintRect.right;
-    //paintRect.right = GetRight();
-    //pPainter->DrawRowSplitter(GrPaintStyle_Default, paintRect, lineColor, lineColor);
 }
 
 GrGroupRow::GrGroupRow() 
@@ -4464,7 +4455,6 @@ GrCell* GrRootRow::HitTest(const GrPoint& location) const
         GrCell* pSubHitted = value->HitTest(location);
         if(pSubHitted != nullptr)
         {
-            int d = (int)pSubHitted->GetCellType();
             return pSubHitted;
         }
     }
@@ -4688,7 +4678,7 @@ bool GrExpander::GetDisplayable() const
     return m_pDataRow->GetDisplayable();
 }
 
-void GrExpander::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
+void GrExpander::Paint(GrGridPainter* pPainter, const GrRect& /*clipRect*/) const
 {
     GrRect paintRect = GetRect();
     GrColor foreColor = GetPaintingLineColor();

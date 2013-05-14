@@ -412,8 +412,13 @@ void GrFocuserInternal::OnFocusChanging(GrFocusChangeArgs* e)
         IFocusable* pFocusable = e->GetFocusable();
         if(pFocusable != nullptr)
         {
+            GrDataRow* pDataRow = dynamic_cast<GrDataRow*>(pFocusable->GetDataRow());
             GrItemSelectorInternal* pItemSelector = dynamic_cast<GrItemSelectorInternal*>(m_pGridCore->GetItemSelector());
-            pItemSelector->Select(pFocusable);
+            if(pDataRow != nullptr && pDataRow->GetFullSelected() == true)
+                pItemSelector->SelectDataRow(pDataRow, GrSelectionType_Normal);
+            else
+                pItemSelector->Select(pFocusable);
+            
         }
     }
 

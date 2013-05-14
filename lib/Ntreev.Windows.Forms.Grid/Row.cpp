@@ -48,13 +48,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     Row::Row(RowBuilder^ rowBuilder)
         : m_pDataRow(rowBuilder->NativeRef), RowBase(rowBuilder->GridControl, rowBuilder->NativeRef), m_errorDescription(System::String::Empty)
     {
-        //m_cells = gcnew CellCollection(this);
+        m_cells = gcnew CellCollection(this);
         m_componentIndex = -1;
 
-        //for each(Column^ item in this->GridControl->Columns)
-        //{
-        //    this->NewCell(item);
-        //}
+        for each(Column^ item in this->GridControl->Columns)
+        {
+            this->NewCell(item);
+        }
 
         m_cellErrorDescriptions = gcnew System::Collections::Generic::Dictionary<Cell^, System::String^>();
     }

@@ -267,6 +267,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         static int VkKeyScan(System::Char word);
         static bool ShowWindow(System::IntPtr handle, int flag);
         static int GetFontInternalLeading(System::Drawing::Font^ font);
+        static uint GetWindowThreadProcessId(System::IntPtr handle);
+
 
         static System::IntPtr WindowFromPoint(System::Drawing::Point location);
 

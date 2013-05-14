@@ -104,18 +104,21 @@ namespace SampleApplication
             this.column2.ClickEditType = Ntreev.Windows.Forms.Grid.ClickEditType.FocusedClick;
             this.column2.ColumnName = "Icon";
             this.column2.DataType = typeof(System.Drawing.Icon);
+            this.column2.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.column2.VisibleIndex = 1;
             // 
             // columnUITypeEditor1
             // 
             this.columnUITypeEditor1.ColumnName = "CheckBox";
             this.columnUITypeEditor1.DataType = typeof(bool);
+            this.columnUITypeEditor1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.columnUITypeEditor1.VisibleIndex = 2;
             // 
             // columnButton1
             // 
             this.columnButton1.ColumnName = "Cursor";
             this.columnButton1.DataType = typeof(System.Windows.Forms.Cursor);
+            this.columnButton1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.columnButton1.VisibleIndex = 3;
             // 
             // columnUITypeEditor2
@@ -123,6 +126,8 @@ namespace SampleApplication
             this.columnUITypeEditor2.ClickEditType = Ntreev.Windows.Forms.Grid.ClickEditType.FocusedClick;
             this.columnUITypeEditor2.ColumnName = "Color";
             this.columnUITypeEditor2.DataType = typeof(System.Drawing.Color);
+            this.columnUITypeEditor2.IsReadOnly = true;
+            this.columnUITypeEditor2.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.columnUITypeEditor2.VisibleIndex = 4;
             // 
             // columnFlags
@@ -130,12 +135,14 @@ namespace SampleApplication
             this.columnFlags.ClickEditType = Ntreev.Windows.Forms.Grid.ClickEditType.FocusedClick;
             this.columnFlags.ColumnName = "Flags";
             this.columnFlags.DataType = typeof(System.AttributeTargets);
+            this.columnFlags.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.columnFlags.VisibleIndex = 5;
             // 
             // column3
             // 
             this.column3.ColumnName = "Enums";
             this.column3.DataType = typeof(System.Environment.SpecialFolder);
+            this.column3.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.column3.VisibleIndex = 6;
             // 
             // columnDataLocation1
@@ -144,11 +151,13 @@ namespace SampleApplication
             this.columnDataLocation1.DataType = typeof(SampleApplication.DataLocation);
             this.columnDataLocation1.MaxWidth = 30;
             this.columnDataLocation1.MinWidth = 30;
+            this.columnDataLocation1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.columnDataLocation1.VisibleIndex = 7;
             // 
             // columnEnable1
             // 
             this.columnEnable1.ColumnName = "Column1";
+            this.columnEnable1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.columnEnable1.VisibleIndex = 8;
             // 
             // columnTextBox1
@@ -156,6 +165,7 @@ namespace SampleApplication
             this.columnTextBox1.ClickEditType = Ntreev.Windows.Forms.Grid.ClickEditType.FocusedClick;
             this.columnTextBox1.ColumnName = "DockStyle";
             this.columnTextBox1.DataType = typeof(System.Windows.Forms.DockStyle);
+            this.columnTextBox1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.columnTextBox1.VisibleIndex = 9;
             // 
             // column1
@@ -163,6 +173,7 @@ namespace SampleApplication
             this.column1.CellMultiline = true;
             this.column1.ClickEditType = Ntreev.Windows.Forms.Grid.ClickEditType.FocusedClick;
             this.column1.ColumnName = "Text";
+            this.column1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.column1.VisibleIndex = 10;
             // 
             // columnButton123
@@ -173,12 +184,14 @@ namespace SampleApplication
             this.columnButton123.ColumnName = "Button";
             this.columnButton123.IsFrozen = true;
             this.columnButton123.IsResizable = false;
+            this.columnButton123.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.columnButton123.VisibleIndex = 0;
             // 
             // columnRadio2
             // 
             this.columnRadio2.ColumnName = "Radio";
             this.columnRadio2.DataType = typeof(bool);
+            this.columnRadio2.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.columnRadio2.VisibleIndex = 11;
             // 
             // columnLinkLabel1
@@ -186,6 +199,7 @@ namespace SampleApplication
             this.columnLinkLabel1.ClickEditType = Ntreev.Windows.Forms.Grid.ClickEditType.SingClick;
             this.columnLinkLabel1.ColumnName = "LinkLabel";
             this.columnLinkLabel1.IsGroupable = false;
+            this.columnLinkLabel1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.columnLinkLabel1.VisibleIndex = 12;
             // 
             // ColumnComboBox
@@ -193,22 +207,26 @@ namespace SampleApplication
             this.ColumnComboBox.ClickEditType = Ntreev.Windows.Forms.Grid.ClickEditType.FocusedClick;
             this.ColumnComboBox.ColumnName = "ComboBox";
             this.ColumnComboBox.DataType = typeof(SampleApplication.Test);
+            this.ColumnComboBox.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.ColumnComboBox.VisibleIndex = 13;
             // 
             // columnNumeric1
             // 
             this.columnNumeric1.ColumnName = "Int32";
             this.columnNumeric1.DataType = typeof(int);
+            this.columnNumeric1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.columnNumeric1.VisibleIndex = 14;
             // 
             // columnDate1
             // 
             this.columnDate1.ColumnName = "Date";
+            this.columnDate1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.columnDate1.VisibleIndex = 15;
             // 
             // columnDataTypes1
             // 
             this.columnDataTypes1.ColumnName = "DataTypes";
+            this.columnDataTypes1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.columnDataTypes1.VisibleIndex = 16;
             // 
             // gridControl1

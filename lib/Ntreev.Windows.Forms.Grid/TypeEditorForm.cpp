@@ -70,6 +70,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
                 if (!m_dropDownForm->Bounds.Contains(cursorPos))
                 {
+                    if(m.HWnd != m_dropDownForm->GridControl->Handle)
+                    {
+                        System::IntPtr mainHandle = Native::Methods::GetRootWindow(m.HWnd);
+                        System::IntPtr mainHandle2 = Native::Methods::GetRootWindow(Native::Methods::WindowFromPoint(cursorPos));
+
+                        if(mainHandle2 != m_dropDownForm->MainHandle)
+                        {
+                            uint idcont = Native::Methods::GetWindowThreadProcessId(m.HWnd);
+                            uint idform = Native::Methods::GetWindowThreadProcessId(m_dropDownForm->Handle);
+
+                            if(idcont == idform)
+                                break;
+                        }
+                    }
+
                     m_dropDownForm->Close_Ntreev_Windows_Forms_Grid_Design_IEditorService();
 
                     Ntreev::Windows::Forms::Grid::GridControl^ gridControl = m_dropDownForm->GridControl;
@@ -389,6 +404,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     System::Windows::Forms::DialogResult TypeEditorForm::Result::get()
     {
         return this->DialogResult;
+    }
+
+    System::IntPtr TypeEditorForm::MainHandle::get()
+    {
+        return m_mainHandle;
     }
 
     void TypeEditorForm::CloseDropDown()

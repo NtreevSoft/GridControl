@@ -49,7 +49,11 @@ namespace SampleApplication
         
         public Form1()
         {
+            string d = ((int)100).ToString("{0} wow");
+            
+            
             InitializeComponent();
+            this.gridControl1.InsertionRow.Cells["Color"].IsReadOnly = true;
 
             List<Type> types = new List<Type>();
             types.Add(typeof(int));

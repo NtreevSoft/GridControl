@@ -164,5 +164,4 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     {
         return Ntreev::Windows::Forms::Grid::ViewType::Custom; 
     }
-
 } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

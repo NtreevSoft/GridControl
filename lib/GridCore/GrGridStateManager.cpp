@@ -1779,14 +1779,13 @@ namespace GridStateClass
 
     }
 
-    bool ExpanderPressing::GetHitTest(GrCell* pHitted, const GrPoint& localLocation)
+    bool ExpanderPressing::GetHitTest(GrCell* pHitted, const GrPoint& /*localLocation*/)
     {
         GrExpander* pGroupCell = dynamic_cast<GrExpander*>(pHitted);
         if(pGroupCell == nullptr)
             return false;
 
         return true;
-        //return pGroupCell->HitMouseOverTest(localLocation) == GrMouseOverState_Control;
     }
 
     void ExpanderPressing::OnBegin(GrStateEventArgs* e)
@@ -2118,7 +2117,6 @@ namespace GridStateClass
                     m_pItemSelector->ClearSelection();
                     m_pFocuser->Set(pDataRow);
                 }
-                int qwer=0;
             }
             break;
         }

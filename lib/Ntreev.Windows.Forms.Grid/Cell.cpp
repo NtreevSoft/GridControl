@@ -29,6 +29,7 @@
 #include "FromNative.h"
 #include "ErrorDescriptor.h"
 #include "CellBuilder.h"
+#include "IDisplayTextConverter.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -182,6 +183,27 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         this->Row->Refresh();
     }
 
+    System::Object^ Cell::SourceValue::get()
+    {
+        System::ComponentModel::PropertyDescriptor^ propertyDescriptor = this->Column->PropertyDescriptor;
+        System::Object^ component = this->Row->Component;
+        if(propertyDescriptor == nullptr || component == nullptr)
+            throw gcnew System::ArgumentException();
+        return propertyDescriptor->GetValue(component);
+    }
+
+    //void Cell::SourceValue::set(System::Object^ value)
+    //{
+    //    System::ComponentModel::PropertyDescriptor^ propertyDescriptor = this->Column->PropertyDescriptor;
+    //    System::Object^ component = this->Row->Component;
+
+    //    if(propertyDescriptor == nullptr || component == nullptr)
+    //        throw gcnew System::ArgumentException();
+
+    //    propertyDescriptor->SetValue(component, value);
+    //    this->UpdateNativeText();
+    //}
+
     void Cell::UpdateNativeText()
     {
         this->UpdateNativeText(this->ValueCore);
@@ -191,17 +213,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         try
         {
-            TypeDescriptorContextCore^ typeDescriptorContext = gcnew TypeDescriptorContextCore(this);
             System::String^ text = System::String::Empty;
             if(m_wrongValue == true)
             {
-                System::Object^ sourceValue = this->SourceValue;
+                System::Object^ sourceValue = this->GetValueFromSource();
                 if(sourceValue != nullptr)
                     text = sourceValue->ToString();
             }
             else if(value != nullptr && value != System::DBNull::Value)
             {
-                text = this->Column->TypeConverter->ConvertToString(typeDescriptorContext, value);
+                IDisplayTextConverter^ converter = this->Column->DisplayTextConverter;
+                text = converter->ValueToString(value, this->Column);
 
                 if(this->Column->CellMultiline == true)
                     text = text->Replace("\r\n", "\n");
@@ -438,7 +460,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             return m_value;
         }
-        return this->SourceValue;
+        return this->GetValueFromSource();
     }
 
     void Cell::ValueCore::set(System::Object^ value)
@@ -448,10 +470,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(this->HasSourceValue == false)
             m_value = value;
         else
-            this->SourceValue = value;
+            this->SetValueToSource(value);
     }
 
-    System::Object^ Cell::SourceValue::get()
+    System::Object^ Cell::GetValueFromSource()
     {
         System::ComponentModel::PropertyDescriptor^ propertyDescriptor = this->Column->PropertyDescriptor;
         System::Object^ component = this->Row->Component;
@@ -461,7 +483,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return this->Column->ConvertFromSource(value);
     }
 
-    void Cell::SourceValue::set(System::Object^ value)
+    void Cell::SetValueToSource(System::Object^ value)
     {
         System::ComponentModel::PropertyDescriptor^ propertyDescriptor = this->Column->PropertyDescriptor;
         System::Object^ component = this->Row->Component;
@@ -519,10 +541,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         else
         {
             this->UpdateNativeText(value);
-            TypeConverter^ converter = this->Column->TypeConverter;
+            
+            IDisplayTextConverter^ converter = this->Column->DisplayTextConverter;
             try
             {
-                m_displayValue = converter->ConvertFromString(value);
+                if(converter->CanConvertFromString == true)
+                    m_displayValue = converter->StringToValue(value, this->Column);
+                else
+                    m_displayValue = Cell::NullValue;
             }
             catch(System::Exception^ /*e*/)
             {

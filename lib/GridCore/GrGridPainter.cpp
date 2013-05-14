@@ -71,7 +71,7 @@ GrStyle::GrStyle()
     //GroupBackColors.push_back(GrColor::Honeydew);
 }
 
-GrStyle::GrStyle(bool defaultStyle)
+GrStyle::GrStyle(bool /*defaultStyle*/)
 {
     ForeColor = GrColor::Black;
     BackColor = GrColor::White;

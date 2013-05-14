@@ -79,6 +79,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             virtual System::Windows::Forms::DialogResult get();
         }
 
+        property System::IntPtr MainHandle
+        {
+            System::IntPtr get();
+        }
+
     public: // events
 
         event System::EventHandler^ EscapeKeyPress;

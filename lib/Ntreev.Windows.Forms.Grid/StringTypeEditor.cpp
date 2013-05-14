@@ -27,6 +27,7 @@
 #include "TextBox.h"
 #include "Utilities.h"
 #include "ITextCacheProvider.h"
+#include "IDisplayTextConverter.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design
 {
@@ -58,7 +59,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     System::Object^ StringTypeEditor::EditValue(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value)
     {
         Ntreev::Windows::Forms::Grid::Design::Controls::TextBox^ textBox = gcnew Ntreev::Windows::Forms::Grid::Design::Controls::TextBox(editorService);
-        System::ComponentModel::TypeConverter^ converter = cell->Column->TypeConverter;
+        IDisplayTextConverter^ converter = cell->Column->DisplayTextConverter;
 
         System::String^ oldText = System::String::Empty;
         
@@ -75,7 +76,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
                 }
                 else
                 {
-                    textBox->Text = converter->ConvertToString(value);
+                    textBox->Text = converter->ValueToString(value, cell->Column);
                 }
             }
             break;
@@ -115,6 +116,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         if(editorService->Result == System::Windows::Forms::DialogResult::Cancel || textBox->Text == oldText)
             return value;
 
-        return converter->ConvertFromString(textBox->Text);
+        if(converter->CanConvertFromString == false)
+            throw gcnew System::Exception("문자열 변환기가 값의 변환을 지원하지 못하여 변환할 수 없습니다.");
+
+        return converter->StringToValue(textBox->Text, cell->Column);
     }
 } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

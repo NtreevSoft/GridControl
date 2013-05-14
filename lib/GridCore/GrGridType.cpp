@@ -739,12 +739,7 @@ bool GrColor::operator != (const GrColor& color) const
 bool GrColor::operator == (const GrColor& color) const
 {
     return this->name == color.name;
-    const wchar_t* d = this->name.c_str();
-    const wchar_t* q = color.name.c_str();
-    if(this->name.length() == 0 && color.name.length() == 0)
-        return value == color.value;
-    return _wcsicmp(this->name.c_str(), color.name.c_str()) == 0;
-}
+ }
 
 float GrColor::A() const
 {

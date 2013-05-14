@@ -285,6 +285,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         return internalLeading;
     }
 
+    uint Methods::GetWindowThreadProcessId(System::IntPtr handle)
+    {
+        HWND hWnd = (HWND)handle.ToPointer();
+        DWORD id = ::GetWindowThreadProcessId(hWnd, &id);
+        return id;
+    }
+
     System::IntPtr Methods::WindowFromPoint(System::Drawing::Point location)
     {
         POINT pt;

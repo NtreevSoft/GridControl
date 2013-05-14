@@ -118,6 +118,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void set(System::Object^);
         }
 
+        property bool HasSourceValue
+        {
+            bool get();
+        }
+
+        property System::Object^ SourceValue
+        {
+            System::Object^ get();
+            //void set(System::Object^);
+        }
+
         /// <summary>
         /// 이 셀을 소유한 열의 인스턴스를 가져옵니다.
         /// </summary>
@@ -349,6 +360,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         void LocalValueToSource(System::Object^ component);
 
+        System::Object^ GetValueFromSource();
+
+        void SetValueToSource(System::Object^ value);
+
     internal: // properties
 
         property GrItem* NativeRef
@@ -367,12 +382,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void set(System::Object^);
         }
 
-        property System::Object^ SourceValue
-        {
-            System::Object^ get();
-            void set(System::Object^);
-        }
-
         property bool WrongValue
         {
             bool get();
@@ -382,11 +391,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property System::Object^ DisplayValue
         {
             System::Object^ get();
-        }
-
-        property bool HasSourceValue
-        {
-            bool get();
         }
 
     protected:

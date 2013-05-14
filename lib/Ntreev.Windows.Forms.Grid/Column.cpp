@@ -88,6 +88,27 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         gcroot<Column^> m_column;
     };
 
+    ref class DisplayTextConverter : IDisplayTextConverter
+    {
+    public:
+        virtual System::String^ ValueToString(System::Object^ value, IColumn^ column)
+        {
+            return column->TypeConverter->ConvertToString(value);
+        }
+
+        virtual System::Object^ StringToValue(System::String^ text, IColumn^ column)
+        {
+            return column->TypeConverter->ConvertFromString(text);
+        }
+
+        property virtual bool CanConvertFromString
+        {
+            bool get()
+            {
+                return true;
+            }
+        }
+    };
 
 
     bool RowComparerUp(GrGridCore* /*pGridCore*/, const GrDataRow* pDataRow1, const GrDataRow* pDataRow2, const GrColumn* pColumn)
@@ -148,8 +169,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pColumn->SetSortComparer(GrSort_Down, RowComparerDown);
 
         m_pCustomPaint = new CustomPaint(this);
-
         SetEditStyleToNative();
+    }
+
+    static Column::Column()
+    {
+        baseDisplayTextConverter = gcnew Ntreev::Windows::Forms::Grid::DisplayTextConverter();
     }
 
     Column::~Column()
@@ -189,6 +214,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         GrItemSelector* pItemSelector = this->Selector;
         if(pItemSelector != nullptr)
             pItemSelector->SelectColumn(m_pColumn, (GrSelectionType)selectionType);
+    }
+
+    void Column::Refresh()
+    {
+        //return;
+        for each(Row^ item in this->GridControl->Rows)
+        {
+            try
+            {
+                Cell^ cell = item->Cells[this];
+                cell->UpdateNativeText();
+            }
+            catch(System::Exception^)
+            {
+
+            }
+        }
     }
 
     void Column::BringIntoView()
@@ -491,6 +533,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_typeConverter = converter;
     }
 
+    IDisplayTextConverter^ Column::DisplayTextConverter::get()
+    {
+        if(m_displayTextConverter == nullptr)
+            return baseDisplayTextConverter;
+        return m_displayTextConverter;
+    }
+
+    void Column::DisplayTextConverter::set(IDisplayTextConverter^ value)
+    {
+        m_displayTextConverter = value;
+    }
+
     Ntreev::Windows::Forms::Grid::SortType Column::SortType::get()
     {
         return (Ntreev::Windows::Forms::Grid::SortType)m_pColumn->GetSortType(); 
@@ -650,6 +704,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void Column::IsGroupable::set(bool value)
     {
         m_pColumn->SetGroupable(value);
+    }
+
+    bool Column::IsBinded::get()
+    {
+        return m_propertyDescriptor != nullptr;
     }
 
     Ntreev::Windows::Forms::Grid::ColumnPainter^ Column::ColumnPainter::get()

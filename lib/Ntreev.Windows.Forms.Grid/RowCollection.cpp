@@ -503,8 +503,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(index < 0)
             throw gcnew System::ArgumentException("이미 지워지거나 사용되지 않은 row입니다.");
 
+        try
+        {
+            m_manager->RemoveAt(index);
+        }
+        catch(System::Exception^ e)
+        {
+            this->GridControl->ShowMessage(e->Message, "Error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
+            return false;
+        }
+
         item->Component = nullptr;
-        m_manager->RemoveAt(index);
         m_pDataRowList->RemoveDataRow(item->NativeRef);
 
         RowRemovedEventArgs eRemoved(0);

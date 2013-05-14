@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColumnDesigner.cs" />
+    <Compile Include="DateTimeExtension.cs" />
     <Compile Include="GridControlContainerFilterService.cs" />
     <Compile Include="GridControlDesigner.ActionList.cs">
       <Generator>SettingsSingleFileGenerator</Generator>

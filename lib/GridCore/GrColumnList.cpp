@@ -805,7 +805,6 @@ void GrColumnList::BuildVisibleColumnList()
     visibleCores.reserve(m_vecColumns.size());
     visibles.reserve(m_vecColumns.size());
 
-    uint i=0;
     for(auto value : m_vecColumns)
     {
         value->SetDisplayable(false);
