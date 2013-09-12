@@ -512,14 +512,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         case EditingReasonType::Mouse:
             {
                 System::Windows::Forms::Message msg;
-                System::Drawing::Point location = m_gridControl->PointToScreen(m_reason.Location);;
-                location = control->PointToClient(location);
+                System::Drawing::Point location = m_gridControl->PointToScreen(m_reason.Location);
+				System::Windows::Forms::Control^ hitTest = m_gridControl->GetChildAt(control, location);
+				if(hitTest == nullptr)
+					hitTest = control;
+                location = hitTest->PointToClient(location);
 
-                msg.HWnd = control->Handle;
+				msg.HWnd = hitTest->Handle;
+                msg.Msg = (int)Native::WM::WM_MOUSEMOVE;
+                msg.WParam = System::IntPtr(0);
+                msg.LParam = Native::Methods::MakeLParam(location.X, location.Y);
+                //Native::Methods::SendMessage(msg);
+
+                msg.HWnd = hitTest->Handle;
                 msg.Msg = (int)Native::WM::WM_LBUTTONDOWN;
                 msg.WParam = System::IntPtr(1);
-                msg.LParam = Native::Methods::MakeLParam(location.X,location.Y);
-                Native::Methods::SendMessage(msg);
+                msg.LParam = Native::Methods::MakeLParam(location.X, location.Y);
+                //Native::Methods::SendMessage(msg);
             }
             break;
         case EditingReasonType::Key:
@@ -561,32 +570,32 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     void TypeEditorForm::PostProcessEvent(System::Windows::Forms::Control^ control)
     {
         using namespace System::Windows::Forms;
+
         switch(m_reason.ReasonType)
         {
-       
         case EditingReasonType::Mouse:
             {
                 System::Windows::Forms::Message msg;
-                System::Drawing::Point location = m_gridControl->PointToScreen(m_reason.Location);;
-                location = control->PointToClient(location);
+                System::Drawing::Point location = m_gridControl->PointToScreen(m_reason.Location);
+				System::Windows::Forms::Control^ hitTest = m_gridControl->GetChildAt(control, location);
+				if(hitTest == nullptr)
+					hitTest = control;
+                location = hitTest->PointToClient(location);
 
-                msg.HWnd = control->Handle;
+				msg.HWnd = hitTest->Handle;
+                msg.Msg = (int)Native::WM::WM_MOUSEMOVE;
+                msg.WParam = System::IntPtr(0);
+                msg.LParam = Native::Methods::MakeLParam(location.X, location.Y);
+                Native::Methods::SendMessage(msg);
+
+                msg.HWnd = hitTest->Handle;
                 msg.Msg = (int)Native::WM::WM_LBUTTONDOWN;
                 msg.WParam = System::IntPtr(1);
                 msg.LParam = Native::Methods::MakeLParam(location.X,location.Y);
                 Native::Methods::SendMessage(msg);
-
-                //if(b == true)
-                //{
-                // msg.Msg = (int)Native::WM::WM_LBUTTONUP;
-                // msg.WParam = System::IntPtr(1);
-                // msg.LParam = Native::Methods::MakeLParam(location.X,location.Y);
-                // Native::Methods::PostMessage(msg);
-                //}
             }
             break;
         }
-
     }
 
     System::Windows::Forms::DialogResult TypeEditorForm::ShowDialog_System_Windows_Forms_Design_IWindowsFormsEditorService(System::Windows::Forms::Form^ dialog)
@@ -726,7 +735,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         }
     }
 
-    void TypeEditorForm::gridControl_EditClosed(System::Object^ sender, System::EventArgs^ e)
+    void TypeEditorForm::gridControl_EditClosed(System::Object^ /*sender*/, System::EventArgs^ /*e*/)
     {
         this->CancelEdit();
     }

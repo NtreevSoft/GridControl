@@ -88,29 +88,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         gcroot<Column^> m_column;
     };
 
-    ref class DisplayTextConverter : IDisplayTextConverter
-    {
-    public:
-        virtual System::String^ ValueToString(System::Object^ value, IColumn^ column)
-        {
-            return column->TypeConverter->ConvertToString(value);
-        }
-
-        virtual System::Object^ StringToValue(System::String^ text, IColumn^ column)
-        {
-            return column->TypeConverter->ConvertFromString(text);
-        }
-
-        property virtual bool CanConvertFromString
-        {
-            bool get()
-            {
-                return true;
-            }
-        }
-    };
-
-
     bool RowComparerUp(GrGridCore* /*pGridCore*/, const GrDataRow* pDataRow1, const GrDataRow* pDataRow2, const GrColumn* pColumn)
     {
         Ntreev::Windows::Forms::Grid::Cell^ cell1 = FromNative::Get(pDataRow1->GetItem(pColumn));
@@ -174,7 +151,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     static Column::Column()
     {
-        baseDisplayTextConverter = gcnew Ntreev::Windows::Forms::Grid::DisplayTextConverter();
+        
     }
 
     Column::~Column()
@@ -239,6 +216,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             return;
         this->GridControl->BringIntoView(this);
     }
+
+	void Column::AdjustWidth()
+	{
+		m_pColumn->SetFit();
+	}
 
     System::String^ Column::ToString()
     {
@@ -533,18 +515,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_typeConverter = converter;
     }
 
-    IDisplayTextConverter^ Column::DisplayTextConverter::get()
-    {
-        if(m_displayTextConverter == nullptr)
-            return baseDisplayTextConverter;
-        return m_displayTextConverter;
-    }
-
-    void Column::DisplayTextConverter::set(IDisplayTextConverter^ value)
-    {
-        m_displayTextConverter = value;
-    }
-
     Ntreev::Windows::Forms::Grid::SortType Column::SortType::get()
     {
         return (Ntreev::Windows::Forms::Grid::SortType)m_pColumn->GetSortType(); 
@@ -809,16 +779,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             m_pColumn->SetItemFont(GrFont::FromManaged(value));
     }
 
-    int Column::CellMinHeight::get()
-    {
-        return m_pColumn->GetItemMinHeight();
-    }
-
-    void Column::CellMinHeight::set(int value)
-    {
-        m_pColumn->SetItemMinHeight(value);
-    }
-
     Ntreev::Windows::Forms::Grid::ClickEditType Column::ClickEditType::get()
     {
         return (Ntreev::Windows::Forms::Grid::ClickEditType)m_pColumn->GetItemClickEditing();
@@ -849,7 +809,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Column::ResetCellPadding()
     {
-        this->CellPadding = GrPadding::Default;
+		this->CellPadding = GrPadding::Empty;
     }
 
     void Column::ResetCellForeColor()
@@ -914,7 +874,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Column::ShouldSerializeCellPadding()
     {
-        return m_pColumn->GetItemPadding() != GrPadding::Default;
+        return m_pColumn->GetItemPadding() != GrPadding::Empty;
     }
 
     bool Column::ShouldSerializeCellFont()
@@ -966,6 +926,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         return m_pColumn->ShouldSerializeWidth();
     }
+
+	bool Column::ShouldSerializeVisibleIndex()
+	{
+		return m_pColumn->ShouldSerializeVisibleIndex();
+	}
 
     //bool Column::ShouldSerializePriorityOnFrozen()
     //{

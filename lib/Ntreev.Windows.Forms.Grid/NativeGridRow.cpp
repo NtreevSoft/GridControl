@@ -133,7 +133,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     void GrGridRow::OnVisibleChanged()
     {
         IDataRow::OnVisibleChanged();
-        bool visibled = this->GetVisible();
+        //bool visibled = this->GetVisible();
 
         if(this->HasGridControl() == false)
         {

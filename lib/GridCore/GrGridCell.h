@@ -36,8 +36,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
 #endif
 
-static const unsigned int INVALID_INDEX = ((uint)-1);
-static const unsigned int INSERTION_ROW = ((uint)-8);
+static const uint INVALID_INDEX = ((uint)-1);
+static const uint INSERTION_ROW = ((uint)-8);
 
 static const int UPDATEPRIORITY_DATAROWLIST = 1;
 static const int UPDATEPRIORITY_COLUMNLIST = 2;
@@ -363,6 +363,7 @@ public:
     uint GetTextLineCount() const;
     const GrLineDesc& GetTextLine(uint index) const;
     GrSize GetTextBounds() const;
+	virtual GrSize GetPreferredSize() const;
     GrPoint AlignText(const GrLineDesc& line, int index, int count) const;
     void ComputeTextBounds();
     bool GetTextVisible() const;
@@ -410,12 +411,14 @@ private:
 
     struct GrStyleData
     {
-        GrStyleData() : m_pFont(nullptr), m_padding(GrPadding::Default) {}
-        GrColor m_backColor;
-        GrColor m_foreColor;
-        GrColor m_lineColor;
-        GrFont* m_pFont;
-        GrPadding m_padding;
+        GrStyleData() : pFont(nullptr) {}
+        GrColor backColor;
+        GrColor foreColor;
+        GrColor lineColor;
+        GrFont* pFont;
+        GrPadding padding;
+
+		static const GrStyleData Default;
     };
 
     GrStyleData* m_pStyleData;
@@ -458,10 +461,10 @@ public:
     const GrColor& GetItemBackColor() const;
     GrFont* GetItemFont() const;
     const GrPadding& GetItemPadding() const;
-    int GetItemMinHeight() const;
     GrClickEditing GetItemClickEditing() const;
     bool GetItemTextVisible() const;
     bool GetItemIcon() const;
+	GrSize GetItemMinSize() const;
 
     uint GetDisplayIndex() const;
     uint GetVisibleIndex() const;
@@ -481,10 +484,10 @@ public:
     void SetItemBackColor(const GrColor& color);
     void SetItemFont(GrFont* pFont);
     void SetItemPadding(const GrPadding& padding);
-    void SetItemMinHeight(int height);
     void SetItemClickEditing(GrClickEditing clickEditing);
     void SetItemTextVisible(bool b);
     void SetItemIcon(bool b);
+	void SetItemMinSize(GrSize size);
 
     bool GetMovable() const;
     void SetMovable(bool b);
@@ -631,10 +634,10 @@ private:
     GrColor m_itemForeColor;
     GrPadding m_itemPadding;
     GrFont* m_pItemFont;
-    int m_itemMinHeight;
     GrClickEditing m_itemClickEditing;
     bool m_itemTextVisible;
     bool m_itemIcon;
+	GrSize m_itemMinSize;
 
     GrGroup* m_pGroup;
 
@@ -657,6 +660,7 @@ private:
     friend ref class Ntreev::Windows::Forms::Grid::Column;
 private:
     bool ShouldSerializeWidth();
+	bool ShouldSerializeVisibleIndex();
     //bool ShouldSerializePriorityOnFrozen();
     //bool ShouldSerializePriorityOnUnfrozen();
 #endif
@@ -885,6 +889,7 @@ public:
 
     uint GetVisibleDataRowIndex() const;
     uint GetDataRowIndex() const;
+	void SetDataRowIndex(uint index);
     uint GetDataRowID() const;
     bool IsInsertionRow() const;
 
@@ -916,7 +921,7 @@ protected:
 
 private:
     void SetVisibleDataRowIndex(uint index);
-    void SetDataRowIndex(uint index);
+    void SetDataRowIndexCore(uint index);
     void SetDataRowID(uint index);
     void AddItem(GrColumn* pColumn);
     void Reserve(uint count);
@@ -975,9 +980,9 @@ public:
     void SetReadOnly(bool b);
     void SetSelected(bool b);
     void SetFocused(bool b);
+	void SetTextBounds(GrSize size);
 
     bool ShouldBringIntoView() const;
-    int GetMinHeight() const;
     void BringIntoView();
 
     virtual int HitMouseOverTest(const GrPoint& localLocation) const;
@@ -994,6 +999,7 @@ public:
     virtual int GetY() const;
     virtual int GetWidth() const;
     virtual int GetHeight() const;
+	virtual GrSize GetPreferredSize() const;
     virtual GrCellType GetCellType() const { return GrCellType_Item; }
 
     virtual bool GetDisplayable() const;
@@ -1024,6 +1030,7 @@ private:
 private:
     GrDataRow* m_pDataRow;
     GrColumn* m_pColumn;
+	GrSize m_textBounds;
 
     bool m_readOnly;
     bool m_selected;

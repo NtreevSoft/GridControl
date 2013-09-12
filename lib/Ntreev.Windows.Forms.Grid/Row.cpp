@@ -49,7 +49,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         : m_pDataRow(rowBuilder->NativeRef), RowBase(rowBuilder->GridControl, rowBuilder->NativeRef), m_errorDescription(System::String::Empty)
     {
         m_cells = gcnew CellCollection(this);
-        m_componentIndex = -1;
+        //m_componentIndex = -1;
 
         for each(Column^ item in this->GridControl->Columns)
         {
@@ -58,40 +58,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         m_cellErrorDescriptions = gcnew System::Collections::Generic::Dictionary<Cell^, System::String^>();
     }
-
-    //void Row::SourceValueToLocal(System::Object^ component)
-    //{
-    //    PropertyDescriptor^ propertyDescriptor = this->Column->PropertyDescriptor;
-    //    if(propertyDescriptor == nullptr)
-    //        return;
-
-    //    if(component == nullptr)
-    //    {
-    //        m_value = nullptr;
-    //    }
-    //    else
-    //    {
-    //        System::Object^ value = propertyDescriptor->GetValue(component);
-    //        m_value = this->Column->ConvertFromSource(value);
-    //    }
-    //}
-
-    //void Row::LocalValueToSource(System::Object^ component)
-    //{
-    //    PropertyDescriptor^ propertyDescriptor = this->Column->PropertyDescriptor;
-    //    if(propertyDescriptor == nullptr)
-    //        return;
-
-    //    System::Object^ value = propertyDescriptor->GetValue(component);
-
-    //    if(ValueChecker::IsNullOrDBNull(value) == true && ValueChecker::IsNullOrDBNull(m_value) == false)
-    //    {
-    //        value = this->Column->ConvertToSource(m_value);
-    //        propertyDescriptor->SetValue(component, value);
-    //    }
-
-    //    m_value = nullptr;        
-    //}
 
     void Row::Component::set(System::Object^ value)
     {
@@ -147,6 +113,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             delete gridRow->ChildGrid;
         }
     }
+
+	System::Collections::Generic::Dictionary<Cell^, System::String^>^ Row::CellErrors::get()
+	{
+		return m_cellErrorDescriptions;
+	}
 
     GrDataRow* Row::NativeRef::get()
     {
@@ -289,18 +260,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             throw gcnew System::Exception();
     }
 
-    void Row::AddErrorCell()
-    {
-        m_errorCell++;
-    }
-
-    void Row::RemoveErrorCell()
-    {
-        m_errorCell--;
-        if(m_errorCell < 0)
-            throw gcnew System::Exception();
-    }
-
     bool Row::IsBeingEdited::get()
     {
         return m_editing;
@@ -419,16 +378,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Row::ErrorDescription::set(System::String^ value)
     {
-        if(value == nullptr)
-            value = System::String::Empty;
+		value = value == nullptr ? System::String::Empty : value;
 
         if(m_errorDescription == value)
             return;
 
         m_errorDescription = value;
-        if(m_errorDescription == System::String::Empty)
+		if(m_errorDescription == System::String::Empty)
         {
-            this->GridControl->ErrorDescriptor->Remove(this);
+			if(m_cellErrorDescriptions->Count == 0)
+				this->GridControl->ErrorDescriptor->Remove(this);
         }
         else
         {
@@ -438,7 +397,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Row::HasErrorCell::get()
     {
-        return m_errorCell > 0;
+		return m_cellErrorDescriptions->Count > 0;
     }
 
     void Row::CellForeColor::set(System::Drawing::Color value)
@@ -488,24 +447,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
      
     void Row::SetErrorDescription(Cell^ cell, System::String^ text)
     {
-        if(text == nullptr)
-            text = System::String::Empty;
+		text = text == nullptr ? System::String::Empty : text;
 
-        if(this->GetErrorDescription(cell) == text)
-            return;
+		if(text == System::String::Empty)
+		{
+			if(m_cellErrorDescriptions->ContainsKey(cell) == true)
+				m_cellErrorDescriptions->Remove(cell);
 
-        m_cellErrorDescriptions[cell] = text;
-
-        if(m_errorDescription == System::String::Empty)
-        {
-            this->GridControl->ErrorDescriptor->Remove(this);
-            this->RemoveErrorCell();
-        }
-        else
-        {
-            this->GridControl->ErrorDescriptor->Add(this);
-            this->AddErrorCell();
-        }
+			if(m_cellErrorDescriptions->Count == 0 && m_errorDescription == System::String::Empty)
+				this->GridControl->ErrorDescriptor->Remove(this);
+		}
+		else
+		{
+			m_cellErrorDescriptions[cell] = text;
+			this->GridControl->ErrorDescriptor->Add(this);
+		}
     }
 
     System::Object^ Row::GetSourceValue(Column^ column)

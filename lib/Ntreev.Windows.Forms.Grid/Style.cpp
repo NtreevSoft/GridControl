@@ -40,14 +40,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     Style::Style()
     {
         m_pNativeStyle = new GrStyle();
-        m_cellForeColors = gcnew StyleColorCollection(&m_pNativeStyle->ItemForeColors, GrStyle::DefaultStyle.ForeColor);
-        m_cellBackColors = gcnew StyleColorCollection(&m_pNativeStyle->ItemBackColors, GrStyle::DefaultStyle.BackColor);
-        m_cellLineColors = gcnew StyleColorCollection(&m_pNativeStyle->ItemLineColors, GrStyle::DefaultStyle.LineColor);
+        m_cellForeColors = gcnew StyleColorCollection(&m_pNativeStyle->ItemForeColors, GrStyle::Default.ForeColor);
+        m_cellBackColors = gcnew StyleColorCollection(&m_pNativeStyle->ItemBackColors, GrStyle::Default.BackColor);
+        m_cellLineColors = gcnew StyleColorCollection(&m_pNativeStyle->ItemLineColors, GrStyle::Default.LineColor);
         m_cellFonts = gcnew StyleFontCollection(&m_pNativeStyle->ItemFonts);
 
-        m_groupForeColors = gcnew StyleColorCollection(&m_pNativeStyle->GroupForeColors, GrStyle::DefaultStyle.ForeColor);
-        m_groupBackColors = gcnew StyleColorCollection(&m_pNativeStyle->GroupBackColors, GrStyle::DefaultStyle.BackColor);
-        m_groupLineColors = gcnew StyleColorCollection(&m_pNativeStyle->GroupLineColors, GrStyle::DefaultStyle.LineColor);
+        m_groupForeColors = gcnew StyleColorCollection(&m_pNativeStyle->GroupForeColors, GrStyle::Default.ForeColor);
+        m_groupBackColors = gcnew StyleColorCollection(&m_pNativeStyle->GroupBackColors, GrStyle::Default.BackColor);
+        m_groupLineColors = gcnew StyleColorCollection(&m_pNativeStyle->GroupLineColors, GrStyle::Default.LineColor);
         m_groupFonts = gcnew StyleFontCollection(&m_pNativeStyle->GroupFonts);
     }
 
@@ -67,42 +67,42 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Style::ResetSelectedForeColor()
     {
-        this->SelectedForeColor = GrStyle::DefaultStyle.SelectedForeColor;
+        this->SelectedForeColor = GrStyle::Default.SelectedForeColor;
     }
 
     void Style::ResetSelectedBackColor()
     {
-        this->SelectedBackColor = GrStyle::DefaultStyle.SelectedBackColor;
+        this->SelectedBackColor = GrStyle::Default.SelectedBackColor;
     }
 
     void Style::ResetFocusedForeColor()
     {
-        this->FocusedForeColor = GrStyle::DefaultStyle.FocusedForeColor;
+        this->FocusedForeColor = GrStyle::Default.FocusedForeColor;
     }
 
     void Style::ResetFocusedBackColor()
     {
-        this->FocusedBackColor = GrStyle::DefaultStyle.FocusedBackColor;
+        this->FocusedBackColor = GrStyle::Default.FocusedBackColor;
     }
 
     void Style::ResetForeColor()
     {
-        this->ForeColor = GrStyle::DefaultStyle.ForeColor;
+        this->ForeColor = GrStyle::Default.ForeColor;
     }
 
     void Style::ResetBackColor()
     {
-        this->BackColor = GrStyle::DefaultStyle.BackColor;
+        this->BackColor = GrStyle::Default.BackColor;
     }
 
     void Style::ResetLineColor()
     {
-        this->LineColor = GrStyle::DefaultStyle.LineColor;
+        this->LineColor = GrStyle::Default.LineColor;
     }
 
     void Style::ResetFont()
     {
-        this->Font = GrFont::ToManaged(GrStyle::DefaultStyle.Font);
+        this->Font = GrFont::ToManaged(GrStyle::Default.Font);
     }
 
     void Style::ResetColumnForeColor()
@@ -187,12 +187,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Style::ResetRowHighlightLineColor()
     {
-        this->RowHighlightLineColor = GrStyle::DefaultStyle.RowHighlightLineColor;
+        this->RowHighlightLineColor = GrStyle::Default.RowHighlightLineColor;
     }
 
     void Style::ResetRowHighlightFillColor()
     {
-        this->RowHighlightFillColor = GrStyle::DefaultStyle.RowHighlightFillColor;
+        this->RowHighlightFillColor = GrStyle::Default.RowHighlightFillColor;
     }
 
     void Style::ResetCellForeColors()
@@ -640,42 +640,42 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Style::ShouldSerializeForeColor()
     {
-        return m_pNativeStyle->ForeColor != GrStyle::DefaultStyle.ForeColor;
+        return m_pNativeStyle->ForeColor != GrStyle::Default.ForeColor;
     }
 
     bool Style::ShouldSerializeBackColor()
     {
-        return m_pNativeStyle->BackColor != GrStyle::DefaultStyle.BackColor;
+        return m_pNativeStyle->BackColor != GrStyle::Default.BackColor;
     }
 
     bool Style::ShouldSerializeLineColor()
     {
-        return m_pNativeStyle->LineColor != GrStyle::DefaultStyle.LineColor;
+        return m_pNativeStyle->LineColor != GrStyle::Default.LineColor;
     }
 
     bool Style::ShouldSerializeFont()
     {
-        return m_pNativeStyle->Font != GrStyle::DefaultStyle.Font;
+        return m_pNativeStyle->Font != GrStyle::Default.Font;
     }
 
     bool Style::ShouldSerializeSelectedForeColor()
     {
-        return m_pNativeStyle->SelectedForeColor != GrStyle::DefaultStyle.SelectedForeColor;
+        return m_pNativeStyle->SelectedForeColor != GrStyle::Default.SelectedForeColor;
     }
 
     bool Style::ShouldSerializeSelectedBackColor()
     {
-        return m_pNativeStyle->SelectedBackColor != GrStyle::DefaultStyle.SelectedBackColor;
+        return m_pNativeStyle->SelectedBackColor != GrStyle::Default.SelectedBackColor;
     }
 
     bool Style::ShouldSerializeFocusedForeColor()
     {
-        return m_pNativeStyle->FocusedForeColor != GrStyle::DefaultStyle.FocusedForeColor;
+        return m_pNativeStyle->FocusedForeColor != GrStyle::Default.FocusedForeColor;
     }
 
     bool Style::ShouldSerializeFocusedBackColor()
     {
-        return m_pNativeStyle->FocusedBackColor != GrStyle::DefaultStyle.FocusedBackColor;
+        return m_pNativeStyle->FocusedBackColor != GrStyle::Default.FocusedBackColor;
     }
 
     bool Style::ShouldSerializeColumnForeColor()
@@ -760,12 +760,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool Style::ShouldSerializeRowHighlightLineColor()
     {
-        return m_pNativeStyle->RowHighlightLineColor != GrStyle::DefaultStyle.RowHighlightLineColor;
+        return m_pNativeStyle->RowHighlightLineColor != GrStyle::Default.RowHighlightLineColor;
     }
 
     bool Style::ShouldSerializeRowHighlightFillColor()
     {
-        return m_pNativeStyle->RowHighlightFillColor != GrStyle::DefaultStyle.RowHighlightFillColor;
+        return m_pNativeStyle->RowHighlightFillColor != GrStyle::Default.RowHighlightFillColor;
     }
 
     bool Style::ShouldSerializeCellForeColors()

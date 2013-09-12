@@ -246,6 +246,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             virtual int get();
         }
 
+#ifdef _DEBUG
+		[System::ComponentModel::CategoryAttribute("Debug")]
+#else
+		[System::ComponentModel::BrowsableAttribute(false)]
+#endif
+        property bool Capture
+        {
+            bool get();
+        }
+
         /// <summary>
         /// 화면에 표시되고 있는 셀의 안쪽 영역을 가져옵니다.
         /// </summary>

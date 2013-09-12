@@ -113,6 +113,8 @@ public:
     void SetReadOnly(bool value);
     bool GetRowResizable() const;
     void SetRowResizable(bool b);
+	bool GetRowMovable() const;
+    void SetRowMovable(bool b);
     bool GetHideSelection() const;
     void SetHideSelection(bool b);
     bool GetMultiSelect() const;
@@ -176,6 +178,7 @@ public:
     _GrRowMouseEvent RowMouseEnter;
     _GrRowMouseEvent RowMouseMove;
     _GrRowMouseEvent RowMouseLeave;
+
 
 protected:
     virtual void OnCleared(GrEventArgs* e);
@@ -245,6 +248,7 @@ private:
     int m_rowSplitterHeight;
 
     bool m_updating;
+	mutable bool m_painting;
     bool m_fullRowSelect;
     bool m_selectionVisible;
     bool m_rowHighlight;
@@ -255,6 +259,7 @@ private:
     bool m_columnFreezable;
     bool m_readOnly;
     bool m_rowResizable;
+	bool m_rowMovable;
     bool m_rowVisible;
     bool m_hideSelection;
     bool m_multiSelect;

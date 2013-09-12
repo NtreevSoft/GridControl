@@ -27,109 +27,195 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design { namespace Controls
 {
-    using namespace System;
-    using namespace System::Drawing;
-    using namespace System::Windows::Forms;
+	using namespace System;
+	using namespace System::Drawing;
+	using namespace System::Windows::Forms;
 
-    FlagControl::FlagControl()
-    {
-        InitializeComponent();
-    }
+	FlagControl::FlagControl()
+	{
+		InitializeComponent();
+	}
 
-    FlagControl::FlagControl(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, System::Type^ flagType)
-        : m_editorService(editorService), m_flagType(flagType)
-    {
-        InitializeComponent();
-        InitializeCheckBox();
-    }
+	FlagControl::FlagControl(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, System::Type^ flagType)
+		: m_editorService(editorService), m_flagType(flagType)
+	{
+		InitializeComponent();
+		InitializeCheckBox();
+	}
 
-    System::Object^ FlagControl::Value::get()
-    {
-        return m_value;
-    }
+	System::Object^ FlagControl::Value::get()
+	{
+		return m_value;
+	}
 
-    void FlagControl::Value::set(System::Object^ value)
-    {
-        int enumValue = ValueChecker::IsNullOrDBNull(value) == false ? (int)value : 0;
+	void FlagControl::Value::set(System::Object^ value)
+	{
+		m_value = value;
 
-        for each (Control^ item in this->Controls)
-        {
-            CheckBox^ checkBox = dynamic_cast<CheckBox^>(item);
-            if (checkBox == nullptr)
-                continue;
-            int flag = (int)item->Tag;
-            checkBox->Checked = (enumValue & flag) != 0 ? true : false;
-        }
-        m_value = value;
-    }
+		if(ValueChecker::IsNullOrDBNull(m_value) == true)
+			return;
 
-    void FlagControl::InitializeCheckBox()
-    {
-        cli::array<System::Object^>^ flagAttrs = m_flagType->GetCustomAttributes(FlagsAttribute::typeid, true);
-        if(flagAttrs->Length == 0)
-            throw gcnew ArgumentException("FlagsAttribute를 갖는 Enum Type만 가능합니다.");
+		this->UpdateValueToControl(m_value->GetHashCode(), nullptr);
+	}
 
-        this->SuspendLayout();
+	void FlagControl::InitializeCheckBox()
+	{
+		cli::array<System::Object^>^ flagAttrs = m_flagType->GetCustomAttributes(FlagsAttribute::typeid, true);
+		if(flagAttrs->Length == 0)
+			throw gcnew ArgumentException("FlagsAttribute를 갖는 Enum Type만 가능합니다.");
 
-        for (int i = this->Controls->Count-1; i >=0 ; i--)
-        {
-            CheckBox^ checkBox = dynamic_cast<CheckBox^>(this->Controls[i]);
-            if(checkBox != nullptr)
-                this->Controls->Remove(checkBox);
-        }
+		this->SuspendLayout();
 
-        int y = this->Padding.Top;
-        int buttonHeight = this->Bottom - this->buttonOk->Top;
-        for each(System::Object^ item in Enum::GetValues(m_flagType))
-        {
-            CheckBox^ checkBox = gcnew CheckBox();
-            checkBox->Name = item->ToString();
-            checkBox->Text = item->ToString();
-            checkBox->Tag = item;
-            checkBox->AutoSize = true;
-            checkBox->Location = Point(this->Padding.Left, y);
+		for (int i = this->Controls->Count-1; i >=0 ; i--)
+		{
+			CheckBox^ checkBox = dynamic_cast<CheckBox^>(this->Controls[i]);
+			
+			if(checkBox != nullptr)
+			{
+				checkBox->CheckedChanged -= gcnew System::EventHandler(this, &FlagControl::checkBox_CheckChanged);
+				this->Controls->Remove(checkBox);
+			}
+		}
 
-            this->Controls->Add(checkBox);
+		int y = this->Padding.Top;
+		int buttonHeight = this->Bottom - this->buttonOk->Top;
+		for each(System::String^ item in Enum::GetNames(m_flagType))
+		{
+			System::Object^ value = Enum::Parse(m_flagType, item);
+			CheckBox^ checkBox = gcnew CheckBox();
+			checkBox->Name = item;
+			checkBox->Text = item;
+			checkBox->Tag = value;
 
-            y += checkBox->Height + 1;
-        }
+			int code = value->GetHashCode();
 
-        this->Height = y + buttonHeight;
-        this->ResumeLayout(true);
-    }
+			if(code == 0)
+				checkBox->ForeColor = System::Drawing::Color::Red;
+			else if(this->IsSingleBit(code) == false)
+				checkBox->Font = gcnew System::Drawing::Font(checkBox->Font, System::Drawing::FontStyle::Bold);
 
-    bool FlagControl::ProcessCmdKey(System::Windows::Forms::Message% msg, System::Windows::Forms::Keys keyData)
-    {
-        if (keyData == Keys::Enter)
-        {
-            UpdateValue();
-            m_editorService->Close();
-            return true;
-        }
-        return UserControl::ProcessCmdKey(msg, keyData);
-    }
+			checkBox->AutoSize = true;
+			checkBox->Location = Point(this->Padding.Left, y);
 
-    System::Void FlagControl::buttonOk_Click(System::Object^ /*sender*/, System::EventArgs^ /*e*/) 
-    {
-        UpdateValue();
-        m_editorService->Close();
-    }
+			this->Controls->Add(checkBox);
+			m_checkBoxes.Add(checkBox);
+			checkBox->CheckedChanged += gcnew System::EventHandler(this, &FlagControl::checkBox_CheckChanged);
 
-    System::Void FlagControl::buttonCancel_Click(System::Object^ /*sender*/, System::EventArgs^ /*e*/) 
-    {
-        m_editorService->Close();
-    }
+			y += checkBox->Height + 1;
+		}
 
-    void FlagControl::UpdateValue()
-    {
-        int value = 0;
-        for each(Control^ item in this->Controls)
-        {
-            CheckBox^ checkBox = dynamic_cast<CheckBox^>(item);
-            if (checkBox == nullptr || checkBox->Checked == false)
-                continue;
-            value |= (int)item->Tag;
-        }
-        m_value = System::Enum::ToObject(m_flagType, value);
-    }
+		this->Height = y + buttonHeight;
+		this->ResumeLayout(true);
+	}
+
+	bool FlagControl::ProcessCmdKey(System::Windows::Forms::Message% msg, System::Windows::Forms::Keys keyData)
+	{
+		if (keyData == Keys::Enter)
+		{
+			UpdateValue();
+			m_editorService->Close();
+			return true;
+		}
+		return UserControl::ProcessCmdKey(msg, keyData);
+	}
+
+	System::Void FlagControl::buttonOk_Click(System::Object^ /*sender*/, System::EventArgs^ /*e*/) 
+	{
+		UpdateValue();
+		m_editorService->Close();
+	}
+
+	System::Void FlagControl::buttonCancel_Click(System::Object^ /*sender*/, System::EventArgs^ /*e*/) 
+	{
+		m_editorService->Close();
+	}
+
+	System::Void FlagControl::checkBox_CheckChanged(System::Object^ sender, System::EventArgs^ e)
+	{
+		CheckBox^ checkBox = dynamic_cast<CheckBox^>(sender);
+		int controlValue = checkBox->Tag->GetHashCode();
+		int value = this->GetInt32Value();
+
+		if(checkBox->Checked == true)
+		{
+			if(controlValue == 0)
+				value = 0;
+			else
+				value |= checkBox->Tag->GetHashCode();
+		}
+		else
+		{
+			value &= ~checkBox->Tag->GetHashCode();
+		}
+	
+		m_value = System::Enum::ToObject(m_flagType, value);
+		this->UpdateValueToControl(value, controlValue != 0 ? checkBox : nullptr);
+	}
+
+	void FlagControl::UpdateValue()
+	{
+		m_value = System::Enum::ToObject(m_flagType, this->GetInt32Value());
+	}
+
+	void FlagControl::UpdateValueToControl(int value, CheckBox^ exception)
+	{
+		for each (CheckBox^ item in m_checkBoxes)
+		{
+			item->CheckedChanged -= gcnew System::EventHandler(this, &FlagControl::checkBox_CheckChanged);
+		}
+
+		for each (CheckBox^ item in m_checkBoxes)
+		{
+			if(item == exception)
+				continue;
+
+			int itemValue = item->Tag->GetHashCode();
+
+			if(value == itemValue)
+			{
+				item->CheckState = System::Windows::Forms::CheckState::Checked;
+			}
+			else if((value & itemValue) != 0)
+			{
+				if(this->IsSingleBit(itemValue) == true || (value & itemValue) == itemValue)
+					item->CheckState = System::Windows::Forms::CheckState::Checked;
+				else
+					item->CheckState = System::Windows::Forms::CheckState::Indeterminate;
+			}
+			else
+			{
+				item->CheckState = System::Windows::Forms::CheckState::Unchecked;
+			}
+		}
+
+		for each (CheckBox^ item in m_checkBoxes)
+		{
+			item->CheckedChanged += gcnew System::EventHandler(this, &FlagControl::checkBox_CheckChanged);
+		}
+	}
+
+	int FlagControl::GetInt32Value()
+	{
+		int value = 0;
+		for each(CheckBox^ item in m_checkBoxes)
+		{
+			int controlValue = item->Tag->GetHashCode();
+			if(item->CheckState != CheckState::Checked || this->IsSingleBit(controlValue) == false)
+				continue;
+			value |= controlValue;
+		}
+		return value;
+	}
+
+	bool FlagControl::IsSingleBit(int value)
+	{
+		for(int i=0; i <32 ; i++)
+		{
+			if(value == 1 << i)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 } /*namespace Controls*/ } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

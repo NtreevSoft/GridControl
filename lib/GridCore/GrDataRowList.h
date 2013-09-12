@@ -44,6 +44,7 @@ public:
     void AddDataRow(GrDataRow* pDataRow);
     void RemoveDataRow(GrDataRow* pDataRow);
     void InsertDataRow(GrDataRow* pDataRow, uint index);
+	void MoveDataRow(GrDataRow* pDataRow, uint index);
     uint GetDataRowCount() const;
     GrDataRow* GetDataRow(uint index) const;
     void Clear();
@@ -82,6 +83,7 @@ public:
     _GrDataRowInsertingEvent DataRowInserting;
     _GrDataRowInsertedEvent DataRowInserted;
     _GrDataRowEvent DataRowRemoved;
+	_GrDataRowEvent DataRowMoved;
     _GrEvent VisibleHeightChanged;
 
     virtual GrRect GetBounds() const;
@@ -105,6 +107,7 @@ protected:
     virtual void OnDataRowInserting(GrDataRowInsertingEventArgs* e);
     virtual void OnDataRowInserted(GrDataRowInsertedEventArgs* e);
     virtual void OnDataRowRemoved(GrDataRowEventArgs* e);
+	virtual void OnDataRowMoved(GrDataRowEventArgs* e);
     virtual void OnVisibleHeightChanged(GrEventArgs* e);
 
 private:
@@ -129,6 +132,7 @@ private:
     void columnList_ColumnInserted(GrObject* pSender, GrColumnEventArgs* e);
     void columnList_ColumnRemoved(GrObject* pSender, GrColumnEventArgs* e);
     void columnList_ColumnSortTypeChanged(GrObject* pSender, GrColumnEventArgs* e);
+	void columnList_ColumnPaddingChanged(GrObject* pSender, GrColumnEventArgs* e);
     void focuser_FocusedChanged(GrObject* pSender, GrFocusChangeArgs* e);
 
 private:

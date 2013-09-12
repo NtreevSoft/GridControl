@@ -346,7 +346,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         void UpdateNativeText();
 
-        void UpdateNativeText(System::Object^ value);
+        //void UpdateNativeText2(System::Object^ value);
 
         void UpdateNativeText(System::String^ text);
 
@@ -376,16 +376,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             bool get(); 
         }
 
+		property bool WrongValue
+        {
+            bool get();
+            void set(bool);
+        }
+
         property System::Object^ ValueCore
         {
             System::Object^ get();
             void set(System::Object^);
-        }
-
-        property bool WrongValue
-        {
-            bool get();
-            void set(bool);
         }
 
         property System::Object^ DisplayValue
@@ -424,7 +424,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::Object^ m_value;
         System::String^ m_text;
         System::Object^ m_displayValue;
-        bool m_wrongValue;
+		bool m_wrongValue;
 
         static System::Object^ NullValue = gcnew System::Object();
 

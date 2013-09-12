@@ -49,6 +49,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         [System::ComponentModel::CategoryAttribute("Layout")]
         property int Height
         {
+			virtual int get() override;
             void set(int);
         }
 

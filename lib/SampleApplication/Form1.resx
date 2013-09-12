@@ -117,17 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="dataSet1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
+  <metadata name="columnButton123.HasLifeline" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
   </metadata>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="splitContainer1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="splitContainer1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
   <metadata name="column2.HasLifeline" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </metadata>
@@ -143,6 +135,9 @@
   <metadata name="columnFlags.HasLifeline" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </metadata>
+  <metadata name="columnLinkedItemSelector1.HasLifeline" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
   <metadata name="column3.HasLifeline" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </metadata>
@@ -156,9 +151,6 @@
     <value>False</value>
   </metadata>
   <metadata name="column1.HasLifeline" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>False</value>
-  </metadata>
-  <metadata name="columnButton123.HasLifeline" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </metadata>
   <metadata name="columnRadio2.HasLifeline" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -179,6 +171,26 @@
   <metadata name="columnDataTypes1.HasLifeline" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>58</value>
+  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>7, 12</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>916, 556</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="splitContainer1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="splitContainer1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
   <data name="gridControl1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
@@ -199,7 +211,7 @@
     <value>gridControl1</value>
   </data>
   <data name="&gt;&gt;gridControl1.Type" xml:space="preserve">
-    <value>Ntreev.Windows.Forms.Grid.GridControl, Ntreev.Windows.Forms.Grid, Version=2.0.4849.31577, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
+    <value>Ntreev.Windows.Forms.Grid.GridControl, Ntreev.Windows.Forms.Grid, Version=2.0.4926.24716, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
   </data>
   <data name="&gt;&gt;gridControl1.Parent" xml:space="preserve">
     <value>splitContainer1.Panel1</value>
@@ -276,134 +288,116 @@
   <data name="&gt;&gt;splitContainer1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <metadata name="style1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>117, 17</value>
-  </metadata>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>7, 12</value>
-  </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>916, 556</value>
-  </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Form1</value>
-  </data>
-  <data name="&gt;&gt;dataSet1.Name" xml:space="preserve">
-    <value>dataSet1</value>
-  </data>
-  <data name="&gt;&gt;dataSet1.Type" xml:space="preserve">
-    <value>System.Data.DataSet, System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;column2.Name" xml:space="preserve">
-    <value>column2</value>
-  </data>
-  <data name="&gt;&gt;column2.Type" xml:space="preserve">
-    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4849.31577, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
-  </data>
-  <data name="&gt;&gt;columnUITypeEditor1.Name" xml:space="preserve">
-    <value>columnUITypeEditor1</value>
-  </data>
-  <data name="&gt;&gt;columnUITypeEditor1.Type" xml:space="preserve">
-    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4849.31577, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
-  </data>
-  <data name="&gt;&gt;columnButton1.Name" xml:space="preserve">
-    <value>columnButton1</value>
-  </data>
-  <data name="&gt;&gt;columnButton1.Type" xml:space="preserve">
-    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4849.31577, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
-  </data>
-  <data name="&gt;&gt;columnUITypeEditor2.Name" xml:space="preserve">
-    <value>columnUITypeEditor2</value>
-  </data>
-  <data name="&gt;&gt;columnUITypeEditor2.Type" xml:space="preserve">
-    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4849.31577, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
-  </data>
-  <data name="&gt;&gt;columnFlags.Name" xml:space="preserve">
-    <value>columnFlags</value>
-  </data>
-  <data name="&gt;&gt;columnFlags.Type" xml:space="preserve">
-    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4849.31577, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
-  </data>
-  <data name="&gt;&gt;column3.Name" xml:space="preserve">
-    <value>column3</value>
-  </data>
-  <data name="&gt;&gt;column3.Type" xml:space="preserve">
-    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4849.31577, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
-  </data>
-  <data name="&gt;&gt;columnDataLocation1.Name" xml:space="preserve">
-    <value>columnDataLocation1</value>
-  </data>
-  <data name="&gt;&gt;columnDataLocation1.Type" xml:space="preserve">
-    <value>SampleApplication.ColumnDataLocation, SampleApplication, Version=1.0.4850.17872, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;columnEnable1.Name" xml:space="preserve">
-    <value>columnEnable1</value>
-  </data>
-  <data name="&gt;&gt;columnEnable1.Type" xml:space="preserve">
-    <value>SampleApplication.ColumnEnable, SampleApplication, Version=1.0.4850.17872, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;columnTextBox1.Name" xml:space="preserve">
-    <value>columnTextBox1</value>
-  </data>
-  <data name="&gt;&gt;columnTextBox1.Type" xml:space="preserve">
-    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4849.31577, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
-  </data>
-  <data name="&gt;&gt;column1.Name" xml:space="preserve">
-    <value>column1</value>
-  </data>
-  <data name="&gt;&gt;column1.Type" xml:space="preserve">
-    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4849.31577, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
   </data>
   <data name="&gt;&gt;columnButton123.Name" xml:space="preserve">
     <value>columnButton123</value>
   </data>
   <data name="&gt;&gt;columnButton123.Type" xml:space="preserve">
-    <value>SampleApplication.ColumnButton, SampleApplication, Version=1.0.4850.17872, Culture=neutral, PublicKeyToken=null</value>
+    <value>SampleApplication.ColumnButton, SampleApplication, Version=1.0.4926.24718, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;column2.Name" xml:space="preserve">
+    <value>column2</value>
+  </data>
+  <data name="&gt;&gt;column2.Type" xml:space="preserve">
+    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4926.24716, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
+  </data>
+  <data name="&gt;&gt;columnUITypeEditor1.Name" xml:space="preserve">
+    <value>columnUITypeEditor1</value>
+  </data>
+  <data name="&gt;&gt;columnUITypeEditor1.Type" xml:space="preserve">
+    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4926.24716, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
+  </data>
+  <data name="&gt;&gt;columnButton1.Name" xml:space="preserve">
+    <value>columnButton1</value>
+  </data>
+  <data name="&gt;&gt;columnButton1.Type" xml:space="preserve">
+    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4926.24716, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
+  </data>
+  <data name="&gt;&gt;columnUITypeEditor2.Name" xml:space="preserve">
+    <value>columnUITypeEditor2</value>
+  </data>
+  <data name="&gt;&gt;columnUITypeEditor2.Type" xml:space="preserve">
+    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4926.24716, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
+  </data>
+  <data name="&gt;&gt;columnFlags.Name" xml:space="preserve">
+    <value>columnFlags</value>
+  </data>
+  <data name="&gt;&gt;columnFlags.Type" xml:space="preserve">
+    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4926.24716, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
+  </data>
+  <data name="&gt;&gt;columnLinkedItemSelector1.Name" xml:space="preserve">
+    <value>columnLinkedItemSelector1</value>
+  </data>
+  <data name="&gt;&gt;columnLinkedItemSelector1.Type" xml:space="preserve">
+    <value>SampleApplication.ColumnLinkedItemSelector, SampleApplication, Version=1.0.4926.24718, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;column3.Name" xml:space="preserve">
+    <value>column3</value>
+  </data>
+  <data name="&gt;&gt;column3.Type" xml:space="preserve">
+    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4926.24716, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
+  </data>
+  <data name="&gt;&gt;columnDataLocation1.Name" xml:space="preserve">
+    <value>columnDataLocation1</value>
+  </data>
+  <data name="&gt;&gt;columnDataLocation1.Type" xml:space="preserve">
+    <value>SampleApplication.ColumnDataLocation, SampleApplication, Version=1.0.4926.24718, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;columnEnable1.Name" xml:space="preserve">
+    <value>columnEnable1</value>
+  </data>
+  <data name="&gt;&gt;columnEnable1.Type" xml:space="preserve">
+    <value>SampleApplication.ColumnEnable, SampleApplication, Version=1.0.4926.24718, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;columnTextBox1.Name" xml:space="preserve">
+    <value>columnTextBox1</value>
+  </data>
+  <data name="&gt;&gt;columnTextBox1.Type" xml:space="preserve">
+    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4926.24716, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
+  </data>
+  <data name="&gt;&gt;column1.Name" xml:space="preserve">
+    <value>column1</value>
+  </data>
+  <data name="&gt;&gt;column1.Type" xml:space="preserve">
+    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4926.24716, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
   </data>
   <data name="&gt;&gt;columnRadio2.Name" xml:space="preserve">
     <value>columnRadio2</value>
   </data>
   <data name="&gt;&gt;columnRadio2.Type" xml:space="preserve">
-    <value>SampleApplication.ColumnRadio, SampleApplication, Version=1.0.4850.17872, Culture=neutral, PublicKeyToken=null</value>
+    <value>SampleApplication.ColumnRadio, SampleApplication, Version=1.0.4926.24718, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;columnLinkLabel1.Name" xml:space="preserve">
     <value>columnLinkLabel1</value>
   </data>
   <data name="&gt;&gt;columnLinkLabel1.Type" xml:space="preserve">
-    <value>SampleApplication.ColumnLinkLabel, SampleApplication, Version=1.0.4850.17872, Culture=neutral, PublicKeyToken=null</value>
+    <value>SampleApplication.ColumnLinkLabel, SampleApplication, Version=1.0.4926.24718, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;ColumnComboBox.Name" xml:space="preserve">
     <value>ColumnComboBox</value>
   </data>
   <data name="&gt;&gt;ColumnComboBox.Type" xml:space="preserve">
-    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4849.31577, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
+    <value>Ntreev.Windows.Forms.Grid.Column, Ntreev.Windows.Forms.Grid, Version=2.0.4926.24716, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
   </data>
   <data name="&gt;&gt;columnNumeric1.Name" xml:space="preserve">
     <value>columnNumeric1</value>
   </data>
   <data name="&gt;&gt;columnNumeric1.Type" xml:space="preserve">
-    <value>SampleApplication.ColumnNumeric, SampleApplication, Version=1.0.4850.17872, Culture=neutral, PublicKeyToken=null</value>
+    <value>SampleApplication.ColumnNumeric, SampleApplication, Version=1.0.4926.24718, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;columnDate1.Name" xml:space="preserve">
     <value>columnDate1</value>
   </data>
   <data name="&gt;&gt;columnDate1.Type" xml:space="preserve">
-    <value>SampleApplication.ColumnDate, SampleApplication, Version=1.0.4850.17872, Culture=neutral, PublicKeyToken=null</value>
+    <value>SampleApplication.ColumnDate, SampleApplication, Version=1.0.4926.24718, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;columnDataTypes1.Name" xml:space="preserve">
     <value>columnDataTypes1</value>
   </data>
   <data name="&gt;&gt;columnDataTypes1.Type" xml:space="preserve">
-    <value>SampleApplication.ColumnDataTypes, SampleApplication, Version=1.0.4850.17872, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;style1.Name" xml:space="preserve">
-    <value>style1</value>
-  </data>
-  <data name="&gt;&gt;style1.Type" xml:space="preserve">
-    <value>Ntreev.Windows.Forms.Grid.Style, Ntreev.Windows.Forms.Grid, Version=2.0.4849.31577, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca</value>
+    <value>SampleApplication.ColumnDataTypes, SampleApplication, Version=1.0.4926.24718, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>Form1</value>

@@ -546,16 +546,43 @@ namespace GridStateClass
     {
     public:
         RowPressing();
+		virtual ~RowPressing();
 
         virtual bool GetHitTest(GrCell* pHitted, const GrPoint& localLocation);
         virtual void OnBegin(GrStateEventArgs* e);
         virtual void OnEnd(GrStateEventArgs* e);
 
+		virtual void OnMouseDown(GrStateMouseEventArgs* e);
+        virtual void OnMouseUp(GrStateMouseEventArgs* e);
+        virtual void OnPaintAdornments(GrGridPainter* g, const GrRect& displayRect);
+
+		virtual void OnMouseDragBegin(const GrPoint& location);
+        virtual void OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest);
+        virtual void OnMouseDragEnd(bool cancel, const GrHitTest& hitTest);
+
     public:
         virtual GrGridState GetState() const { return GrGridState_RowPressing; }
+		virtual bool GetDragable() const;
+
+	protected:
+        virtual void OnGridCoreAttached();
+
+	private:
+        void timer_Elapsed(GrObject* pSender, GrElapsedEventArgs* e);
+		//void PaintLine(GrGridPainter* g, const GrRect& displayRect, int top) const;
 
     private:
         GrRow* m_pRow;
+		bool m_handled;
+		
+		GrDataRowList* m_pDataRowList;
+		GrColumnList* m_pColumnList;
+
+		GrDataRow* m_pDataRow;
+		GrDataRow* m_pTargetDataRow;
+		uint m_targetIndex;
+
+		GrSelectionTimer* m_pTimer;
     };
 
     class RowResizing : public GrStateBase

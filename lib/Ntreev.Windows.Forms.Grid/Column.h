@@ -74,6 +74,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         void BringIntoView();
 
+		void AdjustWidth();
+
         /// <summary>
         /// 현재 <see cref="System:Object"/>를 나타내는 <see cref="System::String"/>을 반환합니다.
         /// </summary>
@@ -441,14 +443,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void set(System::ComponentModel::TypeConverter^);
         }
 
-        [System::ComponentModel::BrowsableAttribute(false)]
-        [System::ComponentModel::DesignerSerializationVisibilityAttribute(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
-        property IDisplayTextConverter^ DisplayTextConverter
-        {
-            virtual IDisplayTextConverter^ get() sealed;
-            void set(IDisplayTextConverter^);
-        }
-
         /// <summary>
         /// 열의 정렬방식을 가져오거나 설정합니다.
         /// </summary>
@@ -666,20 +660,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
-        /// 셀의 최소 높이를 가져오거나 설정합니다.
-        /// </summary>
-        /// <returns>
-        /// 셀의 최소 높이를 나타내는 정수 값입니다.
-        /// </returns>
-        [System::ComponentModel::CategoryAttribute("Cell")]
-        [System::ComponentModel::DefaultValueAttribute(0)]
-        property int CellMinHeight
-        {
-            int get();
-            void set(int);
-        }
-
-        /// <summary>
         /// 마우스 클릭으로 셀을 편집하는 방법을 설정하거나 가져옵니다.
         /// </summary>
         /// <returns>
@@ -797,6 +777,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         virtual Design::EditStyle GetEditStyle();
 
+		virtual void OnCellBoundUpdate(Cell^ /*cell*/, System::Object^ /*value*/) {}
+
     internal: // properties
 
         property System::ComponentModel::PropertyDescriptor^ PropertyDescriptor
@@ -837,6 +819,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         bool ShouldSerializeTypeConverter();
         bool ShouldSerializeDefaultValue();
         bool ShouldSerializeWidth();
+		bool ShouldSerializeVisibleIndex();
         //bool ShouldSerializePriorityOnFrozen();
         //bool ShouldSerializePriorityOnUnfrozen();
 
@@ -886,9 +869,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::ComponentModel::ISite^ m_site;
 
         class CustomPaint* m_pCustomPaint;
-        IDisplayTextConverter^ m_displayTextConverter;
         GrColumn* m_pColumn;
-
-        static IDisplayTextConverter^ baseDisplayTextConverter;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

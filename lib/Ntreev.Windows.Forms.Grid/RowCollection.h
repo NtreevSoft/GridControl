@@ -373,6 +373,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::Windows::Forms::CurrencyManager^ m_manager;
         System::EventHandler^ m_currentChangedEventHandler;
         System::ComponentModel::ListChangedEventHandler^ m_listChangedEventHandler;
-        System::Collections::Generic::Dictionary<System::Object^, Ntreev::Windows::Forms::Grid::Row^>^ m_components;
+		System::Collections::Generic::Dictionary<System::Object^, Ntreev::Windows::Forms::Grid::Row^>^ m_componentToRow;
+		System::Collections::ArrayList^ m_components;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

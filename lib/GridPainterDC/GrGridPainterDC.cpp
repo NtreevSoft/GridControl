@@ -215,7 +215,7 @@ void GrGridPainterDC::DrawRowSplitter(GrFlag paintStyle, const GrRect& paintRect
 	//DeleteObject(hPen);
 }
 
-void GrGridPainterDC::DrawExpander(GrFlag paintStyle, const GrRect& paintRect, GrControlState state, bool opened, const GrColor& foreColor, const GrColor& backColor)
+void GrGridPainterDC::DrawExpander(GrFlag paintStyle, const GrRect& paintRect, GrControlState /*state*/, bool opened, const GrColor& foreColor, const GrColor& backColor)
 {
 	RECT2 rt = paintRect;
 
@@ -413,7 +413,7 @@ void GrGridPainterDC::DrawRow(GrFlag paintStyle, const GrRect& paintRect, const 
 	DrawGradientHeader(paintStyle, paintRect, lineColor, backColor, pClipRect);
 }
 
-void GrGridPainterDC::DrawThemeHeader(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor, const GrRect* pClipRect)
+void GrGridPainterDC::DrawThemeHeader(GrFlag paintStyle, const GrRect& paintRect, const GrColor& /*lineColor*/, const GrColor& backColor, const GrRect* pClipRect)
 {
 	RECT2 rtPaint(paintRect), rtClip(paintRect);
 	rtPaint.Offset(m_ptTransform);

@@ -112,7 +112,7 @@ public:
 
     bool CanSelect(IDataRow* pDataRow) const;
     bool CanSelect(GrItem* pItem) const;
-    //void SetSelectionGroup(uint selectionGroup);
+    IDataRow* GetSelectionGroup() const;
     void SetSelectionGroup(IDataRow* pDataRow);
     void SetSelectionGroup(GrItem* pItem);
 

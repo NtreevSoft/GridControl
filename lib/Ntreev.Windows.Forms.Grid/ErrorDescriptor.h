@@ -37,8 +37,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         ErrorDescriptor(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
 
         void Paint(System::Drawing::Graphics^ g);
-        void Add(Ntreev::Windows::Forms::Grid::Cell^ cell);
-        void Remove(Ntreev::Windows::Forms::Grid::Cell^ cell);
         void Add(Ntreev::Windows::Forms::Grid::Row^ row);
         void Remove(Ntreev::Windows::Forms::Grid::Row^ row);
 
@@ -50,7 +48,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     private: // variables
 
-        System::Collections::Generic::List<Ntreev::Windows::Forms::Grid::Cell^>^ m_cells;
         System::Collections::Generic::List<Ntreev::Windows::Forms::Grid::Row^>^ m_rows;
         System::Timers::Timer^ m_timer;
         int m_errorCount;

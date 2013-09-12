@@ -35,6 +35,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
         bool isMovable = true;
         bool isResizable = true;
         bool isVisible = true;
+        int visibleIndex = -1;
 
         public ColumnDesigner()
         {
@@ -50,18 +51,6 @@ namespace Ntreev.Windows.Forms.Grid.Design
             this.IsVisible = column.IsVisible;
             this.IsResizable = column.IsResizable;
             this.isMovable = column.IsMovable;
-        }
-
-        public override void InitializeNewComponent(System.Collections.IDictionary defaultValues)
-        {
-            base.InitializeNewComponent(defaultValues);
-            System.Windows.Forms.MessageBox.Show("wer");
-        }
-
-        public override void InitializeExistingComponent(System.Collections.IDictionary defaultValues)
-        {
-            base.InitializeExistingComponent(defaultValues);
-            System.Windows.Forms.MessageBox.Show("wer1");
         }
 
         public bool IsMovable
@@ -107,7 +96,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
         {
             base.PreFilterProperties(properties);
 
-            string[] strArray = new string[] { "IsVisible", "IsResizable", "IsMovable", };
+            string[] strArray = new string[] { "IsVisible", "IsResizable", "IsMovable" };
             Attribute[] attributes = new Attribute[0];
             for (int i = 0; i < strArray.Length; i++)
             {

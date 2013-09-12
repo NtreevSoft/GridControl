@@ -47,6 +47,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         this->Focuser->Set(m_pDataRow);
     }
 
+	int RowBase::Height::get()
+	{
+		return m_pDataRow->GetHeight();
+	}
+
     void RowBase::Height::set(int value)
     {
         if(value < 0)

@@ -99,6 +99,7 @@ public:
     _GrColumnEvent ColumnVertAlignChanged;
     _GrColumnEvent ColumnPaddingChanged;
     _GrColumnEvent ColumnGroupChanged;
+	_GrColumnEvent ColumnVisibleIndexChanged;
 
     _GrColumnMouseEvent ColumnMouseMove;
     _GrColumnMouseEvent ColumnMouseEnter;
@@ -126,6 +127,7 @@ protected:
     virtual void OnColumnVertAlignChanged(GrColumnEventArgs* e);
     virtual void OnColumnPaddingChanged(GrColumnEventArgs* e);
     virtual void OnColumnGroupChanged(GrColumnEventArgs* e);
+	virtual void OnColumnVisibleIndexChanged(GrColumnEventArgs* e);
 
     virtual void OnColumnMouseMove(GrColumnMouseEventArgs* e);
     virtual void OnColumnMouseEnter(GrColumnMouseEventArgs* e);

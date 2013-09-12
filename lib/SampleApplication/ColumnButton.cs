@@ -37,7 +37,6 @@ namespace SampleApplication
         public ColumnButton()
         {
             this.Control.Click += new EventHandler(Control_Click);
-            this.CellMinHeight = this.Control.PreferredSize.Height - 2;
         }
 
         void Control_Click(object sender, EventArgs e)
@@ -56,6 +55,8 @@ namespace SampleApplication
                 value = true;
             else
                 value = false;
+
+            bool b = (bool) value;
 
             control.Text = value.ToString();
         }

@@ -249,7 +249,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     {
         short vkey = ::VkKeyScanW(word);
         int retval = (vkey & 0xff);
-        int modifiers = vkey >> 8;
+        //int modifiers = vkey >> 8;
         //if ((modifiers & 1) != 0) retval |= (int)System::Windows::Forms::Keys::Shift;
         //if ((modifiers & 2) != 0) retval |= (int)System::Windows::Forms::Keys::Control;
         //if ((modifiers & 4) != 0) retval |= (int)System::Windows::Forms::Keys::Alt;
@@ -340,7 +340,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     void Methods::SetScrollValue(System::IntPtr handle, int type, int value)
     {
         HWND hwnd = (HWND)handle.ToPointer();
-        SetScrollPos(hwnd, type, value, TRUE);
+		int oldValue = ::GetScrollPos(hwnd, type);
+		if(oldValue == value)
+			return;
+		::SetScrollPos(hwnd, type, value, TRUE);
     }
 
     void Methods::SetScrollRange(System::IntPtr handle, int type, int min, int max)
@@ -361,14 +364,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         SCROLLINFO si;
         si.cbSize = sizeof(SCROLLINFO);
         si.fMask = SIF_PAGE;
-        si.nPage = page;
+		if(::GetScrollInfo(hwnd, type, &si) == TRUE && (int)si.nPage == page)
+			return;
+		si.nPage = page;
         ::SetScrollInfo(hwnd, type, &si, TRUE);
     }
 
     void Methods::SetScrollVisible(System::IntPtr handle, int type, bool visible)
     {
         HWND hwnd = (HWND)handle.ToPointer();
-
         ::ShowScrollBar(hwnd, type, visible == true ? TRUE : FALSE);
     }
 
@@ -394,9 +398,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         XFORM form, form2;
         GetWorldTransform(_hdc, &form);
         form2 = form;
-        form2 .eDx = paintRect.X;
-        form2 .eDy = paintRect.Y;
-        BOOL b = SetWorldTransform(_hdc, &form2);
+        form2.eDx = (float)paintRect.X;
+        form2.eDy = (float)paintRect.Y;
+        SetWorldTransform(_hdc, &form2);
 
         HRGN hRgn = CreateRectRgn(paintRect.X, paintRect.Y, paintRect.Right, paintRect.Bottom);
         HRGN restoreRegion = CreateRectRgn( 0, 0, 0, 0 );

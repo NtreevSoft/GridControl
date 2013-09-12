@@ -43,37 +43,43 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_created == false)
         {
             HWND hwndParent = (HWND)handle.ToPointer();
-            HWND hTooltip = CreateWindowEx(0, TOOLTIPS_CLASS, nullptr,
+			HINSTANCE inst = (HINSTANCE)GetWindowLong(hwndParent, GWL_HINSTANCE);
+
+			HWND hTooltip = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, nullptr,
                 WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP | TTS_BALLOON,
                 CW_USEDEFAULT, CW_USEDEFAULT,
                 CW_USEDEFAULT, CW_USEDEFAULT,
-                hwndParent, nullptr, nullptr,
+                hwndParent, nullptr, inst,
                 nullptr);
-
-            SetWindowPos(hTooltip, HWND_TOPMOST,0, 0, 0, 0,
-                SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
-
 
             m_tooltip = (void*)hTooltip;
             static wchar_t strText[] = L"wow";
 
+			HWND hwnd = (HWND)handle.ToPointer();
+			HWND parent = GetParent(hwnd);
+			while(parent != nullptr) 
+			{
+				hwnd = parent;
+				parent = GetParent(hwnd);
+			}
 
-            ti.cbSize = sizeof(TOOLINFO);
-            ti.hwnd = hwndParent;
+            ti.cbSize = sizeof(TOOLINFO) - sizeof(void*);
+            ti.hwnd = parent;
             ti.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
             ti.uId = (UINT_PTR)hwndParent;
             ti.lpszText = strText;
+			ti.hinst = inst;
             ::SendMessage((HWND)m_tooltip, TTM_ADDTOOL, 0, (LPARAM)&ti);
             m_created = true;
         }
 
-        //ToNativeString nativeText(text);
+		::SendMessage((HWND)m_tooltip, TTM_ACTIVATE, (WPARAM)TRUE, 0);
+
         wchar_t* strTooltip = new wchar_t[text->Length + 1];
         wcscpy_s(strTooltip, text->Length + 1, ToNativeString::Convert(text));
         ti.lpszText = strTooltip;
         ::SendMessage((HWND)m_tooltip, TTM_SETTOOLINFO, 0, (LPARAM)&ti);
-
-        ::SendMessage((HWND)m_tooltip, TTM_ACTIVATE, (WPARAM)TRUE, 0);
+        
         delete [] strTooltip;
     }
 

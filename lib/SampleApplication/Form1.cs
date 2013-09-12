@@ -51,7 +51,6 @@ namespace SampleApplication
         {
             string d = ((int)100).ToString("{0} wow");
             
-            
             InitializeComponent();
             this.gridControl1.InsertionRow.Cells["Color"].IsReadOnly = true;
 
@@ -133,12 +132,13 @@ namespace SampleApplication
 
             //this.PanelPane.DockChanged += new EventHandler(PanelPane_DockChanged);
            // this.PanelPane.IsActivatedChanged += new EventHandler(PanelPane_IsActivatedChanged);
+            this.gridControl1.Columns.AdjustWidth();
+            this.gridControl1.Rows.Count = 50;
 
         }
 
         void PanelPane_IsActivatedChanged(object sender, EventArgs e)
         {
-
             int qwer = 0;
         }
 
@@ -176,7 +176,7 @@ namespace SampleApplication
 
         private void gridControl1_ColumnMouseDown(object sender, Ntreev.Windows.Forms.Grid.ColumnMouseEventArgs e)
         {
-
+            
         }
 
         class NativeWindow2 : NativeWindow
@@ -205,10 +205,19 @@ namespace SampleApplication
                         }
                         break;
                 }
-
             }
         }
-
     }
- 
+
+    [Flags]
+    public enum TestFlag
+    {
+        None = 0,
+        A = 1,
+        B = 2,
+        AB = 3,
+        C = 4,
+        D = 8,
+        All = A | B | C | D,
+    }
 }

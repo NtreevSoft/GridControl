@@ -35,7 +35,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     [System::Drawing::ToolboxBitmapAttribute(GridControl::typeid)]
     [System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
     [System::Windows::Forms::DockingAttribute(System::Windows::Forms::DockingBehavior::Ask)]
-    public ref class GridControl : System::Windows::Forms::UserControl
+    public ref class GridControl : System::Windows::Forms::Control
     {
 		ref class StyleConverter;
     public: // methods
@@ -83,10 +83,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <exception cref="System::InvalidOperationException">MultiSelect속성이 false인 경우</exception>
         void SelectAll();
 
+		void Select(System::Collections::Generic::IEnumerable<Row^>^ rows);
+
+		void Select(System::Collections::Generic::IEnumerable<Cell^>^ cells);
+
         /// <summary>
         /// 선택된 모든 셀들을 해제합니다.
         /// </summary>
         void ClearSelection();
+
+		void ClearSelection(bool keepFocus);
 
         /// <summary>
         /// 즉시 렌더링에 필요한 데이터를 강제로 업데이트합니다.
@@ -136,9 +142,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         System::Windows::Forms::DialogResult ShowMessage(System::String^ text, System::Windows::Forms::MessageBoxButtons buttons);
 
+		System::Windows::Forms::DialogResult ShowMessage(System::String^ text, System::Windows::Forms::MessageBoxButtons buttons, System::Windows::Forms::MessageBoxIcon icon);
+
         System::Windows::Forms::DialogResult ShowMessage(System::String^ text, System::String^ caption, System::Windows::Forms::MessageBoxButtons buttons);
 
         System::Windows::Forms::DialogResult ShowMessage(System::String^ text, System::String^ caption, System::Windows::Forms::MessageBoxButtons buttons, System::Windows::Forms::MessageBoxIcon icon);
+
+		bool ShowQuestion(System::String^ message);
+
+        void ShowError(System::String^ message);
 
     public: // properties
 
@@ -608,6 +620,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void set(bool); 
         }
 
+		/// <summary>
+        /// 행의 위치 설정에 대한 여부를 가져오거나 설정합니다.
+        /// </summary>
+        /// <remarks>
+        /// 이 속성의 값이 false일 경우 마우스 드래깅을 이용한 행 위치 설정 기능이 제한됩니다.
+        /// </remarks>
+        [System::ComponentModel::DescriptionAttribute("마우스를 이용하여 행의 위치를 이동할 수 있는지에 대한 여부를 설정합니다.")]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute(false)]
+        property bool IsRowMovable
+        {
+            bool get(); 
+            void set(bool); 
+        }
+
         /// <summary>
         /// 그룹화 기능에 대한 사용여부를 가져오거나 설정합니다.
         /// </summary>
@@ -801,6 +828,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             System::Drawing::Rectangle get();
         }
 
+		[System::ComponentModel::BrowsableAttribute(false)]
+		property System::Windows::Forms::BindingContext^ BindingContext
+		{
+			virtual System::Windows::Forms::BindingContext^ get() override;
+			virtual void set(System::Windows::Forms::BindingContext^) override;
+		}
+
+		property System::Drawing::Rectangle DisplayRectangle
+        {
+			virtual System::Drawing::Rectangle get() override;
+        }
+
         /// <summary>
         /// IME 지원을 사용하도록 <see cref="System::Windows::Forms::Control::ImeMode"/> 속성을 활성 값으로 설정할 수 있는지 여부를 나타내는 값을 가져옵니다.
         /// </summary>
@@ -984,6 +1023,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void remove(RowEventHandler^ p) { m_eventRowBinded -= p; }
         private:
             void raise(System::Object^ sender, RowEventArgs^ e) { if(m_eventRowBinded != nullptr) m_eventRowBinded->Invoke(sender, e); }
+        }
+
+		/// <summary>
+        /// 행의 위치가 변경되었을때 발생합니다.
+        /// </summary>
+        [System::ComponentModel::DescriptionAttribute("행의 위치가 변경되었을때 발생합니다.")]
+        [System::ComponentModel::CategoryAttribute("Row")]
+        event RowEventHandler^ RowMoved
+        {
+            void add(RowEventHandler^ p) { m_eventRowMoved += p; }
+            void remove(RowEventHandler^ p) { m_eventRowMoved -= p; }
+        private:
+            void raise(System::Object^ sender, RowEventArgs^ e) { if(m_eventRowMoved != nullptr) m_eventRowMoved->Invoke(sender, e); }
         }
 
         /// <summary>
@@ -1435,16 +1487,28 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void raise(System::Object^ sender, System::EventArgs^ e) { if(m_eventLineColorChanged != nullptr) m_eventLineColorChanged->Invoke(sender, e); }
         }
 
+		/// <summary>
+        /// <see cref="BackgroundColor"/> 클라이언트 영역이 사용자 또는 코드에 의해 스크롤될 때 발생합니다.
+        /// </summary>
+		event System::Windows::Forms::ScrollEventHandler^ Scroll
+        {
+            void add(System::Windows::Forms::ScrollEventHandler^ p) { m_eventScroll += p; }
+            void remove(System::Windows::Forms::ScrollEventHandler^ p) { m_eventScroll -= p; }
+        private:
+            void raise(System::Object^ sender, System::Windows::Forms::ScrollEventArgs^ e) { if(m_eventScroll != nullptr) m_eventScroll->Invoke(sender, e); }
+        }
+
     internal: // methods
 
         bool InvokeValueChanging(Cell^ cell, System::Object^ value, System::Object^ oldValue);
         void InvokeValueChanged(Cell^ cell);
-        bool InvokeRowInserting(System::Object^ component);
+        bool InvokeRowInserting(Row^ row);
         void InvokeRowInserted(Row^ row);
         bool InvokeRowBinding(System::Object^ component);
         void InvokeRowBinded(Row^ row);
         void InvokeRowUnbinding(Row^ row);
         void InvokeRowUnbinded(Row^ row);
+		void InvokeRowMoved(Row^ row);
         bool InvokeRowRemoving(Row^ row);
         void InvokeRowRemoved(RowRemovedEventArgs^ e);
         void InvokeRowChanged(Row^ row);
@@ -1459,6 +1523,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void InvokeColumnMouseLeave(Column^ column);
         void InvokeColumnWidthChanged(Column^ column);
         void InvokeColumnFrozenChanged(Column^ column);
+		void InvokeColumnVisibleIndexChanged(Column^ column);
         bool InvokeEditBegun(Cell^ cell);
         void InvokeEditEnded(CellEventArgs^ e);
         void InvokeScroll(System::Windows::Forms::ScrollEventArgs^ e);
@@ -1480,6 +1545,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         bool DesignTimeHitTest(System::Drawing::Point globalLocation);
         void PostPaint(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle clipRectangle);
+		System::Windows::Forms::Control^ GetChildAt(System::Windows::Forms::Control^ control, System::Drawing::Point location);
         Row^ CreateRow(GrDataRow* pDataRow);
 
     internal: // properties
@@ -1508,6 +1574,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             _ErrorDescriptor^ get();
         }
+
+		property bool HScrollInternal
+		{
+			virtual bool get() { return this->HScroll; };
+		}
+
+		property bool VScrollInternal
+		{
+			virtual bool get() { return this->VScroll; };
+		}
 
     internal: // events
 
@@ -1631,6 +1707,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이벤트 데이터가 들어 있는 <see cref="RowEventArgs"/>입니다.
         /// </param>
         virtual void OnRowUnbinded(RowEventArgs^ e);
+
+		virtual void OnRowMoved(RowEventArgs^ e);
 
         /// <summary>
         /// <see cref="SelectedColumnsChanged"/> 이벤트를 발생시킵니다.
@@ -2006,6 +2084,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		virtual void OnLineColorChanged(System::EventArgs^ e);
 
+		virtual void OnScroll(System::Windows::Forms::ScrollEventArgs^ e);
+
         ///// <summary>
         ///// <see cref="Invalidated"/> 이벤트를 발생시킵니다.
         ///// </summary>
@@ -2048,7 +2128,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 컨트롤이 선택되면 true이고, 그렇지 않으면 false입니다.
         /// </returns>
-        virtual bool ProcessTabKey(bool forward) override;
+        virtual bool ProcessTabKey(bool forward);
 
         virtual Row^ NewRowFromBuilder(RowBuilder^ rowBuilder);
 
@@ -2058,6 +2138,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         virtual void OnInvalidated(System::Windows::Forms::InvalidateEventArgs^ e) override;
         virtual void OnCursorChanged(System::EventArgs^ e) override;
 #endif
+	protected: // properties
+		property bool HScroll
+		{
+			virtual bool get() { return true; };
+		}
+
+		property bool VScroll
+		{
+			virtual bool get() { return true; };
+		}
 
     private: // methods
         void OnCurrencyManagerChanging(CurrencyManagerChangingEventArgs^ e);
@@ -2066,6 +2156,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         void PaintRowState(System::Drawing::Graphics^ g);
         void PaintColumnControls(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle clipRectangle);
+		void PaintCell(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle clipRectangle, GrItem* pItem);
         void SetDataConnection(System::Object^ dataSource, System::String^ dataMember);
 
         bool ShouldSerializeColumns();
@@ -2151,6 +2242,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         RowEventHandler^ m_eventRowBinded;
         RowEventHandler^ m_eventRowUnbinding;
         RowEventHandler^ m_eventRowUnbinded;
+		RowEventHandler^ m_eventRowMoved;
         System::EventHandler^ m_eventSelectedColumnsChanged;
         System::EventHandler^ m_eventSelectedRowsChanged;
         System::EventHandler^ m_eventSelectionChanged;
@@ -2184,6 +2276,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		System::EventHandler^ m_eventBackgroundColorChanged;
         System::EventHandler^ m_eventPaddingColorChanged;
 		System::EventHandler^ m_eventLineColorChanged;
+
+		System::Windows::Forms::ScrollEventHandler^ m_eventScroll;
 
         CurrencyManagerChangingEventHandler^ m_eventCurrencyManagerChanging;
         CurrencyManagerChangedEventHandler^ m_eventCurrencyManagerChanged;

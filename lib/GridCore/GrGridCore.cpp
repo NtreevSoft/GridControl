@@ -176,15 +176,17 @@ GrGridCore::GrGridCore(GrGridWindow* pGridWindow) : m_pGridWindow(pGridWindow)
     m_columnFreezable = true;
     m_readOnly = false;
     m_rowResizable = true;
+	m_rowMovable = false;
     m_hideSelection = false;
     m_multiSelect = true;
     m_rowVisible = true;
     m_clickEditing = DefaultClickEditing;
 
-	m_foreColor = GrStyle::DefaultStyle.ForeColor;
-	m_backColor = GrStyle::DefaultStyle.BackColor;
-	m_lineColor = GrStyle::DefaultStyle.LineColor;
-    m_pFont = GrStyle::DefaultStyle.Font;
+	m_foreColor = GrStyle::Default.ForeColor;
+	m_backColor = GrStyle::Default.BackColor;
+	m_lineColor = GrStyle::Default.LineColor;
+	m_padding = GrStyle::Default.Padding;
+    m_pFont = GrStyle::Default.Font;
     m_pStyle = nullptr;
 
     m_pItemSelector = new GrItemSelectorInternal();
@@ -419,12 +421,16 @@ void GrGridCore::PrePaint(GrGridPainter* /*pPainter*/, const GrRect& /*clipRect*
 
 void GrGridCore::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
 {
+	m_painting = true;
     m_pRootRow->Paint(pPainter, clipRect);
+	m_painting = false;
 }
 
 void GrGridCore::PostPaint(GrGridPainter* pPainter, const GrRect& /*clipRect*/) const
 {
+	m_painting = true;
     m_pStateManager->OnPaint(pPainter); 
+	m_painting = false;
 }
 
 void GrGridCore::BeginPaint()
@@ -511,6 +517,16 @@ bool GrGridCore::GetRowResizable() const
 void GrGridCore::SetRowResizable(bool b)
 {
     m_rowResizable = b;
+}
+
+bool GrGridCore::GetRowMovable() const
+{
+    return m_rowMovable;
+}
+
+void GrGridCore::SetRowMovable(bool b)
+{
+    m_rowMovable = b;
 }
 
 bool GrGridCore::GetHideSelection() const

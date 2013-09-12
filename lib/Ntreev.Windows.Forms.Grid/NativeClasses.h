@@ -223,6 +223,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         void columnList_ColumnMouseMove(GrObject* pSender, GrColumnMouseEventArgs* e);
         void columnList_ColumnWidthChanged(GrObject* pSender, GrColumnEventArgs* e);
         void columnList_ColumnFrozenChanged(GrObject* pSender, GrColumnEventArgs* e);
+		void columnList_ColumnVisibleIndexChanged(GrObject* pSender, GrColumnEventArgs* e);
 
         void focuser_FocusChanging(GrObject* pSender, GrFocusChangeArgs* e);
         void focuser_FocusChanged(GrObject* pSender, GrFocusChangeArgs* e);
@@ -231,6 +232,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         void itemSelector_SelectionChanged(GrObject* pSender, GrEventArgs* e);
 
         void caption_HeightChanged(GrObject* pSender, GrEventArgs* e);
+
+		void dataRowList_DataRowMoved(GrObject* pSender, GrDataRowEventArgs* e);
 
     public:
         gcroot<Ntreev::Windows::Forms::Grid::GridControl^> m_gridControl;

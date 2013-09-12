@@ -126,9 +126,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         virtual Ntreev::Windows::Forms::Grid::Design::EditStyle GetEditStyle() override sealed;
 
+		virtual void OnCellBoundUpdate(Cell^ cell, System::Object^ value) override;
+
     private: // methods
 
         void gridControl_CellMouseMove(System::Object^ sender, Ntreev::Windows::Forms::Grid::CellMouseEventArgs^ e);
+		void viewControl_Invalidated(System::Object^ sender, System::Windows::Forms::InvalidateEventArgs^ e);
 
     private: // variables
 
@@ -138,7 +141,24 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         Ntreev::Windows::Forms::Grid::IControlPainter^ m_controlPainter;
         Ntreev::Windows::Forms::Grid::Design::IEditorService^ m_editorService;
 
-        System::Windows::Forms::Form^ m_form;
+        //System::Windows::Forms::Form^ m_form;
         Ntreev::Windows::Forms::Grid::CellMouseEventHandler^ m_eventCellMouseMove;
+		System::Windows::Forms::InvalidateEventHandler^ m_viewControlInvalidate;
+		Cell^ m_viewedCell;
+
+
+		ref class MessageFilter : System::Windows::Forms::IMessageFilter
+        {
+		public:
+			MessageFilter(TControl control) : m_control(control) {}
+
+        private:
+            virtual bool PreFilterMessage(System::Windows::Forms::Message% m) sealed = System::Windows::Forms::IMessageFilter::PreFilterMessage;
+
+		private:
+			TControl m_control;
+        };
+
+		MessageFilter^ messageFilter;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

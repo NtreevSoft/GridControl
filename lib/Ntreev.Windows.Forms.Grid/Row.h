@@ -106,6 +106,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </exception>
         Cell^ GetAt(int index);
 
+		int GetCellsTextCapacity(); 
+
     public: // properties
 
         /// <summary>
@@ -393,7 +395,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         Row(RowBuilder^ rowBuilder);
 
     protected: // methods
-        int GetCellsTextCapacity(); 
 
         virtual Cell^ NewCellFromBuilder(CellBuilder^ builder);
 
@@ -405,8 +406,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         void AddEditedCell();
         void RemoveEditedCell();
-        void AddErrorCell();
-        void RemoveErrorCell();
 
         void ProcessChildControl();
         void DetachChildControl();
@@ -419,11 +418,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     internal: // properties
 
-        property int ComponentIndex
-        {
-            int get() { return m_componentIndex; }
-            void set(int value) { m_componentIndex = value; }
-        }
+        //property int ComponentIndex
+        //{
+        //    int get() { return m_componentIndex; }
+        //    void set(int value) { m_componentIndex = value; }
+        //}
+
+		property System::Collections::Generic::Dictionary<Cell^, System::String^>^ CellErrors
+		{
+			System::Collections::Generic::Dictionary<Cell^, System::String^>^ get();
+		}
 
         property GrDataRow* NativeRef
         {
@@ -449,9 +453,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         CellTagCollection^ m_cellTags;
         GrDataRow* m_pDataRow;
         System::Object^ m_component;
-        int m_componentIndex;
+        //int m_componentIndex;
         int m_editedCount;
-        int m_errorCell;
         bool m_editing;
         System::String^ m_errorDescription;
 

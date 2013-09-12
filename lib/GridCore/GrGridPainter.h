@@ -77,6 +77,7 @@ public:
     GrColor ForeColor;
     GrColor BackColor;
 	GrColor LineColor;
+	GrPadding Padding;
     GrFont* Font;
 
     GrColor SelectedForeColor;
@@ -148,7 +149,7 @@ public:
     GrColor GetGroupLineColor(uint index)const;
     GrFont* GetGroupFont(uint index)const;
 
-    static const GrStyle DefaultStyle;
+    static const GrStyle Default;
 };
 
 

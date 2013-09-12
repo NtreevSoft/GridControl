@@ -219,6 +219,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_pCell->GetBottom();
     }
 
+	bool CellBase::Capture::get()
+    {
+        return m_pCell->GetMousePressed();
+    }
+
  /*   void CellBase::ForeColorChanged::add(System::EventHandler^ p)
     {
         m_eventForeColorChanged += p; 

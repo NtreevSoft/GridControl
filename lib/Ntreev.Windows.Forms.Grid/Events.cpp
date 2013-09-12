@@ -89,8 +89,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     }
 
-    RowInsertingEventArgs::RowInsertingEventArgs(System::Object^ component)
-        : m_component(component), m_cancel(false)
+    RowInsertingEventArgs::RowInsertingEventArgs(_Row^ row)
+        : RowEventArgs(row), m_component(row->Component), m_cancel(false)
     {
 
     }
@@ -190,7 +190,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     }
     
     ColumnBindingEventArgs::ColumnBindingEventArgs(System::ComponentModel::PropertyDescriptor^ propertyDescriptor, _Column^ column)
-        : m_propertyDescriptor(propertyDescriptor), m_column(column)
+        : m_propertyDescriptor(propertyDescriptor), m_column(column), m_cancel(false)
     {
 
     }
@@ -208,6 +208,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void ColumnBindingEventArgs::BindingColumn::set(_Column^ value)
     {
         m_column = value;
+    }
+
+	bool ColumnBindingEventArgs::Cancel::get()
+    {
+        return m_cancel;
+    }
+    
+    void ColumnBindingEventArgs::Cancel::set(bool value)
+    {
+        m_cancel = value;
     }
 
     ColumnEventArgs::ColumnEventArgs(_Column^ column)

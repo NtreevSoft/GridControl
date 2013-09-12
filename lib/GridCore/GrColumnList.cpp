@@ -716,6 +716,8 @@ void GrColumnList::Invoke(std::wstring eventName, GrEventArgs* e)
         OnColumnPaddingChanged((GrColumnEventArgs*)e);
     else if(eventName.compare(L"ColumnGroupChanged") == 0)
         OnColumnGroupChanged((GrColumnEventArgs*)e);
+	else if(eventName.compare(L"ColumnVisibleIndexChanged") == 0)
+        OnColumnVisibleIndexChanged((GrColumnEventArgs*)e);
     else if(eventName.compare(L"ColumnMouseMove") == 0)
         OnColumnMouseMove((GrColumnMouseEventArgs*)e);
     else if(eventName.compare(L"ColumnMouseEnter") == 0)
@@ -947,6 +949,12 @@ void GrColumnList::OnColumnPaddingChanged(GrColumnEventArgs* e)
 void GrColumnList::OnColumnGroupChanged(GrColumnEventArgs* e)
 {
     ColumnGroupChanged(this, e);
+}
+
+void GrColumnList::OnColumnVisibleIndexChanged(GrColumnEventArgs* e)
+{
+	SetVisibleChanged();
+	ColumnVisibleIndexChanged(this, e);
 }
 
 void GrColumnList::OnColumnMouseMove(GrColumnMouseEventArgs* e)

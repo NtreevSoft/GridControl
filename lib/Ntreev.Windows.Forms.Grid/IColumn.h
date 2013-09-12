@@ -32,8 +32,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     typedef SortType _SortType;
     typedef ColumnState _ColumnState;
 
-    interface class IDisplayTextConverter;
-
     /// <summary>
     /// 열을 나타내기위한 속성을 정의합니다.
     /// </summary>
@@ -274,11 +272,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property System::ComponentModel::TypeConverter^ TypeConverter
         {
             System::ComponentModel::TypeConverter^ get();
-        }
-
-        property IDisplayTextConverter^ DisplayTextConverter
-        {
-            IDisplayTextConverter^ get();
         }
 
         /// <summary>

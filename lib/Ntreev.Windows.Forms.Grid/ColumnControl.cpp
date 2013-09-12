@@ -39,12 +39,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(this->ViewType != Ntreev::Windows::Forms::Grid::ViewType::Text)
         {
             m_viewControl = CreateControlInstance(nullptr);
-            m_form = gcnew System::Windows::Forms::Form();
-            m_form->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
-            m_form->Controls->Add(m_viewControl);
+			//m_viewControl->Visible = true;
+			m_eventCellMouseMove = gcnew CellMouseEventHandler(this, &ColumnControl<TControl>::gridControl_CellMouseMove);
+			m_viewControlInvalidate = gcnew System::Windows::Forms::InvalidateEventHandler(this, &ColumnControl<TControl>::viewControl_Invalidated);
+			this->NativeRef->SetItemMinSize(m_viewControl->PreferredSize);
         }
-
-        m_eventCellMouseMove = gcnew CellMouseEventHandler(this, &ColumnControl<TControl>::gridControl_CellMouseMove);
+        
         NativeRef->m_customItemPaint = this->ViewType != Ntreev::Windows::Forms::Grid::ViewType::Text;
     }
 
@@ -57,11 +57,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(this->ViewType != Ntreev::Windows::Forms::Grid::ViewType::Text)
         {
             m_viewControl = CreateControlInstance(controlArgs);
-            m_form = gcnew System::Windows::Forms::Form();
-            m_form->Controls->Add(m_viewControl);
+            m_eventCellMouseMove = gcnew CellMouseEventHandler(this, &ColumnControl<TControl>::gridControl_CellMouseMove);
+			m_viewControlInvalidate = gcnew System::Windows::Forms::InvalidateEventHandler(this, &ColumnControl<TControl>::viewControl_Invalidated);
+			this->NativeRef->SetItemMinSize(m_viewControl->PreferredSize);
         }
 
-        m_eventCellMouseMove = gcnew CellMouseEventHandler(this, &ColumnControl<TControl>::gridControl_CellMouseMove);
         NativeRef->m_customItemPaint = this->ViewType != Ntreev::Windows::Forms::Grid::ViewType::Text;
     }
 
@@ -96,34 +96,51 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         if(m_viewControl == nullptr)
             return;
-        SetControlLayout(m_viewControl, cell);
-        SetControlValue(m_viewControl, value);
+
+		System::Drawing::Point location = this->GridControl->PointToClient(System::Windows::Forms::Cursor::Position);
+		location -= (System::Drawing::Size)cell->Bounds.Location;
+		location.X -= cell->Padding.Left;
+		location.Y -= cell->Padding.Left;
+
+        this->SetControlValue(m_viewControl, value);
+		this->SetControlLayout(m_viewControl, cell);
+
         System::IntPtr hdc = graphics->GetHdc();
 
-        if((cell->State & CellState::Focused) == CellState::Focused)
-            m_form->ActiveControl = m_viewControl;
-        else
-            m_form->ActiveControl = nullptr;
+		System::Windows::Forms::Cursor^ cursor = nullptr;
 
         if(this->Site == nullptr)
         {
-            if((cell->State & CellState::Hot) == CellState::Hot)
+			if(m_viewControl->Bounds.Contains(location) == true)
             {
+				location = m_viewControl->PointToScreen(location);
+				System::Windows::Forms::Control^ hitTest = this->GridControl->GetChildAt(m_viewControl, location);
+				if(hitTest == nullptr)
+					hitTest = m_viewControl;
+				location = hitTest->PointToClient(location);
+
                 System::Windows::Forms::Message msg;
-                msg.HWnd = m_viewControl->Handle;
+                msg.HWnd = hitTest->Handle;
                 msg.Msg = (int)Native::WM::WM_MOUSEMOVE;
                 msg.WParam = System::IntPtr(0);
-                System::Drawing::Point location = m_viewControl->PointToClient(System::Windows::Forms::Cursor::Position);
                 msg.LParam = Native::Methods::MakeLParam(location.X, location.Y);
                 Native::Methods::SendMessage(msg);
+
+				msg.HWnd = hitTest->Handle;
+				msg.Msg = (int)Native::WM::WM_SETCURSOR;
+				msg.WParam = hitTest->Handle;
+				msg.LParam = Native::Methods::MakeLParam(1, (int)Native::WM::WM_MOUSEMOVE);
+				Native::Methods::SendMessage(msg);
+
+				cursor = System::Windows::Forms::Cursor::Current;
             }
             else
             {
                 System::Windows::Forms::Message msg;
                 msg.HWnd = m_viewControl->Handle;
                 msg.Msg = (int)Native::WM::WM_MOUSELEAVE;
-                msg.WParam = System::IntPtr(0);
-                msg.LParam = System::IntPtr(0);
+				msg.WParam = System::IntPtr::Zero;
+                msg.LParam = System::IntPtr(1);
                 Native::Methods::SendMessage(msg);
             }
         }
@@ -140,6 +157,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             graphics->ReleaseHdc();
         }
+
+		if(cursor != nullptr)
+			this->GridControl->Cursor = cursor;
     }
 
     generic<class TControl> where TControl : System::Windows::Forms::Control
@@ -200,79 +220,100 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return Ntreev::Windows::Forms::Grid::Design::EditStyle::Control;
     }
 
+	 generic<class TControl> where TControl : System::Windows::Forms::Control
+        void ColumnControl<TControl>::OnCellBoundUpdate(Cell^ cell, System::Object^ value)
+    {
+		if(m_viewControl == nullptr)
+			return;
+		
+		this->SetControlLayout(m_viewControl, cell);
+		this->SetControlValue(m_viewControl, value);
+		cell->NativeRef->SetTextBounds(m_viewControl->PreferredSize);
+    }
+
     generic<class TControl> where TControl : System::Windows::Forms::Control
         void ColumnControl<TControl>::OnGridControlAttached()
     {
         Column::OnGridControlAttached();
-        this->GridControl->CellMouseMove += m_eventCellMouseMove;
+        
+		if(m_viewControl != nullptr)
+		{
+			this->GridControl->CellMouseMove += m_eventCellMouseMove;
+			this->messageFilter = gcnew MessageFilter(m_viewControl);
+			System::Windows::Forms::Application::AddMessageFilter(this->messageFilter);
+		}
     }
 
     generic<class TControl> where TControl : System::Windows::Forms::Control
         void ColumnControl<TControl>::OnGridControlDetached()
     {
-        this->GridControl->CellMouseMove -= m_eventCellMouseMove;
+		if(this->messageFilter != nullptr)
+		{
+			System::Windows::Forms::Application::RemoveMessageFilter(this->messageFilter);
+			this->messageFilter = nullptr;
+			this->GridControl->CellMouseMove -= m_eventCellMouseMove;
+		}
+        
         Column::OnGridControlDetached();
     }
 
     generic<class TControl> where TControl : System::Windows::Forms::Control
         void ColumnControl<TControl>::gridControl_CellMouseMove(System::Object^ /*sender*/, Ntreev::Windows::Forms::Grid::CellMouseEventArgs^ e)
     {
-        if(this->IsVisible == false)
+        if(this->IsVisible == false || e->Cell->Column != this || e->Cell->IsReadOnly == true || this->Site != nullptr)
             return;
 
-        //System::Diagnostics::Trace::WriteLine(System::Windows::Forms::Cursor::Position);
-        if(e->Cell->Column != this || e->Cell->IsReadOnly == true || m_viewControl == nullptr)
-            return;
+		Cell^ cell = e->Cell;
+		//System::Drawing::Point location = e->Location;
+		//location.X -= cell->Padding.Left;
+		//location.Y -= cell->Padding.Left;
 
-        System::Drawing::Point cursorLocation = System::Windows::Forms::Cursor::Position;
-        System::Drawing::Point location = e->Location + (System::Drawing::Size)e->Cell->Location;
+		//this->SetControlLayout(m_viewControl, cell);
 
-        System::Drawing::Rectangle bounds(e->Cell->Bounds.Left + e->Cell->Padding.Left, 
-            e->Cell->Bounds.Top + e->Cell->Padding.Top, 
-            e->Cell->ClientRectangle.Width, e->Cell->ClientRectangle.Height);
+		//if(m_viewControl->Bounds.Contains(location) == false)
+		//	return;
 
-        m_form->Bounds = this->GridControl->RectangleToScreen(bounds);
+		//this->SetControlValue(m_viewControl, cell->Value);
 
-        location = this->GridControl->PointToScreen(location);
-        location = m_form->PointToClient(location);
+		//System::Windows::Forms::Message msg;
+		//System::Windows::Forms::Control^ hitTest = this->GetChildAt(m_viewControl, location);
+		//location = hitTest->PointToClient(location);
+		//msg.HWnd = hitTest->Handle;
+		//msg.Msg = (int)Native::WM::WM_MOUSEMOVE;
+		//msg.WParam = System::IntPtr(0);
+		//msg.LParam = Native::Methods::MakeLParam(location.X, location.Y);
+		//Native::Methods::SendMessage(msg);
 
+		//msg.HWnd = hitTest->Handle;
+		//msg.Msg = (int)Native::WM::WM_SETCURSOR;
+		//msg.WParam = hitTest->Handle;
+		//msg.LParam = Native::Methods::MakeLParam(1, (int)Native::WM::WM_MOUSEMOVE);
+		//Native::Methods::SendMessage(msg);
 
-        //SetControlLayout(m_viewControl, e->Cell);
-        //SetControlValue(m_viewControl, e->Cell->Value);
-
-        if(this->Site == nullptr)
-        {
-            System::Windows::Forms::Message msg;
-
-            msg.HWnd = m_viewControl->Handle;
-            msg.Msg = (int)Native::WM::WM_MOUSEMOVE;
-            msg.WParam = System::IntPtr(0);
-            msg.LParam = Native::Methods::MakeLParam(location.X, location.Y);
-            Native::Methods::SendMessage(msg);
-
-            msg.HWnd = m_viewControl->Handle;
-            msg.Msg = (int)Native::WM::WM_SETCURSOR;
-            msg.WParam = m_viewControl->Handle;
-            msg.LParam = Native::Methods::MakeLParam(1, (int)Native::WM::WM_MOUSEMOVE);
-            Native::Methods::SendMessage(msg);
-
-            this->GridControl->Cursor = System::Windows::Forms::Cursor::Current;
-        }
-
-
-
-        //System::Drawing::Rectangle rect = Native::Methods::GetWindowRect(m_viewControl->Handle);
-        //System::Drawing::Point cur = System::Windows::Forms::Cursor::Position;
-
-        //System::Diagnostics::Trace::WriteLine(System::Windows::Forms::Cursor::Current);
-
-        //if(rect.Contains(cur) == true)
-        //{
-        // int qwer=0;
-        //}
+		//this->GridControl->Cursor = System::Windows::Forms::Cursor::Current;
+		cell->Invalidate();
+		//System::Console::WriteLine(cell->Location);
 
         e->Handled = true;
-
-
     }
+
+	generic<class TControl> where TControl : System::Windows::Forms::Control
+		void ColumnControl<TControl>::viewControl_Invalidated(System::Object^ /*sender*/, System::Windows::Forms::InvalidateEventArgs^ /*e*/)
+	{
+
+	}
+
+	generic<class TControl> where TControl : System::Windows::Forms::Control
+		bool ColumnControl<TControl>::MessageFilter::PreFilterMessage(System::Windows::Forms::Message% m)
+	{
+		if(m.Msg == (int)Native::WM::WM_MOUSELEAVE)
+		{
+			if(m.HWnd == m_control->Handle && m.LParam == System::IntPtr::Zero)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

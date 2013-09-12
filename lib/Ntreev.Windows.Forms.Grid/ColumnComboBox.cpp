@@ -82,7 +82,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         return m_nMaxDropDownItems;
     }
 
-    void ColumnComboBox::listBox_PreviewKeyDown(System::Object^ sender, System::Windows::Forms::PreviewKeyDownEventArgs^ e)
+    void ColumnComboBox::listBox_PreviewKeyDown(System::Object^ /*sender*/, System::Windows::Forms::PreviewKeyDownEventArgs^ e)
     {
         if(e->KeyCode == System::Windows::Forms::Keys::Enter)
         {

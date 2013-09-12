@@ -61,12 +61,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
         void InitializeCheckBox();
         void UpdateValue();
+		void UpdateValueToControl(int value, System::Windows::Forms::CheckBox^ exception);
+		bool IsSingleBit(int value);
+		int GetInt32Value();
 
     private: // variables
 
         System::Type^ m_flagType;
         Ntreev::Windows::Forms::Grid::Design::IEditorService^ m_editorService;
         System::Object^ m_value;
+		System::Collections::Generic::List<System::Windows::Forms::CheckBox^> m_checkBoxes;
 
     private: 
         System::Windows::Forms::Button^ buttonOk;
@@ -119,5 +123,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     private: 
         System::Void buttonOk_Click(System::Object^ sender, System::EventArgs^ e);
         System::Void buttonCancel_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void checkBox_CheckChanged(System::Object^ sender, System::EventArgs^ e);
     };
 } /*namespace Controls*/ } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

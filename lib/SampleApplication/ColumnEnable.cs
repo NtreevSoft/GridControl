@@ -10,6 +10,16 @@ namespace SampleApplication
 {
     class ColumnEnable : ColumnControl<EnablePicker>
     {
+        public ColumnEnable()
+        {
+
+        }
+
+        protected override void OnGridControlAttached()
+        {
+            base.OnGridControlAttached();
+        }
+
         protected override void SetControlLayout(EnablePicker control, ICell cell)
         {
             base.SetControlLayout(control, cell);

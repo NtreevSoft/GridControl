@@ -23,7 +23,7 @@
 
 #include "GrGridPainter.h"
 
-const GrStyle GrStyle::DefaultStyle(true);
+const GrStyle GrStyle::Default(true);
 GrFont* const GrFont::Empty = nullptr;
 
 GrStyle::GrStyle()
@@ -31,6 +31,7 @@ GrStyle::GrStyle()
     ForeColor = GrColor::Black;
     BackColor = GrColor::White;
 	LineColor = GrColor::DefaultLineColor;
+	Padding = GrPadding::Default;
     Font = GrFont::GetDefaultFont();
 
     SelectedForeColor = GrColor::White;
@@ -76,6 +77,7 @@ GrStyle::GrStyle(bool /*defaultStyle*/)
     ForeColor = GrColor::Black;
     BackColor = GrColor::White;
 	LineColor = GrColor::DefaultLineColor;
+	Padding = GrPadding::Default;
     Font = GrFont::GetDefaultFont();
 
     SelectedForeColor = GrColor::White;
@@ -257,7 +259,7 @@ GrColor GrStyle::GetGroupForeColor(uint index) const
 {
     const GrColors& colors = 
         this->GroupForeColors.size() == 0 ? 
-        GrStyle::DefaultStyle.GroupForeColors : this->GroupForeColors;
+        GrStyle::Default.GroupForeColors : this->GroupForeColors;
 
     return colors[index % colors.size()];
 }
@@ -266,7 +268,7 @@ GrColor GrStyle::GetGroupBackColor(uint index) const
 {
     const GrColors& colors = 
         this->GroupBackColors.size() == 0 ? 
-        GrStyle::DefaultStyle.GroupBackColors : this->GroupBackColors;
+        GrStyle::Default.GroupBackColors : this->GroupBackColors;
 
     return colors[index % colors.size()];
 }
@@ -275,7 +277,7 @@ GrColor GrStyle::GetGroupLineColor(uint index) const
 {
    const GrColors& colors = 
         this->GroupLineColors.size() == 0 ? 
-        GrStyle::DefaultStyle.GroupLineColors : this->GroupLineColors;
+        GrStyle::Default.GroupLineColors : this->GroupLineColors;
 
     return colors[index % colors.size()];
 }
@@ -284,7 +286,7 @@ GrFont* GrStyle::GetGroupFont(uint index) const
 {
     const GrFonts& fonts = 
         this->GroupFonts.size() == 0 ? 
-        GrStyle::DefaultStyle.GroupFonts : this->GroupFonts;
+        GrStyle::Default.GroupFonts : this->GroupFonts;
 
     return fonts[index % fonts.size()];
 }

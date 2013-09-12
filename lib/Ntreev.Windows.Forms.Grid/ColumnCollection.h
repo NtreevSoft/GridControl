@@ -279,6 +279,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         bool Contains(Column^ item);
 
+		void AdjustWidth();
+
         /// <summary>
         /// 컬렉션을 반복하는 열거자를 가져옵니다.
         /// </summary>
@@ -403,9 +405,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         static Column^ CreateColumnInstance(System::IServiceProvider^ serviceProvider, System::Type^ columnType);
 
-    private: // methods
+		Column^ CreateColumnInstance();
 
-        Column^ CreateColumnInstance();
+    private: // methods
 
         System::String^ NewColumnName();
 

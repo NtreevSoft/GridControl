@@ -178,17 +178,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// 새로운 행이 추가되는 이벤트의 데이터를 제공합니다.
     /// </summary>
     public ref class RowInsertingEventArgs
-        : System::EventArgs
+        : RowEventArgs
     {
     public: // methods
 
         /// <summary>
         /// <see cref="Ntreev::Windows::Forms::Grid::RowInsertingEventArgs"/>클래스의 새 인스턴스를 초기화합니다.
         /// </summary>
-        /// <param name="component">
-        /// 이벤트의 대상이 되는 <see cref="Ntreev::Windows::Forms::Grid::Row"/>와 연결될 데이터를 나타냅니다.
+         /// <param name="row">
+        /// 이벤트의 대상이 되는 <see cref="Ntreev::Windows::Forms::Grid::Row"/>의 인스턴스입니다.
         /// </param>
-        RowInsertingEventArgs(System::Object^ component);
+        RowInsertingEventArgs(_Row^ row);
 
     public: // properties
 
@@ -223,7 +223,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     private: // variables
 
-        System::Object^ m_component;
+		System::Object^ m_component;
         bool m_cancel;
     };
 
@@ -443,10 +443,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void set(_Column^ value);
         }
 
+		/// <summary>
+        /// 바인딩을 취소할 지에 대한 여부를 가져오거나 설정합니다.
+        /// </summary>
+        property bool Cancel
+        {
+            bool get();
+            void set(bool);
+        }
+
     private: // variables
 
         System::ComponentModel::PropertyDescriptor^ m_propertyDescriptor;
         _Column^ m_column;
+		 bool m_cancel;
     };
 
     /// <summary>

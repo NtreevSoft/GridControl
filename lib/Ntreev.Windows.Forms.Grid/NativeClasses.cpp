@@ -237,8 +237,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     void WinFormScroll::SetVisible(bool value)
     {
-        m_visible = value;
-        Native::Methods::SetScrollVisible(m_gridControl->Handle, m_type, m_visible);
+		if(m_type == 0 && m_gridControl->HScrollInternal == false)
+			value = false;
+		else if(m_type == 1 && m_gridControl->VScrollInternal == false)
+			value = false;
+
+		m_visible = value;
+
+		Native::Methods::SetScrollVisible(m_gridControl->Handle, m_type, m_visible);
     }
 
     void WinFormScroll::WndProc(System::IntPtr handle, System::IntPtr wParam)
@@ -540,7 +546,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         catch(System::Exception^ e1)
         {
             m_gridControl->ShowMessage(e1->Message, "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
-            cell->CancelEdit();
+            //cell->CancelEdit();
         }
         finally
         {
@@ -571,47 +577,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         return m_pGridPainter;
     }
 
-	//GrColor WinFormWindow::GetForeColor() const
-	//{
-	//	return m_foreColor;
-	//}
-
-	//GrColor WinFormWindow::GetBackColor() const
-	//{
-	//	return m_backColor;
-	//}
-
- //   GrFont* WinFormWindow::GetFont() const
- //   {
- //       return m_pFont;
- //   }
-
- //   void WinFormWindow::SetFont(System::Drawing::Font^ font)
- //   {
- //       m_pFont = WinFormFontManager::FromManagedFont(font);
- //       OnFontChanged();
- //   }
-
-	//void WinFormWindow::SetForeColor(System::Drawing::Color foreColor)
-	//{
-
-	//}
-	//
-	//void WinFormWindow::SetBackColor(System::Drawing::Color backColor)
-	//{
-
-	//}
-
-    //GrFont* WinFormWindow::GetFont(void* fontData) const
-    //{
-    //    return GrFontCreator::Create(fontData);
-    //}
-
-    //GrFont* WinFormWindow::GetDefaultFont() const
-    //{
-    //    return WinFormFontManager::FromManagedFont(System::Windows::Forms::Control::DefaultFont);
-    //}
-
     GrTimer* WinFormWindow::CreateTimer()
     {
         return new WinFormTimer(m_gridControl);
@@ -631,25 +596,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         return cell->Column->CanEditInternal(cell, Ntreev::Windows::Forms::Grid::EditingReason(reason));
     }
 
-    //GrFont* WinFormWindow::FromManagedFont(System::Drawing::Font^ font)
-    //{
-    // if(font == nullptr)
-    // return nullptr;
-    // return GrFontCreator::Create(font->ToHfont().ToPointer());
-    //}
-
-    //System::Drawing::Font^ WinFormWindow::ToManagedFont(GrFont* pFont)
-    //{
-    // if(pFont == nullptr)
-    // return nullptr;
-    // if(pFont == m_pDefaultfont)
-    // return System::Windows::Forms::Control::DefaultFont;
-    // System::IntPtr ptr(GrFontCreator::GetFontHandle(pFont));
-    // System::Drawing::Font^ font = System::Drawing::Font::FromHfont(ptr);
-    // System::Drawing::Font^ font1 = gcnew System::Drawing::Font(font->FontFamily, font->SizeInPoints, font->Style, System::Windows::Forms::Control::DefaultFont->Unit, font->GdiCharSet);
-    // return font1;
-    //}
-
     WinFormGridCore::WinFormGridCore(gcroot<Ntreev::Windows::Forms::Grid::GridControl^> gridControl, GrGridWindow* pGridWindow)
         : GrGridCore(pGridWindow), m_gridControl(gridControl)
     {
@@ -661,6 +607,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         pColumnList->ColumnMouseUp.Add(this, &WinFormGridCore::columnList_ColumnMouseUp);
         pColumnList->ColumnWidthChanged.Add(this,&WinFormGridCore::columnList_ColumnWidthChanged);
         pColumnList->ColumnFrozenChanged.Add(this,&WinFormGridCore::columnList_ColumnFrozenChanged);
+		pColumnList->ColumnVisibleIndexChanged.Add(this,&WinFormGridCore::columnList_ColumnVisibleIndexChanged);
 
         GrFocuser* pFocuser = GetFocuser();
         pFocuser->FocusChanging.Add(this, &WinFormGridCore::focuser_FocusChanging);
@@ -673,6 +620,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
         GrCaption* pCaption = GetCaptionRow();
         pCaption->HeightChanged.Add(this, &WinFormGridCore::caption_HeightChanged);
+
+		GrDataRowList* pDataRowList = GetDataRowList();
+		pDataRowList->DataRowMoved.Add(this, &WinFormGridCore::dataRowList_DataRowMoved);
     }
 
     void WinFormGridCore::OnItemMouseMove(GrItemMouseEventArgs* e)
@@ -802,6 +752,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         m_gridControl->InvokeColumnFrozenChanged(column);
     }
 
+	void WinFormGridCore::columnList_ColumnVisibleIndexChanged(GrObject* /*pSender*/, GrColumnEventArgs* e)
+    {
+        Column^ column = FromNative::Get(e->GetColumn());
+        m_gridControl->InvokeColumnVisibleIndexChanged(column);
+    }
+
     void WinFormGridCore::focuser_FocusChanging(GrObject* /*pSender*/, GrFocusChangeArgs* /*e*/)
     {
         m_gridControl->InvokeFocusChanging();
@@ -839,4 +795,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         service->OnComponentChanging(m_gridControl, propertyDescriptor);
         service->OnComponentChanged(m_gridControl, propertyDescriptor, nullptr, nullptr);
     }
+
+	void WinFormGridCore::dataRowList_DataRowMoved(GrObject* /*pSender*/, GrDataRowEventArgs* e)
+	{
+		Row^ row = FromNative::Get(e->GetDataRow());
+		m_gridControl->InvokeRowMoved(row);
+	}
 } /*namespace Native*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

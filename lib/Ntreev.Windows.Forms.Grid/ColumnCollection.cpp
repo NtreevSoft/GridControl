@@ -199,6 +199,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return item->Index >= 0;
     }
 
+	void ColumnCollection::AdjustWidth()
+	{
+		for each(Column^ item in this)
+		{
+			item->AdjustWidth();
+		}
+	}
+
     System::Collections::Generic::IEnumerator<Column^>^ ColumnCollection::GetEnumerator()
     {
         return gcnew ColumnCollection::Enumerator(m_pColumnList);
@@ -210,10 +218,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         Column^ existColumn = this[propertyDescriptor->Name];
         Column^ column = this->GridControl->InvokeColumnBinding(propertyDescriptor, existColumn);
-        if(column == nullptr && this->GridControl->ColumnBindingCreation != ColumnBindingCreation::None)
-        {
-            column = CreateColumnInstance();
-        }
 
         if(column == nullptr)
             return;
@@ -443,12 +447,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             break;
         case ListChangedType::Reset:
             {
-                PropertyDescriptorCollection^ props = m_manager->GetItemProperties();
+                //PropertyDescriptorCollection^ props = m_manager->GetItemProperties();
 
-                for each(PropertyDescriptor^ item in props)
-                {
-                    this->Bind(item);
-                }
+                //for each(PropertyDescriptor^ item in props)
+                //{
+                //    this->Bind(item);
+                //}
             }
             break;
         }

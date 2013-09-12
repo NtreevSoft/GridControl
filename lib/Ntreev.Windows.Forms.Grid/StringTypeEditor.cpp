@@ -59,7 +59,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     System::Object^ StringTypeEditor::EditValue(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value)
     {
         Ntreev::Windows::Forms::Grid::Design::Controls::TextBox^ textBox = gcnew Ntreev::Windows::Forms::Grid::Design::Controls::TextBox(editorService);
-        IDisplayTextConverter^ converter = cell->Column->DisplayTextConverter;
 
         System::String^ oldText = System::String::Empty;
         
@@ -76,7 +75,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
                 }
                 else
                 {
-                    textBox->Text = converter->ValueToString(value, cell->Column);
+					textBox->Text = cell->Column->TypeConverter->ConvertToString(value);
                 }
             }
             break;
@@ -116,9 +115,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         if(editorService->Result == System::Windows::Forms::DialogResult::Cancel || textBox->Text == oldText)
             return value;
 
-        if(converter->CanConvertFromString == false)
-            throw gcnew System::Exception("문자열 변환기가 값의 변환을 지원하지 못하여 변환할 수 없습니다.");
-
-        return converter->StringToValue(textBox->Text, cell->Column);
+		return cell->Column->TypeConverter->ConvertFromString(textBox->Text);
     }
 } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

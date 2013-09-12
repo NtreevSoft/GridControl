@@ -270,6 +270,7 @@ bool GrStateManager::OnKeyDown(GrKeys key, GrKeys modifierKeys)
 
             if(e.GetNextState() == m_defaultState->GetState())
                 ChangeState(e.GetNextState(), e.GetCell(), e.GetUserData());
+			return true;
         }
     }
     else if(m_state != nullptr)
@@ -625,6 +626,8 @@ namespace GridStateClass
 
         switch(key)
         {
+		case GrKeys_Escape:
+			return true;
         case GrKeys_Add:
             {
                 IDataRow* pDataRow = m_pFocuser->GetFocusedRow();
@@ -1001,8 +1004,6 @@ namespace GridStateClass
 
                     m_pColumn->SetVisibleIndex(index);
                     m_pColumn->SetFrozen(true);
-
-                    //m_pColumnList->MoveToFrozen(m_pColumn, (GrColumn*)m_targetCell);
                 }
                 break;
             case TargetType_Unfrozen:
@@ -1012,9 +1013,11 @@ namespace GridStateClass
                     if(pTarget != nullptr)
                         index = pTarget->GetVisibleIndex();
 
+					if(index > m_pColumn->GetVisibleIndex())
+						index--;
+
                     m_pColumn->SetVisibleIndex(index);
                     m_pColumn->SetFrozen(false);
-                    //m_pColumnList->MoveToUnfrozen(m_pColumn, (GrColumn*)m_targetCell);
                 }
                 break;
             case TargetType_GroupList:
@@ -1031,11 +1034,11 @@ namespace GridStateClass
             default:
                 break;
             }
-            m_pGridCore->Invalidate();
         }
         m_targetType = TargetType_Unknown;
         m_cursor = GrCursor_Default;
         m_pTimer->Stop();
+		m_pGridCore->Invalidate();
     }
 
     void ColumnPressing::OnMouseUp(GrStateMouseEventArgs* e)
@@ -2016,8 +2019,16 @@ namespace GridStateClass
 
     RowPressing::RowPressing()
     {
-
+		m_pTimer = new GrSelectionTimer();
+        m_pTimer->Elapsed.Add(this, &RowPressing::timer_Elapsed);
+		m_pTargetDataRow = nullptr;
+		m_targetIndex = INVALID_INDEX;
     }
+
+	RowPressing::~RowPressing()
+	{
+		delete m_pTimer;
+	}
 
     bool RowPressing::GetHitTest(GrCell* pHitted, const GrPoint& localLocation)
     {
@@ -2030,9 +2041,18 @@ namespace GridStateClass
         return true;
     }
 
-    void RowPressing::OnBegin(GrStateEventArgs* e)
+	void RowPressing::OnGridCoreAttached()
     {
-        m_pRow = e->GetCell<GrRow*>();
+        GrStateBase::OnGridCoreAttached();
+		m_pDataRowList = m_pGridCore->GetDataRowList();
+		m_pColumnList = m_pGridCore->GetColumnList();
+        m_pGridCore->AttachObject(m_pTimer);
+    }
+
+	void RowPressing::OnMouseDown(GrStateMouseEventArgs* e)
+	{
+		m_pRow = e->GetCell<GrRow*>();
+		m_pDataRow = dynamic_cast<GrDataRow*>(m_pRow);
 
         switch(m_pRow->GetRowType())
         {
@@ -2121,11 +2141,101 @@ namespace GridStateClass
             break;
         }
         m_pGridCore->SetMousePress(m_pRow);
+	}
+     
+	void RowPressing::OnMouseUp(GrStateMouseEventArgs* /*e*/)
+	{
+		m_pGridCore->SetMouseUnpress();
+	}
+
+    void RowPressing::OnPaintAdornments(GrGridPainter* g, const GrRect& displayRect)
+	{
+		if(m_targetIndex == INVALID_INDEX)
+			return;
+
+		int top = 0;
+
+		if(m_targetIndex == m_pDataRowList->GetDataRowCount())
+			top = m_pGridCore->GetDataRect().bottom;
+		else
+			top = m_pTargetDataRow->GetY();
+
+		GrRect paintRect(m_pDataRowList->GetX(), top-1, displayRect.right, top+1);
+		g->FillRectangle(paintRect, GrColor::Black);
+	}
+
+	void RowPressing::OnMouseDragBegin(const GrPoint& /*location*/)
+    {
+        m_pTimer->Start();
+    }
+
+	void RowPressing::OnMouseDragMove(const GrPoint& location, const GrHitTest& hitTest)
+    {
+		if(hitTest.pHitted == nullptr)
+		{
+			GrRect dataRect = m_pGridCore->GetDataRect();
+			m_pTargetDataRow = nullptr;
+			
+			if(location.y >= dataRect.bottom)
+				m_targetIndex = m_pDataRowList->GetDataRowCount();
+			else
+				m_targetIndex = INVALID_INDEX;
+		}
+		else
+		{
+			GrDataRow* pDataRow = dynamic_cast<GrDataRow*>(hitTest.pHitted->GetRow());
+
+			if(pDataRow != nullptr && pDataRow != m_pDataRowList->GetInsertionRow())
+				m_pTargetDataRow = pDataRow;
+
+			if(m_pTargetDataRow == nullptr)
+				m_targetIndex = INVALID_INDEX;
+			else
+				m_targetIndex = m_pTargetDataRow->GetDataRowIndex();
+		}
+
+		m_pTimer->SetMouseLocation(m_pGridWindow->ClientToScreen(location));
+		m_pGridCore->Invalidate();
+	}
+
+	void RowPressing::OnMouseDragEnd(bool cancel, const GrHitTest& /*hitTest*/)
+    {
+		m_pTimer->Stop();
+		if(cancel == false)
+			m_pDataRow->SetDataRowIndex(m_targetIndex);
+		m_pGridCore->Invalidate();
+	}
+
+	bool RowPressing::GetDragable() const
+	{
+		if(m_pDataRow == nullptr || m_pDataRow == m_pDataRowList->GetInsertionRow())
+			return false;
+
+		if(m_pGridCore->IsGrouped() == true || m_pGridCore->GetRowMovable() == false)
+			return false;
+
+		GrColumn* pColumn = m_pColumnList->GetFirstSortColumn();
+		if(pColumn != nullptr && pColumn->GetSortType() != GrSort_None)
+			return false;
+
+		return true;
+	}
+	
+    void RowPressing::OnBegin(GrStateEventArgs* /*e*/)
+    {
+		
     }
 
     void RowPressing::OnEnd(GrStateEventArgs* /*e*/)
     {
-        m_pGridCore->SetMouseUnpress();
+        m_pTargetDataRow = nullptr;
+		m_targetIndex = INVALID_INDEX;
+    }
+
+	void RowPressing::timer_Elapsed(GrObject* /*pSender*/, GrElapsedEventArgs* /*e*/)
+    {
+        m_pTimer->DoScroll();
+        m_pGridCore->Invalidate();
     }
 
     RowResizing::RowResizing()
