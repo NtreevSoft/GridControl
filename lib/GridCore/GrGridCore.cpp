@@ -391,6 +391,10 @@ void GrGridCore::SetDisplayRect(const GrRect& displayRect)
     if(m_displayRect == displayRect)
         return;
     m_displayRect = displayRect;
+	this->Update();
+	uint horz = GetHorzScroll()->GetVisible() == true ? GetHorzScroll()->GetValue() : GetHorzScroll()->GetMinimum();
+    uint vert = GetVertScroll()->GetVisible() == true ? GetVertScroll()->GetValue() : GetVertScroll()->GetMinimum();
+    m_pRootRow->Clip(m_displayRect, horz, vert);
     OnDisplayRectChanged(&GrEventArgs::Empty);
 }
 

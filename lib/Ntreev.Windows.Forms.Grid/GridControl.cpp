@@ -1598,6 +1598,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pColumnList->BringIntoView(column->NativeRef);
     }
 
+	void GridControl::DisplayFirst(RowBase^ rowBase)
+	{
+		m_pDataRowList->DisplayFirst(rowBase->NativeRef);
+	}
+
     void GridControl::Clear()
     {
         m_disposing = true;

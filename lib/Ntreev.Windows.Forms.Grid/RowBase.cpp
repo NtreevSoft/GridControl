@@ -27,6 +27,7 @@
 #include "Row.h"
 #include "GroupRow.h"
 #include "FromNative.h"
+#include "GridControl.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -42,10 +43,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     }
 
+	IDataRow* RowBase::NativeRef::get()
+    {
+		return m_pDataRow;
+    }
+
     void RowBase::Focus()
     {
         this->Focuser->Set(m_pDataRow);
     }
+
+	void RowBase::DisplayFirst()
+	{
+		this->GridControl->DisplayFirst(this);
+	}
 
 	int RowBase::Height::get()
 	{

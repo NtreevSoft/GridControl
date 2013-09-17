@@ -102,7 +102,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		if(m_componentToRow->ContainsKey(component) == true)
 		{
-			m_componentToRow[component]->Component = component;
+			row = m_componentToRow[component];
+			row->Component = component;
+			m_pDataRowList->RemoveDataRow(row->NativeRef);
+			m_pDataRowList->InsertDataRow(row->NativeRef, componentIndex);
+			m_components->Remove(component);
+			m_components->Insert(componentIndex, component);
 			return;
 		}
 
@@ -112,7 +117,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			return;
 
 		row = this->GridControl->CreateRow(m_pDataRowList->NewDataRow());
-		m_pDataRowList->AddDataRow(row->NativeRef);
+
+		m_pDataRowList->InsertDataRow(row->NativeRef, componentIndex);
 		m_componentToRow->Add(component, row);
 
 		row->Component = component;

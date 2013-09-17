@@ -72,6 +72,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <param name="column">화면내에 표시하려 하는 <see cref="Column"/>의 인스턴스입니다.</param>
         void BringIntoView(Column^ column);
 
+		/// <summary>
+        /// 대상이 되는 행이 화면내에 첫번째로 표시 될 수 있도록 수직 스크롤을 조정합니다.
+        /// </summary>
+        /// <param name="rowBase">화면내에 첫번째로 표시하려 하는 <see cref="RowBase"/>의 인스턴스입니다.</param>
+        void DisplayFirst(RowBase^ rowBase);
+
         /// <summary>
         /// 모든 데이터를 삭제하고 그리드 컨트롤을 초기화 상태로 설정합니다.
         /// </summary>

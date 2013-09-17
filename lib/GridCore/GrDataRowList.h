@@ -61,6 +61,8 @@ public:
     IDataRow* HitTest(int y) const;
     GrIndexRange HitTest(int y, IDataRow* pRowAnchor) const;
     void BringIntoView(IDataRow* pDataRow);
+	void DisplayFirst(IDataRow* pDataRow);
+	int GetDisplayOffset() const;
 
     void Sort(GrColumn* pColumn);
 
@@ -99,6 +101,7 @@ public:
     virtual int GetWidth() const { return 0; }
     virtual int GetHeight() const { return m_displayableHeight; }
     virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
+	
 
 protected:
     virtual void OnGridCoreAttached();
@@ -152,6 +155,7 @@ private:
     uint m_groupCount;
     uint m_dataRowID;
     uint m_margin;
+	int m_offset;
 
     int m_displayableBottom;
     int m_visibleBottom;

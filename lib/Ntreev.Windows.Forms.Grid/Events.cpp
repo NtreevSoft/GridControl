@@ -169,7 +169,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     }
 
     RowBindingEventArgs::RowBindingEventArgs(System::Object^ component)
-        : m_component(component), m_cancel(false)
+        : m_component(component)
     {
 
     }

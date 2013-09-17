@@ -37,6 +37,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         void Focus();
 
+		/// <summary>
+        /// 화면에 첫번째로 표시되도록 스크롤을 조정합니다.
+        /// </summary>
+		void DisplayFirst();
+
     public: // properties
 
         /// <summary>
@@ -160,6 +165,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         RowBase(_GridControl^ gridControl, IDataRow* pDataRow);
 
         RowBase(IDataRow* pDataRow);
+
+	internal: // properties
+
+		property IDataRow* NativeRef
+        {
+            IDataRow* get() new;
+        }
 
     private: // methods
 

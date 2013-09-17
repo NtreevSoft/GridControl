@@ -166,7 +166,9 @@ GrDataRowList::~GrDataRowList()
 
 int GrDataRowList::CellStart() const
 {
-	int start = GetX() + m_rowWidth;
+	int start = GetX();
+	if(m_pGridCore->GetRowVisible() == true)
+		start += m_rowWidth;
 	return start + m_margin;
 }
 
@@ -614,6 +616,7 @@ void GrDataRowList::RepositionVisibleRowList()
 	int y = GetY();
 	for(auto value : m_vecVisibleRows)
 	{
+		value->SetY(y);
 		y += value->GetHeight();
 	}
 	m_visibleBottom = y;
@@ -985,6 +988,17 @@ void GrDataRowList::BringIntoView(IDataRow* pDataRow)
 	m_pGridCore->Invalidate();
 }
 
+void GrDataRowList::DisplayFirst(IDataRow* pDataRow)
+{
+	GrScroll* pVertScroll = m_pGridCore->GetVertScroll();
+	pVertScroll->SetValue(pDataRow->GetVisibleIndex());
+}
+
+int GrDataRowList::GetDisplayOffset() const
+{
+	return m_offset;
+}
+
 GrRect GrDataRowList::GetBounds() const
 {
 	GrRect bound = m_bound;
@@ -1009,6 +1023,12 @@ void GrDataRowList::Clip(const GrRect& displayRect, uint /*horizontal*/, uint ve
 
 	uint displayIndex = 0;
 
+	m_offset = 0;
+	for(uint i=0 ; i<vertical ; i++)
+	{
+		m_offset += m_vecVisibleRows[i]->GetHeight();
+	}
+
 	_IDataRows vecVisibleRows(m_vecVisibleRows.begin() + vertical, m_vecVisibleRows.end());
 	for(auto item : vecVisibleRows)
 	{
@@ -1017,7 +1037,7 @@ void GrDataRowList::Clip(const GrRect& displayRect, uint /*horizontal*/, uint ve
 
 		bool clipped = displayY + item->GetHeight() > displayRect.bottom;
 
-		item->SetY(displayY);
+		//item->SetY(displayY);
 		item->SetDisplayable(true);
 		item->SetDisplayIndex(displayIndex);
 		item->SetClipped(clipped);

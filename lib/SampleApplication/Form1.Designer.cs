@@ -86,27 +86,23 @@ namespace SampleApplication
             this.columnButton123.ColumnName = "Button";
             this.columnButton123.IsFrozen = true;
             this.columnButton123.IsResizable = false;
-            this.columnButton123.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             // 
             // column2
             // 
             this.column2.ClickEditType = Ntreev.Windows.Forms.Grid.ClickEditType.FocusedClick;
             this.column2.ColumnName = "Icon";
             this.column2.DataType = typeof(System.Drawing.Icon);
-            this.column2.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             // 
             // columnUITypeEditor1
             // 
             this.columnUITypeEditor1.CellBackColor = System.Drawing.Color.Red;
             this.columnUITypeEditor1.ColumnName = "CheckBox";
             this.columnUITypeEditor1.DataType = typeof(bool);
-            this.columnUITypeEditor1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             // 
             // columnButton1
             // 
             this.columnButton1.ColumnName = "Cursor";
             this.columnButton1.DataType = typeof(System.Windows.Forms.Cursor);
-            this.columnButton1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             // 
             // columnUITypeEditor2
             // 
@@ -114,27 +110,23 @@ namespace SampleApplication
             this.columnUITypeEditor2.ColumnName = "Color";
             this.columnUITypeEditor2.DataType = typeof(System.Drawing.Color);
             this.columnUITypeEditor2.IsReadOnly = true;
-            this.columnUITypeEditor2.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             // 
             // columnFlags
             // 
             this.columnFlags.ClickEditType = Ntreev.Windows.Forms.Grid.ClickEditType.FocusedClick;
             this.columnFlags.ColumnName = "Flags";
-            this.columnFlags.DataType = typeof(TestFlag);
-            this.columnFlags.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
+            this.columnFlags.DataType = typeof(SampleApplication.TestFlag);
             // 
             // columnLinkedItemSelector1
             // 
             this.columnLinkedItemSelector1.CellPadding = new System.Windows.Forms.Padding(0, 0, 1, 1);
             this.columnLinkedItemSelector1.ClickEditType = Ntreev.Windows.Forms.Grid.ClickEditType.SingClick;
             this.columnLinkedItemSelector1.ColumnName = "Column2";
-            this.columnLinkedItemSelector1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             // 
             // column3
             // 
             this.column3.ColumnName = "Enums";
             this.column3.DataType = typeof(System.Environment.SpecialFolder);
-            this.column3.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             // 
             // columnDataLocation1
             // 
@@ -142,19 +134,16 @@ namespace SampleApplication
             this.columnDataLocation1.DataType = typeof(SampleApplication.DataLocation);
             this.columnDataLocation1.MaxWidth = 30;
             this.columnDataLocation1.MinWidth = 30;
-            this.columnDataLocation1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             // 
             // columnEnable1
             // 
             this.columnEnable1.ColumnName = "Column1";
-            this.columnEnable1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             // 
             // columnTextBox1
             // 
             this.columnTextBox1.ClickEditType = Ntreev.Windows.Forms.Grid.ClickEditType.FocusedClick;
             this.columnTextBox1.ColumnName = "DockStyle";
             this.columnTextBox1.DataType = typeof(System.Windows.Forms.DockStyle);
-            this.columnTextBox1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             // 
             // column1
             // 
@@ -162,48 +151,36 @@ namespace SampleApplication
             this.column1.CellWordWrap = true;
             this.column1.ClickEditType = Ntreev.Windows.Forms.Grid.ClickEditType.FocusedClick;
             this.column1.ColumnName = "Text";
-            this.column1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             // 
             // columnRadio2
             // 
             this.columnRadio2.ColumnName = "Radio";
             this.columnRadio2.DataType = typeof(bool);
-            this.columnRadio2.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             // 
             // columnLinkLabel1
             // 
             this.columnLinkLabel1.ClickEditType = Ntreev.Windows.Forms.Grid.ClickEditType.SingClick;
             this.columnLinkLabel1.ColumnName = "LinkLabel";
             this.columnLinkLabel1.IsGroupable = false;
-            this.columnLinkLabel1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             // 
             // ColumnComboBox
             // 
             this.ColumnComboBox.ClickEditType = Ntreev.Windows.Forms.Grid.ClickEditType.FocusedClick;
             this.ColumnComboBox.ColumnName = "ComboBox";
             this.ColumnComboBox.DataType = typeof(SampleApplication.Test);
-            this.ColumnComboBox.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             // 
             // columnNumeric1
             // 
             this.columnNumeric1.ColumnName = "Int32";
             this.columnNumeric1.DataType = typeof(int);
-            this.columnNumeric1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             // 
             // columnDate1
             // 
             this.columnDate1.ColumnName = "Date";
-            this.columnDate1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
             // 
             // columnDataTypes1
             // 
             this.columnDataTypes1.ColumnName = "DataTypes";
-            this.columnDataTypes1.Padding = new System.Windows.Forms.Padding(5, 3, 5, 3);
-            // 
-            // Form1
-            // 
-            resources.ApplyResources(this, "$this");
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             // 
             // splitContainer1
             // 
@@ -213,6 +190,11 @@ namespace SampleApplication
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.splitContainer1.Panel1.Controls.Add(this.gridControl1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.propertyGrid1);
             // 
             // gridControl1
             // 
@@ -242,18 +224,19 @@ namespace SampleApplication
             this.gridControl1.ForeColor = System.Drawing.Color.Black;
             this.gridControl1.IsRowNumberVisible = false;
             this.gridControl1.Name = "gridControl1";
+            this.gridControl1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.gridControl1_Scroll);
             this.gridControl1.ColumnMouseDown += new Ntreev.Windows.Forms.Grid.ColumnMouseEventHandler(this.gridControl1_ColumnMouseDown);
-            this.splitContainer1.Panel1.Controls.Add(this.gridControl1);
-            // 
-            // splitContainer1.Panel2
-            // 
             // 
             // propertyGrid1
             // 
             resources.ApplyResources(this.propertyGrid1, "propertyGrid1");
             this.propertyGrid1.Name = "propertyGrid1";
             this.propertyGrid1.SelectedObject = this.gridControl1;
-            this.splitContainer1.Panel2.Controls.Add(this.propertyGrid1);
+            // 
+            // Form1
+            // 
+            resources.ApplyResources(this, "$this");
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
             this.Name = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);

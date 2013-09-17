@@ -2961,6 +2961,9 @@ int IDataRow::GetY() const
     if(m_pDataRowList == nullptr)
         throw _Exception("GridCore에 붙지 않았음");
 
+	if((int)m_visibleIndex < 0)
+		return GrRow::GetY();
+	return GrRow::GetY() - m_pDataRowList->GetDisplayOffset();
     if(GetDisplayable() == false)
     {
         uint paintingCount = m_pDataRowList->GetDisplayableRowCount();

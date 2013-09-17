@@ -207,6 +207,12 @@ namespace SampleApplication
                 }
             }
         }
+
+        private void gridControl1_Scroll(object sender, ScrollEventArgs e)
+        {
+            //var bounds = this.gridControl1.Rows[0].Bounds;
+            var y = this.gridControl1.Rows[0].Y;
+        }
     }
 
     [Flags]
