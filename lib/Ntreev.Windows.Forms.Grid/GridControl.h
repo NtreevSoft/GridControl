@@ -741,6 +741,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void set(bool);
         }
 
+		/// <summary>
+        /// 우측 빈 여백을 채울지에 대한 여부를 가져오거나 설정합니다.
+        /// </summary>
+        [System::ComponentModel::DescriptionAttribute("우측 빈 여백을 채울지에 대한 여부를 설정합니다.")]
+        [System::ComponentModel::CategoryAttribute("Appearance")]
+        [System::ComponentModel::DefaultValueAttribute(false)]
+        property bool FillBlank
+        {
+            bool get(); 
+            void set(bool);
+        }
+
         /// <summary>
         /// 행의 전체선택에 대한 여부를 가져오거나 설정합니다.
         /// </summary>
@@ -845,6 +857,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
 			virtual System::Drawing::Rectangle get() override;
         }
+
+		property bool HScrollVisible
+		{
+			bool get();
+		}
+
+		property bool VScrollVisible
+		{
+			bool get();
+		}
 
         /// <summary>
         /// IME 지원을 사용하도록 <see cref="System::Windows::Forms::Control::ImeMode"/> 속성을 활성 값으로 설정할 수 있는지 여부를 나타내는 값을 가져옵니다.

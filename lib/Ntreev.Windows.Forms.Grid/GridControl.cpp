@@ -1774,6 +1774,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pColumnList->GetColumnSplitter()->SetVisible(value);
     }
 
+	bool GridControl::FillBlank::get()
+    {
+        return m_pGridCore->GetFillBlank();
+    }
+
+    void GridControl::FillBlank::set(bool value)
+    {
+        m_pGridCore->SetFillBlank(value);
+    }
+
     bool GridControl::IsColumnMovable::get()
     {
         return m_pGridCore->GetColumnMovable();
@@ -2504,6 +2514,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		clientRectangle.Width -= this->Padding.Horizontal;
 		clientRectangle.Height -= this->Padding.Vertical;
 		return clientRectangle;
+	}
+
+	bool GridControl::HScrollVisible::get()
+	{
+		return m_pGridCore->GetHorzScroll()->GetVisible();
+	}
+
+	bool GridControl::VScrollVisible::get()
+	{
+		return m_pGridCore->GetVertScroll()->GetVisible();
 	}
 
     bool GridControl::CanEnableIme::get()

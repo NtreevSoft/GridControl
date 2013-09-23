@@ -441,7 +441,7 @@ void GrColumnList::Clip(const GrRect& displayRect, uint horizontal, uint /*verti
     {
         GrColumn* pColumn = GetVisibleColumn(i);
 
-        if(x > displayRect.right)
+        if(x >= displayRect.right)
             break;
 
         pColumn->SetX(x);
@@ -760,8 +760,10 @@ void GrColumnList::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
     GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
     GrRect paintRect = GetRect();
     GrFlag paintStyle = ToPaintStyle();
+	GrColor lineColor = GetPaintingLineColor();
+	GrColor backColor = GetPaintingBackColor();
 
-    pPainter->DrawRow(paintStyle, paintRect, GetPaintingLineColor(), GetPaintingBackColor());
+    pPainter->DrawRow(paintStyle, paintRect, lineColor, backColor);
 
     if(pDataRowList->GetMargin() != 0)
     {
@@ -783,6 +785,15 @@ void GrColumnList::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
     }
 
     PaintSplitter(pPainter, clipRect);
+
+	GrRect displayRect = m_pGridCore->GetDisplayRect();
+	if(m_pGridCore->GetFillBlank() == true && m_displayableRight < displayRect.right)
+	{
+		GrRect pr = paintRect;
+		pr.left = m_displayableRight;
+		pr.right = displayRect.right;
+		pPainter->DrawColumn(paintStyle & ~GrPaintStyle_RightLine, pr, lineColor, backColor, &clipRect);
+	}
 }
 
 void GrColumnList::PaintSplitter(GrGridPainter* pPainter, const GrRect& clipRect) const

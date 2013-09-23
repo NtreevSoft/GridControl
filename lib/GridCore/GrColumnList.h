@@ -38,6 +38,7 @@ public:
 
     uint GetDisplayableColumnCount() const;
     GrColumn* GetDisplayableColumn(uint index) const;
+	int GetDisplayableRight() const { return m_displayableRight; }
 
     GrColumn* GetFirstSortColumn() const;
 

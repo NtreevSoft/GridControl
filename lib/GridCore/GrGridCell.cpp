@@ -1468,10 +1468,16 @@ void GrItem::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
         switch(m_pColumn->GetItemType())
         {
         case GrItemType_DropDown:
-            pPainter->DrawDropDown(buttonRect, GetControlState());
+			if(GetClipped() == true)
+				pPainter->DrawDropDown(buttonRect, GetControlState(), &clipRect);
+			else
+				pPainter->DrawDropDown(buttonRect, GetControlState());
             break;
         case GrItemType_Modal:
-            pPainter->DrawModal(buttonRect, GetControlState());
+			if(GetClipped() == true)
+				pPainter->DrawModal(buttonRect, GetControlState(), &clipRect);
+			else
+				pPainter->DrawModal(buttonRect, GetControlState());
             break;
         default:
             break;
@@ -1621,6 +1627,19 @@ void GrDataRow::SetItemFont(GrFont* pFont)
         return;
     m_pItemFont = pFont;
     InvalidateRow();
+}
+
+GrColor GrDataRow::GetPaintingItemBackColor() const
+{
+	GrColor color = GetItemBackColor();
+    if(color != GrColor::Empty)
+        return color;
+
+    GrStyle* pStyle = m_pGridCore->GetStyle();
+    if(pStyle != nullptr && pStyle->ItemBackColors.size() > 0)
+        return pStyle->GetItemBackColor(GetVisibleDataRowIndex());
+
+    return GrCell::GetBackColor();
 }
 
 IFocusable* GrDataRow::GetFocusable(GrColumn* pColumn) const
@@ -2533,6 +2552,8 @@ GrFlag GrColumn::ToPaintStyle() const
         flag.Add(GrPaintStyle_Selected);
     if(HasFocused() == true)
         flag.Add(GrPaintStyle_Focused);
+	if(GetClipped() == true)
+		flag.Remove(GrPaintStyle_RightLine);
 
     return flag;
 }
@@ -2898,6 +2919,7 @@ void GrDataRow::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
     }
 
     const GrColumnList* pColumnList = m_pGridCore->GetColumnList();
+	GrRect displayRect = m_pGridCore->GetDisplayRect();
     for(uint i=0 ; i<pColumnList->GetDisplayableColumnCount() ; i++)
     {
         const GrColumn* pColumn = pColumnList->GetDisplayableColumn(i);
@@ -2906,6 +2928,14 @@ void GrDataRow::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
         const GrItem* pItem = GetItem(pColumn);
         pItem->Paint(pPainter, clipRect);
     }
+
+	if(m_pGridCore->GetFillBlank() == true && pColumnList->GetDisplayableRight() < displayRect.right)
+	{
+		GrRect pr = paintRect;
+		pr.left = pColumnList->GetDisplayableRight();
+		pr.right = displayRect.right;
+		pPainter->DrawItem(GrPaintStyle_BottomLine, pr, GetPaintingLineColor(), GetPaintingItemBackColor(), &clipRect);
+	}
 }
 
 bool GrRow::GetVisible() const
@@ -2964,22 +2994,6 @@ int IDataRow::GetY() const
 	if((int)m_visibleIndex < 0)
 		return GrRow::GetY();
 	return GrRow::GetY() - m_pDataRowList->GetDisplayOffset();
-    if(GetDisplayable() == false)
-    {
-        uint paintingCount = m_pDataRowList->GetDisplayableRowCount();
-        if(paintingCount == 0)
-            return GrRow::GetY();
-
-        IDataRow* pFirstPainting = m_pDataRowList->GetDisplayableRow(0);
-        int offset = 0;
-        if(pFirstPainting != this)
-        {
-            offset = pFirstPainting->GetY() - GrRow::GetY();
-        }
-        return m_pDataRowList->GetY() - offset;
-    }
-
-    return GrRow::GetY();
 }
 
 bool IDataRow::GetVisible() const
@@ -3303,6 +3317,13 @@ void GrRowSplitter::Paint(GrGridPainter* pPainter, const GrRect& /*clipRect*/) c
     GrColor lineColor = GetPaintingLineColor();
     GrRect paintRect = GetRect();
 
+	GrRect displayRect = m_pGridCore->GetDisplayRect();
+	GrColumnList* pColumnList = m_pGridCore->GetColumnList();
+	if(m_pGridCore->GetFillBlank() == true && pColumnList->GetDisplayableRight() < displayRect.right)
+	{
+		paintRect.right = displayRect.right;
+	}
+
     pPainter->DrawRowSplitter(GrPaintStyle_BottomLine, paintRect, lineColor, backColor);
 }
 
@@ -3506,10 +3527,17 @@ void GrCaption::SetTextVertAlign(GrVertAlign align)
 void GrCaption::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
 {
     GrRect paintRect = GetRect();
+	GrRect displayRect = m_pGridCore->GetDisplayRect();
+	GrColumnList* pColumnList = m_pGridCore->GetColumnList();
+	if(m_pGridCore->GetFillBlank() == true && pColumnList->GetDisplayableRight() < displayRect.right)
+	{
+		paintRect.right = displayRect.right;
+	}
+
     if(paintRect.top >= clipRect.bottom || paintRect.bottom < clipRect.top)
         return;
 
-    GrFlag paintStyle = ToPaintStyle();
+    GrFlag paintStyle = ToPaintStyle() & ~GrPaintStyle_RightLine;
     GrColor foreColor = GetPaintingForeColor();
     GrColor backColor = GetPaintingBackColor();
 
@@ -3872,10 +3900,17 @@ void GrGroupPanel::columnList_ColumnGroupChanged(GrObject* /*pSender*/, GrColumn
 void GrGroupPanel::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
 {
     GrRect paintRect = GetRect();
+	GrRect displayRect = m_pGridCore->GetDisplayRect();
+	GrColumnList* pColumnList = m_pGridCore->GetColumnList();
+	if(m_pGridCore->GetFillBlank() == true && pColumnList->GetDisplayableRight() < displayRect.right)
+	{
+		paintRect.right = displayRect.right;
+	}
+
     if(paintRect.top >= clipRect.bottom || paintRect.bottom < clipRect.top)
         return;
 
-    GrFlag paintStyle = ToPaintStyle();
+    GrFlag paintStyle = ToPaintStyle() & ~GrPaintStyle_RightLine;
     GrColor foreColor = GetPaintingForeColor();
     GrColor backColor = GetPaintingBackColor();
 
@@ -4024,7 +4059,9 @@ bool GrColumnSplitter::GetDisplayable() const
 
 void GrColumnSplitter::Paint(GrGridPainter* pPainter, const GrRect& /*clipRect*/) const 
 {
-    pPainter->DrawItem(GrPaintStyle_Default, GetRect(), GetPaintingLineColor(), GetPaintingBackColor());
+	GrRect paintRect = GetRect();
+	
+    pPainter->DrawItem(GrPaintStyle_Default, paintRect, GetPaintingLineColor(), GetPaintingBackColor());
 }
 
 GrRow* GrColumnSplitter::GetRow() const
@@ -4164,10 +4201,17 @@ void GrGroupHeader::Paint(GrGridPainter* pPainter, const GrRect& /*clipRect*/) c
 {
     GrColumn* pColumn = m_pRow->GetColumn();
     GrRect paintRect = GetRect();
-    GrFlag paintStyle = ToPaintStyle();
+    GrFlag paintStyle = ToPaintStyle() & ~GrPaintStyle_RightLine;
     GrColor backColor = pColumn->GetPaintingBackColor();
     GrColor foreColor = pColumn->GetPaintingForeColor();
     GrColor lineColor = pColumn->GetPaintingLineColor();
+
+	GrRect displayRect = m_pGridCore->GetDisplayRect();
+	GrColumnList* pColumnList = m_pGridCore->GetColumnList();
+	if(m_pGridCore->GetFillBlank() == true && pColumnList->GetDisplayableRight() < displayRect.right)
+	{
+		paintRect.right = displayRect.right;
+	}
 
     pPainter->DrawGroupHeader(paintStyle, paintRect, lineColor, backColor);
     DrawText(pPainter, foreColor, paintRect);

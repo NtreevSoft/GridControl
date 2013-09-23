@@ -180,6 +180,7 @@ GrGridCore::GrGridCore(GrGridWindow* pGridWindow) : m_pGridWindow(pGridWindow)
     m_hideSelection = false;
     m_multiSelect = true;
     m_rowVisible = true;
+	m_fillBlank = false;
     m_clickEditing = DefaultClickEditing;
 
 	m_foreColor = GrStyle::Default.ForeColor;
@@ -995,6 +996,19 @@ void GrGridCore::SetRowVisible(bool b)
         return;
     m_rowVisible = b;
     m_pColumnList->SetVisibleChanged();
+    Invalidate();
+}
+
+bool GrGridCore::GetFillBlank() const
+{
+	return m_fillBlank;
+}
+
+void GrGridCore::SetFillBlank(bool b)
+{
+	if(m_fillBlank == b)
+        return;
+    m_fillBlank = b;
     Invalidate();
 }
 

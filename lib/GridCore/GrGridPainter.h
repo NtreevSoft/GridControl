@@ -162,8 +162,8 @@ public:
     virtual void BeginPaint(void* painterDevice) = 0;
 
     virtual void DrawRowSplitter(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& fillColor) = 0;
-    virtual void DrawDropDown(const GrRect& paintRect, GrControlState state) = 0;
-    virtual void DrawModal(const GrRect& paintRect, GrControlState state) = 0;
+    virtual void DrawDropDown(const GrRect& paintRect, GrControlState state, const GrRect* pClipRect = nullptr) = 0;
+    virtual void DrawModal(const GrRect& paintRect, GrControlState state, const GrRect* pClipRect = nullptr) = 0;
     virtual void DrawExpander(GrFlag paintStyle, const GrRect& paintRect, GrControlState state, bool opened, const GrColor& foreColor, const GrColor& backColor) = 0;
     virtual void DrawSortGlyph(const GrRect& paintRect, GrSort sortType) = 0;
 

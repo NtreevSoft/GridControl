@@ -50,9 +50,11 @@ namespace SampleApplication
         public Form1()
         {
             string d = ((int)100).ToString("{0} wow");
-            
+            //ListBox dd;
+            //dd.HorizontalScrollbar
             InitializeComponent();
             this.gridControl1.InsertionRow.Cells["Color"].IsReadOnly = true;
+            //this.gridControl1.gets
 
             List<Type> types = new List<Type>();
             types.Add(typeof(int));
@@ -134,6 +136,8 @@ namespace SampleApplication
            // this.PanelPane.IsActivatedChanged += new EventHandler(PanelPane_IsActivatedChanged);
             this.gridControl1.Columns.AdjustWidth();
             this.gridControl1.Rows.Count = 50;
+
+            this.gridControl1.Rows[0].CellBackColor = Color.Red;
 
         }
 

@@ -900,6 +900,8 @@ public:
     void SetItemForeColor(const GrColor& color);
     void SetItemFont(GrFont* pFont);
 
+	GrColor GetPaintingItemBackColor() const;
+
     virtual bool GetFullSelected() const;
 
     virtual void SetVisible(bool b);

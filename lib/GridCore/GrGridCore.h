@@ -95,6 +95,8 @@ public:
     void SetSelectionVisible(bool b);
     bool GetRowVisible() const;
     void SetRowVisible(bool b);
+	bool GetFillBlank() const;
+	void SetFillBlank(bool b);
 
     bool IsGrouped() const;
     bool IsUpdating() const { return m_updating; }
@@ -263,6 +265,7 @@ private:
     bool m_rowVisible;
     bool m_hideSelection;
     bool m_multiSelect;
+	bool m_fillBlank;
     GrClickEditing m_clickEditing;
 
 	GrColor m_foreColor;

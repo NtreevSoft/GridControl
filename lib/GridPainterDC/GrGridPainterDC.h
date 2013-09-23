@@ -43,8 +43,8 @@ public:
     virtual void BeginPaint(void* hdc);
 
     virtual void DrawRowSplitter(GrFlag paintStyle, const GrRect& paintRect, const GrColor& lineColor, const GrColor& backColor);
-    virtual void DrawDropDown(const GrRect& paintRect, GrControlState state);
-    virtual void DrawModal(const GrRect& paintRect, GrControlState state);
+    virtual void DrawDropDown(const GrRect& paintRect, GrControlState state, const GrRect* pClipRect = nullptr);
+    virtual void DrawModal(const GrRect& paintRect, GrControlState state, const GrRect* pClipRect = nullptr);
     virtual void DrawExpander(GrFlag paintStyle, const GrRect& paintRect, GrControlState state, bool opened, const GrColor& foreColor, const GrColor& backColor);
     virtual void DrawSortGlyph(const GrRect& paintRect, GrSort sortType);
 

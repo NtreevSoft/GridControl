@@ -720,22 +720,24 @@ void GrGridPainterDC::DrawSplitterMovingLine(const GrRect& paintRect)
 	SetROP2(m_hdc, n);
 }
 
-void GrGridPainterDC::DrawDropDown(const GrRect& paintRect, GrControlState state)
+void GrGridPainterDC::DrawDropDown(const GrRect& paintRect, GrControlState state, const GrRect* pClipRect)
 {
 	RECT2 rtPaint = paintRect;
+	RECT2 rtClip = pClipRect != NULL ? *pClipRect : paintRect;
+	rtClip.Offset(m_ptTransform);
 
 	if(m_hDropDownTheme)
 	{
 		switch(state)
 		{
 		case GrControlState_Normal:
-			DrawThemeBackground(m_hDropDownTheme, m_hdc, CP_DROPDOWNBUTTON, CBXS_NORMAL, &rtPaint, &rtPaint);
+			DrawThemeBackground(m_hDropDownTheme, m_hdc, CP_DROPDOWNBUTTON, CBXS_NORMAL, &rtPaint, &rtClip);
 			break;
 		case GrControlState_Hot:
-			DrawThemeBackground(m_hDropDownTheme, m_hdc, CP_DROPDOWNBUTTON, CBXS_HOT, &rtPaint, &rtPaint);
+			DrawThemeBackground(m_hDropDownTheme, m_hdc, CP_DROPDOWNBUTTON, CBXS_HOT, &rtPaint, &rtClip);
 			break;
 		case GrControlState_Pressed:
-			DrawThemeBackground(m_hDropDownTheme, m_hdc, CP_DROPDOWNBUTTON, CBXS_PRESSED, &rtPaint, &rtPaint);
+			DrawThemeBackground(m_hDropDownTheme, m_hdc, CP_DROPDOWNBUTTON, CBXS_PRESSED, &rtPaint, &rtClip);
 			break;
 		}
 	}
@@ -758,20 +760,22 @@ void GrGridPainterDC::DrawDropDown(const GrRect& paintRect, GrControlState state
 	}
 }
 
-void GrGridPainterDC::DrawModal(const GrRect& paintRect, GrControlState state)
+void GrGridPainterDC::DrawModal(const GrRect& paintRect, GrControlState state, const GrRect* pClipRect)
 {
 	RECT2 rtPaint = paintRect;
+	RECT2 rtClip = pClipRect != NULL ? *pClipRect : paintRect;
+	rtClip.Offset(m_ptTransform);
 
 	switch(state)
 	{
 	case GrControlState_Normal:
-		DrawThemeBackground(m_hModalTheme, m_hdc, BP_PUSHBUTTON, PBS_NORMAL, &rtPaint, &rtPaint);
+		DrawThemeBackground(m_hModalTheme, m_hdc, BP_PUSHBUTTON, PBS_NORMAL, &rtPaint, &rtClip);
 		break;
 	case GrControlState_Hot:
-		DrawThemeBackground(m_hModalTheme, m_hdc, BP_PUSHBUTTON, PBS_HOT, &rtPaint, &rtPaint);
+		DrawThemeBackground(m_hModalTheme, m_hdc, BP_PUSHBUTTON, PBS_HOT, &rtPaint, &rtClip);
 		break;
 	case GrControlState_Pressed:
-		DrawThemeBackground(m_hModalTheme, m_hdc, BP_PUSHBUTTON, PBS_PRESSED, &rtPaint, &rtPaint);
+		DrawThemeBackground(m_hModalTheme, m_hdc, BP_PUSHBUTTON, PBS_PRESSED, &rtPaint, &rtClip);
 		break;
 	}
 
