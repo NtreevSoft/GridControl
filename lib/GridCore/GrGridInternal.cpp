@@ -373,7 +373,18 @@ void GrFocuserInternal::SetFocusing(IFocusable* pFocusable)
 
     if(m_pFocusing != nullptr && m_pFocusing->GetDisplayable() == true)
     {
-        m_pFocusing->Invalidate();
+		IDataRow* pDataRow = m_pFocusing->GetDataRow();
+		if(m_pGridCore->GetRowHighlight() == true || m_pGridCore->GetFullRowSelect() == true)
+		{
+			GrRect rect = pDataRow->GetRect();
+			rect.right = m_pGridCore->GetDisplayRect().right;
+			rect.Expand(2);
+			m_pGridCore->Invalidate(rect);
+		}
+		else
+		{
+			m_pFocusing->Invalidate();
+		}
     }
 
     m_pFocusing = pFocusable;

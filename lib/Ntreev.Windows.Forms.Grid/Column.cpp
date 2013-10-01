@@ -217,6 +217,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         this->GridControl->BringIntoView(this);
     }
 
+	void Column::DisplayFirst()
+	{
+		if(this->GridControl == nullptr)
+            return;
+        this->GridControl->DisplayFirst(this);
+	}
+
 	void Column::AdjustWidth()
 	{
 		m_pColumn->SetFit();

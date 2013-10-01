@@ -357,7 +357,10 @@ void GrDataRowList::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
 				pStyle = &GrStyle::Default;
 			GrRect displayRect = m_pGridCore->GetDisplayRect();
 			highlightRect.top--;
-			highlightRect.right = m_pGridCore->GetColumnList()->GetBounds().right;
+			if(m_pGridCore->GetFillBlank() == false)
+				highlightRect.right = m_pGridCore->GetColumnList()->GetBounds().right;
+			else
+				highlightRect.right = displayRect.right;
 			pPainter->DrawRectangle(highlightRect, pStyle->RowHighlightLineColor);
 		}
 	}
@@ -986,12 +989,15 @@ void GrDataRowList::BringIntoView(IDataRow* pDataRow)
 		pVertScroll->SetValue(newValue);
 	}
 	m_pGridCore->Invalidate();
+	m_pGridCore->Update();
 }
 
 void GrDataRowList::DisplayFirst(IDataRow* pDataRow)
 {
 	GrScroll* pVertScroll = m_pGridCore->GetVertScroll();
 	pVertScroll->SetValue(pDataRow->GetVisibleIndex());
+	m_pGridCore->Invalidate();
+	m_pGridCore->Update();
 }
 
 int GrDataRowList::GetDisplayOffset() const

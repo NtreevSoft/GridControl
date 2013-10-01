@@ -108,6 +108,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			m_pDataRowList->InsertDataRow(row->NativeRef, componentIndex);
 			m_components->Remove(component);
 			m_components->Insert(componentIndex, component);
+			this->GridControl->InvokeRowChanged(row);
 			return;
 		}
 

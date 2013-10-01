@@ -2934,8 +2934,48 @@ void GrDataRow::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
 		GrRect pr = paintRect;
 		pr.left = pColumnList->GetDisplayableRight();
 		pr.right = displayRect.right;
-		pPainter->DrawItem(GrPaintStyle_BottomLine, pr, GetPaintingLineColor(), GetPaintingItemBackColor(), &clipRect);
+		pPainter->DrawItem(GrPaintStyle_BottomLine, pr, GetPaintingLineColor(), GetBlankPaintingBackColor(), &clipRect);
 	}
+}
+
+GrColor GrDataRow::GetBlankBackColor() const
+{
+	GrColor color = GrCell::GetBackColorCore();
+    if(color != GrColor::Empty)
+        return color;
+
+    color = GetItemBackColor();
+    if(color != GrColor::Empty)
+        return color;
+
+    GrStyle* pStyle = m_pGridCore->GetStyle();
+    if(pStyle != nullptr && pStyle->ItemBackColors.size() > 0)
+        return pStyle->GetItemBackColor(GetVisibleDataRowIndex());
+
+    return GrCell::GetBackColor();
+}
+
+GrColor GrDataRow::GetBlankPaintingBackColor() const
+{
+	GrColor color = GetBlankBackColor();
+
+	const GrStyle* pStyle = m_pGridCore->GetStyle();
+    if(pStyle == nullptr)
+        pStyle = &GrStyle::Default;
+
+	if(GetFullSelected() == true)
+    {
+        if(m_pGridCore->GetSelectionVisible() == true)
+            color = pStyle->SelectedBackColor;
+    }
+    else if(HasFocused() == true && 
+        m_pGridCore->GetRowHighlight() == true && 
+        m_pGridCore->GetRowHighlightType() != GrRowHighlightType_Line)
+    {
+        color = pStyle->RowHighlightFillColor;
+    }
+
+	return color;
 }
 
 bool GrRow::GetVisible() const

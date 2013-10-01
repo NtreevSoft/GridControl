@@ -35,7 +35,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     [System::Drawing::ToolboxBitmapAttribute(GridControl::typeid)]
     [System::ComponentModel::DesignerAttribute("Ntreev.Windows.Forms.Grid.Design.GridControlDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
     [System::Windows::Forms::DockingAttribute(System::Windows::Forms::DockingBehavior::Ask)]
-    public ref class GridControl : System::Windows::Forms::Control
+    public ref class GridControl : System::Windows::Forms::UserControl
     {
 		ref class StyleConverter;
     public: // methods
@@ -77,6 +77,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         /// <param name="rowBase">화면내에 첫번째로 표시하려 하는 <see cref="RowBase"/>의 인스턴스입니다.</param>
         void DisplayFirst(RowBase^ rowBase);
+
+		/// <summary>
+        /// 대상이 되는 열이 화면내에 첫번째로 표시 될 수 있도록 수평 스크롤을 조정합니다.
+        /// </summary>
+        /// <param name="column">화면내에 첫번째로 표시하려 하는 <see cref="Column"/>의 인스턴스입니다.</param>
+        void DisplayFirst(Column^ column);
 
         /// <summary>
         /// 모든 데이터를 삭제하고 그리드 컨트롤을 초기화 상태로 설정합니다.
@@ -1518,10 +1524,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		/// <summary>
         /// <see cref="BackgroundColor"/> 클라이언트 영역이 사용자 또는 코드에 의해 스크롤될 때 발생합니다.
         /// </summary>
-		event System::Windows::Forms::ScrollEventHandler^ Scroll
+		event System::Windows::Forms::ScrollEventHandler^ Scroll 
         {
-            void add(System::Windows::Forms::ScrollEventHandler^ p) { m_eventScroll += p; }
-            void remove(System::Windows::Forms::ScrollEventHandler^ p) { m_eventScroll -= p; }
+            void add(System::Windows::Forms::ScrollEventHandler^ p) new { m_eventScroll += p; }
+            void remove(System::Windows::Forms::ScrollEventHandler^ p) new { m_eventScroll -= p; }
         private:
             void raise(System::Object^ sender, System::Windows::Forms::ScrollEventArgs^ e) { if(m_eventScroll != nullptr) m_eventScroll->Invoke(sender, e); }
         }
@@ -2112,7 +2118,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		virtual void OnLineColorChanged(System::EventArgs^ e);
 
-		virtual void OnScroll(System::Windows::Forms::ScrollEventArgs^ e);
+		virtual void OnScroll(System::Windows::Forms::ScrollEventArgs^ e) new;
 
         ///// <summary>
         ///// <see cref="Invalidated"/> 이벤트를 발생시킵니다.
@@ -2156,7 +2162,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// <returns>
         /// 컨트롤이 선택되면 true이고, 그렇지 않으면 false입니다.
         /// </returns>
-        virtual bool ProcessTabKey(bool forward);
+        virtual bool ProcessTabKey(bool forward) override;
 
         virtual Row^ NewRowFromBuilder(RowBuilder^ rowBuilder);
 
@@ -2169,12 +2175,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	protected: // properties
 		property bool HScroll
 		{
-			virtual bool get() { return true; };
+			virtual bool get() new { return true; };
 		}
 
 		property bool VScroll
 		{
-			virtual bool get() { return true; };
+			virtual bool get() new { return true; };
 		}
 
     private: // methods

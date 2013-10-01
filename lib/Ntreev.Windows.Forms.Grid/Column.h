@@ -74,6 +74,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </summary>
         void BringIntoView();
 
+		void DisplayFirst();
+
 		void AdjustWidth();
 
         /// <summary>

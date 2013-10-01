@@ -928,6 +928,8 @@ private:
     void AddItem(GrColumn* pColumn);
     void Reserve(uint count);
     void ClearItem();
+	GrColor GetBlankBackColor() const;
+	GrColor GetBlankPaintingBackColor() const;
 
 private:
     _Items m_vecItems;

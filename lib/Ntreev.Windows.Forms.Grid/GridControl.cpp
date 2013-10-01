@@ -181,7 +181,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         control->IsGroupPanelVisible = false;
         control->IsFrozingSplitterVisible = this->IsFrozingSplitterVisible;
         //control->Padding = System::Windows::Forms::Padding((int)this->Font->Size);
-        //control->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+        control->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+		//control->Padding = System::Windows::Forms::Padding(1);
         control->Visible = false;
         control->AutoFitColumn = this->AutoFitColumn;
         control->AutoFitRow = this->AutoFitRow;
@@ -205,13 +206,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 #ifdef _DEBUG
     void GridControl::OnInvalidated(System::Windows::Forms::InvalidateEventArgs^ e)
     {
-        Control::OnInvalidated(e);
+        UserControl::OnInvalidated(e);
         System::Diagnostics::Debug::WriteLine(e->InvalidRect);
     }
 
     void GridControl::OnCursorChanged(System::EventArgs^ e)
     {
-        Control::OnCursorChanged(e);
+        UserControl::OnCursorChanged(e);
         System::Diagnostics::Debug::WriteLine("OnCursorChanged");
     }
 #endif
@@ -219,14 +220,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void GridControl::OnGotFocus(System::EventArgs^ e)
     {
         m_pGridWindow->OnGotFocus();
-        Control::OnGotFocus(e);
+        UserControl::OnGotFocus(e);
 
         System::Console::WriteLine(this->Handle);
     }
 
     void GridControl::OnEnter(System::EventArgs^ e)
     {
-        Control::OnEnter(e);
+        UserControl::OnEnter(e);
 
         if(this->FocusedRow == this->InsertionRow)
         {
@@ -236,7 +237,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GridControl::OnLeave(System::EventArgs^ e)
     {
-        Control::OnLeave(e);
+        UserControl::OnLeave(e);
 
         if(this->FocusedRow == this->InsertionRow)
         {
@@ -284,12 +285,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         m_pGridWindow->OnLostFocus();
-        Control::OnLostFocus(e);
+        UserControl::OnLostFocus(e);
     }
 
     void GridControl::OnLayout(System::Windows::Forms::LayoutEventArgs^ e)
     {
-        Control::OnLayout(e);
+        UserControl::OnLayout(e);
         m_pGridWindow->OnSizeChanged(this->DisplayRectangle);
         m_pGridCore->Update();
     }
@@ -297,13 +298,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void GridControl::OnForeColorChanged(System::EventArgs^ e)
     {
         m_pGridCore->SetForeColor(this->ForeColor);
-        Control::OnForeColorChanged(e);
+        UserControl::OnForeColorChanged(e);
     }
 
     void GridControl::OnBackColorChanged(System::EventArgs^ e)
     {
         m_pGridCore->SetBackColor(this->BackColor);
-        Control::OnBackColorChanged(e);
+        UserControl::OnBackColorChanged(e);
     }
 
     void GridControl::OnBackgroundColorChanged(System::EventArgs^ e)
@@ -359,7 +360,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 e->Graphics->ReleaseHdc(hdc);
             }
 
-            Control::OnPaint(e);
+            UserControl::OnPaint(e);
         }
         catch(System::Exception^ exception)
         {
@@ -388,7 +389,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             try
             {
                 m_paintBackground = true;
-                Control::OnPaintBackground(e);
+                UserControl::OnPaintBackground(e);
             }
             finally
             {
@@ -626,7 +627,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         m_pGridCore->Update();
 
-        Control::Update();
+        UserControl::Update();
     }
 
     Ntreev::Windows::Forms::Grid::MessageBoxCallback^ GridControl::MessageBoxCallback::get()
@@ -759,23 +760,23 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             }
             return;
         }
-        Control::WndProc(m); 
+        UserControl::WndProc(m); 
     }
 
     System::Object^ GridControl::GetInternalService(System::Type^ serviceType)
     {
-        return Control::GetService(serviceType);
+        return UserControl::GetService(serviceType);
     }
 
     void GridControl::OnMouseLeave(System::EventArgs^ e)
     {
-        Control::OnMouseLeave(e);
+        UserControl::OnMouseLeave(e);
         m_pGridWindow->OnMouseLeave();
     }
 
     void GridControl::OnMouseMove(System::Windows::Forms::MouseEventArgs^ e)
     {
-        Control::OnMouseMove(e);
+        UserControl::OnMouseMove(e);
         m_pGridWindow->OnMouseMove(e->Location, e->Button == System::Windows::Forms::MouseButtons::Left);
     }
 
@@ -783,7 +784,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         //System::Diagnostics::Trace::WriteLine(System::String::Format("mouse down : {0}", System::DateTime::Now));
         m_buttonDownTime = System::DateTime::Now;
-        Control::OnMouseDown(e);
+        UserControl::OnMouseDown(e);
         if(e->Button == System::Windows::Forms::MouseButtons::Left)
             m_pGridWindow->OnMouseDown(e->Location);
 
@@ -796,7 +797,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void GridControl::OnMouseUp(System::Windows::Forms::MouseEventArgs^ e)
     {
         //System::Diagnostics::Trace::WriteLine(System::String::Format("mouse up : {0}", System::DateTime::Now));
-        Control::OnMouseUp(e);
+        UserControl::OnMouseUp(e);
         if(e->Button == System::Windows::Forms::MouseButtons::Left)
             m_pGridWindow->OnMouseUp(e->Location);
         //System::Diagnostics::Trace::WriteLine(System::String::Format("mouse up end: {0}", System::DateTime::Now));
@@ -804,7 +805,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GridControl::OnMouseClick(System::Windows::Forms::MouseEventArgs^ e)
     {
-        Control::OnMouseClick(e);
+        UserControl::OnMouseClick(e);
         if(e->Button == System::Windows::Forms::MouseButtons::Left)
             m_pGridWindow->OnMouseClick(e->Location);
     }
@@ -816,14 +817,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         //if(timeSpan.Milliseconds >= System::Windows::Forms::SystemInformation::DoubleClickTime)
         // return;
 
-        Control::OnMouseDoubleClick(e);
+        UserControl::OnMouseDoubleClick(e);
         if(e->Button == System::Windows::Forms::MouseButtons::Left)
             m_pGridWindow->OnMouseDoubleClick(e->Location);
     }
 
     void GridControl::OnMouseWheel(System::Windows::Forms::MouseEventArgs^ e)
     {
-        Control::OnMouseWheel(e);
+        UserControl::OnMouseWheel(e);
         m_pGridWindow->OnMouseWheel(e->Location, e->Delta);
     }
 
@@ -955,7 +956,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void GridControl::OnFontChanged(System::EventArgs^ e)
     {
         m_pGridCore->SetFont(GrFont::FromManaged(this->Font));
-        Control::OnFontChanged(e);
+        UserControl::OnFontChanged(e);
 #ifdef _DEBUG
         System::Diagnostics::Debug::WriteLine("Invalidate");
 #endif
@@ -1040,7 +1041,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         //    break;
         //}
 
-        return Control::IsInputKey(keyData);
+        return UserControl::IsInputKey(keyData);
     }
 
     bool GridControl::ProcessDialogKey(System::Windows::Forms::Keys keyData)
@@ -1091,19 +1092,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 break;
             case Keys::Tab:
                 {
-                    Control::ProcessDialogKey(keyData);
+                    UserControl::ProcessDialogKey(keyData);
                     return true;
                 }
                 break;
             }
         }
 
-        return Control::ProcessDialogKey(keyData);
+        return UserControl::ProcessDialogKey(keyData);
     }
 
     bool GridControl::ProcessDialogChar(wchar_t charCode)
     {
-        if(m_focusedCell != nullptr && ((Control::ModifierKeys & (Keys::Control | Keys::Alt)) == Keys::None))
+        if(m_focusedCell != nullptr && ((UserControl::ModifierKeys & (Keys::Control | Keys::Alt)) == Keys::None))
         {
             Column^ column = m_focusedCell->Column;
             EditingReason reason(charCode);
@@ -1114,7 +1115,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             }
         }
 
-        return Control::ProcessDialogChar(charCode);
+        return UserControl::ProcessDialogChar(charCode);
     }
 
     // 키에 의해서 편집이 시작되는 경우는 여기다가.
@@ -1205,14 +1206,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             break;
         }
 
-        return Control::ProcessCmdKey(msg, keyData);
+        return UserControl::ProcessCmdKey(msg, keyData);
     }
 
     void GridControl::OnPreviewKeyDown(System::Windows::Forms::PreviewKeyDownEventArgs^ e)
     {
         using namespace System::Windows::Forms;
 
-        Control::OnPreviewKeyDown(e);
+        UserControl::OnPreviewKeyDown(e);
 
         switch(e->KeyCode)
         {
@@ -1250,7 +1251,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         using namespace Native;
         using namespace System::Windows::Forms;
 
-        Control::OnKeyDown(e);
+        UserControl::OnKeyDown(e);
         return;
 
         ////if(m_pGridWindow->OnKeyDown((GrKeys)e->KeyCode) == true)
@@ -1601,6 +1602,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void GridControl::DisplayFirst(RowBase^ rowBase)
 	{
 		m_pDataRowList->DisplayFirst(rowBase->NativeRef);
+	}
+
+	void GridControl::DisplayFirst(Column^ column)
+	{
+		m_pColumnList->DisplayFirst(column->NativeRef);
 	}
 
     void GridControl::Clear()
@@ -2094,8 +2100,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void GridControl::InvokeScroll(System::Windows::Forms::ScrollEventArgs^ e)
     {
+		m_pGridCore->Invalidate();
+		m_pGridCore->Update();
         OnScroll(e);
-        m_pGridCore->Invalidate();
     }
 
     void GridControl::InvokeCellMouseEnter(Ntreev::Windows::Forms::Grid::Cell^ cell)
@@ -2490,7 +2497,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	System::Windows::Forms::BindingContext^ GridControl::BindingContext::get()
 	{
-		System::Windows::Forms::BindingContext^ bindingContext = Control::BindingContext;
+		System::Windows::Forms::BindingContext^ bindingContext = UserControl::BindingContext;
 		if(bindingContext == nullptr)
 		{
 			bindingContext = gcnew System::Windows::Forms::BindingContext();
@@ -2502,13 +2509,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	
 	void GridControl::BindingContext::set(System::Windows::Forms::BindingContext^ value)
 	{
-		Control::BindingContext = value;
+		UserControl::BindingContext = value;
 	}
 
 
 	System::Drawing::Rectangle GridControl::DisplayRectangle::get()
 	{
-		System::Drawing::Rectangle clientRectangle = Control::ClientRectangle;
+		System::Drawing::Rectangle clientRectangle = UserControl::ClientRectangle;
 		clientRectangle.X += this->Padding.Left;
 		clientRectangle.Y += this->Padding.Top;
 		clientRectangle.Width -= this->Padding.Horizontal;
@@ -2574,12 +2581,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         if(m_paintBackground == true)
             return m_backgroundColor;
-        return Control::BackColor;
+        return UserControl::BackColor;
     }
 
     void GridControl::BackColor::set(System::Drawing::Color value)
     {
-        Control::BackColor = value;
+        UserControl::BackColor = value;
     }
 
     bool GridControl::DesignTimeHitTest(System::Drawing::Point globalLocation)

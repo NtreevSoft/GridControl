@@ -53,6 +53,7 @@ public:
     GrColumn* HitTest(int x) const;
     GrIndexRange HitTest(int x, GrColumn* pColumnAnchor) const;
     void BringIntoView(GrColumn* pColumn);
+	void DisplayFirst(GrColumn* pColumn);
 
     void SetFitChanged();
     void SetVisibleChanged();

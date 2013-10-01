@@ -356,6 +356,15 @@ void GrColumnList::BringIntoView(GrColumn* pColumn)
 
     pHorzScroll->SetValue((int)newValue);
     m_pGridCore->Invalidate();
+	m_pGridCore->Update();
+}
+
+void GrColumnList::DisplayFirst(GrColumn* pColumn)
+{
+	GrScroll* pHorzScroll = m_pGridCore->GetHorzScroll();
+	pHorzScroll->SetValue(pColumn->GetUnfrozenIndex());
+	m_pGridCore->Invalidate();
+	m_pGridCore->Update();
 }
 
 void GrColumnList::SetFitChanged()

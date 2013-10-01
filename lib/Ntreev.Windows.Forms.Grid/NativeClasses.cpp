@@ -184,7 +184,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     void WinFormScroll::SetValue(int value)
     {
-        this->SetValueCore(value);
+		using namespace System::Windows::Forms;
+
+		int oldValue = m_value;
+        if(this->SetValueCore(value) == false)
+            return;
+
+		ScrollEventArgs se(ScrollEventType::ThumbPosition, oldValue, m_value, (ScrollOrientation)m_type);
+        m_gridControl->InvokeScroll(%se);
     }
 
     int WinFormScroll::GetSmallChange() const
