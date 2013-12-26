@@ -148,6 +148,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             GrDataRowList* pDataRowList = pGridCore->GetDataRowList();
             pDataRowList->VisibleHeightChanged.Add(this, &GrGridRow::dataRowList_VisibleHeightChanged);
 
+			m_pGridCore->DisplayRectChanged.Add(this, &GrGridRow::gridCore_DisplayRectChanged);
+
             this->SetHeight(GetMinHeight());
         }
     }
@@ -166,6 +168,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     void GrGridRow::dataRowList_VisibleHeightChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
     {
         this->SetFit();
+    }
+
+	void GrGridRow::gridCore_DisplayRectChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
+    {
+        GrRect clientRect = m_pCell->GetClientRect();
+		m_gridControl->Size = clientRect.GetSize();
     }
 
     bool GrGridRow::HasGridControl() const

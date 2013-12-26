@@ -250,7 +250,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void Column::Title::set(System::String^ value)
     {
         m_title = value;
-        AsyncDisplayText();
+        SyncDisplayText();
     }
 
     System::String^ Column::ColumnName::get()
@@ -315,7 +315,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void Column::propertyDescriptor_ValueChanged(System::Object^ /*sender*/, System::EventArgs^ /*e*/)
     {
-        AsyncDisplayText();
+        SyncDisplayText();
     }
 
     void Column::PropertyDescriptor::set(System::ComponentModel::PropertyDescriptor^ value)
@@ -347,10 +347,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         SetEditStyleToNative();
 
-        m_pColumn->SetReadOnly(this->IsReadOnly);
-        m_pColumn->SetVisible(this->IsVisible);
+		if(m_propertyDescriptor != nullptr && m_propertyDescriptor->IsReadOnly == true)
+			m_pColumn->SetReadOnly(true);
+		if(m_propertyDescriptor != nullptr && m_propertyDescriptor->IsBrowsable == false)
+			m_pColumn->SetVisible(false);
 
-        AsyncDisplayText();
+        SyncDisplayText();
     }
 
     int Column::Width::get()
@@ -969,7 +971,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_typeConverter = nullptr;
     }
 
-    void Column::AsyncDisplayText()
+    void Column::SyncDisplayText()
     {
         m_pColumn->SetText(ToNativeString::Convert(this->Title));
     }

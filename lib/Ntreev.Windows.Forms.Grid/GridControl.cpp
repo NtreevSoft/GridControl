@@ -243,24 +243,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             this->Rows->EndInsertion();
         }
-        else 
-        {
-            //Row^ row = dynamic_cast<Row^>(this->FocusedRow);
-            //if(row != nullptr)
-            //{
-            //    try
-            //    {
-            //        m_manager->EndCurrentEdit();
-            //        row->EndEdit();
-            //    }
-            //    catch(System::Exception^ e)
-            //    {
-            //        m_manager->CancelCurrentEdit();
-            //        row->CancelEdit();
-            //        this->ShowMessage(e->Message, "Error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
-            //    }
-            //}
-        }
     }
 
     void GridControl::OnLostFocus(System::EventArgs^ e)
@@ -270,17 +252,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             Row^ row = dynamic_cast<Row^>(this->FocusedRow);
             if(row != nullptr)
             {
-                try
-                {
-                    m_manager->EndCurrentEdit();
-                    row->EndEdit();
-                }
-                catch(System::Exception^ e)
-                {
-                    m_manager->CancelCurrentEdit();
-                    row->CancelEdit();
-                    this->ShowMessage(e->Message, "Error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
-                }
+				this->EndCurrentEdit(row);
             }
         }
 
@@ -411,6 +383,21 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_rowBuilder->NativeRef = pDataRow;
         return NewRowFromBuilder(m_rowBuilder);
     }
+
+	void GridControl::EndCurrentEdit(Row^ row)
+	{
+		try
+		{
+			m_manager->EndCurrentEdit();
+			row->EndEditInternal();
+		}
+		catch(System::Exception^ e)
+		{
+			m_manager->CancelCurrentEdit();
+			row->CancelEdit();
+			this->ShowMessage(e->Message, "Error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
+		}
+	}
 
     void GridControl::PostPaint(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle clipRectangle)
     {
@@ -1980,6 +1967,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void GridControl::InvokeRowMoved(Row^ row)
 	{
+		m_pGridCore->Update();
 		RowEventArgs e(row);
         OnRowMoved(%e);
 	}
@@ -2221,17 +2209,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             if(row->IsBeingEdited == true && row != this->InsertionRow)
             {
-                try
-                {
-                    m_manager->EndCurrentEdit();
-                    row->EndEdit();
-                }
-                catch(System::Exception^ e)
-                {
-                    m_manager->CancelCurrentEdit();
-                    row->CancelEdit();
-                    this->ShowMessage(e->Message, "Error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
-                }
+				this->EndCurrentEdit(row);
             }
         }
 

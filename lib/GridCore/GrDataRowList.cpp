@@ -98,6 +98,7 @@ void GrDataRowList::OnDataRowMoved(GrDataRowEventArgs* e)
 {
 	SetListChanged();
 	m_pGridCore->Invalidate();
+	m_pGridCore->Update();
 	DataRowMoved(this, e);
 }
 
@@ -1047,6 +1048,7 @@ void GrDataRowList::Clip(const GrRect& displayRect, uint /*horizontal*/, uint ve
 		item->SetDisplayable(true);
 		item->SetDisplayIndex(displayIndex);
 		item->SetClipped(clipped);
+		item->OnYChanged();
 
 		m_vecDisplayableRows.push_back(item);
 		displayY += item->GetHeight();

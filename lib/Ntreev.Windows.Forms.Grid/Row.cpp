@@ -304,7 +304,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         this->Refresh();
     }
 
-    void Row::EndEdit()
+	void Row::EndEdit()
+	{
+		this->GridControl->EndCurrentEdit(this);
+	}
+
+
+    void Row::EndEditInternal()
     {
         try
         {

@@ -278,8 +278,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         void EndInsertion();
 
-        Row^ GetByComponentIndex(int index);
-
     internal: // properties
 
         property Ntreev::Windows::Forms::Grid::Row^ default[GrDataRow*]
@@ -321,6 +319,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void gridControl_CurrencyManagerChanging(System::Object^ sender, Ntreev::Windows::Forms::Grid::CurrencyManagerChangingEventArgs^ e);
 
         void gridControl_CurrencyManagerChanged(System::Object^ sender, Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventArgs^ e);
+
+		void gridControl_Cleared(System::Object^ sender, Ntreev::Windows::Forms::Grid::ClearEventArgs^ e);
 
         void gridControl_FocusedRowChanged(System::Object^ sender, System::EventArgs^ e);
 

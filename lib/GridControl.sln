@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApplication", "Sample
 		{8EB27EC4-86A3-44A7-9767-19C343709894} = {8EB27EC4-86A3-44A7-9767-19C343709894}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ntreev.Crema.Library", "..\..\..\NTG\Crema\trunk\common library\Ntreev.Crema.Library\Ntreev.Crema.Library.csproj", "{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ntreev.Crema.Library", "..\..\..\NTG\Crema\branches\diff_merge\common library\Ntreev.Crema.Library\Ntreev.Crema.Library.csproj", "{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

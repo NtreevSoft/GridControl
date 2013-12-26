@@ -763,7 +763,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         bool CanEditInternal(Ntreev::Windows::Forms::Grid::ICell^ cell, Ntreev::Windows::Forms::Grid::EditingReason reason);
 
-        void AsyncDisplayText();
+        void SyncDisplayText();
 
         bool CanConvertFrom(System::Type^ dataType, System::Type^ sourceType);
 

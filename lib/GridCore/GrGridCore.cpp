@@ -373,8 +373,8 @@ bool GrGridCore::Update(bool force)
         i++;
 
 #ifdef _MANAGED
-        System::Console::Write("횟수");
-        System::Console::WriteLine(i);
+        //System::Console::Write("횟수");
+        //System::Console::WriteLine(i);
 #endif
     }
 

@@ -83,7 +83,7 @@ namespace SampleApplication
             if (value != null)
                 b = (bool)value;
             b = !b;
-            e.Cell.DisplayText = b.ToString();
+            e.Cell.DisplayValue = b;
 
             Action<Cell, bool> d = new Action<Cell, bool>((c, b2) =>
                 {
@@ -92,7 +92,7 @@ namespace SampleApplication
                     {
                         c3.Tag = new object();
                         c3.Value = b3;
-                        c3.DisplayText = null;
+                        c3.DisplayValue = null;
                         c3.Tag = null;
                         
                     }), c, b2);
@@ -160,6 +160,8 @@ namespace SampleApplication
                 this.Text = "null";
             else
                 this.Text = this.ActiveControl.Name;
+
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -187,7 +189,6 @@ namespace SampleApplication
         {
             protected override void WndProc(ref Message m)
             {
-
                 base.WndProc(ref m);
 
                 switch (m.Msg)
@@ -217,17 +218,26 @@ namespace SampleApplication
             //var bounds = this.gridControl1.Rows[0].Bounds;
             var y = this.gridControl1.Rows[0].Y;
         }
+
+        private void gridControl1_CellMouseMove(object sender, CellMouseEventArgs e)
+        {
+            
+        }
     }
 
     [Flags]
     public enum TestFlag
     {
-        None = 0,
-        A = 1,
-        B = 2,
-        AB = 3,
-        C = 4,
-        D = 8,
-        All = A | B | C | D,
+        //None = 0,
+        //A = 1,
+        //B = 2,
+        //AB = 3,
+        //C = 4,
+        //D = 8,
+        //All = A | B | C | D,
+
+        a = 213123,
+        b = 2343,
+        c = 1123,
     }
 }

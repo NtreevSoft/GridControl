@@ -52,10 +52,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	{
 		m_value = value;
 
-		if(ValueChecker::IsNullOrDBNull(m_value) == true)
-			return;
-
-		this->UpdateValueToControl(m_value->GetHashCode(), nullptr);
+		if(ValueChecker::IsNullOrDBNull(m_value) == false)
+		{
+			this->UpdateValueToControl(m_value->GetHashCode(), nullptr);
+		}
 	}
 
 	void FlagControl::InitializeCheckBox()
@@ -148,7 +148,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 			value &= ~checkBox->Tag->GetHashCode();
 		}
 	
-		m_value = System::Enum::ToObject(m_flagType, value);
+		//m_value = System::Enum::ToObject(m_flagType, value);
 		this->UpdateValueToControl(value, controlValue != 0 ? checkBox : nullptr);
 	}
 
@@ -200,7 +200,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		for each(CheckBox^ item in m_checkBoxes)
 		{
 			int controlValue = item->Tag->GetHashCode();
-			if(item->CheckState != CheckState::Checked || this->IsSingleBit(controlValue) == false)
+			//if(item->CheckState != CheckState::Checked || this->IsSingleBit(controlValue) == false)
+			//	continue;
+			if(item->CheckState != CheckState::Checked)
 				continue;
 			value |= controlValue;
 		}

@@ -839,6 +839,7 @@ public:
 
     virtual GrFlag ToPaintStyle() const;
     virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
+	virtual void OnYChanged();
 
 protected:
     virtual void OnFitted();

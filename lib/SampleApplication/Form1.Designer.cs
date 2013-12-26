@@ -134,6 +134,7 @@ namespace SampleApplication
             this.columnDataLocation1.DataType = typeof(SampleApplication.DataLocation);
             this.columnDataLocation1.MaxWidth = 30;
             this.columnDataLocation1.MinWidth = 30;
+            this.columnDataLocation1.Width = 30;
             // 
             // columnEnable1
             // 
@@ -225,6 +226,7 @@ namespace SampleApplication
             this.gridControl1.IsRowNumberVisible = false;
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.gridControl1_Scroll);
+            this.gridControl1.CellMouseMove += new Ntreev.Windows.Forms.Grid.CellMouseEventHandler(this.gridControl1_CellMouseMove);
             this.gridControl1.ColumnMouseDown += new Ntreev.Windows.Forms.Grid.ColumnMouseEventHandler(this.gridControl1_ColumnMouseDown);
             // 
             // propertyGrid1

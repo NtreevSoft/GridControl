@@ -90,13 +90,27 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
                     Ntreev::Windows::Forms::Grid::GridControl^ gridControl = m_dropDownForm->GridControl;
                     System::Drawing::Point localPos = gridControl->PointToClient(cursorPos);
 
-                    Ntreev::Windows::Forms::Grid::Cell^ cell = gridControl->GetCellAt(localPos);
-                    if(cell != nullptr && cell->IsFocused == true)
-                        return true;
-                    Native::Methods::PostMessage(m);
-                    return true;
-                }
-            } 
+					Ntreev::Windows::Forms::Grid::Cell^ cell = gridControl->GetCellAt(localPos);
+					if(cell != nullptr)
+					{
+						if(cell->IsFocused == false)
+						{
+							m.HWnd = gridControl->Handle;
+							m.LParam = Native::Methods::MakeLParam(localPos.X, localPos.Y);
+							Native::Methods::SendMessage(m);
+						}
+						else
+						{
+							int qwer=0;
+						}
+					}
+					else
+					{
+						Native::Methods::PostMessage(m);
+					}
+					return true;
+				}
+			} 
             break;
         }
 

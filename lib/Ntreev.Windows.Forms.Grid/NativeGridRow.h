@@ -36,6 +36,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     private:
         void focuser_FocusChanged(GrObject* pSender, GrFocusChangeArgs* e);
         void dataRowList_VisibleHeightChanged(GrObject* pSender, GrEventArgs* e);
+		void gridCore_DisplayRectChanged(GrObject* pSender, GrEventArgs* e);
         bool HasGridControl() const;
 
     private:

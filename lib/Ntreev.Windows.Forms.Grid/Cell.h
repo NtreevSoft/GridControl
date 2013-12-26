@@ -334,10 +334,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             System::Drawing::Rectangle get();
         }
 
-        property System::String^ DisplayText
+        property System::Object^ DisplayValue
         {
-            System::String^ get();
-            void set(System::String^);
+            System::Object^ get();
+            void set(System::Object^);
         }
 
     internal: // methods
@@ -386,11 +386,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             System::Object^ get();
             void set(System::Object^);
-        }
-
-        property System::Object^ DisplayValue
-        {
-            System::Object^ get();
         }
 
     protected:

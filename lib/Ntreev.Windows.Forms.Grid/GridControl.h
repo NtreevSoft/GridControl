@@ -1581,6 +1581,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void PostPaint(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle clipRectangle);
 		System::Windows::Forms::Control^ GetChildAt(System::Windows::Forms::Control^ control, System::Drawing::Point location);
         Row^ CreateRow(GrDataRow* pDataRow);
+		void EndCurrentEdit(Row^ row);
 
     internal: // properties
 
@@ -2167,6 +2168,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         virtual Row^ NewRowFromBuilder(RowBuilder^ rowBuilder);
 
         virtual GridControl^ NewChildGridControl(System::ComponentModel::PropertyDescriptor^ descriptor, Row^ row);
+
 
 #ifdef _DEBUG
         virtual void OnInvalidated(System::Windows::Forms::InvalidateEventArgs^ e) override;

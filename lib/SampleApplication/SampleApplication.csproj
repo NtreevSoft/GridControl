@@ -182,7 +182,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\NTG\Crema\trunk\common library\Ntreev.Crema.Library\Ntreev.Crema.Library.csproj">
+    <ProjectReference Include="..\..\..\..\NTG\Crema\branches\diff_merge\common library\Ntreev.Crema.Library\Ntreev.Crema.Library.csproj">
       <Project>{eb8e9874-54fa-4789-acc0-b25d8337b6c7}</Project>
       <Name>Ntreev.Crema.Library</Name>
     </ProjectReference>

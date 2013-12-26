@@ -535,24 +535,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_wrongValue = value;
     }
 
-    System::String^ Cell::DisplayText::get()
-    {
-        return m_text;
-    }
-
-    void Cell::DisplayText::set(System::String^ value)
+    void Cell::DisplayValue::set(System::Object^ value)
     {
         using namespace System::ComponentModel;
 
-        if(System::String::IsNullOrEmpty(value) == true)
+        if(value == nullptr || value == System::DBNull::Value)
         {
+			m_displayValue = Cell::NullValue;
             this->UpdateNativeText();
-            m_displayValue = Cell::NullValue;
         }
         else
         {
-			m_displayValue = Cell::NullValue;
-			this->UpdateNativeText(value);
+			if(value->GetType() != this->Column->DataType)
+				throw gcnew System::ArgumentException("설정할 수 없는 타입입니다.");
+
+			m_displayValue = value;
+			this->UpdateNativeText(value->ToString());
 			//this->Column->OnCellBoundUpdate(this, this->DisplayValue);
             this->Invalidate();
         }

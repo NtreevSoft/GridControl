@@ -2182,8 +2182,14 @@ void GrColumn::AdjustWidth()
     if(m_maxWidth != 0)
         width = std::min(width, m_maxWidth);
 
-    m_fitWidth = m_width = width;
-    m_fitting = false;
+	if(m_width != width)
+	{
+		m_fitWidth = m_width = width;
+
+		GrColumnEventArgs e(this);
+		m_pColumnList->Invoke(L"ColumnWidthChanged", &e);
+	}
+	m_fitting = false;
 }
 
 void GrColumn::SetFit()
@@ -3297,6 +3303,11 @@ void IDataRow::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
     }
 
     DrawExpander(pPainter, clipRect);
+}
+
+void IDataRow::OnYChanged()
+{
+	GrRow::OnYChanged();
 }
 
 void IDataRow::Expand(bool b)

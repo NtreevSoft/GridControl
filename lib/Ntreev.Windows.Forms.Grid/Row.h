@@ -415,6 +415,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         System::String^ GetErrorDescription(Cell^ cell);
         void SetErrorDescription(Cell^ cell, System::String^ text);
+		void EndEditInternal();
 
     internal: // properties
 
