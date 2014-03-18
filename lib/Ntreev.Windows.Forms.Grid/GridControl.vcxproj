@@ -17,14 +17,6 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Template|Win32">
-      <Configuration>Template</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Template|x64">
-      <Configuration>Template</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>Ntreev.Windows.Forms.Grid</ProjectName>
@@ -48,10 +40,6 @@
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v110</PlatformToolset>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
@@ -66,44 +54,34 @@
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
-    <PlatformToolset>v110</PlatformToolset>
-  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\Default.props" />
+    <Import Project="..\x86.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\Default.props" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Template|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\x86.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\Default.props" />
+    <Import Project="..\x64.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\Default.props" />
+    <Import Project="..\x64.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
     <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)GridControl.snk</LinkKeyFile>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkIncremental>
     <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)GridControl.snk</LinkKeyFile>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)GridControl.snk</LinkKeyFile>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <LinkKeyFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)GridControl.snk</LinkKeyFile>
   </PropertyGroup>
@@ -136,13 +114,8 @@
       <OutputFile>$(OutDir)$(ProjectName).xml</OutputFile>
     </Xdcmake>
     <PostBuildEvent>
-      <Command>copy "$(TargetDir)$(TargetName).dll" "$(SolutionDir)..\bin\$(TargetName).dll"
-copy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)..\bin\$(TargetName).pdb"
-
-copy "$(TargetDir)$(TargetName).dll" "d:\NTG\Crema\trunk\common library\RefAssemblies\$(TargetName).dll"
-copy "$(TargetDir)$(TargetName).pdb" "d:\NTG\Crema\trunk\common library\RefAssemblies\$(TargetName).pdb"
-
-</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -160,8 +133,7 @@ copy "$(TargetDir)$(TargetName).pdb" "d:\NTG\Crema\trunk\common library\RefAssem
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>../GridCore/bin/$(Platform)/$(Configuration)/GridCore.lib;../GridPainterDC/bin/$(Platform)/$(Configuration)/GridPainterDC.lib</AdditionalDependencies>
       <Version>
       </Version>
       <EmbedManagedResourceFile>$(ProjectDir)Ntreev.Windows.Forms.Grid.GridControl.bmp;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Movable.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Add.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Remove.cur;%(EmbedManagedResourceFile)</EmbedManagedResourceFile>
@@ -177,10 +149,8 @@ copy "$(TargetDir)$(TargetName).pdb" "d:\NTG\Crema\trunk\common library\RefAssem
       <OutputFile>$(OutDir)$(ProjectName).xml</OutputFile>
     </Xdcmake>
     <PostBuildEvent>
-      <Command>copy "$(TargetDir)$(TargetName).dll" "$(TargetDir)..\$(TargetName).dll"
-copy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)..\$(TargetName).pdb"
-
-</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -239,20 +209,18 @@ copy "$(TargetDir)$(TargetName).xml" "d:\NTG\Crema\trunk\common library\RefAssem
       <Culture>0x0412</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>../GridCore/bin/$(Platform)/$(Configuration)/GridCore.lib;../GridPainterDC/bin/$(Platform)/$(Configuration)/GridPainterDC.lib</AdditionalDependencies>
       <EmbedManagedResourceFile>$(ProjectDir)Ntreev.Windows.Forms.Grid.GridControl.bmp;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Movable.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Add.cur;$(ProjectDir)Ntreev.Windows.Forms.Grid.Cursors.Remove.cur;%(EmbedManagedResourceFile)</EmbedManagedResourceFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <TargetMachine>MachineX64</TargetMachine>
     </Link>
+    <PostBuildEvent />
     <PostBuildEvent>
-      <Command>copy "$(TargetDir)$(TargetName).dll" "$(TargetDir)..\$(TargetName).dll"
-copy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)..\$(TargetName).pdb"
-copy "$(TargetDir)$(TargetName).xml" "$(TargetDir)..\$(TargetName).xml"
-</Command>
+      <Command>copy "$(TargetDir)$(TargetName).dll" "$(SolutionDir)..\bin\$(Platform)\$(TargetName).dll"
+copy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)..\bin\$(Platform)\$(TargetName).pdb"
+copy "$(TargetDir)$(TargetName).xml" "$(SolutionDir)..\bin\$(Platform)\$(TargetName).xml"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

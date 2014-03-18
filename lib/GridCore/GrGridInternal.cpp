@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.5190.32793
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -33,7 +33,7 @@
 void GrTextUtil::SingleLine(GrLineDesc* pLine, const std::wstring& cellText, const GrFont* pFont)
 {
     memset(pLine, 0, sizeof(GrLineDesc));
-    pLine->length = cellText.length();
+    pLine->length = (int)cellText.length();
     pLine->width = pFont->GetStringWidth(cellText);
 }
 

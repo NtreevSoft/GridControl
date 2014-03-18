@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 2.0.4646.22417
+//Ntreev Grid for .Net 2.0.5190.32793
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.
@@ -264,13 +264,11 @@ namespace SampleApplication
         private ColumnButton columnButton123;
         private Ntreev.Windows.Forms.Grid.Column column2;
         private ColumnLinkLabel columnLinkLabel1;
-        private System.Data.DataSet dataSet1;
         private Ntreev.Windows.Forms.Grid.Column columnNumeric1;
         private ColumnDate columnDate1;
         private ColumnRadio columnRadio2;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
-        private Ntreev.Windows.Forms.Grid.Style style1;
         private ColumnDataLocation columnDataLocation1;
         private ColumnEnable columnEnable1;
         private Ntreev.Windows.Forms.Grid.Column column3;

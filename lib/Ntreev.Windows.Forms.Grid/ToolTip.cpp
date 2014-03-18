@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.5190.32793
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -43,7 +43,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(m_created == false)
         {
             HWND hwndParent = (HWND)handle.ToPointer();
-			HINSTANCE inst = (HINSTANCE)GetWindowLong(hwndParent, GWL_HINSTANCE);
+			HINSTANCE inst = (HINSTANCE)GetWindowLongPtr(hwndParent, GWLP_HINSTANCE);
 
 			HWND hTooltip = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, nullptr,
                 WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP | TTS_BALLOON,

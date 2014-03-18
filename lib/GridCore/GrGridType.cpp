@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.5190.32793
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -428,7 +428,7 @@ GrRect::operator System::Drawing::Rectangle () const
 #endif
 
 GrPadding::GrPadding()
-    : left(0), top(0), right(0), bottom(0)
+    : left(INT_MIN), top(INT_MIN), right(INT_MIN), bottom(INT_MIN)
 {
 
 }

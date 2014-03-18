@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 2.0.4646.22417
+//Ntreev Grid for .Net 2.0.5190.32793
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.
@@ -68,43 +68,6 @@ namespace SampleApplication
             this.columnDataTypes1.DataSource = types;
             DataSet dataSet = new DataSet();
             dataSet.Tables.Add("table-1").Columns.Add("column1");
-
-            this.gridControl1.RowChanged += gridControl1_RowChanged;
-        }
-
-        void gridControl1_ValueChanging(object sender, Ntreev.Windows.Forms.Grid.ValueChangingEventArgs e)
-        {
-            return;
-            if (e.Cell.Tag != null)
-                return;
-            e.Cancel = true;
-            object value = e.Cell.Value;
-            bool b = false;
-            if (value != null)
-                b = (bool)value;
-            b = !b;
-            e.Cell.DisplayValue = b;
-
-            Action<Cell, bool> d = new Action<Cell, bool>((c, b2) =>
-                {
-                    Thread.Sleep(10000);
-                    this.gridControl1.BeginInvoke((Action<Cell, bool>)((c3, b3) => 
-                    {
-                        c3.Tag = new object();
-                        c3.Value = b3;
-                        c3.DisplayValue = null;
-                        c3.Tag = null;
-                        
-                    }), c, b2);
-
-                });
-
-            d.BeginInvoke(e.Cell, b, null, null);
-        }
-
-        void gridControl1_RowChanged(object sender, Ntreev.Windows.Forms.Grid.RowEventArgs e)
-        {
-            //e.Row.CellBackColor = Color.Red;
         }
 
         public void SaveSettings()
@@ -141,17 +104,6 @@ namespace SampleApplication
 
         }
 
-        void PanelPane_IsActivatedChanged(object sender, EventArgs e)
-        {
-            int qwer = 0;
-        }
-
-        void PanelPane_DockChanged(object sender, EventArgs e)
-        {
-            int qwer = 0;
-        }
-
-
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
@@ -182,7 +134,8 @@ namespace SampleApplication
 
         private void gridControl1_ColumnMouseDown(object sender, Ntreev.Windows.Forms.Grid.ColumnMouseEventArgs e)
         {
-            
+            int qwr = 0;
+            this.gridControl1.InsertionRow.CancelEdit();
         }
 
         class NativeWindow2 : NativeWindow

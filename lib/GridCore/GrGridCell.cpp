@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4646.22417
+// Ntreev Grid for .Net 2.0.5190.32793
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -457,7 +457,7 @@ void GrCell::ComputeTextBounds()
             _TextLines lines;
             GrTextUtil::MultiLine(&lines, GetText(), cellWidth, pFont, GetTextWordWrap());
 
-            m_layout->linesCount = lines.size();
+            m_layout->linesCount = (int)lines.size();
             m_layout->pLines = new GrLineDesc[m_layout->linesCount];
             memcpy(m_layout->pLines, &lines[0], sizeof(GrLineDesc) * m_layout->linesCount);
         }
@@ -632,7 +632,7 @@ int get_hash_code(const wchar_t* chPtr)
     int num = 0x15051505;
     int num2 = num;
     int* numPtr = ( int* ) chPtr;
-    int len = wcslen(chPtr);
+    int len = (int)wcslen(chPtr);
     for ( int i = len; i > 0; i -= 4 )
     {
         num = ( ( ( num << 5 ) + num ) + ( num >> 0x1b ) ) ^ numPtr[ 0 ];
@@ -3148,7 +3148,10 @@ void IDataRow::OnChildAdded(GrRow* pRow)
     GrRow::OnChildAdded(pRow);
 
     if(m_pDataRowList != nullptr)
+	{
         m_pDataRowList->SetVisibleChanged();
+		m_pGridCore->GetColumnList()->SetWidthChanged();
+	}
 }
 
 void IDataRow::OnDisplayableChanged()
@@ -3648,7 +3651,7 @@ uint GrGroupPanel::GetGroupCount() const
 {
     if(m_enableGroup == false)
         return 0;
-    return m_vecGroups.size();
+    return (uint)m_vecGroups.size();
 }
 
 GrGroup* GrGroupPanel::GetGroup(uint level) const
@@ -3864,7 +3867,7 @@ void GrGroupPanel::groupInfo_LevelChanged(GrObject* pSender, GrEventArgs* /*e*/)
     _Groups::iterator itor = std::find(m_vecGroups.begin(), m_vecGroups.end(), pGroup);
     *itor = nullptr;
 
-    uint index = std::min(pGroup->GetGroupLevel(), m_vecGroups.size());
+    uint index = std::min(pGroup->GetGroupLevel(), (uint)m_vecGroups.size());
 
     m_vecGroups.insert(m_vecGroups.begin() + index, pGroup);
     m_vecGroups.erase(std::find(m_vecGroups.begin(), m_vecGroups.end(), (GrGroup*)nullptr));
@@ -3982,7 +3985,7 @@ int GrGroupPanel::GetWidth() const
 
 uint GrRow::GetChildCount() const
 {
-    return m_vecChilds.size();
+    return (uint)m_vecChilds.size();
 }
 
 GrRow* GrRow::GetChild(uint index) const

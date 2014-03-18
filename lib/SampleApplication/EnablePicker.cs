@@ -22,7 +22,6 @@ namespace SampleApplication
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-            int eqwr = 0;
             //e.Graphics.Clear(SystemColors.Control);
         }
 

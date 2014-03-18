@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4646.22417
+// Ntreev Grid for .Net 2.0.5190.32793
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -212,7 +212,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 			value = this->ValueCore;
 		}
-		catch(System::Exception^ e)
+		catch(System::Exception^ /*e*/)
 		{
 			m_wrongValue = true;
 		}
@@ -515,6 +515,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             }
         }
     }
+
+	void Cell::ClearLocalValue()
+	{
+		m_value = nullptr;
+		m_oldValue = Cell::NullValue;
+        m_displayValue = Cell::NullValue;
+	}
 
     bool Cell::HasSourceValue::get()
     {

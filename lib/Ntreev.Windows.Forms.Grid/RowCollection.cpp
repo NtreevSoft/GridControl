@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4646.22417
+// Ntreev Grid for .Net 2.0.5190.32793
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -360,6 +360,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         ManagerEventDetach managerEventDeatch(this);
 
         m_manager->AddNew();
+		if(this->InsertionRow->IsBeingEdited == false)
+            this->InsertionRow->BeginEdit();
         this->InsertionRow->Component = m_manager->Current;
     }
 

@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.5190.32793
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -50,7 +50,7 @@ GrDataRow* GrFocuser::GetFocusableDataRow() const
 
     if(pDataRow == nullptr)
     {
-		GrItemSelector* pItemSelector = m_pGridCore->GetItemSelector();
+		//GrItemSelector* pItemSelector = m_pGridCore->GetItemSelector();
         GrDataRowList* pDataRowList = m_pGridCore->GetDataRowList();
 
 		GrDataRow* pInsertionRow = pDataRowList->GetInsertionRow();

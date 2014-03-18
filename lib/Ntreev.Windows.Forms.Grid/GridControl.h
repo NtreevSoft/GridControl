@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4646.22417
+// Ntreev Grid for .Net 2.0.5190.32793
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -149,6 +149,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void ResetPaddingColor();
 
 		void ResetLineColor();
+
+		void ClearInsertion();
 
         System::Windows::Forms::DialogResult ShowMessage(System::String^ text);
 
@@ -1582,6 +1584,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		System::Windows::Forms::Control^ GetChildAt(System::Windows::Forms::Control^ control, System::Drawing::Point location);
         Row^ CreateRow(GrDataRow* pDataRow);
 		void EndCurrentEdit(Row^ row);
+		void DeleteFocusedCell();
 
     internal: // properties
 

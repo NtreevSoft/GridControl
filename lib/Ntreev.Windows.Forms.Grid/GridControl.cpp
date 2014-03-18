@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4646.26569
+// Ntreev Grid for .Net 2.0.5190.32793
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -397,6 +397,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			row->CancelEdit();
 			this->ShowMessage(e->Message, "Error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
 		}
+	}
+
+	void GridControl::DeleteFocusedCell()
+	{
+		this->Focuser->Delete();
 	}
 
     void GridControl::PostPaint(System::Drawing::Graphics^ graphics, System::Drawing::Rectangle clipRectangle)
@@ -1447,6 +1452,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         return this->ForeColor != (System::Drawing::Color)GrStyle::Default.ForeColor;
     }
+
+	void GridControl::ClearInsertion()
+	{
+		this->InsertionRow->CancelEdit();
+		for each(Ntreev::Windows::Forms::Grid::Cell^ cell in this->InsertionRow->Cells)
+		{
+			cell->ClearLocalValue();
+			cell->UpdateNativeText();
+		}
+	}
 
     void GridControl::InvokeColumnWidthChanged(Column^ column)
     {

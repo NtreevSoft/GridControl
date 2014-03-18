@@ -1,5 +1,5 @@
 //=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.5190.32793
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -144,7 +144,7 @@ void GrColumnList::Reserve(uint reserve)
 
 void GrColumnList::AddColumn(GrColumn* pColumn)
 {
-    InsertColumn(pColumn, m_vecColumns.size());
+    InsertColumn(pColumn, (uint)m_vecColumns.size());
 }
 
 void GrColumnList::InsertColumn(GrColumn* pColumn, uint index)
@@ -162,7 +162,7 @@ void GrColumnList::InsertColumn(GrColumn* pColumn, uint index)
         m_vecColumnsRemoved.erase(itor);
 
     itor = m_vecColumns.insert(m_vecColumns.begin() + index, pColumn);
-    index = std::min(index, m_vecColumns.size());
+    index = std::min(index, (uint)m_vecColumns.size());
     for( ; itor != m_vecColumns.end() ; itor++)
     {
         (*itor)->SetIndex(index++);
@@ -267,7 +267,7 @@ GrFont* GrColumnList::GetFont() const
 
 uint GrColumnList::GetColumnCount() const
 {
-    return m_vecColumns.size();
+    return (uint)m_vecColumns.size();
 }
 
 GrColumn* GrColumnList::HitTest(int x) const
@@ -423,7 +423,7 @@ void GrColumnList::Clip(const GrRect& displayRect, uint horizontal, uint /*verti
 
         pColumn->SetX(x);
         pColumn->SetDisplayable(true);
-        pColumn->SetDisplayIndex(m_vecDisplayableColumns.size());
+        pColumn->SetDisplayIndex((uint)m_vecDisplayableColumns.size());
 
         int width = pColumn->GetWidth();
 
@@ -455,7 +455,7 @@ void GrColumnList::Clip(const GrRect& displayRect, uint horizontal, uint /*verti
 
         pColumn->SetX(x);
         pColumn->SetDisplayable(true);
-        pColumn->SetDisplayIndex(m_vecDisplayableColumns.size());
+        pColumn->SetDisplayIndex((uint)m_vecDisplayableColumns.size());
 
         int width = pColumn->GetWidth();
 
@@ -1004,7 +1004,7 @@ void GrColumnList::OnColumnMouseUp(GrColumnMouseEventArgs* e)
 
 uint GrColumnList::GetVisibleColumnCount() const
 {
-    return m_vecVisibleColumns.size();
+    return (uint)m_vecVisibleColumns.size();
 }
 
 GrColumn* GrColumnList::GetVisibleColumn(uint index) const
@@ -1043,7 +1043,7 @@ GrColumn* GrColumnList::GetUnfrozenColumn(uint index) const
 
 uint GrColumnList::GetDisplayableColumnCount() const
 {
-    return m_vecDisplayableColumns.size();
+    return (uint)m_vecDisplayableColumns.size();
 }
 
 GrColumn* GrColumnList::GetDisplayableColumn(uint index) const

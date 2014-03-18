@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 2.0.4646.22417
+//Ntreev Grid for .Net 2.0.5190.32793
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.
@@ -60,10 +60,6 @@ namespace SampleApplication
 
         protected override void SetControlLayout(LinkLabel control, ICell cell)
         {
-            if ((cell.State & CellState.Hot) == CellState.Hot)
-            {
-                int qwer = 0;
-            }
             base.SetControlLayout(control, cell);
         }
 

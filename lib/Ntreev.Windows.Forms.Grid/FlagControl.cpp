@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.5190.32793
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -130,7 +130,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		m_editorService->Close();
 	}
 
-	System::Void FlagControl::checkBox_CheckChanged(System::Object^ sender, System::EventArgs^ e)
+	System::Void FlagControl::checkBox_CheckChanged(System::Object^ sender, System::EventArgs^ /*e*/)
 	{
 		CheckBox^ checkBox = dynamic_cast<CheckBox^>(sender);
 		int controlValue = checkBox->Tag->GetHashCode();

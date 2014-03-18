@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.5190.32793
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -201,7 +201,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             _NativeType::const_iterator itor = std::find(m_internal->begin(), m_internal->end(), C::TtoS(item));
             if(itor == m_internal->end())
                 return -1;
-            return itor - m_internal->begin();
+            return (int)(itor - m_internal->begin());
         }
 
         public:

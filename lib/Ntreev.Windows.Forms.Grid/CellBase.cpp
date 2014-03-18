@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.5190.32793
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -106,12 +106,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool CellBase::ShouldSerializePadding()
     {
-        return m_pCell->GetPaddingCore() != GrPadding::Default;
+		return m_pCell->GetPaddingCore() != GrPadding::Empty;
     }
 
     void CellBase::ResetPadding()
     {
-        m_pCell->SetPadding(GrPadding::Default);
+        m_pCell->SetPadding(GrPadding::Empty);
     }
 
     void CellBase::ResetFont()

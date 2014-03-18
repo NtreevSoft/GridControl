@@ -256,7 +256,7 @@ void GrDataRowList::BuildChildRowList()
 {
 	ClearChild();
 
-	ReserveChild(m_vecDataRows.size());
+	ReserveChild((uint)m_vecDataRows.size());
 	for(auto value : m_vecDataRows)
 	{
 		AddChild(value);
@@ -587,10 +587,10 @@ void GrDataRowList::BuildVisibleRowList()
 		GrDataRow* pDataRow = dynamic_cast<GrDataRow*>(pDataRowBase);
 		if(pDataRow)
 		{
-			pDataRow->SetVisibleDataRowIndex(m_vecVisibleDataRows.size());
+			pDataRow->SetVisibleDataRowIndex((uint)m_vecVisibleDataRows.size());
 			m_vecVisibleDataRows.push_back(pDataRow);
 		}
-		pDataRowBase->SetVisibleIndex(m_vecVisibleRows.size());
+		pDataRowBase->SetVisibleIndex((uint)m_vecVisibleRows.size());
 		m_vecVisibleRows.push_back(pDataRowBase);
 
 		oldVisibles.erase(pDataRowBase);
@@ -668,7 +668,7 @@ void GrDataRowList::Update(bool force)
 
 uint GrDataRowList::GetVisibleDataRowCount() const
 {
-	return m_vecVisibleDataRows.size();
+	return (uint)m_vecVisibleDataRows.size();
 }
 
 GrDataRow* GrDataRowList::GetVisibleDataRow(uint index) const
@@ -692,7 +692,7 @@ void GrDataRowList::SetRowWidth(int width)
 
 uint GrDataRowList::GetVisibleRowCount() const
 {
-	return m_vecVisibleRows.size();
+	return (uint)m_vecVisibleRows.size();
 }
 
 IDataRow* GrDataRowList::GetVisibleRow(uint index) const
@@ -706,7 +706,7 @@ IDataRow* GrDataRowList::GetVisibleRow(uint index) const
 
 void GrDataRowList::AddDataRow(GrDataRow* pDataRow)
 {
-	InsertDataRow(pDataRow, m_vecDataRows.size());
+	InsertDataRow(pDataRow, (uint)m_vecDataRows.size());
 }
 
 void GrDataRowList::InsertDataRow(GrDataRow* pDataRow, uint index)
@@ -744,7 +744,7 @@ void GrDataRowList::InsertDataRow(GrDataRow* pDataRow, uint index)
 	m_pGridCore->AttachObject(pDataRow);
 
 	_DataRows::iterator itor = m_vecDataRows.insert(m_vecDataRows.begin() + index, pDataRow);
-	index = std::min(index, m_vecDataRows.size());
+	index = std::min(index, (uint)m_vecDataRows.size());
 	for( ; itor != m_vecDataRows.end() ; itor++)
 	{
 		(*itor)->SetDataRowIndexCore(index++);
@@ -755,7 +755,7 @@ void GrDataRowList::InsertDataRow(GrDataRow* pDataRow, uint index)
 		m_pInsertionRow = CreateInsertionRow();
 		m_pGridCore->AttachObject(m_pInsertionRow);
 
-		m_pInsertionRow->Reserve(m_vecColumns.size());
+		m_pInsertionRow->Reserve((uint)m_vecColumns.size());
 		for(auto value : m_vecColumns)
 		{
 			m_pInsertionRow->AddItem(value);
@@ -831,7 +831,7 @@ GrDataRow* GrDataRowList::NewDataRow()
 {
 	GrDataRow* pDataRow = new GrDataRow();
 	pDataRow->SetDataRowID(m_dataRowID++);
-	pDataRow->Reserve(m_vecColumns.size());
+	pDataRow->Reserve((uint)m_vecColumns.size());
 	for(auto value : m_vecColumns)
 	{
 		pDataRow->AddItem(value);
@@ -842,7 +842,7 @@ GrDataRow* GrDataRowList::NewDataRow()
 
 uint GrDataRowList::GetDataRowCount() const
 {
-	return m_vecDataRows.size();
+	return (uint)m_vecDataRows.size();
 }
 
 GrDataRow* GrDataRowList::GetDataRow(uint index) const
@@ -892,7 +892,7 @@ void GrDataRowList::DeleteObjects()
 
 uint GrDataRowList::GetDisplayableRowCount() const
 {
-	return m_vecDisplayableRows.size();
+	return (uint)m_vecDisplayableRows.size();
 }
 
 IDataRow* GrDataRowList::GetDisplayableRow(uint index) const

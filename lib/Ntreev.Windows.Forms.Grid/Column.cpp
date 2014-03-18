@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.5190.32793
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -1133,7 +1133,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             texts.insert(pItem->GetText());
         }
 
-        cli::array<System::String^>^ textCache = gcnew cli::array<System::String^>(texts.size());
+        cli::array<System::String^>^ textCache = gcnew cli::array<System::String^>((int)texts.size());
 
         int i=0;
         for(auto value : texts)

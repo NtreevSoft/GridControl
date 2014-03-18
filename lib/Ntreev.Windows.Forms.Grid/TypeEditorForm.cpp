@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.4478.19833
+// Ntreev Grid for .Net 2.0.5190.32793
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -98,10 +98,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 							m.HWnd = gridControl->Handle;
 							m.LParam = Native::Methods::MakeLParam(localPos.X, localPos.Y);
 							Native::Methods::SendMessage(m);
-						}
-						else
-						{
-							int qwer=0;
 						}
 					}
 					else
