@@ -19,6 +19,7 @@ class GrDataRowList : public GrUpdatableRow
     typedef GrEvent<GrDataRowEventArgs, GrDataRowList> _GrDataRowEvent;
     typedef GrEvent<GrDataRowInsertingEventArgs, GrDataRowList> _GrDataRowInsertingEvent;
     typedef GrEvent<GrDataRowInsertedEventArgs, GrDataRowList> _GrDataRowInsertedEvent;
+	typedef GrEvent<GrDataRowMovingEventArgs, GrDataRowList> _GrDataRowMovingEvent;
 
 public:
     GrDataRowList();
@@ -36,7 +37,6 @@ public:
     uint GetVisibleDataRowCount() const;
     GrDataRow* GetVisibleDataRow(uint index) const;
 
-    GrDataRow* NewDataRowFromInsertion();
     GrDataRow* NewDataRow();
 
     GrInsertionRow* GetInsertionRow() const;
@@ -45,6 +45,8 @@ public:
     void RemoveDataRow(GrDataRow* pDataRow);
     void InsertDataRow(GrDataRow* pDataRow, uint index);
 	void MoveDataRow(GrDataRow* pDataRow, uint index);
+	void MoveDataRow(GrDataRow* pDataRow, uint oldIndex, uint newIndex);
+	void Reset(const std::vector<GrDataRow*>& rows);
     uint GetDataRowCount() const;
     GrDataRow* GetDataRow(uint index) const;
     void Clear();
@@ -85,6 +87,7 @@ public:
     _GrDataRowInsertingEvent DataRowInserting;
     _GrDataRowInsertedEvent DataRowInserted;
     _GrDataRowEvent DataRowRemoved;
+	_GrDataRowMovingEvent DataRowMoving;
 	_GrDataRowEvent DataRowMoved;
     _GrEvent VisibleHeightChanged;
 
@@ -110,6 +113,7 @@ protected:
     virtual void OnDataRowInserting(GrDataRowInsertingEventArgs* e);
     virtual void OnDataRowInserted(GrDataRowInsertedEventArgs* e);
     virtual void OnDataRowRemoved(GrDataRowEventArgs* e);
+	virtual void OnDataRowMoving(GrDataRowMovingEventArgs* e);
 	virtual void OnDataRowMoved(GrDataRowEventArgs* e);
     virtual void OnVisibleHeightChanged(GrEventArgs* e);
 

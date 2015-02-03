@@ -178,9 +178,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 m_oldValue = oldValue;
             }
         }
-
+		this->UpdateNativeText();
         this->GridControl->InvokeValueChanged(this);
-        this->Row->Refresh();
     }
 
     System::Object^ Cell::SourceValue::get()
@@ -328,14 +327,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     bool Cell::CancelEdit()
     {
         bool result = this->CancelEditInternal();
-        this->Row->Refresh();
         return result;
     }
 
     bool Cell::EndEdit()
     {
         bool result = this->EndEditInternal();
-        this->Row->Refresh();
         return result;
     }
 
@@ -364,15 +361,27 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         System::Object^ value = propertyDescriptor->GetValue(component);
 
-        //if(ValueChecker::IsNullOrDBNull(value) == true && ValueChecker::IsNullOrDBNull(m_value) == false)
 		if(ValueChecker::IsNullOrDBNull(m_value) == false)
         {
             value = this->Column->ConvertToSource(m_value);
             propertyDescriptor->SetValue(component, value);
         }
 
-        m_value = nullptr;        
+		m_value = nullptr;
     }
+
+	void Cell::UpdateError(System::Object^ component)
+	{
+		System::ComponentModel::IDataErrorInfo^ dataError = dynamic_cast<System::ComponentModel::IDataErrorInfo^>(component);
+		if(dataError != nullptr && this->Column->PropertyDescriptor != nullptr && this->Column->SourceType != System::ComponentModel::IBindingList::typeid)
+		{
+			this->ErrorDescription = dataError[this->Column->ColumnName];
+			return;
+		}
+
+		this->ErrorDescription = nullptr;
+		
+	}
 
     void Cell::Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType)
     {
@@ -389,12 +398,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         this->GridControl->BringIntoView(this);
     }
-
-    //void Cell::SetDefaultValue()
-    //{
-    //    this->ValueCore = this->Column->DefaultValue;
-    //    UpdateNativeText();
-    //}
 
     bool Cell::IsEdited::get()
     { 

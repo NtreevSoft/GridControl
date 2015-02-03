@@ -285,11 +285,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             Ntreev::Windows::Forms::Grid::Row^ get(GrDataRow* pDataRow);
         }
 
-        property Ntreev::Windows::Forms::Grid::Row^ default[System::Object^]
-        {
-            Ntreev::Windows::Forms::Grid::Row^ get(System::Object^ component);
-        }
-
     private: // methods
 
         virtual System::Collections::IEnumerator^ GetEnumerator_System_Collections_IEnumerable() sealed = System::Collections::IEnumerable::GetEnumerator;
@@ -314,8 +309,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         void currencyManager_ListChanged(System::Object^ sender, System::ComponentModel::ListChangedEventArgs^ e);
 
-        void currencyManager_CurrentChanged(System::Object^ sender, System::EventArgs^ e);
-
         void gridControl_CurrencyManagerChanging(System::Object^ sender, Ntreev::Windows::Forms::Grid::CurrencyManagerChangingEventArgs^ e);
 
         void gridControl_CurrencyManagerChanged(System::Object^ sender, Ntreev::Windows::Forms::Grid::CurrencyManagerChangedEventArgs^ e);
@@ -324,7 +317,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         void gridControl_FocusedRowChanged(System::Object^ sender, System::EventArgs^ e);
 
-        void ArgumentTest(Ntreev::Windows::Forms::Grid::Row^ item);
+        void ValidateArgument(Ntreev::Windows::Forms::Grid::Row^ item);
 
         Ntreev::Windows::Forms::Grid::Row^ InsertCore(int index, Ntreev::Windows::Forms::Grid::Row^ item);
 
@@ -367,13 +360,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     private: // variables
-        bool at;
+        //bool at;
         int m_lockRef;
         GrDataRowList* m_pDataRowList;
         System::Windows::Forms::CurrencyManager^ m_manager;
-        System::EventHandler^ m_currentChangedEventHandler;
+        //System::EventHandler^ m_currentChangedEventHandler;
         System::ComponentModel::ListChangedEventHandler^ m_listChangedEventHandler;
 		System::Collections::Generic::Dictionary<System::Object^, Ntreev::Windows::Forms::Grid::Row^>^ m_componentToRow;
 		System::Collections::ArrayList^ m_components;
+		bool m_insertion;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

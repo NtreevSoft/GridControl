@@ -49,7 +49,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         : m_pDataRow(rowBuilder->NativeRef), RowBase(rowBuilder->GridControl, rowBuilder->NativeRef), m_errorDescription(System::String::Empty)
     {
         m_cells = gcnew CellCollection(this);
-        //m_componentIndex = -1;
 
         for each(Column^ item in this->GridControl->Columns)
         {
@@ -64,6 +63,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::Object^ oldComponent = m_component;
         m_component = value;
 
+		this->GridControl->ErrorDescriptor->Remove(this);
+		System::ComponentModel::IDataErrorInfo^ dataError = dynamic_cast<System::ComponentModel::IDataErrorInfo^>(value);
+		if(dataError != nullptr)
+		{
+			this->ErrorDescription = dataError->Error;
+		}
+
         for each(Column^ item in this->GridControl->Columns)
         {
             try
@@ -72,6 +78,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 if(value != nullptr)
                 {
                     cell->LocalValueToSource(value);
+					cell->UpdateError(value);
                 }
                 else
                 {
@@ -86,7 +93,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
     }
 
-    void Row::ProcessChildControl()
+    void Row::AttachChildControl()
     {
         using namespace System::ComponentModel;
 
@@ -96,7 +103,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             {
                 Native::GrGridRow* pChildRow = new Native::GrGridRow(this->GridControl, item->PropertyDescriptor, this, this[item]);
                 m_pDataRow->AddChild(pChildRow);
-                //this->GridControl->InvokeNewChildGridControl(item->PropertyDescriptor, this, this[item]);
             }
         }
     }
@@ -287,7 +293,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             if(m_editedCount == 0)
                 return;
 
-            for each(Ntreev::Windows::Forms::Grid::Cell^ cell in m_cells)
+            for each(Cell^ cell in m_cells)
             {
                 cell->CancelEditInternal();
             }
@@ -301,14 +307,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             m_editing = false;
         }
 
-        this->Refresh();
+        for each(Cell^ item in m_cells)
+        {
+			item->UpdateNativeText();
+        }
     }
 
 	void Row::EndEdit()
 	{
 		this->GridControl->EndCurrentEdit(this);
 	}
-
 
     void Row::EndEditInternal()
     {
@@ -317,7 +325,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             if(m_editedCount == 0)
                 return;
 
-            for each(Ntreev::Windows::Forms::Grid::Cell^ cell in m_cells)
+            for each(Cell^ cell in m_cells)
             {
                 cell->EndEditInternal();
             }
@@ -331,7 +339,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             m_editing = false;
         }
 
-        this->Refresh();
+        for each(Cell^ item in m_cells)
+        {
+			item->UpdateNativeText();
+        }
         this->GridControl->InvokeRowChanged(this);
     }
 
@@ -425,23 +436,43 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         return m_pDataRow->GetItemFont() != nullptr;
     }
+	
+	void Row::Refresh(System::ComponentModel::PropertyDescriptor^ descriptor)
+	{
+		if(m_component == nullptr)
+			throw gcnew System::ArgumentException();
 
-    void Row::Refresh()
-    {
-        //return;
-        for each(Column^ item in this->GridControl->Columns)
-        {
-            try
-            {
-                Cell^ cell = NewCell(item);
-                cell->UpdateNativeText();
-            }
-            catch(System::Exception^)
-            {
+		System::ComponentModel::IDataErrorInfo^ dataErrorInfo = dynamic_cast<System::ComponentModel::IDataErrorInfo^>(m_component);
 
-            }
-        }
-    }
+		if(dataErrorInfo != nullptr)
+		{
+			this->ErrorDescription = dataErrorInfo->Error;
+		}
+
+		if(descriptor == nullptr)
+		{
+			for each(Cell^ item in this->Cells)
+			{
+				item->UpdateNativeText();
+
+				if(dataErrorInfo != nullptr)
+				{
+					item->ErrorDescription = dataErrorInfo[item->Column->ColumnName];
+				}
+
+				this->GridControl->InvokeValueChanged(item);
+			}
+		}
+		else
+		{
+			Cell^ cell = this->Cells[descriptor->Name];
+			cell->UpdateNativeText();
+			if(dataErrorInfo != nullptr)
+			{
+				cell->ErrorDescription = dataErrorInfo[descriptor->Name];
+			}
+		}
+	}
 
     System::String^ Row::GetErrorDescription(Cell^ cell)
     {

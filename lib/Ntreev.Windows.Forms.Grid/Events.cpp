@@ -89,6 +89,42 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     }
 
+	RowMovingEventArgs::RowMovingEventArgs(_Row^ row, int index)
+        : RowEventArgs(row), m_component(row->Component), m_cancel(false), m_index(index)
+    {
+
+    }
+
+    void RowMovingEventArgs::Cancel::set(bool value)
+    {
+        m_cancel = value; 
+    }
+
+    bool RowMovingEventArgs::Cancel::get()
+    {
+        return m_cancel;
+    }
+
+	int RowMovingEventArgs::Index::get()
+    {
+        return m_index;
+    }
+
+    System::Object^ RowMovingEventArgs::Component::get()
+    {
+        return m_component; 
+    } 
+
+    void RowMovingEventArgs::Component::set(System::Object^ value)
+    {
+        m_component = value; m_cancel = false; 
+    }
+
+    RowMovingEventArgs::RowMovingEventArgs()
+    {
+
+    }
+
     RowInsertingEventArgs::RowInsertingEventArgs(_Row^ row)
         : RowEventArgs(row), m_component(row->Component), m_cancel(false)
     {

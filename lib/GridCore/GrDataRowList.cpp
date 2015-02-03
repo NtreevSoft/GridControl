@@ -94,6 +94,11 @@ void GrDataRowList::OnDataRowRemoved(GrDataRowEventArgs* e)
 	DataRowRemoved(this, e);
 }
 
+void GrDataRowList::OnDataRowMoving(GrDataRowMovingEventArgs* e)
+{
+	DataRowMoving(this, e);
+}
+
 void GrDataRowList::OnDataRowMoved(GrDataRowEventArgs* e)
 {
 	SetListChanged();
@@ -722,16 +727,7 @@ void GrDataRowList::InsertDataRow(GrDataRow* pDataRow, uint index)
 	if(e1.GetCancel() == true)
 		return;
 
-	/*    if(pDataRow->GetDataRowID() == INVALID_INDEX)
-	{
-	pDataRow->SetDataRowID(m_dataRowID++);
-	pDataRow->Reserve(m_vecColumns.size());
-	for_each(_Columns, m_vecColumns, value)
-	{
-	pDataRow->AddItem(value);
-	}
-	}
-	else */if(pDataRow->GetDataRowID() == INSERTION_ROW)
+	if(pDataRow->GetDataRowID() == INSERTION_ROW)
 	{
 		pDataRow->SetDataRowID(m_dataRowID++);
 	}
@@ -794,6 +790,12 @@ void GrDataRowList::MoveDataRow(GrDataRow* pDataRow, uint index)
 	if(pDataRow->GetDataRowIndex() == index)
 		return;
 
+	GrDataRowMovingEventArgs e1(pDataRow, index);
+	OnDataRowMoving(&e1);
+
+	if(e1.GetCancel() == true)
+		return;
+
 	_DataRows::iterator itor = std::find(m_vecDataRows.begin(), m_vecDataRows.end(), pDataRow);
 	
 	if(index >= m_vecDataRows.size())
@@ -819,12 +821,35 @@ void GrDataRowList::MoveDataRow(GrDataRow* pDataRow, uint index)
 	OnDataRowMoved(&e);
 }
 
-GrDataRow* GrDataRowList::NewDataRowFromInsertion()
+void GrDataRowList::Reset(const std::vector<GrDataRow*>& rows)
 {
-	AddDataRow(m_pInsertionRow);
-	m_pGridCore->Update();
+	m_vecDataRows.clear();
+	m_vecDataRows.insert(m_vecDataRows.begin(), rows.begin(), rows.end());
 
-	return m_pInsertionRow;
+	uint index = 0;
+	for(auto item : m_vecDataRows)
+	{
+		item->SetDataRowIndexCore(index++);
+	}
+
+	SetListChanged();
+	m_pGridCore->Invalidate();
+	m_pGridCore->Update();
+}
+
+void GrDataRowList::MoveDataRow(GrDataRow* pDataRow, uint oldIndex, uint newIndex)
+{
+	m_vecDataRows.erase(m_vecDataRows.begin() + oldIndex);
+	m_vecDataRows.insert(m_vecDataRows.begin() + newIndex, pDataRow);
+
+	int index = 0;
+	for(auto item : m_vecDataRows)
+	{
+		item->SetDataRowIndexCore(index++);
+	}
+	
+	GrDataRowEventArgs e(pDataRow);
+	OnDataRowMoved(&e);
 }
 
 GrDataRow* GrDataRowList::NewDataRow()

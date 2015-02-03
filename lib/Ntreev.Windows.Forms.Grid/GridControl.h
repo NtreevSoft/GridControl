@@ -935,6 +935,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     public: // events
 
+		/// <summary>
+        /// 데이터가 리셋되었을때 발생합니다.
+        /// </summary>
+        [System::ComponentModel::DescriptionAttribute("데이터가 리셋되었을때 발생합니다.")]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        event System::EventHandler^ Reseted
+        {
+            void add(System::EventHandler^ p) { m_eventReseted += p; }
+            void remove(System::EventHandler^ p) { m_eventReseted -= p; }
+        private:
+            void raise(System::Object^ sender, System::EventArgs^ e) { if(m_eventReseted != nullptr) m_eventReseted->Invoke(sender, e); }
+        }
+
         /// <summary>
         /// 셀의 값이 변경되기 전에 발생합니다.
         /// </summary>
@@ -1059,6 +1072,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void remove(RowEventHandler^ p) { m_eventRowBinded -= p; }
         private:
             void raise(System::Object^ sender, RowEventArgs^ e) { if(m_eventRowBinded != nullptr) m_eventRowBinded->Invoke(sender, e); }
+        }
+
+		/// <summary>
+        /// 행의 위치가 변경되기 전에 발생합니다.
+        /// </summary>
+        [System::ComponentModel::DescriptionAttribute("행의 위치가 변경되기 전에 발생합니다.")]
+        [System::ComponentModel::CategoryAttribute("Row")]
+        event RowMovingEventHandler^ RowMoving
+        {
+            void add(RowMovingEventHandler^ p) { m_eventRowMoving += p; }
+            void remove(RowMovingEventHandler^ p) { m_eventRowMoving -= p; }
+        private:
+            void raise(System::Object^ sender, RowMovingEventArgs^ e) { if(m_eventRowMoving != nullptr) m_eventRowMoving->Invoke(sender, e); }
         }
 
 		/// <summary>
@@ -1536,6 +1562,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     internal: // methods
 
+		void InvokeReset();
         bool InvokeValueChanging(Cell^ cell, System::Object^ value, System::Object^ oldValue);
         void InvokeValueChanged(Cell^ cell);
         bool InvokeRowInserting(Row^ row);
@@ -1544,6 +1571,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void InvokeRowBinded(Row^ row);
         void InvokeRowUnbinding(Row^ row);
         void InvokeRowUnbinded(Row^ row);
+		bool InvokeRowMoving(Row^ row, int index);
 		void InvokeRowMoved(Row^ row);
         bool InvokeRowRemoving(Row^ row);
         void InvokeRowRemoved(RowRemovedEventArgs^ e);
@@ -1658,6 +1686,14 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         // events
 
+		/// <summary>
+        /// <see cref="Reseted"/> 이벤트를 발생시킵니다.
+        /// </summary>
+        /// <param name="e">
+        /// 이벤트 데이터가 들어 있는 <see cref="System::EventArgs"/>입니다.
+        /// </param>
+        virtual void OnReseted(System::EventArgs^ e);
+
         /// <summary>
         /// <see cref="ValueChanging"/> 이벤트를 발생시킵니다.
         /// </summary>
@@ -1745,6 +1781,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이벤트 데이터가 들어 있는 <see cref="RowEventArgs"/>입니다.
         /// </param>
         virtual void OnRowUnbinded(RowEventArgs^ e);
+
+		virtual void OnRowMoving(RowMovingEventArgs^ e);
 
 		virtual void OnRowMoved(RowEventArgs^ e);
 
@@ -2270,6 +2308,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         RowBuilder^ m_rowBuilder;
 
         // events
+		System::EventHandler^ m_eventReseted;
         ValueChangingEventHandler^ m_eventValueChanging;
         CellEventHandler^ m_eventValueChanged;
         RowInsertingEventHandler^ m_eventRowInserting;
@@ -2281,6 +2320,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         RowEventHandler^ m_eventRowBinded;
         RowEventHandler^ m_eventRowUnbinding;
         RowEventHandler^ m_eventRowUnbinded;
+		RowMovingEventHandler^ m_eventRowMoving;
 		RowEventHandler^ m_eventRowMoved;
         System::EventHandler^ m_eventSelectedColumnsChanged;
         System::EventHandler^ m_eventSelectedRowsChanged;

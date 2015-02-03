@@ -234,6 +234,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         void caption_HeightChanged(GrObject* pSender, GrEventArgs* e);
 
 		void dataRowList_DataRowMoved(GrObject* pSender, GrDataRowEventArgs* e);
+		void dataRowList_DataRowMoving(GrObject* pSender, GrDataRowMovingEventArgs* e);
 
     public:
         gcroot<Ntreev::Windows::Forms::Grid::GridControl^> m_gridControl;

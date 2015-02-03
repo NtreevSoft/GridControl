@@ -174,6 +174,76 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// </summary>
     public delegate void RowEventHandler(System::Object^ sender, RowEventArgs^ e);
 
+	/// <summary>
+    /// 행이 변경되는 이벤트의 데이터를 제공합니다.
+    /// </summary>
+    public ref class RowMovingEventArgs
+        : RowEventArgs
+    {
+    public: // methods
+
+        /// <summary>
+        /// <see cref="Ntreev::Windows::Forms::Grid::RowMovingEventArgs"/>클래스의 새 인스턴스를 초기화합니다.
+        /// </summary>
+         /// <param name="row">
+        /// 이벤트의 대상이 되는 <see cref="Ntreev::Windows::Forms::Grid::Row"/>의 인스턴스입니다.
+        /// </param>
+        RowMovingEventArgs(_Row^ row, int index);
+
+    public: // properties
+
+        /// <summary>
+        /// 행을 변경 할지에 대한 여부를 가져오거나 설정합니다.
+        /// </summary>
+        /// <returns>
+        /// 행을 변경하는 작업이 취소되면 true, 그렇지 않으면 false를 반환합니다.
+        /// </returns>
+        property bool Cancel
+        {
+            void set(bool value);
+            bool get();
+        }
+
+		/// <summary>
+        /// 행을 변경 될 인덱스를 가져옵니다.
+        /// </summary>
+        /// <returns>
+        /// 변경될 행의 인덱스 변호를 나타냅니다.
+        /// </returns>
+        property int Index
+        {
+            int get();
+        }
+
+        /// <summary>
+        /// 이벤트의 대상이 되는 <see cref="Ntreev::Windows::Forms::Grid::Row"/>와 연결될 데이터를 가져옵니다.
+        /// </summary>
+        /// <remarks>
+        /// DataSource가 <see cref="System::Data::DataTable"/>일때는 이 속성의 타입은 <see cref="System::Data::DataRowView"/>가 되고 컬렉션일때는 컬렉션 항목의 타입이 됩니다.
+        /// </remarks>
+        property System::Object^ Component
+        {
+            System::Object^ get();
+        internal:
+            void set(System::Object^ value);
+        }
+
+    internal: // methods
+
+        RowMovingEventArgs();
+
+    private: // variables
+
+		System::Object^ m_component;
+        bool m_cancel;
+		int m_index;
+    };
+
+    /// <summary>
+    /// 새로운 행이 추가되는 이벤트를 처리하는 메서드를 나타냅니다.
+    /// </summary>
+    public delegate void RowMovingEventHandler(System::Object^ sender, RowMovingEventArgs^ e);
+
     /// <summary>
     /// 새로운 행이 추가되는 이벤트의 데이터를 제공합니다.
     /// </summary>

@@ -360,6 +360,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         void LocalValueToSource(System::Object^ component);
 
+		void UpdateError(System::Object^ component);
+
         System::Object^ GetValueFromSource();
 
         void SetValueToSource(System::Object^ value);

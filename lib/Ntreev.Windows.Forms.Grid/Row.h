@@ -400,21 +400,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     internal: // methodss
 
-        //Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl);
-
-        //Row(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrDataRow* pDataRow);
-
         void AddEditedCell();
+
         void RemoveEditedCell();
 
-        void ProcessChildControl();
+        void AttachChildControl();
+
         void DetachChildControl();
+
         Cell^ NewCell(Column^ column);
-        //void ValueToSource(System::Object^ component);
-        void Refresh();
+
+		void Refresh(System::ComponentModel::PropertyDescriptor^ descriptor);
 
         System::String^ GetErrorDescription(Cell^ cell);
+
         void SetErrorDescription(Cell^ cell, System::String^ text);
+
 		void EndEditInternal();
 
     internal: // properties

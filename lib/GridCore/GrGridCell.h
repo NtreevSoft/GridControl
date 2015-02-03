@@ -166,6 +166,25 @@ private:
     GrDataRow* m_pDataRow;
 };
 
+class GrDataRowMovingEventArgs : public GrDataRowEventArgs
+{
+public:
+    GrDataRowMovingEventArgs(GrDataRow* pDataRow, uint index) 
+        : GrDataRowEventArgs(pDataRow), m_index(index)
+    {
+
+    }
+
+    uint GetIndex() const { return m_index; }
+	bool GetCancel() const { return m_cancel; }
+    void SetCancel(bool b) { m_cancel = b; }
+
+private:
+	uint m_index;
+	bool m_cancel;
+
+};
+
 class GrDataRowInsertedEventArgs : public GrDataRowEventArgs
 {
 public:

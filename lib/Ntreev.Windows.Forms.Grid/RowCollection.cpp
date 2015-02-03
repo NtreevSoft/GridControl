@@ -85,7 +85,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_pDataRowList = this->GridCore->GetDataRowList();
 
         m_listChangedEventHandler = gcnew System::ComponentModel::ListChangedEventHandler(this, &RowCollection::currencyManager_ListChanged);
-        m_currentChangedEventHandler = gcnew System::EventHandler(this, &RowCollection::currencyManager_CurrentChanged);
+        //m_currentChangedEventHandler = gcnew System::EventHandler(this, &RowCollection::currencyManager_CurrentChanged);
         
         gridControl->CurrencyManagerChanging += gcnew CurrencyManagerChangingEventHandler(this, &RowCollection::gridControl_CurrencyManagerChanging);
         gridControl->CurrencyManagerChanged += gcnew CurrencyManagerChangedEventHandler(this, &RowCollection::gridControl_CurrencyManagerChanged);
@@ -99,7 +99,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void RowCollection::Bind(System::Object^ component, int componentIndex)
     {
 		Row^ row;
-		System::ComponentModel::IDataErrorInfo^ dataErrorInfo = dynamic_cast<System::ComponentModel::IDataErrorInfo^>(component);
 
 		if(m_componentToRow->ContainsKey(component) == true)
 		{
@@ -115,52 +114,31 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		m_components->Insert(componentIndex, component);
 
-		if(this->GridControl->InvokeRowBinding(component) == false)
-			return;
+		this->GridControl->InvokeRowBinding(component);
 
 		row = this->GridControl->CreateRow(m_pDataRowList->NewDataRow());
-
 		m_pDataRowList->InsertDataRow(row->NativeRef, componentIndex);
 		m_componentToRow->Add(component, row);
 
 		row->Component = component;
-		row->ProcessChildControl();
-
-		if(dataErrorInfo != nullptr)
-		{
-			System::String^ error = dataErrorInfo->Error;
-
-			if(System::String::IsNullOrEmpty(error) == false)
-				row->ErrorDescription = error;
-
-			for each(System::ComponentModel::PropertyDescriptor^ item in m_manager->GetItemProperties())
-			{
-				if(item->PropertyType == System::ComponentModel::IBindingList::typeid)
-					continue;
-
-				System::String^ error = dataErrorInfo[item->Name];
-
-				if(System::String::IsNullOrEmpty(error) == false)
-					row->Cells[item->Name]->ErrorDescription = error;
-			}
-		}
+		row->AttachChildControl();
 
 		this->GridControl->InvokeRowBinded(row);
 		this->GridControl->InvokeRowChanged(row);
-
     }
 
     void RowCollection::Unbind(int componentIndex)
     {
 		System::Object^ component = m_components[componentIndex];
 		Row^ row = m_componentToRow[component];
+		this->GridControl->InvokeRowUnbinding(row);
+
 		m_components->RemoveAt(componentIndex);
 		m_componentToRow->Remove(component);
-		
-		this->GridControl->InvokeRowUnbinding(row);
 		m_pDataRowList->RemoveDataRow(row->NativeRef);
-		this->GridControl->InvokeRowUnbinded(row);
+		row->Component = nullptr;
 		row->DetachChildControl();
+		this->GridControl->InvokeRowUnbinded(row);
     }
 
     void RowCollection::SetItemsByDesigner(cli::array<System::Object^>^ values)
@@ -179,69 +157,58 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool RowCollection::Contains(Row^ item)
     {
-        ArgumentTest(item);
+        ValidateArgument(item);
         return item->Index != INVALID_INDEX;
     }
 
     int RowCollection::IndexOf(Row^ item)
     {
-        ArgumentTest(item);
+        ValidateArgument(item);
         return item->Index;
     }
 
-    void RowCollection::currencyManager_ListChanged(System::Object^ sender, System::ComponentModel::ListChangedEventArgs^ e)
+    void RowCollection::currencyManager_ListChanged(System::Object^ /*sender*/, System::ComponentModel::ListChangedEventArgs^ e)
     {
+		System::Console::WriteLine(e->ListChangedType);
         switch(e->ListChangedType)
         {
         case System::ComponentModel::ListChangedType::ItemAdded:
             {
-                int componentIndex = e->NewIndex;
-                this->Bind(m_manager->List[componentIndex], componentIndex);
+				int componentIndex = e->NewIndex;
+				auto component = m_manager->List[componentIndex];
+				if(m_insertion == true)
+				{
+					m_components->Add(component);
+					m_componentToRow->Add(component, this->InsertionRow);
+					m_insertion = false;
+				}
+				else
+				{
+					this->Bind(component, componentIndex);
+				}
             }
             break;
         case System::ComponentModel::ListChangedType::ItemDeleted:
             {
-                this->Unbind(e->NewIndex);
+				auto component = m_components[e->NewIndex];
+				if(m_insertion == true)
+				{
+					m_components->RemoveAt(e->NewIndex);
+					m_componentToRow->Remove(component);
+					m_insertion = false;
+				}
+				else
+				{
+					this->Unbind(e->NewIndex);
+				}
             }
             break;
         case System::ComponentModel::ListChangedType::ItemChanged:
             {
                 System::Object^ component = m_manager->List[e->NewIndex];
-				System::ComponentModel::IDataErrorInfo^ dataErrorInfo = dynamic_cast<System::ComponentModel::IDataErrorInfo^>(component);
 
-                Row^ row = this[component];
-                System::Collections::Generic::List<Cell^> cells;
-
-				if(dataErrorInfo != nullptr)
-				{
-					row->ErrorDescription = dataErrorInfo->Error;
-				}
-
-                if(e->PropertyDescriptor == nullptr)
-                {
-					for each(System::ComponentModel::PropertyDescriptor^ item in m_manager->GetItemProperties())
-					{
-						if(item->PropertyType == System::ComponentModel::IBindingList::typeid)
-							continue;
-						cells.Add(row->Cells[item->Name]);
-					}
-                }
-                else
-                {
-                    cells.Add(row->Cells[e->PropertyDescriptor->Name]);
-                }
-
-                for each(Cell^ item in cells)
-                {
-					item->UpdateNativeText();
-
-					if(dataErrorInfo != nullptr)
-					{
-						item->ErrorDescription = dataErrorInfo[item->Column->ColumnName];
-					}
-
-					this->GridControl->InvokeValueChanged(item);
-                }
+				Row^ row = m_componentToRow[component];
+				row->Refresh(e->PropertyDescriptor);
 
                 this->GridControl->InvokeRowChanged(row);
             }
@@ -254,55 +221,44 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 				m_components->RemoveAt(oldIndex);
 				m_components->Insert(newIndex, component);
 				
-
-				m_pDataRowList->Clear();
-				for each(System::Object^ item in m_components)
-				{
-					Row^ row = m_componentToRow[item];
-					m_pDataRowList->AddDataRow(row->NativeRef);
-				}
-
 				Row^ row = m_componentToRow[component];
 
-				//m_pDataRowList->RemoveDataRow(row->NativeRef);
-				//m_pDataRowList->InsertDataRow(row->NativeRef, newIndex);
-				this->GridControl->InvokeRowMoved(row);
+				m_pDataRowList->MoveDataRow(row->NativeRef, oldIndex, newIndex);
             }
             break;
         case System::ComponentModel::ListChangedType::Reset:
             {
-                m_pDataRowList->Clear();
-                m_components->Clear();
-				m_componentToRow->Clear();
-                for each(System::Object^ item in m_manager->List)
-                {
-					if(item == this->GridControl->InsertionRow->Component)
-						continue;
-					this->Bind(item, this->Count);
-                }
+				auto components = m_components;
+				auto componentToRow = m_componentToRow;
+				m_components = gcnew System::Collections::ArrayList(components->Count);
+				m_componentToRow = gcnew System::Collections::Generic::Dictionary<System::Object^, Row^>(m_componentToRow->Count);
 
-                currencyManager_CurrentChanged(sender, System::EventArgs::Empty);
+				if(m_manager->List->Count == 0)
+				{
+					m_pDataRowList->Clear();
+				}
+				else
+				{
+					std::vector<GrDataRow*> nativeRows;
+					nativeRows.reserve(m_manager->List->Count);
+
+					for each(System::Object^ item in m_manager->List)
+					{
+						if(item == this->GridControl->InsertionRow->Component)
+							continue;
+
+						Row^ row = componentToRow[item];
+						m_components->Add(item);
+						m_componentToRow->Add(item, row);
+						nativeRows.push_back(row->NativeRef);
+					}
+					m_pDataRowList->Reset(nativeRows);
+				}
+
+				this->GridControl->InvokeReset();
             }
             break;
         }
-    }
-
-    void RowCollection::currencyManager_CurrentChanged(System::Object^ /*sender*/, System::EventArgs^ /*e*/)
-    {
-        if(m_manager->Position < 0)
-            return;
-
-        Row^ focusedRow = dynamic_cast<Row^>(this->GridControl->FocusedRow);
-		if(focusedRow != nullptr && focusedRow->Component == m_manager->Current)
-            return;
-
-        //Row^ row = this[m_manager->Current];
-        //if(row != nullptr)
-        //{
-        //    row->Select();
-        //    row->Focus();
-        //    row->BringIntoView();
-        //}
     }
 
     void RowCollection::gridControl_CurrencyManagerChanging(System::Object^ /*sender*/, CurrencyManagerChangingEventArgs^ /*e*/)
@@ -316,6 +272,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         m_manager = e->CurrecnyManager;
         m_components->Clear();
+		m_componentToRow->Clear();
 
         if(m_manager == nullptr)
             return;
@@ -323,18 +280,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         int componentIndex = 0;
         for each(System::Object^ item in m_manager->List)
         {
-            Bind(item, componentIndex++);
+            this->Bind(item, componentIndex++);
         }
-
-        //this->SetDefaultValue();
 
         AttachManagerEvent();
     }
 
 	void RowCollection::gridControl_Cleared(System::Object^ /*sender*/, Ntreev::Windows::Forms::Grid::ClearEventArgs^ /*e*/)
     {
-		m_componentToRow->Clear();
 		m_components->Clear();
+		m_componentToRow->Clear();
     }
 
     void RowCollection::gridControl_FocusedRowChanged(System::Object^ /*sender*/, System::EventArgs^ /*e*/)
@@ -357,8 +312,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(this->InsertionRow->Component != nullptr)
             return;
 
-        ManagerEventDetach managerEventDeatch(this);
-
+		m_insertion = true;
         m_manager->AddNew();
 		if(this->InsertionRow->IsBeingEdited == false)
             this->InsertionRow->BeginEdit();
@@ -367,13 +321,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void RowCollection::EndInsertion()
     {
-        ManagerEventDetach managerEventDeatch(this);
-
-        this->InsertionRow->Component = nullptr;
-        m_manager->CancelCurrentEdit();
+		this->InsertionRow->Component = nullptr;
+		m_insertion = true;
+		m_manager->CancelCurrentEdit();
     }
 
-    void RowCollection::ArgumentTest(Row^ item)
+    void RowCollection::ValidateArgument(Row^ item)
     {
         if(item == nullptr)
             throw gcnew System::ArgumentNullException("item");
@@ -384,10 +337,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void RowCollection::Clear()
     {
         ManagerEventDetach managerEventDeatch(this);
-        m_pDataRowList->Clear();
+		
+		for (int i = m_manager->Count-1; i >= 0; i--)
+		{
+			m_manager->RemoveAt(i);
+		}
 
-        for(int i=m_manager->Count-1 ; i>=0 ; i--)
-            m_manager->RemoveAt(i);
+		m_components->Clear();
+		m_componentToRow->Clear();
+        m_pDataRowList->Clear();
     }
 
     void RowCollection::Insert(int index, Row^ item)
@@ -420,8 +378,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             item->Component = m_manager->Current;
         }
 
-        //bool fromInsertion = item == this->InsertionRow;
-
+		//bool insertion = m_insertion;
+		//m_insertion = false;
         if(this->GridControl->InvokeRowInserting(item) == false)
         {
             if(isNew == true)
@@ -430,17 +388,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 ManagerEventDetach managerEventDeatch(this);
                 m_manager->CancelCurrentEdit();
             }
+			//m_insertion = insertion;
         }
         else
         {
             try
             {
-                //item->ComponentIndex = m_manager->List->Count - 1;
-                ManagerEventDetach managerEventDeatch(this);
+                //ManagerEventDetach managerEventDeatch(this);
+				
+				m_pDataRowList->InsertDataRow(item->NativeRef, index);
                 m_manager->EndCurrentEdit();
             }
             catch(System::Exception^ e)
             {
+				m_pDataRowList->RemoveDataRow(item->NativeRef);
                 if(isNew == true)
                 {
                     item->Component = nullptr;
@@ -450,14 +411,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 this->GridControl->ShowMessage(e->Message, "Error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
                 return nullptr;
             }
-
-            item->ProcessChildControl();
-            m_pDataRowList->InsertDataRow(item->NativeRef, index);
-
+			
+            item->AttachChildControl();
             item->EndEditInternal();
-            item->Refresh();
             this->GridControl->InvokeRowInserted(item);
-            this->InsertionRow->Refresh();
+            this->InsertionRow->Refresh(nullptr);
             this->GridControl->InvokeRowChanged(item);
         }
         return item;
@@ -466,7 +424,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     void RowCollection::RemoveAt(int index)
     {
         Row^ row = this[index];
-        Remove(row);
+        this->Remove(row);
     }
 
     System::Collections::Generic::IEnumerator<Row^>^ RowCollection::GetEnumerator()
@@ -522,7 +480,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     Row^ RowCollection::AddFromInsertion()
     {
-        return InsertCore(this->Count, this->InsertionRow);
+		return InsertCore(this->Count, this->InsertionRow);
     }
 
     void RowCollection::Add(Row^ item)
@@ -532,7 +490,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     bool RowCollection::Remove(Row^ item)
     {
-        ArgumentTest(item);
+        ValidateArgument(item);
 
         if(item->Index == INVALID_INDEX)
             throw gcnew System::ArgumentException("이미 지워지거나 사용되지 않은 row입니다.");
@@ -540,7 +498,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         if(this->GridControl->InvokeRowRemoving(item) == false)
             return false;
 
-        ManagerEventDetach managerEventDeatch(this);
+        //ManagerEventDetach managerEventDeatch(this);
 
         int index = m_manager->List->IndexOf(item->Component);
         if(index < 0)
@@ -556,12 +514,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             return false;
         }
 
-        item->Component = nullptr;
-        m_pDataRowList->RemoveDataRow(item->NativeRef);
-
         RowRemovedEventArgs eRemoved(0);
         this->GridControl->InvokeRowRemoved(%eRemoved);
-        item->DetachChildControl();
+        
         return true;
     }
 
@@ -601,16 +556,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return FromNative::Get(pDataRow);
     }
 
-    Row^ RowCollection::default::get(System::Object^ component)
-    {
-        for each(Row^ item in this)
-        {
-            if(item->Component == component)
-                return item;
-        }
-        return nullptr;
-    }
-
     System::Collections::IEnumerator^ RowCollection::GetEnumerator_System_Collections_IEnumerable()
     {
         return GetEnumerator();
@@ -624,7 +569,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     int RowCollection::Add_System_Collections_IList(System::Object^ value)
     {
         int count = this->Count;
-        Add((Row^)value);
+        this->Add((Row^)value);
         return count;
     }
 
@@ -635,9 +580,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void RowCollection::Clear_System_Collections_IList()
     {
-        for(int i=this->Count-1 ; i>=0 ; i--)
+        for(int i = this->Count - 1; i >= 0; i--)
         {
-            RemoveAt(i);
+            this->RemoveAt(i);
         }
     }
 
@@ -719,7 +664,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             if(m_manager != nullptr)
             {
                 m_manager->ListChanged -= m_listChangedEventHandler;
-                m_manager->CurrentChanged -= m_currentChangedEventHandler;
+                //m_manager->CurrentChanged -= m_currentChangedEventHandler;
             }
         }
         m_lockRef--;
@@ -733,7 +678,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             if(m_manager != nullptr)
             {
                 m_manager->ListChanged += m_listChangedEventHandler;
-                m_manager->CurrentChanged += m_currentChangedEventHandler;
+                //m_manager->CurrentChanged += m_currentChangedEventHandler;
             }
         }
     }

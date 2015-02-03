@@ -630,6 +630,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 		GrDataRowList* pDataRowList = GetDataRowList();
 		pDataRowList->DataRowMoved.Add(this, &WinFormGridCore::dataRowList_DataRowMoved);
+		pDataRowList->DataRowMoving.Add(this, &WinFormGridCore::dataRowList_DataRowMoving);
     }
 
     void WinFormGridCore::OnItemMouseMove(GrItemMouseEventArgs* e)
@@ -807,5 +808,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 	{
 		Row^ row = FromNative::Get(e->GetDataRow());
 		m_gridControl->InvokeRowMoved(row);
+	}
+
+	void WinFormGridCore::dataRowList_DataRowMoving(GrObject* /*pSender*/, GrDataRowMovingEventArgs* e)
+	{
+		Row^ row = FromNative::Get(e->GetDataRow());
+		if(m_gridControl->InvokeRowMoving(row, e->GetIndex()) == false)
+			e->SetCancel(true);
 	}
 } /*namespace Native*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

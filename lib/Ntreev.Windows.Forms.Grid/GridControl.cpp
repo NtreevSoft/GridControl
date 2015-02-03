@@ -1930,6 +1930,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return m_pGridCore->IsGrouped();
     }
 
+	void GridControl::InvokeReset()
+	{
+		OnReseted(System::EventArgs::Empty);
+	}
+
     bool GridControl::InvokeValueChanging(Ntreev::Windows::Forms::Grid::Cell^ cell, System::Object^ value, System::Object^ oldValue)
     {
         ValueChangingEventArgs e(cell, value, oldValue);
@@ -1978,6 +1983,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         RowEventArgs e(row);
         OnRowUnbinded(%e);
+    }
+
+	bool GridControl::InvokeRowMoving(Row^ row, int index)
+    {
+        RowMovingEventArgs e(row, index);
+        OnRowMoving(%e);
+        return e.Cancel != true;
     }
 
 	void GridControl::InvokeRowMoved(Row^ row)
@@ -2137,6 +2149,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         OnCellDoubleClick(gcnew CellEventArgs(cell));
     }
 
+	void GridControl::OnReseted(System::EventArgs^ e)
+	{
+		Reseted(this, e);
+	}
+
     void GridControl::OnValueChanging(ValueChangingEventArgs^ e)
     {
         ValueChanging(this, e);
@@ -2195,6 +2212,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         RowUnbinded(this, e);
     }
+
+	void GridControl::OnRowMoving(RowMovingEventArgs^ e)
+	{
+		RowMoving(this, e);
+	}
 
 	void GridControl::OnRowMoved(Ntreev::Windows::Forms::Grid::RowEventArgs^ e)
     {
