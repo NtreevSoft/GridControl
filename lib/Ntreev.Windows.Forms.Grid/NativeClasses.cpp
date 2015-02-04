@@ -545,9 +545,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
                 {
                     cell->Value = newValue;
                     e->SetHandled(true);
-                    
                 }
-                m_gridControl->Refresh();
+				//m_gridControl->Update();
             }
         }
         catch(System::Exception^ e1)
@@ -676,8 +675,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         try
         {
             Ntreev::Windows::Forms::Grid::Row^ row = FromNative::Get(pDataRow);
-            if(row != nullptr && row->ErrorDescription != System::String::Empty)
-                m_gridControl->ToolTip->Show(row->ErrorDescription);
+			System::String^ error = row->Error;
+			System::String^ sourceError = row->SourceError;
+			if(error != System::String::Empty)
+			{
+				m_gridControl->ToolTip->Show(error);
+			}
+			else if(sourceError != System::String::Empty)
+			{
+				m_gridControl->ToolTip->Show(sourceError);
+			}
         }
         catch(System::Exception^)
         {

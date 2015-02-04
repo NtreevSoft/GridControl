@@ -144,20 +144,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
                 message.WParam = System::IntPtr((int)msg.wParam);
                 message.LParam = System::IntPtr((int)msg.lParam);
 
-                //WM wm = (WM)message.Msg;
-                //Control^ ctl = Control::FromHandle(message.HWnd);
-                //System::String^ name = System::String::Empty;
-                //if(ctl != nullptr)
-                // name = ctl->Name;
-
-                //System::Diagnostics::Trace::WriteLine(System::String::Format("{0}, wParam : {1:X}, lParam : {2:X}, name : {3}", wm, (int)message.WParam, (int)message.LParam, name));
-
-                //#pragma push_macro("WM_NCLBUTTONDOWN")
-                //#undef WM_NCLBUTTONDOWN
-                // if(wm == WM::WM_NCLBUTTONDOWN)
-                // int eqw=0;
-                //#pragma pop_macro("WM_NCLBUTTONDOWN")
-
                 if(Application::FilterMessage(message) == true)
                     continue;
 
@@ -194,6 +180,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     void Methods::DoEvents(System::Collections::ArrayList% mm)
     {
         using namespace System::Windows::Forms;
+
         MSG message;
         while(::PeekMessageW(&message, 0, 0, 0, PM_REMOVE) == TRUE)
         {
@@ -202,24 +189,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
             msg.HWnd = System::IntPtr(message.hwnd);
             msg.WParam = System::IntPtr((int)message.wParam);
             msg.LParam = System::IntPtr((int)message.lParam);
-
-
-            //Control^ sontrol = Control::FromHandle(msg.HWnd);
-            //if(sontrol != nullptr)
-            //{
-            //    if(System::String::IsNullOrEmpty(sontrol->Name) == true)
-            //    {
-            //        System::Diagnostics::Trace::Write(sontrol->GetType()->Name + " : ");   
-            //    }
-            //    else
-            //    {
-            //        System::Diagnostics::Trace::Write(sontrol->Name + " : ");
-            //    }
-            //}
-            //else
-            //{
-            //    System::Diagnostics::Trace::Write(msg.HWnd.ToString() + " : ");
-            //}
 
             if(msg.Msg == WM_LBUTTONUP)
             {

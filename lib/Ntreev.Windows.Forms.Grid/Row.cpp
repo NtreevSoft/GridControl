@@ -43,506 +43,674 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
-    using namespace System::ComponentModel;
+	using namespace System::ComponentModel;
 
-    Row::Row(RowBuilder^ rowBuilder)
-        : m_pDataRow(rowBuilder->NativeRef), RowBase(rowBuilder->GridControl, rowBuilder->NativeRef), m_errorDescription(System::String::Empty)
-    {
-        m_cells = gcnew CellCollection(this);
+	//System::Collections::Generic::Dictionary<Cell^, System::String^>^ Row::emptyErrors = gcnew System::Collections::Generic::Dictionary<Cell^, System::String^>();
 
-        for each(Column^ item in this->GridControl->Columns)
-        {
-            this->NewCell(item);
-        }
-
-        m_cellErrorDescriptions = gcnew System::Collections::Generic::Dictionary<Cell^, System::String^>();
-    }
-
-    void Row::Component::set(System::Object^ value)
-    {
-        System::Object^ oldComponent = m_component;
-        m_component = value;
-
-		this->GridControl->ErrorDescriptor->Remove(this);
-		System::ComponentModel::IDataErrorInfo^ dataError = dynamic_cast<System::ComponentModel::IDataErrorInfo^>(value);
-		if(dataError != nullptr)
-		{
-			this->ErrorDescription = dataError->Error;
-		}
-
-        for each(Column^ item in this->GridControl->Columns)
-        {
-            try
-            {
-                Cell^ cell = this->NewCell(item);
-                if(value != nullptr)
-                {
-                    cell->LocalValueToSource(value);
-					cell->UpdateError(value);
-                }
-                else
-                {
-                    cell->SourceValueToLocal(oldComponent);
-                }
-                cell->UpdateNativeText();
-            }
-            catch(System::Exception^)
-            {
-
-            }
-        }
-    }
-
-    void Row::AttachChildControl()
-    {
-        using namespace System::ComponentModel;
-
-        for each(Column^ item in this->GridControl->Columns)
-        {
-            if(item->PropertyDescriptor != nullptr && item->PropertyDescriptor->PropertyType == IBindingList::typeid)
-            {
-                Native::GrGridRow* pChildRow = new Native::GrGridRow(this->GridControl, item->PropertyDescriptor, this, this[item]);
-                m_pDataRow->AddChild(pChildRow);
-            }
-        }
-    }
-
-    void Row::DetachChildControl()
-    {
-        for each(RowBase^ item in this->Childs)
-        {
-            GridRow^ gridRow = dynamic_cast<GridRow^>(item);
-            if(gridRow == nullptr)
-                continue;
-
-            this->GridControl->Controls->Remove(gridRow->ChildGrid);
-            delete gridRow->ChildGrid;
-        }
-    }
-
-	System::Collections::Generic::Dictionary<Cell^, System::String^>^ Row::CellErrors::get()
+	Row::Row(RowBuilder^ rowBuilder)
+		: m_pDataRow(rowBuilder->NativeRef), RowBase(rowBuilder->GridControl, rowBuilder->NativeRef)
+		, m_error(System::String::Empty)
+		, m_sourceError(System::String::Empty)
 	{
-		return m_cellErrorDescriptions;
+		m_cells = gcnew CellCollection(this);
+
+		for each(Column^ item in this->GridControl->Columns)
+		{
+			this->NewCell(item);
+		}
 	}
 
-    GrDataRow* Row::NativeRef::get()
-    {
-        return m_pDataRow;
-    }
+	void Row::AttachComponent(System::Object^ component)
+	{
+		m_component = component;
 
-    Cell^ Row::NewCell(Column^ column)
-    {
-        GrItem* pItem = m_pDataRow->GetItem(column->NativeRef);
+		for each(Cell^ item in m_cells)
+		{
+			try
+			{
+				item->LocalValueToSource(component);
+				item->UpdateNativeText();
+			}
+			catch(System::Exception^)
+			{
 
-        Cell^ cell = FromNative::Get(pItem);
-        if(cell == nullptr)
-        {
-            CellBuilder builder;
-            builder.GridControl = this->GridControl;
-            builder.NativeRef = pItem;
-            cell = this->NewCellFromBuilder(%builder);
-        }
+			}
+		}
 
-        return cell;
-    }
+		System::ComponentModel::IDataErrorInfo^ dataErrorInfo = dynamic_cast<System::ComponentModel::IDataErrorInfo^>(m_component);
 
-    Cell^ Row::NewCellFromBuilder(CellBuilder^ builder)
-    {
-        return gcnew Cell(builder->GridControl, builder->NativeRef);
-    }
+		if(dataErrorInfo != nullptr)
+		{
+			if(System::String::IsNullOrEmpty(dataErrorInfo->Error) == false)
+				this->SourceError = dataErrorInfo->Error;
 
-    System::String^ Row::ToString()
-    {
-        return this->Index.ToString();
-    }
+			for each(Cell^ item in m_cells)
+			{
+				Column^ column = item->Column;
+				if(column->PropertyDescriptor == nullptr)
+					continue;
 
-    Ntreev::Windows::Forms::Grid::Cell^ Row::GetAt(int index)
-    {
-        return this->Cells[index];
-    }
-    
-    Ntreev::Windows::Forms::Grid::CellCollection^ Row::Cells::get()
-    {
-        if(m_cells == nullptr)
-        {
-            m_cells = gcnew CellCollection(this);
-        }
-        return m_cells;
-    }
+				System::String^ error = dataErrorInfo[column->ColumnName];
+				if(System::String::IsNullOrEmpty(error) == false)
+					this->SetSourceError(item, error);
+			}
+		}
+	}
 
-    Ntreev::Windows::Forms::Grid::CellTagCollection^ Row::CellTags::get()
-    {
-        if(m_cellTags == nullptr)
-        {
-            m_cellTags = gcnew Ntreev::Windows::Forms::Grid::CellTagCollection(this);
-        }
-        return m_cellTags;
-    }
+	void Row::DetachComponent()
+	{
+		auto oldComponent = m_component;
+		m_component = nullptr;
+		for each(Cell^ item in m_cells)
+		{
+			try
+			{
+				if(this->HasInvalidValue(item) == true)
+					continue;
+				item->SourceValueToLocal(oldComponent);
+				//item->UpdateNativeText();
+			}
+			catch(System::Exception^)
+			{
 
-    int Row::CellCount::get()
-    {
-        return this->Cells->Count;
-    }
+			}
+		}
+	}
 
-    unsigned int Row::RowID::get()
-    {
-        return m_pDataRow->GetDataRowID(); 
-    }
+	void Row::AttachChildControl()
+	{
+		using namespace System::ComponentModel;
 
-    System::Object^ Row::default::get(int index)
-    {
-        return this->Cells[index]->Value;
-    }
+		for each(Column^ item in this->GridControl->Columns)
+		{
+			if(item->PropertyDescriptor != nullptr && item->PropertyDescriptor->PropertyType == IBindingList::typeid)
+			{
+				Native::GrGridRow* pChildRow = new Native::GrGridRow(this->GridControl, item->PropertyDescriptor, this, this[item]);
+				m_pDataRow->AddChild(pChildRow);
+			}
+		}
+	}
 
-    void Row::default::set(int index, System::Object^ value)
-    {
-        this->Cells[index]->Value = value;
-    }
+	void Row::DetachChildControl()
+	{
+		for each(RowBase^ item in this->Childs)
+		{
+			GridRow^ gridRow = dynamic_cast<GridRow^>(item);
+			if(gridRow == nullptr)
+				continue;
 
-    System::Object^ Row::default::get(System::String^ columnName)
-    {
-        return m_cells[columnName]->Value;
-    }
+			this->GridControl->Controls->Remove(gridRow->ChildGrid);
+			delete gridRow->ChildGrid;
+		}
+	}
 
-    void Row::default::set(System::String^ columnName, System::Object^ value)
-    {
-        m_cells[columnName]->Value = value;
-    }
+	System::Collections::Generic::Dictionary<Cell^, System::String^>^ Row::Errors::get()
+	{
+		return m_errors;
+	}
 
-    System::Object^ Row::default::get(Column^ column)
-    {
-        return this->Cells[column]->Value;
-    }
+	System::Collections::Generic::Dictionary<Cell^, System::String^>^ Row::SourceErrors::get()
+	{
+		return m_sourceErrors;
+	}
 
-    void Row::default::set(Column^ column, System::Object^ value)
-    {
-        this->Cells[column]->Value = value;
-    }
+	System::Collections::Generic::Dictionary<Cell^, System::String^>^ Row::InvalidValues::get()
+	{
+		return m_invalidValues;
+	}
 
-    bool Row::IsVisible::get()
-    {
-        return m_pDataRow->GetVisible();
-    }
+	GrDataRow* Row::NativeRef::get()
+	{
+		return m_pDataRow;
+	}
 
-    void Row::IsVisible::set(bool value)
-    {
-        m_pDataRow->SetVisible(value);
-    }
+	Cell^ Row::NewCell(Column^ column)
+	{
+		GrItem* pItem = m_pDataRow->GetItem(column->NativeRef);
 
-    bool Row::IsReadOnly::get()
-    {
-        return m_pDataRow->GetReadOnly();
-    }
+		Cell^ cell = FromNative::Get(pItem);
+		if(cell == nullptr)
+		{
+			CellBuilder builder;
+			builder.GridControl = this->GridControl;
+			builder.NativeRef = pItem;
+			cell = this->NewCellFromBuilder(%builder);
+		}
 
-    void Row::IsReadOnly::set(bool value)
-    {
-        m_pDataRow->SetReadOnly(value);
-    }
+		return cell;
+	}
 
-    bool Row::IsSelected::get()
-    {
-        return m_pDataRow->GetSelected();
-    }
+	Cell^ Row::NewCellFromBuilder(CellBuilder^ builder)
+	{
+		return gcnew Cell(builder->GridControl, builder->NativeRef);
+	}
 
-    void Row::IsSelected::set(bool value)
-    {
-        m_pDataRow->SetSelected(value);
-    }
+	System::String^ Row::ToString()
+	{
+		return this->Index.ToString();
+	}
 
-    bool Row::IsFullSelected::get()
-    {
-        return m_pDataRow->GetFullSelected();
-    }
+	Ntreev::Windows::Forms::Grid::Cell^ Row::GetAt(int index)
+	{
+		return this->Cells[index];
+	}
 
-    void Row::AddEditedCell()
-    {
-        m_editedCount++;
-    }
+	Ntreev::Windows::Forms::Grid::CellCollection^ Row::Cells::get()
+	{
+		return m_cells;
+	}
 
-    void Row::RemoveEditedCell()
-    {
-        m_editedCount--;
-        if(m_editedCount < 0)
-            throw gcnew System::Exception();
-    }
+	Ntreev::Windows::Forms::Grid::CellTagCollection^ Row::CellTags::get()
+	{
+		if(m_cellTags == nullptr)
+		{
+			m_cellTags = gcnew Ntreev::Windows::Forms::Grid::CellTagCollection(this);
+		}
+		return m_cellTags;
+	}
 
-    bool Row::IsBeingEdited::get()
-    {
-        return m_editing;
-    }
+	int Row::CellCount::get()
+	{
+		return this->Cells->Count;
+	}
 
-    bool Row::IsEdited::get()
-    {
-        return m_editedCount > 0 ? true : false;
-    }
+	unsigned int Row::RowID::get()
+	{
+		return m_pDataRow->GetDataRowID(); 
+	}
 
-    int Row::Index::get()
-    {
-        return (int)m_pDataRow->GetDataRowIndex();
-    }
+	System::Object^ Row::default::get(int index)
+	{
+		return this->Cells[index]->Value;
+	}
 
-    void Row::BeginEdit()
-    {
-        m_editing = true;
-    }
+	void Row::default::set(int index, System::Object^ value)
+	{
+		this->Cells[index]->Value = value;
+	}
 
-    void Row::CancelEdit()
-    {
-        try
-        {
-            if(m_editedCount == 0)
-                return;
+	System::Object^ Row::default::get(System::String^ columnName)
+	{
+		return m_cells[columnName]->Value;
+	}
 
-            for each(Cell^ cell in m_cells)
-            {
-                cell->CancelEditInternal();
-            }
+	void Row::default::set(System::String^ columnName, System::Object^ value)
+	{
+		m_cells[columnName]->Value = value;
+	}
 
-            if(m_editedCount < 0)
-                throw gcnew System::Exception("먼가 수상합니다.");
-        }
-        finally
-        {
-            m_editedCount = 0;
-            m_editing = false;
-        }
+	System::Object^ Row::default::get(Column^ column)
+	{
+		return this->Cells[column]->Value;
+	}
 
-        for each(Cell^ item in m_cells)
-        {
+	void Row::default::set(Column^ column, System::Object^ value)
+	{
+		this->Cells[column]->Value = value;
+	}
+
+	bool Row::IsVisible::get()
+	{
+		return m_pDataRow->GetVisible();
+	}
+
+	void Row::IsVisible::set(bool value)
+	{
+		m_pDataRow->SetVisible(value);
+	}
+
+	bool Row::IsReadOnly::get()
+	{
+		return m_pDataRow->GetReadOnly();
+	}
+
+	void Row::IsReadOnly::set(bool value)
+	{
+		m_pDataRow->SetReadOnly(value);
+	}
+
+	bool Row::IsSelected::get()
+	{
+		return m_pDataRow->GetSelected();
+	}
+
+	void Row::IsSelected::set(bool value)
+	{
+		m_pDataRow->SetSelected(value);
+	}
+
+	bool Row::IsFullSelected::get()
+	{
+		return m_pDataRow->GetFullSelected();
+	}
+
+	void Row::AddEditedCell()
+	{
+		m_editedCount++;
+	}
+
+	void Row::RemoveEditedCell()
+	{
+		m_editedCount--;
+		if(m_editedCount < 0)
+			throw gcnew System::Exception();
+	}
+
+	bool Row::IsBeingEdited::get()
+	{
+		return m_editing;
+	}
+
+	bool Row::IsEdited::get()
+	{
+		return m_editedCount > 0 ? true : false;
+	}
+
+	int Row::Index::get()
+	{
+		return (int)m_pDataRow->GetDataRowIndex();
+	}
+
+	void Row::BeginEdit()
+	{
+		m_editing = true;
+	}
+
+	void Row::CancelEdit()
+	{
+		try
+		{
+			if(m_editedCount == 0)
+				return;
+
+			for each(Cell^ cell in m_cells)
+			{
+				cell->CancelEditInternal();
+			}
+
+			if(m_editedCount < 0)
+				throw gcnew System::Exception("먼가 수상합니다.");
+		}
+		finally
+		{
+			m_editedCount = 0;
+			m_editing = false;
+		}
+
+		for each(Cell^ item in m_cells)
+		{
 			item->UpdateNativeText();
-        }
-    }
+		}
+	}
 
 	void Row::EndEdit()
 	{
 		this->GridControl->EndCurrentEdit(this);
 	}
 
-    void Row::EndEditInternal()
-    {
-        try
-        {
-            if(m_editedCount == 0)
-                return;
+	void Row::EndEditInternal()
+	{
+		try
+		{
+			if(m_editedCount == 0)
+				return;
 
-            for each(Cell^ cell in m_cells)
-            {
-                cell->EndEditInternal();
-            }
+			for each(Cell^ cell in m_cells)
+			{
+				cell->EndEditInternal();
+			}
 
-            if(m_editedCount < 0)
-                throw gcnew System::Exception("먼가 수상합니다.");
-        }
-        finally
-        {
-            m_editedCount = 0;
-            m_editing = false;
-        }
+			if(m_editedCount < 0)
+				throw gcnew System::Exception("먼가 수상합니다.");
+		}
+		finally
+		{
+			m_editedCount = 0;
+			m_editing = false;
+		}
 
-        for each(Cell^ item in m_cells)
-        {
+		for each(Cell^ item in m_cells)
+		{
 			item->UpdateNativeText();
-        }
-        this->GridControl->InvokeRowChanged(this);
-    }
+		}
+		this->GridControl->InvokeRowChanged(this);
+	}
 
-    void Row::BringIntoView()
-    {
-        if(m_pDataRow->GetDisplayable() == true)
-            return;
-        this->GridControl->BringIntoView(this);
-    }
+	void Row::BringIntoView()
+	{
+		if(m_pDataRow->GetDisplayable() == true)
+			return;
+		this->GridControl->BringIntoView(this);
+	}
 
-    void Row::Select()
-    {
-        this->Selector->SelectDataRow(m_pDataRow, GrSelectionType_Normal);
-    }
+	void Row::Select()
+	{
+		this->Selector->SelectDataRow(m_pDataRow, GrSelectionType_Normal);
+	}
 
-    void Row::Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType)
-    {
-        this->Selector->SelectDataRow(m_pDataRow, (GrSelectionType)selectionType);
-    }
+	void Row::Select(Ntreev::Windows::Forms::Grid::SelectionType selectionType)
+	{
+		this->Selector->SelectDataRow(m_pDataRow, (GrSelectionType)selectionType);
+	}
 
-    void Row::ResetCellBackColor()
-    {
-        this->CellBackColor = System::Drawing::Color::Empty;
-    }
+	void Row::ResetCellBackColor()
+	{
+		this->CellBackColor = System::Drawing::Color::Empty;
+	}
 
-    void Row::ResetCellForeColor()
-    {
-        this->CellForeColor = System::Drawing::Color::Empty;
-    }
+	void Row::ResetCellForeColor()
+	{
+		this->CellForeColor = System::Drawing::Color::Empty;
+	}
 
-    System::Drawing::Color Row::CellBackColor::get()
-    {
-        return m_pDataRow->GetItemBackColor();
-    }
+	System::Drawing::Color Row::CellBackColor::get()
+	{
+		return m_pDataRow->GetItemBackColor();
+	}
 
-    void Row::CellBackColor::set(System::Drawing::Color value)
-    {
-        m_pDataRow->SetItemBackColor(value);
-    }
+	void Row::CellBackColor::set(System::Drawing::Color value)
+	{
+		m_pDataRow->SetItemBackColor(value);
+	}
 
-    System::Drawing::Color Row::CellForeColor::get()
-    {
-        return m_pDataRow->GetItemForeColor();
-    }
+	System::Drawing::Color Row::CellForeColor::get()
+	{
+		return m_pDataRow->GetItemForeColor();
+	}
 
-    System::String^ Row::ErrorDescription::get()
-    {
-        return m_errorDescription; 
-    }
+	System::String^ Row::Error::get()
+	{
+		return m_error; 
+	}
 
-    void Row::ErrorDescription::set(System::String^ value)
-    {
+	void Row::Error::set(System::String^ value)
+	{
 		value = value == nullptr ? System::String::Empty : value;
 
-        if(m_errorDescription == value)
-            return;
+		if(m_error == value)
+			return;
 
-        m_errorDescription = value;
-		if(m_errorDescription == System::String::Empty)
-        {
-			if(m_cellErrorDescriptions->Count == 0)
+		m_error = value;
+		if(m_error == System::String::Empty)
+		{
+			if(m_errors->Count == 0)
 				this->GridControl->ErrorDescriptor->Remove(this);
-        }
-        else
-        {
-            this->GridControl->ErrorDescriptor->Add(this);
-        }
-    }
+		}
+		else
+		{
+			this->GridControl->ErrorDescriptor->Add(this);
+		}
+	}
 
-    bool Row::HasErrorCell::get()
-    {
-		return m_cellErrorDescriptions->Count > 0;
-    }
-
-    void Row::CellForeColor::set(System::Drawing::Color value)
-    {
-        m_pDataRow->SetItemForeColor(value);
-    }
-
-    bool Row::ShouldSerializeCellForeColor()
-    {
-        return m_pDataRow->GetItemForeColor() != GrColor::Empty;
-    }
-
-    bool Row::ShouldSerializeCellBackColor()
-    {
-        return m_pDataRow->GetItemBackColor() != GrColor::Empty;
-    }
-
-    bool Row::ShouldSerializeCellFont()
-    {
-        return m_pDataRow->GetItemFont() != nullptr;
-    }
-	
-	void Row::Refresh(System::ComponentModel::PropertyDescriptor^ descriptor)
+	System::String^ Row::SourceError::get()
 	{
-		if(m_component == nullptr)
-			throw gcnew System::ArgumentException();
+		return m_sourceError;
+	}
+
+	void Row::SourceError::set(System::String^ value)
+	{
+		value = value == nullptr ? System::String::Empty : value;
+
+		if(m_sourceError == value)
+			return;
+
+		m_sourceError = value;
+		if(m_sourceError == System::String::Empty)
+		{
+			if(this->HasErrors == false)
+				this->GridControl->ErrorDescriptor->Remove(this);
+		}
+		else
+		{
+			this->GridControl->ErrorDescriptor->Add(this);
+		}
+	}
+
+	bool Row::HasErrors::get()
+	{
+		if(System::String::IsNullOrEmpty(m_error) == false || System::String::IsNullOrEmpty(m_sourceError) == false)
+			return true;
+		if(m_errors != nullptr && m_errors->Count > 0)
+			return true;
+		if(m_sourceErrors != nullptr && m_sourceErrors->Count > 0)
+			return true;
+		if(m_invalidValues != nullptr && m_invalidValues->Count > 0)
+			return false;
+		return false;
+	}
+
+	void Row::CellForeColor::set(System::Drawing::Color value)
+	{
+		m_pDataRow->SetItemForeColor(value);
+	}
+
+	bool Row::ShouldSerializeCellForeColor()
+	{
+		return m_pDataRow->GetItemForeColor() != GrColor::Empty;
+	}
+
+	bool Row::ShouldSerializeCellBackColor()
+	{
+		return m_pDataRow->GetItemBackColor() != GrColor::Empty;
+	}
+
+	bool Row::ShouldSerializeCellFont()
+	{
+		return m_pDataRow->GetItemFont() != nullptr;
+	}
+
+	void Row::InvokeChanged(System::ComponentModel::PropertyDescriptor^ descriptor)
+	{
+		//if(m_component == nullptr)
+		//	throw gcnew System::ArgumentException();
 
 		System::ComponentModel::IDataErrorInfo^ dataErrorInfo = dynamic_cast<System::ComponentModel::IDataErrorInfo^>(m_component);
 
 		if(dataErrorInfo != nullptr)
 		{
-			this->ErrorDescription = dataErrorInfo->Error;
+			this->SourceError = dataErrorInfo->Error;
 		}
 
 		if(descriptor == nullptr)
 		{
-			for each(Cell^ item in this->Cells)
+			for each(Cell^ item in m_cells)
 			{
 				item->UpdateNativeText();
 
-				if(dataErrorInfo != nullptr)
+				if(dataErrorInfo != nullptr && item->Column->PropertyDescriptor != nullptr)
 				{
-					item->ErrorDescription = dataErrorInfo[item->Column->ColumnName];
+					this->SetSourceError(item, dataErrorInfo[item->Column->ColumnName]);
 				}
-
-				this->GridControl->InvokeValueChanged(item);
 			}
 		}
 		else
 		{
-			Cell^ cell = this->Cells[descriptor->Name];
+			Cell^ cell =  m_cells[descriptor->Name];
 			cell->UpdateNativeText();
+
 			if(dataErrorInfo != nullptr)
 			{
-				cell->ErrorDescription = dataErrorInfo[descriptor->Name];
+				this->SetSourceError(cell, dataErrorInfo[descriptor->Name]);
 			}
+			this->GridControl->InvokeValueChanged(cell);
 		}
 	}
 
-    System::String^ Row::GetErrorDescription(Cell^ cell)
-    {
-        if(m_cellErrorDescriptions->ContainsKey(cell) == false)
-            return System::String::Empty;
+	void Row::UpdateNativeText()
+	{
+		for each(Cell^ item in m_cells)
+		{
+			item->UpdateNativeText();
+		}
+	}
 
-        return m_cellErrorDescriptions[cell];
-    }
-     
-    void Row::SetErrorDescription(Cell^ cell, System::String^ text)
-    {
+	System::String^ Row::GetError(Cell^ cell)
+	{
+		if(m_errors == nullptr)
+			return System::String::Empty;
+
+		if(m_errors->ContainsKey(cell) == false)
+			return System::String::Empty;
+
+		return m_errors[cell];
+	}
+
+	void Row::SetError(Cell^ cell, System::String^ text)
+	{
 		text = text == nullptr ? System::String::Empty : text;
 
 		if(text == System::String::Empty)
 		{
-			if(m_cellErrorDescriptions->ContainsKey(cell) == true)
-				m_cellErrorDescriptions->Remove(cell);
+			if(m_errors == nullptr)
+				return;
 
-			if(m_cellErrorDescriptions->Count == 0 && m_errorDescription == System::String::Empty)
+			if(m_errors->ContainsKey(cell) == true)
+				m_errors->Remove(cell);
+
+			if(this->HasErrors == false)
 				this->GridControl->ErrorDescriptor->Remove(this);
 		}
 		else
 		{
-			m_cellErrorDescriptions[cell] = text;
-			this->GridControl->ErrorDescriptor->Add(this);
+			if(m_errors == nullptr)
+				m_errors = gcnew System::Collections::Generic::Dictionary<Cell^, System::String^>();
+
+			if(m_errors->ContainsKey(cell) == false || m_errors[cell] != text)
+			{
+				m_errors[cell] = text;
+				this->GridControl->ErrorDescriptor->Add(this);
+			}
 		}
-    }
+	}
 
-    System::Object^ Row::GetSourceValue(Column^ column)
-    {
-        PropertyDescriptor^ propertyDescriptor = column->PropertyDescriptor;
+	System::String^ Row::GetSourceError(Cell^ cell)
+	{
+		if(m_sourceErrors == nullptr)
+			return System::String::Empty;
 
-        if(propertyDescriptor == nullptr || m_component == nullptr)
-            throw gcnew System::ArgumentException();
-        System::Object^ value = propertyDescriptor->GetValue(m_component);
-        return column->ConvertFromSource(value);
-    }
+		if(m_sourceErrors->ContainsKey(cell) == false)
+			return System::String::Empty;
 
-    void Row::SetSourceValue(Column^ column, System::Object^ value)
-    {
-        PropertyDescriptor^ propertyDescriptor = column->PropertyDescriptor;
-        
-        if(propertyDescriptor->IsReadOnly == false)
-        {
-            value = column->ConvertToSource(value);
-            try
-            {
-                //if(propertyDescriptor->ShouldSerializeValue(component) == false)
-                    propertyDescriptor->SetValue(m_component, value);
-            }
-            catch(System::Exception^ e)
-            {
-                if(value == nullptr)
-                    propertyDescriptor->SetValue(m_component, System::DBNull::Value);
-                else
-                    throw e;
-            }
-        }
-    }
+		return m_sourceErrors[cell];
+	}
 
-    bool Row::HasSourceValue(Column^ column)
-    {
-        PropertyDescriptor^ propertyDescriptor = column->PropertyDescriptor;
-        if(propertyDescriptor == nullptr || m_component == nullptr)
-            return false;
-        return true;
-    }
+	void Row::SetSourceError(Cell^ cell, System::String^ text)
+	{
+		text = text == nullptr ? System::String::Empty : text;
 
-    int Row::GetCellsTextCapacity()
-    {
-        return m_textCapacity;
-    }
+		if(text == System::String::Empty)
+		{
+			if(m_sourceErrors == nullptr)
+				return;
+
+			if(m_sourceErrors->ContainsKey(cell) == true)
+				m_sourceErrors->Remove(cell);
+
+			if(this->HasErrors == false)
+				this->GridControl->ErrorDescriptor->Remove(this);
+		}
+		else
+		{
+			if(m_sourceErrors == nullptr)
+				m_sourceErrors = gcnew System::Collections::Generic::Dictionary<Cell^, System::String^>();
+
+			if(m_sourceErrors->ContainsKey(cell) == false || m_sourceErrors[cell] != text)
+			{
+				m_sourceErrors[cell] = text;
+				this->GridControl->ErrorDescriptor->Add(this);
+			}
+		}
+	}
+
+	System::String^ Row::GetInvalidValue(Cell^ cell)
+	{
+		if(m_invalidValues == nullptr)
+			return System::String::Empty;
+
+		if(m_invalidValues->ContainsKey(cell) == false)
+			return System::String::Empty;
+
+		return m_invalidValues[cell];
+	}
+
+	void Row::SetInvalidValue(Cell^ cell, System::String^ text)
+	{
+		text = text == nullptr ? System::String::Empty : text;
+
+		if(text == System::String::Empty)
+		{
+			if(m_invalidValues == nullptr)
+				return;
+
+			if(m_invalidValues->ContainsKey(cell) == true)
+				m_invalidValues->Remove(cell);
+
+			if(this->HasErrors == false)
+				this->GridControl->ErrorDescriptor->Remove(this);
+		}
+		else
+		{
+			if(m_invalidValues == nullptr)
+				m_invalidValues = gcnew System::Collections::Generic::Dictionary<Cell^, System::String^>();
+
+			if(m_invalidValues->ContainsKey(cell) == false || m_invalidValues[cell] != text)
+			{
+				m_invalidValues[cell] = text;
+				this->GridControl->ErrorDescriptor->Add(this);
+			}
+		}
+	}
+
+	bool Row::HasInvalidValue(Cell^ cell)
+	{
+		if(m_invalidValues == nullptr)
+			return false;
+
+		return m_invalidValues->ContainsKey(cell);
+	}
+
+	System::Object^ Row::GetSourceValue(Column^ column)
+	{
+		PropertyDescriptor^ propertyDescriptor = column->PropertyDescriptor;
+
+		if(propertyDescriptor == nullptr || m_component == nullptr)
+			throw gcnew System::ArgumentException();
+		System::Object^ value = propertyDescriptor->GetValue(m_component);
+		return column->ConvertFromSource(value);
+	}
+
+	void Row::SetSourceValue(Column^ column, System::Object^ value)
+	{
+		PropertyDescriptor^ propertyDescriptor = column->PropertyDescriptor;
+
+		if(propertyDescriptor->IsReadOnly == false)
+		{
+			value = column->ConvertToSource(value);
+			try
+			{
+				//if(propertyDescriptor->ShouldSerializeValue(component) == false)
+				propertyDescriptor->SetValue(m_component, value);
+			}
+			catch(System::Exception^ e)
+			{
+				if(value == nullptr)
+					propertyDescriptor->SetValue(m_component, System::DBNull::Value);
+				else
+					throw e;
+			}
+		}
+	}
+
+	bool Row::HasSourceValue(Column^ column)
+	{
+		PropertyDescriptor^ propertyDescriptor = column->PropertyDescriptor;
+		if(propertyDescriptor == nullptr || m_component == nullptr)
+			return false;
+		return true;
+	}
+
+	int Row::GetCellsTextCapacity()
+	{
+		return m_textCapacity;
+	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

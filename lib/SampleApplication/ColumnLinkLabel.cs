@@ -46,7 +46,7 @@ namespace SampleApplication
 
         protected override LinkLabel CreateControlInstance(params object[] controlArgs)
         {
-            return new LinkLabel2();
+            return new LinkLabel();
         }
 
         protected override void SetControlValue(LinkLabel control, object value)
@@ -79,14 +79,14 @@ namespace SampleApplication
             return (this.testControl as LinkLabel2).LinkTest(reason.Location) != null;
         }
 
-        void GridControl_CursorChanged(object sender, EventArgs e)
-        {
-            //System.Diagnostics.Trace.WriteLine(Cursor.Current);
-        }
-
         protected override void OnGridControlDetached()
         {
             base.OnGridControlDetached();
+        }
+
+        private void GridControl_CursorChanged(object sender, EventArgs e)
+        {
+            //System.Diagnostics.Trace.WriteLine(Cursor.Current);
         }
 
         class LinkLabel2 : LinkLabel

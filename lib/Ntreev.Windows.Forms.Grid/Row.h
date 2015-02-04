@@ -371,13 +371,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         [System::ComponentModel::DefaultValueAttribute("")]
-        property System::String^ ErrorDescription
+        property System::String^ Error
         {
             System::String^ get();
             void set(System::String^);
         }
 
-        property bool HasErrorCell
+        property bool HasErrors
         {
             bool get();
         }
@@ -385,8 +385,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property System::Object^ Component
         {
             System::Object^ get() { return m_component; }
-        internal:
-            void set(System::Object^);
+        //internal:
+        //    void set(System::Object^);
         }
 
     public: // events
@@ -410,23 +410,49 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         Cell^ NewCell(Column^ column);
 
-		void Refresh(System::ComponentModel::PropertyDescriptor^ descriptor);
+		void InvokeChanged(System::ComponentModel::PropertyDescriptor^ descriptor);
 
-        System::String^ GetErrorDescription(Cell^ cell);
+		void UpdateNativeText();
 
-        void SetErrorDescription(Cell^ cell, System::String^ text);
+        System::String^ GetError(Cell^ cell);
+
+        void SetError(Cell^ cell, System::String^ text);
+
+		System::String^ GetSourceError(Cell^ cell);
+
+        void SetSourceError(Cell^ cell, System::String^ text);
+
+		System::String^ GetInvalidValue(Cell^ cell);
+
+        void SetInvalidValue(Cell^ cell, System::String^ text);
+
+		bool HasInvalidValue(Cell^ cell);
 
 		void EndEditInternal();
 
+		void AttachComponent(System::Object^ component);
+
+		void DetachComponent();
+
     internal: // properties
 
-        //property int ComponentIndex
-        //{
-        //    int get() { return m_componentIndex; }
-        //    void set(int value) { m_componentIndex = value; }
-        //}
+		property System::String^ SourceError
+		{
+			System::String^ get();
+			void set(System::String^);
+		}
 
-		property System::Collections::Generic::Dictionary<Cell^, System::String^>^ CellErrors
+		property System::Collections::Generic::Dictionary<Cell^, System::String^>^ Errors
+		{
+			System::Collections::Generic::Dictionary<Cell^, System::String^>^ get();
+		}
+
+		property System::Collections::Generic::Dictionary<Cell^, System::String^>^ SourceErrors
+		{
+			System::Collections::Generic::Dictionary<Cell^, System::String^>^ get();
+		}
+
+		property System::Collections::Generic::Dictionary<Cell^, System::String^>^ InvalidValues
 		{
 			System::Collections::Generic::Dictionary<Cell^, System::String^>^ get();
 		}
@@ -458,8 +484,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         //int m_componentIndex;
         int m_editedCount;
         bool m_editing;
-        System::String^ m_errorDescription;
 
-        System::Collections::Generic::Dictionary<Cell^, System::String^>^ m_cellErrorDescriptions;
+        System::String^ m_error;
+		System::String^ m_sourceError;
+
+        System::Collections::Generic::Dictionary<Cell^, System::String^>^ m_errors;
+		System::Collections::Generic::Dictionary<Cell^, System::String^>^ m_sourceErrors;
+		System::Collections::Generic::Dictionary<Cell^, System::String^>^ m_invalidValues;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

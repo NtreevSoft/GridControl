@@ -374,7 +374,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     System::String^ ColumnCollection::NewColumnName()
     {
-        int columnIndex = 0;
+        int columnIndex = 1;
 
         System::String^ name;
         do

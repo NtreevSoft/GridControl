@@ -134,7 +134,6 @@ namespace SampleApplication
 
         private void gridControl1_ColumnMouseDown(object sender, Ntreev.Windows.Forms.Grid.ColumnMouseEventArgs e)
         {
-            int qwr = 0;
             this.gridControl1.InsertionRow.CancelEdit();
         }
 

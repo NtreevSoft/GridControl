@@ -45,11 +45,17 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void errorTimer_Elapsed(System::Object^ sender, System::Timers::ElapsedEventArgs^ e);
         void gridControl_Cleared(System::Object^ sender, Ntreev::Windows::Forms::Grid::ClearEventArgs^ e);
         void gridControl_VisibleChanged(System::Object^ sender, System::EventArgs^ e);
+		void gridControl_RowUnbinded(System::Object^ sender, Ntreev::Windows::Forms::Grid::RowEventArgs^ e);
+
+		void Paint(System::Drawing::Graphics^ g, Ntreev::Windows::Forms::Grid::Cell^ cell);
+		void Paint(System::Drawing::Graphics^ g, Ntreev::Windows::Forms::Grid::Row^ row);
 
     private: // variables
 
         System::Collections::Generic::List<Ntreev::Windows::Forms::Grid::Row^>^ m_rows;
         System::Timers::Timer^ m_timer;
         int m_errorCount;
+
+		System::Drawing::Pen^ m_pen;
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

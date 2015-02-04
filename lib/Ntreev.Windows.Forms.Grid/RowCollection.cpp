@@ -103,7 +103,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(m_componentToRow->ContainsKey(component) == true)
 		{
 			row = m_componentToRow[component];
-			row->Component = component;
+			row->AttachComponent(component);
 			m_pDataRowList->RemoveDataRow(row->NativeRef);
 			m_pDataRowList->InsertDataRow(row->NativeRef, componentIndex);
 			m_components->Remove(component);
@@ -120,7 +120,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_pDataRowList->InsertDataRow(row->NativeRef, componentIndex);
 		m_componentToRow->Add(component, row);
 
-		row->Component = component;
+		row->AttachComponent(component);
 		row->AttachChildControl();
 
 		this->GridControl->InvokeRowBinded(row);
@@ -136,7 +136,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_components->RemoveAt(componentIndex);
 		m_componentToRow->Remove(component);
 		m_pDataRowList->RemoveDataRow(row->NativeRef);
-		row->Component = nullptr;
+		row->DetachComponent();
 		row->DetachChildControl();
 		this->GridControl->InvokeRowUnbinded(row);
     }
@@ -208,8 +208,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
                 System::Object^ component = m_manager->List[e->NewIndex];
 
 				Row^ row = m_componentToRow[component];
-				row->Refresh(e->PropertyDescriptor);
-
+				row->InvokeChanged(e->PropertyDescriptor);
                 this->GridControl->InvokeRowChanged(row);
             }
             break;
@@ -253,6 +252,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 						nativeRows.push_back(row->NativeRef);
 					}
 					m_pDataRowList->Reset(nativeRows);
+				}
+
+				if(this->InsertionRow->Component != nullptr)
+				{
+					m_components->Add(this->InsertionRow->Component);
+					m_componentToRow->Add(this->InsertionRow->Component, this->InsertionRow);
 				}
 
 				this->GridControl->InvokeReset();
@@ -316,12 +321,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_manager->AddNew();
 		if(this->InsertionRow->IsBeingEdited == false)
             this->InsertionRow->BeginEdit();
-        this->InsertionRow->Component = m_manager->Current;
+		this->InsertionRow->AttachComponent(m_manager->Current);
     }
 
     void RowCollection::EndInsertion()
     {
-		this->InsertionRow->Component = nullptr;
+		if(this->InsertionRow->Component == nullptr)
+            return;
+
+		this->InsertionRow->DetachComponent();
 		m_insertion = true;
 		m_manager->CancelCurrentEdit();
     }
@@ -367,7 +375,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             try
             {
-                ManagerEventDetach managerEventDeatch(this);
+				m_insertion = true;
                 m_manager->AddNew();
                 isNew = true;
             }
@@ -375,37 +383,32 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             {
                 return nullptr;
             }
-            item->Component = m_manager->Current;
+            item->AttachComponent(m_manager->Current);
         }
 
-		//bool insertion = m_insertion;
-		//m_insertion = false;
         if(this->GridControl->InvokeRowInserting(item) == false)
         {
             if(isNew == true)
             {
-                item->Component = nullptr;
-                ManagerEventDetach managerEventDeatch(this);
+				item->DetachComponent();
+                m_insertion = false;
                 m_manager->CancelCurrentEdit();
             }
-			//m_insertion = insertion;
         }
         else
         {
             try
             {
-                //ManagerEventDetach managerEventDeatch(this);
-				
 				m_pDataRowList->InsertDataRow(item->NativeRef, index);
                 m_manager->EndCurrentEdit();
-            }
+             }
             catch(System::Exception^ e)
             {
 				m_pDataRowList->RemoveDataRow(item->NativeRef);
                 if(isNew == true)
                 {
-                    item->Component = nullptr;
-                    ManagerEventDetach managerEventDeatch(this);
+					item->DetachComponent();
+					m_insertion = true;
                     m_manager->CancelCurrentEdit();
                 }
                 this->GridControl->ShowMessage(e->Message, "Error", System::Windows::Forms::MessageBoxButtons::OK, System::Windows::Forms::MessageBoxIcon::Error);
@@ -415,7 +418,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             item->AttachChildControl();
             item->EndEditInternal();
             this->GridControl->InvokeRowInserted(item);
-            this->InsertionRow->Refresh(nullptr);
+			this->InsertionRow->UpdateNativeText();
             this->GridControl->InvokeRowChanged(item);
         }
         return item;
@@ -456,7 +459,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         try
         {
             Row^ row = this->GridControl->CreateRow(m_pDataRowList->NewDataRow());
-            Insert(this->Count, row);
+            this->Insert(this->Count, row);
             return row;
         }
         catch(System::Exception^ e)

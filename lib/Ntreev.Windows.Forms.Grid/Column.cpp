@@ -569,65 +569,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         return (int)m_pColumn->GetIndex();
     }
 
-    //System::Object^ Column::DefaultValue::get()
-    //{
-    //    using namespace System::ComponentModel;
-
-    //    if(m_defaultValue == nullptr)
-    //    {
-    //        DefaultValueAttribute^ attr = GetSourceAttribute<DefaultValueAttribute^>(m_propertyDescriptor);
-    //        if(attr != nullptr)
-    //        {
-    //            try
-    //            {
-    //                return ConvertFromSource(attr->Value);
-    //            }
-    //            catch(System::Exception^)
-    //            {
-    //                return nullptr;
-    //            }
-    //        }
-    //    }
-    //    return m_defaultValue;
-    //}
-
-    //void Column::DefaultValue::set(System::Object^ value)
-    //{
-    //    System::Object^ oldDefaultValue = m_defaultValue;
-
-    //    try
-    //    {
-    //        m_defaultValue = nullptr;
-    //        if(ValueChecker::IsNullOrDBNull(value) == true)
-    //            return;
-
-    //        if(this->DataType != System::String::typeid)
-    //        {
-    //            if(value->GetType() == System::String::typeid && value->ToString() == System::String::Empty)
-    //            {
-    //                m_defaultValue = nullptr;
-    //                return;
-    //            }
-    //        }
-
-    //        if(value->GetType() == this->DataType)
-    //        {
-    //            m_defaultValue = value;
-    //        }
-    //        else if(this->TypeConverter->CanConvertFrom(value->GetType()) == true)
-    //        {       
-    //            m_defaultValue = this->TypeConverter->ConvertFrom(value);
-    //        }
-    //    }
-    //    finally
-    //    {
-    //        if(oldDefaultValue != m_defaultValue && this->GridControl != nullptr)
-    //        {
-    //            this->GridControl->InsertionRow->Cells[this]->SetDefaultValue();
-    //        }
-    //    }
-    //}
-
     System::Drawing::StringAlignment Column::CellAlignment::get()
     {
         GrHorzAlign align = m_pColumn->GetItemHorzAlign();
@@ -941,16 +882,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return m_pColumn->ShouldSerializeVisibleIndex();
 	}
 
-    //bool Column::ShouldSerializePriorityOnFrozen()
-    //{
-    //    return m_pColumn->ShouldSerializePriorityOnFrozen();
-    //}
-    //    
-    //bool Column::ShouldSerializePriorityOnUnfrozen()
-    //{
-    //    return m_pColumn->ShouldSerializePriorityOnUnfrozen();
-    //}
-
     void Column::ResetTitle()
     {
         m_title = nullptr;
@@ -1092,26 +1023,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     {
         return m_site;
     }
-
-    //int Column::PriorityOnFrozen::get()
-    //{
-    //    return m_pColumn->GetFreezablePriority();
-    //}
-
-    //void Column::PriorityOnFrozen::set(int value)
-    //{
-    //    m_pColumn->SetFreezablePriority(value);
-    //}
-
-    //int Column::Priority::get()
-    //{
-    //    return m_pColumn->GetPriority();
-    //}
-
-    //void Column::Priority::set(int value)
-    //{
-    //    m_pColumn->SetPriority(value);
-    //}
 
     Design::TypeEditor^ Column::TypeEditor::get()
     {

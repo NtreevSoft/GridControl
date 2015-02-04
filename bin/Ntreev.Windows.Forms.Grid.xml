@@ -1636,7 +1636,7 @@ index가 0보다 작거나, <see cref="P:Ntreev.Windows.Forms.Grid.Row.CellCount
 문자열이 출력되는 영역을 나타내늗 <see cref="T:System.Drawing.Rectangle" />입니다.
 </returns>
         </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.Cell.ErrorDescription">
+        <member name="P:Ntreev.Windows.Forms.Grid.Cell.Error">
             <summary>
 셀의 내용이 잘못 되었다는 표시를 가져오거나 설정합니다.
 </summary>
@@ -2296,6 +2296,14 @@ Windows 메시지를 처리합니다.
 이벤트 데이터가 들어 있는 <see cref="T:Ntreev.Windows.Forms.Grid.ValueChangingEventArgs" />입니다.
 </param>
         </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnReseted(System.EventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.GridControl.Reseted" /> 이벤트를 발생시킵니다.
+</summary>
+            <param name="e">
+이벤트 데이터가 들어 있는 <see cref="T:System.EventArgs" />입니다.
+</param>
+        </member>
         <member name="M:Ntreev.Windows.Forms.Grid.GridControl.Dispose">
             <summary>
 사용 중인 모든 리소스를 정리합니다.
@@ -2490,6 +2498,11 @@ Windows 메시지를 처리합니다.
 행의 위치가 변경되었을때 발생합니다.
 </summary>
         </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.GridControl.RowMoving">
+            <summary>
+행의 위치가 변경되기 전에 발생합니다.
+</summary>
+        </member>
         <member name="E:Ntreev.Windows.Forms.Grid.GridControl.RowBinded">
             <summary>
 행이 데이터 소스와 연결 된 후에 발생합니다.
@@ -2543,6 +2556,11 @@ Windows 메시지를 처리합니다.
             <remarks>
 셀의 값이 변경되는 것을 원하지 않는 경우 이벤트 데이터를 통하여 취소시킬 수 있습니다.
 </remarks>
+        </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.GridControl.Reseted">
+            <summary>
+데이터가 리셋되었을때 발생합니다.
+</summary>
         </member>
         <member name="P:Ntreev.Windows.Forms.Grid.GridControl.CanEnableIme">
             <summary>
@@ -4334,6 +4352,48 @@ DataSource가 <see cref="T:System.Data.DataTable" />일때는 이 속성의 타�
         <member name="T:Ntreev.Windows.Forms.Grid.RowInsertingEventArgs">
             <summary>
 새로운 행이 추가되는 이벤트의 데이터를 제공합니다.
+</summary>
+        </member>
+        <member name="T:Ntreev.Windows.Forms.Grid.RowMovingEventHandler">
+            <summary>
+새로운 행이 추가되는 이벤트를 처리하는 메서드를 나타냅니다.
+</summary>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.RowMovingEventArgs.Component">
+            <summary>
+이벤트의 대상이 되는 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />와 연결될 데이터를 가져옵니다.
+</summary>
+            <remarks>
+DataSource가 <see cref="T:System.Data.DataTable" />일때는 이 속성의 타입은 <see cref="T:System.Data.DataRowView" />가 되고 컬렉션일때는 컬렉션 항목의 타입이 됩니다.
+</remarks>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.RowMovingEventArgs.Index">
+            <summary>
+행을 변경 될 인덱스를 가져옵니다.
+</summary>
+            <returns>
+변경될 행의 인덱스 변호를 나타냅니다.
+</returns>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.RowMovingEventArgs.Cancel">
+            <summary>
+행을 변경 할지에 대한 여부를 가져오거나 설정합니다.
+</summary>
+            <returns>
+행을 변경하는 작업이 취소되면 true, 그렇지 않으면 false를 반환합니다.
+</returns>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.RowMovingEventArgs.#ctor(Ntreev.Windows.Forms.Grid.Row,System.Int32)">
+            <summary>
+                <see cref="T:Ntreev.Windows.Forms.Grid.RowMovingEventArgs" />클래스의 새 인스턴스를 초기화합니다.
+</summary>
+            <param name="row">
+이벤트의 대상이 되는 <see cref="T:Ntreev.Windows.Forms.Grid.Row" />의 인스턴스입니다.
+</param>
+        </member>
+        <member name="T:Ntreev.Windows.Forms.Grid.RowMovingEventArgs">
+            <summary>
+행이 변경되는 이벤트의 데이터를 제공합니다.
 </summary>
         </member>
         <member name="T:Ntreev.Windows.Forms.Grid.RowEventHandler">

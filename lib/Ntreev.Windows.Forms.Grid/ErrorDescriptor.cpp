@@ -44,8 +44,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         m_timer->Interval = 300;
         m_errorCount = 0;
 
+		m_pen = gcnew Pen(Color::Firebrick, 2);
+        m_pen->Alignment = PenAlignment::Inset;
+
         this->GridControl->Cleared += gcnew ClearEventHandler(this, &ErrorDescriptor::gridControl_Cleared);
         this->GridControl->VisibleChanged += gcnew System::EventHandler(this, &ErrorDescriptor::gridControl_VisibleChanged);
+		this->GridControl->RowUnbinded += gcnew RowEventHandler(this, &ErrorDescriptor::gridControl_RowUnbinded);
     }
 
     void ErrorDescriptor::Add(Row^ row)
@@ -101,44 +105,80 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
     }
 
+	void ErrorDescriptor::gridControl_RowUnbinded(System::Object^ /*sender*/, RowEventArgs^ e)
+    {
+		this->Remove(e->Row);
+	}
+
     void ErrorDescriptor::Paint(Graphics^ g)
     {
         if(m_errorCount % 2 != 0)
             return;
-
-        Bitmap^ errorBitmap = _Resources::Error;
-        Pen^ pen = gcnew Pen(Color::Firebrick, 2);
-        pen->Alignment = PenAlignment::Inset;
 
         for each(Row^ row in m_rows)
         {
             if(row->IsDisplayable == false)
                 continue;
 
-			if(row->ErrorDescription != System::String::Empty)
+			if(row->Error != System::String::Empty || row->SourceError != System::String::Empty)
 			{
-				Rectangle bounds = row->Bounds;
-				bounds.Width = this->GridCore->GetColumnList()->GetBounds().GetWidth();
-				bounds.Height--;
-				g->DrawRectangle(pen, bounds);
-
-				bounds = row->Bounds;
-				g->DrawImage(errorBitmap, bounds.Left + 3, bounds.Top + 3, errorBitmap->Width, errorBitmap->Height);
+				this->Paint(g, row);
 			}
 
-			for each(Cell^ cell in row->CellErrors->Keys)
+			if(row->Errors != nullptr)
 			{
-				if(cell->IsDisplayable == false)
-					continue;
+				for each(Cell^ cell in row->Errors->Keys)
+				{
+					if(cell->IsDisplayable == false)
+						continue;
 
-				Rectangle bounds = cell->Bounds;
-				bounds.Width--;
-				bounds.Height--;
-				g->DrawRectangle(pen, bounds);
+					this->Paint(g, cell);
+				}
+			}
+			else if(row->SourceErrors != nullptr)
+			{
+				for each(Cell^ cell in row->SourceErrors->Keys)
+				{
+					if(cell->IsDisplayable == false)
+						continue;
 
-				g->DrawImage(errorBitmap, bounds.Left + 3, bounds.Top + 3, errorBitmap->Width, errorBitmap->Height);
+					this->Paint(g, cell);
+				}
+			}
+			else if(row->InvalidValues != nullptr)
+			{
+				for each(Cell^ cell in row->InvalidValues->Keys)
+				{
+					if(cell->IsDisplayable == false)
+						continue;
+
+					this->Paint(g, cell);
+				}
 			}
         }
-        delete pen;
     }
+
+	void ErrorDescriptor::Paint(System::Drawing::Graphics^ g, Ntreev::Windows::Forms::Grid::Cell^ cell)
+	{
+		Bitmap^ errorBitmap = _Resources::Error;
+		Rectangle bounds = cell->Bounds;
+		bounds.Width--;
+		bounds.Height--;
+
+		g->DrawRectangle(m_pen, bounds);
+		g->DrawImage(errorBitmap, bounds.Left + cell->Padding.Left, bounds.Top + cell->Padding.Top, errorBitmap->Width, errorBitmap->Height);
+	}
+
+	void ErrorDescriptor::Paint(System::Drawing::Graphics^ g, Ntreev::Windows::Forms::Grid::Row^ row)
+	{
+		Bitmap^ errorBitmap = _Resources::Error;
+		Rectangle bounds = row->Bounds;
+		bounds.Width = this->GridCore->GetColumnList()->GetBounds().GetWidth();
+		bounds.Height--;
+		g->DrawRectangle(m_pen, bounds);
+
+		bounds = row->Bounds;
+		g->DrawImage(errorBitmap, bounds.Left + row->Padding.Left, bounds.Top + row->Padding.Top, errorBitmap->Width, errorBitmap->Height);
+	}
+
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/
