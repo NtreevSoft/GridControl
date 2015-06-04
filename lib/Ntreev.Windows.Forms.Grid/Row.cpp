@@ -87,7 +87,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			for each(Cell^ item in m_cells)
 			{
 				Column^ column = item->Column;
-				if(column->PropertyDescriptor == nullptr)
+				if(column->PropertyDescriptor == nullptr || column->PropertyDescriptor->PropertyType == IBindingList::typeid)
 					continue;
 
 				System::String^ error = dataErrorInfo[column->ColumnName];
@@ -125,7 +125,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 			if(item->PropertyDescriptor != nullptr && item->PropertyDescriptor->PropertyType == IBindingList::typeid)
 			{
-				Native::GrGridRow* pChildRow = new Native::GrGridRow(this->GridControl, item->PropertyDescriptor, this, this[item]);
+				Native::GrGridRow* pChildRow = new Native::GrGridRow(this->GridControl, item->PropertyDescriptor, this);
 				m_pDataRow->AddChild(pChildRow);
 			}
 		}
@@ -517,9 +517,26 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			{
 				item->UpdateNativeText();
 
-				if(dataErrorInfo != nullptr && item->Column->PropertyDescriptor != nullptr)
+				Column^ column = item->Column;
+
+				if(column->PropertyDescriptor != nullptr && column->PropertyDescriptor->PropertyType == IBindingList::typeid)
 				{
-					this->SetSourceError(item, dataErrorInfo[item->Column->ColumnName]);
+					for(uint i=0; i<m_pDataRow->GetChildCount() ; i++)
+					{
+						Native::GrGridRow* childRow = dynamic_cast<Native::GrGridRow*>(m_pDataRow->GetChild(i));
+						if(childRow != nullptr)
+						{
+							if(childRow->GetPropertyDescriptor() == column->PropertyDescriptor)
+							{
+								childRow->Update();
+							}
+						}
+					}
+				}
+
+				if(dataErrorInfo != nullptr && column->PropertyDescriptor != nullptr && column->PropertyDescriptor->PropertyType != IBindingList::typeid)
+				{
+					this->SetSourceError(item, dataErrorInfo[column->ColumnName]);
 				}
 			}
 		}

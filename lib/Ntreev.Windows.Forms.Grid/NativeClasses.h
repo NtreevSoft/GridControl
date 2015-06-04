@@ -216,6 +216,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         virtual void PostPaint(GrGridPainter* pPainter, const GrRect& clipRect) const;
 
     private:
+		void gridCore_DisplayRectChanged(GrObject* pSender, GrEventArgs* e);
+
         void columnList_ColumnMouseDown(GrObject* pSender, GrColumnMouseEventArgs* e);
         void columnList_ColumnMouseUp(GrObject* pSender, GrColumnMouseEventArgs* e);
         void columnList_ColumnMouseEnter(GrObject* pSender, GrColumnMouseEventArgs* e);
@@ -235,6 +237,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
 		void dataRowList_DataRowMoved(GrObject* pSender, GrDataRowEventArgs* e);
 		void dataRowList_DataRowMoving(GrObject* pSender, GrDataRowMovingEventArgs* e);
+		void dataRowList_VisibleHeightChanged(GrObject* pSender, GrEventArgs* e);
 
     public:
         gcroot<Ntreev::Windows::Forms::Grid::GridControl^> m_gridControl;

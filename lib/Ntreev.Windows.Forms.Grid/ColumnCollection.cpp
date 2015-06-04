@@ -201,11 +201,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 	void ColumnCollection::AdjustWidth()
 	{
+		this->AdjustWidth(true);
+	}
+
+	void ColumnCollection::AdjustWidth(bool forceUpdate)
+	{
 		for each(Column^ item in this)
 		{
 			item->AdjustWidth();
 		}
-		this->GridControl->Update();
+		this->GridControl->Update(forceUpdate);
 	}
 
     System::Collections::Generic::IEnumerator<Column^>^ ColumnCollection::GetEnumerator()

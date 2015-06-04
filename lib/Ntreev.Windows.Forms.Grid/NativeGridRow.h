@@ -9,7 +9,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     class GrGridRow : public IDataRow
     {
     public:
-        GrGridRow(GridControl^ gridControl, System::ComponentModel::PropertyDescriptor^ propertyDescriptor, Row^ row, System::Object^ value);
+        GrGridRow(GridControl^ gridControl, System::ComponentModel::PropertyDescriptor^ propertyDescriptor, Row^ row);
 
         virtual IFocusable* GetFocusable(GrColumn* pColumn) const;
         virtual void Paint(GrGridPainter* pPainter, const GrRect& clipRect) const;
@@ -24,6 +24,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         {
             return m_gridControl; 
         }
+
+		void Update();
 
     protected:
         virtual void OnGridCoreAttached();
@@ -46,7 +48,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         gcroot<System::ComponentModel::PropertyDescriptor^> m_propertyDescriptor;
         gcroot<Row^> m_parentRow;
         gcroot<GridControl^> m_gridControl;
-        gcroot<System::Object^> m_value;
+        //gcroot<System::Object^> m_value;
     };
 
     class GrGridCell : public GrCell, public IFocusable

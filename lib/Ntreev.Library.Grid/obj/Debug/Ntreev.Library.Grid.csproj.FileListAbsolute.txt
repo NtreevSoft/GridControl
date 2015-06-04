@@ -1,0 +1,6 @@
+D:\NTG git\GridControl v2010\lib\Ntreev.Library.Grid\bin\Debug\Ntreev.Library.Grid.dll.config
+D:\NTG git\GridControl v2010\lib\Ntreev.Library.Grid\bin\Debug\Ntreev.Library.Grid.dll
+D:\NTG git\GridControl v2010\lib\Ntreev.Library.Grid\bin\Debug\Ntreev.Library.Grid.pdb
+D:\NTG git\GridControl v2010\lib\Ntreev.Library.Grid\obj\Debug\Ntreev.Library.Grid.csprojResolveAssemblyReference.cache
+D:\NTG git\GridControl v2010\lib\Ntreev.Library.Grid\obj\Debug\Ntreev.Library.Grid.dll
+D:\NTG git\GridControl v2010\lib\Ntreev.Library.Grid\obj\Debug\Ntreev.Library.Grid.pdb

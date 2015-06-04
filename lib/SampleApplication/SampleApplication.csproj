@@ -120,6 +120,12 @@
     <Compile Include="DataLocationPicker.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DataSetTest.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DataSetTest.Designer.cs">
+      <DependentUpon>DataSetTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataTableTest.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -158,6 +164,9 @@
     <Compile Include="ColumnLinkedItemSelector.cs" />
     <EmbeddedResource Include="ColumnTestControl.resx">
       <DependentUpon>ColumnTestControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataSetTest.resx">
+      <DependentUpon>DataSetTest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DataTableTest.resx">
       <DependentUpon>DataTableTest.cs</DependentUpon>
@@ -214,6 +223,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\NTG\Crema\tags\2.0.0\common library\Ntreev.Crema.Library\Ntreev.Crema.Library.csproj">
+      <Project>{eb8e9874-54fa-4789-acc0-b25d8337b6c7}</Project>
+      <Name>Ntreev.Crema.Library</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ntreev.Windows.Forms.Grid.Design\Ntreev.Windows.Forms.Grid.Design.csproj">
       <Project>{8eb27ec4-86a3-44a7-9767-19c343709894}</Project>
       <Name>Ntreev.Windows.Forms.Grid.Design</Name>

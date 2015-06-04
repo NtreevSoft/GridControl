@@ -281,6 +281,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		void AdjustWidth();
 
+		void AdjustWidth(bool forceUpdate);
+
         /// <summary>
         /// 컬렉션을 반복하는 열거자를 가져옵니다.
         /// </summary>

@@ -291,42 +291,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     public: // events
 
-        ///// <summary>
-        ///// <see cref="ForeColor"/> 속성 값이 변경되면 발생합니다.
-        ///// </summary>
-        //[System::ComponentModel::DescriptionAttribute("전경색이 변경되면 발생합니다.")]
-        //event System::EventHandler^ ForeColorChanged
-        //{
-        //    void add(System::EventHandler^ p);
-        //    void remove(System::EventHandler^ p);
-        //private:
-        //    void raise(System::Object^ sender, System::EventArgs^ e);
-        //}
-
-        ///// <summary>
-        ///// <see cref="BackColor"/> 속성 값이 변경되면 발생합니다.
-        ///// </summary>
-        //[System::ComponentModel::DescriptionAttribute("배경색이 변경되면 발생합니다.")]
-        //event System::EventHandler^ BackColorChanged
-        //{
-        //    void add(System::EventHandler^ p);
-        //    void remove(System::EventHandler^ p);
-        //private:
-        //    void raise(System::Object^ sender, System::EventArgs^ e);
-        //}
-
-        ///// <summary>
-        ///// <see cref="Font"/> 속성 값이 변경되면 발생합니다.
-        ///// </summary>
-        //[System::ComponentModel::DescriptionAttribute("글꼴이 변경되면 발생합니다.")]
-        //event System::EventHandler^ FontChanged
-        //{
-        //    void add(System::EventHandler^ p);
-        //    void remove(System::EventHandler^ p);
-        //private:
-        //    void raise(System::Object^ sender, System::EventArgs^ e);
-        //}
-
     internal: // methods
 
         CellBase(Ntreev::Windows::Forms::Grid::GridControl^ gridControl, GrCell* pCell);
@@ -351,30 +315,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
     protected: // methods
-
-        ///// <summary>
-        ///// <see cref="ForeColorChanged"/> 이벤트를 발생시킵니다.
-        ///// </summary>
-        ///// <param name="e">
-        ///// 이벤트 데이터가 들어 있는 <see cref="System::EventArgs"/>입니다.
-        ///// </param>
-        //virtual void OnForeColorChanged(System::EventArgs^ e);
-
-        ///// <summary>
-        ///// <see cref="BackColorChanged"/> 이벤트를 발생시킵니다.
-        ///// </summary>
-        ///// <param name="e">
-        ///// 이벤트 데이터가 들어 있는 <see cref="System::EventArgs"/>입니다.
-        ///// </param>
-        //virtual void OnBackColorChanged(System::EventArgs^ e);
-
-        ///// <summary>
-        ///// <see cref="FontChanged"/> 이벤트를 발생시킵니다.
-        ///// </summary>
-        ///// <param name="e">
-        ///// 이벤트 데이터가 들어 있는 <see cref="System::EventArgs"/>입니다.
-        ///// </param>
-        //virtual void OnFontChanged(System::EventArgs^ e);
 
     private: // methods
 

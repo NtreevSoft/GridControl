@@ -34,20 +34,23 @@
             this.dataColumn2 = new System.Data.DataColumn();
             this.dataTable2 = new System.Data.DataTable();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.column2 = new Ntreev.Windows.Forms.Grid.Column();
+            this.gridControl1 = new Ntreev.Windows.Forms.Grid.GridControl();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.buttonDeleteRow = new System.Windows.Forms.Button();
+            this.buttonSourceError = new System.Windows.Forms.Button();
+            this.buttonError = new System.Windows.Forms.Button();
             this.buttonInvalidValue = new System.Windows.Forms.Button();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.buttonError = new System.Windows.Forms.Button();
-            this.buttonSourceError = new System.Windows.Forms.Button();
-            this.gridControl1 = new Ntreev.Windows.Forms.Grid.GridControl();
-            this.column2 = new Ntreev.Windows.Forms.Grid.Column();
+            this.panel2 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable2)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataSet1
@@ -83,8 +86,8 @@
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 74F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26F));
-            this.tableLayoutPanel1.Controls.Add(this.gridControl1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.panel2, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -93,8 +96,28 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(812, 468);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
+            // column2
+            // 
+            this.column2.ColumnName = "Column2";
+            this.column2.DataType = typeof(int);
+            // 
+            // gridControl1
+            // 
+            this.gridControl1.CaptionRow.Height = 21;
+            this.gridControl1.Columns.AddRange(new Ntreev.Windows.Forms.Grid.Column[] {
+            this.column2});
+            this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridControl1.IsRowMovable = true;
+            this.gridControl1.Location = new System.Drawing.Point(0, 0);
+            this.gridControl1.Name = "gridControl1";
+            this.gridControl1.Size = new System.Drawing.Size(592, 460);
+            this.gridControl1.TabIndex = 0;
+            this.gridControl1.RowUnbinded += new Ntreev.Windows.Forms.Grid.RowEventHandler(this.gridControl1_RowUnbinded);
+            this.gridControl1.RowInserting += new Ntreev.Windows.Forms.Grid.RowInsertingEventHandler(this.gridControl1_RowInserting);
+            // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.buttonDeleteRow);
             this.panel1.Controls.Add(this.buttonSourceError);
             this.panel1.Controls.Add(this.buttonError);
             this.panel1.Controls.Add(this.buttonInvalidValue);
@@ -106,6 +129,36 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(206, 462);
             this.panel1.TabIndex = 1;
+            // 
+            // buttonDeleteRow
+            // 
+            this.buttonDeleteRow.Location = new System.Drawing.Point(21, 330);
+            this.buttonDeleteRow.Name = "buttonDeleteRow";
+            this.buttonDeleteRow.Size = new System.Drawing.Size(100, 23);
+            this.buttonDeleteRow.TabIndex = 5;
+            this.buttonDeleteRow.Text = "DeleteRow";
+            this.buttonDeleteRow.UseVisualStyleBackColor = true;
+            this.buttonDeleteRow.Click += new System.EventHandler(this.buttonDeleteRow_Click);
+            // 
+            // buttonSourceError
+            // 
+            this.buttonSourceError.Location = new System.Drawing.Point(21, 359);
+            this.buttonSourceError.Name = "buttonSourceError";
+            this.buttonSourceError.Size = new System.Drawing.Size(100, 23);
+            this.buttonSourceError.TabIndex = 5;
+            this.buttonSourceError.Text = "SourceError";
+            this.buttonSourceError.UseVisualStyleBackColor = true;
+            this.buttonSourceError.Click += new System.EventHandler(this.buttonSourceError_Click);
+            // 
+            // buttonError
+            // 
+            this.buttonError.Location = new System.Drawing.Point(21, 388);
+            this.buttonError.Name = "buttonError";
+            this.buttonError.Size = new System.Drawing.Size(100, 23);
+            this.buttonError.TabIndex = 4;
+            this.buttonError.Text = "Error";
+            this.buttonError.UseVisualStyleBackColor = true;
+            this.buttonError.Click += new System.EventHandler(this.buttonError_Click);
             // 
             // buttonInvalidValue
             // 
@@ -144,43 +197,15 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // buttonError
+            // panel2
             // 
-            this.buttonError.Location = new System.Drawing.Point(21, 388);
-            this.buttonError.Name = "buttonError";
-            this.buttonError.Size = new System.Drawing.Size(100, 23);
-            this.buttonError.TabIndex = 4;
-            this.buttonError.Text = "Error";
-            this.buttonError.UseVisualStyleBackColor = true;
-            this.buttonError.Click += new System.EventHandler(this.buttonError_Click);
-            // 
-            // buttonSourceError
-            // 
-            this.buttonSourceError.Location = new System.Drawing.Point(21, 359);
-            this.buttonSourceError.Name = "buttonSourceError";
-            this.buttonSourceError.Size = new System.Drawing.Size(100, 23);
-            this.buttonSourceError.TabIndex = 5;
-            this.buttonSourceError.Text = "SourceError";
-            this.buttonSourceError.UseVisualStyleBackColor = true;
-            this.buttonSourceError.Click += new System.EventHandler(this.buttonSourceError_Click);
-            // 
-            // gridControl1
-            // 
-            this.gridControl1.CaptionRow.Height = 21;
-            this.gridControl1.Columns.AddRange(new Ntreev.Windows.Forms.Grid.Column[] {
-            this.column2});
-            this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.IsRowMovable = true;
-            this.gridControl1.Location = new System.Drawing.Point(3, 3);
-            this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(594, 462);
-            this.gridControl1.TabIndex = 0;
-            this.gridControl1.RowInserting += new Ntreev.Windows.Forms.Grid.RowInsertingEventHandler(this.gridControl1_RowInserting);
-            // 
-            // column2
-            // 
-            this.column2.ColumnName = "Column2";
-            this.column2.DataType = typeof(int);
+            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.gridControl1);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(3, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(594, 462);
+            this.panel2.TabIndex = 2;
             // 
             // DataTableTest
             // 
@@ -195,6 +220,7 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -216,5 +242,7 @@
         private System.Windows.Forms.Button buttonInvalidValue;
         private System.Windows.Forms.Button buttonSourceError;
         private System.Windows.Forms.Button buttonError;
+        private System.Windows.Forms.Button buttonDeleteRow;
+        private System.Windows.Forms.Panel panel2;
     }
 }

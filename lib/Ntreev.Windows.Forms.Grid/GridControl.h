@@ -106,10 +106,12 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		void ClearSelection(bool keepFocus);
 
-        /// <summary>
-        /// 즉시 렌더링에 필요한 데이터를 강제로 업데이트합니다.
-        /// </summary>
-        void Update() new;
+        ///// <summary>
+        ///// 즉시 렌더링에 필요한 데이터를 강제로 업데이트합니다.
+        ///// </summary>
+        //void Update() new;
+
+		void Update(bool forceUpdate);
 
         /// <summary>
         /// 지정된 위치를 포함하는 그리드 컨트롤의 셀 객체를 검색합니다.
@@ -1550,6 +1552,30 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
 		/// <summary>
+        /// <see cref="DisplayRectangle"/> 속성 값이 변경되면 발생합니다.
+        /// </summary>
+        [System::ComponentModel::DescriptionAttribute("DisplayRectangle 값이 변경되면 발생합니다.")]
+        event System::EventHandler^ DisplayRectangleChanged
+        {
+            void add(System::EventHandler^ p) { m_eventDisplayRectangleChanged += p; }
+            void remove(System::EventHandler^ p) { m_eventDisplayRectangleChanged -= p; }
+        private:
+            void raise(System::Object^ sender, System::EventArgs^ e) { if(m_eventDisplayRectangleChanged != nullptr) m_eventDisplayRectangleChanged->Invoke(sender, e); }
+        }
+
+		/// <summary>
+        /// 보여지는 행들의 높이값이 달라지면 발생합니다.
+        /// </summary>
+        [System::ComponentModel::DescriptionAttribute("보여지는 행들의 높이값이 달라지면 발생합니다.")]
+        event System::EventHandler^ VisibleHeightChanged
+        {
+            void add(System::EventHandler^ p) { m_eventVisibleHeightChanged += p; }
+            void remove(System::EventHandler^ p) { m_eventVisibleHeightChanged -= p; }
+        private:
+            void raise(System::Object^ sender, System::EventArgs^ e) { if(m_eventVisibleHeightChanged != nullptr) m_eventVisibleHeightChanged->Invoke(sender, e); }
+        }
+
+		/// <summary>
         /// <see cref="BackgroundColor"/> 클라이언트 영역이 사용자 또는 코드에 의해 스크롤될 때 발생합니다.
         /// </summary>
 		event System::Windows::Forms::ScrollEventHandler^ Scroll 
@@ -1596,6 +1622,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         void InvokeCellMouseLeave(Cell^ cell);
         void InvokeCellClick(Cell^ cell);
         void InvokeCellDoubleClick(Cell^ cell);
+		void InvokeDisplayRectangleChanged();
+		void InvokeVisibleHeightChanged();
 
         System::Object^ GetInternalService(System::Type^ serviceType);
 
@@ -1961,6 +1989,22 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 이벤트 데이터가 들어 있는 <see cref="CellEventArgs"/>입니다.
         /// </param>
         virtual void OnCellDoubleClick(CellEventArgs^ e);
+
+		/// <summary>
+        /// <see cref="DisplayRectangleChanged"/> 이벤트를 발생시킵니다.
+        /// </summary>
+        /// <param name="e">
+        /// 이벤트 데이터가 들어 있는 <see cref="System::EventArgs"/>입니다.
+        /// </param>
+		virtual void OnDisplayRectangleChanged(System::EventArgs^ e);
+
+		/// <summary>
+        /// <see cref="VisibleHeightChanged"/> 이벤트를 발생시킵니다.
+        /// </summary>
+        /// <param name="e">
+        /// 이벤트 데이터가 들어 있는 <see cref="System::EventArgs"/>입니다.
+        /// </param>
+		virtual void OnVisibleHeightChanged(System::EventArgs^ e);
 
         /// <summary>
         /// <see cref="EditBegun"/> 이벤트를 발생시킵니다.
@@ -2355,6 +2399,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		System::EventHandler^ m_eventBackgroundColorChanged;
         System::EventHandler^ m_eventPaddingColorChanged;
 		System::EventHandler^ m_eventLineColorChanged;
+
+		System::EventHandler^ m_eventDisplayRectangleChanged;
+		System::EventHandler^ m_eventVisibleHeightChanged;
 
 		System::Windows::Forms::ScrollEventHandler^ m_eventScroll;
 

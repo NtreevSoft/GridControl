@@ -1520,6 +1520,22 @@ Windows 메시지를 처리합니다.
 이벤트 데이터가 들어 있는 <see cref="T:Ntreev.Windows.Forms.Grid.EditBegunEventArgs" />입니다.
 </param>
         </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnVisibleHeightChanged(System.EventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.GridControl.VisibleHeightChanged" /> 이벤트를 발생시킵니다.
+</summary>
+            <param name="e">
+이벤트 데이터가 들어 있는 <see cref="T:System.EventArgs" />입니다.
+</param>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnDisplayRectangleChanged(System.EventArgs)">
+            <summary>
+                <see cref="E:Ntreev.Windows.Forms.Grid.GridControl.DisplayRectangleChanged" /> 이벤트를 발생시킵니다.
+</summary>
+            <param name="e">
+이벤트 데이터가 들어 있는 <see cref="T:System.EventArgs" />입니다.
+</param>
+        </member>
         <member name="M:Ntreev.Windows.Forms.Grid.GridControl.OnCellDoubleClick(Ntreev.Windows.Forms.Grid.CellEventArgs)">
             <summary>
                 <see cref="E:Ntreev.Windows.Forms.Grid.GridControl.CellDoubleClick" /> 이벤트를 발생시킵니다.
@@ -1800,6 +1816,16 @@ Windows 메시지를 처리합니다.
         <member name="E:Ntreev.Windows.Forms.Grid.GridControl.Scroll">
             <summary>
                 <see cref="P:Ntreev.Windows.Forms.Grid.GridControl.BackgroundColor" /> 클라이언트 영역이 사용자 또는 코드에 의해 스크롤될 때 발생합니다.
+</summary>
+        </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.GridControl.VisibleHeightChanged">
+            <summary>
+보여지는 행들의 높이값이 달라지면 발생합니다.
+</summary>
+        </member>
+        <member name="E:Ntreev.Windows.Forms.Grid.GridControl.DisplayRectangleChanged">
+            <summary>
+                <see cref="P:Ntreev.Windows.Forms.Grid.GridControl.DisplayRectangle" /> 속성 값이 변경되면 발생합니다.
 </summary>
         </member>
         <member name="E:Ntreev.Windows.Forms.Grid.GridControl.LineColorChanged">
@@ -2391,11 +2417,6 @@ CellWordwrap 값이 true인 열에 대해서는 이 기능이 적용되지 않�
             <returns>
 지정된 위치를 포함하는 <see cref="T:Ntreev.Windows.Forms.Grid.CellBase" />입니다. 위치를 포함하는 <see cref="T:Ntreev.Windows.Forms.Grid.CellBase" />이 없다면 null을 반환합니다.
 </returns>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.GridControl.Update">
-            <summary>
-즉시 렌더링에 필요한 데이터를 강제로 업데이트합니다.
-</summary>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.GridControl.ClearSelection">
             <summary>

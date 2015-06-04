@@ -14,9 +14,16 @@ namespace SampleApplication
 {
     public partial class DataTableTest : UserControl
     {
+        static int p;
         public DataTableTest()
         {
             InitializeComponent();
+            this.gridControl1.Paint += gridControl1_Paint;
+        }
+
+        void gridControl1_Paint(object sender, PaintEventArgs e)
+        {
+            Console.WriteLine("Painted : " + p++);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -61,7 +68,8 @@ namespace SampleApplication
 
         void dataTable1_TableNewRow(object sender, DataTableNewRowEventArgs e)
         {
-            e.Row[this.dataColumn2] = "wqer";
+            e.Row[this.dataColumn1] = this.dataTable1.Rows.Count;
+            //e.Row[this.dataColumn2] = "wqer";
         }
 
         void dataTable1_RowChanged(object sender, DataRowChangeEventArgs e)
@@ -88,7 +96,7 @@ namespace SampleApplication
             List<DataRow> items = new List<DataRow>(this.dataTable1.Rows.Count);
             foreach (DataRow item in this.dataTable1.Rows)
             {
-                if (item.RowState == DataRowState.Added)
+                if (item.RowState == DataRowState.Added || item.RowState == DataRowState.Deleted)
                     continue;
                 items.Add(item);
             }
@@ -107,24 +115,25 @@ namespace SampleApplication
             int index = (int)proposedValue;
 
 
-            index = Math.Min(index, items.Count);
+            index = Math.Min(index, items.Count - 1);
+            index = Math.Max(index, 0);
 
-            if (index >= items.Count)
+            int oldIndex = items.IndexOf(dataRow);
+            if (oldIndex < 0)
             {
-                items.Remove(dataRow);
                 items.Add(dataRow);
             }
             else
             {
-                var targetRow = items[index];
-                items.Remove(dataRow);
-                items.Insert(items.IndexOf(targetRow), dataRow);
+                items.RemoveAt(oldIndex);
+                items.Insert(index, dataRow);
             }
 
             index = 0;
             foreach (var item in items)
             {
                 item[this.dataColumn1] = index++;
+                item[this.dataColumn2] = index.ToString();
             }
 
             this.dataTable1.AcceptChanges();
@@ -149,9 +158,12 @@ namespace SampleApplication
 
         void gridControl1_RowMoving(object sender, Ntreev.Windows.Forms.Grid.RowMovingEventArgs e)
         {
+            Console.WriteLine("moving");
             e.Cancel = true;
             this.row = e.Row;
+            //this.gridControl1.SuspendLayout();
             e.Row[0] = e.Index;
+            //this.gridControl1.ResumeLayout();
         }
 
         void gridControl1_RowMoved(object sender, Ntreev.Windows.Forms.Grid.RowEventArgs e)
@@ -226,6 +238,20 @@ namespace SampleApplication
             Random random = new Random();
             var row = this.dataTable1.Rows[random.Next(this.dataTable1.Rows.Count)];
             row.RowError = "source Error";
+        }
+
+        private void buttonDeleteRow_Click(object sender, EventArgs e)
+        {
+            if (this.dataTable1.Rows.Count == 0)
+                return;
+            Random random = new Random();
+            var row = this.dataTable1.Rows[random.Next(this.dataTable1.Rows.Count)];
+            row.Delete();
+        }
+
+        private void gridControl1_RowUnbinded(object sender, RowEventArgs e)
+        {
+            e.Row.CellBackColor = Color.Red;
         }
     }
 }

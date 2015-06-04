@@ -207,13 +207,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void GridControl::OnInvalidated(System::Windows::Forms::InvalidateEventArgs^ e)
 	{
 		UserControl::OnInvalidated(e);
-		System::Diagnostics::Debug::WriteLine(e->InvalidRect);
+		//System::Diagnostics::Debug::WriteLine(e->InvalidRect);
 	}
 
 	void GridControl::OnCursorChanged(System::EventArgs^ e)
 	{
 		UserControl::OnCursorChanged(e);
-		System::Diagnostics::Debug::WriteLine("OnCursorChanged");
+		//System::Diagnostics::Debug::WriteLine("OnCursorChanged");
 	}
 #endif
 
@@ -222,7 +222,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_pGridWindow->OnGotFocus();
 		UserControl::OnGotFocus(e);
 
-		System::Console::WriteLine(this->Handle);
+		//System::Console::WriteLine(this->Handle);
 	}
 
 	void GridControl::OnEnter(System::EventArgs^ e)
@@ -615,11 +615,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 	}
 
-	void GridControl::Update()
+	//void GridControl::Update()
+	//{
+	//	m_pGridCore->Update();
+
+	//	UserControl::Update();
+	//}
+
+	void GridControl::Update(bool forceUpdate)
 	{
 		m_pGridCore->Update();
-
-		UserControl::Update();
+		if(forceUpdate == true)
+			UserControl::Update();
 	}
 
 	Ntreev::Windows::Forms::Grid::MessageBoxCallback^ GridControl::MessageBoxCallback::get()
@@ -950,7 +957,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_pGridCore->SetFont(GrFont::FromManaged(this->Font));
 		UserControl::OnFontChanged(e);
 #ifdef _DEBUG
-		System::Diagnostics::Debug::WriteLine("Invalidate");
+		//System::Diagnostics::Debug::WriteLine("Invalidate");
 #endif
 	}
 
@@ -2149,6 +2156,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		OnCellDoubleClick(gcnew CellEventArgs(cell));
 	}
 
+	void GridControl::InvokeDisplayRectangleChanged()
+	{
+		OnDisplayRectangleChanged(System::EventArgs::Empty);
+	}
+
+	void GridControl::InvokeVisibleHeightChanged()
+	{
+		OnVisibleHeightChanged(System::EventArgs::Empty);
+	}
+
 	void GridControl::OnReseted(System::EventArgs^ e)
 	{
 		Reseted(this, e);
@@ -2404,6 +2421,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	void GridControl::OnCellDoubleClick(CellEventArgs^ e)
 	{
 		CellDoubleClick(this, e); 
+	}
+
+	void GridControl::OnDisplayRectangleChanged(System::EventArgs^ e)
+	{
+		DisplayRectangleChanged(this, e);
+	}
+
+	void GridControl::OnVisibleHeightChanged(System::EventArgs^ e)
+	{
+		VisibleHeightChanged(this, e);
 	}
 
 	void GridControl::OnEditBegun(Ntreev::Windows::Forms::Grid::EditBegunEventArgs^ e)

@@ -489,7 +489,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         {
             m_gridControl->Cursor = temp;
 #ifdef _DEBUG
-            System::Diagnostics::Trace::WriteLine(temp);
+            //System::Diagnostics::Trace::WriteLine(temp);
 #endif
             if(m_gridControl->Site != nullptr)
             {
@@ -605,6 +605,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
     WinFormGridCore::WinFormGridCore(gcroot<Ntreev::Windows::Forms::Grid::GridControl^> gridControl, GrGridWindow* pGridWindow)
         : GrGridCore(pGridWindow), m_gridControl(gridControl)
     {
+		GrGridCore* pGridCore = this;
+		pGridCore->DisplayRectChanged.Add(this, &WinFormGridCore::gridCore_DisplayRectChanged);
+
         GrColumnList* pColumnList = GetColumnList();
         pColumnList->ColumnMouseDown.Add(this, &WinFormGridCore::columnList_ColumnMouseDown);
         pColumnList->ColumnMouseEnter.Add(this, &WinFormGridCore::columnList_ColumnMouseEnter);
@@ -630,6 +633,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		GrDataRowList* pDataRowList = GetDataRowList();
 		pDataRowList->DataRowMoved.Add(this, &WinFormGridCore::dataRowList_DataRowMoved);
 		pDataRowList->DataRowMoving.Add(this, &WinFormGridCore::dataRowList_DataRowMoving);
+		pDataRowList->VisibleHeightChanged.Add(this, &WinFormGridCore::dataRowList_VisibleHeightChanged);
     }
 
     void WinFormGridCore::OnItemMouseMove(GrItemMouseEventArgs* e)
@@ -709,6 +713,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         delete graphics;
         GrGridCore::PostPaint(pPainter, clipRect);
     }
+
+	void WinFormGridCore::gridCore_DisplayRectChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
+	{
+		m_gridControl->InvokeDisplayRectangleChanged();	
+	}
 
     void WinFormGridCore::columnList_ColumnMouseDown(GrObject* /*pSender*/, GrColumnMouseEventArgs* e)
     {
@@ -822,5 +831,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 		Row^ row = FromNative::Get(e->GetDataRow());
 		if(m_gridControl->InvokeRowMoving(row, e->GetIndex()) == false)
 			e->SetCancel(true);
+	}
+
+	void WinFormGridCore::dataRowList_VisibleHeightChanged(GrObject* /*pSender*/, GrEventArgs* /*e*/)
+	{
+		m_gridControl->InvokeVisibleHeightChanged();
 	}
 } /*namespace Native*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

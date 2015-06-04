@@ -5,10 +5,9 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Native
 {
-    GrGridRow::GrGridRow(GridControl^ gridControl, System::ComponentModel::PropertyDescriptor^ propertyDescriptor, Row^ parentRow, System::Object^ value)
+    GrGridRow::GrGridRow(GridControl^ gridControl, System::ComponentModel::PropertyDescriptor^ propertyDescriptor, Row^ parentRow)
     {
         m_parentGrid = gridControl;
-        m_value = value;
 
         m_propertyDescriptor = propertyDescriptor;
         m_parentRow = parentRow;
@@ -83,6 +82,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         return m_parentRow;
     }
 
+	void GrGridRow::Update()
+	{
+		if(this->HasGridControl() == true)
+        {
+			Row^ row = m_parentRow;
+			System::ComponentModel::PropertyDescriptor^ propertyDescriptor = m_propertyDescriptor;
+			System::Object^ value = propertyDescriptor->GetValue(row->Component);
+
+			m_gridControl->DataSource = value;
+			m_gridControl->Refresh();
+            this->SetHeight(GetMinHeight());
+		}
+	}
+
     void GrGridRow::OnGridCoreAttached()
     {
         IDataRow::OnGridCoreAttached();
@@ -137,10 +150,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
         if(this->HasGridControl() == false)
         {
+			Row^ row = m_parentRow;
+			System::ComponentModel::PropertyDescriptor^ propertyDescriptor = m_propertyDescriptor;
+
             m_gridControl = m_parentGrid->InvokeNewChildGridControl(this);
 
-            m_gridControl->DataSource = m_value;
-            m_gridControl->Refresh();
+			System::Object^ value = propertyDescriptor->GetValue(row->Component);
+
+			m_gridControl->DataSource = value;
+			m_gridControl->Refresh();
 
             GrGridCore* pGridCore = m_gridControl->GridCore;
             GrRect rect = pGridCore->GetVisibleBounds();

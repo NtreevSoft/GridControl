@@ -169,7 +169,6 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
     void RowCollection::currencyManager_ListChanged(System::Object^ /*sender*/, System::ComponentModel::ListChangedEventArgs^ e)
     {
-		System::Console::WriteLine(e->ListChangedType);
         switch(e->ListChangedType)
         {
         case System::ComponentModel::ListChangedType::ItemAdded:

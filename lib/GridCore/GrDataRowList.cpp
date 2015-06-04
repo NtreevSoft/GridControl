@@ -796,20 +796,30 @@ void GrDataRowList::MoveDataRow(GrDataRow* pDataRow, uint index)
 	if(e1.GetCancel() == true)
 		return;
 
+	//index = std::min(index, m_vecDataRows.size() - 1);
+
 	_DataRows::iterator itor = std::find(m_vecDataRows.begin(), m_vecDataRows.end(), pDataRow);
-	
-	if(index >= m_vecDataRows.size())
-	{
-		m_vecDataRows.erase(itor);
-		m_vecDataRows.push_back(pDataRow);
-	}
-	else
-	{
-		GrDataRow* pTargetDataRow = m_vecDataRows[index];
-		m_vecDataRows.erase(itor);
-		_DataRows::iterator itorAt = std::find(m_vecDataRows.begin(), m_vecDataRows.end(), pTargetDataRow);
-		m_vecDataRows.insert(itorAt, pDataRow);
-	}
+	size_t oldIndex = std::distance(m_vecDataRows.begin(), itor);
+	m_vecDataRows.erase(itor);
+	m_vecDataRows.insert(m_vecDataRows.begin() + index, pDataRow);
+
+	//int oldIndex = items.IndexOf(dataRow);
+	//var targetRow = items[oldIndex];
+	//items.RemoveAt(oldIndex);
+	//items.Insert(index, targetRow);
+	//
+	//if(index >= m_vecDataRows.size())
+	//{
+	//	m_vecDataRows.erase(itor);
+	//	m_vecDataRows.push_back(pDataRow);
+	//}
+	//else
+	//{
+	//	GrDataRow* pTargetDataRow = m_vecDataRows[index];
+	//	m_vecDataRows.erase(itor);
+	//	_DataRows::iterator itorAt = std::find(m_vecDataRows.begin(), m_vecDataRows.end(), pTargetDataRow);
+	//	m_vecDataRows.insert(itorAt, pDataRow);
+	//}
 
 	index = 0;
 	for(auto item : m_vecDataRows)

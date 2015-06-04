@@ -2177,9 +2177,18 @@ namespace GridStateClass
 			m_pTargetDataRow = nullptr;
 			
 			if(location.y >= dataRect.bottom)
+			{
 				m_targetIndex = m_pDataRowList->GetDataRowCount();
+			}
+			else if(location.y <= dataRect.top)
+			{
+				m_targetIndex = 0;
+				m_pTargetDataRow = m_pDataRowList->GetDataRow(m_targetIndex);
+			}
 			else
+			{
 				m_targetIndex = INVALID_INDEX;
+			}
 		}
 		else
 		{
@@ -2201,8 +2210,15 @@ namespace GridStateClass
 	void RowPressing::OnMouseDragEnd(bool cancel, const GrHitTest& /*hitTest*/)
     {
 		m_pTimer->Stop();
-		if(cancel == false)
-			m_pDataRow->SetDataRowIndex(m_targetIndex);
+		if(cancel == false && m_targetIndex != INVALID_INDEX)
+		{
+			uint index = m_pDataRow->GetDataRowIndex();
+			uint targetIndex = m_targetIndex;
+			if(index < m_targetIndex)
+				targetIndex--;
+
+			m_pDataRow->SetDataRowIndex(targetIndex);
+		}
 		m_pGridCore->Invalidate();
 	}
 

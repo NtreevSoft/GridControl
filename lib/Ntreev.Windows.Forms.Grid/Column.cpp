@@ -229,6 +229,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_pColumn->SetFit();
 	}
 
+
     System::String^ Column::ToString()
     {
         return this->ColumnName;
@@ -555,7 +556,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         if(this->GridControl != nullptr)
         {
-            this->GridControl->Update();
+            this->GridControl->Invalidate();
+			this->GridCore->Update();
         }
     }
 
