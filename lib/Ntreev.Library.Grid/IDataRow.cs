@@ -337,5 +337,10 @@ namespace Ntreev.Library.Grid
         }
 
 
+
+        internal void InvokeOnYChanged()
+        {
+            this.OnYChanged();
+        }
     }
 }

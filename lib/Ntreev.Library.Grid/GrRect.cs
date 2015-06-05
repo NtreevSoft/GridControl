@@ -222,10 +222,34 @@ namespace Ntreev.Library.Grid
             }
         }
 
+        public int Y
+        {
+            get { return this.top; }
+            set
+            {
+                int offset = value - this.top;
+                this.top = value;
+                this.bottom += offset;
+            }
+        }
+
         public int Width
         {
             get { return this.right - this.left; }
             set { this.right = this.left + value; }
+        }
+
+        public static bool operator ==(GrRect rect1, GrRect rect2)
+        {
+            return rect1.left == rect2.left &&
+                rect1.top == rect2.top &&
+                rect1.right == rect2.right &&
+                rect1.bottom == rect2.bottom;
+        }
+
+        public static bool operator !=(GrRect rect1, GrRect rect2)
+        {
+            return !(rect1 == rect2);
         }
 
         //public static void operator += ( GrRect rect);
@@ -279,7 +303,16 @@ namespace Ntreev.Library.Grid
 
         public static readonly GrRect Empty = new GrRect();
 
-        //#ifdef _MANAGED
+#if _WINFORM
+        public static implicit operator System.Drawing.Rectangle(GrRect rect)
+        {
+            return System.Drawing.Rectangle.FromLTRB(rect.left, rect.top, rect.right, rect.bottom);
+        }
+
+        public static implicit operator GrRect(System.Drawing.Rectangle rect)
+        {
+            return GrRect.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
+        }
         //    GrRect(System::Drawing::Rectangle% rect);
         //    GrRect(System::Drawing::RectangleF% rect);
 
@@ -287,6 +320,6 @@ namespace Ntreev.Library.Grid
         //    operator System::Drawing::Rectangle ();
         //    operator System::Drawing::Rectangle () ;
         //    void operator = (System::Drawing::Rectangle% rect);
-        //#endif
+#endif
     }
 }

@@ -1115,5 +1115,10 @@ namespace Ntreev.Library.Grid
                 return y.m_frozen.CompareTo(x.m_frozen);
             }
         }
+
+        public int GetUnfrozenX()
+        {
+            return m_unfrozenX;
+        }
     }
 }

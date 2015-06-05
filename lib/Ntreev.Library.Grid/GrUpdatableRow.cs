@@ -27,12 +27,12 @@ namespace Ntreev.Library.Grid
             return int.MaxValue;
         }
 
-        public virtual bool ShouldClip(GrRect displayRect, uint horizontal, uint vertical)
+        public virtual bool ShouldClip(GrRect displayRect, int horizontal, int vertical)
         {
             return false;
         }
 
-        public virtual void Clip(GrRect displayRect, uint horizontal, uint vertical)
+        public virtual void Clip(GrRect displayRect, int horizontal, int vertical)
         {
 
         }

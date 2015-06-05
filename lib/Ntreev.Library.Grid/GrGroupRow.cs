@@ -11,7 +11,7 @@ namespace Ntreev.Library.Grid
 
         GrColumn m_pColumn;
         string m_itemText;
-        string m_key;
+        internal string m_key;
 
         GrGroupHeader m_pLabel;
 
@@ -61,15 +61,15 @@ namespace Ntreev.Library.Grid
         }
 
 
-        protected virtual void OnUpdatePositionCell(int x, GrRect pBounds)
+        protected virtual void OnUpdatePositionCell(int x, ref GrRect pBounds)
         {
-            pBounds.Left = x;
-            pBounds.Right = m_pLabel.GetX() + m_pLabel.GetWidth();
+            pBounds.X = x;
+            pBounds.Width = m_pLabel.GetX() + m_pLabel.GetWidth() - x;
         }
         protected override void OnGridCoreAttached()
         {
             base.OnGridCoreAttached();
-            m_pGridCore.AttachObject(m_pLabel);
+            this.GridCore.AttachObject(m_pLabel);
         }
 
         protected override GrCell OnHitTest(int x)

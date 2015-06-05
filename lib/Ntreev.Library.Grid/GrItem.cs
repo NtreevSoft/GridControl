@@ -77,7 +77,7 @@ namespace Ntreev.Library.Grid
         {
             if (GetMouseOvered() == false)
                 return GrControlState.Normal;
-            if (this.GridCore.GetMouseOverState() == GrMouseOverState.Control)
+            if (this.GridCore.GetMouseOverState() == (int)GrMouseOverState.Control)
             {
                 if (GetMousePressed() == true)
                     return GrControlState.Pressed;
@@ -201,7 +201,6 @@ namespace Ntreev.Library.Grid
                         break;
                     case GrItemTypeShow.Always:
                         return (int)GrMouseOverState.Control;
-                        break;
                     default:
                         break;
                 }
@@ -309,9 +308,9 @@ namespace Ntreev.Library.Grid
             GrColor foreColor = GetPaintingForeColor();
 
             if (GetClipped() == true)
-                pPainter.DrawItem(paintStyle, paintRect, GetPaintingLineColor(), backColor, &clipRect);
+                pPainter.DrawItem(paintStyle, paintRect, GetPaintingLineColor(), backColor, clipRect);
             else
-                pPainter.DrawItem(paintStyle, paintRect, GetPaintingLineColor(), backColor);
+                pPainter.DrawItem(paintStyle, paintRect, GetPaintingLineColor(), backColor, null);
 
             if (m_pColumn.m_customItemPaint == true)
             {

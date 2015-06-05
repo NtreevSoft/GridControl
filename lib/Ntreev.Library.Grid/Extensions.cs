@@ -13,5 +13,14 @@ namespace Ntreev.Library.Grid
         {
             invalidator.Invalidate(rect.Left, rect.Top, rect.GetWidth(), rect.GetHeight());
         }
+
+        public static GrRect ClientToScreen(this GrGridWindow gridWindow, GrRect rect)
+        {
+            GrPoint clientLocation = rect.GetLocation();
+            GrPoint screenLocation = gridWindow.ClientToScreen(clientLocation);
+            GrRect value = rect;
+            value.Offset(screenLocation.X - clientLocation.X, screenLocation.Y - clientLocation.Y);
+            return value;
+        }
     }
 }

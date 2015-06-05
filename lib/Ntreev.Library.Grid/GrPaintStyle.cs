@@ -9,6 +9,7 @@ namespace Ntreev.Library.Grid
     [Flags]
     public enum GrPaintStyle
     {
+        None = 0,
         Focused = 0x00000001,
         Mouseover = 0x00000002,
         Selected = 0x00000004,

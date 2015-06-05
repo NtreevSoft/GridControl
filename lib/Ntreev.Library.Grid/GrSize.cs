@@ -46,5 +46,17 @@ namespace Ntreev.Library.Grid
         }
 
         public static readonly GrSize Empty = new GrSize();
-    };
+
+#if _WINFORM
+        public static implicit operator System.Drawing.Size(GrSize size)
+        {
+            return new System.Drawing.Size(size.width, size.height);
+        }
+
+        public static implicit operator GrSize(System.Drawing.Size size)
+        {
+            return new GrSize(size.Width, size.Height);
+        }
+#endif
+    }
 }

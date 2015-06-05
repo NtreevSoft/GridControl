@@ -57,5 +57,17 @@ namespace Ntreev.Library.Grid
         //#endif
 
         public static readonly GrPoint Empty = new GrPoint();
+
+#if _WINFORM
+        public static implicit operator System.Drawing.Point(GrPoint pt)
+        {
+            return new System.Drawing.Point(pt.x, pt.y);
+        }
+
+        public static implicit operator GrPoint(System.Drawing.Point pt)
+        {
+            return new GrPoint(pt.X, pt.Y);
+        }
+#endif
     }
 }

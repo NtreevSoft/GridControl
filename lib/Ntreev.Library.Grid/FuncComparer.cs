@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Ntreev.Library.Grid
 {
-    public delegate bool FuncComparer(GrGridCore gridCore, GrDataRow row1, GrDataRow row2, GrColumn column);
+    //public delegate int FuncComparer(GrGridCore gridCore, GrDataRow row1, GrDataRow row2, GrColumn column);
 }

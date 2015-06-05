@@ -7,7 +7,7 @@ namespace Ntreev.Library.Grid
 {
     public abstract class GrRow : GrCell
     {
-        private static int DefaultHeight = 21;
+        public static int DefaultHeight = 21;
 
         protected bool m_visible;
 

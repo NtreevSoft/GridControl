@@ -139,7 +139,7 @@ namespace Ntreev.Library.Grid
             AttachObject(m_pDataRowList);
             AttachObject(m_pSplitterRow);
             AttachObject(m_pStateManager);
-            AttachObject(m_pGridWindow);
+            //AttachObject(m_pGridWindow);
             AttachObject(m_pFocusMover);
 
             m_pRootRow.AddChild(m_pCaption);
@@ -250,8 +250,8 @@ namespace Ntreev.Library.Grid
                 return;
             m_displayRect = displayRect;
             this.Update();
-            uint horz = GetHorzScroll().GetVisible() == true ? GetHorzScroll().GetValue() : GetHorzScroll().GetMinimum();
-            uint vert = GetVertScroll().GetVisible() == true ? GetVertScroll().GetValue() : GetVertScroll().GetMinimum();
+            int horz = GetHorzScroll().GetVisible() == true ? GetHorzScroll().GetValue() : GetHorzScroll().GetMinimum();
+            int vert = GetVertScroll().GetVisible() == true ? GetVertScroll().GetValue() : GetVertScroll().GetMinimum();
             m_pRootRow.Clip(m_displayRect, horz, vert);
             OnDisplayRectChanged(EventArgs.Empty);
         }
@@ -267,11 +267,12 @@ namespace Ntreev.Library.Grid
 
         public GrRect GetDataRect()
         {
-            GrRect dataRect;
-            dataRect.Left = m_pColumnList.GetUnfrozenX();
-            dataRect.Top = m_pDataRowList.GetY();
-            dataRect.Right = Math.Min(GetBounds().Right, m_displayRect.Right);
-            dataRect.bottom = Math.Min(GetBounds().Bottom, m_displayRect.Bottom);
+
+            int left = m_pColumnList.GetUnfrozenX();
+            int top = m_pDataRowList.GetY();
+            int right = Math.Min(GetBounds().Right, m_displayRect.Right);
+            int bottom = Math.Min(GetBounds().Bottom, m_displayRect.Bottom);
+            GrRect dataRect = GrRect.FromLTRB(left, top, right, bottom);
             return dataRect;
         }
 
@@ -450,7 +451,7 @@ namespace Ntreev.Library.Grid
         {
             m_rowResizable = b;
         }
-        bool GetRowMovable()
+        public bool GetRowMovable()
         {
             return m_rowMovable;
         }
@@ -648,19 +649,19 @@ namespace Ntreev.Library.Grid
 
         public void AttachObject(GrObject pObject)
         {
-            if (pObject.m_pGridCore != null)
+            if (pObject.GridCore != null)
                 return;
-            pObject.m_pGridCore = this;
-            pObject.OnGridCoreAttached();
+            pObject.GridCore = this;
+            pObject.InvokeOnGridCoreAttached();
 
             m_attachedCount++;
         }
         public void DetachObject(GrObject pObject)
         {
-            if (pObject.m_pGridCore == null)
+            if (pObject.GridCore == null)
                 return;
-            pObject.OnGridCoreDetached();
-            pObject.m_pGridCore = null;
+            pObject.InvokeOnGridCoreDetached();
+            pObject.GridCore = null;
             m_attachedCount--;
         }
 

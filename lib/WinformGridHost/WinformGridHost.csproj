@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{ABD34EA7-4C48-415B-8907-EC140EA98CD9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ntreev.Windows.Forms.Grid</RootNamespace>
+    <AssemblyName>WinformGridHost</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CaptionRow.cs" />
+    <Compile Include="Cell.cs" />
+    <Compile Include="CellBase.cs" />
+    <Compile Include="CellBuilder.cs" />
+    <Compile Include="CellCollection.cs" />
+    <Compile Include="CellEventArgs.cs" />
+    <Compile Include="CellEventHandler.cs" />
+    <Compile Include="CellState.cs" />
+    <Compile Include="CellTagCollection.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="ClickEditType.cs" />
+    <Compile Include="Column.cs" />
+    <Compile Include="ColumnBindingCreation.cs" />
+    <Compile Include="ColumnCollection.cs" />
+    <Compile Include="ColumnPainter.cs" />
+    <Compile Include="ColumnState.cs" />
+    <Compile Include="CustomPaint.cs" />
+    <Compile Include="Design\EditStyle.cs" />
+    <Compile Include="Design\IEditorService.cs" />
+    <Compile Include="Design\TypeEditor.cs" />
+    <Compile Include="Design\UITypeEditor.cs" />
+    <Compile Include="DisplayableColumnCollection.cs" />
+    <Compile Include="DisplayableRowCollection.cs" />
+    <Compile Include="EditingReason.cs" />
+    <Compile Include="FromNative.cs" />
+    <Compile Include="FrozenAttribute.cs" />
+    <Compile Include="FrozenColumnCollection.cs" />
+    <Compile Include="GrGridRow.cs" />
+    <Compile Include="GridControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GridObject.cs" />
+    <Compile Include="GridRow.cs" />
+    <Compile Include="GroupPanel.cs" />
+    <Compile Include="GroupRow.cs" />
+    <Compile Include="GroupRowCollection.cs" />
+    <Compile Include="ICell.cs" />
+    <Compile Include="ICellBase.cs" />
+    <Compile Include="IColumn.cs" />
+    <Compile Include="IControlPainter.cs" />
+    <Compile Include="ITextCacheProvider.cs" />
+    <Compile Include="MessageBoxCallback.cs" />
+    <Compile Include="MovableAttribute.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResizableAttribute.cs" />
+    <Compile Include="Row.cs" />
+    <Compile Include="RowBase.cs" />
+    <Compile Include="RowBaseCollection.cs" />
+    <Compile Include="RowBuilder.cs" />
+    <Compile Include="RowCollection.cs" />
+    <Compile Include="RowHighlightType.cs" />
+    <Compile Include="RowInsertedEventHandler.cs" />
+    <Compile Include="RowInsertingEventHandler.cs" />
+    <Compile Include="RowRemovedEventArgs.cs" />
+    <Compile Include="SelectedColumnCollection.cs" />
+    <Compile Include="SelectedRowCollection.cs" />
+    <Compile Include="SelectionType.cs" />
+    <Compile Include="SortableAttribute.cs" />
+    <Compile Include="SortType.cs" />
+    <Compile Include="Style.cs" />
+    <Compile Include="TypeDescriptorContextCore.cs" />
+    <Compile Include="UnfrozenColumnCollection.cs" />
+    <Compile Include="Utility.cs" />
+    <Compile Include="ValueChangingEventArgs.cs" />
+    <Compile Include="ValueChangingEventHandler.cs" />
+    <Compile Include="ViewType.cs" />
+    <Compile Include="VisibleColumnCollection.cs" />
+    <Compile Include="VisibleRowCollection.cs" />
+    <Compile Include="WinFormGridCore.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ntreev.Library.Grid\Ntreev.Library.Grid.csproj">
+      <Project>{0be425c2-3ffd-446d-acee-697418422e15}</Project>
+      <Name>Ntreev.Library.Grid</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -88,7 +88,7 @@ namespace Ntreev.Library.Grid
             return true;
         }
 
-        public void Clip(GrRect displayRect, uint horizontal, uint vertical)
+        public void Clip(GrRect displayRect, int horizontal, int vertical)
         {
     int y = GetY();
     foreach(var value in m_vecVisibleRows)
@@ -216,7 +216,7 @@ namespace Ntreev.Library.Grid
             m_height = y - GetY();
         }
 
-        private void gridCore_Created(object pSender, EventArgs e)
+        private void gridCore_Created(object sender, EventArgs e)
         {
             base.OnGridCoreAttached();
 
@@ -238,12 +238,12 @@ namespace Ntreev.Library.Grid
             this.GridCore.GetDataRowList().DataRowInserted += dataRowList_DataRowInserted;
         }
 
-        private void gridCore_DisplayRectChanged(object pSender, EventArgs e)
+        private void gridCore_DisplayRectChanged(object sender, EventArgs e)
         {
             SetHeightChanged();
         }
 
-        private void dataRowList_DataRowInserted(object pSender, GrDataRowInsertedEventArgs e)
+        private void dataRowList_DataRowInserted(object sender, GrDataRowInsertedEventArgs e)
         {
             if (e.GetInsertType() == GrDataRowInsertType.New)
                 return;

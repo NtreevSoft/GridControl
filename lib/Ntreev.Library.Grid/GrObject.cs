@@ -21,6 +21,16 @@ namespace Ntreev.Library.Grid
             internal set { this.gridCore = value; }
         }
 
+        internal void InvokeOnGridCoreAttached()
+        {
+            this.OnGridCoreAttached();
+        }
+
+        internal void InvokeOnGridCoreDetached()
+        {
+            this.OnGridCoreDetached();
+        }
+
         protected virtual void OnGridCoreAttached() { }
         protected virtual void OnGridCoreDetached() { }
 

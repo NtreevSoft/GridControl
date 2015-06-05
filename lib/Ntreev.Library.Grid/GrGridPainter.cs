@@ -34,7 +34,7 @@ namespace Ntreev.Library.Grid
         public abstract void EndPaint();
         public abstract void SetFont(GrFont pFont);
 
-        public abstract void GetDevice();
+        public abstract object GetDevice();
         public abstract void ReleaseDevice(object painterDevice);
     };
 }

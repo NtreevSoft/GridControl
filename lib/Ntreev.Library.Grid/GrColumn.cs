@@ -57,7 +57,7 @@ namespace Ntreev.Library.Grid
         GrGroup m_pGroup;
 
         GrSort m_sortType;
-        FuncComparer[] m_comparer;
+        FuncSortRow[] m_comparer;
 
         string m_tooltip;
 
@@ -108,7 +108,7 @@ namespace Ntreev.Library.Grid
             m_itemTextVisible = true;
             m_itemIcon = false;
 
-            m_comparer = new FuncComparer[Enum.GetNames(typeof(GrSort)).Length];
+            m_comparer = new FuncSortRow[Enum.GetNames(typeof(GrSort)).Length];
             //m_comparer[GrSort_None] = 0;
             //m_comparer[GrSort_Up] = 0;
             //m_comparer[GrSort_Down] = 0;
@@ -274,7 +274,7 @@ namespace Ntreev.Library.Grid
             }
         }
 
-        void SetItemVertAlign(GrVertAlign vertAlign)
+        public void SetItemVertAlign(GrVertAlign vertAlign)
         {
             if (m_itemVertAlign == vertAlign)
                 return;
@@ -692,12 +692,12 @@ namespace Ntreev.Library.Grid
             return m_sortType;
         }
 
-        public void SetSortComparer(GrSort sortType, FuncComparer comparer)
+        public void SetSortComparer(GrSort sortType, FuncSortRow comparer)
         {
             throw new NotImplementedException();
         }
 
-        public FuncComparer GetSortComparer(GrSort sortType)
+        public FuncSortRow GetSortComparer(GrSort sortType)
         {
             return m_comparer[(int)sortType];
         }

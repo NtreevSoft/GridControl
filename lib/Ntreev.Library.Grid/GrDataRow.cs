@@ -335,7 +335,7 @@ namespace Ntreev.Library.Grid
         }
 
 
-        private void SetVisibleDataRowIndex(int index)
+        internal void SetVisibleDataRowIndex(int index)
         {
             m_visibleDataRowIndex = index;
         }
@@ -396,7 +396,7 @@ namespace Ntreev.Library.Grid
             }
         }
 
-        private void ClearItem()
+        internal void ClearItem()
         {
             foreach (var value in m_vecItems)
             {
@@ -451,7 +451,5 @@ namespace Ntreev.Library.Grid
 
             return color;
         }
-
-
     }
 }

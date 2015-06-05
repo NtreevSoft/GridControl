@@ -7,5 +7,9 @@ namespace Ntreev.Library.Grid
 {
     public class GrHitTest
     {
+        public GrCell pHitted;
+        public GrPoint localHit;
+
+        public static GrHitTest Empty = new GrHitTest();
     }
 }

@@ -668,18 +668,18 @@ namespace Ntreev.Library.Grid
             EndSelection();
         }
 
-        private void gridCore_Cleared(object pSender, EventArgs e)
+        private void gridCore_Cleared(object sender, EventArgs e)
         {
             ResetVariables();
         }
 
-        private void gridCore_Created(object pSender, EventArgs e)
+        private void gridCore_Created(object sender, EventArgs e)
         {
             GrDataRowList pDataRowList = this.GridCore.GetDataRowList();
             pDataRowList.VisibleChanged += dataRowList_RowVisibleChanged;
         }
 
-        private void dataRowList_RowVisibleChanged(object pSender, EventArgs e)
+        private void dataRowList_RowVisibleChanged(object sender, EventArgs e)
         {
             OnSelectedRowsChanged(EventArgs.Empty);
         }

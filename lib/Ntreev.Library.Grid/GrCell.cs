@@ -601,14 +601,14 @@ namespace Ntreev.Library.Grid
 
         }
 
-        protected virtual void OnGridCoreAttached()
+        protected override void OnGridCoreAttached()
         {
             base.OnGridCoreAttached();
             GrTextUpdater pTextUpdater = this.GridCore.GetTextUpdater();
             pTextUpdater.AddTextBounds(this);
             pTextUpdater.AddTextAlign(this);
         }
-        protected virtual void OnGridCoreDetached()
+        protected override void OnGridCoreDetached()
         {
             GrTextUpdater pTextUpdater = this.GridCore.GetTextUpdater();
             if (m_textAlignChanged == true)
@@ -656,7 +656,9 @@ namespace Ntreev.Library.Grid
         };
 
 
-
+        public object ManagedRef
+        {
+            get; set; }
 
     }
 }

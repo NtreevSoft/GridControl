@@ -106,9 +106,9 @@ namespace Ntreev.Library.Grid
             GrRect paintRect = GetRect();
             GrRect displayRect = this.GridCore.GetDisplayRect();
             GrColumnList pColumnList = this.GridCore.GetColumnList();
-            if (this.GridCore.GetFillBlank() == true && pColumnList.GetDisplayableRight() < displayRect.right)
+            if (this.GridCore.GetFillBlank() == true && pColumnList.GetDisplayableRight() < displayRect.Right)
             {
-                paintRect.Right = displayRect.Right;
+                paintRect.Width = displayRect.Right - paintRect.Left;
             }
 
             if (paintRect.Top >= clipRect.Bottom || paintRect.Bottom < clipRect.Top)
@@ -240,13 +240,13 @@ namespace Ntreev.Library.Grid
         }
 
 
-        private void gridCore_Cleared(object pSender, EventArgs e)
+        private void gridCore_Cleared(object sender, EventArgs e)
         {
             m_vecGroups.Clear();
             SetFit();
         }
 
-        private void gridCore_Created(object pSender, EventArgs e)
+        private void gridCore_Created(object sender, EventArgs e)
         {
             GrColumnList pColumnList = this.GridCore.GetColumnList();
             pColumnList.ColumnGroupChanged += columnList_ColumnGroupChanged;
@@ -254,7 +254,7 @@ namespace Ntreev.Library.Grid
             pColumnList.ColumnRemoved += columnList_ColumnRemoved;
         }
 
-        private void gridCore_FontChanged(object pSender, EventArgs e)
+        private void gridCore_FontChanged(object sender, EventArgs e)
         {
             GrTextUpdater pTextUpdater = this.GridCore.GetTextUpdater();
             pTextUpdater.AddTextBounds(this);
@@ -265,7 +265,7 @@ namespace Ntreev.Library.Grid
             }
         }
 
-        private void columnList_ColumnInserted(object pSender, GrColumnEventArgs e)
+        private void columnList_ColumnInserted(object sender, GrColumnEventArgs e)
         {
             GrColumn pColumn = e.GetColumn();
             if (pColumn.GetGrouped() == false)
@@ -273,7 +273,7 @@ namespace Ntreev.Library.Grid
             AddGroup(pColumn.GetGroup());
         }
 
-        private void columnList_ColumnRemoved(object pSender, GrColumnEventArgs e)
+        private void columnList_ColumnRemoved(object sender, GrColumnEventArgs e)
         {
             GrColumn pColumn = e.GetColumn();
             if (pColumn.GetGrouped() == false)
@@ -281,7 +281,7 @@ namespace Ntreev.Library.Grid
             RemoveGroup(pColumn.GetGroup());
         }
 
-        private void columnList_ColumnGroupChanged(object pSender, GrColumnEventArgs e)
+        private void columnList_ColumnGroupChanged(object sender, GrColumnEventArgs e)
         {
             GrColumn pColumn = e.GetColumn();
             if (pColumn.GetGrouped() == true)
@@ -290,16 +290,16 @@ namespace Ntreev.Library.Grid
                 RemoveGroup(pColumn.GetGroup());
         }
 
-        private void groupInfo_LevelChanged(object pSender, EventArgs e)
+        private void groupInfo_LevelChanged(object sender, EventArgs e)
         {
-            GrGroup pGroup = pSender as GrGroup;
-            _Groups.iterator itor = std.find(m_vecGroups.begin(), m_vecGroups.end(), pGroup);
-            *itor = null;
+            GrGroup pGroup = sender as GrGroup;
 
-            int index = std.min(pGroup.GetGroupLevel(), m_vecGroups.Count);
+            m_vecGroups[m_vecGroups.IndexOf(pGroup)] = null;
 
-            m_vecGroups.insert(m_vecGroups.begin() + index, pGroup);
-            m_vecGroups.Remove(std.find(m_vecGroups.begin(), m_vecGroups.end(), (GrGroup*)null));
+            int index = Math.Min(pGroup.GetGroupLevel(), m_vecGroups.Count);
+
+            m_vecGroups.Insert(index, pGroup);
+            m_vecGroups.Remove(null);
 
             index = 0;
             foreach (var value in m_vecGroups)
@@ -307,7 +307,7 @@ namespace Ntreev.Library.Grid
                 value.SetGroupLevelCore(index++);
             }
 
-            Changed.Raise(this, EventArgs.Empty);
+            Changed(this, EventArgs.Empty);
         }
 
         private void ResetGroupLevel()
@@ -320,42 +320,42 @@ namespace Ntreev.Library.Grid
         }
         private void AddGroup(GrGroup pGroup)
         {
-            _Groups.iterator itor = find(m_vecGroups.begin(), m_vecGroups.end(), pGroup);
+            int index = m_vecGroups.IndexOf(pGroup);
 
-            if (itor != m_vecGroups.end())
+            if (index >= 0)
                 throw new Exception("이미 Group이 되어 있습니다.");
 
-            uint level = pGroup.GetGroupLevel();
+            int level = pGroup.GetGroupLevel();
             if (level > m_vecGroups.Count)
-                m_vecGroups.push_back(pGroup);
+                m_vecGroups.Add(pGroup);
             else
-                m_vecGroups.insert(m_vecGroups.begin() + level, pGroup);
+                m_vecGroups.Insert(level, pGroup);
             pGroup.SetText();
-            pGroup.LevelChanged.Add(this, &GrGroupPanel.groupInfo_LevelChanged);
+            pGroup.LevelChanged += groupInfo_LevelChanged;
 
             ResetGroupLevel();
             SetFit();
             this.GridCore.Invalidate();
             m_groupChanged = true;
-            Changed.Raise(this, EventArgs.Empty);
+            Changed(this, EventArgs.Empty);
         }
 
         private void RemoveGroup(GrGroup pGroup)
         {
-            _Groups.iterator itor = find(m_vecGroups.begin(), m_vecGroups.end(), pGroup);
+            int index = m_vecGroups.IndexOf(pGroup);
 
-            if (itor == m_vecGroups.end())
+            if (index < 0)
                 throw new Exception("Group이 되어 있지 않은데 해제하려고 합니다.");
 
             pGroup.LevelChanged -= groupInfo_LevelChanged;
-            (*itor).SetGroupLevelCore(GrDefineUtility.INVALID_INDEX);
-            m_vecGroups.Remove(itor);
+            pGroup.SetGroupLevelCore(GrDefineUtility.INVALID_INDEX);
+            m_vecGroups.Remove(pGroup);
 
             ResetGroupLevel();
             SetFit();
             this.GridCore.Invalidate();
             m_groupChanged = true;
-            Changed.Raise(this, EventArgs.Empty);
+            Changed(this, EventArgs.Empty);
         }
         private void RepositionGroup()
         {

@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ntreev.Crema.Library", "..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ntreev.Library.Grid", "Ntreev.Library.Grid\Ntreev.Library.Grid.csproj", "{0BE425C2-3FFD-446D-ACEE-697418422E15}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinformGridHost", "WinformGridHost\WinformGridHost.csproj", "{ABD34EA7-4C48-415B-8907-EC140EA98CD9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -128,6 +130,18 @@ Global
 		{0BE425C2-3FFD-446D-ACEE-697418422E15}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0BE425C2-3FFD-446D-ACEE-697418422E15}.Release|x64.ActiveCfg = Release|Any CPU
 		{0BE425C2-3FFD-446D-ACEE-697418422E15}.Release|x86.ActiveCfg = Release|Any CPU
+		{ABD34EA7-4C48-415B-8907-EC140EA98CD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABD34EA7-4C48-415B-8907-EC140EA98CD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABD34EA7-4C48-415B-8907-EC140EA98CD9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{ABD34EA7-4C48-415B-8907-EC140EA98CD9}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{ABD34EA7-4C48-415B-8907-EC140EA98CD9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{ABD34EA7-4C48-415B-8907-EC140EA98CD9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ABD34EA7-4C48-415B-8907-EC140EA98CD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABD34EA7-4C48-415B-8907-EC140EA98CD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABD34EA7-4C48-415B-8907-EC140EA98CD9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{ABD34EA7-4C48-415B-8907-EC140EA98CD9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{ABD34EA7-4C48-415B-8907-EC140EA98CD9}.Release|x64.ActiveCfg = Release|Any CPU
+		{ABD34EA7-4C48-415B-8907-EC140EA98CD9}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

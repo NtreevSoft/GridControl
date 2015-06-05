@@ -137,11 +137,11 @@ namespace Ntreev.Library.Grid
             return null;
         }
 
-        private void gridCore_Cleared(object pSender, EventArgs e)
+        private void gridCore_Cleared(object sender, EventArgs e)
         {
             ResetVariables();
         }
-        private void gridCore_Created(object pSender, EventArgs e)
+        private void gridCore_Created(object sender, EventArgs e)
         {
 
         }
@@ -160,12 +160,12 @@ namespace Ntreev.Library.Grid
             if (pFocusable == null)
                 return;
 
-            GrRect rect;
+            GrRect rect = GrRect.Empty;
             IDataRow pDataRow = pFocusable.GetDataRow();
             if (this.GridCore.GetRowHighlight() == true || this.GridCore.GetFullRowSelect() == true)
             {
                 rect = pDataRow.GetRect();
-                rect.Right = this.GridCore.GetDisplayRect().Right;
+                rect.Width = this.GridCore.GetDisplayRect().Right - rect.Left;
                 rect.Expand(2);
             }
             else

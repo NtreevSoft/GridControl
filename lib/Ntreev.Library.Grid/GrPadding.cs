@@ -101,5 +101,17 @@ namespace Ntreev.Library.Grid
         //    operator System::Windows::Forms::Padding () ;
         //    void operator = (System::Windows::Forms::Padding% padding);
         //#endif
+
+#if _WINFORM
+        public static implicit operator System.Windows.Forms.Padding(GrPadding padding)
+        {
+            return new System.Windows.Forms.Padding(padding.left, padding.top, padding.right, padding.bottom);
+        }
+
+        public static implicit operator GrPadding(System.Windows.Forms.Padding padding)
+        {
+            return new GrPadding(padding.Left, padding.Top, padding.Right, padding.Bottom);
+        }
+#endif
     }
 }

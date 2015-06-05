@@ -1,0 +1,1 @@
+D:\NTG git\GridControl v2010\lib\WinformGridHost\obj\Debug\WinformGridHost.csprojResolveAssemblyReference.cache

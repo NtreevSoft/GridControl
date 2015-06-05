@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;_WINFORM</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -37,6 +37,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,10 +48,15 @@
   <ItemGroup>
     <Compile Include="ColumnEventHandler.cs" />
     <Compile Include="ColumnMouseEventHandler.cs" />
+    <Compile Include="GrEditingType.cs" />
+    <Compile Include="GrGridUtility.cs" />
+    <Compile Include="States\ColumnResizing.cs" />
+    <Compile Include="States\ColumnSplitterMoving.cs" />
     <Compile Include="DataRowEventHandler.cs" />
     <Compile Include="DataRowInsertedEventHandler.cs" />
     <Compile Include="DataRowInsertingEventHandler.cs" />
     <Compile Include="DataRowMovingEventHandler.cs" />
+    <Compile Include="ElapsedEventHandler.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FocusEventHandler.cs" />
     <Compile Include="FuncColumnPaint.cs" />
@@ -79,14 +86,17 @@
     <Compile Include="GrDefineUtility.cs" />
     <Compile Include="GrEditEventArgs.cs" />
     <Compile Include="GrEditingReason.cs" />
+    <Compile Include="GrElapsedEventArgs.cs" />
     <Compile Include="GrEventArgs.cs" />
     <Compile Include="GrExpander.cs" />
     <Compile Include="GrFlag.cs" />
     <Compile Include="GrFocusChangeArgs.cs" />
     <Compile Include="GrFocuser.cs" />
+    <Compile Include="GrFocuserInternal.cs" />
     <Compile Include="GrFocusMover.cs" />
     <Compile Include="GrFont.cs" />
     <Compile Include="GrGridPainter.cs" />
+    <Compile Include="GrGridState.cs" />
     <Compile Include="GrGridWindow.cs" />
     <Compile Include="GrGroup.cs" />
     <Compile Include="GrGroupEventArgs.cs" />
@@ -124,24 +134,42 @@
     <Compile Include="GrRowSplitter.cs" />
     <Compile Include="GrRowType.cs" />
     <Compile Include="GrScroll.cs" />
+    <Compile Include="GrScrollEventType.cs" />
+    <Compile Include="GrSelectionRange.cs" />
+    <Compile Include="GrSelectionTimer.cs" />
     <Compile Include="GrSelectionType.cs" />
     <Compile Include="GrSize.cs" />
     <Compile Include="GrSort.cs" />
     <Compile Include="GrSortFunc.cs" />
+    <Compile Include="GrStateBase.cs" />
+    <Compile Include="GrStateEventArgs.cs" />
     <Compile Include="GrStateManager.cs" />
+    <Compile Include="GrStateMouseEventArgs.cs" />
     <Compile Include="GrStyle.cs" />
     <Compile Include="GrTextLayout.cs" />
     <Compile Include="GrTextUpdater.cs" />
     <Compile Include="GrTextUtil.cs" />
+    <Compile Include="GrTimer.cs" />
     <Compile Include="GrUpdatableRow.cs" />
     <Compile Include="GrVertAlign.cs" />
     <Compile Include="IDataRow.cs" />
     <Compile Include="IFocusable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="States\ExpanderPressing.cs" />
+    <Compile Include="States\GroupCellPressing.cs" />
+    <Compile Include="States\GroupInfoPressing.cs" />
+    <Compile Include="States\ItemButtonPressing.cs" />
+    <Compile Include="States\ItemEditing.cs" />
+    <Compile Include="States\ItemPressing.cs" />
+    <Compile Include="States\RowPressing.cs" />
+    <Compile Include="States\ColumnPressing.cs" />
+    <Compile Include="States\Normal.cs" />
+    <Compile Include="States\RootPressing.cs" />
+    <Compile Include="States\RowResizing.cs" />
     <Compile Include="WordDesc.cs" />
-    <Compile Include="_GrItemMouseEvent.cs" />
-    <Compile Include="_GrRowMouseEvent.cs" />
+    <Compile Include="ItemMouseEventHandler.cs" />
+    <Compile Include="RowMouseEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

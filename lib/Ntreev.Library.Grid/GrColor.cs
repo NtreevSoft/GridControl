@@ -57,6 +57,23 @@ namespace Ntreev.Library.Grid
             this.isNamed = true;
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is GrColor == false)
+                return false;
+            return this == (GrColor)obj;
+        }
+
+        public override int GetHashCode()
+        {
+            return GrGridUtility.GetHashCode(this.b) ^
+                GrGridUtility.GetHashCode(this.g) ^
+                GrGridUtility.GetHashCode(this.b) ^
+                GrGridUtility.GetHashCode(this.a) ^
+                GrGridUtility.GetHashCode(this.name) ^
+                GrGridUtility.GetHashCode(this.isNamed);
+        }
+
         public static GrColor operator *(GrColor color, float f)
         {
             return new GrColor(color.Af * f, color.Rf * f, color.Gf * f, color.Bf * f);
@@ -295,10 +312,16 @@ namespace Ntreev.Library.Grid
 
         public static readonly GrColor DefaultLineColor = new GrColor(255, 208, 215, 229);
 
-        //#ifdef _MANAGED
-        //    GrColor(System::Drawing::Color color);
-        //    operator System::Drawing::Color ();
-        //    operator System::Drawing::Color () ;
-        //#endif
+#if _WINFORM
+        public static implicit operator System.Drawing.Color(GrColor color)
+        {
+            return System.Drawing.Color.FromArgb(color.a, color.r, color.g, color.b);
+        }
+
+        public static implicit operator GrColor(System.Drawing.Color color)
+        {
+            return new GrColor(color.A, color.R, color.G, color.B);
+        }
+#endif
     }
 }

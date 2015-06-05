@@ -56,7 +56,8 @@ namespace Ntreev.Library.Grid
             GrColor foreColor = GetPaintingLineColor();
             GrColor backColor = GetPaintingBackColor();
 
-            GrPaintStyle paintStyle;
+            GrPaintStyle paintStyle = GrPaintStyle.None;
+
             if (m_pDataRow.IsLastVisible() == true)
                 paintStyle |= GrPaintStyle.BottomLine;
 

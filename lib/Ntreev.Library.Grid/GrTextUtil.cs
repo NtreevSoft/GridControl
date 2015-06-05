@@ -62,9 +62,10 @@ namespace Ntreev.Library.Grid
             int pos = 0;
             //memset(&wd, 0, sizeof(GrWordDesc));
 
+            GrWordDesc wd = new GrWordDesc();
             while (pos != cellText.Length)
             {
-                GrWordDesc wd = new GrWordDesc();
+                
                 char s = cellText[pos];
                 int width = pFont.GetCharacterWidth(s);
 
