@@ -10,192 +10,175 @@ namespace Ntreev.Windows.Forms.Grid
 {
     class WinFormScroll : GrScroll
     {
-         GridControl m_gridControl;
-        //gcroot<System.Windows.Forms.ScrollProperties> m_scroll;
-        Orientation m_type;
-        int m_min;
-        int m_max;
-        int m_value;
-        int m_smallChange;
-        int m_largeChange;
-        bool m_visible;
+        private readonly GridControl gridControl;
+        private readonly Orientation type;
+        private int min;
+        private int max;
+        private int value;
+        private int smallChange;
+        private int largeChange;
+        private bool isVisible;
 
         public WinFormScroll(GridControl gridControl, Orientation type)
         {
-            m_gridControl = gridControl;
-            m_type = type;
-            m_min = 0;
-            m_max = 100;
-            m_value = 0;
-            m_smallChange = 1;
-            m_largeChange = 10;
+            this.gridControl = gridControl;
+            this.type = type;
+            this.min = 0;
+            this.max = 100;
+            this.value = 0;
+            this.smallChange = 1;
+            this.largeChange = 10;
         }
 
-        public override int GetValue()
+        public override int Value
         {
-            return m_value;
+            get { return this.value; }
+            set
+            {
+                int oldValue = this.value;
+                if (this.SetValueCore(value) == false)
+                    return;
+
+                ScrollEventArgs se = new ScrollEventArgs(ScrollEventType.ThumbPosition, oldValue, this.value, (ScrollOrientation)this.type);
+                this.gridControl.InvokeScroll(se);
+            }
         }
 
-        public override void SetValue(int value)
+        public override int SmallChange
         {
-
-
-            int oldValue = m_value;
-            if (this.SetValueCore(value) == false)
-                return;
-
-            ScrollEventArgs se = new ScrollEventArgs(ScrollEventType.ThumbPosition, oldValue, m_value, (ScrollOrientation)m_type);
-            m_gridControl.InvokeScroll(se);
+            get { return this.smallChange; }
+            set { this.smallChange = value; }
         }
 
-        public override int GetSmallChange()
+        public override int LargeChange
         {
-            return m_smallChange;
+            get { return this.largeChange; }
+            set
+            {
+                this.largeChange = value;
+                NativeMethods.SetScrollPage(this.gridControl.Handle, this.type, this.largeChange);
+            }
         }
 
-        public override void SetSmallChange(int value)
+        public override int Maximum
         {
-            m_smallChange = value;
+            get { return this.max; }
+            set
+            {
+                this.max = value;
+                NativeMethods.SetScrollRange(this.gridControl.Handle, this.type, this.min, this.max);
+            }
         }
 
-        public override int GetLargeChange()
+        public override int Minimum
         {
-            return m_largeChange;
+            get { return this.min; }
+            set
+            {
+                this.min = value;
+                NativeMethods.SetScrollRange(this.gridControl.Handle, this.type, this.min, this.max);
+            }
         }
 
-        public override void SetLargeChange(int value)
+        public override bool IsVisible
         {
-            m_largeChange = value;
-            NativeMethods.SetScrollPage(m_gridControl.Handle, m_type, m_largeChange);
+            get { return this.isVisible; }
+            set
+            {
+                if (this.type == 0 && this.gridControl.HScrollInternal == false)
+                    value = false;
+                else if (this.type == Orientation.Vertical && this.gridControl.VScrollInternal == false)
+                    value = false;
+
+                this.isVisible = value;
+
+                NativeMethods.SetScrollVisible(this.gridControl.Handle, this.type, this.isVisible);
+            }
         }
 
-        public override int GetMaximum()
-        {
-            return m_max;
-
-        }
-
-        public override void SetMaximum(int value)
-        {
-            m_max = value;
-            NativeMethods.SetScrollRange(m_gridControl.Handle, m_type, m_min, m_max);
-        }
-
-        public override int GetMinimum()
-        {
-            return m_min;
-        }
-
-        public override void SetMinimum(int value)
-        {
-            m_min = value;
-            NativeMethods.SetScrollRange(m_gridControl.Handle, m_type, m_min, m_max);
-        }
-
-        public override bool GetVisible()
-        {
-            return m_visible;
-        }
-
-        public override void SetVisible(bool value)
-        {
-            if (m_type == 0 && m_gridControl.HScrollInternal == false)
-                value = false;
-            else if (m_type == Orientation.Vertical && m_gridControl.VScrollInternal == false)
-                value = false;
-
-            m_visible = value;
-
-            NativeMethods.SetScrollVisible(m_gridControl.Handle, m_type, m_visible);
-        }
-        
         public void WndProc(IntPtr handle, IntPtr wParam)
         {
+            int nValue = this.value;
 
-
-            int nValue = m_value;
-
-            ScrollEventType ScrollType;
+            ScrollEventType scrollType;
 
             switch ((uint)NativeMethods.LoWord(wParam))
             {
                 case NativeMethods.SB_ENDSCROLL:
                     {
-                        ScrollType = ScrollEventType.EndScroll;
+                        scrollType = ScrollEventType.EndScroll;
                     }
                     break;
                 case NativeMethods.SB_LEFT:
                     {
-                        nValue = m_min;
-                        ScrollType = ScrollEventType.First;
+                        nValue = this.min;
+                        scrollType = ScrollEventType.First;
                     }
                     break;
                 case NativeMethods.SB_RIGHT:
                     {
-                        nValue = m_max;
-                        ScrollType = ScrollEventType.Last;
+                        nValue = this.max;
+                        scrollType = ScrollEventType.Last;
                     }
                     break;
                 case NativeMethods.SB_LINELEFT:
                     {
-                        nValue -= m_smallChange;
-                        ScrollType = ScrollEventType.SmallDecrement;
+                        nValue -= this.smallChange;
+                        scrollType = ScrollEventType.SmallDecrement;
                     }
                     break;
                 case NativeMethods.SB_LINERIGHT:
                     {
-                        nValue += m_smallChange;
-                        ScrollType = ScrollEventType.SmallIncrement;
+                        nValue += this.smallChange;
+                        scrollType = ScrollEventType.SmallIncrement;
                     }
                     break;
                 case NativeMethods.SB_PAGELEFT:
                     {
-                        nValue -= m_largeChange;
-                        ScrollType = ScrollEventType.LargeDecrement;
+                        nValue -= this.largeChange;
+                        scrollType = ScrollEventType.LargeDecrement;
                     }
                     break;
                 case NativeMethods.SB_PAGERIGHT:
                     {
-                        nValue += m_largeChange;
-                        ScrollType = ScrollEventType.LargeIncrement;
+                        nValue += this.largeChange;
+                        scrollType = ScrollEventType.LargeIncrement;
                     }
                     break;
                 case NativeMethods.SB_THUMBTRACK:
                     {
-                        if (NativeMethods.GetScrollTrackPosition(handle, m_type, ref nValue) == false)
+                        if (NativeMethods.GetScrollTrackPosition(handle, this.type, ref nValue) == false)
                             return;
-                        ScrollType = ScrollEventType.ThumbTrack;
+                        scrollType = ScrollEventType.ThumbTrack;
                     }
                     break;
                 default:
                     return;
             }
 
-            SetValue(nValue, (int)ScrollType);
+            SetValue(nValue, (int)scrollType);
         }
-        
+
         private void SetValue(int value, int scrollEventType)
         {
-
-
-            int oldValue = m_value;
+            int oldValue = this.value;
             if (this.SetValueCore(value) == false)
                 return;
 
-            ScrollEventArgs se = new ScrollEventArgs((ScrollEventType)scrollEventType, oldValue, m_value, (ScrollOrientation)m_type);
-            m_gridControl.InvokeScroll(se);
+            ScrollEventArgs se = new ScrollEventArgs((ScrollEventType)scrollEventType, oldValue, this.value, (ScrollOrientation)this.type);
+            this.gridControl.InvokeScroll(se);
         }
 
         private bool SetValueCore(int value)
         {
-            int oldValue = m_value;
+            int oldValue = this.value;
             int newValue = this.ValidateValue(value);
 
             if (oldValue == newValue)
                 return false;
 
-            m_value = newValue;
-            NativeMethods.SetScrollValue(m_gridControl.Handle, m_type, newValue);
+            this.value = newValue;
+            NativeMethods.SetScrollValue(this.gridControl.Handle, this.type, newValue);
             return true;
         }
     }

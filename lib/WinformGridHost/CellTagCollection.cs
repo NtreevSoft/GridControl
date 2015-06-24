@@ -15,7 +15,7 @@ namespace Ntreev.Windows.Forms.Grid
         internal CellTagCollection(Row row)
         {
             m_row = row;
-            m_pColumnList = row.GridCore.GetColumnList();
+            m_pColumnList = row.GridCore.ColumnList;
         }
 
         public object this[string columnName]

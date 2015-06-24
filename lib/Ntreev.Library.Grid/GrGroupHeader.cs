@@ -74,8 +74,8 @@ namespace Ntreev.Library.Grid
             GrColor foreColor = column.GetPaintingForeColor();
             GrColor lineColor = column.GetPaintingLineColor();
 
-            GrRect displayRect = this.GridCore.GetDisplayRect();
-            GrColumnList columnList = this.GridCore.GetColumnList();
+            GrRect displayRect = this.GridCore.DisplayRectangle;
+            GrColumnList columnList = this.GridCore.ColumnList;
             if (this.GridCore.GetFillBlank() == true && columnList.GetDisplayableRight() < displayRect.Right)
             {
                 int left = paintRect.Left;
@@ -102,7 +102,7 @@ namespace Ntreev.Library.Grid
         {
             GrPaintStyle flag = base.ToPaintStyle();
 
-            GrFocuser focuser = this.GridCore.GetFocuser();
+            GrFocuser focuser = this.GridCore.Focuser;
             if (focuser.Get() == this)
                 flag |= GrPaintStyle.Focused;
             return flag;

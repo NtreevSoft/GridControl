@@ -30,7 +30,7 @@ namespace Ntreev.Library.Grid.States
 
         public override void OnPaintAdornments(GrGridPainter g, GrRect displayRect)
         {
-            GrRect paintRect = new GrRect(new GrPoint(m_location, displayRect.Top), new GrSize(GrColumnSplitter.DefaultSplitterWidth, displayRect.GetHeight()));
+            GrRect paintRect = new GrRect(new GrPoint(m_location, displayRect.Top), new GrSize(GrColumnSplitter.DefaultSplitterWidth, displayRect.Height));
             g.DrawSplitterMovingLine(paintRect);
         }
 
@@ -79,7 +79,7 @@ namespace Ntreev.Library.Grid.States
 
             if (oldLocation != m_location)
             {
-                GrRect displayRect = this.GridCore.GetDisplayRect();
+                GrRect displayRect = this.GridCore.DisplayRectangle;
                 this.GridCore.Invalidate(oldLocation - 2, displayRect.Top, oldLocation + GrColumnSplitter.DefaultSplitterWidth + 2, displayRect.Bottom);
                 this.GridCore.Invalidate(m_location - 2, displayRect.Top, m_location + GrColumnSplitter.DefaultSplitterWidth + 2, displayRect.Bottom);
             }
@@ -89,7 +89,7 @@ namespace Ntreev.Library.Grid.States
         {
             if (cancel == true)
             {
-                GrRect displayRect = this.GridCore.GetDisplayRect();
+                GrRect displayRect = this.GridCore.DisplayRectangle;
                 this.GridCore.Invalidate(m_location - 2, displayRect.Top, m_location + GrColumnSplitter.DefaultSplitterWidth + 2, displayRect.Bottom);
                 return;
             }

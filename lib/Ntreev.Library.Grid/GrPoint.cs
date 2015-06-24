@@ -73,13 +73,6 @@ namespace Ntreev.Library.Grid
             return new GrPoint(point1.x - point2.x, point1.y - point2.y);
         }
 
-        //#ifdef _MANAGED
-        //    GrPoint(System::Drawing::Point point);
-        //    void operator = (System::Drawing::Point point);
-        //    operator System::Drawing::Point ();
-        //    operator System::Drawing::Point () ;
-        //#endif
-
         public static readonly GrPoint Empty = new GrPoint();
 
 #if _WINFORM

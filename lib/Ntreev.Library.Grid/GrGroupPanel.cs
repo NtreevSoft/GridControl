@@ -98,14 +98,14 @@ namespace Ntreev.Library.Grid
 
         public override int GetWidth()
         {
-            return this.GridCore.GetBounds().GetWidth();
+            return this.GridCore.GetBounds().Width;
         }
 
         public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
             GrRect paintRect = GetRect();
-            GrRect displayRect = this.GridCore.GetDisplayRect();
-            GrColumnList columnList = this.GridCore.GetColumnList();
+            GrRect displayRect = this.GridCore.DisplayRectangle;
+            GrColumnList columnList = this.GridCore.ColumnList;
             if (this.GridCore.GetFillBlank() == true && columnList.GetDisplayableRight() < displayRect.Right)
             {
                 paintRect.Width = displayRect.Right - paintRect.Left;
@@ -248,7 +248,7 @@ namespace Ntreev.Library.Grid
 
         private void gridCore_Created(object sender, EventArgs e)
         {
-            GrColumnList columnList = this.GridCore.GetColumnList();
+            GrColumnList columnList = this.GridCore.ColumnList;
             columnList.ColumnGroupChanged += columnList_ColumnGroupChanged;
             columnList.ColumnInserted+= columnList_ColumnInserted;
             columnList.ColumnRemoved += columnList_ColumnRemoved;

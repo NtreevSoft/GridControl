@@ -41,13 +41,6 @@ namespace Ntreev.Library.Grid
             return this == (GrSize)obj;
         }
 
-        //#ifdef _MANAGED
-        //    GrSize(System::Drawing::Size size);
-        //    void operator = (System::Drawing::Size size);
-        //    operator System::Drawing::Size ();
-        //    operator System::Drawing::Size () const;
-        //#endif
-
         public int Width
         {
             get { return this.width; }

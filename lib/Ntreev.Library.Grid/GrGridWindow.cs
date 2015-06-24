@@ -20,8 +20,8 @@ namespace Ntreev.Library.Grid
         public abstract GrInvalidator GetInvalidator();
         public abstract GrGridPainter GetGridPainter();
 
-        public abstract GrTimer CreateTimer();
-        public abstract void DestroyTimer(GrTimer pTimer);
+        public abstract ITimer CreateTimer();
+        public abstract void DestroyTimer(ITimer pTimer);
 
         public abstract void OnEditValue(GrEditEventArgs e);
 
@@ -101,7 +101,7 @@ namespace Ntreev.Library.Grid
 
         public virtual void OnSizeChanged(GrRect rect)
         {
-            this.GridCore.SetDisplayRect(rect);
+            this.GridCore.DisplayRectangle = rect;
         }
 
         public virtual void OnUpdate()
@@ -157,14 +157,14 @@ namespace Ntreev.Library.Grid
             this.GridCore.AttachObject(pHorzScroll);
             this.GridCore.AttachObject(pVertScroll);
 
-            pHorzScroll.SetVisible(false);
-            pVertScroll.SetVisible(false);
+            pHorzScroll.IsVisible = false;
+            pVertScroll.IsVisible = false;
         }
 
 
         public GrRect ClientToScreen(GrRect rect)
         {
-            GrPoint clientLocation = rect.GetLocation();
+            GrPoint clientLocation = rect.Location;
             GrPoint screenLocation = ClientToScreen(clientLocation);
             GrRect value = rect;
             value.Offset(screenLocation.X - clientLocation.X, screenLocation.Y - clientLocation.Y);

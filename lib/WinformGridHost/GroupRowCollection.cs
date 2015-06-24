@@ -14,7 +14,7 @@ namespace Ntreev.Windows.Forms.Grid
         internal GroupRowCollection(GridControl gridControl)
             : base(gridControl)
         {
-            m_pDataRowList = this.GridCore.GetDataRowList();
+            m_pDataRowList = this.GridCore.DataRowList;
         }
 
         public GroupRow this[int index]
@@ -107,7 +107,7 @@ namespace Ntreev.Windows.Forms.Grid
                 int count = 0;
                 if (pGridCore.IsGrouped() == true)
                 {
-                    count = pGridCore.GetDataRowList().GetChildCount();
+                    count = pGridCore.DataRowList.GetChildCount();
                 }
                 m_index++;
                 return m_index < count;
@@ -123,7 +123,7 @@ namespace Ntreev.Windows.Forms.Grid
             {
                 get
                 {
-                    GrDataRowList pDataRowList = this.GridCore.GetDataRowList();
+                    GrDataRowList pDataRowList = this.GridCore.DataRowList;
                     GrGroupRow pGroupRow = pDataRowList.GetChild(m_index) as GrGroupRow;
 
                     return FromNative.Get(pGroupRow);

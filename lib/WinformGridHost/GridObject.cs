@@ -85,12 +85,12 @@ namespace Ntreev.Windows.Forms.Grid
 
         internal GrItemSelector Selector
         {
-            get { return m_gridControl.GridCore.GetItemSelector(); }
+            get { return m_gridControl.GridCore.ItemSelector; }
         }
 
         internal GrFocuser Focuser
         {
-            get { return m_gridControl.GridCore.GetFocuser(); }
+            get { return m_gridControl.GridCore.Focuser; }
         }
     }
 }

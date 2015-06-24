@@ -97,129 +97,129 @@ namespace Ntreev.Library.Grid
 
         public virtual GrCursor GetCursor() { return GrCursor.Default; }
 
-        protected override  void OnGridCoreAttached()
-            {
-    base.OnGridCoreAttached();
-    m_pItemSelector = this.GridCore.GetItemSelector() as GrItemSelectorInternal;
-    m_pFocuser = this.GridCore.GetFocuser() as GrFocuserInternal;
-    m_pGridWindow = this.GridCore.GetGridWindow();
-}
+        protected override void OnGridCoreAttached()
+        {
+            base.OnGridCoreAttached();
+            m_pItemSelector = this.GridCore.ItemSelector as GrItemSelectorInternal;
+            m_pFocuser = this.GridCore.Focuser as GrFocuserInternal;
+            m_pGridWindow = this.GridCore.GetGridWindow();
+        }
 
         protected void InvokeMouseEvent(GrCell pOldCell, GrCell pNewCell, GrStateMouseEventArgs e)
-            {
-    if(pOldCell == pNewCell)
-    {
-        if(pNewCell != null)
         {
-            switch(pNewCell.GetCellType())
+            if (pOldCell == pNewCell)
             {
-            case GrCellType.Item:
+                if (pNewCell != null)
                 {
-                    GrItemMouseEventArgs e1 = new GrItemMouseEventArgs(pNewCell as GrItem, e.GetLocalHit(), e.GetModifierKeys());
-                    this.GridCore.Invoke("ItemMouseMove", e1);
-                    if(e1.GetHandled() == true)
+                    switch (pNewCell.GetCellType())
                     {
-                        e.SetHandled(true);
+                        case GrCellType.Item:
+                            {
+                                GrItemMouseEventArgs e1 = new GrItemMouseEventArgs(pNewCell as GrItem, e.GetLocalHit(), e.GetModifierKeys());
+                                this.GridCore.Invoke("ItemMouseMove", e1);
+                                if (e1.GetHandled() == true)
+                                {
+                                    e.SetHandled(true);
+                                }
+                            }
+                            break;
+                        case GrCellType.Column:
+                            {
+                                GrColumnMouseEventArgs e2 = new GrColumnMouseEventArgs(pNewCell as GrColumn, e.GetLocalHit(), e.GetModifierKeys());
+                                this.GridCore.Invoke("ColumnMouseMove", e2);
+                                if (e2.IsHandled == true)
+                                {
+                                    e.SetHandled(true);
+                                }
+                            }
+                            break;
+                        case GrCellType.Row:
+                            {
+                                GrRowMouseEventArgs e2 = new GrRowMouseEventArgs(pNewCell as GrRow, e.GetLocalHit(), e.GetModifierKeys());
+                                this.GridCore.Invoke("RowMouseMove", e2);
+                                if (e2.GetHandled() == true)
+                                {
+                                    e.SetHandled(true);
+                                }
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
-                break;
-            case GrCellType.Column:
-                {
-                    GrColumnMouseEventArgs e2 = new GrColumnMouseEventArgs(pNewCell as GrColumn, e.GetLocalHit(), e.GetModifierKeys());
-                    this.GridCore.Invoke("ColumnMouseMove", e2);
-                    if(e2.IsHandled == true)
-                    {
-                        e.SetHandled(true);
-                    }
-                }
-                break;
-            case GrCellType.Row:
-                {
-                    GrRowMouseEventArgs e2 = new GrRowMouseEventArgs(pNewCell as GrRow, e.GetLocalHit(), e.GetModifierKeys());
-                    this.GridCore.Invoke("RowMouseMove", e2);
-                    if(e2.GetHandled() == true)
-                    {
-                        e.SetHandled(true);
-                    }
-                }
-                break;
-            default:
-                break;
             }
-        }
-    }
-    else
-    {
+            else
+            {
 
-        if(pOldCell != null)
-        {
-            switch(pOldCell.GetCellType())
-            {
-            case GrCellType.Item:
+                if (pOldCell != null)
                 {
-                    GrItemMouseEventArgs e1 = new GrItemMouseEventArgs(pOldCell as GrItem, e.GetLocalHit(), e.GetModifierKeys());
-                    this.GridCore.Invoke("ItemMouseLeave", e1);
+                    switch (pOldCell.GetCellType())
+                    {
+                        case GrCellType.Item:
+                            {
+                                GrItemMouseEventArgs e1 = new GrItemMouseEventArgs(pOldCell as GrItem, e.GetLocalHit(), e.GetModifierKeys());
+                                this.GridCore.Invoke("ItemMouseLeave", e1);
+                            }
+                            break;
+                        case GrCellType.Column:
+                            {
+                                GrColumnMouseEventArgs e2 = new GrColumnMouseEventArgs(pOldCell as GrColumn, e.GetLocalHit(), e.GetModifierKeys());
+                                this.GridCore.Invoke("ColumnMouseLeave", e2);
+                            }
+                            break;
+                        case GrCellType.Row:
+                            {
+                                GrRowMouseEventArgs e2 = new GrRowMouseEventArgs(pOldCell as GrRow, e.GetLocalHit(), e.GetModifierKeys());
+                                this.GridCore.Invoke("RowMouseLeave", e2);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
-                break;
-            case GrCellType.Column:
-                {
-                    GrColumnMouseEventArgs e2 = new GrColumnMouseEventArgs(pOldCell as GrColumn, e.GetLocalHit(), e.GetModifierKeys());
-                    this.GridCore.Invoke("ColumnMouseLeave", e2);
-                }
-                break;
-            case GrCellType.Row:
-                {
-                    GrRowMouseEventArgs e2 = new GrRowMouseEventArgs(pOldCell as GrRow, e.GetLocalHit(), e.GetModifierKeys());
-                    this.GridCore.Invoke("RowMouseLeave", e2);
-                }
-                break;
-            default:
-                break;
-            }
-        }
 
-        if(pNewCell != null)
-        {
-            switch(pNewCell.GetCellType())
-            {
-            case GrCellType.Item:
+                if (pNewCell != null)
                 {
-                    GrItemMouseEventArgs e1 = new GrItemMouseEventArgs(pNewCell as GrItem, e.GetLocalHit(), e.GetModifierKeys());
-                    this.GridCore.Invoke("ItemMouseEnter", e1);
-                    this.GridCore.Invoke("ItemMouseMove", e1);
-                    if(e1.GetHandled() == true)
+                    switch (pNewCell.GetCellType())
                     {
-                        e.SetHandled(true);
+                        case GrCellType.Item:
+                            {
+                                GrItemMouseEventArgs e1 = new GrItemMouseEventArgs(pNewCell as GrItem, e.GetLocalHit(), e.GetModifierKeys());
+                                this.GridCore.Invoke("ItemMouseEnter", e1);
+                                this.GridCore.Invoke("ItemMouseMove", e1);
+                                if (e1.GetHandled() == true)
+                                {
+                                    e.SetHandled(true);
+                                }
+                            }
+                            break;
+                        case GrCellType.Column:
+                            {
+                                GrColumnMouseEventArgs e2 = new GrColumnMouseEventArgs(pNewCell as GrColumn, e.GetLocalHit(), e.GetModifierKeys());
+                                this.GridCore.Invoke("ColumnMouseEnter", e2);
+                                this.GridCore.Invoke("ColumnMouseMove", e2);
+                                if (e2.IsHandled == true)
+                                {
+                                    e.SetHandled(true);
+                                }
+                            }
+                            break;
+                        case GrCellType.Row:
+                            {
+                                GrRowMouseEventArgs e2 = new GrRowMouseEventArgs(pNewCell as GrRow, e.GetLocalHit(), e.GetModifierKeys());
+                                this.GridCore.Invoke("RowMouseEnter", e2);
+                                this.GridCore.Invoke("RowMouseMove", e2);
+                                if (e2.GetHandled() == true)
+                                {
+                                    e.SetHandled(true);
+                                }
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
-                break;
-            case GrCellType.Column:
-                {
-                    GrColumnMouseEventArgs e2 = new GrColumnMouseEventArgs(pNewCell as GrColumn, e.GetLocalHit(), e.GetModifierKeys());
-                    this.GridCore.Invoke("ColumnMouseEnter", e2);
-                    this.GridCore.Invoke("ColumnMouseMove", e2);
-                    if(e2.IsHandled == true)
-                    {
-                        e.SetHandled(true);
-                    }
-                }
-                break;
-            case GrCellType.Row:
-                {
-                    GrRowMouseEventArgs e2= new GrRowMouseEventArgs(pNewCell as GrRow, e.GetLocalHit(), e.GetModifierKeys());
-                    this.GridCore.Invoke("RowMouseEnter", e2);
-                    this.GridCore.Invoke("RowMouseMove", e2);
-                    if(e2.GetHandled() == true)
-                    {
-                        e.SetHandled(true);
-                    }
-                }
-                break;
-            default:
-                break;
             }
         }
-    }
-}
     }
 }

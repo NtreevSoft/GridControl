@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Ntreev.Windows.Forms.Grid
 {
-    class WinFormTimer : GrTimer
+    class WinFormTimer : ITimer
     {
         private readonly GridControl gridControl;
         private readonly System.Timers.Timer timer;

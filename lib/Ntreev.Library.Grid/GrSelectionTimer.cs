@@ -17,7 +17,7 @@ namespace Ntreev.Library.Grid
         int m_horzScroll;
         int m_vertScroll;
 
-        GrTimer m_pTimer;
+        ITimer m_pTimer;
         GrScroll m_pHorzScroll;
         GrScroll m_pVertScroll;
 
@@ -39,14 +39,14 @@ namespace Ntreev.Library.Grid
             bool result = false;
             if (GetHScrollEnabled() == true)
             {
-                int newHorz = m_pHorzScroll.GetValue() + m_horzScroll;
+                int newHorz = m_pHorzScroll.Value + m_horzScroll;
                 if (m_pHorzScroll.DoScroll(newHorz) == true)
                     result = true;
             }
 
             if (GetVScrollEnabled() == true)
             {
-                int newVert = m_pVertScroll.GetValue() + m_vertScroll;
+                int newVert = m_pVertScroll.Value + m_vertScroll;
                 if (m_pVertScroll.DoScroll(newVert) == true)
                     result = true;
             }
@@ -85,14 +85,14 @@ namespace Ntreev.Library.Grid
             {
                 if (point.X < inside.Left && point.X >= outside.Left)
                 {
-                    if (m_pHorzScroll.GetValue() > m_pHorzScroll.GetMinimum())
+                    if (m_pHorzScroll.Value > m_pHorzScroll.Minimum)
                     {
                         m_horzScroll = -ComputeSpeed(inside.Left - point.X, inside.Left - outside.Left);
                     }
                 }
                 else if (point.X >= inside.Right && point.X < outside.Right)
                 {
-                    if (m_pHorzScroll.GetValue() < m_pHorzScroll.GetMaximum() - m_pHorzScroll.GetLargeChange() + 1)
+                    if (m_pHorzScroll.Value < m_pHorzScroll.Maximum - m_pHorzScroll.LargeChange + 1)
                     {
                         m_horzScroll = ComputeSpeed(point.X - inside.Right, outside.Right - inside.Right);
                     }
@@ -103,14 +103,14 @@ namespace Ntreev.Library.Grid
             {
                 if (point.Y < inside.Top && point.Y >= outside.Top)
                 {
-                    if (m_pVertScroll.GetValue() > m_pVertScroll.GetMinimum())
+                    if (m_pVertScroll.Value > m_pVertScroll.Minimum)
                     {
                         m_vertScroll = -ComputeSpeed(inside.Top - point.Y, inside.Top - outside.Top);
                     }
                 }
                 else if (point.Y >= inside.Bottom && point.Y < outside.Bottom)
                 {
-                    if (m_pVertScroll.GetValue() < m_pVertScroll.GetMaximum() - m_pVertScroll.GetLargeChange() + 1)
+                    if (m_pVertScroll.Value < m_pVertScroll.Maximum - m_pVertScroll.LargeChange + 1)
                     {
                         m_vertScroll = ComputeSpeed(point.Y - inside.Bottom, outside.Bottom - inside.Bottom);
                     }
@@ -142,7 +142,7 @@ namespace Ntreev.Library.Grid
 
         public bool GetHScrollEnabled()
         {
-            return m_horzEnable && m_pHorzScroll.GetVisible() == true;
+            return m_horzEnable && m_pHorzScroll.IsVisible == true;
         }
 
         public void SetHScrollEnabled(bool value)
@@ -152,7 +152,7 @@ namespace Ntreev.Library.Grid
 
         public bool GetVScrollEnabled()
         {
-            return m_vertEnable && m_pVertScroll.GetVisible() == true;
+            return m_vertEnable && m_pVertScroll.IsVisible == true;
         }
 
         public void SetVScrollEnabled(bool value)

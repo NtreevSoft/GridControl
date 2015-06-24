@@ -29,7 +29,7 @@ namespace Ntreev.Library.Grid.States
             if (m_where == GrDefineUtility.INVALID_INDEX)
                 return;
 
-            GrGroupPanel groupList = this.GridCore.GetGroupPanel();
+            GrGroupPanel groupList = this.GridCore.GroupPanel;
             GrRect paintRect;
             if (m_where < groupList.GetGroupCount())
             {

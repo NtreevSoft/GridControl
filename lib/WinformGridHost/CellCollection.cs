@@ -16,7 +16,7 @@ namespace Ntreev.Windows.Forms.Grid
             : base(row.GridControl)
         {
             m_row = row;
-            m_pColumnList = row.GridCore.GetColumnList();
+            m_pColumnList = row.GridCore.ColumnList;
         }
 
         public Cell this[string columnName]

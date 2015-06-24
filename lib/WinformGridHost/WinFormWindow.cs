@@ -230,12 +230,12 @@ namespace Ntreev.Windows.Forms.Grid
         //GrFont GetFont(void fontData) ;
         //GrFont GetDefaultFont() ; 
 
-        public override GrTimer CreateTimer()
+        public override ITimer CreateTimer()
         {
             return new WinFormTimer(m_gridControl);
         }
 
-        public override void DestroyTimer(GrTimer pTimer)
+        public override void DestroyTimer(ITimer pTimer)
         {
             pTimer.Dispose();
         }

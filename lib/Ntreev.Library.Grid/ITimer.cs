@@ -5,16 +5,14 @@ using System.Text;
 
 namespace Ntreev.Library.Grid
 {
-    public interface GrTimer : IDisposable
+    public interface ITimer : IDisposable
     {
         void Start();
+
         void Stop();
+
         void SetInterval(TimeSpan interval);
 
-
         event GrElapsedEventHandler Elapsed;
-
-        //protected:
-        //    void InvokeElapsed(time_t signalTime);
     }
 }

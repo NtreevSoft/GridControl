@@ -22,7 +22,7 @@ namespace Ntreev.Windows.Forms.Grid
         internal RowCollection(GridControl gridControl)
             : base(gridControl)
         {
-            m_pDataRowList = this.GridCore.GetDataRowList();
+            m_pDataRowList = this.GridCore.DataRowList;
 
             m_listChangedEventHandler = new ListChangedEventHandler(currencyManager_ListChanged);
             //m_currentChangedEventHandler = new System.EventHandler(this, &RowCollection.currencyManager_CurrentChanged);

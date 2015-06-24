@@ -226,21 +226,45 @@ namespace Ntreev.Library.Grid
             return true;
         }
 
-        public GrRootRow GetRootRow() { return m_pRootRow; }
+        public GrRootRow RootRow
+        {
+            get { return m_pRootRow; }
+        }
 
-        public GrDataRowList GetDataRowList() { return m_pDataRowList; }
+        public GrDataRowList DataRowList
+        {
+            get { return m_pDataRowList; }
+        }
 
-        public GrColumnList GetColumnList() { return m_columnList; }
+        public GrColumnList ColumnList
+        {
+            get { return m_columnList; }
+        }
 
-        public GrDataRow GetInsertionRow() { return m_pDataRowList.GetInsertionRow(); }
+        public GrDataRow InsertionRow
+        {
+            get { return m_pDataRowList.GetInsertionRow(); }
+        }
 
-        public GrCaption GetCaptionRow() { return m_pCaption; }
+        public GrCaption CaptionRow
+        {
+            get { return m_pCaption; }
+        }
 
-        public GrGroupPanel GetGroupPanel() { return m_groupPanel; }
+        public GrGroupPanel GroupPanel
+        {
+            get { return m_groupPanel; }
+        }
 
-        public GrItemSelector GetItemSelector() { return m_pItemSelector; }
+        public GrItemSelector ItemSelector
+        {
+            get { return m_pItemSelector; }
+        }
 
-        public GrFocuser GetFocuser() { return m_pFocuser; }
+        public GrFocuser Focuser
+        {
+            get { return m_pFocuser; }
+        }
 
         public GrFocusMover GetFocusMover() { return m_pFocusMover; }
 
@@ -254,22 +278,22 @@ namespace Ntreev.Library.Grid
 
         public GrStateManager GetStateManager() { return m_pStateManager; }
 
-        public GrRect GetDisplayRect()
+        public GrRect DisplayRectangle
         {
-            return m_displayRect;
+            get { return m_displayRect; }
+            set
+            {
+                if (m_displayRect == value)
+                    return;
+                m_displayRect = value;
+                this.Update();
+                int horz = GetHorzScroll().IsVisible == true ? GetHorzScroll().Value : GetHorzScroll().Minimum;
+                int vert = GetVertScroll().IsVisible == true ? GetVertScroll().Value : GetVertScroll().Minimum;
+                m_pRootRow.Clip(m_displayRect, horz, vert);
+                OnDisplayRectChanged(EventArgs.Empty);
+            }
         }
 
-        public void SetDisplayRect(GrRect displayRect)
-        {
-            if (m_displayRect == displayRect)
-                return;
-            m_displayRect = displayRect;
-            this.Update();
-            int horz = GetHorzScroll().GetVisible() == true ? GetHorzScroll().GetValue() : GetHorzScroll().GetMinimum();
-            int vert = GetVertScroll().GetVisible() == true ? GetVertScroll().GetValue() : GetVertScroll().GetMinimum();
-            m_pRootRow.Clip(m_displayRect, horz, vert);
-            OnDisplayRectChanged(EventArgs.Empty);
-        }
 
         public GrRect GetBounds()
         {
@@ -331,12 +355,12 @@ namespace Ntreev.Library.Grid
 
         public bool GetInsertionRowVisible()
         {
-            return GetInsertionRow().GetVisible();
+            return InsertionRow.GetVisible();
         }
 
         public void SetInsertionRowVisible(bool b)
         {
-            GetInsertionRow().SetVisible(b);
+            InsertionRow.SetVisible(b);
         }
 
         public bool GetRowHighlight()
@@ -993,8 +1017,8 @@ namespace Ntreev.Library.Grid
 
         internal void BeginPaint()
         {
-            int horz = GetHorzScroll().GetVisible() == true ? GetHorzScroll().GetValue() : GetHorzScroll().GetMinimum();
-            int vert = GetVertScroll().GetVisible() == true ? GetVertScroll().GetValue() : GetVertScroll().GetMinimum();
+            int horz = GetHorzScroll().IsVisible == true ? GetHorzScroll().Value : GetHorzScroll().Minimum;
+            int vert = GetVertScroll().IsVisible == true ? GetVertScroll().Value : GetVertScroll().Minimum;
             m_pRootRow.Clip(m_displayRect, horz, vert);
         }
 

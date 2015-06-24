@@ -65,9 +65,8 @@
     <Compile Include="GrElapsedEventHandler.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GrFocusEventHandler.cs" />
-    <Compile Include="FuncColumnPaint.cs" />
-    <Compile Include="FuncComparer.cs" />
-    <Compile Include="FuncSortRow.cs" />
+    <Compile Include="GrFuncColumnPaint.cs" />
+    <Compile Include="GrFuncSortRow.cs" />
     <Compile Include="GrAutoFitColumnType.cs" />
     <Compile Include="GrCaption.cs" />
     <Compile Include="GrCell.cs" />
@@ -155,7 +154,7 @@
     <Compile Include="GrTextLayout.cs" />
     <Compile Include="GrTextUpdater.cs" />
     <Compile Include="GrTextUtil.cs" />
-    <Compile Include="GrTimer.cs" />
+    <Compile Include="ITimer.cs" />
     <Compile Include="GrUpdatableRow.cs" />
     <Compile Include="GrVertAlign.cs" />
     <Compile Include="IDataRow.cs" />

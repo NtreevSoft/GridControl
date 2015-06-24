@@ -22,7 +22,7 @@ namespace Ntreev.Windows.Forms.Grid
         internal ColumnCollection(GridControl gridControl)
             : base(gridControl)
         {
-            m_pColumnList = this.GridCore.GetColumnList();
+            m_pColumnList = this.GridCore.ColumnList;
 
             m_listChangedEventHandler = new ListChangedEventHandler(currencyManager_ListChanged);
 
@@ -205,7 +205,7 @@ namespace Ntreev.Windows.Forms.Grid
 
         internal void SetItemsByDesigner(IEnumerable<object> values)
             {
-        GrGroupPanel pGroupPanel = this.GridCore.GetGroupPanel();
+        GrGroupPanel pGroupPanel = this.GridCore.GroupPanel;
         List<GrColumn> groupings = new List<GrColumn>(pGroupPanel.GetGroupCount());
 
         for(int i=0 ; i<pGroupPanel.GetGroupCount() ; i++)

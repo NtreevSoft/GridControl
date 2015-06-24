@@ -38,7 +38,7 @@ namespace Ntreev.Library.Grid
         }
         public override int GetHeight()
         {
-            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
+            GrDataRowList dataRowList = this.GridCore.DataRowList;
             return dataRowList.GetDisplayableBottom() - m_columnList.GetY();
         }
         public override bool GetVisible()

@@ -140,7 +140,7 @@ namespace Ntreev.Library.Grid
 
         public bool HasFocused()
         {
-            GrFocuser focuser = this.GridCore.GetFocuser();
+            GrFocuser focuser = this.GridCore.Focuser;
             if (focuser.GetFocusedRow() == this)
                 return true;
             return false;
@@ -150,7 +150,7 @@ namespace Ntreev.Library.Grid
         {
             if (HasFocused() == true)
                 return;
-            this.GridCore.GetFocuser().Reset();
+            this.GridCore.Focuser.Reset();
         }
 
         public void Expand(bool b)
@@ -287,7 +287,7 @@ namespace Ntreev.Library.Grid
         protected override void OnGridCoreAttached()
         {
             base.OnGridCoreAttached();
-            m_pDataRowList = this.GridCore.GetDataRowList();
+            m_pDataRowList = this.GridCore.DataRowList;
             this.GridCore.AttachObject(m_pExpander);
             m_pDataRowList.SetHeightChanged();
         }
@@ -306,7 +306,7 @@ namespace Ntreev.Library.Grid
             if (m_pDataRowList != null)
             {
                 m_pDataRowList.SetVisibleChanged();
-                this.GridCore.GetColumnList().SetWidthChanged();
+                this.GridCore.ColumnList.SetWidthChanged();
             }
         }
 

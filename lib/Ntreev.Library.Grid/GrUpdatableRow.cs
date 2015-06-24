@@ -48,7 +48,7 @@ namespace Ntreev.Library.Grid
 
             if (this.GridCore == null)
                 return;
-            this.GridCore.GetRootRow().SetFitChanged();
+            this.GridCore.RootRow.SetFitChanged();
         }
 
         protected override void OnHeightChanged()
@@ -57,7 +57,7 @@ namespace Ntreev.Library.Grid
 
             if (this.GridCore == null)
                 return;
-            this.GridCore.GetRootRow().SetHeightChanged();
+            this.GridCore.RootRow.SetHeightChanged();
             this.GridCore.Invalidate();
         }
     }

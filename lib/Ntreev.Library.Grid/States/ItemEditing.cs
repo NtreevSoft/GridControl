@@ -77,7 +77,7 @@ namespace Ntreev.Library.Grid.States
 
             if (e.GetHandled() == true && this.GridCore.IsGrouped() == true)
             {
-                this.GridCore.GetDataRowList().SetListChanged();
+                this.GridCore.DataRowList.SetListChanged();
             }
             return GrGridState.Normal;
         }

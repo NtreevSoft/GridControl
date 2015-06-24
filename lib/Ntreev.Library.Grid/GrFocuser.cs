@@ -165,7 +165,7 @@ namespace Ntreev.Library.Grid
             if (this.GridCore.GetRowHighlight() == true || this.GridCore.GetFullRowSelect() == true)
             {
                 rect = pDataRow.GetRect();
-                rect.Width = this.GridCore.GetDisplayRect().Right - rect.Left;
+                rect.Width = this.GridCore.DisplayRectangle.Right - rect.Left;
                 rect.Expand(2);
             }
             else
@@ -190,7 +190,7 @@ namespace Ntreev.Library.Grid
 
             if (column == null)
             {
-                GrColumnList columnList = this.GridCore.GetColumnList();
+                GrColumnList columnList = this.GridCore.ColumnList;
                 if (columnList.GetVisibleColumnCount() == 0)
                     return null;
                 column = columnList.GetVisibleColumn(0);
@@ -205,7 +205,7 @@ namespace Ntreev.Library.Grid
             if (pDataRow == null)
             {
                 //GrItemSelector pItemSelector = this.GridCore.GetItemSelector();
-                GrDataRowList dataRowList = this.GridCore.GetDataRowList();
+                GrDataRowList dataRowList = this.GridCore.DataRowList;
 
                 GrDataRow pInsertionRow = dataRowList.GetInsertionRow();
                 if (pInsertionRow.GetVisible() == true)

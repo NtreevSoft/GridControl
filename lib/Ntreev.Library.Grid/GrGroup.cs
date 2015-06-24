@@ -109,13 +109,13 @@ namespace Ntreev.Library.Grid
             GrFont pFont = GetPaintingFont();
             return GetTextBounds().Width +
                 (int)((pFont.GetHeight() + pFont.GetExternalLeading()) * 0.25f) +
-                GetPadding().GetHorizontal() + SortGlyphSize;
+                GetPadding().Horizontal + SortGlyphSize;
         }
 
         public override int GetHeight()
         {
             GrFont pFont = GetPaintingFont();
-            return (int)((pFont.GetHeight() + pFont.GetExternalLeading()) * 1.25f) + GetPadding().GetVertical();
+            return (int)((pFont.GetHeight() + pFont.GetExternalLeading()) * 1.25f) + GetPadding().Vertical;
         }
 
         public override bool GetVisible() { return true; }
@@ -168,7 +168,7 @@ namespace Ntreev.Library.Grid
         protected override void OnGridCoreAttached()
         {
     base.OnGridCoreAttached();
-    m_groupPanel = this.GridCore.GetGroupPanel();
+    m_groupPanel = this.GridCore.GroupPanel;
 }
 
         protected override void OnGridCoreDetached()

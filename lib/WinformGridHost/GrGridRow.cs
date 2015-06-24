@@ -74,7 +74,7 @@ namespace Ntreev.Windows.Forms.Grid
             GrGridCore pGridCore = m_gridControl.GridCore;
             GrRect rect = pGridCore.GetVisibleBounds();
 
-            return rect.GetHeight() + m_gridControl.Padding.Vertical + borderSize + m_pCell.GetPadding().GetVertical();
+            return rect.Height + m_gridControl.Padding.Vertical + borderSize + m_pCell.GetPadding().Vertical;
         }
 
         public bool SetFocus()
@@ -122,13 +122,13 @@ namespace Ntreev.Windows.Forms.Grid
         {
             base.OnGridCoreAttached();
             this.GridCore.AttachObject(m_pCell);
-            GrFocuser pFocuser = this.GridCore.GetFocuser();
+            GrFocuser pFocuser = this.GridCore.Focuser;
             pFocuser.FocusChanged += focuser_FocusChanged;
         }
 
         protected override void OnGridCoreDetached()
         {
-            GrFocuser pFocuser = this.GridCore.GetFocuser();
+            GrFocuser pFocuser = this.GridCore.Focuser;
             pFocuser.FocusChanged += focuser_FocusChanged;
             this.GridCore.DetachObject(m_pCell);
             base.OnGridCoreDetached();
@@ -140,7 +140,7 @@ namespace Ntreev.Windows.Forms.Grid
             if (this.HasGridControl() == true)
             {
                 GrRect clientRect = m_pCell.GetClientRect();
-                m_gridControl.Location = clientRect.GetLocation() + m_pCell.GetLocation();
+                m_gridControl.Location = clientRect.Location + m_pCell.GetLocation();
             }
             //m_gridControl.Visible = true;
         }
@@ -151,7 +151,7 @@ namespace Ntreev.Windows.Forms.Grid
             if (this.HasGridControl() == true)
             {
                 GrRect clientRect = m_pCell.GetClientRect();
-                m_gridControl.Size = clientRect.GetSize();
+                m_gridControl.Size = clientRect.Size;
                 m_gridControl.Visible = this.GetDisplayable();
             }
         }
@@ -185,7 +185,7 @@ namespace Ntreev.Windows.Forms.Grid
                 GrGridCore pGridCore = m_gridControl.GridCore;
                 GrRect rect = pGridCore.GetVisibleBounds();
 
-                GrDataRowList pDataRowList = pGridCore.GetDataRowList();
+                GrDataRowList pDataRowList = pGridCore.DataRowList;
                 pDataRowList.VisibleHeightChanged += dataRowList_VisibleHeightChanged;
 
                 this.GridCore.DisplayRectChanged += gridCore_DisplayRectChanged;
@@ -213,7 +213,7 @@ namespace Ntreev.Windows.Forms.Grid
         private void gridCore_DisplayRectChanged(object pSender, EventArgs e)
         {
             GrRect clientRect = m_pCell.GetClientRect();
-            m_gridControl.Size = clientRect.GetSize();
+            m_gridControl.Size = clientRect.Size;
         }
 
         private bool HasGridControl()

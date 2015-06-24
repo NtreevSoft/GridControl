@@ -261,8 +261,8 @@ namespace Ntreev.Library.Grid
         public virtual GrSize GetPreferredSize()
         {
             GrSize size = this.GetTextBounds();
-            size.Width += this.GetPadding().GetHorizontal();
-            size.Height += this.GetPadding().GetVertical();
+            size.Width += this.GetPadding().Horizontal;
+            size.Height += this.GetPadding().Vertical;
             return size;
         }
 

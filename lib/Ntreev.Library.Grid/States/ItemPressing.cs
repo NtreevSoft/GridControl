@@ -240,17 +240,17 @@ namespace Ntreev.Library.Grid.States
             public FindSelection(GrGridCore pGridCore, GrPoint location)
             {
                 m_pGridCore = pGridCore;
-                m_pItemSelector = pGridCore.GetItemSelector();
-                m_pFocuser = pGridCore.GetFocuser();
+                m_pItemSelector = pGridCore.ItemSelector;
+                m_pFocuser = pGridCore.Focuser;
 
 
-                GrRange columnRange = m_pGridCore.GetColumnList().HitTest(location.X, m_pItemSelector.GetColumnAnchor());
-                GrRange rowRange = m_pGridCore.GetDataRowList().HitTest(location.Y, m_pItemSelector.GetRowAnchor());
+                GrRange columnRange = m_pGridCore.ColumnList.HitTest(location.X, m_pItemSelector.GetColumnAnchor());
+                GrRange rowRange = m_pGridCore.DataRowList.HitTest(location.Y, m_pItemSelector.GetRowAnchor());
 
-                m_columnBegin = columnRange.GetMinValue();
-                m_columnEnd = columnRange.GetMaxValue();
-                m_rowBegin = rowRange.GetMinValue();
-                m_rowEnd = rowRange.GetMaxValue();
+                m_columnBegin = columnRange.Minimum;
+                m_columnEnd = columnRange.Maximum;
+                m_rowBegin = rowRange.Minimum;
+                m_rowEnd = rowRange.Maximum;
 
                 GrColumn pFocusColumn = GetFocusColumn(m_columnBegin, m_columnEnd);
                 IDataRow pFocusRow = GetFocusRow(m_rowBegin, m_rowEnd);
@@ -266,7 +266,7 @@ namespace Ntreev.Library.Grid.States
 
             private IDataRow GetFocusRow(int begin, int end)
             {
-                GrDataRowList dataRowList = m_pGridCore.GetDataRowList();
+                GrDataRowList dataRowList = m_pGridCore.DataRowList;
                 IDataRow pAnchorRow = m_pItemSelector.GetRowAnchor();
                 if (pAnchorRow.GetVisibleIndex() == begin)
                     return dataRowList.GetVisibleRow(end - 1);
@@ -275,7 +275,7 @@ namespace Ntreev.Library.Grid.States
 
             private GrColumn GetFocusColumn(int begin, int end)
             {
-                GrColumnList columnList = m_pGridCore.GetColumnList();
+                GrColumnList columnList = m_pGridCore.ColumnList;
                 GrColumn pAnchorColumn = m_pItemSelector.GetColumnAnchor();
 
                 if (pAnchorColumn.GetVisibleIndex() == begin)

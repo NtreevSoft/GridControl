@@ -90,10 +90,10 @@ namespace Ntreev.Windows.Forms.Grid
             m_pGridCore.SetBackColor(this.BackColor);
             m_pGridPainter = m_pGridWindow.GetGridPainter();
 
-            m_pColumnList = m_pGridCore.GetColumnList();
-            m_pDataRowList = m_pGridCore.GetDataRowList();
+            m_pColumnList = m_pGridCore.ColumnList;
+            m_pDataRowList = m_pGridCore.DataRowList;
 
-            m_pGridCore.SetDisplayRect(this.DisplayRectangle);
+            m_pGridCore.DisplayRectangle = this.DisplayRectangle;
 
 #if _TIME_TEST
 		Rendering = true;
@@ -123,8 +123,8 @@ namespace Ntreev.Windows.Forms.Grid
 
             m_groupRows = new GroupRowCollection(this);
 
-            m_captionRow = new CaptionRow(this, m_pGridCore.GetCaptionRow());
-            m_groupPanel = new GroupPanel(this, m_pGridCore.GetGroupPanel());
+            m_captionRow = new CaptionRow(this, m_pGridCore.CaptionRow);
+            m_groupPanel = new GroupPanel(this, m_pGridCore.GroupPanel);
 
             m_rowBuilder = new RowBuilder();
 
@@ -276,14 +276,14 @@ namespace Ntreev.Windows.Forms.Grid
         }
 
         public CellBase GetAt(Point pt)
-            {
-		GrHitTest hitTest;
-		if(m_pGridCore.HitTest(pt, out hitTest) == false)
-			return null;
+        {
+            GrHitTest hitTest;
+            if (m_pGridCore.HitTest(pt, out hitTest) == false)
+                return null;
 
-		object e = hitTest.pHitted.ManagedRef;
-        return e as CellBase;
-	}
+            object e = hitTest.pHitted.ManagedRef;
+            return e as CellBase;
+        }
 
         public Cell GetCellAt(Point pt)
         {
@@ -948,12 +948,12 @@ namespace Ntreev.Windows.Forms.Grid
 
         public bool HScrollVisible
         {
-            get { return m_pGridCore.GetHorzScroll().GetVisible(); }
+            get { return m_pGridCore.GetHorzScroll().IsVisible; }
         }
 
         public bool VScrollVisible
         {
-            get { return m_pGridCore.GetVertScroll().GetVisible(); }
+            get { return m_pGridCore.GetVertScroll().IsVisible; }
         }
 
         [Browsable(false)]
@@ -1680,12 +1680,12 @@ namespace Ntreev.Windows.Forms.Grid
 
         internal GrItemSelector Selector
         {
-            get { return m_pGridCore.GetItemSelector(); }
+            get { return m_pGridCore.ItemSelector; }
         }
 
         internal GrFocuser Focuser
         {
-            get { return m_pGridCore.GetFocuser(); }
+            get { return m_pGridCore.Focuser; }
         }
 
         internal ErrorDescriptor ErrorDescriptor
@@ -2185,28 +2185,28 @@ namespace Ntreev.Windows.Forms.Grid
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
-{
+        {
 
-		if(this.BackgroundImage != null)
-		{
-			try
-			{
-				m_paintBackground = true;
-				base.OnPaintBackground(e);
-			}
-			finally
-			{
-				m_paintBackground = false;
-			}
-		}
-		else
-		{
-            SolidBrush br = new SolidBrush(m_backgroundColor);
-            SolidBrush br2 = new SolidBrush(m_paddingColor);
-            e.Graphics.FillRectangle(br2, e.ClipRectangle);
-            e.Graphics.FillRectangle(br, this.DisplayRectangle);
-		}
-	}
+            if (this.BackgroundImage != null)
+            {
+                try
+                {
+                    m_paintBackground = true;
+                    base.OnPaintBackground(e);
+                }
+                finally
+                {
+                    m_paintBackground = false;
+                }
+            }
+            else
+            {
+                SolidBrush br = new SolidBrush(m_backgroundColor);
+                SolidBrush br2 = new SolidBrush(m_paddingColor);
+                e.Graphics.FillRectangle(br2, e.ClipRectangle);
+                e.Graphics.FillRectangle(br, this.DisplayRectangle);
+            }
+        }
 
         protected override void OnMouseLeave(EventArgs e)
         {
@@ -2269,40 +2269,40 @@ namespace Ntreev.Windows.Forms.Grid
         }
 
         protected override void OnPreviewKeyDown(PreviewKeyDownEventArgs e)
-{
+        {
 
-		base.OnPreviewKeyDown(e);
+            base.OnPreviewKeyDown(e);
 
-		switch(e.KeyCode)
-		{
-		case Keys.ProcessKey:
-			{
-				if(e.Control == true || e.Alt == true)
-					break;
+            switch (e.KeyCode)
+            {
+                case Keys.ProcessKey:
+                    {
+                        if (e.Control == true || e.Alt == true)
+                            break;
 
-				Column column = this.FocusedColumn;
+                        Column column = this.FocusedColumn;
 
-				if(column == null)
-				{
-					GridControl parent = this.Parent as GridControl;
-					if(parent != null && parent.FocusedCell != null)
-					{
-						parent.OnPreviewKeyDown(e);
-					}
-				}
-				else
-				{
-					System.Char imeChar = Natives.NativeMethods.ImmGetVirtualKey(Handle);
-					EditingReason er = new EditingReason(e.KeyValue);
-					if(System.Char.IsLetter(imeChar) && column.CanEditInternal(m_focusedCell, er))
-					{
-						this.EditCell(m_focusedCell, er);
-					}
-				}
-			}
-			break;
-		}
-	}
+                        if (column == null)
+                        {
+                            GridControl parent = this.Parent as GridControl;
+                            if (parent != null && parent.FocusedCell != null)
+                            {
+                                parent.OnPreviewKeyDown(e);
+                            }
+                        }
+                        else
+                        {
+                            System.Char imeChar = Natives.NativeMethods.ImmGetVirtualKey(Handle);
+                            EditingReason er = new EditingReason(e.KeyValue);
+                            if (System.Char.IsLetter(imeChar) && column.CanEditInternal(m_focusedCell, er))
+                            {
+                                this.EditCell(m_focusedCell, er);
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -2528,92 +2528,92 @@ namespace Ntreev.Windows.Forms.Grid
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-{
-		switch(keyData)
-		{
-		case Keys.Enter:
-			{
-				if(m_focusedCell != null && m_focusedCell.Row != this.InsertionRow)
-				{
-                    this.EditCell(m_focusedCell, new EditingReason(keyData));
-					return true;
-				}
-			}
-			break;
-		case (Keys.Down | Keys.Alt):
-			{
-				if(m_focusedCell != null && m_focusedCell.Column.GetEditStyle() == Design.EditStyle.DropDown)
-				{
-					this.EditCell(m_focusedCell, new EditingReason(keyData));
-					return true;
-				}
-			}
-			break;
-		case Keys.F2:
-			{
-				if(m_focusedCell != null)
-				{
-                    this.EditCell(m_focusedCell, new EditingReason(keyData));
-					return true;
-				}
-			}
-			break;
-		case Keys.F12:
-			{
-				if(this.InsertionRow.IsVisible == true)
-				{
-					this.InsertionRow.Select(SelectionType.Normal);
-					this.InsertionRow.Focus();
-					this.InsertionRow.BringIntoView();
-					return true;
-				}
-			}
-			break;
-		case Keys.Escape:
-			{
-				if(m_focusedCell == null)
-					break;
+        {
+            switch (keyData)
+            {
+                case Keys.Enter:
+                    {
+                        if (m_focusedCell != null && m_focusedCell.Row != this.InsertionRow)
+                        {
+                            this.EditCell(m_focusedCell, new EditingReason(keyData));
+                            return true;
+                        }
+                    }
+                    break;
+                case (Keys.Down | Keys.Alt):
+                    {
+                        if (m_focusedCell != null && m_focusedCell.Column.GetEditStyle() == Design.EditStyle.DropDown)
+                        {
+                            this.EditCell(m_focusedCell, new EditingReason(keyData));
+                            return true;
+                        }
+                    }
+                    break;
+                case Keys.F2:
+                    {
+                        if (m_focusedCell != null)
+                        {
+                            this.EditCell(m_focusedCell, new EditingReason(keyData));
+                            return true;
+                        }
+                    }
+                    break;
+                case Keys.F12:
+                    {
+                        if (this.InsertionRow.IsVisible == true)
+                        {
+                            this.InsertionRow.Select(SelectionType.Normal);
+                            this.InsertionRow.Focus();
+                            this.InsertionRow.BringIntoView();
+                            return true;
+                        }
+                    }
+                    break;
+                case Keys.Escape:
+                    {
+                        if (m_focusedCell == null)
+                            break;
 
-				if(m_focusedCell.IsEdited == true)
-				{
-					m_focusedCell.CancelEdit();
-					if(m_pGridCore.IsGrouped() == true)
-						m_pGridCore.GetDataRowList().Update(true);
-				}
-				else if(m_focusedCell.Row.IsEdited == true)
-				{
-					m_focusedCell.Row.CancelEdit();
-					if(m_pGridCore.IsGrouped() == true)
-						m_pGridCore.GetDataRowList().Update(true);
-				}
-				else
-				{
-					return false;
-				}
+                        if (m_focusedCell.IsEdited == true)
+                        {
+                            m_focusedCell.CancelEdit();
+                            if (m_pGridCore.IsGrouped() == true)
+                                m_pGridCore.DataRowList.Update(true);
+                        }
+                        else if (m_focusedCell.Row.IsEdited == true)
+                        {
+                            m_focusedCell.Row.CancelEdit();
+                            if (m_pGridCore.IsGrouped() == true)
+                                m_pGridCore.DataRowList.Update(true);
+                        }
+                        else
+                        {
+                            return false;
+                        }
 
-				this.Invalidate(false);
-				return true;
-			}
-			break;
-		default:
-			{
-				Column column = this.FocusedColumn;
+                        this.Invalidate(false);
+                        return true;
+                    }
+                    break;
+                default:
+                    {
+                        Column column = this.FocusedColumn;
 
-				if(column != null)
-				{
-					EditingReason er = new EditingReason(keyData);
-					if(column.CanEditInternal(m_focusedCell, er) == true)
-					{
-						this.EditCell(m_focusedCell, er);
-						return true;
-					}
-				}
-			}
-			break;
-		}
+                        if (column != null)
+                        {
+                            EditingReason er = new EditingReason(keyData);
+                            if (column.CanEditInternal(m_focusedCell, er) == true)
+                            {
+                                this.EditCell(m_focusedCell, er);
+                                return true;
+                            }
+                        }
+                    }
+                    break;
+            }
 
-		return base.ProcessCmdKey(ref msg, keyData);
-	}
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
 
         protected override bool ProcessDialogKey(Keys keyData)
         {
@@ -2674,20 +2674,20 @@ namespace Ntreev.Windows.Forms.Grid
         }
 
         protected override bool ProcessDialogChar(char charCode)
-{
-		if(m_focusedCell != null && ((Control.ModifierKeys & (Keys.Control | Keys.Alt)) == Keys.None))
-		{
-			Column column = m_focusedCell.Column;
-			EditingReason reason = new EditingReason(charCode);
-			if(column.CanEditInternal(m_focusedCell, reason) == true)
-			{
-				this.EditCell(m_focusedCell, reason);
-				return true;
-			}
-		}
+        {
+            if (m_focusedCell != null && ((Control.ModifierKeys & (Keys.Control | Keys.Alt)) == Keys.None))
+            {
+                Column column = m_focusedCell.Column;
+                EditingReason reason = new EditingReason(charCode);
+                if (column.CanEditInternal(m_focusedCell, reason) == true)
+                {
+                    this.EditCell(m_focusedCell, reason);
+                    return true;
+                }
+            }
 
-		return base.ProcessDialogChar(charCode);
-	}
+            return base.ProcessDialogChar(charCode);
+        }
 
         protected override bool ProcessTabKey(bool forward)
         {
@@ -2831,48 +2831,48 @@ namespace Ntreev.Windows.Forms.Grid
         }
 
         private void PaintColumnControls(Graphics graphics, Rectangle clipRectangle)
-{
-		GrDataRow pInsertionRow = m_pDataRowList.GetInsertionRow();
+        {
+            GrDataRow pInsertionRow = m_pDataRowList.GetInsertionRow();
 
-		GrItem pMouseOvered = null;
+            GrItem pMouseOvered = null;
 
-		for(int i=0;i<m_pColumnList.GetDisplayableColumnCount() ; i++)
-		{
-            GrColumn pColumn = m_pColumnList.GetDisplayableColumn(i);
-			if(pColumn.IntersectsHorzWith(clipRectangle) == false)
-				continue;
+            for (int i = 0; i < m_pColumnList.GetDisplayableColumnCount(); i++)
+            {
+                GrColumn pColumn = m_pColumnList.GetDisplayableColumn(i);
+                if (pColumn.IntersectsHorzWith(clipRectangle) == false)
+                    continue;
 
-			Column column = m_columnList[pColumn];
-			ViewType viewType = column.ViewType;
-			if(viewType == ViewType.Text)
-				continue;
+                Column column = m_columnList[pColumn];
+                ViewType viewType = column.ViewType;
+                if (viewType == ViewType.Text)
+                    continue;
 
-			//unsigned int drows = m_pDataRowList.GetDisplayableRowCount();
-			for(int j=0 ; j<m_pDataRowList.GetDisplayableRowCount() + 1 ; j++)
-			{
-				GrDataRow pDataRow = null;
-				if(j==0)
-					pDataRow = pInsertionRow.GetVisible() == true ? pInsertionRow : null;
-				else
-                    pDataRow = m_pDataRowList.GetDisplayableRow(j - 1) as GrDataRow;
+                //unsigned int drows = m_pDataRowList.GetDisplayableRowCount();
+                for (int j = 0; j < m_pDataRowList.GetDisplayableRowCount() + 1; j++)
+                {
+                    GrDataRow pDataRow = null;
+                    if (j == 0)
+                        pDataRow = pInsertionRow.GetVisible() == true ? pInsertionRow : null;
+                    else
+                        pDataRow = m_pDataRowList.GetDisplayableRow(j - 1) as GrDataRow;
 
-				if(pDataRow == null)
-					continue;
+                    if (pDataRow == null)
+                        continue;
 
-				if(pDataRow.IntersectsVertWith(clipRectangle) == false)
-					continue;
+                    if (pDataRow.IntersectsVertWith(clipRectangle) == false)
+                        continue;
 
-				GrItem pItem = pDataRow.GetItem(pColumn);
-				if(pItem.GetMouseOvered() == true)
-					pMouseOvered = pItem;
-				else
-					this.PaintCell(graphics, clipRectangle, pItem);
-			}
-		}
+                    GrItem pItem = pDataRow.GetItem(pColumn);
+                    if (pItem.GetMouseOvered() == true)
+                        pMouseOvered = pItem;
+                    else
+                        this.PaintCell(graphics, clipRectangle, pItem);
+                }
+            }
 
-		if(pMouseOvered != null)
-			this.PaintCell(graphics, clipRectangle, pMouseOvered);
-	}
+            if (pMouseOvered != null)
+                this.PaintCell(graphics, clipRectangle, pMouseOvered);
+        }
 
         private void PaintCell(Graphics graphics, Rectangle clipRectangle, GrItem pItem)
         {

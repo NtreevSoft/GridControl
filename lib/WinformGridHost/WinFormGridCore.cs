@@ -15,39 +15,39 @@ namespace Ntreev.Windows.Forms.Grid
 
         public WinFormGridCore(GridControl gridControl, GrGridWindow pGridWindow)
             : base(pGridWindow)
-            {
-                m_gridControl = gridControl;
+        {
+            m_gridControl = gridControl;
 
-                GrGridCore pGridCore = this;
-		pGridCore.DisplayRectChanged+=gridCore_DisplayRectChanged;
+            GrGridCore pGridCore = this;
+            pGridCore.DisplayRectChanged += gridCore_DisplayRectChanged;
 
-        GrColumnList pColumnList = GetColumnList();
-        pColumnList.ColumnMouseDown+=columnList_ColumnMouseDown;
-        pColumnList.ColumnMouseEnter+=columnList_ColumnMouseEnter;
-        pColumnList.ColumnMouseLeave+=columnList_ColumnMouseLeave;
-        pColumnList.ColumnMouseMove+=columnList_ColumnMouseMove;
-        pColumnList.ColumnMouseUp+=columnList_ColumnMouseUp;
-        pColumnList.ColumnWidthChanged+=columnList_ColumnWidthChanged;
-        pColumnList.ColumnFrozenChanged+=columnList_ColumnFrozenChanged;
-		pColumnList.ColumnVisibleIndexChanged+=columnList_ColumnVisibleIndexChanged;
+            GrColumnList pColumnList = ColumnList;
+            pColumnList.ColumnMouseDown += columnList_ColumnMouseDown;
+            pColumnList.ColumnMouseEnter += columnList_ColumnMouseEnter;
+            pColumnList.ColumnMouseLeave += columnList_ColumnMouseLeave;
+            pColumnList.ColumnMouseMove += columnList_ColumnMouseMove;
+            pColumnList.ColumnMouseUp += columnList_ColumnMouseUp;
+            pColumnList.ColumnWidthChanged += columnList_ColumnWidthChanged;
+            pColumnList.ColumnFrozenChanged += columnList_ColumnFrozenChanged;
+            pColumnList.ColumnVisibleIndexChanged += columnList_ColumnVisibleIndexChanged;
 
-        GrFocuser pFocuser = GetFocuser();
-        pFocuser.FocusChanging+=focuser_FocusChanging;
-        pFocuser.FocusChanged+=focuser_FocusChanged;
+            GrFocuser pFocuser = Focuser;
+            pFocuser.FocusChanging += focuser_FocusChanging;
+            pFocuser.FocusChanged += focuser_FocusChanged;
 
-        GrItemSelector pItemSelector = GetItemSelector();
-        pItemSelector.SelectedRowsChanged+=itemSelector_SelectedRowsChanged;
-        pItemSelector.SelectedColumnsChanged+=itemSelector_SelectedColumnsChanged;
-        pItemSelector.SelectionChanged+=itemSelector_SelectionChanged;
+            GrItemSelector pItemSelector = ItemSelector;
+            pItemSelector.SelectedRowsChanged += itemSelector_SelectedRowsChanged;
+            pItemSelector.SelectedColumnsChanged += itemSelector_SelectedColumnsChanged;
+            pItemSelector.SelectionChanged += itemSelector_SelectionChanged;
 
-        GrCaption pCaption = GetCaptionRow();
-        pCaption.HeightChanged+=caption_HeightChanged;
+            GrCaption pCaption = this.CaptionRow;
+            pCaption.HeightChanged += caption_HeightChanged;
 
-		GrDataRowList pDataRowList = GetDataRowList();
-		pDataRowList.DataRowMoved+=dataRowList_DataRowMoved;
-		pDataRowList.DataRowMoving+=dataRowList_DataRowMoving;
-		pDataRowList.VisibleHeightChanged+=dataRowList_VisibleHeightChanged;
-            }
+            GrDataRowList pDataRowList = DataRowList;
+            pDataRowList.DataRowMoved += dataRowList_DataRowMoved;
+            pDataRowList.DataRowMoving += dataRowList_DataRowMoving;
+            pDataRowList.VisibleHeightChanged += dataRowList_VisibleHeightChanged;
+        }
 
         protected override void OnItemMouseEnter(GrItemMouseEventArgs e)
         {
@@ -232,7 +232,7 @@ namespace Ntreev.Windows.Forms.Grid
             service.OnComponentChanging(m_gridControl, propertyDescriptor);
             service.OnComponentChanged(m_gridControl, propertyDescriptor, null, null);
         }
-        
+
         private void dataRowList_DataRowMoved(object pSender, GrDataRowEventArgs e)
         {
             Row row = FromNative.Get(e.GetDataRow());

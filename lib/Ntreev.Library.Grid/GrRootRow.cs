@@ -76,7 +76,7 @@ namespace Ntreev.Library.Grid
             if (m_heightChanged == true || force == true)
                 RepositionVisibleList();
 
-            m_width = m_columnList.GetBounds().GetWidth();
+            m_width = m_columnList.GetBounds().Width;
 
             m_heightChanged = false;
             m_visibleChanged = false;
@@ -97,8 +97,8 @@ namespace Ntreev.Library.Grid
     }
     m_height = y - GetY();
 
-    m_bound.SetLocation(displayRect.GetLocation());
-            m_bound = GrRect.FromLTRB(displayRect.Left, displayRect.Top, m_bound.Right, m_bound.Bottom);
+    m_bound.Location = displayRect.Location;
+    m_bound = GrRect.FromLTRB(displayRect.Left, displayRect.Top, m_bound.Right, m_bound.Bottom);
     //m_bound.Right = displayRect.left;
     //m_bound.Bottom = displayRect.top;
 
@@ -133,12 +133,12 @@ namespace Ntreev.Library.Grid
 
         public override int GetX()
         {
-            return this.GridCore.GetDisplayRect().Left;
+            return this.GridCore.DisplayRectangle.Left;
         }
 
         public override int GetY()
         {
-            return this.GridCore.GetDisplayRect().Top;
+            return this.GridCore.DisplayRectangle.Top;
         }
 
         public override int GetWidth() { return m_width; }
@@ -231,11 +231,11 @@ namespace Ntreev.Library.Grid
             m_vecUpdatables.Sort((x, y) => x.GetUpdatePriority().CompareTo(y.GetUpdatePriority()));
             //std::sort(m_vecUpdatables.begin(), m_vecUpdatables.end(), SortUpdatable());
 
-            m_columnList = this.GridCore.GetColumnList();
-            m_pDataRowList = this.GridCore.GetDataRowList();
-            m_pInsertionRow = this.GridCore.GetInsertionRow();
+            m_columnList = this.GridCore.ColumnList;
+            m_pDataRowList = this.GridCore.DataRowList;
+            m_pInsertionRow = this.GridCore.InsertionRow;
 
-            this.GridCore.GetDataRowList().DataRowInserted += dataRowList_DataRowInserted;
+            this.GridCore.DataRowList.DataRowInserted += dataRowList_DataRowInserted;
         }
 
         private void gridCore_DisplayRectChanged(object sender, EventArgs e)
@@ -255,7 +255,7 @@ namespace Ntreev.Library.Grid
                 GrRow pChild = GetChild(i);
                 if (pChild == m_pInsertionRow)
                 {
-                    m_pInsertionRow = this.GridCore.GetInsertionRow();
+                    m_pInsertionRow = this.GridCore.InsertionRow;
                     childs.Add(m_pInsertionRow);
                 }
                 else

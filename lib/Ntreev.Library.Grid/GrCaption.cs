@@ -7,57 +7,57 @@ namespace Ntreev.Library.Grid
 {
     public class GrCaption : GrUpdatableRow
     {
-        private GrHorzAlign m_horzAlign;
-        private GrVertAlign m_vertAlign;
+        private GrHorzAlign horzAlign;
+        private GrVertAlign vertAlign;
 
-        private bool m_visible1;
+        private bool visible1;
 
         public GrCaption()
         {
-            m_horzAlign = GrHorzAlign.Left;
-            m_vertAlign = GrVertAlign.Center;
+            this.horzAlign = GrHorzAlign.Left;
+            this.vertAlign = GrVertAlign.Center;
 
-            m_visible1 = true;
+            this.visible1 = true;
         }
 
         public override GrHorzAlign GetTextHorzAlign()
         {
-            return m_horzAlign;
+            return this.horzAlign;
         }
 
         public override GrVertAlign GetTextVertAlign()
         {
-            return m_vertAlign;
+            return this.vertAlign;
         }
 
         public void SetTextHorzAlign(GrHorzAlign align)
         {
-            if (m_horzAlign == align)
+            if (this.horzAlign == align)
                 return;
-            m_horzAlign = align;
-            SetTextAlignChanged();
+            this.horzAlign = align;
+            this.SetTextAlignChanged();
         }
 
         public void SetTextVertAlign(GrVertAlign align)
         {
-            if (m_vertAlign == align)
+            if (this.vertAlign == align)
                 return;
-            m_vertAlign = align;
-            SetTextAlignChanged();
+            this.vertAlign = align;
+            this.SetTextAlignChanged();
         }
 
         public override GrRowType GetRowType() { return GrRowType.Caption; }
 
         public override int GetWidth()
         {
-            return this.GridCore.GetBounds().GetWidth();
+            return this.GridCore.GetBounds().Width;
         }
 
         public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
-            GrRect paintRect = GetRect();
-            GrRect displayRect = this.GridCore.GetDisplayRect();
-            GrColumnList columnList = this.GridCore.GetColumnList();
+            GrRect paintRect = this.GetRect();
+            GrRect displayRect = this.GridCore.DisplayRectangle;
+            GrColumnList columnList = this.GridCore.ColumnList;
             if (this.GridCore.GetFillBlank() == true && columnList.GetDisplayableRight() < displayRect.Right)
             {
                 paintRect.Width = displayRect.Right - paintRect.Left;
@@ -67,29 +67,29 @@ namespace Ntreev.Library.Grid
                 return;
 
             GrPaintStyle paintStyle = ToPaintStyle() & ~GrPaintStyle.RightLine;
-            GrColor foreColor = GetPaintingForeColor();
-            GrColor backColor = GetPaintingBackColor();
+            GrColor foreColor = this.GetPaintingForeColor();
+            GrColor backColor = this.GetPaintingBackColor();
 
-            painter.DrawItem(paintStyle, paintRect, GetPaintingLineColor(), backColor, null);
+            painter.DrawItem(paintStyle, paintRect, this.GetPaintingLineColor(), backColor, null);
 
-            DrawText(painter, foreColor, paintRect, paintRect);
+            this.DrawText(painter, foreColor, paintRect, paintRect);
         }
 
         public override bool GetVisible()
         {
-            return m_visible1;
+            return this.visible1;
         }
 
         public void SetVisible(bool b)
         {
-            if (m_visible1 == b)
+            if (this.visible1 == b)
                 return;
 
-            m_visible1 = b;
+            this.visible1 = b;
 
             if (this.GridCore == null)
                 return;
-            this.GridCore.GetRootRow().SetVisibleChanged();
+            this.GridCore.RootRow.SetVisibleChanged();
             this.GridCore.Invalidate();
         }
 
@@ -161,9 +161,9 @@ namespace Ntreev.Library.Grid
         protected override void OnHeightChanged()
         {
             base.OnHeightChanged();
-            OnHeightChanged(EventArgs.Empty);
+            this.OnHeightChanged(EventArgs.Empty);
         }
-        
+
         private void gridCore_FontChanged(object sender, EventArgs e)
         {
             GrTextUpdater pTextUpdater = this.GridCore.GetTextUpdater();

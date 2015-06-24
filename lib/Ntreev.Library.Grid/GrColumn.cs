@@ -57,7 +57,7 @@ namespace Ntreev.Library.Grid
         GrGroup m_pGroup;
 
         GrSort m_sortType;
-        FuncSortRow[] m_comparer;
+        GrFuncSortRow[] m_comparer;
 
         string m_tooltip;
 
@@ -108,7 +108,7 @@ namespace Ntreev.Library.Grid
             m_itemTextVisible = true;
             m_itemIcon = false;
 
-            m_comparer = new FuncSortRow[Enum.GetNames(typeof(GrSort)).Length];
+            m_comparer = new GrFuncSortRow[Enum.GetNames(typeof(GrSort)).Length];
             //m_comparer[GrSort_None] = 0;
             //m_comparer[GrSort_Up] = 0;
             //m_comparer[GrSort_Down] = 0;
@@ -230,7 +230,7 @@ namespace Ntreev.Library.Grid
         {
             if (m_frozen == false)
                 throw new Exception();
-            return m_visibleIndexCore - this.GridCore.GetColumnList().GetFrozenColumnCount();
+            return m_visibleIndexCore - this.GridCore.ColumnList.GetFrozenColumnCount();
         }
 
         public int GetIndex()
@@ -423,7 +423,7 @@ namespace Ntreev.Library.Grid
             {
                 if (b == false)
                 {
-                    GrFocuser focuser = this.GridCore.GetFocuser();
+                    GrFocuser focuser = this.GridCore.Focuser;
                     if (focuser.GetFocusedColumn() == this)
                         focuser.Set(null as IFocusable);
                     if (GetSelected() == true)
@@ -476,7 +476,7 @@ namespace Ntreev.Library.Grid
             if (GetSelected() == b)
                 return;
 
-            GrItemSelector pItemSelector = this.GridCore.GetItemSelector();
+            GrItemSelector pItemSelector = this.GridCore.ItemSelector;
             if (b == true)
                 pItemSelector.SelectColumn(this, GrSelectionType.Add);
             else
@@ -492,7 +492,7 @@ namespace Ntreev.Library.Grid
         {
             if (this.GridCore == null)
                 return false;
-            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
+            GrDataRowList dataRowList = this.GridCore.DataRowList;
             if (dataRowList.GetInsertionRow().GetSelected() == true)
                 return false;
             int visibles = (int)dataRowList.GetVisibleDataRowCount();
@@ -505,13 +505,13 @@ namespace Ntreev.Library.Grid
         {
             if (this.GridCore == null)
                 return false;
-            GrItemSelectorInternal pItemSelector = this.GridCore.GetItemSelector() as GrItemSelectorInternal;
+            GrItemSelectorInternal pItemSelector = this.GridCore.ItemSelector as GrItemSelectorInternal;
             return pItemSelector.IsSelecting(this);
         }
 
         public bool HasFocused()
         {
-            GrFocuser focuser = this.GridCore.GetFocuser();
+            GrFocuser focuser = this.GridCore.Focuser;
             if (focuser.GetFocusedColumn() == this)
                 return true;
             return false;
@@ -521,7 +521,7 @@ namespace Ntreev.Library.Grid
         {
             if (this.HasFocused() == true)
                 return;
-            this.GridCore.GetFocuser().Reset();
+            this.GridCore.Focuser.Reset();
         }
 
         public void AdjustWidth()
@@ -529,7 +529,7 @@ namespace Ntreev.Library.Grid
             if (m_fitting == false)
                 return;
 
-            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
+            GrDataRowList dataRowList = this.GridCore.DataRowList;
 
             int width = m_minWidth;
 
@@ -549,7 +549,7 @@ namespace Ntreev.Library.Grid
 
             // insertion Row
             {
-                GrDataRow pDataRow = this.GridCore.GetInsertionRow();
+                GrDataRow pDataRow = this.GridCore.InsertionRow;
                 GrItem pItem = pDataRow.GetItem(this);
                 int itemWidth = pItem.GetPreferredSize().Width;
                 width = Math.Max(width, itemWidth);
@@ -692,12 +692,12 @@ namespace Ntreev.Library.Grid
             return m_sortType;
         }
 
-        public void SetSortComparer(GrSort sortType, FuncSortRow comparer)
+        public void SetSortComparer(GrSort sortType, GrFuncSortRow comparer)
         {
             m_comparer[(int)sortType] = comparer;
         }
 
-        public FuncSortRow GetSortComparer(GrSort sortType)
+        public GrFuncSortRow GetSortComparer(GrSort sortType)
         {
             return m_comparer[(int)sortType];
         }
@@ -895,7 +895,7 @@ namespace Ntreev.Library.Grid
         protected override void OnGridCoreAttached()
         {
             base.OnGridCoreAttached();
-            m_columnList = this.GridCore.GetColumnList();
+            m_columnList = this.GridCore.ColumnList;
             this.GridCore.AttachObject(m_pGroup);
         }
 
@@ -947,9 +947,9 @@ namespace Ntreev.Library.Grid
 
         public bool m_customItemPaint;
 
-        public FuncColumnPaint m_fnColumnBackgroundPaint;
+        public GrFuncColumnPaint m_fnColumnBackgroundPaint;
 
-        public FuncColumnPaint m_fnColumnContentsPaint;
+        public GrFuncColumnPaint m_fnColumnContentsPaint;
 
         public object m_columnPaintData;
 

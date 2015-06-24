@@ -29,7 +29,7 @@ namespace Ntreev.Windows.Forms.Grid
 
         public override int GetWidth()
         {
-            GrRect displayRect = this.GridCore.GetDisplayRect();
+            GrRect displayRect = this.GridCore.DisplayRectangle;
             return displayRect.Right - GetX();
         }
 
@@ -67,7 +67,7 @@ namespace Ntreev.Windows.Forms.Grid
         public override GrColor GetPaintingBackColor()
         {
             GrColor color = base.GetPaintingBackColor();
-            GrFocuser pFocuser = this.GridCore.GetFocuser();
+            GrFocuser pFocuser = this.GridCore.Focuser;
             if (pFocuser.Get() == this)
             {
                 color = GrColor.ModifyBrightness(color, 0.95f);

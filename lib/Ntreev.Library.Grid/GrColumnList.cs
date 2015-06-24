@@ -146,13 +146,13 @@ namespace Ntreev.Library.Grid
             base.OnGridCoreAttached();
             this.GridCore.AttachObject(m_columnSplitter);
 
-            GrGroupPanel groupList = this.GridCore.GetGroupPanel();
+            GrGroupPanel groupList = this.GridCore.GroupPanel;
             groupList.Changed += groupPanel_Changed;
 
-            GrFocuser focuser = this.GridCore.GetFocuser();
+            GrFocuser focuser = this.GridCore.Focuser;
             focuser.FocusChanged += gridCore_FocusChanged;
 
-            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
+            GrDataRowList dataRowList = this.GridCore.DataRowList;
             dataRowList.DataRowRemoved += dataRowList_DataRowRemoved;
 
             this.GridCore.Cleared += gridCore_Cleared;
@@ -179,7 +179,7 @@ namespace Ntreev.Library.Grid
         {
             if (this.GridCore.GetRowVisible() == false)
                 return 0;
-            return this.GridCore.GetDataRowList().GetRowWidth();
+            return this.GridCore.DataRowList.GetRowWidth();
         }
 
         public override bool ShouldUpdate()
@@ -208,9 +208,9 @@ namespace Ntreev.Library.Grid
             bool visible = false;
             if (GetUnfrozenColumnCount() != 0)
             {
-                visible = m_visibleRight > this.GridCore.GetDisplayRect().Right ? true : false;
+                visible = m_visibleRight > this.GridCore.DisplayRectangle.Right ? true : false;
             }
-            this.GridCore.GetHorzScroll().SetVisible(visible);
+            this.GridCore.GetHorzScroll().IsVisible = visible;
         }
 
         public override GrRect GetBounds()
@@ -350,7 +350,7 @@ namespace Ntreev.Library.Grid
             int visibleIndex = column.GetUnfrozenIndex();
 
             int newValue;
-            if (visibleIndex < pHorzScroll.GetValue())
+            if (visibleIndex < pHorzScroll.Value)
             {
                 newValue = visibleIndex;
             }
@@ -359,7 +359,7 @@ namespace Ntreev.Library.Grid
                 newValue = ClipTo(visibleIndex);
             }
 
-            pHorzScroll.SetValue((int)newValue);
+            pHorzScroll.Value = newValue;
             this.GridCore.Invalidate();
             this.GridCore.Update();
         }
@@ -367,7 +367,7 @@ namespace Ntreev.Library.Grid
         public void DisplayFirst(GrColumn column)
         {
             GrScroll pHorzScroll = this.GridCore.GetHorzScroll();
-            pHorzScroll.SetValue(column.GetUnfrozenIndex());
+            pHorzScroll.Value = column.GetUnfrozenIndex();
             this.GridCore.Invalidate();
             this.GridCore.Update();
         }
@@ -403,14 +403,14 @@ namespace Ntreev.Library.Grid
 
         public override bool ShouldClip(GrRect displayRect, int horizontal, int vertical)
         {
-            if (m_clippedIndex == horizontal && displayRect.GetWidth() == m_clippedWidth)
+            if (m_clippedIndex == horizontal && displayRect.Width == m_clippedWidth)
                 return false;
             return true;
         }
 
         public override void Clip(GrRect displayRect, int horizontal, int vertical)
         {
-            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
+            GrDataRowList dataRowList = this.GridCore.DataRowList;
             int x = dataRowList.CellStart();
 
             foreach (var value in m_vecDisplayableColumns)
@@ -480,17 +480,17 @@ namespace Ntreev.Library.Grid
 
             m_displayableRight = x;
 
-            if (m_clippedWidth != displayRect.GetWidth() || m_clippedIndex != horizontal)
+            if (m_clippedWidth != displayRect.Width || m_clippedIndex != horizontal)
                 UpdateHorzScroll(displayRect);
 
             m_clippedIndex = horizontal;
-            m_clippedWidth = displayRect.GetWidth();
+            m_clippedWidth = displayRect.Width;
         }
 
         public void UpdateHorzScroll(GrRect displayRect)
         {
             GrScroll pHorzScroll = this.GridCore.GetHorzScroll();
-            if (pHorzScroll.GetVisible() == false)
+            if (pHorzScroll.IsVisible == false)
                 return;
 
             int visibleWidth = m_visibleRight - m_unfrozenX;
@@ -519,19 +519,19 @@ namespace Ntreev.Library.Grid
             int largeChange = (int)((float)unfrozenCount * (float)displayableWidth / (float)visibleWidth);
             largeChange = Math.Max(1, largeChange);
 
-            pHorzScroll.SetMinimum(0);
-            pHorzScroll.SetMaximum((int)(unfrozenCount - countPerPage + largeChange - 1));
-            pHorzScroll.SetLargeChange(largeChange);
+            pHorzScroll.Minimum = 0;
+            pHorzScroll.Maximum = (int)(unfrozenCount - countPerPage + largeChange - 1);
+            pHorzScroll.LargeChange = largeChange;
         }
 
         public int ClipFrom(int visibleFrom)
         {
-            return ClipFrom(this.GridCore.GetDisplayRect(), visibleFrom);
+            return ClipFrom(this.GridCore.DisplayRectangle, visibleFrom);
         }
 
         public int ClipFrom(GrRect displayRect, int visibleFrom)
         {
-            int displayWidth = displayRect.GetWidth() - m_unfrozenX;
+            int displayWidth = displayRect.Width - m_unfrozenX;
             int displayX = displayWidth;
             int visibleTo = visibleFrom;
 
@@ -548,12 +548,12 @@ namespace Ntreev.Library.Grid
 
         public int ClipTo(int visibleTo)
         {
-            return ClipTo(this.GridCore.GetDisplayRect(), visibleTo);
+            return ClipTo(this.GridCore.DisplayRectangle, visibleTo);
         }
 
         public int ClipTo(GrRect displayRect, int visibleTo)
         {
-            int displayWidth = displayRect.GetWidth() - m_unfrozenX;
+            int displayWidth = displayRect.Width - m_unfrozenX;
             int displayX = displayWidth;
             int visibleFrom = visibleTo;
 
@@ -649,7 +649,7 @@ namespace Ntreev.Library.Grid
 
         void groupPanel_Changed(object sender, EventArgs e)
         {
-            GrGroupPanel groupList = this.GridCore.GetGroupPanel();
+            GrGroupPanel groupList = this.GridCore.GroupPanel;
             m_groupCount = groupList.GetGroupCount();
             m_widthChanged = true;
             m_clippedIndex = -1;
@@ -698,7 +698,7 @@ namespace Ntreev.Library.Grid
         void gridCore_FontChanged(object sender, EventArgs e)
         {
             GrFont pFont = GetPaintingFont();
-            int height = (int)(pFont.GetHeight() + pFont.GetExternalLeading()) + GetPadding().GetVertical();
+            int height = (int)(pFont.GetHeight() + pFont.GetExternalLeading()) + GetPadding().Vertical;
             SetHeight(height);
             foreach (var value in m_vecColumns)
             {
@@ -772,7 +772,7 @@ namespace Ntreev.Library.Grid
 
         public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
-            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
+            GrDataRowList dataRowList = this.GridCore.DataRowList;
             GrRect paintRect = GetRect();
             GrPaintStyle paintStyle = ToPaintStyle();
             GrColor lineColor = GetPaintingLineColor();
@@ -801,7 +801,7 @@ namespace Ntreev.Library.Grid
 
             PaintSplitter(painter, clipRect);
 
-            GrRect displayRect = this.GridCore.GetDisplayRect();
+            GrRect displayRect = this.GridCore.DisplayRectangle;
             if (this.GridCore.GetFillBlank() == true && m_displayableRight < displayRect.Right)
             {
                 GrRect pr = paintRect;
@@ -906,7 +906,7 @@ namespace Ntreev.Library.Grid
 
         protected void RepositionColumnList()
         {
-            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
+            GrDataRowList dataRowList = this.GridCore.DataRowList;
             int x = dataRowList.CellStart();
 
             for (int i = 0; i < GetFrozenColumnCount(); i++)

@@ -181,7 +181,7 @@ namespace Ntreev.Library.Grid
             else
                 SelectMulti(pDataRow, pNewDataRow);
 
-            if (pDataRow != this.GridCore.GetInsertionRow() && pDataRow.GetDisplayable() == true)
+            if (pDataRow != this.GridCore.InsertionRow && pDataRow.GetDisplayable() == true)
                 DoVertScroll(GrScrollEventType.LargeIncrement);
             else
                 BringIntoView(pNewDataRow);
@@ -408,12 +408,12 @@ namespace Ntreev.Library.Grid
 
         private void gridCore_Created(object sender, EventArgs e)
         {
-            m_pDataRowList = this.GridCore.GetDataRowList();
-            m_columnList = this.GridCore.GetColumnList();
+            m_pDataRowList = this.GridCore.DataRowList;
+            m_columnList = this.GridCore.ColumnList;
             m_pHorzScroll = this.GridCore.GetHorzScroll();
             m_pVertScroll = this.GridCore.GetVertScroll();
-            m_pFocuser = this.GridCore.GetFocuser();
-            m_pItemSelector = this.GridCore.GetItemSelector();
+            m_pFocuser = this.GridCore.Focuser;
+            m_pItemSelector = this.GridCore.ItemSelector;
             m_pGridWindow = this.GridCore.GetGridWindow();
 
             m_pFocuser.FocusChanged += focuser_FocusChanged;
@@ -480,8 +480,8 @@ namespace Ntreev.Library.Grid
                 rowRange = new GrRange(rowAnchor.GetVisibleIndex(), pEnd.GetVisibleIndex());
             }
 
-            columnRange.SetMaxValue(columnRange.GetMaxValue() + 1);
-            rowRange.SetMaxValue(rowRange.GetMaxValue() + 1);
+            columnRange.Maximum = columnRange.Maximum + 1;
+            rowRange.Maximum = (rowRange.Maximum + 1);
 
             m_pItemSelector.SelectItems(columnRange, rowRange, m_pGridWindow.GetSelectionType());
 
@@ -519,14 +519,14 @@ namespace Ntreev.Library.Grid
 
         private bool DoHorzScroll(GrScrollEventType type)
         {
-            int value = m_pHorzScroll.GetValue();
+            int value = m_pHorzScroll.Value;
             switch (type)
             {
                 case GrScrollEventType.First:
-                    value = m_pHorzScroll.GetMinimum();
+                    value = m_pHorzScroll.Minimum;
                     break;
                 case GrScrollEventType.SmallDecrement:
-                    value -= m_pHorzScroll.GetSmallChange();
+                    value -= m_pHorzScroll.SmallChange;
                     break;
                 case GrScrollEventType.LargeDecrement:
                     {
@@ -551,10 +551,10 @@ namespace Ntreev.Library.Grid
                     }
                     break;
                 case GrScrollEventType.SmallIncrement:
-                    value += m_pHorzScroll.GetSmallChange();
+                    value += m_pHorzScroll.SmallChange;
                     break;
                 case GrScrollEventType.Last:
-                    value = m_pHorzScroll.ValidateValue(m_pHorzScroll.GetMaximum());
+                    value = m_pHorzScroll.ValidateValue(m_pHorzScroll.Maximum);
                     break;
                 default:
                     throw new Exception("");
@@ -565,16 +565,16 @@ namespace Ntreev.Library.Grid
 
         private bool DoVertScroll(GrScrollEventType type)
         {
-            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
+            GrDataRowList dataRowList = this.GridCore.DataRowList;
 
-            int value = m_pVertScroll.GetValue();
+            int value = m_pVertScroll.Value;
             switch (type)
             {
                 case GrScrollEventType.First:
-                    value = m_pVertScroll.GetMinimum();
+                    value = m_pVertScroll.Minimum;
                     break;
                 case GrScrollEventType.SmallDecrement:
-                    value -= m_pVertScroll.GetSmallChange();
+                    value -= m_pVertScroll.SmallChange;
                     break;
                 case GrScrollEventType.LargeDecrement:
                     {
@@ -599,10 +599,10 @@ namespace Ntreev.Library.Grid
                     }
                     break;
                 case GrScrollEventType.SmallIncrement:
-                    value += m_pVertScroll.GetSmallChange();
+                    value += m_pVertScroll.SmallChange;
                     break;
                 case GrScrollEventType.Last:
-                    value = m_pVertScroll.ValidateValue(m_pVertScroll.GetMaximum());
+                    value = m_pVertScroll.ValidateValue(m_pVertScroll.Maximum);
                     break;
                 default:
                     throw new Exception("");

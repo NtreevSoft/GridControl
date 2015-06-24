@@ -25,7 +25,7 @@ namespace Ntreev.Library.Grid
                 if (this.GridCore.GetRowHighlight() == true || this.GridCore.GetFullRowSelect() == true)
                 {
                     GrRect rect = pDataRow.GetRect();
-                    rect.Width = this.GridCore.GetDisplayRect().Right - rect.Left;
+                    rect.Width = this.GridCore.DisplayRectangle.Right - rect.Left;
                     rect.Expand(2);
                     this.GridCore.Invalidate(rect);
                 }
@@ -42,7 +42,7 @@ namespace Ntreev.Library.Grid
                 pFocusable.Invalidate();
             }
 
-            GrItemSelectorInternal pItemSelector = this.GridCore.GetItemSelector() as GrItemSelectorInternal;
+            GrItemSelectorInternal pItemSelector = this.GridCore.ItemSelector as GrItemSelectorInternal;
             pItemSelector.Selecting(pFocusable);
         }
 
@@ -66,7 +66,7 @@ namespace Ntreev.Library.Grid
                 if (pFocusable != null)
                 {
                     GrDataRow pDataRow = pFocusable.GetDataRow() as GrDataRow;
-                    GrItemSelectorInternal pItemSelector = this.GridCore.GetItemSelector() as GrItemSelectorInternal;
+                    GrItemSelectorInternal pItemSelector = this.GridCore.ItemSelector as GrItemSelectorInternal;
                     if (pDataRow != null && pDataRow.GetFullSelected() == true)
                         pItemSelector.SelectDataRow(pDataRow, GrSelectionType.Normal);
                     else
@@ -94,7 +94,7 @@ namespace Ntreev.Library.Grid
 
         private void gridCore_Created(object sender, EventArgs e)
         {
-            GrItemSelectorInternal pItemSelector = this.GridCore.GetItemSelector() as GrItemSelectorInternal;
+            GrItemSelectorInternal pItemSelector = this.GridCore.ItemSelector as GrItemSelectorInternal;
             pItemSelector.SelectingEnd += itemSelector_SelectingEnd;
         }
     }

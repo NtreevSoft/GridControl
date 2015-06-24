@@ -1170,7 +1170,7 @@ namespace Ntreev.Windows.Forms.Grid
         {
             get
             {
-                GrDataRowList pDataRowList = this.GridCore.GetDataRowList();
+                GrDataRowList pDataRowList = this.GridCore.DataRowList;
                 HashSet<string> texts = new HashSet<string>();
 
                 for (int i = 0; i < pDataRowList.GetVisibleDataRowCount(); i++)

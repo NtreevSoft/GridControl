@@ -8,6 +8,7 @@ namespace Ntreev.Library.Grid
     public enum GrAutoFitColumnType
     {
         ItemOnly,
+
         ColumnIncluded,
     }
 }

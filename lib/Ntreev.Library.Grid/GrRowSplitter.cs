@@ -21,7 +21,7 @@ namespace Ntreev.Library.Grid
         public override GrRowType GetRowType() { return GrRowType.Splitter; }
         public override int GetWidth()
         {
-            return this.GridCore.GetBounds().GetWidth();
+            return this.GridCore.GetBounds().Width;
         }
 
         public override void Paint(GrGridPainter painter, GrRect clipRect)
@@ -30,8 +30,8 @@ namespace Ntreev.Library.Grid
             GrColor lineColor = GetPaintingLineColor();
             GrRect paintRect = GetRect();
 
-            GrRect displayRect = this.GridCore.GetDisplayRect();
-            GrColumnList columnList = this.GridCore.GetColumnList();
+            GrRect displayRect = this.GridCore.DisplayRectangle;
+            GrColumnList columnList = this.GridCore.ColumnList;
             if (this.GridCore.GetFillBlank() == true && columnList.GetDisplayableRight() < displayRect.Right)
             {
                 paintRect.Width = displayRect.Right - paintRect.Left;
@@ -42,7 +42,7 @@ namespace Ntreev.Library.Grid
 
         public override bool GetVisible()
         {
-            return this.GridCore.GetInsertionRow().GetVisible();
+            return this.GridCore.InsertionRow.GetVisible();
         }
         public override int GetMinHeight() { return DefaultSplitterHeight; }
         public override bool GetResizable() { return false; }

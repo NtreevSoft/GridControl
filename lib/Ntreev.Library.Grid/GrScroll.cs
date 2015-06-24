@@ -9,35 +9,59 @@ namespace Ntreev.Library.Grid
     {
         public int ValidateValue(int value)
         {
-            value = Math.Max(value, GetMinimum());
-            value = Math.Min(value, GetMaximum() - GetLargeChange() + 1);
+            value = Math.Max(value, this.Minimum);
+            value = Math.Min(value, this.Maximum - this.LargeChange + 1);
 
             return value;
         }
+
         public bool DoScroll(int value)
         {
-            int newValue = ValidateValue(value);
+            int newValue = this.ValidateValue(value);
 
-            if (newValue != GetValue())
+            if (newValue != Value)
             {
-                SetValue(newValue);
+                this.Value = newValue;
                 this.GridCore.Invalidate();
                 return true;
             }
             return false;
         }
 
-        public abstract int GetValue();
-        public abstract void SetValue(int value);
-        public abstract int GetSmallChange();
-        public abstract void SetSmallChange(int value);
-        public abstract int GetLargeChange();
-        public abstract void SetLargeChange(int value);
-        public abstract int GetMaximum();
-        public abstract void SetMaximum(int value);
-        public abstract int GetMinimum();
-        public abstract void SetMinimum(int value);
-        public abstract bool GetVisible();
-        public abstract void SetVisible(bool value);
+        public abstract int Value
+        {
+            get;
+            set;
+        }
+
+        public abstract int SmallChange
+        {
+            get;
+            set;
+        }
+
+        public abstract int LargeChange
+        {
+            get;
+            set;
+        }
+
+        public abstract int Maximum
+        {
+            get;
+            set;
+        }
+
+        public abstract int Minimum
+        {
+            get;
+            set;
+        }
+
+        public abstract bool IsVisible
+        {
+            get;
+            set;
+        }
     }
 }

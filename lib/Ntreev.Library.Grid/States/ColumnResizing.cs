@@ -49,7 +49,7 @@ namespace Ntreev.Library.Grid.States
 
         public override void OnMouseDoubleClick(GrStateMouseEventArgs e)
         {
-            GrColumnList columnList = this.GridCore.GetColumnList();
+            GrColumnList columnList = this.GridCore.ColumnList;
 
             if (m_column.GetFullSelected() == true)
             {
@@ -121,7 +121,7 @@ namespace Ntreev.Library.Grid.States
                     m_column.SetWidth(newWidth);
                     x = m_column.GetX();
                 }
-                GrRect displayRect = this.GridCore.GetDisplayRect();
+                GrRect displayRect = this.GridCore.DisplayRectangle;
                 this.GridCore.Invalidate(x, displayRect.Top, displayRect.Right, displayRect.Bottom);
             }
             else
@@ -150,7 +150,7 @@ namespace Ntreev.Library.Grid.States
             if (column.GetClipped() == true)
             {
                 int x = localLocation.X + column.GetX();
-                if (x >= this.GridCore.GetDisplayRect().Right - margin)
+                if (x >= this.GridCore.DisplayRectangle.Right - margin)
                     return column;
             }
             else if (localLocation.X >= column.GetWidth() - margin)

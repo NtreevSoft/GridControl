@@ -242,8 +242,8 @@ namespace Ntreev.Library.Grid.States
         protected override void OnGridCoreAttached()
         {
             base.OnGridCoreAttached();
-            m_pDataRowList = this.GridCore.GetDataRowList();
-            m_columnList = this.GridCore.GetColumnList();
+            m_pDataRowList = this.GridCore.DataRowList;
+            m_columnList = this.GridCore.ColumnList;
             this.GridCore.AttachObject(m_pTimer);
         }
 

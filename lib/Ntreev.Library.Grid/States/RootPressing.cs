@@ -25,8 +25,8 @@ namespace Ntreev.Library.Grid.States
             m_pItemSelector.SelectAll();
 
             GrItem pItem = null;
-            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
-            GrColumnList columnList = this.GridCore.GetColumnList();
+            GrDataRowList dataRowList = this.GridCore.DataRowList;
+            GrColumnList columnList = this.GridCore.ColumnList;
 
             if (dataRowList.GetVisibleDataRowCount() > 0 && columnList.GetVisibleColumnCount() > 0)
             {

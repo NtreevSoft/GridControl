@@ -114,13 +114,13 @@ namespace Ntreev.Library.Grid
 
         public bool GetFocused()
         {
-            GrFocuser focuser = this.GridCore.GetFocuser();
+            GrFocuser focuser = this.GridCore.Focuser;
             return focuser.Get() == this;
         }
 
         public bool IsItemSelecting()
         {
-            GrItemSelectorInternal pItemSelector = this.GridCore.GetItemSelector() as GrItemSelectorInternal;
+            GrItemSelectorInternal pItemSelector = this.GridCore.ItemSelector as GrItemSelectorInternal;
             if (pItemSelector.IsSelecting(m_column) == false)
                 return false;
             if (pItemSelector.IsSelecting(m_pDataRow) == false)
@@ -137,7 +137,7 @@ namespace Ntreev.Library.Grid
         {
             if (m_selected == b)
                 return;
-            GrItemSelector pItemSelector = this.GridCore.GetItemSelector();
+            GrItemSelector pItemSelector = this.GridCore.ItemSelector;
             if (b == true)
                 pItemSelector.SelectItem(this, GrSelectionType.Add);
             else
@@ -146,7 +146,7 @@ namespace Ntreev.Library.Grid
 
         public void SetFocused(bool b)
         {
-            GrFocuser focuser = this.GridCore.GetFocuser();
+            GrFocuser focuser = this.GridCore.Focuser;
             if (b == true)
                 focuser.Set(this);
             else
@@ -282,8 +282,8 @@ namespace Ntreev.Library.Grid
             if (size.Height != 0)
                 bounds.Height = Math.Max(bounds.Height, size.Height);
 
-            bounds.Width += GetPadding().GetHorizontal();
-            bounds.Height += GetPadding().GetVertical();
+            bounds.Width += GetPadding().Horizontal;
+            bounds.Height += GetPadding().Vertical;
 
             return bounds;
         }
@@ -327,7 +327,7 @@ namespace Ntreev.Library.Grid
 
             if (GetControlVisible() == true)
             {
-                GrRect buttonRect = GetControlRect() + paintRect.GetLocation();
+                GrRect buttonRect = GetControlRect() + paintRect.Location;
                 switch (m_column.GetItemType())
                 {
                     case GrItemType.DropDown:

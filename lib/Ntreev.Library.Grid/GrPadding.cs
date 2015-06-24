@@ -40,16 +40,6 @@ namespace Ntreev.Library.Grid
             return this == (GrPadding)obj;
         }
 
-        public int GetHorizontal()
-        {
-            return this.left + this.right;
-        }
-
-        public int GetVertical()
-        {
-            return this.top + this.bottom;
-        }
-
         public int Left
         {
             get { return this.left; }

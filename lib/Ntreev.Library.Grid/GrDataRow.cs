@@ -62,7 +62,7 @@ namespace Ntreev.Library.Grid
         {
             if (GetSelected() == b)
                 return;
-            GrItemSelector pItemSelector = this.GridCore.GetItemSelector();
+            GrItemSelector pItemSelector = this.GridCore.ItemSelector;
             if (b == true)
                 pItemSelector.SelectDataRow(this, GrSelectionType.Add);
             else
@@ -76,7 +76,7 @@ namespace Ntreev.Library.Grid
 
         public bool GetSelecting()
         {
-            GrItemSelectorInternal pItemSelector = this.GridCore.GetItemSelector() as GrItemSelectorInternal;
+            GrItemSelectorInternal pItemSelector = this.GridCore.ItemSelector as GrItemSelectorInternal;
             return pItemSelector.IsSelecting(this);
         }
 
@@ -165,7 +165,7 @@ namespace Ntreev.Library.Grid
         {
             if (this.GridCore == null)
                 return false;
-            int visibleColumns = (int)this.GridCore.GetColumnList().GetVisibleColumnCount();
+            int visibleColumns = (int)this.GridCore.ColumnList.GetVisibleColumnCount();
             return m_selected == visibleColumns;
         }
 
@@ -180,7 +180,7 @@ namespace Ntreev.Library.Grid
                 return;
 
             m_pDataRowList.SetVisibleChanged();
-            GrFocuser focuser = this.GridCore.GetFocuser();
+            GrFocuser focuser = this.GridCore.Focuser;
             if (focuser.GetFocusedRow() == this)
                 focuser.Set(null as IFocusable);
 
@@ -193,7 +193,7 @@ namespace Ntreev.Library.Grid
 
             if (m_visible == false && GetSelected() == true)
             {
-                GrItemSelector pItemSelector = this.GridCore.GetItemSelector();
+                GrItemSelector pItemSelector = this.GridCore.ItemSelector;
                 pItemSelector.SelectDataRow(this, GrSelectionType.Remove);
             }
         }
@@ -228,8 +228,8 @@ namespace Ntreev.Library.Grid
                 }
             }
 
-            GrColumnList columnList = this.GridCore.GetColumnList();
-            GrRect displayRect = this.GridCore.GetDisplayRect();
+            GrColumnList columnList = this.GridCore.ColumnList;
+            GrRect displayRect = this.GridCore.DisplayRectangle;
             for (int i = 0; i < columnList.GetDisplayableColumnCount(); i++)
             {
                 GrColumn column = columnList.GetDisplayableColumn(i);
@@ -280,7 +280,7 @@ namespace Ntreev.Library.Grid
 
         protected override void OnGridCoreDetached()
         {
-            GrFocuser focuser = this.GridCore.GetFocuser();
+            GrFocuser focuser = this.GridCore.Focuser;
             if (focuser.GetFocusedRow() == this)
                 focuser.Set(null as IFocusable);
             SetSelected(false);
@@ -318,7 +318,7 @@ namespace Ntreev.Library.Grid
 
         protected override GrCell OnHitTest(int x)
         {
-            GrColumnList columnList = this.GridCore.GetColumnList();
+            GrColumnList columnList = this.GridCore.ColumnList;
             for (int i = 0; i < columnList.GetDisplayableColumnCount(); i++)
             {
                 GrColumn column = columnList.GetDisplayableColumn(i);

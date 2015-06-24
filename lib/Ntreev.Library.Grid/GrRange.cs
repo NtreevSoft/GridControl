@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Ntreev.Library.Grid
 {
-
     public class GrRange
     {
-        private int m_minValue;
-        private int m_maxValue;
+        private int minValue;
+        private int maxValue;
 
         public GrRange()
         {
@@ -23,7 +22,7 @@ namespace Ntreev.Library.Grid
 
         public override int GetHashCode()
         {
-            return this.m_minValue ^ this.m_maxValue;
+            return this.minValue ^ this.maxValue;
         }
 
         public override bool Equals(object obj)
@@ -35,16 +34,28 @@ namespace Ntreev.Library.Grid
 
         public bool IsIn(int value)
         {
-            if (value < m_minValue || value >= m_maxValue)
+            if (value < this.minValue || value >= this.maxValue)
                 return false;
             return true;
         }
 
-        public int GetLength() { return m_maxValue - m_minValue; }
+        public void SetRange(int minValue, int maxValue)
+        {
+            if (minValue > maxValue)
+            {
+                this.minValue = maxValue;
+                this.maxValue = minValue;
+            }
+            else
+            {
+                this.minValue = minValue;
+                this.maxValue = maxValue;
+            }
+        }
 
         public static bool operator ==(GrRange range1, GrRange range2)
         {
-            if (range1.m_minValue != range2.m_minValue || range1.m_maxValue != range2.m_maxValue)
+            if (range1.minValue != range2.minValue || range1.maxValue != range2.maxValue)
                 return false;
             return true;
         }
@@ -54,57 +65,45 @@ namespace Ntreev.Library.Grid
             return !(range1 == range2);
         }
 
-        public int GetMinValue()
+        public int Length
         {
-            return m_minValue;
+            get { return this.maxValue - this.minValue; }
         }
 
-        public int GetMaxValue()
+        public int Minimum
         {
-            return m_maxValue;
-        }
-
-        public void SetMinValue(int value)
-        {
-            if (value > m_maxValue)
+            get { return this.minValue; }
+            set
             {
-                m_minValue = m_maxValue;
-                m_maxValue = value;
-            }
-            else
-            {
-                m_minValue = value;
-            }
-        }
-
-        public void SetMaxValue(int value)
-        {
-            if (value < m_minValue)
-            {
-                m_maxValue = m_minValue;
-                m_minValue = value;
-            }
-            else
-            {
-                m_maxValue = value;
+                if (value > this.maxValue)
+                {
+                    this.minValue = this.maxValue;
+                    this.maxValue = value;
+                }
+                else
+                {
+                    this.minValue = value;
+                }
             }
         }
 
-        public void SetRange(int minValue, int maxValue)
+        public int Maximum
         {
-            if (minValue > maxValue)
+            get { return this.maxValue; }
+            set
             {
-                m_minValue = maxValue;
-                m_maxValue = minValue;
-            }
-            else
-            {
-                m_minValue = minValue;
-                m_maxValue = maxValue;
+                if (value < this.minValue)
+                {
+                    this.maxValue = this.minValue;
+                    this.minValue = value;
+                }
+                else
+                {
+                    this.maxValue = value;
+                }
             }
         }
 
-        public static GrRange Empty = new GrRange();
-
+        public static readonly GrRange Empty = new GrRange();
     }
 }

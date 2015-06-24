@@ -270,7 +270,7 @@ namespace Ntreev.Library.Grid
         public void OnPaint(GrGridPainter pGridPainter)
         {
             if (m_state != null)
-                m_state.OnPaintAdornments(pGridPainter, this.GridCore.GetDisplayRect());
+                m_state.OnPaintAdornments(pGridPainter, this.GridCore.DisplayRectangle);
         }
 
         public void OnClearing()

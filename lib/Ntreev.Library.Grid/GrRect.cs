@@ -8,30 +8,30 @@ namespace Ntreev.Library.Grid
 {
     public struct GrRect
     {
-        private int left, top, right, bottom;
+        private int x, y, width, height;
 
         public GrRect(int x, int y, int width, int height)
         {
-            this.left = x;
-            this.top = y;
-            this.right = x + width;
-            this.bottom = y + height;
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
         }
 
         public GrRect(GrPoint location, GrSize size)
         {
-            this.left = location.X;
-            this.top = location.Y;
-            this.right = location.X + size.Width;
-            this.bottom = location.Y + size.Height;
+            this.x = location.X;
+            this.y = location.Y;
+            this.width = size.Width;
+            this.height = size.Height;
         }
 
         public GrRect(GrPoint pt1, GrPoint pt2)
         {
-            this.left = pt1.X < pt2.X ? pt1.X : pt2.X;
-            this.top = pt1.Y < pt2.Y ? pt1.Y : pt2.Y;
-            this.right = left + Math.Abs(pt1.X - pt2.X);
-            this.bottom = top + Math.Abs(pt1.Y - pt2.Y);
+            this.x = pt1.X < pt2.X ? pt1.X : pt2.X;
+            this.y = pt1.Y < pt2.Y ? pt1.Y : pt2.Y;
+            this.width = Math.Abs(pt1.X - pt2.X);
+            this.height = Math.Abs(pt1.Y - pt2.Y);
         }
 
         public override string ToString()
@@ -52,7 +52,7 @@ namespace Ntreev.Library.Grid
 
         public override int GetHashCode()
         {
-            return this.left ^ this.top ^ this.right ^ this.bottom;
+            return this.x ^ this.y ^ this.width ^ this.height;
         }
 
         public override bool Equals(object obj)
@@ -64,86 +64,34 @@ namespace Ntreev.Library.Grid
 
         public bool Contains(GrPoint location)
         {
-            if (location.X < this.left || location.Y < this.top || location.X >= this.right || location.Y >= this.bottom)
+            if (location.X < this.X || location.Y < this.Y || location.X >= this.Right || location.Y >= this.Bottom)
                 return false;
             return true;
         }
 
         public bool Contains(GrRect rect)
         {
-            if (rect.left < this.left || rect.top < this.top || rect.right >= this.right || rect.bottom >= this.bottom)
+            if (rect.X < this.X || rect.Y < this.Y || rect.Right >= this.Right || rect.Bottom >= this.Bottom)
                 return false;
             return true;
         }
 
         public bool IsEmpty()
         {
-            if (this.left != 0 || this.top != 0 || this.right != 0 || this.bottom != 0)
-                return false;
-            return true;
-        }
-
-        public int GetWidth()
-        {
-            return this.right - this.left;
-        }
-
-        public int GetHeight()
-        {
-            return this.bottom - this.top;
-        }
-
-        public GrSize GetSize()
-        {
-            GrSize size = new GrSize()
-            {
-                Width = GetWidth(),
-                Height = GetHeight(),
-            };
-            return size;
-        }
-
-        public void SetSize(GrSize size)
-        {
-            this.SetSize(size.Width, size.Height);
-        }
-
-        public void SetSize(int width, int height)
-        {
-            this.right = this.left + width;
-            this.bottom = this.top + height;
+            return this.height == 0 && this.width == 0 && this.x == 0 && this.y == 0;
         }
 
         public GrPoint GetCenter()
         {
-            return new GrPoint((this.left & this.right) + ((this.left ^ this.right) >> 1), (this.top & this.bottom) + ((this.top ^ this.bottom) >> 1));
-        }
-
-        public GrPoint GetLocation()
-        {
-            return new GrPoint(this.left, this.top);
-        }
-
-        public void SetLocation(GrPoint location)
-        {
-            this.SetLocation(location.X, location.Y);
-        }
-
-        public void SetLocation(int x, int y)
-        {
-            GrSize size = this.GetSize();
-            this.left = x;
-            this.top = y;
-            this.right = left + size.Width;
-            this.bottom = top + size.Height;
+            return new GrPoint((this.x & this.Right) + ((this.x ^ this.Right) >> 1), (this.y & this.Bottom) + ((this.y ^ this.Bottom) >> 1));
         }
 
         public void Offset(int x, int y)
         {
-            this.left += x;
-            this.top += y;
-            this.right += x;
-            this.bottom += y;
+            this.x += x;
+            this.y += y;
+            //this.right += x;
+            //this.bottom += y;
         }
 
         public void Offset(GrPoint offset)
@@ -153,18 +101,15 @@ namespace Ntreev.Library.Grid
 
         public void Expand(int all)
         {
-            this.left -= all;
-            this.top -= all;
-            this.right += all;
-            this.bottom += all;
+            this.Expand(all, all, all, all);
         }
 
         public void Expand(int left, int top, int right, int bottom)
         {
-            this.left -= left;
-            this.top -= top;
-            this.right += right;
-            this.bottom += bottom;
+            this.x -= left;
+            this.y -= top;
+            this.width += left+ right;
+            this.height += top + bottom;
         }
 
         public void Expand(GrPadding padding)
@@ -174,18 +119,15 @@ namespace Ntreev.Library.Grid
 
         public void Contract(int all)
         {
-            this.left += all;
-            this.top += all;
-            this.right -= all;
-            this.bottom -= all;
+            this.Contract(all, all, all, all);
         }
 
         public void Contract(int left, int top, int right, int bottom)
         {
-            this.left += left;
-            this.top += top;
-            this.right -= right;
-            this.bottom -= bottom;
+            this.x += left;
+            this.y += top;
+            this.width -= (left + right);
+            this.height -= (top + bottom);
         }
 
         public void Contract(GrPadding padding)
@@ -195,91 +137,82 @@ namespace Ntreev.Library.Grid
 
         public void DoEmpty()
         {
-            this.left = Empty.left;
-            this.top = Empty.top;
-            this.right = Empty.right;
-            this.bottom = Empty.bottom;
+            this.x = 0;
+            this.y = 0;
+            this.width = 0;
+            this.height = 0;
         }
 
         public int Left
         {
-            get { return this.left; }
+            get { return this.x; }
         }
 
         public int Top
         {
-            get { return this.top; }
+            get { return this.y; }
         }
 
         public int Right
         {
-            get { return this.right; }
+            get { return this.x + this.width; }
         }
 
         public int Bottom
         {
-            get { return this.bottom; }
+            get { return this.y + this.height; }
         }
 
         public GrPoint Location
         {
-            get { return new GrPoint(this.left, this.top); }
+            get { return new GrPoint(this.x, this.y); }
             set
             {
-
+                this.x = value.X;
+                this.y = value.Y;
             }
         }
 
         public GrSize Size
         {
-            get { return new GrSize(this.right - this.left, this.bottom - this.top); }
+            get { return new GrSize(this.width, this.height); }
             set
             {
-                this.right = this.left + value.Width;
-                this.bottom = this.right + value.Height;
+                this.width = value.Width;
+                this.height = value.Height;
             }
         }
 
         public int X
         {
-            get { return this.left; }
-            set
-            {
-                int offset = value - this.left;
-                this.left = value;
-                this.right += offset;
-            }
+            get { return this.x; }
+            set { this.x = value; }
         }
 
         public int Y
         {
-            get { return this.top; }
-            set
-            {
-                int offset = value - this.top;
-                this.top = value;
-                this.bottom += offset;
-            }
+            get { return this.y; }
+            set { this.y = value; }
         }
 
         public int Width
         {
-            get { return this.right - this.left; }
-            set { this.right = this.left + value; }
+            get { return this.width; }
+            set { this.width = value; }
         }
 
         public int Height
         {
-            get { return this.bottom - this.top; }
-            set { this.bottom = this.top + value; }
+            get { return this.height; }
+            set { this.height = value; }
         }
 
         public static bool operator ==(GrRect rect1, GrRect rect2)
         {
-            return rect1.left == rect2.left &&
-                rect1.top == rect2.top &&
-                rect1.right == rect2.right &&
-                rect1.bottom == rect2.bottom;
+            return rect1.x == rect2.x &&
+                rect1.y == rect2.y &&
+                rect1.width == rect2.width &&
+                rect1.height == rect2.height;
         }
 
         public static bool operator !=(GrRect rect1, GrRect rect2)
@@ -287,74 +220,57 @@ namespace Ntreev.Library.Grid
             return !(rect1 == rect2);
         }
 
-        //public static void operator += ( GrRect rect);
-        public static bool operator ==(GrRect rect, GrPadding padding)
-        {
-            return rect.left == padding.Left &&
-                rect.top == padding.Top &&
-                rect.right == padding.Right &&
-                rect.bottom == padding.Bottom;
-        }
-
-        public static bool operator !=(GrRect rect, GrPadding padding)
-        {
-            return !(rect == padding);
-        }
-
         public static GrRect operator +(GrRect rect, GrPoint point)
         {
-            return new GrRect(rect.left + point.X, rect.top + point.Y, rect.right + point.X, rect.bottom + point.Y);
+            rect.Location += point;
+            return rect;
+            //return new GrRect(rect.x + point.X, rect.y + point.Y, rect.right + point.X, rect.bottom + point.Y);
         }
 
         public static GrRect operator -(GrRect rect, GrPoint point)
         {
-            return new GrRect(rect.left - point.X, rect.top - point.Y, rect.right - point.X, rect.bottom - point.Y);
+            rect.Location -= point;
+            return rect;
+            //return new GrRect(rect.x - point.X, rect.y - point.Y, rect.right - point.X, rect.bottom - point.Y);
         }
 
         public static GrRect operator +(GrRect rect, GrPadding padding)
         {
-            return new GrRect(rect.left + padding.Left, rect.top + padding.Top, rect.right - padding.Right, rect.bottom - padding.Bottom);
+            rect.Expand(padding);
+            return rect;
+            //return new GrRect(rect.x + padding.Left, rect.y + padding.Top, rect.right - padding.Right, rect.bottom - padding.Bottom);
         }
 
         public static GrRect operator -(GrRect rect, GrPadding padding)
         {
-            return new GrRect(rect.left - padding.Left, rect.top - padding.Top, rect.right + padding.Right, rect.bottom + padding.Bottom);
+            rect.Contract(padding);
+            return rect;
+            //return new GrRect(rect.x - padding.Left, rect.y - padding.Top, rect.right + padding.Right, rect.bottom + padding.Bottom);
         }
-        //public void operator += ( GrPadding padding);
-        //public void operator -= ( GrPadding padding);
-
 
         public static GrRect FromLTRB(int left, int top, int right, int bottom)
         {
             return new GrRect()
             {
-                left = left,
-                top = top,
-                right = right,
-                bottom = bottom,
+                x = left,
+                y = top,
+                width = right - left,
+                height = bottom - top,
             };
         }
-
 
         public static readonly GrRect Empty = new GrRect();
 
 #if _WINFORM
         public static implicit operator System.Drawing.Rectangle(GrRect rect)
         {
-            return System.Drawing.Rectangle.FromLTRB(rect.left, rect.top, rect.right, rect.bottom);
+            return new System.Drawing.Rectangle(rect.x, rect.y, rect.width, rect.height);
         }
 
         public static implicit operator GrRect(System.Drawing.Rectangle rect)
         {
-            return GrRect.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
+            return new GrRect(rect.X, rect.Y, rect.Width, rect.Height);
         }
-        //    GrRect(System::Drawing::Rectangle% rect);
-        //    GrRect(System::Drawing::RectangleF% rect);
-
-        //    bool Contains(System::Drawing::Point% location) ;
-        //    operator System::Drawing::Rectangle ();
-        //    operator System::Drawing::Rectangle () ;
-        //    void operator = (System::Drawing::Rectangle% rect);
 #endif
     }
 }

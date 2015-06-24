@@ -94,7 +94,7 @@ namespace Ntreev.Library.Grid
         {
             GrFont pFont = this.GetPaintingFont();
             int minHeight1 = pFont.GetHeight() + pFont.GetExternalLeading();
-            int minHeight2 = this.GetTextBounds().Height + this.GetPadding().GetVertical();
+            int minHeight2 = this.GetTextBounds().Height + this.GetPadding().Vertical;
             if (minHeight2 < minHeight1)
                 return minHeight1;
             return minHeight2;
@@ -106,7 +106,7 @@ namespace Ntreev.Library.Grid
 
         public override int GetX()
         {
-            return this.GridCore.GetDisplayRect().Left;
+            return this.GridCore.DisplayRectangle.Left;
         }
 
         public override bool GetDisplayable() { return true; }
@@ -204,7 +204,7 @@ namespace Ntreev.Library.Grid
     }
         }
 
-        public virtual void Sort(FuncSortRow fnSort, object userData)
+        public virtual void Sort(GrFuncSortRow fnSort, object userData)
         {
             m_vecChilds.Sort((x, y) => fnSort(this.GridCore, x, y, userData));
         }
@@ -284,7 +284,7 @@ namespace Ntreev.Library.Grid
                 return;
             GrRect rect = this.GetRect();
             //rect.Right = this.GridCore.GetDisplayRect().Right;
-            rect.Width = this.GridCore.GetDisplayRect().Right - rect.Left;
+            rect.Width = this.GridCore.DisplayRectangle.Right - rect.Left;
             rect.Expand(2, 2, 2, 2);
 
             this.GridCore.Invalidate(rect);

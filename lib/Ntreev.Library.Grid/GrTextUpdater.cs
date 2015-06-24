@@ -26,8 +26,8 @@ namespace Ntreev.Library.Grid
 
         public void AddTextBoundsByColumn(GrColumn column)
         {
-            GrDataRow pInsertionRow = this.GridCore.GetInsertionRow();
-            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
+            GrDataRow pInsertionRow = this.GridCore.InsertionRow;
+            GrDataRowList dataRowList = this.GridCore.DataRowList;
             AddTextBounds((GrCell)column);
 
             GrItem pItem = pInsertionRow.GetItem(column);
@@ -55,8 +55,8 @@ namespace Ntreev.Library.Grid
 
         public void AddTextAlignByColumn(GrColumn column)
         {
-            GrDataRow pInsertionRow = this.GridCore.GetInsertionRow();
-            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
+            GrDataRow pInsertionRow = this.GridCore.InsertionRow;
+            GrDataRowList dataRowList = this.GridCore.DataRowList;
             AddTextAlign((GrCell)column);
 
             GrItem pItem = pInsertionRow.GetItem(column);

@@ -45,7 +45,7 @@ namespace Ntreev.Library.Grid.States
                         {
                             m_pItemSelector.SetSelectionGroup(pDataRow);
                             m_pItemSelector.SetRowAnchor(pDataRow);
-                            GrColumnList columnList = this.GridCore.GetColumnList();
+                            GrColumnList columnList = this.GridCore.ColumnList;
 
                             GrColumn column = columnList.HitTest(e.GetX());
                             if (column != null)

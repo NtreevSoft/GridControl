@@ -51,7 +51,7 @@ namespace Ntreev.Library.Grid.States
             if (column.GetClipped() == true)
             {
                 int x = localLocation.X + column.GetX();
-                if (x >= this.GridCore.GetDisplayRect().Right - margin)
+                if (x >= this.GridCore.DisplayRectangle.Right - margin)
                     return false;
             }
             return true;
@@ -59,7 +59,7 @@ namespace Ntreev.Library.Grid.States
 
         public override void OnMouseDown(GrStateMouseEventArgs e)
             {
-        GrColumnList columnList = this.GridCore.GetColumnList();
+        GrColumnList columnList = this.GridCore.ColumnList;
         m_pOldDataColumn = m_column;
         m_column = e.GetCell() as GrColumn;
 
@@ -112,7 +112,7 @@ namespace Ntreev.Library.Grid.States
         {
             if (m_handled == true)
             {
-                GrColumnList columnList = this.GridCore.GetColumnList();
+                GrColumnList columnList = this.GridCore.ColumnList;
                 GrColumnMouseEventArgs ce = new GrColumnMouseEventArgs(m_column, e.GetLocalHit(), e.GetModifierKeys());
                 columnList.Invoke("ColumnMouseUp", ce);
                 m_handled = ce.IsHandled;
@@ -386,7 +386,7 @@ namespace Ntreev.Library.Grid.States
         protected override void OnGridCoreAttached()
         {
             base.OnGridCoreAttached();
-            m_columnList = this.GridCore.GetColumnList();
+            m_columnList = this.GridCore.ColumnList;
             this.GridCore.AttachObject(m_pTimer);
         }
 
@@ -430,14 +430,14 @@ namespace Ntreev.Library.Grid.States
 
             protected override GrRect GetInsideRectangle()
             {
-                GrColumnList columnList = this.GridCore.GetColumnList();
+                GrColumnList columnList = this.GridCore.ColumnList;
                 const int gap = 20;
                 GrRect rect = this.GridCore.GetDataRect();
                 return GrRect.FromLTRB(rect.Left + gap, columnList.GetY(), rect.Right - gap, rect.Bottom);
             }
             protected override GrRect GetOutsideRectangle()
             {
-                GrColumnList columnList = this.GridCore.GetColumnList();
+                GrColumnList columnList = this.GridCore.ColumnList;
                 GrRect rect = this.GridCore.GetDataRect();
                 return GrRect.FromLTRB(rect.Left, columnList.GetY(), rect.Right, rect.Bottom);
             }

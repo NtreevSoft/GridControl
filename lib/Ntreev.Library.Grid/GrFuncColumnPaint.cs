@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Ntreev.Library.Grid
 {
-    public delegate bool FuncColumnPaint(GrGridPainter painter, GrColumn column, GrRect paintRect, object userData);
+    public delegate bool GrFuncColumnPaint(GrGridPainter painter, GrColumn column, GrRect paintRect, object userData);
 }
