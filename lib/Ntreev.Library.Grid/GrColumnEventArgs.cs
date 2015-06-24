@@ -7,16 +7,16 @@ namespace Ntreev.Library.Grid
 {
     public class GrColumnEventArgs : EventArgs
     {
-        private readonly GrColumn m_pColumn;
+        private readonly GrColumn m_column;
 
-        public GrColumnEventArgs(GrColumn pColumn)
+        public GrColumnEventArgs(GrColumn column)
         {
-            m_pColumn = pColumn;
+            m_column = column;
         }
 
         public GrColumn GetColumn()
         {
-            return m_pColumn;
+            return m_column;
         }
     }
 }

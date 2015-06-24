@@ -7,18 +7,18 @@ namespace Ntreev.Library.Grid
 {
     public class GrRowMouseEventArgs : GrMouseEventArgs
     {
-        private readonly GrRow m_pRow;
+        private readonly GrRow m_row;
         private bool m_handled;
 
-        public GrRowMouseEventArgs(GrRow pRow, GrPoint location, GrKeys modifierKeys)
+        public GrRowMouseEventArgs(GrRow row, GrPoint location, GrKeys modifierKeys)
             : base(location, modifierKeys)
         {
-            m_pRow = pRow;
+            m_row = row;
         }
 
         public GrRow GetRow()
         {
-            return m_pRow;
+            return m_row;
         }
 
         public bool GetHandled()

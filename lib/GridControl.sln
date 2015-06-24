@@ -18,8 +18,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApplication", "Sample
 		{8EB27EC4-86A3-44A7-9767-19C343709894} = {8EB27EC4-86A3-44A7-9767-19C343709894}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ntreev.Crema.Library", "..\..\..\NTG\Crema\tags\2.0.0\common library\Ntreev.Crema.Library\Ntreev.Crema.Library.csproj", "{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ntreev.Library.Grid", "Ntreev.Library.Grid\Ntreev.Library.Grid.csproj", "{0BE425C2-3FFD-446D-ACEE-697418422E15}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinformGridHost", "WinformGridHost\WinformGridHost.csproj", "{ABD34EA7-4C48-415B-8907-EC140EA98CD9}"
@@ -106,18 +104,6 @@ Global
 		{BE81D0F0-0D06-44CF-8C06-C16EC4B13D63}.Release|x64.Build.0 = Release|x64
 		{BE81D0F0-0D06-44CF-8C06-C16EC4B13D63}.Release|x86.ActiveCfg = Release|x86
 		{BE81D0F0-0D06-44CF-8C06-C16EC4B13D63}.Release|x86.Build.0 = Release|x86
-		{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}.Release|x64.ActiveCfg = Release|Any CPU
-		{EB8E9874-54FA-4789-ACC0-B25D8337B6C7}.Release|x86.ActiveCfg = Release|Any CPU
 		{0BE425C2-3FFD-446D-ACEE-697418422E15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0BE425C2-3FFD-446D-ACEE-697418422E15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BE425C2-3FFD-446D-ACEE-697418422E15}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

@@ -11,7 +11,7 @@ namespace Ntreev.Library.Grid
 
         protected bool m_visible;
 
-        List<GrRow> m_vecChilds;
+        private readonly List<GrRow> m_vecChilds = new List<GrRow>();
         GrRow m_pParent;
         int m_depth;
         uint m_id;
@@ -180,7 +180,7 @@ namespace Ntreev.Library.Grid
             OnFitted();
         }
 
-        public override void Paint(GrGridPainter pPainter, GrRect clipRect) { }
+        public override void Paint(GrGridPainter painter, GrRect clipRect) { }
 
         public virtual GrRect GetBounds() { return GetRect(); }
 
@@ -196,11 +196,11 @@ namespace Ntreev.Library.Grid
             throw new NotImplementedException();
         }
 
-        public void AddChild(GrRow pRow)
+        public void AddChild(GrRow row)
         {
-            m_vecChilds.Add(pRow);
-            pRow.m_pParent = this;
-            this.OnChildAdded(pRow);
+            m_vecChilds.Add(row);
+            row.m_pParent = this;
+            this.OnChildAdded(row);
         }
 
         public void ReserveChild(int reserve)
@@ -250,13 +250,13 @@ namespace Ntreev.Library.Grid
 
         protected virtual void OnHeightAdjusted() { }
 
-        protected virtual void OnChildAdded(GrRow pRow)
+        protected virtual void OnChildAdded(GrRow row)
         {
-            this.UpdateDepth(pRow);
+            this.UpdateDepth(row);
 
             if (this.GridCore != null)
             {
-                this.GridCore.AttachObject(pRow);
+                this.GridCore.AttachObject(row);
             }
         }
 
@@ -277,15 +277,15 @@ namespace Ntreev.Library.Grid
             this.GridCore.Invalidate(rect);
         }
 
-        protected void UpdateDepth(GrRow pRow)
+        protected void UpdateDepth(GrRow row)
         {
-            GrRow pParent = pRow.GetParent();
+            GrRow pParent = row.GetParent();
             if (pParent == null)
-                pRow.m_depth = 0;
+                row.m_depth = 0;
             else
-                pRow.m_depth = pParent.m_depth + 1;
+                row.m_depth = pParent.m_depth + 1;
 
-            foreach (var value in pRow.m_vecChilds)
+            foreach (var value in row.m_vecChilds)
             {
                 this.UpdateDepth(value);
             }
@@ -303,9 +303,9 @@ namespace Ntreev.Library.Grid
         //    {
         //    }
 
-        //    bool operator () ( GrRow pRow1,  GrRow pRow2)
+        //    bool operator () ( GrRow row1,  GrRow row2)
         //    {
-        //        return (m_fn)(this.GridCore, pRow1, pRow2, m_userData);
+        //        return (m_fn)(this.GridCore, row1, row2, m_userData);
         //    }
 
         //    GrGridCore this.GridCore;

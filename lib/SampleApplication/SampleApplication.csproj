@@ -223,17 +223,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\NTG\Crema\tags\2.0.0\common library\Ntreev.Crema.Library\Ntreev.Crema.Library.csproj">
-      <Project>{eb8e9874-54fa-4789-acc0-b25d8337b6c7}</Project>
-      <Name>Ntreev.Crema.Library</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Ntreev.Windows.Forms.Grid.Design\Ntreev.Windows.Forms.Grid.Design.csproj">
       <Project>{8eb27ec4-86a3-44a7-9767-19c343709894}</Project>
       <Name>Ntreev.Windows.Forms.Grid.Design</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Ntreev.Windows.Forms.Grid\GridControl.vcxproj">
-      <Project>{d4d0f372-7312-4b53-bca9-ea27fd971b32}</Project>
-      <Name>Ntreev.Windows.Forms.Grid</Name>
+    <ProjectReference Include="..\WinformGridHost\WinformGridHost.csproj">
+      <Project>{abd34ea7-4c48-415b-8907-ec140ea98cd9}</Project>
+      <Name>WinformGridHost</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

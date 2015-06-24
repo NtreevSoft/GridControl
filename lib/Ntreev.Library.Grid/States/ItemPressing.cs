@@ -266,21 +266,21 @@ namespace Ntreev.Library.Grid.States
 
             private IDataRow GetFocusRow(int begin, int end)
             {
-                GrDataRowList pDataRowList = m_pGridCore.GetDataRowList();
+                GrDataRowList dataRowList = m_pGridCore.GetDataRowList();
                 IDataRow pAnchorRow = m_pItemSelector.GetRowAnchor();
                 if (pAnchorRow.GetVisibleIndex() == begin)
-                    return pDataRowList.GetVisibleRow(end - 1);
-                return pDataRowList.GetVisibleRow(begin);
+                    return dataRowList.GetVisibleRow(end - 1);
+                return dataRowList.GetVisibleRow(begin);
             }
 
             private GrColumn GetFocusColumn(int begin, int end)
             {
-                GrColumnList pColumnList = m_pGridCore.GetColumnList();
+                GrColumnList columnList = m_pGridCore.GetColumnList();
                 GrColumn pAnchorColumn = m_pItemSelector.GetColumnAnchor();
 
                 if (pAnchorColumn.GetVisibleIndex() == begin)
-                    return pColumnList.GetVisibleColumn(end - 1);
-                return pColumnList.GetVisibleColumn(begin);
+                    return columnList.GetVisibleColumn(end - 1);
+                return columnList.GetVisibleColumn(begin);
             }
         }
     }

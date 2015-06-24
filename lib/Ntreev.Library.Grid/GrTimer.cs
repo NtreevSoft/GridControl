@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Ntreev.Library.Grid
 {
-    public interface GrTimer
+    public interface GrTimer : IDisposable
     {
         void Start();
         void Stop();

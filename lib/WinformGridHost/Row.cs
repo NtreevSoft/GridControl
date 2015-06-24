@@ -40,33 +40,90 @@ namespace Ntreev.Windows.Forms.Grid
             }
         }
 
+        internal Row(RowBuilder rowBuilder, GridControl gridControl)
+            : this(rowBuilder)
+        {
+
+        }
+
         public override string ToString()
         {
             return this.Index.ToString();
         }
 
-        public void BeginEdit();
+        public void BeginEdit()
+        {
+            m_editing = true;
+        }
 
-        public void CancelEdit();
+        public void CancelEdit()
+        {
+            try
+            {
+                if (m_editedCount == 0)
+                    return;
 
-        public void EndEdit();
+                foreach (Cell cell in m_cells)
+                {
+                    cell.CancelEditInternal();
+                }
 
-        public void BringIntoView();
+                if (m_editedCount < 0)
+                    throw new Exception("먼가 수상합니다.");
+            }
+            finally
+            {
+                m_editedCount = 0;
+                m_editing = false;
+            }
 
-        public void Select();
+            foreach (Cell item in m_cells)
+            {
+                item.UpdateNativeText();
+            }
+        }
 
-        public void Select(SelectionType selectionType);
+        public void EndEdit()
+        {
+            this.GridControl.EndCurrentEdit(this);
+        }
 
-        public void ResetCellForeColor();
+        public void BringIntoView()
+        {
+            if (m_pDataRow.GetDisplayable() == true)
+                return;
+            this.GridControl.BringIntoView(this);
+        }
 
-        public void ResetCellBackColor();
+        public void Select()
+        {
+            this.Selector.SelectDataRow(m_pDataRow, GrSelectionType.Normal);
+        }
+
+        public void Select(SelectionType selectionType)
+        {
+            this.Selector.SelectDataRow(m_pDataRow, (GrSelectionType)selectionType);
+        }
+
+        public void ResetCellForeColor()
+        {
+            this.CellForeColor = System.Drawing.Color.Empty;
+        }
+
+        public void ResetCellBackColor()
+        {
+            this.CellBackColor = System.Drawing.Color.Empty;
+        }
 
         public Cell GetAt(int index)
         {
             return this.Cells[index];
         }
 
-        public int GetCellsTextCapacity();
+        public int GetCellsTextCapacity()
+        {
+            return m_textCapacity;
+        }
 
         [Description("셀들의 컬렉션입니다.")]
         [Category("Appearance")]
@@ -102,20 +159,20 @@ namespace Ntreev.Windows.Forms.Grid
 
         public object this[int index]
         {
-            get;
-            set;
+            get { return this.Cells[index].Value; }
+            set { this.Cells[index].Value = value; }
         }
 
         public object this[string columnName]
         {
-            get;
-            set;
+            get { return m_cells[columnName].Value; }
+            set { m_cells[columnName].Value = value; }
         }
 
         public object this[Column column]
         {
-            get;
-            set;
+            get { return this.Cells[column].Value; }
+            set { this.Cells[column].Value = value; }
         }
 
 #if DEBUG
@@ -132,7 +189,7 @@ namespace Ntreev.Windows.Forms.Grid
         [Description("표시되고 있는지의 여부를 가져오거나 설정합니다.")]
         [Category("Appearance")]
         [DefaultValue(true)]
-        public bool IsVisible
+        public override bool IsVisible
         {
             get { return m_pDataRow.GetVisible(); }
             set { m_pDataRow.SetVisible(value); }
@@ -300,17 +357,17 @@ namespace Ntreev.Windows.Forms.Grid
         }
 
         internal void DetachChildControl()
-{
-		foreach(RowBase item in this.Childs)
-		{
-			GridRow gridRow = item as GridRow;
-			if(gridRow == null)
-				continue;
+        {
+            foreach (RowBase item in this.Childs)
+            {
+                GridRow gridRow = item as GridRow;
+                if (gridRow == null)
+                    continue;
 
-			this.GridControl.Controls.Remove(gridRow.ChildGrid);
-			delete gridRow.ChildGrid;
-		}
-	}
+                this.GridControl.Controls.Remove(gridRow.ChildGrid);
+                //delete gridRow.ChildGrid;
+            }
+        }
 
         internal Cell NewCell(Column column)
         {
@@ -319,7 +376,7 @@ namespace Ntreev.Windows.Forms.Grid
             Cell cell = FromNative.Get(pItem);
             if (cell == null)
             {
-                CellBuilder builder;
+                CellBuilder builder = new CellBuilder();
                 builder.GridControl = this.GridControl;
                 builder.NativeRef = pItem;
                 cell = this.NewCellFromBuilder(builder);
@@ -329,58 +386,58 @@ namespace Ntreev.Windows.Forms.Grid
         }
 
         internal void InvokeChanged(PropertyDescriptor descriptor)
+        {
+            //if(m_component == null)
+            //	throw new System.ArgumentException();
+
+            IDataErrorInfo dataErrorInfo = m_component as IDataErrorInfo;
+
+            if (dataErrorInfo != null)
             {
-		//if(m_component == null)
-		//	throw new System::ArgumentException();
+                this.SourceError = dataErrorInfo.Error;
+            }
 
-		IDataErrorInfo dataErrorInfo = m_component as IDataErrorInfo;
+            if (descriptor == null)
+            {
+                foreach (Cell item in m_cells)
+                {
+                    item.UpdateNativeText();
 
-		if(dataErrorInfo != null)
-		{
-			this.SourceError = dataErrorInfo.Error;
-		}
+                    Column column = item.Column;
 
-		if(descriptor == null)
-		{
-			foreach(Cell item in m_cells)
-			{
-				item.UpdateNativeText();
+                    if (column.PropertyDescriptor != null && column.PropertyDescriptor.PropertyType == typeof(IBindingList))
+                    {
+                        for (int i = 0; i < m_pDataRow.GetChildCount(); i++)
+                        {
+                            GrGridRow childRow = m_pDataRow.GetChild(i) as GrGridRow;
+                            if (childRow != null)
+                            {
+                                if (childRow.GetPropertyDescriptor() == column.PropertyDescriptor)
+                                {
+                                    childRow.Update();
+                                }
+                            }
+                        }
+                    }
 
-				Column column = item.Column;
+                    if (dataErrorInfo != null && column.PropertyDescriptor != null && column.PropertyDescriptor.PropertyType != typeof(IBindingList))
+                    {
+                        this.SetSourceError(item, dataErrorInfo[column.ColumnName]);
+                    }
+                }
+            }
+            else
+            {
+                Cell cell = m_cells[descriptor.Name];
+                cell.UpdateNativeText();
 
-				if(column.PropertyDescriptor != null && column.PropertyDescriptor.PropertyType == IBindingList::typeid)
-				{
-					for(uint i=0; i<m_pDataRow.GetChildCount() ; i++)
-					{
-						GrGridRow* childRow = m_pDataRow.GetChild(i) as GrGridRow;
-						if(childRow != null)
-						{
-							if(childRow.GetPropertyDescriptor() == column.PropertyDescriptor)
-							{
-								childRow.Update();
-							}
-						}
-					}
-				}
-
-				if(dataErrorInfo != null && column.PropertyDescriptor != null && column.PropertyDescriptor.PropertyType != IBindingList::typeid)
-				{
-					this.SetSourceError(item, dataErrorInfo[column.ColumnName]);
-				}
-			}
-		}
-		else
-		{
-			Cell cell =  m_cells[descriptor.Name];
-			cell.UpdateNativeText();
-
-			if(dataErrorInfo != null)
-			{
-				this.SetSourceError(cell, dataErrorInfo[descriptor.Name]);
-			}
-			this.GridControl.InvokeValueChanged(cell);
-		}
-	}
+                if (dataErrorInfo != null)
+                {
+                    this.SetSourceError(cell, dataErrorInfo[descriptor.Name]);
+                }
+                this.GridControl.InvokeValueChanged(cell);
+            }
+        }
 
         internal void UpdateNativeText()
         {
@@ -528,7 +585,7 @@ namespace Ntreev.Windows.Forms.Grid
                 }
 
                 if (m_editedCount < 0)
-                    throw new System::Exception("먼가 수상합니다.");
+                    throw new Exception("먼가 수상합니다.");
             }
             finally
             {
@@ -623,12 +680,12 @@ namespace Ntreev.Windows.Forms.Grid
             get { return m_invalidValues; }
         }
 
-        internal GrDataRow NativeRef
+        internal new GrDataRow NativeRef
         {
             get { return m_pDataRow; }
         }
 
-                private bool ShouldSerializeCellForeColor()
+        private bool ShouldSerializeCellForeColor()
         {
             return m_pDataRow.GetItemForeColor() != GrColor.Empty;
         }

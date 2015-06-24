@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Design;
 using System.Linq;
 using System.Text;
 
@@ -68,7 +69,7 @@ namespace Ntreev.Windows.Forms.Grid
 
 
         [Category("Data")]
-        [Editor("Ntreev.Windows.Forms.Grid.Design.ValueEditor", typeof(Design.UITypeEditor))]
+        [Editor("Ntreev.Windows.Forms.Grid.Design.ValueEditor", typeof(UITypeEditor))]
         [TypeConverter(typeof(StringConverter))]
         public object Value
         {
@@ -76,14 +77,28 @@ namespace Ntreev.Windows.Forms.Grid
             set;
         }
 
-        public bool HasSourceValue
+        public virtual bool HasSourceValue
         {
-            get;
+            get
+            {
+                PropertyDescriptor propertyDescriptor = this.Column.PropertyDescriptor;
+                object component = this.Row.Component;
+                if (propertyDescriptor == null || component == null)
+                    return false;
+                return true;
+            }
         }
 
-        public object SourceValue
+        public virtual object SourceValue
         {
-            get;
+            get
+            {
+                PropertyDescriptor propertyDescriptor = this.Column.PropertyDescriptor;
+                object component = this.Row.Component;
+                if (propertyDescriptor == null || component == null)
+                    throw new ArgumentException();
+                return propertyDescriptor.GetValue(component);
+            }
         }
 
 #if DEBUG
@@ -93,7 +108,10 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public Column Column
         {
-            get;
+            get
+            {
+                return FromNative.Get(this.NativeRef.GetColumn());
+            }
         }
 
 #if DEBUG
@@ -103,7 +121,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public int ColumnID
         {
-            get;
+            get { return this.Column.ColumnID; }
         }
 
 #if DEBUG
@@ -113,7 +131,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public Row Row
         {
-            get;
+            get { return FromNative.Get(this.NativeRef.GetDataRow());}
         }
 
         /// <summary>
@@ -129,7 +147,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public int RowID
         {
-            get;
+            get { return this.Row.RowID; }
         }
 
         [Category("Behavior")]
@@ -471,9 +489,9 @@ namespace Ntreev.Windows.Forms.Grid
             m_displayValue = Cell.NullValue;
         }
 
-        internal GrItem NativeRef
+        internal new  GrItem NativeRef
         {
-            get;
+            get { return base.NativeRef as GrItem; }
         }
 
         internal bool IsSelecting
@@ -537,21 +555,24 @@ namespace Ntreev.Windows.Forms.Grid
             return propertyDescriptor.ShouldSerializeValue(this.Row.Component);
         }
 
-        private object ICell.Value
+        #region ICell
+
+        object ICell.Value
         {
             get { return this.Value; }
         }
 
-        private object ICell.Tag
+        object ICell.Tag
         {
             get { return this.Tag; }
         }
 
-        private IColumn ICell.Column
+        IColumn ICell.Column
         {
             get { return this.Column; }
         }
 
+        #endregion
 
         //GrItem* m_pItem;
 

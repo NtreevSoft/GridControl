@@ -7,8 +7,8 @@ namespace Ntreev.Library.Grid
 {
     public class GrRootRow : GrRow
     {
-        List<GrRow> m_vecVisibleRows;
-        List<GrUpdatableRow> m_vecUpdatables;
+        private readonly List<GrRow> m_vecVisibleRows = new List<GrRow>();
+        private readonly List<GrUpdatableRow> m_vecUpdatables = new List<GrUpdatableRow>();
         bool m_visibleChanged;
         bool m_fitChanged;
         bool m_heightChanged;
@@ -17,7 +17,7 @@ namespace Ntreev.Library.Grid
         int m_height;
 
         GrRect m_bound;
-        GrColumnList m_pColumnList;
+        GrColumnList m_columnList;
         GrDataRowList m_pDataRowList;
         GrDataRow m_pInsertionRow;
 
@@ -76,7 +76,7 @@ namespace Ntreev.Library.Grid
             if (m_heightChanged == true || force == true)
                 RepositionVisibleList();
 
-            m_width = m_pColumnList.GetBounds().GetWidth();
+            m_width = m_columnList.GetBounds().GetWidth();
 
             m_heightChanged = false;
             m_visibleChanged = false;
@@ -125,7 +125,7 @@ namespace Ntreev.Library.Grid
             GrRect rect;
             int left = this.GetX();
             int top = this.GetY();
-            int right = m_pColumnList.GetVisibleRight();
+            int right = m_columnList.GetVisibleRight();
             int bottom = m_pDataRowList.GetVisibleBottom();
             rect = GrRect.FromLTRB(left, top, right, bottom);
             return rect;
@@ -146,11 +146,11 @@ namespace Ntreev.Library.Grid
 
         public override GrRect GetBounds() { return m_bound; }
 
-        public override void Paint(GrGridPainter pPainter, GrRect clipRect)
+        public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
             foreach (var value in m_vecVisibleRows)
             {
-                value.Paint(pPainter, clipRect);
+                value.Paint(painter, clipRect);
             }
         }
 
@@ -231,7 +231,7 @@ namespace Ntreev.Library.Grid
             m_vecUpdatables.Sort((x, y) => x.GetUpdatePriority().CompareTo(y.GetUpdatePriority()));
             //std::sort(m_vecUpdatables.begin(), m_vecUpdatables.end(), SortUpdatable());
 
-            m_pColumnList = this.GridCore.GetColumnList();
+            m_columnList = this.GridCore.GetColumnList();
             m_pDataRowList = this.GridCore.GetDataRowList();
             m_pInsertionRow = this.GridCore.GetInsertionRow();
 

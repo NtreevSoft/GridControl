@@ -25,14 +25,14 @@ namespace Ntreev.Library.Grid.States
             m_pItemSelector.SelectAll();
 
             GrItem pItem = null;
-            GrDataRowList pDataRowList = this.GridCore.GetDataRowList();
-            GrColumnList pColumnList = this.GridCore.GetColumnList();
+            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
+            GrColumnList columnList = this.GridCore.GetColumnList();
 
-            if (pDataRowList.GetVisibleDataRowCount() > 0 && pColumnList.GetVisibleColumnCount() > 0)
+            if (dataRowList.GetVisibleDataRowCount() > 0 && columnList.GetVisibleColumnCount() > 0)
             {
-                GrColumn pColumn = pColumnList.GetVisibleColumn(0);
-                GrDataRow pDataRow = pDataRowList.GetVisibleDataRow(0);
-                pItem = pDataRow.GetItem(pColumn);
+                GrColumn column = columnList.GetVisibleColumn(0);
+                GrDataRow pDataRow = dataRowList.GetVisibleDataRow(0);
+                pItem = pDataRow.GetItem(column);
             }
 
             m_pFocuser.Set(pItem);

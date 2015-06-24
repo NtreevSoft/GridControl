@@ -7,11 +7,11 @@ namespace Ntreev.Library.Grid.States
 {
     class RowPressing : GrStateBase
     {
-        GrRow m_pRow;
+        GrRow m_row;
         bool m_handled;
 
         GrDataRowList m_pDataRowList;
-        GrColumnList m_pColumnList;
+        GrColumnList m_columnList;
 
         GrDataRow m_pDataRow;
         GrDataRow m_pTargetDataRow;
@@ -31,8 +31,8 @@ namespace Ntreev.Library.Grid.States
         {
             if (pHitted.GetCellType() != GrCellType.Row)
                 return false;
-            GrRow pRow = pHitted as GrRow;
-            int margin = pRow.GetResizingMargin();
+            GrRow row = pHitted as GrRow;
+            int margin = row.GetResizingMargin();
             if (localLocation.Y < margin || localLocation.Y >= pHitted.GetHeight() - margin)
                 return false;
             return true;
@@ -51,15 +51,15 @@ namespace Ntreev.Library.Grid.States
 
         public override void OnMouseDown(GrStateMouseEventArgs e)
         {
-            m_pRow = e.GetCell() as GrRow;
-            m_pDataRow = m_pRow as GrDataRow;
+            m_row = e.GetCell() as GrRow;
+            m_pDataRow = m_row as GrDataRow;
 
-            switch (m_pRow.GetRowType())
+            switch (m_row.GetRowType())
             {
                 case GrRowType.DataRow:
                 case GrRowType.InsertionRow:
                     {
-                        GrDataRow pDataRow = m_pRow as GrDataRow;
+                        GrDataRow pDataRow = m_row as GrDataRow;
 
                         if (m_pGridWindow.GetSelectionRange() == GrSelectionRange.Multi)
                         {
@@ -96,13 +96,13 @@ namespace Ntreev.Library.Grid.States
                     break;
                 case GrRowType.GroupRow:
                     {
-                        GrGroupRow pGroupRow = m_pRow as GrGroupRow;
+                        GrGroupRow groupRow = m_row as GrGroupRow;
                         if (m_pGridWindow.GetSelectionRange() == GrSelectionRange.Multi)
                         {
-                            if (m_pItemSelector.CanSelect(pGroupRow) == true)
+                            if (m_pItemSelector.CanSelect(groupRow) == true)
                             {
-                                m_pItemSelector.SelectDataRows(pGroupRow, m_pItemSelector.GetRowAnchor(), m_pGridWindow.GetSelectionType());
-                                m_pFocuser.Set(pGroupRow);
+                                m_pItemSelector.SelectDataRows(groupRow, m_pItemSelector.GetRowAnchor(), m_pGridWindow.GetSelectionType());
+                                m_pFocuser.Set(groupRow);
                             }
                         }
                         else
@@ -111,17 +111,17 @@ namespace Ntreev.Library.Grid.States
                             {
                                 case GrSelectionType.Normal:
                                     {
-                                        m_pItemSelector.SetSelectionGroup(pGroupRow);
-                                        m_pItemSelector.SetRowAnchor(pGroupRow);
+                                        m_pItemSelector.SetSelectionGroup(groupRow);
+                                        m_pItemSelector.SetRowAnchor(groupRow);
                                         m_pItemSelector.ClearSelection();
-                                        m_pFocuser.Set(pGroupRow);
+                                        m_pFocuser.Set(groupRow);
                                     }
                                     break;
                                 default:
                                     {
-                                        if (m_pItemSelector.CanSelect(pGroupRow) == true)
+                                        if (m_pItemSelector.CanSelect(groupRow) == true)
                                         {
-                                            m_pFocuser.Set(pGroupRow);
+                                            m_pFocuser.Set(groupRow);
                                         }
                                     }
                                     break;
@@ -131,7 +131,7 @@ namespace Ntreev.Library.Grid.States
                     break;
                 default:
                     {
-                        IDataRow pDataRow = m_pRow as IDataRow;
+                        IDataRow pDataRow = m_row as IDataRow;
                         if (pDataRow != null)
                         {
                             m_pItemSelector.ClearSelection();
@@ -140,7 +140,7 @@ namespace Ntreev.Library.Grid.States
                     }
                     break;
             }
-            this.GridCore.SetMousePress(m_pRow);
+            this.GridCore.SetMousePress(m_row);
         }
 
         public override void OnMouseUp(GrStateMouseEventArgs e)
@@ -232,8 +232,8 @@ namespace Ntreev.Library.Grid.States
             if (this.GridCore.IsGrouped() == true || this.GridCore.GetRowMovable() == false)
                 return false;
 
-            GrColumn pColumn = m_pColumnList.GetFirstSortColumn();
-            if (pColumn != null && pColumn.GetSortType() != GrSort.None)
+            GrColumn column = m_columnList.GetFirstSortColumn();
+            if (column != null && column.GetSortType() != GrSort.None)
                 return false;
 
             return true;
@@ -243,7 +243,7 @@ namespace Ntreev.Library.Grid.States
         {
             base.OnGridCoreAttached();
             m_pDataRowList = this.GridCore.GetDataRowList();
-            m_pColumnList = this.GridCore.GetColumnList();
+            m_columnList = this.GridCore.GetColumnList();
             this.GridCore.AttachObject(m_pTimer);
         }
 

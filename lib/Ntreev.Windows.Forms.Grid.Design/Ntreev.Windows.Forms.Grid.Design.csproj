@@ -199,9 +199,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ntreev.Windows.Forms.Grid\GridControl.vcxproj">
-      <Project>{D4D0F372-7312-4B53-BCA9-EA27FD971B32}</Project>
-      <Name>Ntreev.Windows.Forms.Grid</Name>
+    <ProjectReference Include="..\WinformGridHost\WinformGridHost.csproj">
+      <Project>{abd34ea7-4c48-415b-8907-ec140ea98cd9}</Project>
+      <Name>WinformGridHost</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

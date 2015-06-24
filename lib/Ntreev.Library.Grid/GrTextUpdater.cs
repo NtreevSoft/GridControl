@@ -24,19 +24,19 @@ namespace Ntreev.Library.Grid
             pCell.m_textBoundsChanged = true;
         }
 
-        public void AddTextBoundsByColumn(GrColumn pColumn)
+        public void AddTextBoundsByColumn(GrColumn column)
         {
             GrDataRow pInsertionRow = this.GridCore.GetInsertionRow();
-            GrDataRowList pDataRowList = this.GridCore.GetDataRowList();
-            AddTextBounds((GrCell)pColumn);
+            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
+            AddTextBounds((GrCell)column);
 
-            GrItem pItem = pInsertionRow.GetItem(pColumn);
+            GrItem pItem = pInsertionRow.GetItem(column);
             AddTextBounds(pItem);
 
-            for (int i = 0; i < pDataRowList.GetDataRowCount(); i++)
+            for (int i = 0; i < dataRowList.GetDataRowCount(); i++)
             {
-                GrDataRow pDataRow = pDataRowList.GetDataRow(i);
-                pItem = pDataRow.GetItem(pColumn);
+                GrDataRow pDataRow = dataRowList.GetDataRow(i);
+                pItem = pDataRow.GetItem(column);
                 AddTextBounds(pItem);
             }
         }
@@ -53,19 +53,19 @@ namespace Ntreev.Library.Grid
             pCell.m_textAlignChanged = true;
         }
 
-        public void AddTextAlignByColumn(GrColumn pColumn)
+        public void AddTextAlignByColumn(GrColumn column)
         {
             GrDataRow pInsertionRow = this.GridCore.GetInsertionRow();
-            GrDataRowList pDataRowList = this.GridCore.GetDataRowList();
-            AddTextAlign((GrCell)pColumn);
+            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
+            AddTextAlign((GrCell)column);
 
-            GrItem pItem = pInsertionRow.GetItem(pColumn);
+            GrItem pItem = pInsertionRow.GetItem(column);
             AddTextAlign(pItem);
 
-            for (int i = 0; i < pDataRowList.GetDataRowCount(); i++)
+            for (int i = 0; i < dataRowList.GetDataRowCount(); i++)
             {
-                GrDataRow pDataRow = pDataRowList.GetDataRow(i);
-                pItem = pDataRow.GetItem(pColumn);
+                GrDataRow pDataRow = dataRowList.GetDataRow(i);
+                pItem = pDataRow.GetItem(column);
                 AddTextAlign(pItem);
             }
         }

@@ -50,7 +50,7 @@ namespace Ntreev.Library.Grid
             return m_pDataRow.GetDisplayable();
         }
 
-        public override void Paint(GrGridPainter pPainter, GrRect clipRect)
+        public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
             GrRect paintRect = GetRect();
             GrColor foreColor = GetPaintingLineColor();
@@ -61,7 +61,7 @@ namespace Ntreev.Library.Grid
             if (m_pDataRow.IsLastVisible() == true)
                 paintStyle |= GrPaintStyle.BottomLine;
 
-            pPainter.DrawExpander(paintStyle, paintRect, (GrControlState)0, m_pDataRow.IsExpanded(), foreColor, backColor);
+            painter.DrawExpander(paintStyle, paintRect, (GrControlState)0, m_pDataRow.IsExpanded(), foreColor, backColor);
         }
     
     }

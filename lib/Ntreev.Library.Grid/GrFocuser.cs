@@ -43,21 +43,21 @@ namespace Ntreev.Library.Grid
 
             OnFocusChanged(e);
         }
-        public void Set(GrColumn pColumn)
+        public void Set(GrColumn column)
         {
             GrDataRow pDataRow = GetFocusableDataRow();
             if (pDataRow == null)
                 return;
 
-            GrItem pItem = pDataRow.GetItem(pColumn);
+            GrItem pItem = pDataRow.GetItem(column);
             Set(pItem);
         }
         public void Set(IDataRow pDataRow)
         {
-            GrColumn pColumn = GetFocusableColumn();
+            GrColumn column = GetFocusableColumn();
             IFocusable pFocusable = null;
-            if (pColumn != null)
-                pFocusable = pDataRow.GetFocusable(pColumn);
+            if (column != null)
+                pFocusable = pDataRow.GetFocusable(column);
             Set(pFocusable);
         }
 
@@ -181,22 +181,22 @@ namespace Ntreev.Library.Grid
 
         private GrColumn GetFocusableColumn()
         {
-            GrColumn pColumn = GetFocusedColumn();
+            GrColumn column = GetFocusedColumn();
 
-            if (pColumn == null)
+            if (column == null)
             {
-                pColumn = m_pLastFocusedColumn;
+                column = m_pLastFocusedColumn;
             }
 
-            if (pColumn == null)
+            if (column == null)
             {
-                GrColumnList pColumnList = this.GridCore.GetColumnList();
-                if (pColumnList.GetVisibleColumnCount() == 0)
+                GrColumnList columnList = this.GridCore.GetColumnList();
+                if (columnList.GetVisibleColumnCount() == 0)
                     return null;
-                pColumn = pColumnList.GetVisibleColumn(0);
+                column = columnList.GetVisibleColumn(0);
             }
 
-            return pColumn;
+            return column;
         }
         private GrDataRow GetFocusableDataRow()
         {
@@ -205,14 +205,14 @@ namespace Ntreev.Library.Grid
             if (pDataRow == null)
             {
                 //GrItemSelector pItemSelector = this.GridCore.GetItemSelector();
-                GrDataRowList pDataRowList = this.GridCore.GetDataRowList();
+                GrDataRowList dataRowList = this.GridCore.GetDataRowList();
 
-                GrDataRow pInsertionRow = pDataRowList.GetInsertionRow();
+                GrDataRow pInsertionRow = dataRowList.GetInsertionRow();
                 if (pInsertionRow.GetVisible() == true)
                     return pInsertionRow;
-                if (pDataRowList.GetVisibleDataRowCount() == 0)
+                if (dataRowList.GetVisibleDataRowCount() == 0)
                     return null;
-                pDataRow = pDataRowList.GetVisibleDataRow(0);
+                pDataRow = dataRowList.GetVisibleDataRow(0);
             }
 
             return pDataRow as GrDataRow;

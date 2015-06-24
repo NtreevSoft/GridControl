@@ -7,23 +7,23 @@ namespace Ntreev.Library.Grid
 {
     public class GrGroupHeader : GrCell, IFocusable
     {
-        GrGroupRow m_pRow;
+        GrGroupRow m_row;
 
-        public GrGroupHeader(GrGroupRow pRow)
+        public GrGroupHeader(GrGroupRow row)
         {
-            m_pRow = pRow;
+            m_row = row;
         }
 
         public override GrCellType GetCellType() { return GrCellType.GroupHeader; }
         public override int GetX()
         {
-            GrExpander pExpander = m_pRow.GetExpander();
+            GrExpander pExpander = m_row.GetExpander();
             return pExpander.GetRight();
         }
 
         public override int GetY()
         {
-            return m_pRow.GetY();
+            return m_row.GetY();
         }
 
 
@@ -34,7 +34,7 @@ namespace Ntreev.Library.Grid
 
         public override int GetHeight()
         {
-            return m_pRow.GetHeight();
+            return m_row.GetHeight();
         }
 
         public override bool GetVisible() { return true; }
@@ -61,22 +61,22 @@ namespace Ntreev.Library.Grid
 
         public override bool GetDisplayable()
         {
-            return m_pRow.GetDisplayable();
+            return m_row.GetDisplayable();
         }
 
 
-        public override void Paint(GrGridPainter pPainter, GrRect clipRect)
+        public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
-            GrColumn pColumn = m_pRow.GetColumn();
+            GrColumn column = m_row.GetColumn();
             GrRect paintRect = GetRect();
             GrPaintStyle paintStyle = ToPaintStyle() & ~GrPaintStyle.RightLine;
-            GrColor backColor = pColumn.GetPaintingBackColor();
-            GrColor foreColor = pColumn.GetPaintingForeColor();
-            GrColor lineColor = pColumn.GetPaintingLineColor();
+            GrColor backColor = column.GetPaintingBackColor();
+            GrColor foreColor = column.GetPaintingForeColor();
+            GrColor lineColor = column.GetPaintingLineColor();
 
             GrRect displayRect = this.GridCore.GetDisplayRect();
-            GrColumnList pColumnList = this.GridCore.GetColumnList();
-            if (this.GridCore.GetFillBlank() == true && pColumnList.GetDisplayableRight() < displayRect.Right)
+            GrColumnList columnList = this.GridCore.GetColumnList();
+            if (this.GridCore.GetFillBlank() == true && columnList.GetDisplayableRight() < displayRect.Right)
             {
                 int left = paintRect.Left;
                 int top = paintRect.Top;
@@ -85,8 +85,8 @@ namespace Ntreev.Library.Grid
                 paintRect = GrRect.FromLTRB(left, top, right, bottom);
             }
 
-            pPainter.DrawGroupHeader(paintStyle, paintRect, lineColor, backColor, null);
-            DrawText(pPainter, foreColor, paintRect, null);
+            painter.DrawGroupHeader(paintStyle, paintRect, lineColor, backColor, null);
+            DrawText(painter, foreColor, paintRect, null);
         }
 
         public override void Invalidate()
@@ -96,14 +96,14 @@ namespace Ntreev.Library.Grid
 
         public override GrRow GetRow()
         {
-            return m_pRow;
+            return m_row;
         }
         public override GrPaintStyle ToPaintStyle()
         {
             GrPaintStyle flag = base.ToPaintStyle();
 
-            GrFocuser pFocuser = this.GridCore.GetFocuser();
-            if (pFocuser.Get() == this)
+            GrFocuser focuser = this.GridCore.GetFocuser();
+            if (focuser.Get() == this)
                 flag |= GrPaintStyle.Focused;
             return flag;
         }
@@ -162,7 +162,7 @@ namespace Ntreev.Library.Grid
         public virtual GrRect GetDisplayRect() { return GetRect(); }
         public virtual IDataRow GetDataRow()
         {
-            return m_pRow;
+            return m_row;
         }
 
 

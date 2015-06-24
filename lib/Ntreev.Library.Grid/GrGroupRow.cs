@@ -9,7 +9,7 @@ namespace Ntreev.Library.Grid
     {
         internal uint m_groupLevel;
 
-        GrColumn m_pColumn;
+        GrColumn m_column;
         string m_itemText;
         internal string m_key;
 
@@ -18,7 +18,7 @@ namespace Ntreev.Library.Grid
         public GrGroupRow()
         {
             m_groupLevel = 0;
-            m_pColumn = null;
+            m_column = null;
 
             m_pLabel = new GrGroupHeader(this);
 
@@ -28,7 +28,7 @@ namespace Ntreev.Library.Grid
 
         public GrColumn GetColumn()
         {
-            return m_pColumn;
+            return m_column;
         }
 
         public GrGroupHeader GetLabel()
@@ -39,14 +39,14 @@ namespace Ntreev.Library.Grid
         public uint GetGroupLevel() { return m_groupLevel; }
 
         public override GrRowType GetRowType() { return GrRowType.GroupRow; }
-        public override void Paint(GrGridPainter pPainter, GrRect clipRect)
+        public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
-            base.Paint(pPainter, clipRect);
-            m_pLabel.Paint(pPainter, clipRect);
+            base.Paint(painter, clipRect);
+            m_pLabel.Paint(painter, clipRect);
         }
 
 
-        public override IFocusable GetFocusable(GrColumn pColumn)
+        public override IFocusable GetFocusable(GrColumn column)
         {
             return m_pLabel;
         }
@@ -81,12 +81,12 @@ namespace Ntreev.Library.Grid
 
 
 
-        internal void SetReference(GrColumn pColumn, string itemText)
+        internal void SetReference(GrColumn column, string itemText)
         {
-            m_pColumn = pColumn;
+            m_column = column;
             m_itemText = itemText;
 
-            m_key = pColumn.GetText();
+            m_key = column.GetText();
             m_key += " | ";
             m_key += itemText;
         }

@@ -27,7 +27,6 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel.Design;
 using Ntreev.Windows.Forms.Grid;
-using Ntreev.Windows.Forms.Grid.Columns;
 using System.Reflection;
 using System.Windows.Forms;
 using System.ComponentModel;

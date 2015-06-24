@@ -8,57 +8,57 @@ namespace Ntreev.Library.Grid
 {
     static class GrSortFunc
     {
-        public static  int SortRowsDown(GrGridCore pGridCore, GrRow pRow1, GrRow pRow2, object userData)
+        public static  int SortRowsDown(GrGridCore pGridCore, GrRow row1, GrRow row2, object userData)
         {
-            return SortRowsUp(pGridCore, pRow2, pRow1, userData);
+            return SortRowsUp(pGridCore, row2, row1, userData);
         }
 
-        public static int SortRowsUp(GrGridCore pGridCore, GrRow pRow1, GrRow pRow2, object userData)
+        public static int SortRowsUp(GrGridCore pGridCore, GrRow row1, GrRow row2, object userData)
         {
-            int result = pRow1.GetText().CompareTo(pRow2.GetText());
+            int result = row1.GetText().CompareTo(row2.GetText());
             if (result == 0)
-                return pRow1.GetID().CompareTo(pRow2.GetID());
+                return row1.GetID().CompareTo(row2.GetID());
             return result.CompareTo(0);
         }
 
-        public static int SortRowsNone(GrGridCore pGridCore, GrRow pRow1, GrRow pRow2, object userData)
+        public static int SortRowsNone(GrGridCore pGridCore, GrRow row1, GrRow row2, object userData)
         {
-            return pRow1.GetID().CompareTo(pRow2.GetID());
+            return row1.GetID().CompareTo(row2.GetID());
         }
 
-        public static int SortDataRowSortDown(GrGridCore pGridCore, GrRow pRow1, GrRow pRow2, object userData)
+        public static int SortDataRowSortDown(GrGridCore pGridCore, GrRow row1, GrRow row2, object userData)
         {
-            return SortDataRowSortUp(pGridCore, pRow2, pRow1, userData);
+            return SortDataRowSortUp(pGridCore, row2, row1, userData);
         }
 
-        public static int SortDataRowSortNone(GrGridCore pGridCore, GrRow pRow1, GrRow pRow2, object userData)
+        public static int SortDataRowSortNone(GrGridCore pGridCore, GrRow row1, GrRow row2, object userData)
         {
-            GrDataRow pDataRow1 = pRow1 as GrDataRow;
-            GrDataRow pDataRow2 = pRow2 as GrDataRow;
+            GrDataRow pDataRow1 = row1 as GrDataRow;
+            GrDataRow pDataRow2 = row2 as GrDataRow;
             return pDataRow1.GetDataRowIndex().CompareTo(pDataRow2.GetDataRowIndex());
         }
 
-        public static int SortDataRowSortUp(GrGridCore pGridCore, GrRow pRow1, GrRow pRow2, object userData)
+        public static int SortDataRowSortUp(GrGridCore pGridCore, GrRow row1, GrRow row2, object userData)
         {
-            if (pRow1.GetRowType() == pRow2.GetRowType())
+            if (row1.GetRowType() == row2.GetRowType())
             {
-                if (pRow1.GetRowType() == GrRowType.DataRow)
+                if (row1.GetRowType() == GrRowType.DataRow)
                 {
-                    GrColumn pColumn = userData as GrColumn;
-                    GrItem pItem1 = (pRow1 as GrDataRow).GetItem(pColumn);
-                    GrItem pItem2 = (pRow2 as GrDataRow).GetItem(pColumn);
+                    GrColumn column = userData as GrColumn;
+                    GrItem pItem1 = (row1 as GrDataRow).GetItem(column);
+                    GrItem pItem2 = (row2 as GrDataRow).GetItem(column);
                     return pItem1.GetText().CompareTo(pItem2.GetText());
                 }
-                else if (pRow1.GetRowType() == GrRowType.GroupRow)
+                else if (row1.GetRowType() == GrRowType.GroupRow)
                 {
-                    return pRow1.GetText().CompareTo(pRow2.GetText());
+                    return row1.GetText().CompareTo(row2.GetText());
                 }
                 else
                 {
-                    return pRow1.GetID().CompareTo(pRow2.GetID());
+                    return row1.GetID().CompareTo(row2.GetID());
                 }
             }
-            return pRow1.GetRowType().CompareTo(pRow2.GetRowType());
+            return row1.GetRowType().CompareTo(row2.GetRowType());
         }
     }
 }

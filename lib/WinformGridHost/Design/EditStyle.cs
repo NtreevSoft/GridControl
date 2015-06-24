@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace Ntreev.Windows.Forms.Grid.Design
 {
-    class EditStyle
+    public enum EditStyle
     {
+        Control,
+
+        DropDown,
+
+        Modal,
     }
 }

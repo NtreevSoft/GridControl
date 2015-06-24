@@ -16,7 +16,7 @@ namespace Ntreev.Windows.Forms.Grid
     [TypeConverter(typeof(ExpandableObjectConverter))]
     [ToolboxItem(false)]
     [DesignTimeVisible(false)]
-    [Designer("Ntreev.Windows.Forms.Grid.Design.ColumnDesigner, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
+    [Designer("Design.ColumnDesigner, Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca")]
     public class Column : CellBase, IColumn, ITextCacheProvider, IComponent, IServiceProvider
     {
         Type m_dataType;
@@ -50,26 +50,27 @@ namespace Ntreev.Windows.Forms.Grid
 
         public void Dispose()
         {
-            Lock(this);
-
-            if ((m_site != null) && (m_site.Container != null))
+            lock (this)
             {
-                m_site.Container.Remove(this);
-            }
-
-            this.Disposed(this, EventArgs.Empty);
-
-            if (m_pColumn != null)
-            {
-                if (m_pColumn.GetIndex() != GrDefineUtility.INVALID_INDEX)
+                if ((m_site != null) && (m_site.Container != null))
                 {
-                    GrColumnList pColumnList = m_pColumn.GetColumnList();
-                    if (this.GridControl != null)
-                        this.GridControl = null;
-                    pColumnList.RemoveColumn(m_pColumn);
+                    m_site.Container.Remove(this);
                 }
-                m_pColumn.ManagedRef = null;
-                m_pColumn = null;
+
+                this.Disposed(this, EventArgs.Empty);
+
+                if (m_pColumn != null)
+                {
+                    if (m_pColumn.GetIndex() != GrDefineUtility.INVALID_INDEX)
+                    {
+                        GrColumnList pColumnList = m_pColumn.GetColumnList();
+                        if (this.GridControl != null)
+                            this.GridControl = null;
+                        pColumnList.RemoveColumn(m_pColumn);
+                    }
+                    m_pColumn.ManagedRef = null;
+                    m_pColumn = null;
+                }
             }
         }
 
@@ -94,7 +95,7 @@ namespace Ntreev.Windows.Forms.Grid
             {
                 try
                 {
-                    Cell ^ cell = item.Cells[this];
+                    Cell cell = item.Cells[this];
                     cell.UpdateNativeText();
                 }
                 catch (Exception)
@@ -254,7 +255,7 @@ namespace Ntreev.Windows.Forms.Grid
 
         [Category("Layout")]
         [SettingsBindable(true)]
-        public int Width
+        public override int Width
         {
             get
             {
@@ -465,7 +466,7 @@ namespace Ntreev.Windows.Forms.Grid
             }
         }
 
-        [Editor("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", Design.UITypeEditor.typeid)]
+        [Editor("Ntreev.Windows.Forms.Grid.Design.TypeSelector, Ntreev.Windows.Forms.Grid.Design, Version=2.0.4510.20986, Culture=neutral, PublicKeyToken=7a9d7c7c4ba5dfca", typeof(System.Drawing.Design.UITypeEditor))]
         [Category("Data")]
         public Type DataType
         {
@@ -541,7 +542,7 @@ namespace Ntreev.Windows.Forms.Grid
         {
             get
             {
-                return (Ntreev.Windows.Forms.Grid.SortType)m_pColumn.GetSortType();
+                return (SortType)m_pColumn.GetSortType();
             }
             set
             {
@@ -728,14 +729,14 @@ namespace Ntreev.Windows.Forms.Grid
                 if (pFont == null)
                     return null;
 
-                return GrFont.ToManaged(pFont);
+                return pFont.ToManaged();
             }
             set
             {
                 if (value == null)
                     m_pColumn.SetItemFont(null);
                 else
-                    m_pColumn.SetItemFont(GrFont.FromManaged(value));
+                    m_pColumn.SetItemFont(value.FromManaged());
             }
         }
 
@@ -745,7 +746,7 @@ namespace Ntreev.Windows.Forms.Grid
         {
             get
             {
-                return (Ntreev.Windows.Forms.Grid.ClickEditType)m_pColumn.GetItemClickEditing();
+                return (ClickEditType)m_pColumn.GetItemClickEditing();
             }
             set
             {
@@ -758,12 +759,12 @@ namespace Ntreev.Windows.Forms.Grid
 #else
         [Browsable(false)]
 #endif
-        public ViewType ViewType
+        public virtual ViewType ViewType
         {
             get
             {
                 if (m_typeEditor == null)
-                    return Ntreev.Windows.Forms.Grid.ViewType.Text;
+                    return ViewType.Text;
                 return m_typeEditor.ViewType;
             }
         }
@@ -846,7 +847,7 @@ namespace Ntreev.Windows.Forms.Grid
 
         internal object ConvertFromSource(object value)
         {
-            if (ValueChecker.IsNullOrDBNull(value) == true)
+            if (Utility.IsNullOrDBNull(value) == true)
                 return value;
 
             if (m_propertyDescriptor == null)
@@ -885,7 +886,7 @@ namespace Ntreev.Windows.Forms.Grid
 
         internal object ConvertToSource(object value)
         {
-            if (ValueChecker.IsNullOrDBNull(value) == true)
+            if (Utility.IsNullOrDBNull(value) == true)
                 return value;
 
             if (m_propertyDescriptor == null)
@@ -988,9 +989,9 @@ namespace Ntreev.Windows.Forms.Grid
             }
         }
 
-        internal GrColumn NativeRef
+        internal new GrColumn NativeRef
         {
-            get;
+            get { return m_pColumn; }
         }
 
         internal Design.TypeEditor TypeEditor
@@ -1043,7 +1044,7 @@ namespace Ntreev.Windows.Forms.Grid
 
             if (m_propertyDescriptor == null)
             {
-                return m_dataType != string.typeid;
+                return m_dataType != typeof(string);
             }
             return m_dataType != m_propertyDescriptor.PropertyType;
         }
@@ -1060,7 +1061,7 @@ namespace Ntreev.Windows.Forms.Grid
             if (m_defaultValue == null)
                 return false;
 
-            if (this.DataType == string.typeid)
+            if (this.DataType == typeof(string))
             {
                 return string.IsNullOrEmpty(m_defaultValue.ToString()) == false;
             }
@@ -1123,13 +1124,13 @@ namespace Ntreev.Windows.Forms.Grid
             switch (GetEditStyle())
             {
                 case Design.EditStyle.Control:
-                    m_pColumn.SetItemType(GrItemType_Control);
+                    m_pColumn.SetItemType(GrItemType.Control);
                     break;
                 case Design.EditStyle.DropDown:
-                    m_pColumn.SetItemType(GrItemType_DropDown);
+                    m_pColumn.SetItemType(GrItemType.DropDown);
                     break;
                 case Design.EditStyle.Modal:
-                    m_pColumn.SetItemType(GrItemType_Modal);
+                    m_pColumn.SetItemType(GrItemType.Modal);
                     break;
             }
         }
@@ -1145,7 +1146,7 @@ namespace Ntreev.Windows.Forms.Grid
             }
         }
 
-        object IColumnDescriptor.Tag
+        object IColumn.Tag
         {
             get
             {
@@ -1195,6 +1196,59 @@ namespace Ntreev.Windows.Forms.Grid
             }
         }
 
+        static int RowComparerUp(GrGridCore pGridCore, GrRow row1, GrRow row2, object userData)
+        {
+            GrDataRow pDataRow1 = row1 as GrDataRow;
+            GrDataRow pDataRow2 = row2 as GrDataRow;
+            GrColumn pColumn = userData as GrColumn;
+
+            Cell cell1 = FromNative.Get(pDataRow1.GetItem(pColumn));
+            Cell cell2 = FromNative.Get(pDataRow2.GetItem(pColumn));
+
+            object value1 = cell1.Value;
+            object value2 = cell2.Value;
+
+            if (value1 == System.DBNull.Value)
+                value1 = null;
+            if (value2 == System.DBNull.Value)
+                value2 = null;
+
+            if (value1 != null && value2 != null)
+            {
+                int result;
+                System.Collections.IComparer comparer = cell1.Column.SortComparer;
+                if (comparer != null)
+                {
+                    result = comparer.Compare(value1, value2);
+                }
+                else
+                {
+                    IComparable comparable = value1 as IComparable;
+                    if (comparable != null)
+                        result = comparable.CompareTo(value2);
+                    else
+                        result = value1.ToString().CompareTo(value2.ToString());
+                }
+
+                if (result == 0)
+                    return pDataRow1.GetDataRowIndex().CompareTo(pDataRow2.GetDataRowIndex());
+
+                return result.CompareTo(0);
+            }
+            else if (value1 == null)
+            {
+                if (value2 == null)
+                    return pDataRow1.GetDataRowIndex().CompareTo(pDataRow2.GetDataRowIndex());
+                return 1;
+            }
+
+            return -1;
+        }
+
+        static int RowComparerDown(GrGridCore pGridCore, GrRow row1, GrRow row2, object userData)
+        {
+            return RowComparerUp(pGridCore, row2, row1, userData);
+        }
 
     }
 }

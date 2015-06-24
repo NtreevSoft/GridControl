@@ -1,1 +1,11 @@
 D:\NTG git\GridControl v2010\lib\WinformGridHost\obj\Debug\WinformGridHost.csprojResolveAssemblyReference.cache
+D:\NTG git\GridControl v2010\lib\WinformGridHost\obj\Debug\Ntreev.Windows.Forms.Grid.Properties.Resources.resources
+D:\NTG git\GridControl v2010\lib\WinformGridHost\obj\Debug\WinformGridHost.csproj.GenerateResource.Cache
+D:\NTG git\GridControl v2010\lib\WinformGridHost\obj\Debug\Ntreev.Windows.Forms.Grid.Design.Controls.FlagControl.resources
+D:\NTG git\GridControl v2010\lib\WinformGridHost\obj\Debug\Ntreev.Windows.Forms.Grid.AboutForm.resources
+D:\NTG git\GridControl v2010\lib\WinformGridHost\bin\Debug\WinformGridHost.dll
+D:\NTG git\GridControl v2010\lib\WinformGridHost\bin\Debug\WinformGridHost.pdb
+D:\NTG git\GridControl v2010\lib\WinformGridHost\bin\Debug\Ntreev.Library.Grid.dll
+D:\NTG git\GridControl v2010\lib\WinformGridHost\bin\Debug\Ntreev.Library.Grid.pdb
+D:\NTG git\GridControl v2010\lib\WinformGridHost\obj\Debug\WinformGridHost.dll
+D:\NTG git\GridControl v2010\lib\WinformGridHost\obj\Debug\WinformGridHost.pdb

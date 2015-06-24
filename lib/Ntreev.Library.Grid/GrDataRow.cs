@@ -7,7 +7,7 @@ namespace Ntreev.Library.Grid
 {
     public class GrDataRow : IDataRow
     {
-        List<GrItem> m_vecItems;
+        private readonly List<GrItem> m_vecItems = new List<GrItem>();
         bool m_readOnly;
 
         GrColor m_itemBackColor;
@@ -40,9 +40,9 @@ namespace Ntreev.Library.Grid
             m_itemsCount = 0;
         }
 
-        public GrItem GetItem(GrColumn pColumn)
+        public GrItem GetItem(GrColumn column)
         {
-            int columnID = pColumn.GetColumnID();
+            int columnID = column.GetColumnID();
             return m_vecItems[columnID];
         }
 
@@ -180,9 +180,9 @@ namespace Ntreev.Library.Grid
                 return;
 
             m_pDataRowList.SetVisibleChanged();
-            GrFocuser pFocuser = this.GridCore.GetFocuser();
-            if (pFocuser.GetFocusedRow() == this)
-                pFocuser.Set(null as  IFocusable);
+            GrFocuser focuser = this.GridCore.GetFocuser();
+            if (focuser.GetFocusedRow() == this)
+                focuser.Set(null as  IFocusable);
 
             GrRootRow pHeaderList = GetParent() as GrRootRow;
 
@@ -208,9 +208,9 @@ namespace Ntreev.Library.Grid
             return flag;
         }
 
-        public override void Paint(GrGridPainter pPainter, GrRect clipRect)
+        public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
-            base.Paint(pPainter, clipRect);
+            base.Paint(painter, clipRect);
 
             GrRect paintRect = GetRect();
             GrPaintStyle paintStyle = ToPaintStyle();
@@ -222,37 +222,37 @@ namespace Ntreev.Library.Grid
                 if (m_pDataRowList.GetRowNumberVisible() == true)
                 {
                     if (GetClipped() == true)
-                        DrawText(pPainter, foreColor, paintRect, clipRect);
+                        DrawText(painter, foreColor, paintRect, clipRect);
                     else
-                        DrawText(pPainter, foreColor, paintRect, null);
+                        DrawText(painter, foreColor, paintRect, null);
                 }
             }
 
-             GrColumnList pColumnList = this.GridCore.GetColumnList();
+             GrColumnList columnList = this.GridCore.GetColumnList();
             GrRect displayRect = this.GridCore.GetDisplayRect();
-            for (int i = 0; i < pColumnList.GetDisplayableColumnCount(); i++)
+            for (int i = 0; i < columnList.GetDisplayableColumnCount(); i++)
             {
-                 GrColumn pColumn = pColumnList.GetDisplayableColumn(i);
-                if (pColumn.GetX() > clipRect.Right || pColumn.GetRight() < clipRect.Left)
+                 GrColumn column = columnList.GetDisplayableColumn(i);
+                if (column.GetX() > clipRect.Right || column.GetRight() < clipRect.Left)
                     continue;
-                 GrItem pItem = GetItem(pColumn);
-                pItem.Paint(pPainter, clipRect);
+                 GrItem pItem = GetItem(column);
+                pItem.Paint(painter, clipRect);
             }
 
-            if (this.GridCore.GetFillBlank() == true && pColumnList.GetDisplayableRight() < displayRect.Right)
+            if (this.GridCore.GetFillBlank() == true && columnList.GetDisplayableRight() < displayRect.Right)
             {
                 GrRect pr = paintRect;
-                int left = pColumnList.GetDisplayableRight();
+                int left = columnList.GetDisplayableRight();
                 int right = displayRect.Right;
                 pr.X = left;
                 pr.Width = right - left;
-                pPainter.DrawItem(GrPaintStyle.BottomLine, pr, GetPaintingLineColor(), GetBlankPaintingBackColor(), clipRect);
+                painter.DrawItem(GrPaintStyle.BottomLine, pr, GetPaintingLineColor(), GetBlankPaintingBackColor(), clipRect);
             }
         }
 
-        public override IFocusable GetFocusable(GrColumn pColumn)
+        public override IFocusable GetFocusable(GrColumn column)
         {
-            return GetItem(pColumn);
+            return GetItem(column);
         }
 
         public override int GetMinHeight()
@@ -280,9 +280,9 @@ namespace Ntreev.Library.Grid
 
         protected override void OnGridCoreDetached()
         {
-            GrFocuser pFocuser = this.GridCore.GetFocuser();
-            if (pFocuser.GetFocusedRow() == this)
-                pFocuser.Set(null as IFocusable);
+            GrFocuser focuser = this.GridCore.GetFocuser();
+            if (focuser.GetFocusedRow() == this)
+                focuser.Set(null as IFocusable);
             SetSelected(false);
 
             foreach (var value in m_vecItems)
@@ -318,15 +318,15 @@ namespace Ntreev.Library.Grid
 
         protected override GrCell OnHitTest(int x)
         {
-            GrColumnList pColumnList = this.GridCore.GetColumnList();
-            for (int i = 0; i < pColumnList.GetDisplayableColumnCount(); i++)
+            GrColumnList columnList = this.GridCore.GetColumnList();
+            for (int i = 0; i < columnList.GetDisplayableColumnCount(); i++)
             {
-                GrColumn pColumn = pColumnList.GetDisplayableColumn(i);
-                if (pColumn.ContainsHorz(x) == true)
-                    return GetItem(pColumn);
+                GrColumn column = columnList.GetDisplayableColumn(i);
+                if (column.ContainsHorz(x) == true)
+                    return GetItem(column);
             }
 
-            GrColumnSplitter pSplitter = pColumnList.GetColumnSplitter();
+            GrColumnSplitter pSplitter = columnList.GetColumnSplitter();
 
             if (pSplitter.ContainsHorz(x) == true)
                 return pSplitter;
@@ -357,28 +357,28 @@ namespace Ntreev.Library.Grid
             m_dataRowID = index;
         }
 
-        internal void AddItem(GrColumn pColumn)
+        internal void AddItem(GrColumn column)
         {
-            int columnID = pColumn.GetColumnID();
+            int columnID = column.GetColumnID();
             GrItem pItem = null;
             if (columnID >= m_vecItems.Count)
             {
                 if ((int)columnID < m_itemsCount)
                 {
                     pItem = m_pItems[columnID];
-                    pItem.m_pColumn = pColumn;
+                    pItem.m_column = column;
                     pItem.m_pDataRow = this;
                 }
                 else
                 {
-                    pItem = new GrItem(pColumn, this);
+                    pItem = new GrItem(column, this);
                 }
 
                 m_vecItems.Add(pItem);
             }
             else
             {
-                pItem = GetItem(pColumn);
+                pItem = GetItem(column);
             }
 
             if (this.GridCore != null)

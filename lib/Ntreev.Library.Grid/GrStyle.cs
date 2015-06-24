@@ -83,8 +83,10 @@ namespace Ntreev.Library.Grid
             RowHighlightLineColor = GrColor.Black;
             RowHighlightFillColor = GrColor.LightCyan;
 
+            GroupForeColors = new List<GrColor>();
             GroupForeColors.Add(GrColor.Black);
 
+            GroupBackColors = new List<GrColor>();
             GroupBackColors.Add(GrColor.LightSalmon);
             GroupBackColors.Add(GrColor.PaleGreen);
             GroupBackColors.Add(GrColor.SkyBlue);
@@ -93,7 +95,10 @@ namespace Ntreev.Library.Grid
             GroupBackColors.Add(GrColor.Bisque);
             GroupBackColors.Add(GrColor.Honeydew);
 
+            GroupLineColors = new List<GrColor>();
             GroupLineColors.Add(GrColor.DefaultLineColor);
+
+            GroupFonts = new List<GrFont>();
             GroupFonts.Add(GrFont.GetDefaultFont());
         }
 

@@ -7,16 +7,16 @@ namespace Ntreev.Windows.Forms.Grid
 {
     public class CellEventArgs : EventArgs
     {
-        private readonly Cell m_cell;
+        private readonly Cell cell;
 
         public CellEventArgs(Cell cell)
         {
-            m_cell = cell;
+            this.cell = cell;
         }
 
         public Cell Cell
         {
-            get { return m_cell; }
+            get { return this.cell; }
         }
     }
 }

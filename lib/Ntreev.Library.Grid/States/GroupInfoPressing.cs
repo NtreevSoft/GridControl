@@ -29,18 +29,18 @@ namespace Ntreev.Library.Grid.States
             if (m_where == GrDefineUtility.INVALID_INDEX)
                 return;
 
-            GrGroupPanel pGroupList = this.GridCore.GetGroupPanel();
+            GrGroupPanel groupList = this.GridCore.GetGroupPanel();
             GrRect paintRect;
-            if (m_where < pGroupList.GetGroupCount())
+            if (m_where < groupList.GetGroupCount())
             {
-                GrGroup pGroup = pGroupList.GetGroup(m_where);
+                GrGroup pGroup = groupList.GetGroup(m_where);
                 paintRect = pGroup.GetRect();
             }
             else
             {
-                int lastIndex = pGroupList.GetGroupCount() - 1;
-                GrGroup pGroup = pGroupList.GetGroup(lastIndex);
-                paintRect = pGroupList.GetRect();
+                int lastIndex = groupList.GetGroupCount() - 1;
+                GrGroup pGroup = groupList.GetGroup(lastIndex);
+                paintRect = groupList.GetRect();
                 int left = pGroup.GetRect().Right;
                 int top = paintRect.Top;
                 int right = paintRect.Right;
@@ -85,12 +85,12 @@ namespace Ntreev.Library.Grid.States
             if (pHittedCell == null)
                 return;
 
-            GrRow pRow = pHittedCell.GetRow();
+            GrRow row = pHittedCell.GetRow();
 
             m_where = GrDefineUtility.INVALID_INDEX;
             m_targetType = TargetType.Unknown;
 
-            if (pRow.GetRowType() == GrRowType.GroupPanel)
+            if (row.GetRowType() == GrRowType.GroupPanel)
             {
                 if (hitTest.pHitted.GetCellType() == GrCellType.Group)
                 {
@@ -103,15 +103,15 @@ namespace Ntreev.Library.Grid.States
                 }
                 else
                 {
-                    GrGroupPanel pGroupList = pRow as GrGroupPanel;
-                    int lastIndex = pGroupList.GetGroupCount() - 1;
+                    GrGroupPanel groupList = row as GrGroupPanel;
+                    int lastIndex = groupList.GetGroupCount() - 1;
 
                     if (m_pGroup.GetGroupLevel() != lastIndex)
                     {
-                        GrGroup pLastGroup = pGroupList.GetGroup(lastIndex);
+                        GrGroup pLastGroup = groupList.GetGroup(lastIndex);
                         if (location.X > pLastGroup.GetRect().Right)
                         {
-                            m_where = pGroupList.GetGroupCount();
+                            m_where = groupList.GetGroupCount();
                             m_targetType = TargetType.Group;
                         }
                     }

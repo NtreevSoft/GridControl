@@ -24,20 +24,20 @@ namespace Ntreev.Library.Grid
             return this.GridCore.GetBounds().GetWidth();
         }
 
-        public override void Paint(GrGridPainter pPainter, GrRect clipRect)
+        public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
             GrColor backColor = GetPaintingBackColor();
             GrColor lineColor = GetPaintingLineColor();
             GrRect paintRect = GetRect();
 
             GrRect displayRect = this.GridCore.GetDisplayRect();
-            GrColumnList pColumnList = this.GridCore.GetColumnList();
-            if (this.GridCore.GetFillBlank() == true && pColumnList.GetDisplayableRight() < displayRect.Right)
+            GrColumnList columnList = this.GridCore.GetColumnList();
+            if (this.GridCore.GetFillBlank() == true && columnList.GetDisplayableRight() < displayRect.Right)
             {
                 paintRect.Width = displayRect.Right - paintRect.Left;
             }
 
-            pPainter.DrawRowSplitter(GrPaintStyle.BottomLine, paintRect, lineColor, backColor);
+            painter.DrawRowSplitter(GrPaintStyle.BottomLine, paintRect, lineColor, backColor);
         }
 
         public override bool GetVisible()

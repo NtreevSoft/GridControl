@@ -26,39 +26,39 @@
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namespace Design { namespace Controls
 {
-    TextBox::TextBox(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService)
-        : m_editorService(editorService)
-    {
-        this->BorderStyle = System::Windows::Forms::BorderStyle::None;
-        //this->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::Suggest;
-        this->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::None;
-        this->AutoCompleteSource = System::Windows::Forms::AutoCompleteSource::CustomSource;
-    }
+	TextBox::TextBox(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService)
+		: m_editorService(editorService)
+	{
+		this->BorderStyle = System::Windows::Forms::BorderStyle::None;
+		//this->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::Suggest;
+		this->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::None;
+		this->AutoCompleteSource = System::Windows::Forms::AutoCompleteSource::CustomSource;
+	}
 
-    void TextBox::OnKeyDown(System::Windows::Forms::KeyEventArgs^ e)
-    {
-        switch(e->KeyCode)
-        {
-        case System::Windows::Forms::Keys::Enter:
-            if(this->Multiline == true && e->Alt == true)
-            {
-                this->SelectedText = "\r\n";
-                return;
-            }
-            e->Handled = true;
-            break;
-        }
-        System::Windows::Forms::TextBox::OnKeyDown(e);
-    }
+	void TextBox::OnKeyDown(System::Windows::Forms::KeyEventArgs^ e)
+	{
+		switch(e->KeyCode)
+		{
+		case System::Windows::Forms::Keys::Enter:
+			if(this->Multiline == true && e->Alt == true)
+			{
+				this->SelectedText = "\r\n";
+				return;
+			}
+			e->Handled = true;
+			break;
+		}
+		System::Windows::Forms::TextBox::OnKeyDown(e);
+	}
 
-    void TextBox::OnKeyPress(System::Windows::Forms::KeyPressEventArgs^ e)
-      {
-          if ((e->KeyChar == 13) || (e->KeyChar == 27))
-          {
-              e->Handled = true;
-          }
+	void TextBox::OnKeyPress(System::Windows::Forms::KeyPressEventArgs^ e)
+	{
+		if ((e->KeyChar == 13) || (e->KeyChar == 27))
+		{
+			e->Handled = true;
+		}
 
-          System::Windows::Forms::TextBox::OnKeyPress(e);
-      }
+		System::Windows::Forms::TextBox::OnKeyPress(e);
+	}
 
 } /*namespace Controls*/ } /*namespace Design*/ } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

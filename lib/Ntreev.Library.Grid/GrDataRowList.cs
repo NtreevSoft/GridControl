@@ -9,17 +9,17 @@ namespace Ntreev.Library.Grid
     {
         int m_rowWidth;
 
-        List<GrDataRow> m_vecDataRowsRemoved;
-        List<GrDataRow> m_vecDataRows;
-        List<GrDataRow> m_vecVisibleDataRows;
-        List<IDataRow> m_vecVisibleRows;
-        List<IDataRow> m_vecDisplayableRows;
-        List<GrGroupRow> m_vecGroupRows;
+        List<GrDataRow> m_vecDataRowsRemoved = new List<GrDataRow>();
+        List<GrDataRow> m_vecDataRows = new List<GrDataRow>();
+        List<GrDataRow> m_vecVisibleDataRows = new List<GrDataRow>();
+        List<IDataRow> m_vecVisibleRows = new List<IDataRow>();
+        List<IDataRow> m_vecDisplayableRows = new List<IDataRow>();
+        List<GrGroupRow> m_vecGrourows = new List<GrGroupRow>();
 
-        Dictionary<string, GrCache> m_mapCache;
-        List<GrColumn> m_vecColumns;
+        Dictionary<string, GrCache> m_mapCache = new Dictionary<string, GrCache>();
+        List<GrColumn> m_vecColumns = new List<GrColumn>();
 
-        int m_usedGroupRow;
+        int m_usedGrourow;
         int m_groupCount;
         int m_dataRowID;
         int m_margin;
@@ -60,7 +60,7 @@ namespace Ntreev.Library.Grid
             m_margin = 0;
 
             m_groupCount = 0;
-            m_usedGroupRow = 0;
+            m_usedGrourow = 0;
             m_pFocusedDataRow = null;
             m_pInsertionRow = CreateInsertionRow();
             m_dataRowID = 0;
@@ -428,12 +428,12 @@ namespace Ntreev.Library.Grid
             return null;
         }
 
-        public GrRange HitTest(int y, IDataRow pRowAnchor)
+        public GrRange HitTest(int y, IDataRow rowAnchor)
         {
-            int anchorIndex = pRowAnchor.GetVisibleIndex();
+            int anchorIndex = rowAnchor.GetVisibleIndex();
             GrRange indexRange = new GrRange();
 
-            if (pRowAnchor.GetRowType() == GrRowType.InsertionRow)
+            if (rowAnchor.GetRowType() == GrRowType.InsertionRow)
             {
                 indexRange.SetRange(GrDefineUtility.INSERTION_ROW, GrDefineUtility.INSERTION_ROW + 1);
             }
@@ -513,12 +513,12 @@ namespace Ntreev.Library.Grid
             return m_offset;
         }
 
-        public void Sort(GrColumn pColumn)
+        public void Sort(GrColumn column)
         {
-            FuncSortRow fnSort = (FuncSortRow)pColumn.GetSortComparer(pColumn.GetSortType());
+            FuncSortRow fnSort = (FuncSortRow)column.GetSortComparer(column.GetSortType());
             if (fnSort == null)
             {
-                switch (pColumn.GetSortType())
+                switch (column.GetSortType())
                 {
                     case GrSort.Up:
 
@@ -535,15 +535,15 @@ namespace Ntreev.Library.Grid
 
             if (m_groupCount == 0)
             {
-                base.Sort(fnSort, pColumn);
+                base.Sort(fnSort, column);
             }
             else
             {
-                for (int i = 0; i < m_usedGroupRow; i++)
+                for (int i = 0; i < m_usedGrourow; i++)
                 {
-                    GrGroupRow pGroupRow = m_vecGroupRows[i];
-                    if (pGroupRow.GetGroupLevel() == m_groupCount - 1)
-                        pGroupRow.Sort(fnSort, pColumn);
+                    GrGroupRow groupRow = m_vecGrourows[i];
+                    if (groupRow.GetGroupLevel() == m_groupCount - 1)
+                        groupRow.Sort(fnSort, column);
                 }
             }
             SetVisibleChanged();
@@ -764,7 +764,7 @@ namespace Ntreev.Library.Grid
 
         public override int GetWidth() { return 0; }
         public override int GetHeight() { return m_displayableHeight; }
-        public override void Paint(GrGridPainter pPainter, GrRect clipRect)
+        public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
             foreach (var value in m_vecDisplayableRows)
             {
@@ -773,7 +773,7 @@ namespace Ntreev.Library.Grid
                 if (y >= clipRect.Bottom || b < clipRect.Top)
                     continue;
 
-                value.Paint(pPainter, clipRect);
+                value.Paint(painter, clipRect);
             }
 
             if (m_pFocusedDataRow != null && m_pFocusedDataRow.GetDisplayable() == true)
@@ -791,7 +791,7 @@ namespace Ntreev.Library.Grid
                     else
                         highlightRect.Width = displayRect.Right - highlightRect.Left;
 
-                    pPainter.DrawRectangle(highlightRect, pStyle.RowHighlightLineColor);
+                    painter.DrawRectangle(highlightRect, pStyle.RowHighlightLineColor);
                 }
             }
         }
@@ -804,14 +804,14 @@ namespace Ntreev.Library.Grid
 
             m_vecDataRows.Capacity = this.GridCore.GetReservedRow();
 
-            GrGroupPanel pGroupPanel = this.GridCore.GetGroupPanel();
+            GrGroupPanel groupPanel = this.GridCore.GetGroupPanel();
 
-            pGroupPanel.Changed += groupPanel_Changed;
-            pGroupPanel.Expanded += groupPanel_Expanded;
-            pGroupPanel.SortChanged += groupPanel_SortChanged;
+            groupPanel.Changed += groupPanel_Changed;
+            groupPanel.Expanded += groupPanel_Expanded;
+            groupPanel.SortChanged += groupPanel_SortChanged;
 
-            GrFocuser pFocuser = this.GridCore.GetFocuser();
-            pFocuser.FocusChanged += focuser_FocusedChanged;
+            GrFocuser focuser = this.GridCore.GetFocuser();
+            focuser.FocusChanged += focuser_FocusedChanged;
 
             this.GridCore.Cleared += gridCore_Cleared;
             this.GridCore.Created += gridCore_Created;
@@ -822,7 +822,7 @@ namespace Ntreev.Library.Grid
                 this.GridCore.AttachObject(item);
             }
 
-            foreach (var item in m_vecGroupRows)
+            foreach (var item in m_vecGrourows)
             {
                 this.GridCore.AttachObject(item);
             }
@@ -881,43 +881,43 @@ namespace Ntreev.Library.Grid
         }
 
 
-        private GrGroupRow CreateGroupRow(GrRow pParent, GrColumn pColumn, string itemText)
+        private GrGroupRow CreateGrourow(GrRow pParent, GrColumn column, string itemText)
         {
-            GrGroupRow pGroupRow;
-            if (m_vecGroupRows.Count == m_usedGroupRow)
+            GrGroupRow groupRow;
+            if (m_vecGrourows.Count == m_usedGrourow)
             {
-                pGroupRow = new GrGroupRow();
-                m_vecGroupRows.Add(pGroupRow);
+                groupRow = new GrGroupRow();
+                m_vecGrourows.Add(groupRow);
             }
             else
             {
-                pGroupRow = m_vecGroupRows[m_usedGroupRow];
+                groupRow = m_vecGrourows[m_usedGrourow];
             }
 
-            pParent.AddChild(pGroupRow);
+            pParent.AddChild(groupRow);
 
-            pGroupRow.SetTextVisible(false);
-            pGroupRow.SetReference(pColumn, itemText);
-            pGroupRow.m_groupLevel = 0;
+            groupRow.SetTextVisible(false);
+            groupRow.SetReference(column, itemText);
+            groupRow.m_groupLevel = 0;
 
-            if (m_mapCache.ContainsKey(pGroupRow.GetKey()) == false)
+            if (m_mapCache.ContainsKey(groupRow.GetKey()) == false)
             {
-                GrPadding padding = pGroupRow.GetPadding();
+                GrPadding padding = groupRow.GetPadding();
                 int height = GetPaintingFont().GetHeight() + padding.GetVertical();
-                pGroupRow.SetHeight(height);
-                pGroupRow.Expand(true);
+                groupRow.SetHeight(height);
+                groupRow.Expand(true);
             }
             else
             {
-                var value = m_mapCache[pGroupRow.GetKey()];
-                pGroupRow.SetHeight(value.height);
-                pGroupRow.Expand(value.expanded);
+                var value = m_mapCache[groupRow.GetKey()];
+                groupRow.SetHeight(value.height);
+                groupRow.Expand(value.expanded);
             }
 
-            this.GridCore.AttachObject(pGroupRow);
+            this.GridCore.AttachObject(groupRow);
 
-            m_usedGroupRow++;
-            return pGroupRow;
+            m_usedGrourow++;
+            return groupRow;
         }
 
         private GrDataRow CreateInsertionRow()
@@ -935,14 +935,14 @@ namespace Ntreev.Library.Grid
 
         private void BuildGroup(GrRow pParent, int groupLevel)
         {
-            GrGroupPanel pGroupPanel = this.GridCore.GetGroupPanel();
-            this.GridCore.AttachObject(pGroupPanel);
-            GrColumn pColumn = pGroupPanel.GetGroup(groupLevel).GetColumn();
+            GrGroupPanel groupPanel = this.GridCore.GetGroupPanel();
+            this.GridCore.AttachObject(groupPanel);
+            GrColumn column = groupPanel.GetGroup(groupLevel).GetColumn();
 
             List<GrDataRow> vecSort = new List<GrDataRow>();
 
             FuncSortRow fnSort;
-            switch (pColumn.GetGroup().GetSortType())
+            switch (column.GetGroup().GetSortType())
             {
                 case GrSort.Up:
                     fnSort = GrSortFunc.SortDataRowSortUp;
@@ -951,7 +951,7 @@ namespace Ntreev.Library.Grid
                     fnSort = GrSortFunc.SortDataRowSortDown;
                     break;
             }
-            pParent.Sort(fnSort, pColumn);
+            pParent.Sort(fnSort, column);
 
             vecSort.Capacity = pParent.GetChildCount();
             for (int i = 0; i < pParent.GetChildCount(); i++)
@@ -965,29 +965,29 @@ namespace Ntreev.Library.Grid
 
             string itemText = null;
 
-            GrGroupRow pGroupRow = null;
+            GrGroupRow groupRow = null;
 
             for (int i = 0; i < vecSort.Count; i++)
             {
-                GrDataRow pRow = vecSort[i];
-                GrItem pItem = pRow.GetItem(pColumn);
+                GrDataRow row = vecSort[i];
+                GrItem pItem = row.GetItem(column);
                 string nextItemText = pItem.GetText();
 
                 if (itemText != nextItemText || i == 0)
                 {
                     itemText = nextItemText;
-                    pGroupRow = CreateGroupRow(pParent, pColumn, itemText);
+                    groupRow = CreateGrourow(pParent, column, itemText);
                 }
-                pGroupRow.AddChild(pRow);
+                groupRow.AddChild(row);
             }
 
             int nextGroupLevel = groupLevel + 1;
             for (int i = 0; i < pParent.GetChildCount(); i++)
             {
-                GrGroupRow pRow = pParent.GetChild(i) as GrGroupRow;
-                pRow.ProcessAfterGroup();
+                GrGroupRow row = pParent.GetChild(i) as GrGroupRow;
+                row.ProcessAfterGroup();
                 if (nextGroupLevel < m_groupCount)
-                    BuildGroup(pRow, nextGroupLevel);
+                    BuildGroup(row, nextGroupLevel);
             }
         }
 
@@ -1003,12 +1003,12 @@ namespace Ntreev.Library.Grid
 
             if (m_groupCount == 0)
             {
-                m_usedGroupRow = 0;
+                m_usedGrourow = 0;
                 m_mapCache.Clear();
 
-                GrColumn pColumn = this.GridCore.GetColumnList().GetFirstSortColumn();
-                if (pColumn != null)
-                    Sort(pColumn);
+                GrColumn column = this.GridCore.GetColumnList().GetFirstSortColumn();
+                if (column != null)
+                    Sort(column);
                 else
                     base.Sort(GrSortFunc.SortDataRowSortNone, null);
             }
@@ -1016,11 +1016,11 @@ namespace Ntreev.Library.Grid
             {
                 BuildCache();
 
-                foreach (var value in m_vecGroupRows)
+                foreach (var value in m_vecGrourows)
                 {
                     value.ClearChild();
                 }
-                m_usedGroupRow = 0;
+                m_usedGrourow = 0;
                 BuildGroup(this, 0);
             }
 
@@ -1108,15 +1108,15 @@ namespace Ntreev.Library.Grid
         private void BuildCache()
         {
             m_mapCache.Clear();
-            for (int i = 0; i < m_usedGroupRow; i++)
+            for (int i = 0; i < m_usedGrourow; i++)
             {
-                GrGroupRow pGroupRow = m_vecGroupRows[i];
+                GrGroupRow groupRow = m_vecGrourows[i];
 
                 GrCache cache;
-                cache.height = pGroupRow.GetHeight();
-                cache.expanded = pGroupRow.IsExpanded();
+                cache.height = groupRow.GetHeight();
+                cache.expanded = groupRow.IsExpanded();
 
-                m_mapCache.Add(pGroupRow.m_key, cache);
+                m_mapCache.Add(groupRow.m_key, cache);
             }
         }
 
@@ -1132,14 +1132,14 @@ namespace Ntreev.Library.Grid
             //    delete value;
             //}
 
-            //foreach (var value in m_vecGroupRows)
+            //foreach (var value in m_vecGrourows)
             //{
             //    delete value;
             //}
 
             m_vecDataRows.Clear();
             m_vecDataRowsRemoved.Clear();
-            m_vecGroupRows.Clear();
+            m_vecGrourows.Clear();
         }
 
         private void UpdateVertScroll(GrRect displayRect)
@@ -1178,24 +1178,24 @@ namespace Ntreev.Library.Grid
             pVertScroll.SetMaximum(visibleRowCount - countPerPage + largeChange - 1);
             pVertScroll.SetLargeChange(largeChange);
         }
-        private void GetVisibleList(GrRow pRow, List<GrRow> pVisible)
+        private void GetVisibleList(GrRow row, List<GrRow> pVisible)
         {
-            if (pRow.GetVisible() == false)
+            if (row.GetVisible() == false)
                 return;
-            pVisible.Add(pRow);
-            for (int i = 0; i < pRow.GetChildCount(); i++)
+            pVisible.Add(row);
+            for (int i = 0; i < row.GetChildCount(); i++)
             {
-                GrRow pChild = pRow.GetChild(i);
+                GrRow pChild = row.GetChild(i);
                 GetVisibleList(pChild, pVisible);
             }
         }
 
-        private void GetMaxDepth(GrRow pRow, ref int depth)
+        private void GetMaxDepth(GrRow row, ref int depth)
         {
-            depth = Math.Max(depth, pRow.GetDepth());
-            for (int i = 0; i < pRow.GetChildCount(); i++)
+            depth = Math.Max(depth, row.GetDepth());
+            for (int i = 0; i < row.GetChildCount(); i++)
             {
-                GrRow pChild = pRow.GetChild(i);
+                GrRow pChild = row.GetChild(i);
 
                 GetMaxDepth(pChild, ref depth);
             }
@@ -1203,11 +1203,11 @@ namespace Ntreev.Library.Grid
 
         private void groupPanel_Changed(object sender, EventArgs e)
         {
-            GrGroupPanel pGroupPanel = this.GridCore.GetGroupPanel();
-            m_groupCount = pGroupPanel.GetGroupCount();
+            GrGroupPanel groupPanel = this.GridCore.GetGroupPanel();
+            m_groupCount = groupPanel.GetGroupCount();
             m_clippedIndex = GrDefineUtility.INVALID_INDEX;
 
-            int groupCount = pGroupPanel.GetGroupCount();
+            int groupCount = groupPanel.GetGroupCount();
             if (groupCount == 0)
                 m_margin = 0;
             else
@@ -1218,10 +1218,10 @@ namespace Ntreev.Library.Grid
 
         private void groupPanel_Expanded(object sender, GrGroupEventArgs e)
         {
-            GrColumn pColumn = e.Group.GetColumn();
-            foreach (var value in m_vecGroupRows)
+            GrColumn column = e.Group.GetColumn();
+            foreach (var value in m_vecGrourows)
             {
-                if (value.GetColumn() == pColumn)
+                if (value.GetColumn() == column)
                     value.Expand(e.Group.GetExpanded());
             }
             SetVisibleChanged();
@@ -1229,15 +1229,15 @@ namespace Ntreev.Library.Grid
 
         private void groupPanel_SortChanged(object sender, GrGroupEventArgs e)
         {
-            GrColumn pColumn = e.Group.GetColumn();
+            GrColumn column = e.Group.GetColumn();
 
             HashSet<GrRow> parentRows = new HashSet<GrRow>();
-            for (int i = 0; i < m_usedGroupRow; i++)
+            for (int i = 0; i < m_usedGrourow; i++)
             {
-                GrGroupRow pGroupRow = m_vecGroupRows[i];
+                GrGroupRow groupRow = m_vecGrourows[i];
 
-                if (pGroupRow.GetColumn() == pColumn)
-                    parentRows.Add(pGroupRow.GetParent());
+                if (groupRow.GetColumn() == column)
+                    parentRows.Add(groupRow.GetParent());
             }
 
             foreach (var value in parentRows)
@@ -1249,11 +1249,11 @@ namespace Ntreev.Library.Grid
 
         private void gridCore_Created(object sender, EventArgs e)
         {
-            GrColumnList pColumnList = this.GridCore.GetColumnList();
-            pColumnList.ColumnInserted += columnList_ColumnInserted;
-            pColumnList.ColumnRemoved += columnList_ColumnRemoved;
-            pColumnList.ColumnSortTypeChanged += columnList_ColumnSortTypeChanged;
-            pColumnList.ColumnPaddingChanged += columnList_ColumnPaddingChanged;
+            GrColumnList columnList = this.GridCore.GetColumnList();
+            columnList.ColumnInserted += columnList_ColumnInserted;
+            columnList.ColumnRemoved += columnList_ColumnRemoved;
+            columnList.ColumnSortTypeChanged += columnList_ColumnSortTypeChanged;
+            columnList.ColumnPaddingChanged += columnList_ColumnPaddingChanged;
         }
 
         private void gridCore_Cleared(object sender, EventArgs e)
@@ -1261,7 +1261,7 @@ namespace Ntreev.Library.Grid
             ClearChild();
 
             m_groupCount = 0;
-            m_usedGroupRow = 0;
+            m_usedGrourow = 0;
             m_pFocusedDataRow = null;
             m_dataRowID = 0;
             m_margin = 0;
@@ -1279,7 +1279,7 @@ namespace Ntreev.Library.Grid
         }
         private void gridCore_FontChanged(object sender, EventArgs e)
         {
-            GrColumnList pColumnList = this.GridCore.GetColumnList();
+            GrColumnList columnList = this.GridCore.GetColumnList();
             List<GrDataRow> vecDataRows = m_vecDataRows;
             vecDataRows.Add(GetInsertionRow());
 
@@ -1290,15 +1290,15 @@ namespace Ntreev.Library.Grid
                 GrDataRow pDataRow = value;
                 pTextUpdater.AddTextBounds(pDataRow);
 
-                for (int i = 0; i < pColumnList.GetColumnCount(); i++)
+                for (int i = 0; i < columnList.GetColumnCount(); i++)
                 {
-                    GrColumn pColumn = pColumnList.GetColumn(i);
-                    GrItem pItem = pDataRow.GetItem(pColumn);
+                    GrColumn column = columnList.GetColumn(i);
+                    GrItem pItem = pDataRow.GetItem(column);
                     pTextUpdater.AddTextBounds(pItem);
                 }
             }
 
-            foreach (var value in m_vecGroupRows)
+            foreach (var value in m_vecGrourows)
             {
                 pTextUpdater.AddTextBounds(value);
                 pTextUpdater.AddTextBounds(value.GetLabel());
@@ -1307,22 +1307,22 @@ namespace Ntreev.Library.Grid
 
         private void columnList_ColumnInserted(object sender, GrColumnEventArgs e)
         {
-            GrColumn pColumn = e.GetColumn();
+            GrColumn column = e.GetColumn();
 
-            if (pColumn.GetColumnID() >= m_vecColumns.Count)
+            if (column.GetColumnID() >= m_vecColumns.Count)
             {
-                m_vecColumns.Add(pColumn);
+                m_vecColumns.Add(column);
             }
 
-            GetInsertionRow().AddItem(pColumn);
+            GetInsertionRow().AddItem(column);
             foreach (var value in m_vecDataRows)
             {
-                value.AddItem(pColumn);
+                value.AddItem(column);
             }
 
             foreach (var value in m_vecDataRowsRemoved)
             {
-                value.AddItem(pColumn);
+                value.AddItem(column);
             }
         }
 
@@ -1340,8 +1340,8 @@ namespace Ntreev.Library.Grid
 
         private void columnList_ColumnSortTypeChanged(object sender, GrColumnEventArgs e)
         {
-            GrColumn pColumn = e.GetColumn();
-            Sort(pColumn);
+            GrColumn column = e.GetColumn();
+            Sort(column);
         }
 
         private void columnList_ColumnPaddingChanged(object sender, GrColumnEventArgs e)
@@ -1355,8 +1355,8 @@ namespace Ntreev.Library.Grid
 
         private void focuser_FocusedChanged(object sender, GrFocusChangeArgs e)
         {
-            GrFocuser pFocuser = sender as GrFocuser;
-            m_pFocusedDataRow = pFocuser.GetFocusedRow() as GrDataRow;
+            GrFocuser focuser = sender as GrFocuser;
+            m_pFocusedDataRow = focuser.GetFocusedRow() as GrDataRow;
         }
 
 

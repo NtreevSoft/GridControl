@@ -8,7 +8,7 @@ namespace Ntreev.Library.Grid.States
 {
     class ItemEditing : GrStateBase
     {
-        GrColumn m_pColumn;
+        GrColumn m_column;
         GrItem m_pItem;
 
         GrEditingResult m_result;
@@ -69,7 +69,7 @@ namespace Ntreev.Library.Grid.States
         private GrGridState OnBegin(GrEditingReason reason)
         {
             m_result = GrEditingResult.None;
-            m_pColumn = m_pItem.GetColumn();
+            m_column = m_pItem.GetColumn();
             m_pItem.LockColor(true);
 
             GrEditEventArgs e = new GrEditEventArgs(m_pItem, reason);

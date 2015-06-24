@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Ntreev.Windows.Forms.Grid
 {
-    class Style
+    public class Style
     {
     }
 }

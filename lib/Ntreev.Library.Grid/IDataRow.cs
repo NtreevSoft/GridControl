@@ -138,8 +138,8 @@ namespace Ntreev.Library.Grid
         }
         public bool HasFocused()
         {
-            GrFocuser pFocuser = this.GridCore.GetFocuser();
-            if (pFocuser.GetFocusedRow() == this)
+            GrFocuser focuser = this.GridCore.GetFocuser();
+            if (focuser.GetFocusedRow() == this)
                 return true;
             return false;
         }
@@ -177,7 +177,7 @@ namespace Ntreev.Library.Grid
 
         public int GetSelectionGroup() { return m_selectionGroup; }
 
-        public abstract IFocusable GetFocusable(GrColumn pColumn);
+        public abstract IFocusable GetFocusable(GrColumn column);
         public virtual bool GetFullSelected() { return false; }
 
         public override GrColor GetForeColor()
@@ -237,7 +237,7 @@ namespace Ntreev.Library.Grid
                 flag |= GrPaintStyle.Focused;
             return flag;
         }
-        public virtual void Paint(GrGridPainter pPainter, GrRect clipRect)
+        public virtual void Paint(GrGridPainter painter, GrRect clipRect)
         {
             GrRect paintRect = GetRect();
             GrPaintStyle paintStyle = ToPaintStyle();
@@ -247,9 +247,9 @@ namespace Ntreev.Library.Grid
             if (this.GridCore.GetRowVisible() == true)
             {
                 if (GetClipped() == true)
-                    pPainter.DrawRow(paintStyle, paintRect, GetPaintingLineColor(), backColor, clipRect);
+                    painter.DrawRow(paintStyle, paintRect, GetPaintingLineColor(), backColor, clipRect);
                 else
-                    pPainter.DrawRow(paintStyle, paintRect, GetPaintingLineColor(), backColor, null);
+                    painter.DrawRow(paintStyle, paintRect, GetPaintingLineColor(), backColor, null);
             }
 
             if (m_pDataRowList.GetMargin() > 0)
@@ -259,14 +259,14 @@ namespace Ntreev.Library.Grid
                 paintRect.X = left;
                 paintRect.Width = right - left;
                 if (GetRowType() == GrRowType.InsertionRow)
-                    pPainter.DrawItem(GrPaintStyle.Default, paintRect, GetCellLineColor(), GetCellBackColor(), null);
+                    painter.DrawItem(GrPaintStyle.Default, paintRect, GetCellLineColor(), GetCellBackColor(), null);
                 else if (GetVisibleIndex() == m_pDataRowList.GetVisibleRowCount() - 1)
-                    pPainter.DrawItem(GrPaintStyle.Default, paintRect, GetCellLineColor(), GetCellBackColor(), null);
+                    painter.DrawItem(GrPaintStyle.Default, paintRect, GetCellLineColor(), GetCellBackColor(), null);
                 else
-                    pPainter.DrawItem(GrPaintStyle.RightLine, paintRect, GetCellLineColor(), GetCellBackColor(), clipRect);
+                    painter.DrawItem(GrPaintStyle.RightLine, paintRect, GetCellLineColor(), GetCellBackColor(), clipRect);
             }
 
-            DrawExpander(pPainter, clipRect);
+            DrawExpander(painter, clipRect);
         }
         //public virtual void OnYChanged();
 
@@ -289,9 +289,9 @@ namespace Ntreev.Library.Grid
             if (m_pDataRowList != null)
                 m_pDataRowList.SetHeightChanged();
         }
-        protected override void OnChildAdded(GrRow pRow)
+        protected override void OnChildAdded(GrRow row)
         {
-            base.OnChildAdded(pRow);
+            base.OnChildAdded(row);
 
             if (m_pDataRowList != null)
             {
@@ -313,11 +313,11 @@ namespace Ntreev.Library.Grid
             return null;
         }
 
-        protected void DrawExpander(GrGridPainter pPainter, GrRect clipRect)
+        protected void DrawExpander(GrGridPainter painter, GrRect clipRect)
         {
             if (m_pExpander.GetVisible() == false)
                 return;
-            m_pExpander.Paint(pPainter, clipRect);
+            m_pExpander.Paint(painter, clipRect);
         }
 
 

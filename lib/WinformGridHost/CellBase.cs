@@ -24,6 +24,7 @@ namespace Ntreev.Windows.Forms.Grid
         internal CellBase(GrCell pCell)
             : base(pCell)
         {
+            m_pCell = pCell;
             m_pCell.ManagedRef = this;
         }
 
@@ -125,9 +126,13 @@ namespace Ntreev.Windows.Forms.Grid
 #else
         [Browsable(false)]
 #endif
-        public int Width
+        public virtual int Width
         {
             get { return m_pCell.GetWidth(); }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
 
 #if DEBUG

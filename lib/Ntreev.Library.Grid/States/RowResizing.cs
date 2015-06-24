@@ -8,7 +8,7 @@ namespace Ntreev.Library.Grid.States
 {
     class RowResizing : GrStateBase
     {
-        GrRow m_pRow;
+        GrRow m_row;
         int m_resizingStart;
         int m_resizingLocation;
         int m_resizingMin;
@@ -23,17 +23,17 @@ namespace Ntreev.Library.Grid.States
 
         public override bool GetHitTest(GrCell pHitted, GrPoint localLocation)
         {
-            GrRow pRow = pHitted as GrRow;
-            if (pRow == null || pRow.GetResizable() == false || this.GridCore.GetRowResizable() == false)
+            GrRow row = pHitted as GrRow;
+            if (row == null || row.GetResizable() == false || this.GridCore.GetRowResizable() == false)
                 return false;
-            return GetResizingRow(pRow, localLocation) != null;
+            return GetResizingRow(row, localLocation) != null;
         }
 
         public override void OnMouseDown(GrStateMouseEventArgs e)
         {
-            m_pRow = GetResizingRow(e.GetCell() as GrRow, e.GetLocalHit());
+            m_row = GetResizingRow(e.GetCell() as GrRow, e.GetLocalHit());
 
-            GrRect rowRect = m_pRow.GetRect();
+            GrRect rowRect = m_row.GetRect();
 
             m_resizingStart = rowRect.Bottom;
             m_resizingLocation = rowRect.Bottom;
@@ -45,14 +45,14 @@ namespace Ntreev.Library.Grid.States
 
         public override void OnMouseDoubleClick(GrStateMouseEventArgs e)
         {
-            GrDataRowList pDataRowList = this.GridCore.GetDataRowList();
+            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
 
-            IDataRow p = m_pRow as IDataRow;
+            IDataRow p = m_row as IDataRow;
             if (p != null && p.GetFullSelected() == true)
             {
-                for (int i = 0; i < pDataRowList.GetVisibleRowCount(); i++)
+                for (int i = 0; i < dataRowList.GetVisibleRowCount(); i++)
                 {
-                    GrDataRow pDataRow = pDataRowList.GetVisibleRow(i) as GrDataRow;
+                    GrDataRow pDataRow = dataRowList.GetVisibleRow(i) as GrDataRow;
                     if (pDataRow == null)
                         continue;
                     if (pDataRow.GetFullSelected() == false)
@@ -64,7 +64,7 @@ namespace Ntreev.Library.Grid.States
             }
             else
             {
-                m_pRow.SetFit();
+                m_row.SetFit();
             }
             this.GridCore.Invalidate();
         }
@@ -89,18 +89,18 @@ namespace Ntreev.Library.Grid.States
 
         public override void OnMouseDragEnd(bool cancel, GrHitTest hitTest)
         {
-            int newHeight = m_pRow.GetHeight() + (m_resizingLocation - m_resizingStart);
+            int newHeight = m_row.GetHeight() + (m_resizingLocation - m_resizingStart);
             GrRect displayRect = this.GridCore.GetDisplayRect();
-            if (m_pRow.GetHeight() != newHeight)
+            if (m_row.GetHeight() != newHeight)
             {
-                IDataRow p = m_pRow as IDataRow;
+                IDataRow p = m_row as IDataRow;
                 if (p != null && p.GetFullSelected() == true)
                 {
-                    GrDataRowList pDataRowList = m_pRow.GetGridCore().GetDataRowList();
+                    GrDataRowList dataRowList = m_row.GetGridCore().GetDataRowList();
                     int y = int.MaxValue;
-                    for (int i = 0; i < pDataRowList.GetVisibleRowCount(); i++)
+                    for (int i = 0; i < dataRowList.GetVisibleRowCount(); i++)
                     {
-                        GrDataRow pDataRow = pDataRowList.GetVisibleRow(i) as GrDataRow;
+                        GrDataRow pDataRow = dataRowList.GetVisibleRow(i) as GrDataRow;
                         if (pDataRow == null)
                             continue;
                         if (pDataRow.GetFullSelected() == false)
@@ -118,8 +118,8 @@ namespace Ntreev.Library.Grid.States
                 }
                 else
                 {
-                    m_pRow.SetHeight(newHeight);
-                    this.GridCore.Invalidate(displayRect.Left, m_pRow.GetY(), displayRect.Right, displayRect.Bottom);
+                    m_row.SetHeight(newHeight);
+                    this.GridCore.Invalidate(displayRect.Left, m_row.GetY(), displayRect.Right, displayRect.Bottom);
                 }
             }
             else
@@ -134,22 +134,22 @@ namespace Ntreev.Library.Grid.States
 
         public override GrCursor GetCursor() { return GrCursor.HSplit; }
 
-        private GrRow GetResizingRow(GrRow pRow, GrPoint localLocation)
+        private GrRow GetResizingRow(GrRow row, GrPoint localLocation)
         {
-            int margin = pRow.GetResizingMargin();
+            int margin = row.GetResizingMargin();
 
-            if (localLocation.Y >= pRow.GetHeight() - margin)
+            if (localLocation.Y >= row.GetHeight() - margin)
             {
-                if (pRow.GetResizable() == true)
-                    return pRow;
+                if (row.GetResizable() == true)
+                    return row;
             }
             else if (localLocation.Y < margin)
             {
-                IDataRow pDataRow = pRow as IDataRow;
+                IDataRow pDataRow = row as IDataRow;
                 if (pDataRow != null && pDataRow.GetVisibleIndex() > 0)
                 {
-                    GrDataRowList pDataRowList = pDataRow.GetGridCore().GetDataRowList();
-                    pDataRow = pDataRowList.GetVisibleRow(pDataRow.GetVisibleIndex() - 1);
+                    GrDataRowList dataRowList = pDataRow.GetGridCore().GetDataRowList();
+                    pDataRow = dataRowList.GetVisibleRow(pDataRow.GetVisibleIndex() - 1);
                     if (pDataRow.GetResizable())
                         return pDataRow;
                 }

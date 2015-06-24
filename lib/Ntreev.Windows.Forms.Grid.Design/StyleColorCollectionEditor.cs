@@ -11,7 +11,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
     public class StyleColorCollectionEditor : CollectionEditor
     {
         Color defaultColor = Color.Empty;
-        StyleColorCollection colorCollection;
+        //StyleColorCollection colorCollection;
 
         public StyleColorCollectionEditor(Type type)
             : base(type)
@@ -24,14 +24,14 @@ namespace Ntreev.Windows.Forms.Grid.Design
             Style style = this.Context.Instance as Style;
             if(style == null)
                 return base.CreateInstance(itemType);
-            if (this.colorCollection != null)
-                return this.colorCollection.DefaultColor;
+            //if (this.colorCollection != null)
+            //    return this.colorCollection.DefaultColor;
             return defaultColor;
         }
 
         public override object EditValue(System.ComponentModel.ITypeDescriptorContext context, IServiceProvider provider, object value)
         {
-            this.colorCollection = value as StyleColorCollection;
+            //this.colorCollection = value as StyleColorCollection;
             return base.EditValue(context, provider, value);
         }
     }

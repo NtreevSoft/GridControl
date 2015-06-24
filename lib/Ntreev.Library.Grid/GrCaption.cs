@@ -52,12 +52,12 @@ namespace Ntreev.Library.Grid
             return this.GridCore.GetBounds().GetWidth();
         }
 
-        public override void Paint(GrGridPainter pPainter, GrRect clipRect)
+        public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
             GrRect paintRect = GetRect();
             GrRect displayRect = this.GridCore.GetDisplayRect();
-            GrColumnList pColumnList = this.GridCore.GetColumnList();
-            if (this.GridCore.GetFillBlank() == true && pColumnList.GetDisplayableRight() < displayRect.Right)
+            GrColumnList columnList = this.GridCore.GetColumnList();
+            if (this.GridCore.GetFillBlank() == true && columnList.GetDisplayableRight() < displayRect.Right)
             {
                 paintRect.Width = displayRect.Right - paintRect.Left;
             }
@@ -69,9 +69,9 @@ namespace Ntreev.Library.Grid
             GrColor foreColor = GetPaintingForeColor();
             GrColor backColor = GetPaintingBackColor();
 
-            pPainter.DrawItem(paintStyle, paintRect, GetPaintingLineColor(), backColor, null);
+            painter.DrawItem(paintStyle, paintRect, GetPaintingLineColor(), backColor, null);
 
-            DrawText(pPainter, foreColor, paintRect, paintRect);
+            DrawText(painter, foreColor, paintRect, paintRect);
         }
 
         public override bool GetVisible()

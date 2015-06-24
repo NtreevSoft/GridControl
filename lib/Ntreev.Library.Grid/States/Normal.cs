@@ -31,7 +31,7 @@ namespace Ntreev.Library.Grid.States
         public override void OnMouseWheel(GrMouseEventArgs e)
         {
             GrScroll pVertScroll = this.GridCore.GetVertScroll();
-            GrDataRowList pDataRowList = this.GridCore.GetDataRowList();
+            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
 
             if (pVertScroll.GetVisible() == false)
                 return;
@@ -39,7 +39,7 @@ namespace Ntreev.Library.Grid.States
             int scrollLine = m_pGridWindow.GetMouseWheelScrollLines();
 
             int value = e.GetDelta() / m_pGridWindow.GetMouseWheelScrollDelta() * scrollLine;
-            int rowCount = (int)pDataRowList.GetDisplayableRowCount();
+            int rowCount = (int)dataRowList.GetDisplayableRowCount();
 
             if (rowCount < Math.Abs(value))
             {

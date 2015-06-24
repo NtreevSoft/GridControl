@@ -8,7 +8,7 @@ namespace Ntreev.Library.Grid
 {
     public class GrStateManager : GrObject
     {
-        List<GrStateBase> m_states;
+        private readonly List<GrStateBase> m_states = new List<GrStateBase>();
         GrStateBase m_state;
         GrStateBase m_downState;
         GrStateBase m_defaultState;
@@ -58,8 +58,8 @@ namespace Ntreev.Library.Grid
 
         public GrGridState GetHitTest(GrPoint location)
         {
-            GrHitTest hitTest = new GrHitTest();
-            if (this.GridCore.HitTest(location, hitTest) == false)
+            GrHitTest hitTest;
+            if (this.GridCore.HitTest(location, out hitTest) == false)
                 return GrGridState.Unknown;
             GrStateBase base1 = GetHitTest(hitTest.pHitted, hitTest.localHit);
             return base1 != null ? base1.GetState() : GrGridState.Unknown;
@@ -73,9 +73,9 @@ namespace Ntreev.Library.Grid
             {
 
                 m_downState = null;
-                GrHitTest hitTest = new GrHitTest();
+                GrHitTest hitTest;
 
-                if (this.GridCore.HitTest(location, hitTest) == true)
+                if (this.GridCore.HitTest(location, out hitTest) == true)
                 {
                     GrStateBase hittedState = GetHitTest(hitTest.pHitted, hitTest.localHit);
                     if (hittedState == null)
@@ -108,8 +108,8 @@ namespace Ntreev.Library.Grid
             using (Invalidator invalidator = new Invalidator(this.GridCore))
             {
 
-                GrHitTest hitTest = new GrHitTest();
-                this.GridCore.HitTest(location, hitTest);
+                GrHitTest hitTest;
+                this.GridCore.HitTest(location, out hitTest);
 
                 if (pressed == true)
                 {
@@ -155,8 +155,8 @@ namespace Ntreev.Library.Grid
 
                 if (m_state != null)
                 {
-                    GrHitTest hitTest = new GrHitTest();
-                    this.GridCore.HitTest(location, hitTest);
+                    GrHitTest hitTest;
+                    this.GridCore.HitTest(location, out hitTest);
 
                     if (m_dragging == true)
                     {
@@ -182,8 +182,8 @@ namespace Ntreev.Library.Grid
 
                 if (m_downState != null)
                 {
-                    GrHitTest hitTest = new GrHitTest();
-                    this.GridCore.HitTest(location, hitTest);
+                    GrHitTest hitTest;
+                    this.GridCore.HitTest(location, out hitTest);
 
                     GrStateMouseEventArgs e = new GrStateMouseEventArgs(location, modifierKeys, hitTest.pHitted, hitTest.localHit, m_downState.GetState());
 
@@ -204,8 +204,8 @@ namespace Ntreev.Library.Grid
 
                 if (m_downState != null)
                 {
-                    GrHitTest hitTest = new GrHitTest();
-                    this.GridCore.HitTest(location, hitTest);
+                    GrHitTest hitTest;
+                    this.GridCore.HitTest(location, out hitTest);
 
                     GrStateMouseEventArgs e = new GrStateMouseEventArgs(location, modifierKeys, hitTest.pHitted, hitTest.localHit, m_downState.GetState());
                     m_downState.OnMouseDoubleClick(e);

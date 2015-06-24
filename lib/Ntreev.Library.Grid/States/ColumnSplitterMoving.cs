@@ -9,7 +9,7 @@ namespace Ntreev.Library.Grid.States
     {
         int m_location;
         int m_freezableIndex;
-        GrColumnSplitter m_pColumnSplitter;
+        GrColumnSplitter m_columnSplitter;
 
         public ColumnSplitterMoving()
         {
@@ -25,7 +25,7 @@ namespace Ntreev.Library.Grid.States
 
         public override void OnBegin(GrStateEventArgs e)
         {
-            m_pColumnSplitter = e.GetCell() as GrColumnSplitter;
+            m_columnSplitter = e.GetCell() as GrColumnSplitter;
         }
 
         public override void OnPaintAdornments(GrGridPainter g, GrRect displayRect)
@@ -36,27 +36,27 @@ namespace Ntreev.Library.Grid.States
 
         public override void OnMouseDragBegin(GrPoint location)
         {
-            m_location = m_pColumnSplitter.GetX();
+            m_location = m_columnSplitter.GetX();
             this.GridCore.Invalidate();
         }
 
         public override void OnMouseDragMove(GrPoint location, GrHitTest hitTest)
         {
-            GrColumnList pColumnList = m_pColumnSplitter.GetColumnList();
+            GrColumnList columnList = m_columnSplitter.GetColumnList();
 
             int oldLocation = m_location;
 
-            for (int i = 0; i < pColumnList.GetDisplayableColumnCount(); i++)
+            for (int i = 0; i < columnList.GetDisplayableColumnCount(); i++)
             {
-                GrColumn pColumn = pColumnList.GetDisplayableColumn(i);
-                GrRect columnRect = pColumn.GetRect();
+                GrColumn column = columnList.GetDisplayableColumn(i);
+                GrRect columnRect = column.GetRect();
                 if (location.X < columnRect.Left || location.X >= columnRect.Right)
                     continue;
                 int centerValue = columnRect.GetCenter().X;
 
                 if (location.X > centerValue)
                 {
-                    if (pColumn.GetFrozen())
+                    if (column.GetFrozen())
                     {
                         m_location = columnRect.Right;
                         m_freezableIndex = i;
@@ -69,7 +69,7 @@ namespace Ntreev.Library.Grid.States
                 }
                 else
                 {
-                    if (pColumn.GetFrozen())
+                    if (column.GetFrozen())
                         m_location = columnRect.Left;
                     else
                         m_location = columnRect.Left - GrColumnSplitter.DefaultSplitterWidth;
@@ -94,18 +94,18 @@ namespace Ntreev.Library.Grid.States
                 return;
             }
 
-            GrColumnList pColumnList = m_pColumnSplitter.GetColumnList();
+            GrColumnList columnList = m_columnSplitter.GetColumnList();
 
-            for (int i = 0; i < pColumnList.GetDisplayableColumnCount(); i++)
+            for (int i = 0; i < columnList.GetDisplayableColumnCount(); i++)
             {
-                GrColumn pColumn = pColumnList.GetDisplayableColumn(i);
-                bool oldFrozen = pColumn.GetFrozen();
+                GrColumn column = columnList.GetDisplayableColumn(i);
+                bool oldFrozen = column.GetFrozen();
                 if (m_freezableIndex == -1)
-                    pColumn.SetFrozen(false);
+                    column.SetFrozen(false);
                 else
-                    pColumn.SetFrozen(i <= (uint)m_freezableIndex);
+                    column.SetFrozen(i <= (uint)m_freezableIndex);
 
-                if (oldFrozen != pColumn.GetFrozen())
+                if (oldFrozen != column.GetFrozen())
                 {
 
                 }

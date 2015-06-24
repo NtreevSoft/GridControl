@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ntreev.Windows.Forms.Grid.Design
 {
-    class UITypeEditor
-    {
-    }
+    //class UITypeEditor
+    //{
+    //}
 }

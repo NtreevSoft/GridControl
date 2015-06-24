@@ -34,3 +34,10 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+[assembly: InternalsVisibleTo("Ntreev.Windows.Forms.Grid.Design, " +
+                              "PublicKey=00240000048000009400000006020000002400005253413100040000" +
+                              "010001006345cf79e806cbeefceea2a6963996ae219a19a62530c54dadf6d153ac" +
+                              "3d5469e5cc2e73520f18da28cfd0966171e825369b52aee496bddff0c8aa146115" +
+                              "b55b3a2af80349841f0e3e57ed7c49cbf4cdb092f76723beaac70cdb7aba8f314c" +
+                              "d781a803205a424c50ef31a76edae25dc2afd846d260b6bc03ca4218e620a2bda8")]

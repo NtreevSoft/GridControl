@@ -45,11 +45,11 @@ namespace Ntreev.Library.Grid.States
                         {
                             m_pItemSelector.SetSelectionGroup(pDataRow);
                             m_pItemSelector.SetRowAnchor(pDataRow);
-                            GrColumnList pColumnList = this.GridCore.GetColumnList();
+                            GrColumnList columnList = this.GridCore.GetColumnList();
 
-                            GrColumn pColumn = pColumnList.HitTest(e.GetX());
-                            if (pColumn != null)
-                                m_pItemSelector.SetColumnAnchor(pColumn);
+                            GrColumn column = columnList.HitTest(e.GetX());
+                            if (column != null)
+                                m_pItemSelector.SetColumnAnchor(column);
                             m_pItemSelector.ClearSelection();
                             m_pFocuser.Set(m_pGroupCell);
                         }
@@ -77,8 +77,8 @@ namespace Ntreev.Library.Grid.States
 
         public override void OnMouseDoubleClick(GrStateMouseEventArgs e)
         {
-            GrGroupRow pGroupRow = m_pGroupCell.GetRow() as GrGroupRow;
-            pGroupRow.Expand(!pGroupRow.IsExpanded());
+            GrGroupRow groupRow = m_pGroupCell.GetRow() as GrGroupRow;
+            groupRow.Expand(!groupRow.IsExpanded());
             this.GridCore.Invalidate();
         }
 

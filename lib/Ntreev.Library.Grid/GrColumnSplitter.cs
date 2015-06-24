@@ -9,13 +9,13 @@ namespace Ntreev.Library.Grid
     {
         public static readonly int DefaultSplitterWidth = 5;
 
-        private readonly GrColumnList m_pColumnList;
+        private readonly GrColumnList m_columnList;
         int m_x;
         bool m_visible;
 
-        public GrColumnSplitter(GrColumnList pColumnList)
+        public GrColumnSplitter(GrColumnList columnList)
         {
-            this.m_pColumnList = pColumnList;
+            this.m_columnList = columnList;
             SetTextVisible(false);
             SetText("ColumnSplitter");
 
@@ -30,7 +30,7 @@ namespace Ntreev.Library.Grid
         }
         public override int GetY()
         {
-            return m_pColumnList.GetY(); 
+            return m_columnList.GetY(); 
         }
         public override int GetWidth()
         {
@@ -38,8 +38,8 @@ namespace Ntreev.Library.Grid
         }
         public override int GetHeight()
         {
-            GrDataRowList pDataRowList = this.GridCore.GetDataRowList();
-            return pDataRowList.GetDisplayableBottom() - m_pColumnList.GetY();
+            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
+            return dataRowList.GetDisplayableBottom() - m_columnList.GetY();
         }
         public override bool GetVisible()
         {
@@ -53,16 +53,16 @@ namespace Ntreev.Library.Grid
         {
             return true;
         }
-        public override void Paint(GrGridPainter pPainter, GrRect clipRect)
+        public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
             GrRect paintRect = this.GetRect();
 
-            pPainter.DrawItem(GrPaintStyle.Default, paintRect, this.GetPaintingLineColor(), this.GetPaintingBackColor(), null);
+            painter.DrawItem(GrPaintStyle.Default, paintRect, this.GetPaintingLineColor(), this.GetPaintingBackColor(), null);
         }
 
         public override GrRow GetRow()
         {
-            return m_pColumnList;
+            return m_columnList;
         }
 
         public void SetVisible(bool b)
@@ -71,11 +71,11 @@ namespace Ntreev.Library.Grid
                 return;
             m_visible = b;
 
-            m_pColumnList.SetVisibleChanged();
+            m_columnList.SetVisibleChanged();
         }
         public GrColumnList GetColumnList()
         {
-            return m_pColumnList;
+            return m_columnList;
         }
 
 

@@ -7,7 +7,7 @@ namespace Ntreev.Library.Grid
 {
     public class GrColumn : GrCell
     {
-        GrColumnList m_pColumnList;
+        GrColumnList m_columnList;
 
 
         int m_x;
@@ -64,7 +64,7 @@ namespace Ntreev.Library.Grid
 
         public GrColumn()
         {
-            m_pColumnList = null;
+            m_columnList = null;
             m_visible = true;
             m_readOnly = false;
             m_sortable = true;
@@ -117,7 +117,7 @@ namespace Ntreev.Library.Grid
 
             m_fnColumnBackgroundPaint = null;
             m_fnColumnContentsPaint = null;
-            m_pColumnPaintData = null;
+            m_columnPaintData = null;
 
             m_pGroup = new GrGroup(this);
 
@@ -125,7 +125,7 @@ namespace Ntreev.Library.Grid
 
         public GrColumnList GetColumnList()
         {
-            return m_pColumnList;
+            return m_columnList;
         }
 
         public GrItemType GetItemType()
@@ -215,7 +215,7 @@ namespace Ntreev.Library.Grid
             if (m_index != -1)
             {
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_pColumnList.Invoke("ColumnVisibleIndexChanged", e);
+                m_columnList.Invoke("ColumnVisibleIndexChanged", e);
             }
         }
 
@@ -270,7 +270,7 @@ namespace Ntreev.Library.Grid
             if (m_index != -1)
             {
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_pColumnList.Invoke("ColumnHorzAlignChanged", e);
+                m_columnList.Invoke("ColumnHorzAlignChanged", e);
             }
         }
 
@@ -282,7 +282,7 @@ namespace Ntreev.Library.Grid
             if (m_index != -1)
             {
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_pColumnList.Invoke("ColumnVertAlignChanged", e);
+                m_columnList.Invoke("ColumnVertAlignChanged", e);
             }
         }
 
@@ -294,7 +294,7 @@ namespace Ntreev.Library.Grid
             if (m_index != -1)
             {
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_pColumnList.Invoke("ColumnWordwrapChanged", e);
+                m_columnList.Invoke("ColumnWordwrapChanged", e);
             }
         }
 
@@ -306,7 +306,7 @@ namespace Ntreev.Library.Grid
             if (m_index != -1)
             {
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_pColumnList.Invoke("ColumnMultilineChanged", e);
+                m_columnList.Invoke("ColumnMultilineChanged", e);
             }
         }
 
@@ -339,7 +339,7 @@ namespace Ntreev.Library.Grid
             if (m_index != -1)
             {
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_pColumnList.Invoke("ColumnPaddingChanged", e);
+                m_columnList.Invoke("ColumnPaddingChanged", e);
             }
         }
 
@@ -396,10 +396,10 @@ namespace Ntreev.Library.Grid
             if (m_index != -1)
             {
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_pColumnList.Invoke("ColumnFrozenChanged", e);
+                m_columnList.Invoke("ColumnFrozenChanged", e);
             }
         }
-        
+
         public bool GetReadOnly()
         {
             if (this.GridCore != null && this.GridCore.GetReadOnly() == true)
@@ -415,26 +415,26 @@ namespace Ntreev.Library.Grid
         }
 
         public void SetVisible(bool b)
-    {
-        if(m_visible == b)
-        return;
-
-    if(this.GridCore != null)
-    {
-        if(b == false)
         {
-            GrFocuser pFocuser = this.GridCore.GetFocuser();
-            if(pFocuser.GetFocusedColumn() == this)
-                pFocuser.Set(null as IFocusable);
-            if(GetSelected() == true)
-                SetSelected(false);
+            if (m_visible == b)
+                return;
+
+            if (this.GridCore != null)
+            {
+                if (b == false)
+                {
+                    GrFocuser focuser = this.GridCore.GetFocuser();
+                    if (focuser.GetFocusedColumn() == this)
+                        focuser.Set(null as IFocusable);
+                    if (GetSelected() == true)
+                        SetSelected(false);
+                }
+
+                m_columnList.SetVisibleChanged();
+            }
+
+            m_visible = b;
         }
-
-        m_pColumnList.SetVisibleChanged();
-    }
-
-    m_visible = b;
-    }
 
         public void SetMinWidth(int minWidth)
         {
@@ -492,10 +492,10 @@ namespace Ntreev.Library.Grid
         {
             if (this.GridCore == null)
                 return false;
-            GrDataRowList pDataRowList = this.GridCore.GetDataRowList();
-            if (pDataRowList.GetInsertionRow().GetSelected() == true)
+            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
+            if (dataRowList.GetInsertionRow().GetSelected() == true)
                 return false;
-            int visibles = (int)pDataRowList.GetVisibleDataRowCount();
+            int visibles = (int)dataRowList.GetVisibleDataRowCount();
             if (visibles == 0)
                 return false;
             return m_selected == visibles;
@@ -511,8 +511,8 @@ namespace Ntreev.Library.Grid
 
         public bool HasFocused()
         {
-            GrFocuser pFocuser = this.GridCore.GetFocuser();
-            if (pFocuser.GetFocusedColumn() == this)
+            GrFocuser focuser = this.GridCore.GetFocuser();
+            if (focuser.GetFocusedColumn() == this)
                 return true;
             return false;
         }
@@ -529,7 +529,7 @@ namespace Ntreev.Library.Grid
             if (m_fitting == false)
                 return;
 
-            GrDataRowList pDataRowList = this.GridCore.GetDataRowList();
+            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
 
             int width = m_minWidth;
 
@@ -539,9 +539,9 @@ namespace Ntreev.Library.Grid
                 width = Math.Max(m_minWidth, columnWidth);
             }
 
-            for (int i = 0; i < pDataRowList.GetVisibleDataRowCount(); i++)
+            for (int i = 0; i < dataRowList.GetVisibleDataRowCount(); i++)
             {
-                GrDataRow pDataRow = pDataRowList.GetVisibleDataRow(i);
+                GrDataRow pDataRow = dataRowList.GetVisibleDataRow(i);
                 GrItem pItem = pDataRow.GetItem(this);
                 int itemWidth = pItem.GetPreferredSize().Width;
                 width = Math.Max(width, itemWidth);
@@ -566,7 +566,7 @@ namespace Ntreev.Library.Grid
                 m_fitWidth = m_width = width;
 
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_pColumnList.Invoke("ColumnWidthChanged", e);
+                m_columnList.Invoke("ColumnWidthChanged", e);
             }
             m_fitting = false;
         }
@@ -576,7 +576,7 @@ namespace Ntreev.Library.Grid
             if (m_fitting == true)
                 return;
             m_fitting = true;
-            m_pColumnList.SetFitChanged();
+            m_columnList.SetFitChanged();
         }
 
         public void SetSortable(bool b)
@@ -633,7 +633,7 @@ namespace Ntreev.Library.Grid
             if (m_index != -1)
             {
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_pColumnList.Invoke("ColumnWidthChanged", e);
+                m_columnList.Invoke("ColumnWidthChanged", e);
 
                 GrTextUpdater pTextUpdater = this.GridCore.GetTextUpdater();
                 pTextUpdater.AddTextBoundsByColumn(this);
@@ -673,28 +673,28 @@ namespace Ntreev.Library.Grid
         {
             if (m_sortable == false)
                 return;
-            if (m_pColumnList == null)
+            if (m_columnList == null)
                 return;
             m_sortType = sortType;
             if (m_index != -1)
             {
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_pColumnList.Invoke("ColumnSortTypeChanged", e);
+                m_columnList.Invoke("ColumnSortTypeChanged", e);
             }
         }
 
         public GrSort GetSortType()
         {
-            if (m_pColumnList == null)
+            if (m_columnList == null)
                 return GrSort.None;
-            if (m_pColumnList.GetFirstSortColumn() != this)
+            if (m_columnList.GetFirstSortColumn() != this)
                 return GrSort.None;
             return m_sortType;
         }
 
         public void SetSortComparer(GrSort sortType, FuncSortRow comparer)
         {
-            throw new NotImplementedException();
+            m_comparer[(int)sortType] = comparer;
         }
 
         public FuncSortRow GetSortComparer(GrSort sortType)
@@ -711,9 +711,9 @@ namespace Ntreev.Library.Grid
 
         public override int GetY()
         {
-            if (m_pColumnList == null)
+            if (m_columnList == null)
                 return 0;
-            return m_pColumnList.GetY();
+            return m_columnList.GetY();
         }
 
         public override int GetWidth()
@@ -723,9 +723,9 @@ namespace Ntreev.Library.Grid
 
         public override int GetHeight()
         {
-            if (m_pColumnList == null)
+            if (m_columnList == null)
                 return 0;
-            return m_pColumnList.GetHeight();
+            return m_columnList.GetHeight();
         }
 
         public override bool GetVisible()
@@ -798,7 +798,7 @@ namespace Ntreev.Library.Grid
 
         public override GrRow GetRow()
         {
-            return m_pColumnList;
+            return m_columnList;
         }
 
         public override GrPaintStyle ToPaintStyle()
@@ -844,21 +844,21 @@ namespace Ntreev.Library.Grid
             return m_displayable;
         }
 
-        public override void Paint(GrGridPainter pPainter, GrRect clipRect)
+        public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
             GrRect paintRect = GetRect();
 
-            if (m_fnColumnBackgroundPaint == null || m_fnColumnBackgroundPaint(pPainter, this, paintRect, m_pColumnPaintData) == false)
+            if (m_fnColumnBackgroundPaint == null || m_fnColumnBackgroundPaint(painter, this, paintRect, m_columnPaintData) == false)
             {
                 GrPaintStyle paintStyle = this.ToPaintStyle();
                 GrColor backColor = GetPaintingBackColor();
                 if (GetClipped() == true)
-                    pPainter.DrawColumn(paintStyle, paintRect, GetPaintingLineColor(), backColor, clipRect);
+                    painter.DrawColumn(paintStyle, paintRect, GetPaintingLineColor(), backColor, clipRect);
                 else
-                    pPainter.DrawColumn(paintStyle, paintRect, GetPaintingLineColor(), backColor, null);
+                    painter.DrawColumn(paintStyle, paintRect, GetPaintingLineColor(), backColor, null);
             }
 
-            if (m_fnColumnContentsPaint == null || m_fnColumnContentsPaint(pPainter, this, paintRect, m_pColumnPaintData) == false)
+            if (m_fnColumnContentsPaint == null || m_fnColumnContentsPaint(painter, this, paintRect, m_columnPaintData) == false)
             {
                 GrColor foreColor = GetPaintingForeColor();
 
@@ -873,7 +873,7 @@ namespace Ntreev.Library.Grid
                     int bottom = top + 10;
 
                     GrRect sortRect = GrRect.FromLTRB(left, top, right, bottom);
-                    pPainter.DrawSortGlyph(sortRect, sortType);
+                    painter.DrawSortGlyph(sortRect, sortType);
 
                     //textRect.Right = sortRect.Left;
                     textRect.Width = sortRect.Left - textRect.Left;
@@ -883,9 +883,9 @@ namespace Ntreev.Library.Grid
                 {
                     GrLineDesc cl = GetTextLine(0);
                     if (GetClipped() == true)
-                        pPainter.DrawColumnText(GetPaintingFont(), GetText() + cl.textBegin, cl.length, textRect, foreColor, clipRect);
+                        painter.DrawColumnText(GetPaintingFont(), GetText() + cl.textBegin, cl.length, textRect, foreColor, clipRect);
                     else
-                        pPainter.DrawColumnText(GetPaintingFont(), GetText() + cl.textBegin, cl.length, textRect, foreColor, null);
+                        painter.DrawColumnText(GetPaintingFont(), GetText() + cl.textBegin, cl.length, textRect, foreColor, null);
                 }
             }
         }
@@ -895,7 +895,7 @@ namespace Ntreev.Library.Grid
         protected override void OnGridCoreAttached()
         {
             base.OnGridCoreAttached();
-            m_pColumnList = this.GridCore.GetColumnList();
+            m_columnList = this.GridCore.GetColumnList();
             this.GridCore.AttachObject(m_pGroup);
         }
 
@@ -909,7 +909,7 @@ namespace Ntreev.Library.Grid
 
             base.OnGridCoreDetached();
             this.GridCore.DetachObject(m_pGroup);
-            m_pColumnList = null;
+            m_columnList = null;
         }
 
         protected override void OnTextChanged()
@@ -951,7 +951,7 @@ namespace Ntreev.Library.Grid
         public FuncColumnPaint m_fnColumnBackgroundPaint;
         public FuncColumnPaint m_fnColumnContentsPaint;
 
-        public object m_pColumnPaintData;
+        public object m_columnPaintData;
 
 
 
@@ -968,10 +968,17 @@ namespace Ntreev.Library.Grid
         //#ifdef _MANAGED
         //    friend ref class Ntreev.Windows.Forms.Grid.Column;
         //private:
-        //    bool ShouldSerializeWidth();
-        //    bool ShouldSerializeVisibleIndex();
-        //    //bool ShouldSerializePriorityOnFrozen();
-        //    //bool ShouldSerializePriorityOnUnfrozen();
-        //#endif
+        public bool ShouldSerializeWidth()
+        {
+            if (m_width == 100)
+                return false;
+            return m_width != m_fitWidth;
+        }
+
+        public bool ShouldSerializeVisibleIndex()
+        {
+            return m_visibleIndex != GrDefineUtility.INVALID_INDEX;
+        }
+
     }
 }

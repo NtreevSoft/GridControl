@@ -51,9 +51,10 @@ namespace Ntreev.Windows.Forms.Grid
         [Description("표시되고 있는지의 여부를 가져오거나 설정합니다.")]
         [Category("Appearance")]
         [DefaultValue(true)]
-        public bool IsVisible
+        public virtual bool IsVisible
         {
             get { return m_pDataRow.GetVisible(); }
+            set { throw new NotImplementedException(); }
         }
 
 #if DEBUG

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WinformGridHost
+namespace Ntreev.Windows.Forms.Grid.Natives
 {
-    public class Class1
+    enum BkMode
     {
+        TRANSPARENT = 1,
+        OPAQUE = 2,
     }
 }

@@ -8,7 +8,9 @@ namespace Ntreev.Windows.Forms.Grid
     public enum ViewType
     {
         Text,
+
         Icon,
+
         Custom,
     }
 }

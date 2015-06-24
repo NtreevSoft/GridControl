@@ -149,7 +149,7 @@ namespace Ntreev.Windows.Forms.Grid.Design
             base.OnPaintAdornments(pe);
             GridControl gridControl = this.Control as GridControl;
 
-            foreach (Column item in gridControl.DisplayableColumns)
+            foreach (Column item in gridControl.Columns.Where(item => item.IsDisplayable))
             {
                 if (item.PropertyDescriptor == null)
                     continue;

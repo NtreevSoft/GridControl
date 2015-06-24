@@ -92,7 +92,112 @@ namespace Ntreev.Library.Grid
                 color1.b == color2.b;
         }
 
-        //int ToARGB()  { return this->value; }
+        public int ToARGB()  
+        {
+            byte[] bytes = new byte[] { b, g, r, a, };
+            return BitConverter.ToInt32(bytes, 0); 
+        }
+
+        public static GrColor SetBrightness(GrColor c, float brightness)
+        {
+            HSL hsl = RGB_to_HSL(c);
+            hsl.L(brightness);
+            return HSL_to_RGB(hsl);
+        }
+
+        public static GrColor ModifyBrightness(GrColor c, float brightness)
+        {
+            HSL hsl = RGB_to_HSL(c);
+            hsl.L(hsl.L() * brightness);
+            return HSL_to_RGB(hsl);
+        }
+
+        public static GrColor SetSaturation(GrColor c, float Saturation)
+        {
+            HSL hsl = RGB_to_HSL(c);
+            hsl.S(Saturation);
+            return HSL_to_RGB(hsl);
+        }
+
+        public static GrColor ModifySaturation(GrColor c, float Saturation)
+        {
+            HSL hsl = RGB_to_HSL(c);
+            hsl.S(hsl.S() * Saturation);
+            return HSL_to_RGB(hsl);
+        }
+
+        public static GrColor SetHue(GrColor c, float Hue)
+        {
+            HSL hsl = RGB_to_HSL(c);
+            hsl.H(Hue);
+            return HSL_to_RGB(hsl);
+        }
+
+        public static GrColor ModifyHue(GrColor c, float Hue)
+        {
+            HSL hsl = RGB_to_HSL(c);
+            hsl.H(hsl.H() * Hue);
+            return HSL_to_RGB(hsl);
+        }
+
+        private static GrColor HSL_to_RGB(HSL hsl)
+        {
+            float r = 0, g = 0, b = 0;
+            float temp1, temp2;
+
+            if (hsl.L() == 0)
+            {
+                r = g = b = 0;
+            }
+            else
+            {
+                if (hsl.S() == 0)
+                {
+                    r = g = b = hsl.L();
+                }
+                else
+                {
+                    temp2 = ((hsl.L() <= 0.5f) ? hsl.L() * (1.0f + hsl.S()) : hsl.L() + hsl.S() - (hsl.L() * hsl.S()));
+                    temp1 = 2.0f * hsl.L() - temp2;
+
+                    float[] t3 = new float[] { hsl.H() + 1.0f / 3.0f, hsl.H(), hsl.H() - 1.0f / 3.0f };
+                    float[] clr = new float[] { 0.0f, 0.0f, 0.0f };
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (t3[i] < 0)
+                            t3[i] += 1.0f;
+                        if (t3[i] > 1)
+                            t3[i] -= 1.0f;
+
+                        if (6.0f * t3[i] < 1.0f)
+                            clr[i] = temp1 + (temp2 - temp1) * t3[i] * 6.0f;
+                        else if (2.0f * t3[i] < 1.0f)
+                            clr[i] = temp2;
+                        else if (3.0f * t3[i] < 2.0f)
+                            clr[i] = (temp1 + (temp2 - temp1) * ((2.0f / 3.0f) - t3[i]) * 6.0f);
+                        else
+                            clr[i] = temp1;
+                    }
+                    r = clr[0];
+                    g = clr[1];
+                    b = clr[2];
+
+                }
+            }
+
+            return new GrColor((int)(255 * r), (int)(255 * g), (int)(255 * b));
+        }
+
+        private static HSL RGB_to_HSL(GrColor c)
+        {
+            HSL hsl = new HSL();
+
+            hsl.H(c.GetHue() / 360.0f); // we store hue as 0-1 as opposed to 0-360
+            hsl.L(c.GetBrightness());
+            hsl.S(c.GetSaturation());
+
+            return hsl;
+        }
 
         public float GetBrightness()
         {
@@ -111,10 +216,10 @@ namespace Ntreev.Library.Grid
 
         public int Value
         {
-            get 
+            get
             {
                 byte[] values = new byte[] { this.b, this.g, this.r, this.a, };
-                return BitConverter.ToInt32(values, 0); 
+                return BitConverter.ToInt32(values, 0);
             }
         }
 
@@ -311,6 +416,46 @@ namespace Ntreev.Library.Grid
         public static readonly GrColor YellowGreen = new GrColor(255, 154, 205, 50, "YellowGreen");
 
         public static readonly GrColor DefaultLineColor = new GrColor(255, 208, 215, 229);
+
+        class HSL
+        {
+            private float _h;
+            private float _s;
+            private float _l;
+            public HSL()
+            {
+
+            }
+
+            public float H()
+            {
+                return _h;
+            }
+
+            public void H(float value)
+            {
+                _h = value;
+                _h = _h > 1 ? 1 : _h < 0 ? 0 : _h;
+            }
+            public float S()
+            {
+                return _s;
+            }
+            public void S(float value)
+            {
+                _s = value;
+                _s = _s > 1 ? 1 : _s < 0 ? 0 : _s;
+            }
+            public float L()
+            {
+                return _l;
+            }
+            public void L(float value)
+            {
+                _l = value;
+                _l = _l > 1 ? 1 : _l < 0 ? 0 : _l;
+            }
+        }
 
 #if _WINFORM
         public static implicit operator System.Drawing.Color(GrColor color)

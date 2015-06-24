@@ -29,9 +29,19 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>GridControl.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -41,6 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CaptionRow.cs" />
     <Compile Include="Cell.cs" />
     <Compile Include="CellBase.cs" />
@@ -48,26 +64,84 @@
     <Compile Include="CellCollection.cs" />
     <Compile Include="CellEventArgs.cs" />
     <Compile Include="CellEventHandler.cs" />
+    <Compile Include="CellMouseEventArgs.cs" />
+    <Compile Include="CellMouseEventHandler.cs" />
     <Compile Include="CellState.cs" />
     <Compile Include="CellTagCollection.cs" />
-    <Compile Include="Class1.cs" />
+    <Compile Include="ClearEventArgs.cs" />
+    <Compile Include="ClearEventHandler.cs" />
     <Compile Include="ClickEditType.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="ColumnBindingCreation.cs" />
+    <Compile Include="ColumnBindingEventArgs.cs" />
+    <Compile Include="ColumnBindingEventHandler.cs" />
     <Compile Include="ColumnCollection.cs" />
-    <Compile Include="ColumnPainter.cs" />
+    <Compile Include="ColumnControl.cs" />
+    <Compile Include="ColumnDropDown.cs" />
+    <Compile Include="ColumnEventArgs.cs" />
+    <Compile Include="ColumnEventHandler.cs" />
+    <Compile Include="ColumnInsertingEventArgs.cs" />
+    <Compile Include="ColumnInsertingEventHandler.cs" />
+    <Compile Include="ColumnMouseEventArgs.cs" />
+    <Compile Include="ColumnMouseEventHandler.cs" />
+    <Compile Include="ColumnPainter.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ColumnState.cs" />
+    <Compile Include="Columns\ColumnCheckBox.cs" />
+    <Compile Include="Columns\ColumnComboBox.cs" />
+    <Compile Include="ControlPainter.cs" />
+    <Compile Include="CurrencyManagerChangedEventArgs.cs" />
+    <Compile Include="CurrencyManagerChangedEventHandler.cs" />
+    <Compile Include="CurrencyManagerChangingEventArgs.cs" />
+    <Compile Include="CurrencyManagerChangingEventHandler.cs" />
     <Compile Include="CustomPaint.cs" />
+    <Compile Include="Design\BindingListTypeEditor.cs" />
+    <Compile Include="Design\BooleanTypeEditor.cs" />
+    <Compile Include="Design\Controls\InternalCheckBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Design\Controls\FlagControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Design\Controls\FlagControl.Designer.cs">
+      <DependentUpon>FlagControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Design\Controls\InternalListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Design\Controls\InternalTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Design\DataTypeEditor.cs" />
     <Compile Include="Design\EditStyle.cs" />
+    <Compile Include="Design\EnumTypeEditor.cs" />
+    <Compile Include="Design\FlagTypeEditor.cs" />
     <Compile Include="Design\IEditorService.cs" />
+    <Compile Include="Design\ListTypeEditor.cs" />
+    <Compile Include="Design\StringTypeEditor.cs" />
     <Compile Include="Design\TypeEditor.cs" />
+    <Compile Include="Design\TypeEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Design\TypeEditorForm.Designer.cs">
+      <DependentUpon>TypeEditorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Design\UITypeEditor.cs" />
     <Compile Include="DisplayableColumnCollection.cs" />
     <Compile Include="DisplayableRowCollection.cs" />
+    <Compile Include="EditBegunEventArgs.cs" />
+    <Compile Include="EditBegunEventHandler.cs" />
     <Compile Include="EditingReason.cs" />
+    <Compile Include="EditingReasonType.cs" />
+    <Compile Include="ErrorDescriptor.cs" />
     <Compile Include="FromNative.cs" />
     <Compile Include="FrozenAttribute.cs" />
     <Compile Include="FrozenColumnCollection.cs" />
+    <Compile Include="GrFontCreator.cs" />
+    <Compile Include="GrFontDC.cs" />
+    <Compile Include="GrGridCell.cs" />
+    <Compile Include="GrGridPainterDC.cs" />
     <Compile Include="GrGridRow.cs" />
     <Compile Include="GridControl.cs">
       <SubType>UserControl</SubType>
@@ -81,26 +155,82 @@
     <Compile Include="ICellBase.cs" />
     <Compile Include="IColumn.cs" />
     <Compile Include="IControlPainter.cs" />
+    <Compile Include="InternalToolTip.cs" />
     <Compile Include="ITextCacheProvider.cs" />
     <Compile Include="MessageBoxCallback.cs" />
     <Compile Include="MovableAttribute.cs" />
+    <Compile Include="Natives\BinaryRasterOperations.cs" />
+    <Compile Include="Natives\BkMode.cs" />
+    <Compile Include="Natives\BLENDFUNCTION.cs" />
+    <Compile Include="Natives\BrushStyle.cs" />
+    <Compile Include="Natives\DrawFrameControlStates.cs" />
+    <Compile Include="Natives\DrawFrameControlTypes.cs" />
+    <Compile Include="Natives\DrawTextFlags.cs" />
+    <Compile Include="Natives\ETOOptions.cs" />
+    <Compile Include="Natives\GradientFillMode.cs" />
+    <Compile Include="Natives\GRADIENT_RECT.cs" />
+    <Compile Include="Natives\GWL.cs" />
+    <Compile Include="Natives\HatchStyle.cs" />
+    <Compile Include="Natives\LOGBRUSH.cs" />
+    <Compile Include="Natives\LOGFONT.cs" />
+    <Compile Include="Natives\MSG.cs" />
+    <Compile Include="Natives\NativeMethods.cs" />
+    <Compile Include="Natives\OSVERSIONINFO.cs" />
+    <Compile Include="Natives\PAINTSTRUCT.cs" />
+    <Compile Include="Natives\PenStyle.cs" />
+    <Compile Include="Natives\POINT.cs" />
+    <Compile Include="Natives\RECT.cs" />
+    <Compile Include="Natives\SCROLLINFO.cs" />
+    <Compile Include="Natives\SIZE.cs" />
+    <Compile Include="Natives\StockObjects.cs" />
+    <Compile Include="Natives\TernaryRasterOperations.cs" />
+    <Compile Include="Natives\TEXTMETRIC.cs" />
+    <Compile Include="Natives\TOOLINFO.cs" />
+    <Compile Include="Natives\ToolInfoFlags.cs" />
+    <Compile Include="Natives\TRIVERTEX.cs" />
+    <Compile Include="Natives\UxThemeParts.cs" />
+    <Compile Include="Natives\UxThemeStates.cs" />
+    <Compile Include="Natives\NativeUtility.cs" />
+    <Compile Include="Natives\NativeMethods2.cs" />
+    <Compile Include="Natives\WindowMessages.cs" />
+    <Compile Include="Natives\WindowStyles.cs" />
+    <Compile Include="Natives\WindowStylesEx.cs" />
+    <Compile Include="Natives\WinGdi.cs" />
+    <Compile Include="Natives\XFORM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="ResizableAttribute.cs" />
     <Compile Include="Row.cs" />
     <Compile Include="RowBase.cs" />
     <Compile Include="RowBaseCollection.cs" />
+    <Compile Include="RowBindingEventArgs.cs" />
+    <Compile Include="RowBindingEventHandler.cs" />
     <Compile Include="RowBuilder.cs" />
     <Compile Include="RowCollection.cs" />
+    <Compile Include="RowEventArgs.cs" />
+    <Compile Include="RowEventHandler.cs" />
     <Compile Include="RowHighlightType.cs" />
+    <Compile Include="RowInsertedEventArgs.cs" />
     <Compile Include="RowInsertedEventHandler.cs" />
+    <Compile Include="RowInsertingEventArgs.cs" />
     <Compile Include="RowInsertingEventHandler.cs" />
+    <Compile Include="RowMovingEventArgs.cs" />
+    <Compile Include="RowMovingEventHandler.cs" />
     <Compile Include="RowRemovedEventArgs.cs" />
+    <Compile Include="RowRemovedEventHandler.cs" />
+    <Compile Include="RowRemovingEventArgs.cs" />
+    <Compile Include="RowRemovingEventHandler.cs" />
     <Compile Include="SelectedColumnCollection.cs" />
     <Compile Include="SelectedRowCollection.cs" />
     <Compile Include="SelectionType.cs" />
     <Compile Include="SortableAttribute.cs" />
     <Compile Include="SortType.cs" />
     <Compile Include="Style.cs" />
+    <Compile Include="StyleColorCollection.cs" />
     <Compile Include="TypeDescriptorContextCore.cs" />
     <Compile Include="UnfrozenColumnCollection.cs" />
     <Compile Include="Utility.cs" />
@@ -109,13 +239,61 @@
     <Compile Include="ViewType.cs" />
     <Compile Include="VisibleColumnCollection.cs" />
     <Compile Include="VisibleRowCollection.cs" />
+    <Compile Include="WindowMessages.cs" />
     <Compile Include="WinFormGridCore.cs" />
+    <Compile Include="WinFormInvalidator.cs" />
+    <Compile Include="WinFormScroll.cs" />
+    <Compile Include="WinFormTimer.cs" />
+    <Compile Include="WinFormWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ntreev.Library.Grid\Ntreev.Library.Grid.csproj">
       <Project>{0be425c2-3ffd-446d-acee-697418422e15}</Project>
       <Name>Ntreev.Library.Grid</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Design\Controls\FlagControl.resx">
+      <DependentUpon>FlagControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GridControl.snk" />
+    <None Include="Resources\Error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\InsertionRow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\InsertionRowFocused.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ntreev.Windows.Forms.Grid.ColumnPainter.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ntreev.Windows.Forms.Grid.Cursors.Add.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ntreev.Windows.Forms.Grid.Cursors.Movable.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ntreev.Windows.Forms.Grid.Cursors.Remove.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ntreev.Windows.Forms.Grid.GridControl.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\RowEditing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\RowFocused.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

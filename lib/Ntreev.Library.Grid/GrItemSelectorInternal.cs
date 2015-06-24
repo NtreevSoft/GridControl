@@ -54,18 +54,18 @@ namespace Ntreev.Library.Grid
                 return;
 
             HashSet<GrItem> items = new HashSet<GrItem>();
-            GrColumnList pColumnList = this.GridCore.GetColumnList();
-            GrDataRowList pDataRowList = this.GridCore.GetDataRowList();
+            GrColumnList columnList = this.GridCore.GetColumnList();
+            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
 
             for (int y = m_rowSelecting.GetMinValue(); y < m_rowSelecting.GetMaxValue(); y++)
             {
-                GrDataRow pDataRow = pDataRowList.GetVisibleRow(y) as GrDataRow;
+                GrDataRow pDataRow = dataRowList.GetVisibleRow(y) as GrDataRow;
                 if (pDataRow == null)
                     continue;
                 for (int x = m_columnSelecting.GetMinValue(); x < m_columnSelecting.GetMaxValue(); x++)
                 {
-                    GrColumn pColumn = pColumnList.GetVisibleColumn(x);
-                    GrItem pItem = pDataRow.GetItem(pColumn);
+                    GrColumn column = columnList.GetVisibleColumn(x);
+                    GrItem pItem = pDataRow.GetItem(column);
                     if (pItem == null)
                         throw new Exception();
                     items.Add(pItem);
@@ -86,11 +86,11 @@ namespace Ntreev.Library.Grid
             return m_bSelecting;
         }
 
-        public bool IsSelecting(GrColumn pColumn)
+        public bool IsSelecting(GrColumn column)
         {
             if (m_bSelecting == false)
                 return false;
-            return m_columnSelecting.IsIn(pColumn.GetVisibleIndex());
+            return m_columnSelecting.IsIn(column.GetVisibleIndex());
         }
 
         public bool IsSelecting(GrDataRow pDataRow)
@@ -112,8 +112,8 @@ namespace Ntreev.Library.Grid
 
         public GrRect GetInvalidateRect(GrRange visibleColumnRange, GrRange visibleRowRange)
         {
-            GrColumnList pColumnList = this.GridCore.GetColumnList();
-            GrDataRowList pDataRowList = this.GridCore.GetDataRowList();
+            GrColumnList columnList = this.GridCore.GetColumnList();
+            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
 
             if (visibleColumnRange.GetLength() == 0 || visibleRowRange.GetLength() == 0)
                 return GrRect.Empty;
@@ -122,10 +122,10 @@ namespace Ntreev.Library.Grid
 
             for (int i = visibleColumnRange.GetMinValue(); i < visibleColumnRange.GetMaxValue(); i++)
             {
-                GrColumn pColumn = pColumnList.GetVisibleColumn(i);
-                if (pColumn.GetDisplayable() == false)
+                GrColumn column = columnList.GetVisibleColumn(i);
+                if (column.GetDisplayable() == false)
                     continue;
-                GrRect displayRect = pColumn.GetRect();
+                GrRect displayRect = column.GetRect();
                 int left = Math.Min(rect.Left, displayRect.Left);
                 int top = displayRect.Top;
                 int right = Math.Max(rect.Right, displayRect.Right);
@@ -137,7 +137,7 @@ namespace Ntreev.Library.Grid
 
             for (int y = visibleRowRange.GetMinValue(); y < visibleRowRange.GetMaxValue(); y++)
             {
-                IDataRow pDataRow = pDataRowList.GetVisibleRow(y);
+                IDataRow pDataRow = dataRowList.GetVisibleRow(y);
                 if (pDataRow.GetDisplayable() == false)
                     continue;
                 GrRect displayRect = pDataRow.GetRect();
@@ -165,12 +165,12 @@ namespace Ntreev.Library.Grid
             {
                 if (this.GridCore.GetFullRowSelect() == true)
                 {
-                    GrColumnList pColumnList = this.GridCore.GetColumnList();
+                    GrColumnList columnList = this.GridCore.GetColumnList();
                     GrDataRow pDataRow = pFocusedItem.GetDataRow();
-                    for (int i = 0; i < pColumnList.GetVisibleColumnCount(); i++)
+                    for (int i = 0; i < columnList.GetVisibleColumnCount(); i++)
                     {
-                        GrColumn pColumn = pColumnList.GetVisibleColumn(i);
-                        GrItem pItem = pDataRow.GetItem(pColumn);
+                        GrColumn column = columnList.GetVisibleColumn(i);
+                        GrItem pItem = pDataRow.GetItem(column);
                         DoSelect(pItem);
                     }
                 }
@@ -194,16 +194,16 @@ namespace Ntreev.Library.Grid
             GrItem pItem = pFocusable as GrItem;
             if (pItem != null)
             {
-                GrColumn pColumn = pItem.GetColumn();
+                GrColumn column = pItem.GetColumn();
                 GrDataRow pDataRow = pItem.GetDataRow();
 
-                int visibleColumnIndex = pColumn.GetVisibleIndex();
+                int visibleColumnIndex = column.GetVisibleIndex();
                 int visibleRowIndex = pDataRow.GetVisibleIndex();
 
                 if (this.GridCore.GetFullRowSelect() == true)
                 {
-                    GrColumnList pColumnList = this.GridCore.GetColumnList();
-                    SetColumnSelectingRange(new GrRange(0, pColumnList.GetVisibleColumnCount()));
+                    GrColumnList columnList = this.GridCore.GetColumnList();
+                    SetColumnSelectingRange(new GrRange(0, columnList.GetVisibleColumnCount()));
                 }
                 else
                 {

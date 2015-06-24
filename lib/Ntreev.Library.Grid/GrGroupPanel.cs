@@ -101,12 +101,12 @@ namespace Ntreev.Library.Grid
             return this.GridCore.GetBounds().GetWidth();
         }
 
-        public override void Paint(GrGridPainter pPainter, GrRect clipRect)
+        public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
             GrRect paintRect = GetRect();
             GrRect displayRect = this.GridCore.GetDisplayRect();
-            GrColumnList pColumnList = this.GridCore.GetColumnList();
-            if (this.GridCore.GetFillBlank() == true && pColumnList.GetDisplayableRight() < displayRect.Right)
+            GrColumnList columnList = this.GridCore.GetColumnList();
+            if (this.GridCore.GetFillBlank() == true && columnList.GetDisplayableRight() < displayRect.Right)
             {
                 paintRect.Width = displayRect.Right - paintRect.Left;
             }
@@ -118,14 +118,14 @@ namespace Ntreev.Library.Grid
             GrColor foreColor = GetPaintingForeColor();
             GrColor backColor = GetPaintingBackColor();
 
-            pPainter.DrawItem(paintStyle, paintRect, GetPaintingLineColor(), backColor, null);
+            painter.DrawItem(paintStyle, paintRect, GetPaintingLineColor(), backColor, null);
 
             foreach (var value in m_vecGroups)
             {
-                value.Paint(pPainter, clipRect);
+                value.Paint(painter, clipRect);
             }
 
-            DrawText(pPainter, foreColor, paintRect, clipRect);
+            DrawText(painter, foreColor, paintRect, clipRect);
         }
 
 
@@ -248,10 +248,10 @@ namespace Ntreev.Library.Grid
 
         private void gridCore_Created(object sender, EventArgs e)
         {
-            GrColumnList pColumnList = this.GridCore.GetColumnList();
-            pColumnList.ColumnGroupChanged += columnList_ColumnGroupChanged;
-            pColumnList.ColumnInserted+= columnList_ColumnInserted;
-            pColumnList.ColumnRemoved += columnList_ColumnRemoved;
+            GrColumnList columnList = this.GridCore.GetColumnList();
+            columnList.ColumnGroupChanged += columnList_ColumnGroupChanged;
+            columnList.ColumnInserted+= columnList_ColumnInserted;
+            columnList.ColumnRemoved += columnList_ColumnRemoved;
         }
 
         private void gridCore_FontChanged(object sender, EventArgs e)
@@ -267,27 +267,27 @@ namespace Ntreev.Library.Grid
 
         private void columnList_ColumnInserted(object sender, GrColumnEventArgs e)
         {
-            GrColumn pColumn = e.GetColumn();
-            if (pColumn.GetGrouped() == false)
+            GrColumn column = e.GetColumn();
+            if (column.GetGrouped() == false)
                 return;
-            AddGroup(pColumn.GetGroup());
+            AddGroup(column.GetGroup());
         }
 
         private void columnList_ColumnRemoved(object sender, GrColumnEventArgs e)
         {
-            GrColumn pColumn = e.GetColumn();
-            if (pColumn.GetGrouped() == false)
+            GrColumn column = e.GetColumn();
+            if (column.GetGrouped() == false)
                 return;
-            RemoveGroup(pColumn.GetGroup());
+            RemoveGroup(column.GetGroup());
         }
 
         private void columnList_ColumnGroupChanged(object sender, GrColumnEventArgs e)
         {
-            GrColumn pColumn = e.GetColumn();
-            if (pColumn.GetGrouped() == true)
-                AddGroup(pColumn.GetGroup());
+            GrColumn column = e.GetColumn();
+            if (column.GetGrouped() == true)
+                AddGroup(column.GetGroup());
             else
-                RemoveGroup(pColumn.GetGroup());
+                RemoveGroup(column.GetGroup());
         }
 
         private void groupInfo_LevelChanged(object sender, EventArgs e)

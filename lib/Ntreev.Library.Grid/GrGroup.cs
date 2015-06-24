@@ -9,21 +9,21 @@ namespace Ntreev.Library.Grid
     {
 
         public static int SortGlyphSize = 10;
-        GrGroupPanel m_pGroupPanel;
-        GrColumn m_pColumn;
+        GrGroupPanel m_groupPanel;
+        GrColumn m_column;
         GrPoint m_pt;
         bool m_expanded;
         bool m_grouped;
         GrSort m_sortType;
 
-        Dictionary<uint, GrGroupRow> m_mapGroupRows = new Dictionary<uint, GrGroupRow>();
+        Dictionary<uint, GrGroupRow> m_mapGrourows = new Dictionary<uint, GrGroupRow>();
         int m_level;
 
-        public GrGroup(GrColumn pColumn)
+        public GrGroup(GrColumn column)
         {
             // TODO: Complete member initialization
-            m_pColumn = pColumn;
-            m_pGroupPanel = null;
+            m_column = column;
+            m_groupPanel = null;
             m_grouped = false;
             m_expanded = true;
             m_sortType = GrSort.Up;
@@ -32,26 +32,26 @@ namespace Ntreev.Library.Grid
 
         public GrColumn GetColumn()
         {
-            return m_pColumn;
+            return m_column;
         }
 
 
         public bool GetGrouped()
         {
-            return m_pColumn.GetGrouped();
+            return m_column.GetGrouped();
         }
 
         public void SetGrouped(bool b)
         {
-            m_pColumn.SetGrouped(b);
+            m_column.SetGrouped(b);
         }
 
         public void SetExpanded(bool b)
         {
-            if (m_pGroupPanel.GetGroupable() == false)
+            if (m_groupPanel.GetGroupable() == false)
                 return;
             m_expanded = b;
-            m_pGroupPanel.NotifyExpanded(this);
+            m_groupPanel.NotifyExpanded(this);
         }
         public bool GetExpanded()
         {
@@ -60,10 +60,10 @@ namespace Ntreev.Library.Grid
 
         public void SetSortType(GrSort sortType)
         {
-            if (m_pGroupPanel.GetGroupable() == false)
+            if (m_groupPanel.GetGroupable() == false)
                 return;
             m_sortType = (sortType == GrSort.Up) ? GrSort.Up : GrSort.Down;
-            m_pGroupPanel.NotifySortChanged(this);
+            m_groupPanel.NotifySortChanged(this);
         }
 
         public GrSort GetSortType()
@@ -88,7 +88,7 @@ namespace Ntreev.Library.Grid
 
         public void SetText()
         {
-    base.SetText(m_pColumn.GetText());
+    base.SetText(m_column.GetText());
 }
 
 
@@ -132,19 +132,19 @@ namespace Ntreev.Library.Grid
 
         public override bool GetDisplayable()
         {
-            return m_pGroupPanel.GetDisplayable();
+            return m_groupPanel.GetDisplayable();
         }
 
-        public override void Paint(GrGridPainter pPainter, GrRect clipRect)
+        public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
             GrRect paintRect = GetRect();
             GrPaintStyle paintStyle = ToPaintStyle();
 
-            GrColor backColor = m_pColumn.GetPaintingBackColor();
-            GrColor foreColor = m_pColumn.GetPaintingForeColor();
+            GrColor backColor = m_column.GetPaintingBackColor();
+            GrColor foreColor = m_column.GetPaintingForeColor();
             GrPadding padding = GetPadding();
 
-            pPainter.DrawColumn(paintStyle, paintRect, GetPaintingLineColor(), backColor, null);
+            painter.DrawColumn(paintStyle, paintRect, GetPaintingLineColor(), backColor, null);
 
             
             int right = paintRect.Right - padding.Right;
@@ -154,11 +154,11 @@ namespace Ntreev.Library.Grid
 
             GrRect sortRect = GrRect.FromLTRB(left, top, right, bottom);
 
-            pPainter.DrawSortGlyph(sortRect, m_sortType);
-            DrawText(pPainter, foreColor, paintRect, null);
+            painter.DrawSortGlyph(sortRect, m_sortType);
+            DrawText(painter, foreColor, paintRect, null);
         }
 
-        public override GrRow GetRow() { return m_pGroupPanel; }
+        public override GrRow GetRow() { return m_groupPanel; }
 
 
         public event EventHandler LevelChanged;
@@ -168,12 +168,12 @@ namespace Ntreev.Library.Grid
         protected override void OnGridCoreAttached()
         {
     base.OnGridCoreAttached();
-    m_pGroupPanel = this.GridCore.GetGroupPanel();
+    m_groupPanel = this.GridCore.GetGroupPanel();
 }
 
         protected override void OnGridCoreDetached()
         {
-    m_pGroupPanel = null;
+    m_groupPanel = null;
     base.OnGridCoreDetached();
 }
 

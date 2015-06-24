@@ -5,7 +5,5 @@ using System.Text;
 
 namespace Ntreev.Windows.Forms.Grid
 {
-    class RowInsertingEventHandler
-    {
-    }
+    public delegate void RowInsertingEventHandler(object sender, RowInsertingEventArgs e);
 }

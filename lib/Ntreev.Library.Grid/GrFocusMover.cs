@@ -8,7 +8,7 @@ namespace Ntreev.Library.Grid
     public class GrFocusMover : GrObject
     {
         GrDataRowList m_pDataRowList;
-        GrColumnList m_pColumnList;
+        GrColumnList m_columnList;
         GrColumn m_pLastDataColumn;
         GrScroll m_pHorzScroll;
         GrScroll m_pVertScroll;
@@ -27,38 +27,38 @@ namespace Ntreev.Library.Grid
             if (pFocused == null)
                 return false;
 
-            GrColumn pColumn = pFocused.GetColumn();
+            GrColumn column = pFocused.GetColumn();
             GrDataRow pDataRow = pFocused.GetDataRow();
 
-            if (pColumn.GetFrozen() == true)
+            if (column.GetFrozen() == true)
             {
-                int index = pColumn.GetFrozenIndex();
+                int index = column.GetFrozenIndex();
                 if (index == 0)
                     return false;
 
                 index = index - 1;
-                pColumn = m_pColumnList.GetFrozenColumn(0);
+                column = m_columnList.GetFrozenColumn(0);
             }
             else
             {
-                int frozenColumnCount = m_pColumnList.GetFrozenColumnCount();
+                int frozenColumnCount = m_columnList.GetFrozenColumnCount();
 
-                int index = pColumn.GetUnfrozenIndex();
+                int index = column.GetUnfrozenIndex();
                 if (index == 0 && frozenColumnCount > 0)
                 {
-                    pColumn = m_pColumnList.GetFrozenColumn(0);
+                    column = m_columnList.GetFrozenColumn(0);
                 }
                 else
                 {
-                    pColumn = m_pColumnList.GetUnfrozenColumn(0);
+                    column = m_columnList.GetUnfrozenColumn(0);
                 }
             }
 
-            pFocused = pDataRow.GetItem(pColumn);
+            pFocused = pDataRow.GetItem(column);
 
             if (range == GrSelectionRange.One)
             {
-                m_pItemSelector.SetColumnAnchor(pColumn);
+                m_pItemSelector.SetColumnAnchor(column);
                 m_pItemSelector.SelectItem(pFocused, m_pGridWindow.GetSelectionType());
             }
             else
@@ -70,7 +70,7 @@ namespace Ntreev.Library.Grid
             }
             m_pFocuser.Set(pFocused);
             DoHorzScroll(GrScrollEventType.First);
-            BringIntoView(pColumn);
+            BringIntoView(column);
             return true;
         }
 
@@ -80,17 +80,17 @@ namespace Ntreev.Library.Grid
             if (pFocused == null)
                 return false;
 
-            GrColumn pColumn = pFocused.GetColumn();
+            GrColumn column = pFocused.GetColumn();
             GrDataRow pDataRow = pFocused.GetDataRow();
 
-            int visibleColumnCount = m_pColumnList.GetVisibleColumnCount();
+            int visibleColumnCount = m_columnList.GetVisibleColumnCount();
             int index = visibleColumnCount - 1;
 
-            if (index == pColumn.GetVisibleIndex())
+            if (index == column.GetVisibleIndex())
                 return false;
 
-            pColumn = m_pColumnList.GetVisibleColumn(index);
-            pFocused = pDataRow.GetItem(pColumn);
+            column = m_columnList.GetVisibleColumn(index);
+            pFocused = pDataRow.GetItem(column);
 
             if (range == GrSelectionRange.One)
             {
@@ -107,7 +107,7 @@ namespace Ntreev.Library.Grid
             m_pFocuser.Set(pFocused);
 
             DoHorzScroll(GrScrollEventType.Last);
-            BringIntoView(pColumn);
+            BringIntoView(column);
             return true;
         }
 
@@ -306,19 +306,19 @@ namespace Ntreev.Library.Grid
             if (pFocused == null)
                 return false;
 
-            GrColumn pColumn = pFocused.GetColumn();
+            GrColumn column = pFocused.GetColumn();
             GrDataRow pDataRow = pFocused.GetDataRow();
 
-            int visibleColumnCount = m_pColumnList.GetVisibleColumnCount();
-            int index = pColumn.GetVisibleIndex() + 1;
+            int visibleColumnCount = m_columnList.GetVisibleColumnCount();
+            int index = column.GetVisibleIndex() + 1;
             if (index >= visibleColumnCount)
                 index = visibleColumnCount - 1;
 
-            if (index == pColumn.GetVisibleIndex())
+            if (index == column.GetVisibleIndex())
                 return false;
 
-            pColumn = m_pColumnList.GetVisibleColumn(index);
-            pFocused = pDataRow.GetItem(pColumn);
+            column = m_columnList.GetVisibleColumn(index);
+            pFocused = pDataRow.GetItem(column);
 
             if (range == GrSelectionRange.One)
             {
@@ -337,7 +337,7 @@ namespace Ntreev.Library.Grid
             }
             m_pFocuser.Set(pFocused);
 
-            BringIntoView(pColumn);
+            BringIntoView(column);
             return true;
         }
 
@@ -347,18 +347,18 @@ namespace Ntreev.Library.Grid
             if (pFocused == null)
                 return false;
 
-            GrColumn pColumn = pFocused.GetColumn();
+            GrColumn column = pFocused.GetColumn();
             GrDataRow pDataRow = pFocused.GetDataRow();
 
-            int index = pColumn.GetVisibleIndex();
+            int index = column.GetVisibleIndex();
             if (index != 0)
                 index = index - 1;
 
-            if (index == pColumn.GetVisibleIndex())
+            if (index == column.GetVisibleIndex())
                 return false;
 
-            pColumn = m_pColumnList.GetVisibleColumn(index);
-            pFocused = pDataRow.GetItem(pColumn);
+            column = m_columnList.GetVisibleColumn(index);
+            pFocused = pDataRow.GetItem(column);
 
             if (range == GrSelectionRange.One)
             {
@@ -377,7 +377,7 @@ namespace Ntreev.Library.Grid
             }
             m_pFocuser.Set(pFocused);
 
-            BringIntoView(pColumn);
+            BringIntoView(column);
             return true;
         }
 
@@ -386,9 +386,9 @@ namespace Ntreev.Library.Grid
             m_pDataRowList.BringIntoView(pDataRow);
         }
 
-        public void BringIntoView(GrColumn pColumn)
+        public void BringIntoView(GrColumn column)
         {
-            m_pColumnList.BringIntoView(pColumn);
+            m_columnList.BringIntoView(column);
         }
 
         protected override void OnGridCoreAttached()
@@ -409,7 +409,7 @@ namespace Ntreev.Library.Grid
         private void gridCore_Created(object sender, EventArgs e)
         {
             m_pDataRowList = this.GridCore.GetDataRowList();
-            m_pColumnList = this.GridCore.GetColumnList();
+            m_columnList = this.GridCore.GetColumnList();
             m_pHorzScroll = this.GridCore.GetHorzScroll();
             m_pVertScroll = this.GridCore.GetVertScroll();
             m_pFocuser = this.GridCore.GetFocuser();
@@ -426,25 +426,25 @@ namespace Ntreev.Library.Grid
                 case GrRowType.InsertionRow:
                 case GrRowType.DataRow:
                     {
-                        GrDataRow pRow = pDataRow as GrDataRow;
+                        GrDataRow row = pDataRow as GrDataRow;
                         GrItem pOldFocusItem = m_pFocuser.GetItem();
                         GrItem pFocusItem;
 
-                        GrColumn pColumn;
+                        GrColumn column;
 
                         if (pOldFocusItem != null)
-                            pColumn = pOldFocusItem.GetColumn();
+                            column = pOldFocusItem.GetColumn();
                         else
-                            pColumn = m_pItemSelector.GetColumnAnchor();
+                            column = m_pItemSelector.GetColumnAnchor();
 
-                        if (pColumn == null)
+                        if (column == null)
                         {
-                            pColumn = m_pColumnList.GetVisibleColumn(0);
+                            column = m_columnList.GetVisibleColumn(0);
                         }
-                        pFocusItem = pRow.GetItem(pColumn);
+                        pFocusItem = row.GetItem(column);
                         m_pItemSelector.SetSelectionGroup(pDataRow);
                         if (this.GridCore.GetFullRowSelect() == true)
-                            m_pItemSelector.SelectDataRow(pRow, GrSelectionType.Normal);
+                            m_pItemSelector.SelectDataRow(row, GrSelectionType.Normal);
                         else
                             m_pItemSelector.SelectItem(pFocusItem, GrSelectionType.Normal);
                         m_pItemSelector.SetAnchor(pFocusItem);
@@ -469,15 +469,15 @@ namespace Ntreev.Library.Grid
             GrRange columnRange = new GrRange(m_pItemSelector.GetColumnAnchor().GetVisibleIndex(), m_pLastDataColumn.GetVisibleIndex());
             GrRange rowRange;
 
-            IDataRow pRowAnchor = m_pItemSelector.GetRowAnchor();
-            if (pRowAnchor.GetRowType() == GrRowType.InsertionRow)
+            IDataRow rowAnchor = m_pItemSelector.GetRowAnchor();
+            if (rowAnchor.GetRowType() == GrRowType.InsertionRow)
             {
                 m_pItemSelector.SetRowAnchor(pBegin);
                 rowRange = new GrRange(pBegin.GetVisibleIndex(), pEnd.GetVisibleIndex());
             }
             else
             {
-                rowRange = new GrRange(pRowAnchor.GetVisibleIndex(), pEnd.GetVisibleIndex());
+                rowRange = new GrRange(rowAnchor.GetVisibleIndex(), pEnd.GetVisibleIndex());
             }
 
             columnRange.SetMaxValue(columnRange.GetMaxValue() + 1);
@@ -489,22 +489,22 @@ namespace Ntreev.Library.Grid
             {
                 case GrRowType.DataRow:
                     {
-                        GrDataRow pRow = pEnd as GrDataRow;
+                        GrDataRow row = pEnd as GrDataRow;
                         GrItem pOldFocusItem = m_pFocuser.GetItem();
                         GrItem pFocusItem;
 
-                        GrColumn pColumn;
+                        GrColumn column;
 
                         if (pOldFocusItem != null)
-                            pColumn = pOldFocusItem.GetColumn();
+                            column = pOldFocusItem.GetColumn();
                         else
-                            pColumn = m_pLastDataColumn;
+                            column = m_pLastDataColumn;
 
-                        if (pColumn == null)
+                        if (column == null)
                         {
-                            pColumn = m_pColumnList.GetVisibleColumn(0);
+                            column = m_columnList.GetVisibleColumn(0);
                         }
-                        pFocusItem = pRow.GetItem(pColumn);
+                        pFocusItem = row.GetItem(column);
 
                         m_pFocuser.Set(pFocusItem);
                     }
@@ -531,7 +531,7 @@ namespace Ntreev.Library.Grid
                 case GrScrollEventType.LargeDecrement:
                     {
                         int oldValue = value;
-                        value = m_pColumnList.ClipTo(value);
+                        value = m_columnList.ClipTo(value);
                         if (value == oldValue)
                         {
                             if (value != 0)
@@ -542,10 +542,10 @@ namespace Ntreev.Library.Grid
                 case GrScrollEventType.LargeIncrement:
                     {
                         int oldValue = value;
-                        value = m_pColumnList.ClipFrom(value);
+                        value = m_columnList.ClipFrom(value);
                         if (value == oldValue)
                         {
-                            if ((uint)value + 1 != m_pColumnList.GetVisibleColumnCount())
+                            if ((uint)value + 1 != m_columnList.GetVisibleColumnCount())
                                 value++;
                         }
                     }
@@ -565,7 +565,7 @@ namespace Ntreev.Library.Grid
 
         private bool DoVertScroll(GrScrollEventType type)
         {
-            GrDataRowList pDataRowList = this.GridCore.GetDataRowList();
+            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
 
             int value = m_pVertScroll.GetValue();
             switch (type)
@@ -579,7 +579,7 @@ namespace Ntreev.Library.Grid
                 case GrScrollEventType.LargeDecrement:
                     {
                         int oldValue = value;
-                        value = pDataRowList.ClipTo(value);
+                        value = dataRowList.ClipTo(value);
                         if (value == oldValue)
                         {
                             if (value != 0)
@@ -590,10 +590,10 @@ namespace Ntreev.Library.Grid
                 case GrScrollEventType.LargeIncrement:
                     {
                         int oldValue = value;
-                        value = pDataRowList.ClipFrom(value);
+                        value = dataRowList.ClipFrom(value);
                         if (value == oldValue)
                         {
-                            if (value + 1 != pDataRowList.GetVisibleRowCount())
+                            if (value + 1 != dataRowList.GetVisibleRowCount())
                                 value++;
                         }
                     }

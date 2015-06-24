@@ -8,7 +8,7 @@ namespace Ntreev.Library.Grid
     public class GrItem : GrCell, IFocusable
     {
         internal GrDataRow m_pDataRow;
-        internal GrColumn m_pColumn;
+        internal GrColumn m_column;
         GrSize m_textBounds;
 
         bool m_readOnly;
@@ -21,9 +21,9 @@ namespace Ntreev.Library.Grid
 
         }
 
-        public GrItem(GrColumn pColumn, GrDataRow pDataRow)
+        public GrItem(GrColumn column, GrDataRow pDataRow)
         {
-            m_pColumn = pColumn;
+            m_column = column;
             m_pDataRow = pDataRow;
         }
 
@@ -38,12 +38,12 @@ namespace Ntreev.Library.Grid
 
         public bool GetControlVisible()
         {
-            if (m_pColumn.GetItemType() == GrItemType.Control)
+            if (m_column.GetItemType() == GrItemType.Control)
                 return false;
 
             bool showControl = false;
 
-            switch (m_pColumn.GetItemTypeShow())
+            switch (m_column.GetItemTypeShow())
             {
                 case GrItemTypeShow.SelectedOnly:
                     {
@@ -99,7 +99,7 @@ namespace Ntreev.Library.Grid
 
         public GrColumn GetColumn()
         {
-            return m_pColumn;
+            return m_column;
         }
 
         public bool GetSelected()
@@ -107,21 +107,21 @@ namespace Ntreev.Library.Grid
             if (m_selected == true)
                 return true;
             if (m_pDataRow.GetFullSelected() == true ||
-                (m_pDataRow.IsInsertionRow() == false && m_pColumn.GetFullSelected() == true))
+                (m_pDataRow.IsInsertionRow() == false && m_column.GetFullSelected() == true))
                 return true;
             return false;
         }
 
         public bool GetFocused()
         {
-            GrFocuser pFocuser = this.GridCore.GetFocuser();
-            return pFocuser.Get() == this;
+            GrFocuser focuser = this.GridCore.GetFocuser();
+            return focuser.Get() == this;
         }
 
         public bool IsItemSelecting()
         {
             GrItemSelectorInternal pItemSelector = this.GridCore.GetItemSelector() as GrItemSelectorInternal;
-            if (pItemSelector.IsSelecting(m_pColumn) == false)
+            if (pItemSelector.IsSelecting(m_column) == false)
                 return false;
             if (pItemSelector.IsSelecting(m_pDataRow) == false)
                 return false;
@@ -146,11 +146,11 @@ namespace Ntreev.Library.Grid
 
         public void SetFocused(bool b)
         {
-            GrFocuser pFocuser = this.GridCore.GetFocuser();
+            GrFocuser focuser = this.GridCore.GetFocuser();
             if (b == true)
-                pFocuser.Set(this);
+                focuser.Set(this);
             else
-                pFocuser.Set(null as IFocusable);
+                focuser.Set(null as IFocusable);
         }
 
         public void SetTextBounds(GrSize size)
@@ -163,7 +163,7 @@ namespace Ntreev.Library.Grid
 
         public bool ShouldBringIntoView()
         {
-            return (m_pColumn.ShouldBringIntoView() || m_pDataRow.ShouldBringIntoView());
+            return (m_column.ShouldBringIntoView() || m_pDataRow.ShouldBringIntoView());
         }
 
         public void BringIntoView()
@@ -179,13 +179,13 @@ namespace Ntreev.Library.Grid
             if (GetReadOnly() == true)
                 return (int)GrMouseOverState.In;
 
-            if (m_pColumn.GetItemType() == GrItemType.Control)
+            if (m_column.GetItemType() == GrItemType.Control)
                 return (int)GrMouseOverState.In;
 
             GrRect controlRect = GetControlRect();
             if (controlRect.Contains(localLocation) == true)
             {
-                switch (m_pColumn.GetItemTypeShow())
+                switch (m_column.GetItemTypeShow())
                 {
                     case GrItemTypeShow.FocusedOnly:
                         {
@@ -211,7 +211,7 @@ namespace Ntreev.Library.Grid
 
         public override bool GetVisible()
         {
-            return m_pColumn.GetVisible();
+            return m_column.GetVisible();
         }
 
         public virtual bool GetReadOnly()
@@ -222,39 +222,39 @@ namespace Ntreev.Library.Grid
                     return true;
                 return m_pDataRow.GetReadOnly();
             }
-            return (m_pColumn.GetReadOnly() == true || m_pDataRow.GetReadOnly() == true || m_readOnly == true);
+            return (m_column.GetReadOnly() == true || m_pDataRow.GetReadOnly() == true || m_readOnly == true);
         }
 
         public override GrHorzAlign GetTextHorzAlign()
         {
-            return m_pColumn.GetItemHorzAlign();
+            return m_column.GetItemHorzAlign();
         }
 
         public override GrVertAlign GetTextVertAlign()
         {
-            return m_pColumn.GetItemVertAlign();
+            return m_column.GetItemVertAlign();
         }
 
         public override bool GetTextWordWrap()
         {
-            return m_pColumn.GetItemWordWrap();
+            return m_column.GetItemWordWrap();
         }
 
         public override bool GetTextMulitiline()
         {
-            return m_pColumn.GetItemMultiline();
+            return m_column.GetItemMultiline();
         }
 
         public virtual bool GetClipped()
         {
-            if (m_pColumn.GetClipped() == true || m_pDataRow.GetClipped() == true)
+            if (m_column.GetClipped() == true || m_pDataRow.GetClipped() == true)
                 return true;
             return false;
         }
 
         public override int GetX()
         {
-            return m_pColumn.GetX();
+            return m_column.GetX();
         }
 
         public override int GetY()
@@ -264,7 +264,7 @@ namespace Ntreev.Library.Grid
 
         public override int GetWidth()
         {
-            return m_pColumn.GetWidth();
+            return m_column.GetWidth();
         }
 
         public override int GetHeight()
@@ -274,7 +274,7 @@ namespace Ntreev.Library.Grid
 
         public override GrSize GetPreferredSize()
         {
-            GrSize size = m_pColumn.GetItemMinSize();
+            GrSize size = m_column.GetItemMinSize();
             GrSize bounds = m_textBounds == GrSize.Empty ? GetTextBounds() : m_textBounds;
 
             if (size.Width != 0)
@@ -292,10 +292,10 @@ namespace Ntreev.Library.Grid
 
         public override bool GetDisplayable()
         {
-            return (m_pColumn.GetDisplayable() && m_pDataRow.GetDisplayable());
+            return (m_column.GetDisplayable() && m_pDataRow.GetDisplayable());
         }
 
-        public override void Paint(GrGridPainter pPainter, GrRect clipRect)
+        public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
             GrRect paintRect = GetRect();
 
@@ -308,39 +308,39 @@ namespace Ntreev.Library.Grid
             GrColor foreColor = GetPaintingForeColor();
 
             if (GetClipped() == true)
-                pPainter.DrawItem(paintStyle, paintRect, GetPaintingLineColor(), backColor, clipRect);
+                painter.DrawItem(paintStyle, paintRect, GetPaintingLineColor(), backColor, clipRect);
             else
-                pPainter.DrawItem(paintStyle, paintRect, GetPaintingLineColor(), backColor, null);
+                painter.DrawItem(paintStyle, paintRect, GetPaintingLineColor(), backColor, null);
 
-            if (m_pColumn.m_customItemPaint == true)
+            if (m_column.m_customItemPaint == true)
             {
                 return;
             }
 
-            if (m_pColumn.GetItemTextVisible() == true)
+            if (m_column.GetItemTextVisible() == true)
             {
                 if (GetClipped() == true)
-                    DrawText(pPainter, foreColor, paintRect, clipRect);
+                    DrawText(painter, foreColor, paintRect, clipRect);
                 else
-                    DrawText(pPainter, foreColor, paintRect, null);
+                    DrawText(painter, foreColor, paintRect, null);
             }
 
             if (GetControlVisible() == true)
             {
                 GrRect buttonRect = GetControlRect() + paintRect.GetLocation();
-                switch (m_pColumn.GetItemType())
+                switch (m_column.GetItemType())
                 {
                     case GrItemType.DropDown:
                         if (GetClipped() == true)
-                            pPainter.DrawDropDown(buttonRect, GetControlState(), clipRect);
+                            painter.DrawDropDown(buttonRect, GetControlState(), clipRect);
                         else
-                            pPainter.DrawDropDown(buttonRect, GetControlState(), null);
+                            painter.DrawDropDown(buttonRect, GetControlState(), null);
                         break;
                     case GrItemType.Modal:
                         if (GetClipped() == true)
-                            pPainter.DrawModal(buttonRect, GetControlState(), clipRect);
+                            painter.DrawModal(buttonRect, GetControlState(), clipRect);
                         else
-                            pPainter.DrawModal(buttonRect, GetControlState(), null);
+                            painter.DrawModal(buttonRect, GetControlState(), null);
                         break;
                     default:
                         break;
@@ -453,7 +453,7 @@ namespace Ntreev.Library.Grid
             if (color != GrColor.Empty)
                 return color;
 
-            color = m_pColumn.GetItemForeColor();
+            color = m_column.GetItemForeColor();
             if (color != GrColor.Empty)
                 return color;
 
@@ -474,7 +474,7 @@ namespace Ntreev.Library.Grid
             if (color != GrColor.Empty)
                 return color;
 
-            color = m_pColumn.GetItemBackColor();
+            color = m_column.GetItemBackColor();
             if (color != GrColor.Empty)
                 return color;
 
@@ -489,12 +489,12 @@ namespace Ntreev.Library.Grid
         {
             GrPadding padding = base.GetPaddingCore();
             if (padding == GrPadding.Empty)
-                padding = m_pColumn.GetItemPadding();
+                padding = m_column.GetItemPadding();
 
             if (padding == GrPadding.Empty)
                 padding = base.GetPadding();
 
-            if (m_pColumn.GetItemIcon() == true)
+            if (m_column.GetItemIcon() == true)
                 padding.Left += (GrDefineUtility.DEF_ICON_SIZE + padding.Left);
 
             return padding;
@@ -510,7 +510,7 @@ namespace Ntreev.Library.Grid
             if (pFont != null)
                 return pFont;
 
-            pFont = m_pColumn.GetItemFont();
+            pFont = m_column.GetItemFont();
             if (pFont != null)
                 return pFont;
 
@@ -537,7 +537,7 @@ namespace Ntreev.Library.Grid
 
             if (this.GridCore.GetAutoFitColumn() == true)
             {
-                m_pColumn.SetFit();
+                m_column.SetFit();
             }
 
             if (this.GridCore.GetAutoFitRow() == true)

@@ -33,7 +33,7 @@ namespace Ntreev.Library.Grid
         public abstract GrCellType GetCellType();
         public abstract bool GetVisible();
         public abstract bool GetDisplayable();
-        public abstract void Paint(GrGridPainter pPainter, GrRect clipRect);
+        public abstract void Paint(GrGridPainter painter, GrRect clipRect);
 
         public bool Contains(GrPoint point)
         {
@@ -427,7 +427,7 @@ namespace Ntreev.Library.Grid
                 flag |= GrPaintStyle.Pressed;
             return flag;
         }
-        public void DrawText(GrGridPainter pPainter, GrColor foreColor, GrRect paintRect, GrRect? pClipRect)
+        public void DrawText(GrGridPainter painter, GrColor foreColor, GrRect paintRect, GrRect? pClipRect)
         {
             if (this.GetTextVisible() == false)
                 return;
@@ -459,11 +459,11 @@ namespace Ntreev.Library.Grid
                             Math.Min(clipRect.Bottom, pClipRect.Value.Bottom));
                     }
 
-                    pPainter.DrawText(pFont, GetText() + cl.textBegin, cl.length, textRect, foreColor, clipRect);
+                    painter.DrawText(pFont, GetText() + cl.textBegin, cl.length, textRect, foreColor, clipRect);
                 }
                 else
                 {
-                    pPainter.DrawText(pFont, GetText() + cl.textBegin, cl.length, textRect, foreColor, null);
+                    painter.DrawText(pFont, GetText() + cl.textBegin, cl.length, textRect, foreColor, null);
                 }
             }
         }
