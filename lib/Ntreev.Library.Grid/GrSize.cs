@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -14,6 +15,30 @@ namespace Ntreev.Library.Grid
         {
             this.width = width;
             this.height = height;
+        }
+
+        public override string ToString()
+        {
+            return string.Concat(new string[]
+			{
+				"{Width=",
+				this.width.ToString(CultureInfo.CurrentCulture),
+				", Height=",
+				this.height.ToString(CultureInfo.CurrentCulture),
+				"}"
+			});
+        }
+
+        public override int GetHashCode()
+        {
+            return this.width ^ this.height;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is GrSize == false)
+                return false;
+            return this == (GrSize)obj;
         }
 
         //#ifdef _MANAGED

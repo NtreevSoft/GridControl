@@ -68,7 +68,7 @@ namespace Ntreev.Library.Grid
             m_pTimer.SetInterval(interval);
         }
 
-        public event ElapsedEventHandler Elapsed;
+        public event GrElapsedEventHandler Elapsed;
 
         public void SetMouseLocation(GrPoint point)
         {

@@ -68,8 +68,16 @@ namespace Ntreev.Windows.Forms.Grid
         [AmbientValue((string)null)]
         public Font Font
         {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            get
+            {
+                GrFont pFont = m_pCell.GetPaintingFont();
+                return Utility.ToManaged(pFont);
+            }
+            set
+            {
+                GrFont pFont = Utility.FromManaged(value);
+                m_pCell.SetFont(pFont);
+            }
         }
 
 #if DEBUG
@@ -267,8 +275,7 @@ namespace Ntreev.Windows.Forms.Grid
 
         private bool ShouldSerializeFont()
         {
-            throw new NotImplementedException();
-            //return m_pCell.GetFontCore() != GrFont.Empty;
+            return m_pCell.GetFontCore() != GrFont.Empty;
         }
 
         private bool ShouldSerializePadding()
@@ -280,7 +287,6 @@ namespace Ntreev.Windows.Forms.Grid
         {
             m_pCell.SetPadding(GrPadding.Empty);
         }
-
 
         Color ICellBase.PaintingForeColor
         {

@@ -1713,7 +1713,10 @@ namespace Ntreev.Windows.Forms.Grid
 
         protected virtual void OnReseted(EventArgs e)
         {
-            Reseted(this, e);
+            if (this.Reseted != null)
+            {
+                this.Reseted(this, e);
+            }
         }
 
         protected virtual void OnValueChanging(ValueChangingEventArgs e)
@@ -1732,37 +1735,58 @@ namespace Ntreev.Windows.Forms.Grid
 
         protected virtual void OnRowInserting(RowInsertingEventArgs e)
         {
-            RowInserting(this, e);
+            if (this.RowInserting != null)
+            {
+                this.RowInserting(this, e);
+            }
         }
 
         protected virtual void OnRowInserted(RowInsertedEventArgs e)
         {
-            RowInserted(this, e);
+            if (this.RowInserted != null)
+            {
+                this.RowInserted(this, e);
+            }
         }
 
         protected virtual void OnRowRemoving(RowRemovingEventArgs e)
         {
-            RowRemoving(this, e);
+            if (this.RowRemoving != null)
+            {
+                this.RowRemoving(this, e);
+            }
         }
 
         protected virtual void OnRowRemoved(RowRemovedEventArgs e)
         {
-            RowRemoved(this, e);
+            if (this.RowRemoved != null)
+            {
+                this.RowRemoved(this, e);
+            }
         }
 
         protected virtual void OnRowChanged(RowEventArgs e)
         {
-            RowChanged(this, e);
+            if (this.RowChanged != null)
+            {
+                this.RowChanged(this, e);
+            }
         }
 
         protected virtual void OnRowBinding(RowBindingEventArgs e)
         {
-            RowBinding(this, e);
+            if (this.RowBinding != null)
+            {
+                this.RowBinding(this, e);
+            }
         }
 
         protected virtual void OnRowBinded(RowEventArgs e)
         {
-            RowBinded(this, e);
+            if (this.RowBinded != null)
+            {
+                this.RowBinded(this, e);
+            }
         }
 
         protected virtual void OnRowUnbinding(RowEventArgs e)
@@ -1802,7 +1826,10 @@ namespace Ntreev.Windows.Forms.Grid
 
         protected virtual void OnFocusedColumnChanged(EventArgs e)
         {
-            FocusedColumnChanged(this, e);
+            if (this.FocusedColumnChanged != null)
+            {
+                this.FocusedColumnChanged(this, e);
+            }
         }
 
         protected virtual void OnFocusedRowChanged(EventArgs e)
@@ -1829,17 +1856,26 @@ namespace Ntreev.Windows.Forms.Grid
                 }
             }
 
-            FocusedRowChanged(this, e);
+            if (this.FocusedRowChanged != null)
+            {
+                this.FocusedRowChanged(this, e);
+            }
         }
 
         protected virtual void OnFocusedCellChanged(CellEventArgs e)
         {
-            FocusedCellChanged(this, e);
+            if (this.FocusedCellChanged != null)
+            {
+                this.FocusedCellChanged(this, e);
+            }
         }
 
         protected virtual void OnColumnInserting(ColumnInsertingEventArgs e)
         {
-            ColumnInserting(this, e);
+            if (this.ColumnInserting != null)
+            {
+                this.ColumnInserting(this, e);
+            }
         }
 
         protected virtual void OnColumnInserted(ColumnEventArgs e)
@@ -1851,12 +1887,18 @@ namespace Ntreev.Windows.Forms.Grid
                 item.NewCell(column);
             }
 
-            ColumnInserted(this, e);
+            if (this.ColumnInserted != null)
+            {
+                this.ColumnInserted(this, e);
+            }
         }
 
         protected virtual void OnColumnBinding(ColumnBindingEventArgs e)
         {
-            ColumnBinding(this, e);
+            if (this.ColumnBinding != null)
+            {
+                this.ColumnBinding(this, e);
+            }
         }
 
         protected virtual void OnColumnBinded(ColumnEventArgs e)
@@ -1868,17 +1910,26 @@ namespace Ntreev.Windows.Forms.Grid
                 item.NewCell(column);
             }
 
-            ColumnBinded(this, e);
+            if (this.ColumnBinded != null)
+            {
+                ColumnBinded(this, e);
+            }
         }
 
         protected virtual void OnColumnWidthChanged(ColumnEventArgs e)
         {
-            ColumnWidthChanged(this, e);
+            if (this.ColumnWidthChanged != null)
+            {
+                this.ColumnWidthChanged(this, e);
+            }
         }
 
         protected virtual void OnColumnFrozenChanged(ColumnEventArgs e)
         {
-            ColumnFrozenChanged(this, e);
+            if (this.ColumnFrozenChanged != null)
+            {
+                this.ColumnFrozenChanged(this, e);
+            }
         }
 
         protected virtual void OnColumnMouseEnter(ColumnMouseEventArgs e)
@@ -1891,7 +1942,10 @@ namespace Ntreev.Windows.Forms.Grid
                 m_tooltips.Show(e.Column.Tooltip);
             }
 
-            ColumnMouseEnter(this, e);
+            if (this.ColumnMouseEnter != null)
+            {
+                this.ColumnMouseEnter(this, e);
+            }
         }
 
         protected virtual void OnColumnMouseLeave(ColumnMouseEventArgs e)
@@ -1901,22 +1955,34 @@ namespace Ntreev.Windows.Forms.Grid
                 m_tooltips.Hide();
             }
 
-            ColumnMouseLeave(this, e);
+            if (this.ColumnMouseLeave != null)
+            {
+                this.ColumnMouseLeave(this, e);
+            }
         }
 
         protected virtual void OnColumnMouseDown(ColumnMouseEventArgs e)
         {
-            ColumnMouseDown(this, e);
+            if (this.ColumnMouseDown != null)
+            {
+                this.ColumnMouseDown(this, e);
+            }
         }
 
         protected virtual void OnColumnMouseUp(ColumnMouseEventArgs e)
         {
-            ColumnMouseUp(this, e);
+            if (this.ColumnMouseUp != null)
+            {
+                this.ColumnMouseUp(this, e);
+            }
         }
 
         protected virtual void OnColumnMouseMove(ColumnMouseEventArgs e)
         {
-            ColumnMouseMove(this, e);
+            if (this.ColumnMouseMove != null)
+            {
+                this.ColumnMouseMove(this, e);
+            }
         }
 
         protected virtual void OnCellMouseEnter(CellEventArgs e)
@@ -1944,64 +2010,100 @@ namespace Ntreev.Windows.Forms.Grid
             {
             }
 
-            CellMouseEnter(this, e);
+            if (this.CellMouseEnter != null)
+            {
+                CellMouseEnter(this, e);
+            }
         }
 
         protected virtual void OnCellMouseMove(CellMouseEventArgs e)
         {
-            CellMouseMove(this, e);
+            if (this.CellMouseMove != null)
+            {
+                this.CellMouseMove(this, e);
+            }
         }
 
         protected virtual void OnCellMouseLeave(CellEventArgs e)
         {
             this.ToolTip.Hide();
-            CellMouseLeave(this, e);
+            if (this.CellMouseLeave != null)
+            {
+                this.CellMouseLeave(this, e);
+            }
         }
 
         protected virtual void OnCellClick(CellEventArgs e)
         {
-            CellClick(this, e);
+            if (this.CellClick != null)
+            {
+                this.CellClick(this, e);
+            }
         }
 
         protected virtual void OnCellDoubleClick(CellEventArgs e)
         {
-            CellDoubleClick(this, e);
+            if (this.CellDoubleClick != null)
+            {
+                this.CellDoubleClick(this, e);
+            }
         }
 
         protected virtual void OnDisplayRectangleChanged(EventArgs e)
         {
-            DisplayRectangleChanged(this, e);
+            if (this.DisplayRectangleChanged != null)
+            {
+                this.DisplayRectangleChanged(this, e);
+            }
         }
 
         protected virtual void OnVisibleHeightChanged(EventArgs e)
         {
-            VisibleHeightChanged(this, e);
+            if (this.VisibleHeightChanged != null)
+            {
+                this.VisibleHeightChanged(this, e);
+            }
         }
 
         protected virtual void OnEditBegun(EditBegunEventArgs e)
         {
-            EditBegun(this, e);
+            if (this.EditBegun != null)
+            {
+                this.EditBegun(this, e);
+            }
         }
 
         protected virtual void OnEditEnded(CellEventArgs e)
         {
-            EditEnded(this, e);
+            if (this.EditEnded != null)
+            {
+                this.EditEnded(this, e);
+            }
         }
 
         protected virtual void OnClearing(ClearEventArgs e)
         {
-            Clearing(this, e);
+            if (this.Clearing != null)
+            {
+                this.Clearing(this, e);
+            }
         }
 
         protected virtual void OnCleared(ClearEventArgs e)
         {
-            Cleared(this, e);
+            if (this.Cleared != null)
+            {
+                this.Cleared(this, e);
+            }
             Invalidate(false);
         }
 
         protected virtual void OnDataSourceChanged(EventArgs e)
         {
-            DataSourceChanged(this, e);
+            if (this.DataSourceChanged != null)
+            {
+                this.DataSourceChanged(this, e);
+            }
         }
 
         protected virtual void OnDataMemberChanged(EventArgs e)
@@ -2029,14 +2131,17 @@ namespace Ntreev.Windows.Forms.Grid
             {
 
             }
-
-            DataBindingComplete(this, e);
+            if (this.DataBindingComplete != null)
+            {
+                this.DataBindingComplete(this, e);
+            }
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             try
             {
+                Console.WriteLine(DateTime.Now);
                 GrRect clipping = e.ClipRectangle;
 
                 int left = clipping.Left;
@@ -2365,7 +2470,10 @@ namespace Ntreev.Windows.Forms.Grid
 
         protected new void OnScroll(ScrollEventArgs e)
         {
-            this.Scroll(this, e);
+            if (this.Scroll != null)
+            {
+                this.Scroll(this, e);
+            }
         }
 
         protected override void WndProc(ref Message m)

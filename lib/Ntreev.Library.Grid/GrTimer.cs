@@ -12,7 +12,7 @@ namespace Ntreev.Library.Grid
         void SetInterval(TimeSpan interval);
 
 
-        event ElapsedEventHandler Elapsed;
+        event GrElapsedEventHandler Elapsed;
 
         //protected:
         //    void InvokeElapsed(time_t signalTime);

@@ -12,7 +12,7 @@ namespace Ntreev.Windows.Forms.Grid
     {
         private bool m_showed;
 
-        private ToolTipItemCollection m_toolTips;
+        private readonly ToolTipItemCollection m_toolTips = new ToolTipItemCollection();
 
         internal ToolTip(GridControl gridControl, int count)
             : base(gridControl)

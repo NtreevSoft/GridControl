@@ -9,8 +9,8 @@ namespace Ntreev.Library.Grid
     {
         private bool m_bSelecting;
 
-        private GrRange m_columnSelecting;
-        private GrRange m_rowSelecting;
+        private GrRange m_columnSelecting = new GrRange();
+        private GrRange m_rowSelecting = new GrRange();
 
         public GrItemSelectorInternal()
         {
@@ -225,12 +225,18 @@ namespace Ntreev.Library.Grid
 
         protected virtual void OnSelectingBegin(EventArgs e)
         {
-            SelectingBegin(this, e);
+            if (this.SelectingBegin != null)
+            {
+                this.SelectingBegin(this, e);
+            }
         }
 
         protected virtual void OnSelectingEnd(EventArgs e)
         {
-            SelectingEnd(this, e);
+            if (this.SelectingEnd != null)
+            {
+                this.SelectingEnd(this, e);
+            }
         }
 
     }

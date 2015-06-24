@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Ntreev.Windows.Forms.Grid
 {
-    public class RowCollection : GridObject, IList<Row>, IList
+    public sealed class RowCollection : GridObject, IList<Row>, IList
     {
         private int m_lockRef;
         private GrDataRowList m_pDataRowList;

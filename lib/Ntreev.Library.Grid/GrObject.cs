@@ -5,10 +5,9 @@ using System.Text;
 
 namespace Ntreev.Library.Grid
 {
-    public class GrObject
+    public abstract class GrObject
     {
         private GrGridCore gridCore;
-
 
         public bool IsGridCoreAttached() 
         {
@@ -31,8 +30,14 @@ namespace Ntreev.Library.Grid
             this.OnGridCoreDetached();
         }
 
-        protected virtual void OnGridCoreAttached() { }
-        protected virtual void OnGridCoreDetached() { }
+        protected virtual void OnGridCoreAttached()
+        {
 
+        }
+
+        protected virtual void OnGridCoreDetached()
+        {
+
+        }
     }
 }

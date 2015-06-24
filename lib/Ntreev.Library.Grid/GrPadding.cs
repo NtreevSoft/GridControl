@@ -28,6 +28,18 @@ namespace Ntreev.Library.Grid
             this.bottom = bottom;
         }
 
+        public override int GetHashCode()
+        {
+            return this.left ^ this.top ^ this.right ^ this.bottom;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is GrPadding == false)
+                return false;
+            return this == (GrPadding)obj;
+        }
+
         public int GetHorizontal()
         {
             return this.left + this.right;

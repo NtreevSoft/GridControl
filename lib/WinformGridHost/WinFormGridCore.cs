@@ -134,63 +134,63 @@ namespace Ntreev.Windows.Forms.Grid
 
         private void columnList_ColumnMouseDown(object pSender, GrColumnMouseEventArgs e)
         {
-            Column column = FromNative.Get(e.GetColumn());
+            Column column = FromNative.Get(e.Column);
             if (m_gridControl.Site == null)
             {
                 bool handled = m_gridControl.InvokeColumnMouseDown(column, e.GetLocation());
-                e.SetHandled(handled);
+                e.IsHandled = handled;
                 return;
             }
 
             ISelectionService selectionService = m_gridControl.GetInternalService(typeof(ISelectionService)) as ISelectionService;
             object[] components = new object[] { column, };
             selectionService.SetSelectedComponents(components);
-            e.SetHandled(true);
+            e.IsHandled = true;
         }
 
         private void columnList_ColumnMouseUp(object pSender, GrColumnMouseEventArgs e)
         {
-            Column column = FromNative.Get(e.GetColumn());
+            Column column = FromNative.Get(e.Column);
             bool handled = m_gridControl.InvokeColumnMouseUp(column, e.GetLocation());
-            e.SetHandled(handled);
+            e.IsHandled = handled;
         }
 
         private void columnList_ColumnMouseEnter(object pSender, GrColumnMouseEventArgs e)
         {
-            Column column = FromNative.Get(e.GetColumn());
+            Column column = FromNative.Get(e.Column);
             m_gridControl.InvokeColumnMouseEnter(column, e.GetLocation());
         }
 
         private void columnList_ColumnMouseLeave(object pSender, GrColumnMouseEventArgs e)
         {
-            Column column = FromNative.Get(e.GetColumn());
+            Column column = FromNative.Get(e.Column);
             m_gridControl.InvokeColumnMouseLeave(column);
         }
 
         private void columnList_ColumnMouseMove(object pSender, GrColumnMouseEventArgs e)
         {
-            Column column = FromNative.Get(e.GetColumn());
+            Column column = FromNative.Get(e.Column);
             if (m_gridControl.InvokeColumnMouseMove(column, e.GetLocation()) == true)
             {
-                e.SetHandled(true);
+                e.IsHandled = true;
             }
         }
 
         private void columnList_ColumnWidthChanged(object pSender, GrColumnEventArgs e)
         {
-            Column column = FromNative.Get(e.GetColumn());
+            Column column = FromNative.Get(e.Column);
             m_gridControl.InvokeColumnWidthChanged(column);
         }
 
         private void columnList_ColumnFrozenChanged(object pSender, GrColumnEventArgs e)
         {
-            Column column = FromNative.Get(e.GetColumn());
+            Column column = FromNative.Get(e.Column);
             m_gridControl.InvokeColumnFrozenChanged(column);
         }
 
         private void columnList_ColumnVisibleIndexChanged(object pSender, GrColumnEventArgs e)
         {
-            Column column = FromNative.Get(e.GetColumn());
+            Column column = FromNative.Get(e.Column);
             m_gridControl.InvokeColumnVisibleIndexChanged(column);
         }
 

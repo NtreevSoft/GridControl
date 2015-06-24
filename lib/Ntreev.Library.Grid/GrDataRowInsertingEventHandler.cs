@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Ntreev.Library.Grid
 {
-    public delegate void ElapsedEventHandler(object sender, GrElapsedEventArgs e);
+    public delegate void GrDataRowInsertingEventHandler(object sender, GrDataRowInsertingEventArgs e);
 }

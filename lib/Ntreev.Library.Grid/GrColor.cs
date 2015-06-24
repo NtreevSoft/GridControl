@@ -57,6 +57,31 @@ namespace Ntreev.Library.Grid
             this.isNamed = true;
         }
 
+        public override string ToString()
+        {
+            StringBuilder stringBuilder = new StringBuilder(32);
+            stringBuilder.Append(base.GetType().Name);
+            stringBuilder.Append(" [");
+            if (this.isNamed == true)
+            {
+                stringBuilder.Append(this.Name);
+            }
+            else 
+            {
+                stringBuilder.Append("A=");
+                stringBuilder.Append(this.A);
+                stringBuilder.Append(", R=");
+                stringBuilder.Append(this.R);
+                stringBuilder.Append(", G=");
+                stringBuilder.Append(this.G);
+                stringBuilder.Append(", B=");
+                stringBuilder.Append(this.B);
+            }
+
+            stringBuilder.Append("]");
+            return stringBuilder.ToString();
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is GrColor == false)
@@ -201,17 +226,114 @@ namespace Ntreev.Library.Grid
 
         public float GetBrightness()
         {
-            throw new NotImplementedException();
+            float num = this.Rf;
+            float num2 = this.Gf;
+            float num3 = this.Bf;
+            float num4 = num;
+            float num5 = num;
+            if (num2 > num4)
+            {
+                num4 = num2;
+            }
+            if (num3 > num4)
+            {
+                num4 = num3;
+            }
+            if (num2 < num5)
+            {
+                num5 = num2;
+            }
+            if (num3 < num5)
+            {
+                num5 = num3;
+            }
+            return ((num4 + num5) / 2.0f);
+
         }
 
         public float GetHue()
         {
-            throw new NotImplementedException();
+            if ((this.r == this.g) && (this.g == this.b))
+            {
+                return 0.0f;
+            }
+            float num = this.Rf;
+            float num2 = this.Gf;
+            float num3 = this.Bf;
+            float num7 = 0.0f;
+            float num4 = num;
+            float num5 = num;
+            if (num2 > num4)
+            {
+                num4 = num2;
+            }
+            if (num3 > num4)
+            {
+                num4 = num3;
+            }
+            if (num2 < num5)
+            {
+                num5 = num2;
+            }
+            if (num3 < num5)
+            {
+                num5 = num3;
+            }
+            float num6 = num4 - num5;
+            if (num == num4)
+            {
+                num7 = (num2 - num3) / num6;
+            }
+            else if (num2 == num4)
+            {
+                num7 = 2.0f + ((num3 - num) / num6);
+            }
+            else if (num3 == num4)
+            {
+                num7 = 4.0f + ((num - num2) / num6);
+            }
+            num7 *= 60.0f;
+            if (num7 < 0.0f)
+            {
+                num7 += 360.0f;
+            }
+            return num7;
         }
 
         public float GetSaturation()
         {
-            throw new NotImplementedException();
+            float num = this.Rf;
+            float num2 = this.Gf;
+            float num3 = this.Bf;
+            float num7 = 0.0f;
+            float num4 = num;
+            float num5 = num;
+            if (num2 > num4)
+            {
+                num4 = num2;
+            }
+            if (num3 > num4)
+            {
+                num4 = num3;
+            }
+            if (num2 < num5)
+            {
+                num5 = num2;
+            }
+            if (num3 < num5)
+            {
+                num5 = num3;
+            }
+            if (num4 == num5)
+            {
+                return num7;
+            }
+            float num6 = (num4 + num5) / 2.0f;
+            if (num6 <= 0.5f)
+            {
+                return ((num4 - num5) / (num4 + num5));
+            }
+            return ((num4 - num5) / ((2.0f - num4) - num5));
         }
 
         public int Value
@@ -422,6 +544,7 @@ namespace Ntreev.Library.Grid
             private float _h;
             private float _s;
             private float _l;
+
             public HSL()
             {
 
@@ -437,19 +560,23 @@ namespace Ntreev.Library.Grid
                 _h = value;
                 _h = _h > 1 ? 1 : _h < 0 ? 0 : _h;
             }
+
             public float S()
             {
                 return _s;
             }
+
             public void S(float value)
             {
                 _s = value;
                 _s = _s > 1 ? 1 : _s < 0 ? 0 : _s;
             }
+
             public float L()
             {
                 return _l;
             }
+
             public void L(float value)
             {
                 _l = value;

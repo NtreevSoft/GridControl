@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -14,6 +15,30 @@ namespace Ntreev.Library.Grid
         {
             this.x = x;
             this.y = y;
+        }
+
+        public override string ToString()
+        {
+            return string.Concat(new string[]
+			{
+				"{X=",
+				this.X.ToString(CultureInfo.CurrentCulture),
+				",Y=",
+				this.Y.ToString(CultureInfo.CurrentCulture),
+				"}"
+			});
+        }
+
+        public override int GetHashCode()
+        {
+            return this.x ^ this.y;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is GrPoint == false)
+                return false;
+            return this == (GrPoint)obj;
         }
 
         public int X
@@ -35,7 +60,6 @@ namespace Ntreev.Library.Grid
 
         public static bool operator !=(GrPoint point1, GrPoint point2)
         {
-
             return point1.x != point2.x || point1.y != point2.y;
         }
 

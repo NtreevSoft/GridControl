@@ -8,18 +8,18 @@ namespace Ntreev.Library.Grid
     public class GrDataRow : IDataRow
     {
         private readonly List<GrItem> m_vecItems = new List<GrItem>();
-        bool m_readOnly;
+        private bool m_readOnly;
 
-        GrColor m_itemBackColor;
-        GrColor m_itemForeColor;
-        GrFont m_pItemFont;
+        private GrColor m_itemBackColor;
+        private GrColor m_itemForeColor;
+        private GrFont m_pItemFont;
 
-        int m_visibleDataRowIndex;
-        int m_dataRowIndex;
-        int m_dataRowID;
+        private int m_visibleDataRowIndex;
+        private int m_dataRowIndex;
+        private int m_dataRowID;
 
-        GrItem[] m_pItems;
-        int m_itemsCount;
+        private GrItem[] m_pItems;
+        private int m_itemsCount;
 
         internal int m_selected;
 
@@ -182,7 +182,7 @@ namespace Ntreev.Library.Grid
             m_pDataRowList.SetVisibleChanged();
             GrFocuser focuser = this.GridCore.GetFocuser();
             if (focuser.GetFocusedRow() == this)
-                focuser.Set(null as  IFocusable);
+                focuser.Set(null as IFocusable);
 
             GrRootRow pHeaderList = GetParent() as GrRootRow;
 
@@ -228,14 +228,14 @@ namespace Ntreev.Library.Grid
                 }
             }
 
-             GrColumnList columnList = this.GridCore.GetColumnList();
+            GrColumnList columnList = this.GridCore.GetColumnList();
             GrRect displayRect = this.GridCore.GetDisplayRect();
             for (int i = 0; i < columnList.GetDisplayableColumnCount(); i++)
             {
-                 GrColumn column = columnList.GetDisplayableColumn(i);
+                GrColumn column = columnList.GetDisplayableColumn(i);
                 if (column.GetX() > clipRect.Right || column.GetRight() < clipRect.Left)
                     continue;
-                 GrItem pItem = GetItem(column);
+                GrItem pItem = GetItem(column);
                 pItem.Paint(painter, clipRect);
             }
 
@@ -334,7 +334,6 @@ namespace Ntreev.Library.Grid
             return null;
         }
 
-
         internal void SetVisibleDataRowIndex(int index)
         {
             m_visibleDataRowIndex = index;
@@ -365,6 +364,7 @@ namespace Ntreev.Library.Grid
             {
                 if ((int)columnID < m_itemsCount)
                 {
+                    m_pItems[columnID] = new GrItem();
                     pItem = m_pItems[columnID];
                     pItem.m_column = column;
                     pItem.m_pDataRow = this;
@@ -433,7 +433,7 @@ namespace Ntreev.Library.Grid
         {
             GrColor color = GetBlankBackColor();
 
-             GrStyle pStyle = this.GridCore.GetStyle();
+            GrStyle pStyle = this.GridCore.GetStyle();
             if (pStyle == null)
                 pStyle = GrStyle.Default;
 

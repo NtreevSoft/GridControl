@@ -21,7 +21,7 @@ namespace Ntreev.Windows.Forms.Grid
 
         static GrFontDC()
         {
-            GrFont.DefaultFont = new GrFontDC(Control.DefaultFont.ToHfont());
+            
         }
 
         public GrFontDC(object fontHandle)

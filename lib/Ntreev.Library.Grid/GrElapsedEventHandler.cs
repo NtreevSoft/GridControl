@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Ntreev.Library.Grid
 {
-    public delegate  void FocusEventHandler(object sender, GrFocusChangeArgs e);
+    public delegate void GrElapsedEventHandler(object sender, GrElapsedEventArgs e);
 }

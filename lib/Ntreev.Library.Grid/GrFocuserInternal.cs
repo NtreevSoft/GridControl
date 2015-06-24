@@ -46,19 +46,19 @@ namespace Ntreev.Library.Grid
             pItemSelector.Selecting(pFocusable);
         }
 
-        protected virtual void OnGridCoreAttached()
+        protected override void OnGridCoreAttached()
         {
             base.OnGridCoreAttached();
             this.GridCore.Created += gridCore_Created;
             this.GridCore.Cleared += gridCore_Cleared;
         }
 
-        protected virtual IFocusable GetFocusing()
+        protected override IFocusable GetFocusing()
         {
             return m_pFocusing;
         }
 
-        protected virtual void OnFocusChanging(GrFocusChangeArgs e)
+        protected override void OnFocusChanging(GrFocusChangeArgs e)
         {
             if (this.GridCore.GetMultiSelect() == false)
             {

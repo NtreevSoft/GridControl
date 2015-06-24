@@ -9,17 +9,16 @@ namespace Ntreev.Library.Grid
     {
         protected GrDataRowList m_pDataRowList;
 
+        private bool m_expanded;
+        private bool m_displayable;
+        private bool m_clipped;
+        private int m_visibleIndex;
+        private int m_displayIndex;
+        private int m_selectionGroup;
 
-        bool m_expanded;
-        bool m_displayable;
-        bool m_clipped;
-        int m_visibleIndex;
-        int m_displayIndex;
-        int m_selectionGroup;
+        private GrExpander m_pExpander;
 
-        GrExpander m_pExpander;
-
-        public IDataRow()
+        protected IDataRow()
         {
             m_displayable = false;
             m_clipped = false;
@@ -36,7 +35,7 @@ namespace Ntreev.Library.Grid
             if (m_pDataRowList == null)
                 throw new Exception("GridCore에 붙지 않았음");
 
-            if ((int)m_visibleIndex < 0)
+            if (m_visibleIndex < 0)
                 return base.GetY();
             return base.GetY() - m_pDataRowList.GetDisplayOffset();
         }
@@ -114,6 +113,7 @@ namespace Ntreev.Library.Grid
 
             m_selectionGroup = index == GrDefineUtility.INSERTION_ROW ? 1 : 0;
         }
+
         public int GetDisplayIndex()
         {
             return m_displayIndex;
@@ -123,6 +123,7 @@ namespace Ntreev.Library.Grid
         {
             m_clipped = b;
         }
+
         public bool GetClipped()
         {
             return m_clipped;
@@ -136,6 +137,7 @@ namespace Ntreev.Library.Grid
                 return true;
             return false;
         }
+
         public bool HasFocused()
         {
             GrFocuser focuser = this.GridCore.GetFocuser();
@@ -143,6 +145,7 @@ namespace Ntreev.Library.Grid
                 return true;
             return false;
         }
+
         public void KillFocus()
         {
             if (HasFocused() == true)
@@ -158,12 +161,14 @@ namespace Ntreev.Library.Grid
                 m_pDataRowList.SetVisibleChanged();
             m_expanded = b;
         }
+
         public bool IsExpanded()
         {
             if (GetChildCount() == 0)
                 return false;
             return m_expanded;
         }
+
         public GrExpander GetExpander()
         {
             return m_pExpander;
@@ -178,6 +183,7 @@ namespace Ntreev.Library.Grid
         public int GetSelectionGroup() { return m_selectionGroup; }
 
         public abstract IFocusable GetFocusable(GrColumn column);
+
         public virtual bool GetFullSelected() { return false; }
 
         public override GrColor GetForeColor()
@@ -192,6 +198,7 @@ namespace Ntreev.Library.Grid
 
             return base.GetForeColor();
         }
+
         public override GrColor GetBackColor()
         {
             GrColor color = base.GetBackColorCore();
@@ -217,6 +224,7 @@ namespace Ntreev.Library.Grid
 
             return base.GetLineColor();
         }
+
         public override GrFont GetFont()
         {
             GrFont pFont = base.GetFontCore();
@@ -237,7 +245,8 @@ namespace Ntreev.Library.Grid
                 flag |= GrPaintStyle.Focused;
             return flag;
         }
-        public virtual void Paint(GrGridPainter painter, GrRect clipRect)
+
+        public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
             GrRect paintRect = GetRect();
             GrPaintStyle paintStyle = ToPaintStyle();
@@ -268,14 +277,13 @@ namespace Ntreev.Library.Grid
 
             DrawExpander(painter, clipRect);
         }
-        //public virtual void OnYChanged();
-
 
         protected override void OnFitted()
         {
             base.OnFitted();
             m_pDataRowList.SetFitChanged();
         }
+
         protected override void OnGridCoreAttached()
         {
             base.OnGridCoreAttached();
@@ -283,12 +291,14 @@ namespace Ntreev.Library.Grid
             this.GridCore.AttachObject(m_pExpander);
             m_pDataRowList.SetHeightChanged();
         }
+
         protected override void OnHeightChanged()
         {
             base.OnHeightChanged();
             if (m_pDataRowList != null)
                 m_pDataRowList.SetHeightChanged();
         }
+
         protected override void OnChildAdded(GrRow row)
         {
             base.OnChildAdded(row);
@@ -299,10 +309,12 @@ namespace Ntreev.Library.Grid
                 this.GridCore.GetColumnList().SetWidthChanged();
             }
         }
+
         protected virtual void OnDisplayableChanged()
         {
 
         }
+
         protected virtual void OnVisibleChanged()
         {
 
@@ -319,8 +331,7 @@ namespace Ntreev.Library.Grid
                 return;
             m_pExpander.Paint(painter, clipRect);
         }
-
-
+        
         protected GrColor GetCellBackColor()
         {
             GrStyle pStyle = this.GridCore.GetStyle();
@@ -328,6 +339,7 @@ namespace Ntreev.Library.Grid
                 return pStyle.BackColor;
             return this.GridCore.GetBackColor();
         }
+
         protected GrColor GetCellLineColor()
         {
             GrStyle pStyle = this.GridCore.GetStyle();
@@ -335,9 +347,7 @@ namespace Ntreev.Library.Grid
                 return pStyle.LineColor;
             return this.GridCore.GetLineColor();
         }
-
-
-
+        
         internal void InvokeOnYChanged()
         {
             this.OnYChanged();

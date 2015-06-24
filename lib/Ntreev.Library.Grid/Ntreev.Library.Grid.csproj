@@ -27,7 +27,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;_WINFORM</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -58,13 +58,13 @@
     <Compile Include="GrGridUtility.cs" />
     <Compile Include="States\ColumnResizing.cs" />
     <Compile Include="States\ColumnSplitterMoving.cs" />
-    <Compile Include="DataRowEventHandler.cs" />
-    <Compile Include="DataRowInsertedEventHandler.cs" />
-    <Compile Include="DataRowInsertingEventHandler.cs" />
-    <Compile Include="DataRowMovingEventHandler.cs" />
-    <Compile Include="ElapsedEventHandler.cs" />
+    <Compile Include="GrDataRowEventHandler.cs" />
+    <Compile Include="GrDataRowInsertedEventHandler.cs" />
+    <Compile Include="GrDataRowInsertingEventHandler.cs" />
+    <Compile Include="GrDataRowMovingEventHandler.cs" />
+    <Compile Include="GrElapsedEventHandler.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="FocusEventHandler.cs" />
+    <Compile Include="GrFocusEventHandler.cs" />
     <Compile Include="FuncColumnPaint.cs" />
     <Compile Include="FuncComparer.cs" />
     <Compile Include="FuncSortRow.cs" />
@@ -111,7 +111,7 @@
     <Compile Include="GrGroupRow.cs" />
     <Compile Include="GrHitTest.cs" />
     <Compile Include="GrHorzAlign.cs" />
-    <Compile Include="GridCore.cs" />
+    <Compile Include="GrGridCore.cs" />
     <Compile Include="GrInsertionRow.cs" />
     <Compile Include="GrInvalidator.cs" />
     <Compile Include="GrItem.cs" />
@@ -174,8 +174,8 @@
     <Compile Include="States\RootPressing.cs" />
     <Compile Include="States\RowResizing.cs" />
     <Compile Include="WordDesc.cs" />
-    <Compile Include="ItemMouseEventHandler.cs" />
-    <Compile Include="RowMouseEventHandler.cs" />
+    <Compile Include="GrItemMouseEventHandler.cs" />
+    <Compile Include="GrRowMouseEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

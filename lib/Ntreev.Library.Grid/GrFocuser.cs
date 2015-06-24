@@ -101,9 +101,9 @@ namespace Ntreev.Library.Grid
         public void Delete() { ResetVariables(); }
 
 
-        public event FocusEventHandler FocusChanging;
+        public event GrFocusEventHandler FocusChanging;
 
-        public event FocusEventHandler FocusChanged;
+        public event GrFocusEventHandler FocusChanged;
 
 
         protected virtual void OnFocusChanging(GrFocusChangeArgs e)
@@ -125,7 +125,7 @@ namespace Ntreev.Library.Grid
 
             Invalidate(e.GetFocusable());
         }
-        protected virtual void OnGridCoreAttached()
+        protected override void OnGridCoreAttached()
         {
             base.OnGridCoreAttached();
 

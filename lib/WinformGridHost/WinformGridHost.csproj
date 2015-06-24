@@ -36,7 +36,7 @@
     <AssemblyOriginatorKeyFile>GridControl.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <DelaySign>true</DelaySign>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -96,6 +96,7 @@
     <Compile Include="CurrencyManagerChangingEventArgs.cs" />
     <Compile Include="CurrencyManagerChangingEventHandler.cs" />
     <Compile Include="CustomPaint.cs" />
+    <Compile Include="DefaultFontProvider.cs" />
     <Compile Include="Design\BindingListTypeEditor.cs" />
     <Compile Include="Design\BooleanTypeEditor.cs" />
     <Compile Include="Design\Controls\InternalCheckBox.cs">

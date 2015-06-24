@@ -96,7 +96,7 @@ namespace Ntreev.Library.Grid.States
                 IDataRow p = m_row as IDataRow;
                 if (p != null && p.GetFullSelected() == true)
                 {
-                    GrDataRowList dataRowList = m_row.GetGridCore().GetDataRowList();
+                    GrDataRowList dataRowList = m_row.GridCore.GetDataRowList();
                     int y = int.MaxValue;
                     for (int i = 0; i < dataRowList.GetVisibleRowCount(); i++)
                     {
@@ -148,7 +148,7 @@ namespace Ntreev.Library.Grid.States
                 IDataRow pDataRow = row as IDataRow;
                 if (pDataRow != null && pDataRow.GetVisibleIndex() > 0)
                 {
-                    GrDataRowList dataRowList = pDataRow.GetGridCore().GetDataRowList();
+                    GrDataRowList dataRowList = pDataRow.GridCore.GetDataRowList();
                     pDataRow = dataRowList.GetVisibleRow(pDataRow.GetVisibleIndex() - 1);
                     if (pDataRow.GetResizable())
                         return pDataRow;

@@ -400,14 +400,13 @@ namespace Ntreev.Library.Grid
             return ClipTo(this.GridCore.GetDisplayRect(), visibleTo);
         }
 
-
         public int ClipTo(GrRect displayRect, int visibleTo)
         {
             int displayHeight = displayRect.GetHeight() - GetY();
             int displayY = displayHeight;
             int visibleFrom = visibleTo;
 
-            for (int i = visibleTo; i < m_vecVisibleRows.Count; i--)
+            for (int i = visibleTo; i < m_vecVisibleRows.Count && i >= 0; i--)
             {
                 IDataRow item = m_vecVisibleRows[i];
                 displayY -= item.GetHeight();
@@ -627,11 +626,16 @@ namespace Ntreev.Library.Grid
 
         public event EventHandler VisibleChanged;
 
-        public event DataRowInsertingEventHandler DataRowInserting;
-        public event DataRowInsertedEventHandler DataRowInserted;
-        public event DataRowEventHandler DataRowRemoved;
-        public event DataRowMovingEventHandler DataRowMoving;
-        public event DataRowEventHandler DataRowMoved;
+        public event GrDataRowInsertingEventHandler DataRowInserting;
+
+        public event GrDataRowInsertedEventHandler DataRowInserted;
+
+        public event GrDataRowEventHandler DataRowRemoved;
+
+        public event GrDataRowMovingEventHandler DataRowMoving;
+
+        public event GrDataRowEventHandler DataRowMoved;
+
         public event EventHandler VisibleHeightChanged;
 
         public override GrRect GetBounds()
@@ -665,7 +669,13 @@ namespace Ntreev.Library.Grid
                 m_offset += m_vecVisibleRows[i].GetHeight();
             }
 
-            List<IDataRow> vecVisibleRows = new List<IDataRow>(m_vecVisibleRows);
+            List<IDataRow> vecVisibleRows = new List<IDataRow>(m_vecVisibleRows.Count);
+
+            for (int i = vertical; i < m_vecVisibleRows.Count; i++)
+            {
+                vecVisibleRows.Add(m_vecVisibleRows[i]);
+            }
+
             foreach (var item in vecVisibleRows)
             {
                 if (displayY > displayRect.Bottom)
@@ -710,6 +720,7 @@ namespace Ntreev.Library.Grid
         }
 
         public override int GetClipPriority() { return 1; }
+
         public override bool ShouldUpdate()
         {
             return m_listChanged == true ||
@@ -746,6 +757,7 @@ namespace Ntreev.Library.Grid
         public override int GetUpdatePriority() { return GrDefineUtility.UPDATEPRIORITY_DATAROWLIST; }
 
         public override GrRowType GetRowType() { return GrRowType.DataRowList; }
+
         public override GrCell HitTest(GrPoint location)
         {
             GrCell pHitted = base.HitTest(location);
@@ -763,7 +775,9 @@ namespace Ntreev.Library.Grid
         }
 
         public override int GetWidth() { return 0; }
+
         public override int GetHeight() { return m_displayableHeight; }
+
         public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
             foreach (var value in m_vecDisplayableRows)
@@ -795,8 +809,6 @@ namespace Ntreev.Library.Grid
                 }
             }
         }
-
-
 
         protected override void OnGridCoreAttached()
         {
@@ -837,7 +849,10 @@ namespace Ntreev.Library.Grid
 
         protected virtual void OnDataRowInserting(GrDataRowInsertingEventArgs e)
         {
-            DataRowInserting(this, e);
+            if (this.DataRowInserting != null)
+            {
+                this.DataRowInserting(this, e);
+            }
         }
 
         protected virtual void OnDataRowInserted(GrDataRowInsertedEventArgs e)
@@ -879,7 +894,6 @@ namespace Ntreev.Library.Grid
         {
             VisibleHeightChanged(this, e);
         }
-
 
         private GrGroupRow CreateGrourow(GrRow pParent, GrColumn column, string itemText)
         {
@@ -1178,6 +1192,7 @@ namespace Ntreev.Library.Grid
             pVertScroll.SetMaximum(visibleRowCount - countPerPage + largeChange - 1);
             pVertScroll.SetLargeChange(largeChange);
         }
+
         private void GetVisibleList(GrRow row, List<GrRow> pVisible)
         {
             if (row.GetVisible() == false)
@@ -1277,6 +1292,7 @@ namespace Ntreev.Library.Grid
             m_mapCache.Clear();
             m_vecColumns.Clear();
         }
+
         private void gridCore_FontChanged(object sender, EventArgs e)
         {
             GrColumnList columnList = this.GridCore.GetColumnList();
@@ -1307,7 +1323,7 @@ namespace Ntreev.Library.Grid
 
         private void columnList_ColumnInserted(object sender, GrColumnEventArgs e)
         {
-            GrColumn column = e.GetColumn();
+            GrColumn column = e.Column;
 
             if (column.GetColumnID() >= m_vecColumns.Count)
             {
@@ -1328,19 +1344,19 @@ namespace Ntreev.Library.Grid
 
         private void columnList_ColumnRemoved(object sender, GrColumnEventArgs e)
         {
-            GrItem pItem = GetInsertionRow().GetItem(e.GetColumn());
+            GrItem pItem = GetInsertionRow().GetItem(e.Column);
             this.GridCore.DetachObject(pItem);
 
             foreach (var value in m_vecDataRows)
             {
-                pItem = value.GetItem(e.GetColumn());
+                pItem = value.GetItem(e.Column);
                 this.GridCore.DetachObject(pItem);
             }
         }
 
         private void columnList_ColumnSortTypeChanged(object sender, GrColumnEventArgs e)
         {
-            GrColumn column = e.GetColumn();
+            GrColumn column = e.Column;
             Sort(column);
         }
 
@@ -1359,12 +1375,10 @@ namespace Ntreev.Library.Grid
             m_pFocusedDataRow = focuser.GetFocusedRow() as GrDataRow;
         }
 
-
         struct GrCache
         {
             public int height;
             public bool expanded;
         }
-
     }
 }

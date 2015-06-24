@@ -9,16 +9,16 @@ namespace Ntreev.Library.Grid
     public class GrItemSelector : GrObject
     {
         //HashSet<GrItem> m_selectedItems;
-        HashSet<GrColumn> m_selectedColumns;
-        HashSet<GrDataRow> m_selectedRows;
+        HashSet<GrColumn> m_selectedColumns = new HashSet<GrColumn>();
+        HashSet<GrDataRow> m_selectedRows = new HashSet<GrDataRow>();
 
         //HashSet<GrItem> m_oldSelectedItems;
-        HashSet<GrColumn> m_oldSelectedColumns;
-        HashSet<GrDataRow> m_oldSelectedRows;
+        HashSet<GrColumn> m_oldSelectedColumns = new HashSet<GrColumn>();
+        HashSet<GrDataRow> m_oldSelectedRows = new HashSet<GrDataRow>();
 
 
-        List<GrColumn> m_externalSelectedColumns;
-        List<GrDataRow> m_externalSelectedRows;
+        List<GrColumn> m_externalSelectedColumns = new List<GrColumn>();
+        List<GrDataRow> m_externalSelectedRows = new List<GrDataRow>();
 
         int m_selectionLock;
         IDataRow m_pSelectionGroup;
@@ -190,20 +190,20 @@ namespace Ntreev.Library.Grid
         }
 
         public void SelectColumns(GrColumn pFrom, GrColumn pTo, GrSelectionType selectType)
+        {
+            GrRange indexRange = new GrRange(pFrom.GetVisibleIndex(), pTo.GetVisibleIndex());
+
+            HashSet<GrColumn> dataRows = new HashSet<GrColumn>();
+            GrColumnList columnList = this.GridCore.GetColumnList();
+            for (int i = indexRange.GetMinValue(); i <= indexRange.GetMaxValue(); i++)
             {
-    GrRange indexRange =new GrRange(pFrom.GetVisibleIndex(), pTo.GetVisibleIndex());
+                GrColumn column = columnList.GetVisibleColumn(i) as GrColumn;
+                if (column != null)
+                    dataRows.Add(column);
+            }
 
-    HashSet<GrColumn> dataRows = new HashSet<GrColumn>();
-    GrColumnList columnList = this.GridCore.GetColumnList();
-    for(int i=indexRange.GetMinValue() ; i<=indexRange.GetMaxValue() ; i++)
-    {
-        GrColumn column = columnList.GetVisibleColumn(i) as GrColumn;
-        if(column != null)
-            dataRows.Add(column);
-    }
-
-    SelectColumns(dataRows, selectType);
-}
+            SelectColumns(dataRows, selectType);
+        }
 
         public void SelectDataRows(HashSet<GrDataRow> pDataRows, GrSelectionType selectType)
         {
@@ -241,22 +241,22 @@ namespace Ntreev.Library.Grid
         }
 
         public void SelectDataRows(GrDataRow pFrom, GrDataRow pTo, GrSelectionType selectType)
+        {
+            if (pFrom.GetSelectionGroup() != pTo.GetSelectionGroup())
+                throw new Exception("");
+
+            GrRange indexRange = new GrRange(pFrom.GetVisibleDataRowIndex(), pTo.GetVisibleDataRowIndex());
+
+            HashSet<GrDataRow> dataRows = new HashSet<GrDataRow>();
+            GrDataRowList dataRowList = this.GridCore.GetDataRowList();
+            for (int i = indexRange.GetMinValue(); i <= indexRange.GetMaxValue(); i++)
             {
-    if(pFrom.GetSelectionGroup() != pTo.GetSelectionGroup())
-        throw new Exception("");
+                GrDataRow pDataRow = dataRowList.GetVisibleDataRow(i);
+                dataRows.Add(pDataRow);
+            }
 
-    GrRange indexRange = new GrRange(pFrom.GetVisibleDataRowIndex(), pTo.GetVisibleDataRowIndex());
-
-    HashSet<GrDataRow> dataRows = new HashSet<GrDataRow>();
-    GrDataRowList dataRowList = this.GridCore.GetDataRowList();
-    for(int i=indexRange.GetMinValue() ; i<=indexRange.GetMaxValue() ; i++)
-    {
-        GrDataRow pDataRow = dataRowList.GetVisibleDataRow(i);
-        dataRows.Add(pDataRow);
-    }
-
-    SelectDataRows(dataRows, selectType);
-}
+            SelectDataRows(dataRows, selectType);
+        }
 
         public void SelectDataRows(IDataRow pFrom, IDataRow pTo, GrSelectionType selectType)
         {
@@ -401,11 +401,11 @@ namespace Ntreev.Library.Grid
         }
 
         public GrRange GetColumnSelections(GrColumn column)
-            {
-    GrRange range = new GrRange(m_pAnchorColumn.GetVisibleIndex(), column.GetVisibleIndex());
-    range.SetMaxValue(range.GetMaxValue() + 1);
-    return range;
-}
+        {
+            GrRange range = new GrRange(m_pAnchorColumn.GetVisibleIndex(), column.GetVisibleIndex());
+            range.SetMaxValue(range.GetMaxValue() + 1);
+            return range;
+        }
 
         public GrRange GetRowSelections(GrItem pItem)
         {
@@ -413,14 +413,14 @@ namespace Ntreev.Library.Grid
         }
 
         public GrRange GetRowSelections(IDataRow pDataRow)
-            {
-    if(pDataRow.GetSelectionGroup() != m_pAnchorDataRow.GetSelectionGroup())
-        return GrRange.Empty;
+        {
+            if (pDataRow.GetSelectionGroup() != m_pAnchorDataRow.GetSelectionGroup())
+                return GrRange.Empty;
 
-    GrRange range = new GrRange(m_pAnchorDataRow.GetVisibleIndex(), pDataRow.GetVisibleIndex());
-    range.SetMaxValue(range.GetMaxValue() + 1);
-    return range;
-}
+            GrRange range = new GrRange(m_pAnchorDataRow.GetVisibleIndex(), pDataRow.GetVisibleIndex());
+            range.SetMaxValue(range.GetMaxValue() + 1);
+            return range;
+        }
 
         public event EventHandler SelectionChanged;
 
@@ -652,7 +652,7 @@ namespace Ntreev.Library.Grid
         {
             BeginSelection();
 
-            HashSet<GrDataRow> selectedRows = m_selectedRows;
+            HashSet<GrDataRow> selectedRows = new HashSet<GrDataRow>(m_selectedRows);
             foreach (var value in selectedRows)
             {
                 DoDeselectDataRow(value);

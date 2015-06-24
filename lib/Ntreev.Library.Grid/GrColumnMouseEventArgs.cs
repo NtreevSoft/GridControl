@@ -16,20 +16,15 @@ namespace Ntreev.Library.Grid
             this.column = column;
         }
 
-        public GrColumn GetColumn()
+        public GrColumn Column
         {
-            return this.column;
+            get { return this.column; }
         }
 
-        public bool GetHandled()
+        public bool IsHandled
         {
-            return this.handled;
-        }
-
-        public void SetHandled(bool value)
-        {
-            this.handled = value;
-
+            get { return this.handled; }
+            set { this.handled = value; }
         }
     }
 }

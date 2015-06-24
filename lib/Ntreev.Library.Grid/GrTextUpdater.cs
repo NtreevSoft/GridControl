@@ -80,6 +80,7 @@ namespace Ntreev.Library.Grid
             //}
             m_vecTextBounds.Remove(pCell);
         }
+
         public void RemoveTextAlign(GrCell pCell)
         {
 
@@ -94,18 +95,17 @@ namespace Ntreev.Library.Grid
             }
             m_vecTextBounds.Clear();
         }
+
         public void UpdateTextAlign()
         {
 
         }
-
 
         protected override void OnGridCoreAttached()
         {
             this.GridCore.Cleared += gridCore_Cleared;
             this.GridCore.CapacityChanged += gridCore_CapacityChanged;
         }
-
 
         private void gridCore_Cleared(object sender, EventArgs e)
         {
@@ -119,6 +119,5 @@ namespace Ntreev.Library.Grid
             m_vecTextBounds.Capacity = capacity;
 
         }
-
     }
 }

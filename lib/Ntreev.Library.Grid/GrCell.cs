@@ -7,70 +7,84 @@ namespace Ntreev.Library.Grid
 {
     public abstract class GrCell : GrObject
     {
+        internal bool m_textBoundsChanged;
+        internal bool m_textAlignChanged;
+
         private string m_text;
         private GrStyleData m_pStyleData;
 
-        internal bool m_textBoundsChanged;
-        internal bool m_textAlignChanged;
         private bool m_textVisible = true;
         private GrTextLayout m_layout;
 
         private static Dictionary<int, string> s_texts = new Dictionary<int, string>();
 
-        public GrCell()
+        protected GrCell()
         {
 
 
         }
-        //virtual ~GrCell();
 
         public abstract int GetX();
+
         public abstract int GetY();
+
         public abstract int GetWidth();
+
         public abstract int GetHeight();
+
         public abstract GrRow GetRow();
 
         public abstract GrCellType GetCellType();
+
         public abstract bool GetVisible();
+
         public abstract bool GetDisplayable();
+
         public abstract void Paint(GrGridPainter painter, GrRect clipRect);
 
         public bool Contains(GrPoint point)
         {
             return this.ContainsHorz(point.X) && this.ContainsVert(point.Y);
         }
+
         public bool ContainsHorz(int x)
         {
             if (x < this.GetX() || x >= this.GetRight())
                 return false;
             return true;
         }
+
         public bool ContainsVert(int y)
         {
             if (y < this.GetY() || y >= this.GetBottom())
                 return false;
             return true;
         }
+
         public bool IntersectsHorzWith(int left, int right)
         {
             if (this.GetX() > right || this.GetRight() <= left)
                 return false;
             return true;
         }
+
         public bool IntersectsHorzWith(GrRect rect)
         {
             return this.IntersectsHorzWith(rect.Left, rect.Right);
         }
+
         public bool IntersectsVertWith(int top, int bottom)
         {
             if (this.GetY() > bottom || this.GetBottom() <= top)
                 return false;
             return true;
         }
+
         public bool IntersectsVertWith(GrRect rect)
         {
             return this.IntersectsVertWith(rect.Top, rect.Bottom);
         }
+
         public bool IntersectsWith(GrRect rect)
         {
             return this.IntersectsHorzWith(rect.Left, rect.Right) &&
@@ -83,12 +97,14 @@ namespace Ntreev.Library.Grid
                 return false;
             return this.GridCore.GetMouseOver() == this;
         }
+
         public bool GetMousePressed()
         {
             if (this.GridCore == null)
                 return false;
             return this.GridCore.GetMousePress() == this;
         }
+
         public int GetMouseOverState()
         {
             if (this.GridCore == null)
@@ -101,14 +117,17 @@ namespace Ntreev.Library.Grid
             GrPadding padding = this.GetPadding();
             return GrRect.FromLTRB(padding.Left, padding.Top, this.GetWidth() - (padding.Right), this.GetHeight() - (padding.Bottom));
         }
+
         public GrRect GetRect()
         {
             return new GrRect(this.GetX(), this.GetY(), this.GetWidth(), this.GetHeight());
         }
+
         public GrPoint GetLocation()
         {
             return new GrPoint(this.GetX(), this.GetY());
         }
+
         public GrSize GetSize()
         {
             return new GrSize(this.GetWidth(), this.GetHeight());
@@ -132,6 +151,7 @@ namespace Ntreev.Library.Grid
             m_pStyleData.backColor = color;
             this.Invalidate();
         }
+
         public void SetForeColor(GrColor color)
         {
             if (m_pStyleData == null)
@@ -141,6 +161,7 @@ namespace Ntreev.Library.Grid
             this.Invalidate();
 
         }
+
         public void SetLineColor(GrColor color)
         {
             if (m_pStyleData == null)
@@ -149,6 +170,7 @@ namespace Ntreev.Library.Grid
             m_pStyleData.lineColor = color;
             this.Invalidate();
         }
+
         public void SetFont(GrFont pFont)
         {
             if (m_pStyleData == null)
@@ -157,6 +179,7 @@ namespace Ntreev.Library.Grid
             m_pStyleData.pFont = pFont;
             this.SetTextBoundsChanged();
         }
+
         public void SetPadding(GrPadding padding)
         {
             if (m_pStyleData == null)
@@ -172,18 +195,21 @@ namespace Ntreev.Library.Grid
                 return GrStyleData.Default.foreColor;
             return m_pStyleData.foreColor;
         }
+
         public GrColor GetBackColorCore()
         {
             if (m_pStyleData == null)
                 return GrStyleData.Default.backColor;
             return m_pStyleData.backColor;
         }
+
         public GrColor GetLineColorCore()
         {
             if (m_pStyleData == null)
                 return GrStyleData.Default.lineColor;
             return m_pStyleData.lineColor;
         }
+
         public GrFont GetFontCore()
         {
             if (m_pStyleData == null)
@@ -197,13 +223,13 @@ namespace Ntreev.Library.Grid
             return m_pStyleData.padding;
         }
 
-
         public string GetText()
         {
             if (m_text == null)
                 return string.Empty;
             return m_text;
         }
+
         public void SetText(string text)
         {
             if (m_text == text)
@@ -212,20 +238,26 @@ namespace Ntreev.Library.Grid
             m_text = text;
             this.OnTextChanged();
         }
+
         public int GetTextLineCount()
         {
+            if (m_layout == null)
+                return 0;
             return m_layout.linesCount;
         }
+
         public GrLineDesc GetTextLine(int index)
         {
             return m_layout.pLines[index];
         }
+
         public GrSize GetTextBounds()
         {
             if (m_layout == null)
                 return GrSize.Empty;
             return new GrSize(m_layout.width, m_layout.height);
         }
+
         public virtual GrSize GetPreferredSize()
         {
             GrSize size = this.GetTextBounds();
@@ -233,6 +265,7 @@ namespace Ntreev.Library.Grid
             size.Height += this.GetPadding().GetVertical();
             return size;
         }
+
         public GrPoint AlignText(GrLineDesc line, int index, int count)
         {
             GrFont pFont = this.GetPaintingFont();
@@ -288,6 +321,7 @@ namespace Ntreev.Library.Grid
             //}
             //}
         }
+
         public void ComputeTextBounds()
         {
             //        tbinfo_fixed ti_f;
@@ -393,10 +427,12 @@ namespace Ntreev.Library.Grid
             if (GetTextBounds() != oldTextBounds)
                 OnTextSizeChanged();
         }
+
         public bool GetTextVisible()
         {
             return m_textVisible;
         }
+
         public bool GetTextClipped()
         {
             GrPadding padding = GetPaintingPadding();
@@ -406,10 +442,12 @@ namespace Ntreev.Library.Grid
                 return true;
             return false;
         }
+
         public void SetTextVisible(bool b)
         {
             m_textVisible = b;
         }
+
         public virtual void Invalidate()
         {
             if (this.GridCore == null || this.GetDisplayable() == false)
@@ -427,6 +465,7 @@ namespace Ntreev.Library.Grid
                 flag |= GrPaintStyle.Pressed;
             return flag;
         }
+
         public void DrawText(GrGridPainter painter, GrColor foreColor, GrRect paintRect, GrRect? pClipRect)
         {
             if (this.GetTextVisible() == false)
@@ -439,10 +478,12 @@ namespace Ntreev.Library.Grid
                 GrLineDesc cl = this.GetTextLine(i);
 
                 GrPoint offset = this.AlignText(cl, i, GetTextLineCount());
-                GrRect textRect = GrRect.FromLTRB(paintRect.Left + offset.X,
-                    paintRect.Top + offset.Y,
-                    paintRect.Left + offset.X + cl.width,
-                    paintRect.Top + offset.Y + pFont.GetHeight());
+
+                int left = paintRect.Left + offset.X;
+                int top = paintRect.Top + offset.Y;
+                int right = paintRect.Left + offset.X + cl.width;
+                int bottom = paintRect.Top + offset.Y + pFont.GetHeight();
+                GrRect textRect = GrRect.FromLTRB(left, top, right, bottom);
 
                 if (textRect.Top > paintRect.Bottom || textRect.Bottom <= paintRect.Top)
                     continue;
@@ -472,10 +513,12 @@ namespace Ntreev.Library.Grid
         {
             return GrHorzAlign.Left;
         }
+
         public virtual GrVertAlign GetTextVertAlign()
         {
             return GrVertAlign.Top;
         }
+
         public virtual bool GetTextWordWrap()
         {
             return false;
@@ -487,18 +530,22 @@ namespace Ntreev.Library.Grid
         {
             return this.GetForeColor();
         }
+
         public virtual GrColor GetPaintingBackColor()
         {
             return this.GetBackColor();
         }
+
         public virtual GrColor GetPaintingLineColor()
         {
             return this.GetLineColor();
         }
+
         public virtual GrFont GetPaintingFont()
         {
             return this.GetFont();
         }
+
         public virtual GrPadding GetPaintingPadding()
         {
             return this.GetPadding();
@@ -519,6 +566,7 @@ namespace Ntreev.Library.Grid
             }
             return GrStyle.Default.ForeColor;
         }
+
         public virtual GrColor GetBackColor()
         {
             GrColor color = GetBackColorCore();
@@ -534,6 +582,7 @@ namespace Ntreev.Library.Grid
             }
             return GrStyle.Default.BackColor;
         }
+
         public virtual GrColor GetLineColor()
         {
             GrColor color = GetLineColorCore();
@@ -549,6 +598,7 @@ namespace Ntreev.Library.Grid
             }
             return GrStyle.Default.LineColor;
         }
+
         public virtual GrFont GetFont()
         {
             GrFont pFont = GetFontCore();
@@ -564,6 +614,7 @@ namespace Ntreev.Library.Grid
             }
             return GrStyle.Default.Font;
         }
+
         public virtual GrPadding GetPadding()
         {
             GrPadding padding = GetPaddingCore();
@@ -583,19 +634,16 @@ namespace Ntreev.Library.Grid
 
         public virtual int HitMouseOverTest(GrPoint localLocation)
         {
-            if (localLocation.X < 0 || localLocation.Y < 0 ||
-        localLocation.X >= this.GetWidth() || localLocation.Y >= this.GetHeight())
+            if (localLocation.X < 0 || localLocation.Y < 0 || localLocation.X >= this.GetWidth() || localLocation.Y >= this.GetHeight())
                 return 0;
             return 1;
         }
-
-        public GrGridCore GetGridCore() { return this.GridCore; }
-
 
         protected virtual void OnTextChanged()
         {
             this.SetTextBoundsChanged();
         }
+
         protected virtual void OnTextSizeChanged()
         {
 
@@ -608,6 +656,7 @@ namespace Ntreev.Library.Grid
             pTextUpdater.AddTextBounds(this);
             pTextUpdater.AddTextAlign(this);
         }
+
         protected override void OnGridCoreDetached()
         {
             GrTextUpdater pTextUpdater = this.GridCore.GetTextUpdater();
@@ -630,6 +679,7 @@ namespace Ntreev.Library.Grid
                 }
             }
         }
+
         protected void SetTextAlignChanged()
         {
             if (this.GridCore != null)
@@ -643,7 +693,6 @@ namespace Ntreev.Library.Grid
             }
         }
 
-
         class GrStyleData
         {
             public GrColor backColor;
@@ -655,10 +704,10 @@ namespace Ntreev.Library.Grid
             public static readonly GrStyleData Default = new GrStyleData();
         };
 
-
         public object ManagedRef
         {
-            get; set; }
-
+            get;
+            set;
+        }
     }
 }

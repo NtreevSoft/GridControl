@@ -43,6 +43,7 @@ namespace Ntreev.Library.Grid
         {
             this.GridCore.GetStateManager().OnMouseDown(location, GetModifierKeys());
         }
+
         public virtual void OnMouseMove(GrPoint location, bool pressed)
         {
             this.GridCore.GetStateManager().OnMouseMove(location, GetModifierKeys(), pressed);

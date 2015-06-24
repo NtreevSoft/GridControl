@@ -5,5 +5,5 @@ using System.Text;
 
 namespace Ntreev.Library.Grid
 {
-    public delegate void RowMouseEventHandler(object sender, GrRowMouseEventArgs e);
+    public delegate void GrRowMouseEventHandler(object sender, GrRowMouseEventArgs e);
 }

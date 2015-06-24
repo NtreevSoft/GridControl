@@ -139,7 +139,7 @@ namespace Ntreev.Library.Grid
             AttachObject(m_pDataRowList);
             AttachObject(m_pSplitterRow);
             AttachObject(m_pStateManager);
-            //AttachObject(m_pGridWindow);
+            AttachObject(m_pGridWindow);
             AttachObject(m_pFocusMover);
 
             m_pRootRow.AddChild(m_pCaption);
@@ -793,21 +793,21 @@ namespace Ntreev.Library.Grid
 
         public event EventHandler DisplayRectChanged;
 
-        public event ItemMouseEventHandler ItemMouseEnter;
+        public event GrItemMouseEventHandler ItemMouseEnter;
 
-        public event ItemMouseEventHandler ItemMouseMove;
+        public event GrItemMouseEventHandler ItemMouseMove;
 
-        public event ItemMouseEventHandler ItemMouseLeave;
+        public event GrItemMouseEventHandler ItemMouseLeave;
 
-        public event ItemMouseEventHandler ItemMouseClick;
+        public event GrItemMouseEventHandler ItemMouseClick;
 
-        public event ItemMouseEventHandler ItemMouseDoubleClick;
+        public event GrItemMouseEventHandler ItemMouseDoubleClick;
 
-        public event RowMouseEventHandler RowMouseEnter;
+        public event GrRowMouseEventHandler RowMouseEnter;
 
-        public event RowMouseEventHandler RowMouseMove;
+        public event GrRowMouseEventHandler RowMouseMove;
 
-        public event RowMouseEventHandler RowMouseLeave;
+        public event GrRowMouseEventHandler RowMouseLeave;
         
         protected virtual void OnCleared(EventArgs e)
         {
@@ -841,42 +841,66 @@ namespace Ntreev.Library.Grid
 
         protected virtual void OnItemMouseEnter(GrItemMouseEventArgs e)
         {
-            ItemMouseEnter(this, e);
+            if (this.ItemMouseEnter != null)
+            {
+                this.ItemMouseEnter(this, e);
+            }
         }
 
         protected virtual void OnItemMouseMove(GrItemMouseEventArgs e)
         {
-            ItemMouseMove(this, e);
+            if (this.ItemMouseMove != null)
+            {
+                this.ItemMouseMove(this, e);
+            }
         }
 
         protected virtual void OnItemMouseLeave(GrItemMouseEventArgs e)
         {
-            ItemMouseLeave(this, e);
+            if (this.ItemMouseLeave != null)
+            {
+                this.ItemMouseLeave(this, e);
+            }
         }
 
         protected virtual void OnItemMouseClick(GrItemMouseEventArgs e)
         {
-            ItemMouseClick(this, e);
+            if (this.ItemMouseClick != null)
+            {
+                this.ItemMouseClick(this, e);
+            }
         }
 
         protected virtual void OnItemMouseDoubleClick(GrItemMouseEventArgs e)
         {
-            ItemMouseDoubleClick(this, e);
+            if (this.ItemMouseDoubleClick != null)
+            {
+                this.ItemMouseDoubleClick(this, e);
+            }
         }
 
         protected virtual void OnRowMouseEnter(GrRowMouseEventArgs e)
         {
-            RowMouseEnter(this, e);
+            if (this.RowMouseEnter != null)
+            {
+                this.RowMouseEnter(this, e);
+            }
         }
 
         protected virtual void OnRowMouseMove(GrRowMouseEventArgs e)
         {
-            RowMouseMove(this, e);
+            if (this.RowMouseMove != null)
+            {
+                this.RowMouseMove(this, e);
+            }
         }
 
         protected virtual void OnRowMouseLeave(GrRowMouseEventArgs e)
         {
-            RowMouseLeave(this, e);
+            if (this.RowMouseLeave != null)
+            {
+                this.RowMouseLeave(this, e);
+            }
         }
 
         internal void InvokePrePaint(GrGridPainter painter, GrRect clipRect)
@@ -935,7 +959,7 @@ namespace Ntreev.Library.Grid
         {
             if (m_updating == true)
                 return;
-            GrColumn column = e.GetColumn();
+            GrColumn column = e.Column;
             if (column.GetItemWordWrap() == true)
                 m_pTextUpdater.AddTextBounds(column);
         }
@@ -944,25 +968,25 @@ namespace Ntreev.Library.Grid
         {
             if (m_updating == true)
                 return;
-            GrColumn column = e.GetColumn();
+            GrColumn column = e.Column;
             m_pTextUpdater.AddTextBounds(column);
         }
 
         private void columnList_ColumnHorzAlignChanged(object sender, GrColumnEventArgs e)
         {
-            GrColumn column = e.GetColumn();
+            GrColumn column = e.Column;
             m_pTextUpdater.AddTextAlign(column);
         }
 
         private void columnList_ColumnVertAlignChanged(object sender, GrColumnEventArgs e)
         {
-            GrColumn column = e.GetColumn();
+            GrColumn column = e.Column;
             m_pTextUpdater.AddTextAlign(column);
         }
 
         private void columnList_ColumnPaddingChanged(object sender, GrColumnEventArgs e)
         {
-            GrColumn column = e.GetColumn();
+            GrColumn column = e.Column;
             if (column.GetItemWordWrap() == true)
                 m_pTextUpdater.AddTextBounds(column);
         }

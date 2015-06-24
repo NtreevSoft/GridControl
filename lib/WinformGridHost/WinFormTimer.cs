@@ -38,7 +38,7 @@ namespace Ntreev.Windows.Forms.Grid
             this.OnElapsed(new GrElapsedEventArgs(signalTime));
         }
 
-        public event ElapsedEventHandler Elapsed;
+        public event GrElapsedEventHandler Elapsed;
 
         protected virtual void OnElapsed(GrElapsedEventArgs e)
         {

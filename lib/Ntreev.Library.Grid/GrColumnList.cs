@@ -7,10 +7,10 @@ namespace Ntreev.Library.Grid
 {
     public class GrColumnList : GrUpdatableRow
     {
-        List<GrColumn> m_vecColumns;
-        List<GrColumn> m_vecColumnsRemoved;
-        List<GrColumn> m_vecVisibleColumns;
-        List<GrColumn> m_vecDisplayableColumns;
+        private readonly List<GrColumn> m_vecColumns = new List<GrColumn>();
+        private readonly List<GrColumn> m_vecColumnsRemoved = new List<GrColumn>();
+        private readonly List<GrColumn> m_vecVisibleColumns = new List<GrColumn>();
+        private readonly List<GrColumn> m_vecDisplayableColumns = new List<GrColumn>();
         int m_columnID;
 
         int m_unfrozenX;
@@ -58,6 +58,88 @@ namespace Ntreev.Library.Grid
 
         }
 
+        public void Reserve(int reserve)
+        {
+            m_vecColumns.Capacity = reserve;
+            m_vecVisibleColumns.Capacity = reserve;
+            m_vecDisplayableColumns.Capacity = reserve;
+            m_vecColumnsRemoved.Capacity = reserve;
+        }
+
+        public void AddColumn(GrColumn column)
+        {
+            InsertColumn(column, m_vecColumns.Count);
+        }
+
+        public void RemoveColumn(GrColumn column)
+        {
+            //List<GrColumn>.iterator itor = std.find(m_vecColumns.begin(), m_vecColumns.end(), column);
+
+            int index = column.GetIndex();
+            //for (List<GrColumn>.iterator next = itor + 1; next != m_vecColumns.end(); next++)
+            for (int i = index + 1; i < m_vecColumns.Count; i++)
+            {
+                m_vecColumns[i].SetIndex(i);
+            }
+
+            column.SetSelected(false);
+            column.KillFocus();
+
+            this.GridCore.DetachObject(column);
+
+            column.SetIndex(-1);
+
+            m_vecColumns.Remove(column);
+            m_vecColumnsRemoved.Add(column);
+
+            column.GroupChanged -= column_GroupChanged;
+            GrColumnEventArgs e = new GrColumnEventArgs(column);
+            OnColumnRemoved(e);
+
+            if (this.GridCore.IsInvalidated() == false)
+                throw new Exception();
+
+
+        }
+
+        public void InsertColumn(GrColumn column, int index)
+        {
+            if (column.GetIndex() != -1)
+                throw new Exception("이미 등록되어 있습니다");
+
+            if (column.GetColumnID() == -1)
+            {
+                column.SetColumnID(m_columnID++);
+            }
+
+            m_vecColumnsRemoved.Remove(column);
+
+            m_vecColumns.Insert(index, column);
+            for (int i = index; i < m_vecColumns.Count; i++)
+            {
+                m_vecColumns[i].SetIndex(i);
+            }
+
+            //itor = m_vecColumns.insert(m_vecColumns.begin() + index, column);
+            //index = Math.Min(index, (uint)m_vecColumns.Count);
+            //for( ; itor != m_vecColumns.end() ; itor++)
+            //{
+            //    (*itor).SetIndex(index++);
+            //}
+
+            //column.m_freezablePriority = column.GetIndex();
+            //column.m_priority = column.GetIndex();
+
+            this.GridCore.AttachObject(column);
+
+            GrColumnEventArgs e = new GrColumnEventArgs(column);
+            OnColumnInserted(e);
+
+            column.GroupChanged += column_GroupChanged;
+            if (this.GridCore.IsInvalidated() == false)
+                throw new Exception();
+
+        }
 
         protected override void OnGridCoreAttached()
         {
@@ -129,89 +211,6 @@ namespace Ntreev.Library.Grid
                 visible = m_visibleRight > this.GridCore.GetDisplayRect().Right ? true : false;
             }
             this.GridCore.GetHorzScroll().SetVisible(visible);
-        }
-
-        public void Reserve(int reserve)
-        {
-            m_vecColumns.Capacity = reserve;
-            m_vecVisibleColumns.Capacity = reserve;
-            m_vecDisplayableColumns.Capacity = reserve;
-            m_vecColumnsRemoved.Capacity = reserve;
-        }
-
-        public void AddColumn(GrColumn column)
-        {
-            InsertColumn(column, m_vecColumns.Count);
-        }
-
-        public void InsertColumn(GrColumn column, int index)
-        {
-            if (column.GetIndex() != -1)
-                throw new Exception("이미 등록되어 있습니다");
-
-            if (column.GetColumnID() == -1)
-            {
-                column.SetColumnID(m_columnID++);
-            }
-
-            m_vecColumnsRemoved.Remove(column);
-
-            m_vecColumns.Insert(index, column);
-            for (int i = index; i < m_vecColumns.Count; i++)
-            {
-                m_vecColumns[i].SetIndex(i);
-            }
-
-            //itor = m_vecColumns.insert(m_vecColumns.begin() + index, column);
-            //index = Math.Min(index, (uint)m_vecColumns.Count);
-            //for( ; itor != m_vecColumns.end() ; itor++)
-            //{
-            //    (*itor).SetIndex(index++);
-            //}
-
-            //column.m_freezablePriority = column.GetIndex();
-            //column.m_priority = column.GetIndex();
-
-            this.GridCore.AttachObject(column);
-
-            GrColumnEventArgs e = new GrColumnEventArgs(column);
-            OnColumnInserted(e);
-
-            column.GroupChanged += column_GroupChanged;
-            if (this.GridCore.IsInvalidated() == false)
-                throw new Exception();
-
-        }
-
-        public void RemoveColumn(GrColumn column)
-        {
-            //List<GrColumn>.iterator itor = std.find(m_vecColumns.begin(), m_vecColumns.end(), column);
-
-            int index = column.GetIndex();
-            //for (List<GrColumn>.iterator next = itor + 1; next != m_vecColumns.end(); next++)
-            for (int i = index + 1; i < m_vecColumns.Count; i++)
-            {
-                m_vecColumns[i].SetIndex(i);
-            }
-
-            column.SetSelected(false);
-            column.KillFocus();
-
-            this.GridCore.DetachObject(column);
-
-            column.SetIndex(-1);
-
-            m_vecColumns.Remove(column);
-            m_vecColumnsRemoved.Add(column);
-
-            column.GroupChanged -= column_GroupChanged;
-            GrColumnEventArgs e = new GrColumnEventArgs(column);
-            OnColumnRemoved(e);
-
-            if (this.GridCore.IsInvalidated() == false)
-                throw new Exception();
-
-
         }
 
         public override GrRect GetBounds()
@@ -402,14 +401,14 @@ namespace Ntreev.Library.Grid
             return m_pSortColumn;
         }
 
-        public bool ShouldClip(GrRect displayRect, int horizontal, int vertical)
+        public override bool ShouldClip(GrRect displayRect, int horizontal, int vertical)
         {
             if (m_clippedIndex == horizontal && displayRect.GetWidth() == m_clippedWidth)
                 return false;
             return true;
         }
 
-        public void Clip(GrRect displayRect, int horizontal, int vertical)
+        public override void Clip(GrRect displayRect, int horizontal, int vertical)
         {
             GrDataRowList dataRowList = this.GridCore.GetDataRowList();
             int x = dataRowList.CellStart();
@@ -948,7 +947,7 @@ namespace Ntreev.Library.Grid
 
         protected virtual void OnColumnSortTypeChanged(GrColumnEventArgs e)
         {
-            m_pSortColumn = e.GetColumn();
+            m_pSortColumn = e.Column;
             this.GridCore.Invalidate();
 
             ColumnSortTypeChanged(this, e);
@@ -962,7 +961,7 @@ namespace Ntreev.Library.Grid
 
         protected virtual void OnColumnWidthChanged(GrColumnEventArgs e)
         {
-            GrColumn column = e.GetColumn();
+            GrColumn column = e.Column;
             if (column.GetDisplayIndex() != -1)
             {
                 this.GridCore.Invalidate();

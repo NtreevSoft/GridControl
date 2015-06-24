@@ -923,7 +923,6 @@ namespace Ntreev.Library.Grid
             this.GridCore.Invalidate(GetRect());
         }
 
-
         internal void SetX(int x) { m_x = x; }
 
         internal void SetDisplayable(bool b)
@@ -949,15 +948,13 @@ namespace Ntreev.Library.Grid
         public bool m_customItemPaint;
 
         public FuncColumnPaint m_fnColumnBackgroundPaint;
+
         public FuncColumnPaint m_fnColumnContentsPaint;
 
         public object m_columnPaintData;
 
-
-
         class SortColumnByVisible : IComparer<GrColumn>
         {
-
             public int Compare(GrColumn x, GrColumn y)
             {
                 throw new NotImplementedException();
@@ -979,6 +976,5 @@ namespace Ntreev.Library.Grid
         {
             return m_visibleIndex != GrDefineUtility.INVALID_INDEX;
         }
-
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -31,6 +32,34 @@ namespace Ntreev.Library.Grid
             this.top = pt1.Y < pt2.Y ? pt1.Y : pt2.Y;
             this.right = left + Math.Abs(pt1.X - pt2.X);
             this.bottom = top + Math.Abs(pt1.Y - pt2.Y);
+        }
+
+        public override string ToString()
+        {
+            return string.Concat(new string[]
+			{
+				"{X=",
+				this.X.ToString(CultureInfo.CurrentCulture),
+				",Y=",
+				this.Y.ToString(CultureInfo.CurrentCulture),
+				",Width=",
+				this.Width.ToString(CultureInfo.CurrentCulture),
+				",Height=",
+				this.Height.ToString(CultureInfo.CurrentCulture),
+				"}"
+			});
+        }
+
+        public override int GetHashCode()
+        {
+            return this.left ^ this.top ^ this.right ^ this.bottom;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is GrRect == false)
+                return false;
+            return this == (GrRect)obj;
         }
 
         public bool Contains(GrPoint location)
@@ -237,6 +266,12 @@ namespace Ntreev.Library.Grid
         {
             get { return this.right - this.left; }
             set { this.right = this.left + value; }
+        }
+
+        public int Height
+        {
+            get { return this.bottom - this.top; }
+            set { this.bottom = this.top + value; }
         }
 
         public static bool operator ==(GrRect rect1, GrRect rect2)

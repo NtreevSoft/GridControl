@@ -67,7 +67,7 @@ namespace Ntreev.Windows.Forms.Grid
 
         internal GridObject(GrCell pCell)
         {
-            WinFormGridCore pGridCore = pCell.GetGridCore() as WinFormGridCore;
+            WinFormGridCore pGridCore = pCell.GridCore as WinFormGridCore;
             if (pGridCore != null)
             {
                 m_gridControl = pGridCore.m_gridControl;

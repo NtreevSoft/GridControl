@@ -7,10 +7,10 @@ namespace Ntreev.Library.Grid
 {
     public class GrCaption : GrUpdatableRow
     {
-        GrHorzAlign m_horzAlign;
-        GrVertAlign m_vertAlign;
+        private GrHorzAlign m_horzAlign;
+        private GrVertAlign m_vertAlign;
 
-        bool m_visible1;
+        private bool m_visible1;
 
         public GrCaption()
         {
@@ -47,6 +47,7 @@ namespace Ntreev.Library.Grid
         }
 
         public override GrRowType GetRowType() { return GrRowType.Caption; }
+
         public override int GetWidth()
         {
             return this.GridCore.GetBounds().GetWidth();
@@ -146,7 +147,6 @@ namespace Ntreev.Library.Grid
 
         public event EventHandler HeightChanged;
 
-
         protected override void OnGridCoreAttached()
         {
             base.OnGridCoreAttached();
@@ -163,8 +163,7 @@ namespace Ntreev.Library.Grid
             base.OnHeightChanged();
             OnHeightChanged(EventArgs.Empty);
         }
-
-
+        
         private void gridCore_FontChanged(object sender, EventArgs e)
         {
             GrTextUpdater pTextUpdater = this.GridCore.GetTextUpdater();

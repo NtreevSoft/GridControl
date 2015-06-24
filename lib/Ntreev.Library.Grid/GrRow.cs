@@ -188,12 +188,25 @@ namespace Ntreev.Library.Grid
 
         public virtual void Sort(GrSort sortType)
         {
-            throw new NotImplementedException();
+            switch(sortType)
+    {
+    case GrSort.Up:
+            Sort(GrSortFunc.SortRowsUp, 0);
+        break;
+    case GrSort.Down:
+        Sort(GrSortFunc.SortRowsDown, 0);
+        break;
+    case GrSort.None:
+        Sort(GrSortFunc.SortRowsNone, 0);
+        break;
+    default:
+        break;
+    }
         }
 
         public virtual void Sort(FuncSortRow fnSort, object userData)
         {
-            throw new NotImplementedException();
+            m_vecChilds.Sort((x, y) => fnSort(this.GridCore, x, y, userData));
         }
 
         public void AddChild(GrRow row)

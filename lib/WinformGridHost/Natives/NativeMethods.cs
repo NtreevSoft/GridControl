@@ -110,7 +110,7 @@ namespace Ntreev.Windows.Forms.Grid.Natives
         [DllImport("gdi32.dll")]
         public static extern IntPtr CreatePatternBrush(IntPtr hbmp);
 
-        [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
+        [DllImport("gdi32.dll")]
         public static extern bool GetTextMetrics(IntPtr hdc, out TEXTMETRIC lptm);
 
         [DllImport("gdi32.dll")]
@@ -122,7 +122,7 @@ namespace Ntreev.Windows.Forms.Grid.Natives
         [DllImport("gdi32.dll")]
         public static extern int GetObject(IntPtr hgdiobj, int cbBuffer, IntPtr lpvObject);
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        [DllImport("user32.dll")]
         public static extern int GetScrollPos(IntPtr hWnd, Orientation nBar);
 
         [DllImport("user32.dll")]

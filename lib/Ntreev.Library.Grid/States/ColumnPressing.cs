@@ -65,7 +65,7 @@ namespace Ntreev.Library.Grid.States
 
         GrColumnMouseEventArgs ce = new GrColumnMouseEventArgs(m_column, e.GetLocalHit(), e.GetModifierKeys());
         columnList.Invoke("ColumnMouseDown", ce);
-        m_handled = ce.GetHandled();
+        m_handled = ce.IsHandled;
 
         if(m_handled == false)
         {
@@ -115,7 +115,7 @@ namespace Ntreev.Library.Grid.States
                 GrColumnList columnList = this.GridCore.GetColumnList();
                 GrColumnMouseEventArgs ce = new GrColumnMouseEventArgs(m_column, e.GetLocalHit(), e.GetModifierKeys());
                 columnList.Invoke("ColumnMouseUp", ce);
-                m_handled = ce.GetHandled();
+                m_handled = ce.IsHandled;
             }
 
             if (m_handled == false)

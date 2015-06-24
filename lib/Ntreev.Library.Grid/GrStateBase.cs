@@ -127,7 +127,7 @@ namespace Ntreev.Library.Grid
                 {
                     GrColumnMouseEventArgs e2 = new GrColumnMouseEventArgs(pNewCell as GrColumn, e.GetLocalHit(), e.GetModifierKeys());
                     this.GridCore.Invoke("ColumnMouseMove", e2);
-                    if(e2.GetHandled() == true)
+                    if(e2.IsHandled == true)
                     {
                         e.SetHandled(true);
                     }
@@ -198,7 +198,7 @@ namespace Ntreev.Library.Grid
                     GrColumnMouseEventArgs e2 = new GrColumnMouseEventArgs(pNewCell as GrColumn, e.GetLocalHit(), e.GetModifierKeys());
                     this.GridCore.Invoke("ColumnMouseEnter", e2);
                     this.GridCore.Invoke("ColumnMouseMove", e2);
-                    if(e2.GetHandled() == true)
+                    if(e2.IsHandled == true)
                     {
                         e.SetHandled(true);
                     }

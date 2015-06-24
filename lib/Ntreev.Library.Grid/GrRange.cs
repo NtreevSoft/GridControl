@@ -21,6 +21,18 @@ namespace Ntreev.Library.Grid
             SetRange(minValue, maxValue);
         }
 
+        public override int GetHashCode()
+        {
+            return this.m_minValue ^ this.m_maxValue;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is GrRange == false)
+                return false;
+            return this == (GrRange)obj;
+        }
+
         public bool IsIn(int value)
         {
             if (value < m_minValue || value >= m_maxValue)

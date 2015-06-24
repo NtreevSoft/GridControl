@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -25,11 +26,30 @@ namespace Ntreev.Library.Grid
 
         public static GrFont GetDefaultFont()
         {
-            return DefaultFont;
+            if (defaultFont == null)
+            {
+                var query = from item in AppDomain.CurrentDomain.GetAssemblies()
+                            from type in item.GetTypes()
+                            where typeof(IDefaultFontProvider).IsAssignableFrom(type)
+                            select type;
+
+                var providerType = query.FirstOrDefault();
+                if (providerType != null)
+                {
+                    IDefaultFontProvider provider = TypeDescriptor.CreateInstance(null, providerType, null, null) as IDefaultFontProvider;
+                    defaultFont = provider.GetFont();
+                }
+            }
+            return defaultFont;
         }
 
-        public static GrFont DefaultFont;
+        private static GrFont defaultFont;
 
         public static GrFont Empty;
+    }
+
+    public interface IDefaultFontProvider
+    {
+        GrFont GetFont();
     }
 }

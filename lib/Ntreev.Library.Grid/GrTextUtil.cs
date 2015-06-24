@@ -13,7 +13,7 @@ namespace Ntreev.Library.Grid
         public static void SingleLine(ref GrLineDesc pLine, string cellText, GrFont pFont)
         {
             //memset(pLine, 0, sizeof(GrLineDesc));
-            pLine.length = (int)cellText.Length;
+            pLine.length = cellText.Length;
             pLine.width = pFont.GetStringWidth(cellText);
         }
 
@@ -120,8 +120,5 @@ namespace Ntreev.Library.Grid
 
             pLines.Add(cl);
         }
-
-
-
     }
 }

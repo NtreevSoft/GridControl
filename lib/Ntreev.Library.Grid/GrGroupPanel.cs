@@ -7,7 +7,7 @@ namespace Ntreev.Library.Grid
 {
     public class GrGroupPanel : GrUpdatableRow
     {
-        List<GrGroup> m_vecGroups;
+        private readonly List<GrGroup> m_vecGroups = new List<GrGroup>();
         bool m_enableGroup;
 
         bool m_groupChanged;
@@ -267,7 +267,7 @@ namespace Ntreev.Library.Grid
 
         private void columnList_ColumnInserted(object sender, GrColumnEventArgs e)
         {
-            GrColumn column = e.GetColumn();
+            GrColumn column = e.Column;
             if (column.GetGrouped() == false)
                 return;
             AddGroup(column.GetGroup());
@@ -275,7 +275,7 @@ namespace Ntreev.Library.Grid
 
         private void columnList_ColumnRemoved(object sender, GrColumnEventArgs e)
         {
-            GrColumn column = e.GetColumn();
+            GrColumn column = e.Column;
             if (column.GetGrouped() == false)
                 return;
             RemoveGroup(column.GetGroup());
@@ -283,7 +283,7 @@ namespace Ntreev.Library.Grid
 
         private void columnList_ColumnGroupChanged(object sender, GrColumnEventArgs e)
         {
-            GrColumn column = e.GetColumn();
+            GrColumn column = e.Column;
             if (column.GetGrouped() == true)
                 AddGroup(column.GetGroup());
             else
