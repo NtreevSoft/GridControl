@@ -8,16 +8,16 @@ namespace Ntreev.Library.Grid
 {
     public class GrElapsedEventArgs : EventArgs
     {
-        private readonly TimeSpan m_signalTime;
+        private readonly TimeSpan signalTime;
 
         public GrElapsedEventArgs(TimeSpan signalTime)
         {
-            m_signalTime = signalTime;
+            this.signalTime = signalTime;
         }
 
         public TimeSpan GetSignalTime()
         {
-            return m_signalTime;
+            return this.signalTime;
         }
 
     }

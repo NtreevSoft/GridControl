@@ -33,7 +33,7 @@ namespace Ntreev.Windows.Forms.Grid
 
         public override void Paint(GrGridPainter pPainter, GrRect clipRect)
         {
-            GrRect paintRect = GetRect();
+            GrRect paintRect = this.Bounds;
             GrPaintStyle paintStyle = ToPaintStyle();
             GrColor foreColor = GetPaintingForeColor();
             GrColor backColor = GetPaintingBackColor();
@@ -56,7 +56,7 @@ namespace Ntreev.Windows.Forms.Grid
 
             int left = paintRect.Right;
             int top = paintRect.Top;
-            int right = m_pCell.GetX();
+            int right = m_pCell.X;
             int bottom = paintRect.Top;
 
             //paintRect.left = paintRect.right;
@@ -114,7 +114,7 @@ namespace Ntreev.Windows.Forms.Grid
 
                 m_gridControl.DataSource = value;
                 m_gridControl.Refresh();
-                this.SetHeight(GetMinHeight());
+                this.Height = GetMinHeight();
             }
         }
 
@@ -139,20 +139,21 @@ namespace Ntreev.Windows.Forms.Grid
             base.OnYChanged();
             if (this.HasGridControl() == true)
             {
-                GrRect clientRect = m_pCell.GetClientRect();
-                m_gridControl.Location = clientRect.Location + m_pCell.GetLocation();
+                GrRect clientRect = m_pCell.ClientRectangle;
+                m_gridControl.Location = clientRect.Location + m_pCell.Location;
             }
             //m_gridControl.Visible = true;
         }
 
-        protected override void OnHeightChanged()
+        protected override void OnSizeChanged(EventArgs e)
         {
-            base.OnHeightChanged();
+            base.OnSizeChanged(e);
+
             if (this.HasGridControl() == true)
             {
-                GrRect clientRect = m_pCell.GetClientRect();
+                GrRect clientRect = m_pCell.ClientRectangle;
                 m_gridControl.Size = clientRect.Size;
-                m_gridControl.Visible = this.GetDisplayable();
+                m_gridControl.Visible = this.IsDisplayable;
             }
         }
 
@@ -161,7 +162,7 @@ namespace Ntreev.Windows.Forms.Grid
             base.OnDisplayableChanged();
             if (this.HasGridControl() == true)
             {
-                m_gridControl.Visible = this.GetDisplayable();
+                m_gridControl.Visible = this.IsDisplayable;
             }
         }
 
@@ -188,9 +189,9 @@ namespace Ntreev.Windows.Forms.Grid
                 GrDataRowList pDataRowList = pGridCore.DataRowList;
                 pDataRowList.VisibleHeightChanged += dataRowList_VisibleHeightChanged;
 
-                this.GridCore.DisplayRectChanged += gridCore_DisplayRectChanged;
+                this.GridCore.DisplayRectangleChanged += gridCore_DisplayRectChanged;
 
-                this.SetHeight(GetMinHeight());
+                this.Height = GetMinHeight();
             }
         }
 
@@ -212,7 +213,7 @@ namespace Ntreev.Windows.Forms.Grid
 
         private void gridCore_DisplayRectChanged(object pSender, EventArgs e)
         {
-            GrRect clientRect = m_pCell.GetClientRect();
+            GrRect clientRect = m_pCell.ClientRectangle;
             m_gridControl.Size = clientRect.Size;
         }
 

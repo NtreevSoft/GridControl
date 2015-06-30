@@ -90,7 +90,7 @@ namespace Ntreev.Windows.Forms.Grid
 
         public void BringIntoView()
         {
-            if (m_pDataRow.GetDisplayable() == true)
+            if (m_pDataRow.IsDisplayable == true)
                 return;
             this.GridControl.BringIntoView(this);
         }
@@ -191,8 +191,8 @@ namespace Ntreev.Windows.Forms.Grid
         [DefaultValue(true)]
         public override bool IsVisible
         {
-            get { return m_pDataRow.GetVisible(); }
-            set { m_pDataRow.SetVisible(value); }
+            get { return m_pDataRow.IsVisible; }
+            set { m_pDataRow.IsVisible = value; }
         }
 
         [Description("읽기 전용인지에 대한 여부를 가져오거나 설정합니다.")]
@@ -200,8 +200,8 @@ namespace Ntreev.Windows.Forms.Grid
         [DefaultValue(false)]
         public bool IsReadOnly
         {
-            get { return m_pDataRow.GetReadOnly(); }
-            set { m_pDataRow.SetReadOnly(value); }
+            get { return m_pDataRow.IsReadOnly; }
+            set { m_pDataRow.IsReadOnly = value; }
         }
 
         [Description("선택되어 있는지의 여부를 가져오거나 설정합니다.")]
@@ -210,8 +210,8 @@ namespace Ntreev.Windows.Forms.Grid
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsSelected
         {
-            get { return m_pDataRow.GetSelected(); }
-            set { m_pDataRow.SetSelected(value); }
+            get { return m_pDataRow.IsSelected; }
+            set { m_pDataRow.IsSelected = value; }
         }
 
 #if DEBUG

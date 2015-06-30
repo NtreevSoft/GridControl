@@ -25,8 +25,8 @@ namespace Ntreev.Library.Grid
         //int m_fullSelectedCount;
         //uint m_selectionGroup;
 
-        GrRange m_columnSelecting;
-        GrRange m_rowSelecting;
+        //GrRange m_columnSelecting;
+        //GrRange m_rowSelecting;
 
         GrColumn m_pAnchorColumn;
         IDataRow m_pAnchorDataRow;
@@ -166,13 +166,13 @@ namespace Ntreev.Library.Grid
         public void SelectColumns(HashSet<GrColumn> columns, GrSelectionType selectType)
         {
             GrDataRowList dataRowList = this.GridCore.DataRowList;
-            GrDataRow pInsertionRow = dataRowList.GetInsertionRow();
+            GrDataRow pInsertionRow = dataRowList.InsertionRow;
             HashSet<GrItem> items = new HashSet<GrItem>();
             foreach (var value in columns)
             {
-                if ((m_pSelectionGroup == null || m_pSelectionGroup == pInsertionRow) && pInsertionRow.GetVisible() == true)
+                if ((m_pSelectionGroup == null || m_pSelectionGroup == pInsertionRow) && pInsertionRow.IsVisible == true)
                 {
-                    GrItem pItem = dataRowList.GetInsertionRow().GetItem(value);
+                    GrItem pItem = dataRowList.InsertionRow.GetItem(value);
                     items.Add(pItem);
                 }
                 else
@@ -472,13 +472,13 @@ namespace Ntreev.Library.Grid
             pItem.m_selected = true;
             if (pDataRow.m_selected == 0)
                 m_selectedRows.Add(pDataRow);
-            if (column.m_selected == 0)
+            if (column.selected == 0)
                 m_selectedColumns.Add(column);
 
             pDataRow.m_selected++;
-            column.m_selected++;
+            column.selected++;
 
-            if (pItem.GetDisplayable() == true)
+            if (pItem.IsDisplayable == true)
                 AddInvalidatedRectangle(pItem.GetDisplayRect());
         }
 
@@ -492,19 +492,19 @@ namespace Ntreev.Library.Grid
 
             pItem.m_selected = false;
             pDataRow.m_selected--;
-            column.m_selected--;
+            column.selected--;
 
             if (pDataRow.m_selected < 0)
                 throw new Exception();
-            if (column.m_selected < 0)
+            if (column.selected < 0)
                 throw new Exception();
 
             if (pDataRow.m_selected == 0)
                 m_selectedRows.Remove(pDataRow);
-            if (column.m_selected == 0)
+            if (column.selected == 0)
                 m_selectedColumns.Remove(column);
 
-            if (pItem.GetDisplayable() == true)
+            if (pItem.IsDisplayable == true)
                 AddInvalidatedRectangle(pItem.GetDisplayRect());
         }
 
@@ -564,16 +564,16 @@ namespace Ntreev.Library.Grid
                     continue;
                 pItem.m_selected = true;
                 pDataRow.m_selected++;
-                if (column.m_selected == 0)
+                if (column.selected == 0)
                     m_selectedColumns.Add(column);
-                column.m_selected++;
+                column.selected++;
             }
 
             m_selectedRows.Add(pDataRow);
 
-            if (pDataRow.GetDisplayable() == true)
+            if (pDataRow.IsDisplayable == true)
             {
-                GrRect dataRowRect = pDataRow.GetRect();
+                GrRect dataRowRect = pDataRow.Bounds;
                 dataRowRect.Width = this.GridCore.DisplayRectangle.Right - dataRowRect.Left;
                 AddInvalidatedRectangle(dataRowRect);
             }
@@ -581,7 +581,7 @@ namespace Ntreev.Library.Grid
 
         protected void DoDeselectDataRow(GrDataRow pDataRow)
         {
-            if (pDataRow.GetSelected() == false)
+            if (pDataRow.IsSelected == false)
                 return;
 
             GrColumnList columnList = this.GridCore.ColumnList;
@@ -593,10 +593,10 @@ namespace Ntreev.Library.Grid
                     continue;
                 pItem.m_selected = false;
                 pDataRow.m_selected--;
-                column.m_selected--;
-                if (column.m_selected < 0)
+                column.selected--;
+                if (column.selected < 0)
                     throw new Exception();
-                if (column.m_selected == 0)
+                if (column.selected == 0)
                     m_selectedColumns.Remove(column);
 
             }
@@ -605,9 +605,9 @@ namespace Ntreev.Library.Grid
 
             m_selectedRows.Remove(pDataRow);
 
-            if (pDataRow.GetDisplayable() == true)
+            if (pDataRow.IsDisplayable == true)
             {
-                GrRect dataRowRect = pDataRow.GetRect();
+                GrRect dataRowRect = pDataRow.Bounds;
                 int left = dataRowRect.Left;
                 int top = dataRowRect.Top;
                 int right = this.GridCore.DisplayRectangle.Right;
@@ -660,7 +660,7 @@ namespace Ntreev.Library.Grid
 
             foreach (var value in m_selectedColumns)
             {
-                value.m_selected = 0;
+                value.selected = 0;
             }
             m_selectedColumns.Clear();
             m_selectedRows.Clear();

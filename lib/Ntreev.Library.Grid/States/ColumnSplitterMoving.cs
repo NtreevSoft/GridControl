@@ -20,7 +20,7 @@ namespace Ntreev.Library.Grid.States
         {
             if (this.GridCore.GetColumnFreezable() == false)
                 return false;
-            return pHitted.GetCellType() == GrCellType.Splitter;
+            return pHitted is GrColumnSplitter;
         }
 
         public override void OnBegin(GrStateEventArgs e)
@@ -36,7 +36,7 @@ namespace Ntreev.Library.Grid.States
 
         public override void OnMouseDragBegin(GrPoint location)
         {
-            m_location = m_columnSplitter.GetX();
+            m_location = m_columnSplitter.X;
             this.GridCore.Invalidate();
         }
 
@@ -49,14 +49,14 @@ namespace Ntreev.Library.Grid.States
             for (int i = 0; i < columnList.GetDisplayableColumnCount(); i++)
             {
                 GrColumn column = columnList.GetDisplayableColumn(i);
-                GrRect columnRect = column.GetRect();
+                GrRect columnRect = column.Bounds;
                 if (location.X < columnRect.Left || location.X >= columnRect.Right)
                     continue;
                 int centerValue = columnRect.GetCenter().X;
 
                 if (location.X > centerValue)
                 {
-                    if (column.GetFrozen())
+                    if (column.IsFrozen)
                     {
                         m_location = columnRect.Right;
                         m_freezableIndex = i;
@@ -69,7 +69,7 @@ namespace Ntreev.Library.Grid.States
                 }
                 else
                 {
-                    if (column.GetFrozen())
+                    if (column.IsFrozen)
                         m_location = columnRect.Left;
                     else
                         m_location = columnRect.Left - GrColumnSplitter.DefaultSplitterWidth;
@@ -99,13 +99,13 @@ namespace Ntreev.Library.Grid.States
             for (int i = 0; i < columnList.GetDisplayableColumnCount(); i++)
             {
                 GrColumn column = columnList.GetDisplayableColumn(i);
-                bool oldFrozen = column.GetFrozen();
+                bool oldFrozen = column.IsFrozen;
                 if (m_freezableIndex == -1)
-                    column.SetFrozen(false);
+                    column.IsFrozen = false;
                 else
-                    column.SetFrozen(i <= (uint)m_freezableIndex);
+                    column.IsFrozen = i <= m_freezableIndex;
 
-                if (oldFrozen != column.GetFrozen())
+                if (oldFrozen != column.IsFrozen)
                 {
 
                 }

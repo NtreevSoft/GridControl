@@ -19,7 +19,7 @@ namespace Ntreev.Windows.Forms.Grid
             m_gridControl = gridControl;
 
             GrGridCore pGridCore = this;
-            pGridCore.DisplayRectChanged += gridCore_DisplayRectChanged;
+            pGridCore.DisplayRectangleChanged += gridCore_DisplayRectChanged;
 
             GrColumnList pColumnList = ColumnList;
             pColumnList.ColumnMouseDown += columnList_ColumnMouseDown;
@@ -41,7 +41,7 @@ namespace Ntreev.Windows.Forms.Grid
             pItemSelector.SelectionChanged += itemSelector_SelectionChanged;
 
             GrCaption pCaption = this.CaptionRow;
-            pCaption.HeightChanged += caption_HeightChanged;
+            pCaption.SizeChanged += caption_HeightChanged;
 
             GrDataRowList pDataRowList = DataRowList;
             pDataRowList.DataRowMoved += dataRowList_DataRowMoved;

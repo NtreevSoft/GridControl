@@ -35,22 +35,23 @@ namespace Ntreev.Library.Grid.States
 
         public override bool GetHitTest(GrCell pHitted, GrPoint localLocation)
         {
-            if (pHitted.GetCellType() != GrCellType.Column)
+            if (pHitted is GrColumn == false)
                 return false;
+
             GrColumn column = pHitted as GrColumn;
 
-            if (column.GetResizable() == false)
+            if (column.IsResizable == false)
                 return true;
 
             int margin = column.GetResizingMargin();
 
             if (localLocation.X < margin ||
-                localLocation.X >= pHitted.GetWidth() - margin)
+                localLocation.X >= pHitted.Width - margin)
                 return false;
 
-            if (column.GetClipped() == true)
+            if (column.IsClipped == true)
             {
-                int x = localLocation.X + column.GetX();
+                int x = localLocation.X + column.X;
                 if (x >= this.GridCore.DisplayRectangle.Right - margin)
                     return false;
             }
@@ -105,7 +106,7 @@ namespace Ntreev.Library.Grid.States
             m_locationStart = GrPoint.Empty;
         }
 
-        this.GridCore.Invalidate(m_column.GetRect());
+        this.GridCore.Invalidate(m_column.Bounds);
     }
 
         public override void OnMouseUp(GrStateMouseEventArgs e)
@@ -133,7 +134,7 @@ namespace Ntreev.Library.Grid.States
             }
 
             m_pTimer.Stop();
-            this.GridCore.Invalidate(m_column.GetRect());
+            this.GridCore.Invalidate(m_column.Bounds);
             this.GridCore.SetMouseUnpress();
         }
 
@@ -147,13 +148,13 @@ namespace Ntreev.Library.Grid.States
                 int x;
                 if(m_targetCell == null)
                 {
-                    x = m_columnList.GetColumnSplitter().GetX();
+                    x = m_columnList.GetColumnSplitter().X;
                 }
                 else
                 {
-                    x = (m_targetCell as GrColumn).GetX();
+                    x = (m_targetCell as GrColumn).X;
                 }
-                GrRect paintRect = GrRect.FromLTRB(x - padding, m_columnList.GetY(), x + padding, m_columnList.GetY() + m_columnList.GetHeight());
+                GrRect paintRect = GrRect.FromLTRB(x - padding, m_columnList.Y, x + padding, m_columnList.Y + m_columnList.Height);
                 g.FillRectangle(paintRect, GrColor.Black);
             }
             break;
@@ -166,9 +167,9 @@ namespace Ntreev.Library.Grid.States
                 }
                 else
                 {
-                    x = (m_targetCell as GrColumn).GetX();
+                    x = (m_targetCell as GrColumn).X;
                 }
-                GrRect paintRect = GrRect.FromLTRB(x - padding, m_columnList.GetY(), x + padding, m_columnList.GetY() + m_columnList.GetHeight());
+                GrRect paintRect = GrRect.FromLTRB(x - padding, m_columnList.Y, x + padding, m_columnList.Y + m_columnList.Height);
                 g.FillRectangle(paintRect, GrColor.Black);
             }
             break;
@@ -176,8 +177,8 @@ namespace Ntreev.Library.Grid.States
             {
                 if(m_targetCell != null)
                 {
-                    int x = m_targetCell.GetX();
-                    GrRect paintRect = GrRect.FromLTRB(x - padding, m_targetCell.GetY(), x + padding, m_targetCell.GetY() + m_targetCell.GetHeight());
+                    int x = m_targetCell.X;
+                    GrRect paintRect = GrRect.FromLTRB(x - padding, m_targetCell.Y, x + padding, m_targetCell.Y + m_targetCell.Height);
                     g.FillRectangle(paintRect, GrColor.Black);
                 }
             }
@@ -203,11 +204,19 @@ namespace Ntreev.Library.Grid.States
 
             m_targetType = TargetType.Unknown;
 
-            switch (hitTest.pHitted.GetCellType())
+            int type = -1;
+            if (hitTest.pHitted is GrColumn == true)
+                type = 0;
+            else if (hitTest.pHitted is GrGroup == true)
+                type = 1;
+            else if (hitTest.pHitted is GrRow == true)
+                type = 2;
+
+            switch (type)
             {
-                case GrCellType.Column:
+                case 0:
                     {
-                        if (this.GridCore.GetColumnMovable() == false || m_column.GetMovable() == false)
+                        if (this.GridCore.GetColumnMovable() == false || m_column.IsMovable == false)
                             break;
 
                         if (m_pTimer.CanHScroll() == true)
@@ -216,15 +225,15 @@ namespace Ntreev.Library.Grid.States
                         GrColumn pTarget = hitTest.pHitted as GrColumn;
                         if (pTarget != m_column)
                         {
-                            if (pTarget.GetFrozen() == true)
+                            if (pTarget.IsFrozen == true)
                             {
                                 int targetIndex;
-                                if (hitTest.localHit.X < pTarget.GetWidth() / 2)
+                                if (hitTest.localHit.X < pTarget.Width / 2)
                                     targetIndex = pTarget.GetFrozenIndex();
                                 else
                                     targetIndex = pTarget.GetFrozenIndex() + 1;
 
-                                if (m_column.GetFrozen() == false)
+                                if (m_column.IsFrozen == false)
                                 {
                                     if (this.GridCore.GetColumnFreezable() == false)
                                         m_targetType = TargetType.Unknown;
@@ -248,12 +257,12 @@ namespace Ntreev.Library.Grid.States
                             else
                             {
                                 int targetIndex;
-                                if (hitTest.localHit.X < pTarget.GetWidth() / 2)
+                                if (hitTest.localHit.X < pTarget.Width / 2)
                                     targetIndex = pTarget.GetUnfrozenIndex();
                                 else
                                     targetIndex = pTarget.GetUnfrozenIndex() + 1;
 
-                                if (m_column.GetFrozen() == true)
+                                if (m_column.IsFrozen == true)
                                 {
                                     if (this.GridCore.GetColumnFreezable() == false)
                                         m_targetType = TargetType.Unknown;
@@ -277,24 +286,24 @@ namespace Ntreev.Library.Grid.States
                         }
                     }
                     break;
-                case GrCellType.Group:
+                case 1:
                     {
-                        if (m_column.GetGroupable() == false)
+                        if (m_column.IsGroupable == false)
                             break;
 
-                        if (m_column.GetGrouped() == false)
+                        if (m_column.IsGrouped == false)
                         {
                             m_targetCell = hitTest.pHitted as GrGroup;
                             m_targetType = TargetType.GroupList;
                         }
                     }
                     break;
-                case GrCellType.Row:
+                case 2:
                     {
-                        if (m_column.GetGroupable() == false)
+                        if (m_column.IsGroupable == false)
                             break;
 
-                        if (m_column.GetGrouped() == false && hitTest.pHitted is GrGroupPanel)
+                        if (m_column.IsGrouped == false && hitTest.pHitted is GrGroupPanel)
                         {
                             m_targetCell = null;
                             m_targetType = TargetType.GroupList;
@@ -339,7 +348,7 @@ namespace Ntreev.Library.Grid.States
                                 index = pTarget.GetVisibleIndex();
 
                             m_column.SetVisibleIndex(index);
-                            m_column.SetFrozen(true);
+                            m_column.IsFrozen = true;
                         }
                         break;
                     case TargetType.Unfrozen:
@@ -353,7 +362,7 @@ namespace Ntreev.Library.Grid.States
                                 index--;
 
                             m_column.SetVisibleIndex(index);
-                            m_column.SetFrozen(false);
+                            m_column.IsFrozen = false;
                         }
                         break;
                     case TargetType.GroupList:
@@ -361,10 +370,10 @@ namespace Ntreev.Library.Grid.States
                             if (m_targetCell != null)
                             {
                                 GrGroup pTargetGroupInfo = m_targetCell as GrGroup;
-                                GrGroup pGroup = m_column.GetGroup();
+                                GrGroup pGroup = m_column.Group;
                                 pGroup.SetGroupLevel(pTargetGroupInfo.GetGroupLevel());
                             }
-                            m_column.SetGrouped(true);
+                            m_column.IsGrouped = true;
                         }
                         break;
                     default:
@@ -433,13 +442,13 @@ namespace Ntreev.Library.Grid.States
                 GrColumnList columnList = this.GridCore.ColumnList;
                 const int gap = 20;
                 GrRect rect = this.GridCore.GetDataRect();
-                return GrRect.FromLTRB(rect.Left + gap, columnList.GetY(), rect.Right - gap, rect.Bottom);
+                return GrRect.FromLTRB(rect.Left + gap, columnList.Y, rect.Right - gap, rect.Bottom);
             }
             protected override GrRect GetOutsideRectangle()
             {
                 GrColumnList columnList = this.GridCore.ColumnList;
                 GrRect rect = this.GridCore.GetDataRect();
-                return GrRect.FromLTRB(rect.Left, columnList.GetY(), rect.Right, rect.Bottom);
+                return GrRect.FromLTRB(rect.Left, columnList.Y, rect.Right, rect.Bottom);
             }
         }
     }

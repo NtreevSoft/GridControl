@@ -463,8 +463,8 @@ namespace Ntreev.Windows.Forms.Grid
         [SettingsBindable(true)]
         public bool AutoFitColumn
         {
-            get { return m_pGridCore.GetAutoFitColumn(); }
-            set { m_pGridCore.SetAutoFitColumn(value); }
+            get { return m_pGridCore.AutoFitColumn; }
+            set { m_pGridCore.AutoFitColumn = value; }
         }
 
         [Description("행의 높이를 자동적으로 조절할지에 대한 여부를 가져오거나 설정합니다.")]
@@ -472,8 +472,8 @@ namespace Ntreev.Windows.Forms.Grid
         [DefaultValue(false)]
         public bool AutoFitRow
         {
-            get { return m_pGridCore.GetAutoFitRow(); }
-            set { m_pGridCore.SetAutoFitRow(value); }
+            get { return m_pGridCore.AutoFitRow; }
+            set { m_pGridCore.AutoFitRow = value; }
         }
 
         [Description("제목을 설정할 수 있는 인터페이스를 제공합니다.")]
@@ -751,8 +751,8 @@ namespace Ntreev.Windows.Forms.Grid
         [DefaultValue(true)]
         public bool IsGroupable
         {
-            get { return m_pGridCore.GetGroupable(); }
-            set { m_pGridCore.SetGroupable(value); }
+            get { return m_pGridCore.IsGroupable; }
+            set { m_pGridCore.IsGroupable = value; }
         }
 
 #if DEBUG
@@ -830,8 +830,8 @@ namespace Ntreev.Windows.Forms.Grid
         [DefaultValue(true)]
         public bool IsFrozingSplitterVisible
         {
-            get { return m_pColumnList.GetColumnSplitter().GetVisible(); }
-            set { m_pColumnList.GetColumnSplitter().SetVisible(value); }
+            get { return m_pColumnList.GetColumnSplitter().IsVisible; }
+            set { m_pColumnList.GetColumnSplitter().IsVisible = value; }
         }
 
         [Description("우측 빈 여백을 채울지에 대한 여부를 설정합니다.")]
@@ -866,8 +866,8 @@ namespace Ntreev.Windows.Forms.Grid
         [DefaultValue(RowHighlightType.Fill)]
         public RowHighlightType RowHighlightType
         {
-            get { return (RowHighlightType)m_pGridCore.GetRowHighlightType(); ;}
-            set { m_pGridCore.SetRowHighlightType((GrRowHighlightType)value); }
+            get { return (RowHighlightType)m_pGridCore.RowHighlightType;}
+            set { m_pGridCore.RowHighlightType = (GrRowHighlightType)value; }
         }
 
         [Description("컨트롤이 포커스를 잃었을대 선택 영역을 표시하는지에 대한 여부를 설정합니다.")]
@@ -948,12 +948,12 @@ namespace Ntreev.Windows.Forms.Grid
 
         public bool HScrollVisible
         {
-            get { return m_pGridCore.GetHorzScroll().IsVisible; }
+            get { return m_pGridCore.HorzScroll.IsVisible; }
         }
 
         public bool VScrollVisible
         {
-            get { return m_pGridCore.GetVertScroll().IsVisible; }
+            get { return m_pGridCore.VertScroll.IsVisible; }
         }
 
         [Browsable(false)]
@@ -2494,13 +2494,13 @@ namespace Ntreev.Windows.Forms.Grid
                 //    return;
                 case WindowMessages.WM_HSCROLL:
                     {
-                        WinFormScroll pScroll = m_pGridCore.GetHorzScroll() as WinFormScroll;
+                        WinFormScroll pScroll = m_pGridCore.HorzScroll as WinFormScroll;
                         pScroll.WndProc(m.HWnd, m.WParam);
                     }
                     return;
                 case WindowMessages.WM_VSCROLL:
                     {
-                        WinFormScroll pScroll = m_pGridCore.GetVertScroll() as WinFormScroll;
+                        WinFormScroll pScroll = m_pGridCore.VertScroll as WinFormScroll;
                         pScroll.WndProc(m.HWnd, m.WParam);
                     }
                     return;
@@ -2779,14 +2779,14 @@ namespace Ntreev.Windows.Forms.Grid
         {
 
             IDataRow pFocusedRow = this.Focuser.GetFocusedRow();
-            if (pFocusedRow == null || pFocusedRow.GetDisplayable() == false)
+            if (pFocusedRow == null || pFocusedRow.IsDisplayable == false)
                 return;
 
             Row row = this.FocusedRow as Row;
 
             if (EditingCell != null)
             {
-                GrRect bound = EditingCell.NativeRef.GetDataRow().GetRect();
+                GrRect bound = EditingCell.NativeRef.GetDataRow().Bounds;
                 GrPoint center = bound.GetCenter();
 
                 Bitmap image = Resources.RowEditing;
@@ -2796,7 +2796,7 @@ namespace Ntreev.Windows.Forms.Grid
             }
             else if (row != null && row.IsEdited == true)
             {
-                GrRect bound = pFocusedRow.GetRect();
+                GrRect bound = pFocusedRow.Bounds;
                 GrPoint center = bound.GetCenter();
 
                 Bitmap image = Resources.RowEditing;
@@ -2804,9 +2804,9 @@ namespace Ntreev.Windows.Forms.Grid
                 center.Y -= (image.Height / 2);
                 g.DrawImageUnscaled(image, center.X, center.Y);
             }
-            else if (pFocusedRow.GetDisplayable() == true)
+            else if (pFocusedRow.IsDisplayable == true)
             {
-                GrRect bound = pFocusedRow.GetRect();
+                GrRect bound = pFocusedRow.Bounds;
                 GrPoint center = bound.GetCenter();
 
                 Bitmap image = Resources.RowFocused;
@@ -2817,10 +2817,10 @@ namespace Ntreev.Windows.Forms.Grid
                 g.DrawImageUnscaled(image, center.X, center.Y);
             }
 
-            GrDataRow pInsertionRow = m_pDataRowList.GetInsertionRow();
-            if (pInsertionRow.GetVisible() == true && pInsertionRow.HasFocused() == false)
+            GrDataRow pInsertionRow = m_pDataRowList.InsertionRow;
+            if (pInsertionRow.IsVisible == true && pInsertionRow.HasFocused() == false)
             {
-                GrRect bound = pInsertionRow.GetRect();
+                GrRect bound = pInsertionRow.Bounds;
                 GrPoint center = bound.GetCenter();
 
                 Bitmap image = Resources.InsertionRow;
@@ -2832,7 +2832,7 @@ namespace Ntreev.Windows.Forms.Grid
 
         private void PaintColumnControls(Graphics graphics, Rectangle clipRectangle)
         {
-            GrDataRow pInsertionRow = m_pDataRowList.GetInsertionRow();
+            GrDataRow pInsertionRow = m_pDataRowList.InsertionRow;
 
             GrItem pMouseOvered = null;
 
@@ -2852,7 +2852,7 @@ namespace Ntreev.Windows.Forms.Grid
                 {
                     GrDataRow pDataRow = null;
                     if (j == 0)
-                        pDataRow = pInsertionRow.GetVisible() == true ? pInsertionRow : null;
+                        pDataRow = pInsertionRow.IsVisible == true ? pInsertionRow : null;
                     else
                         pDataRow = m_pDataRowList.GetDisplayableRow(j - 1) as GrDataRow;
 
@@ -2880,8 +2880,8 @@ namespace Ntreev.Windows.Forms.Grid
 
             Column column = cell.Column;
             ViewType viewType = column.ViewType;
-            Rectangle paintRect = pItem.GetClientRect();
-            paintRect.Offset(pItem.GetLocation());
+            Rectangle paintRect = pItem.ClientRectangle;
+            paintRect.Offset(pItem.Location);
 
             if (viewType == ViewType.Icon)
             {

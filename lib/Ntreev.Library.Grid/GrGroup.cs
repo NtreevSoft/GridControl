@@ -7,146 +7,144 @@ namespace Ntreev.Library.Grid
 {
     public class GrGroup : GrCell
     {
-
         public static int SortGlyphSize = 10;
-        GrGroupPanel m_groupPanel;
-        GrColumn m_column;
-        GrPoint m_pt;
-        bool m_expanded;
-        bool m_grouped;
-        GrSort m_sortType;
 
-        Dictionary<uint, GrGroupRow> m_mapGrourows = new Dictionary<uint, GrGroupRow>();
-        int m_level;
+        private readonly GrColumn column;
+        private GrGroupPanel groupPanel;
+        private bool isExpanded = true;
+        private GrSort sortType = GrSort.Up;
+
+        private readonly Dictionary<uint, GrGroupRow> mapGrourows = new Dictionary<uint, GrGroupRow>();
+        private int level = GrDefineUtility.INVALID_INDEX;
 
         public GrGroup(GrColumn column)
         {
-            // TODO: Complete member initialization
-            m_column = column;
-            m_groupPanel = null;
-            m_grouped = false;
-            m_expanded = true;
-            m_sortType = GrSort.Up;
-            m_level = GrDefineUtility.INVALID_INDEX;
+            this.column = column;
         }
 
-        public GrColumn GetColumn()
+        public GrColumn Column
         {
-            return m_column;
+            get { return this.column; }
         }
 
-
-        public bool GetGrouped()
+        public bool IsGrouped
         {
-            return m_column.GetGrouped();
-        }
-
-        public void SetGrouped(bool b)
-        {
-            m_column.SetGrouped(b);
+            get { return this.column.IsGrouped; }
+            set { this.column.IsGrouped = value; }
         }
 
         public void SetExpanded(bool b)
         {
-            if (m_groupPanel.GetGroupable() == false)
+            if (this.groupPanel.IsGroupable == false)
                 return;
-            m_expanded = b;
-            m_groupPanel.NotifyExpanded(this);
+            this.isExpanded = b;
+            this.groupPanel.NotifyExpanded(this);
         }
+
         public bool GetExpanded()
         {
-            return m_expanded;
+            return this.isExpanded;
         }
 
         public void SetSortType(GrSort sortType)
         {
-            if (m_groupPanel.GetGroupable() == false)
+            if (this.groupPanel.IsGroupable == false)
                 return;
-            m_sortType = (sortType == GrSort.Up) ? GrSort.Up : GrSort.Down;
-            m_groupPanel.NotifySortChanged(this);
+            this.sortType = (sortType == GrSort.Up) ? GrSort.Up : GrSort.Down;
+            this.groupPanel.NotifySortChanged(this);
         }
 
         public GrSort GetSortType()
         {
-            return m_sortType;
+            return this.sortType;
         }
 
         public int GetGroupLevel()
         {
-            return m_level;
+            return this.level;
         }
 
         public void SetGroupLevel(int level)
         {
-    if(m_level == level)
-        return;
+            if (this.level == level)
+                return;
 
-    m_level = level;
-    if(GetGrouped() == true)
-        LevelChanged(this, EventArgs.Empty);
-}
-
-        public void SetText()
-        {
-    base.SetText(m_column.GetText());
-}
-
-
-        public override GrCellType GetCellType() { return GrCellType.Group; }
-
-        public override int GetX()
-        {
-            return m_pt.X;
+            this.level = level;
+            if (this.IsGrouped == true)
+                LevelChanged(this, EventArgs.Empty);
         }
 
-        public override int GetY()
+        //public void SetText()
+        //{
+        //    base.Text = this.column.Text;
+        //}
+
+
+        //public override GrCellType GetCellType() { return GrCellType.Group; }
+
+        //public override int X
+        //{
+        //    get { return this.pt.X; }
+        //}
+
+        //public override int Y
+        //{
+        //    get { return this.pt.Y; }
+        //}
+
+        //public override int Width
+        //{
+        //    get
+        //    {
+        //        GrFont pFont = GetPaintingFont();
+        //        return GetTextBounds().Width +
+        //            (int)((pFont.GetHeight() + pFont.GetExternalLeading()) * 0.25f) +
+        //            GetPadding().Horizontal + SortGlyphSize;
+        //    }
+        //}
+
+        //public override int Height
+        //{
+        //    get
+        //    {
+        //        GrFont pFont = GetPaintingFont();
+        //        return (int)((pFont.GetHeight() + pFont.GetExternalLeading()) * 1.25f) + GetPadding().Vertical;
+        //    }
+        //}
+
+        public override bool IsVisible
         {
-            return m_pt.Y;
+            get { return true; }
+            set { }
         }
 
-        public override int GetWidth()
+        public override GrHorzAlign TextHorzAlign
         {
-            GrFont pFont = GetPaintingFont();
-            return GetTextBounds().Width +
-                (int)((pFont.GetHeight() + pFont.GetExternalLeading()) * 0.25f) +
-                GetPadding().Horizontal + SortGlyphSize;
+            get { return GrHorzAlign.Left; }
         }
 
-        public override int GetHeight()
+        public override GrVertAlign TextVertAlign
         {
-            GrFont pFont = GetPaintingFont();
-            return (int)((pFont.GetHeight() + pFont.GetExternalLeading()) * 1.25f) + GetPadding().Vertical;
+            get { return GrVertAlign.Center; }
         }
 
-        public override bool GetVisible() { return true; }
-
-        public override GrHorzAlign GetTextHorzAlign()
+        public override bool IsDisplayable
         {
-            return GrHorzAlign.Left;
-        }
-
-        public override GrVertAlign GetTextVertAlign()
-        {
-            return GrVertAlign.Center;
-        }
-
-        public override bool GetDisplayable()
-        {
-            return m_groupPanel.GetDisplayable();
+            get { return this.groupPanel.IsDisplayable; }
         }
 
         public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
-            GrRect paintRect = GetRect();
+            GrRect paintRect = this.Bounds;
             GrPaintStyle paintStyle = ToPaintStyle();
 
-            GrColor backColor = m_column.GetPaintingBackColor();
-            GrColor foreColor = m_column.GetPaintingForeColor();
+            GrColor backColor = this.column.GetPaintingBackColor();
+            GrColor foreColor = this.column.GetPaintingForeColor();
             GrPadding padding = GetPadding();
 
             painter.DrawColumn(paintStyle, paintRect, GetPaintingLineColor(), backColor, null);
 
-            
+
             int right = paintRect.Right - padding.Right;
             int left = right - SortGlyphSize;
             int top = (paintRect.Bottom + paintRect.Top - SortGlyphSize) / 2;
@@ -154,11 +152,11 @@ namespace Ntreev.Library.Grid
 
             GrRect sortRect = GrRect.FromLTRB(left, top, right, bottom);
 
-            painter.DrawSortGlyph(sortRect, m_sortType);
+            painter.DrawSortGlyph(sortRect, this.sortType);
             DrawText(painter, foreColor, paintRect, null);
         }
 
-        public override GrRow GetRow() { return m_groupPanel; }
+        public override GrRow GetRow() { return this.groupPanel; }
 
 
         public event EventHandler LevelChanged;
@@ -167,25 +165,31 @@ namespace Ntreev.Library.Grid
 
         protected override void OnGridCoreAttached()
         {
-    base.OnGridCoreAttached();
-    m_groupPanel = this.GridCore.GroupPanel;
-}
+            base.OnGridCoreAttached();
+            this.groupPanel = this.GridCore.GroupPanel;
+        }
 
         protected override void OnGridCoreDetached()
         {
-    m_groupPanel = null;
-    base.OnGridCoreDetached();
-}
-
-
-        internal void SetPosition(GrPoint pt)
-        {
-            m_pt = pt;
+            this.groupPanel = null;
+            base.OnGridCoreDetached();
         }
+
+        protected override void OnTextChanged()
+        {
+            base.OnTextChanged();
+
+            GrFont pFont = GetPaintingFont();
+            int width = GetTextBounds().Width + (int)((pFont.GetHeight() + pFont.GetExternalLeading()) * 0.25f) + GetPadding().Horizontal + SortGlyphSize;
+            int height = GetTextBounds().Width + (int)((pFont.GetHeight() + pFont.GetExternalLeading()) * 0.25f) + GetPadding().Horizontal + SortGlyphSize;
+
+            this.Size = new GrSize(width, height);
+        }
+
 
         internal void SetGroupLevelCore(int level)
         {
-            m_level = level;
+            this.level = level;
         }
 
 

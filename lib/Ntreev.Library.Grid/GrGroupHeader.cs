@@ -14,39 +14,45 @@ namespace Ntreev.Library.Grid
             m_row = row;
         }
 
-        public override GrCellType GetCellType() { return GrCellType.GroupHeader; }
-        public override int GetX()
+        //public override GrCellType GetCellType() { return GrCellType.GroupHeader; }
+        //public override int X
+        //{
+        //    get
+        //    {
+        //        GrExpander pExpander = m_row.GetExpander();
+        //        return pExpander.Right;
+        //    }
+        //}
+
+        //public override int Y
+        //{
+        //    get { return m_row.Y; }
+        //}
+
+        //public override int Width
+        //{
+        //    get { return this.GridCore.GetBounds().Right - this.X; }
+        //}
+
+        //public override int Height
+        //{
+        //    get { return m_row.Height; }
+        //}
+
+        public override bool IsVisible
         {
-            GrExpander pExpander = m_row.GetExpander();
-            return pExpander.GetRight();
+            get { return true; }
+            set { }
         }
 
-        public override int GetY()
+        public override GrHorzAlign TextHorzAlign
         {
-            return m_row.GetY();
+            get { return GrHorzAlign.Left; }
         }
 
-
-        public override int GetWidth()
+        public override GrVertAlign TextVertAlign
         {
-            return this.GridCore.GetBounds().Right - GetX();
-        }
-
-        public override int GetHeight()
-        {
-            return m_row.GetHeight();
-        }
-
-        public override bool GetVisible() { return true; }
-
-        public override GrHorzAlign GetTextHorzAlign()
-        {
-            return GrHorzAlign.Left;
-        }
-
-        public override GrVertAlign GetTextVertAlign()
-        {
-            return GrVertAlign.Center;
+            get { return GrVertAlign.Center; }
         }
 
         public override int HitMouseOverTest(GrPoint localLocation)
@@ -59,16 +65,16 @@ namespace Ntreev.Library.Grid
             return (int)GrMouseOverState.In;
         }
 
-        public override bool GetDisplayable()
+        public override bool IsDisplayable
         {
-            return m_row.GetDisplayable();
+            get { return m_row.IsDisplayable; }
         }
 
 
         public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
             GrColumn column = m_row.GetColumn();
-            GrRect paintRect = GetRect();
+            GrRect paintRect = this.Bounds;
             GrPaintStyle paintStyle = ToPaintStyle() & ~GrPaintStyle.RightLine;
             GrColor backColor = column.GetPaintingBackColor();
             GrColor foreColor = column.GetPaintingForeColor();
@@ -159,7 +165,7 @@ namespace Ntreev.Library.Grid
         }
 
 
-        public virtual GrRect GetDisplayRect() { return GetRect(); }
+        public virtual GrRect GetDisplayRect() { return this.Bounds; }
         public virtual IDataRow GetDataRow()
         {
             return m_row;

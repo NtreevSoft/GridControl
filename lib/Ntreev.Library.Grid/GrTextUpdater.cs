@@ -12,7 +12,7 @@ namespace Ntreev.Library.Grid
 
         public void AddTextBounds(GrCell pCell)
         {
-            if (pCell.m_textBoundsChanged == true)
+            if (pCell.textBoundsChanged == true)
                 return;
 #if DEBUG
             if (m_vecTextBounds.Capacity == m_vecTextBounds.Count)
@@ -21,7 +21,7 @@ namespace Ntreev.Library.Grid
             }
 #endif
             m_vecTextBounds.Add(pCell);
-            pCell.m_textBoundsChanged = true;
+            pCell.textBoundsChanged = true;
         }
 
         public void AddTextBoundsByColumn(GrColumn column)
@@ -47,10 +47,10 @@ namespace Ntreev.Library.Grid
             if (pCell.IsGridCoreAttached() == false)
                 throw new Exception();
 #endif
-            if (pCell.m_textAlignChanged == true)
+            if (pCell.textAlignChanged == true)
                 return;
             //m_vecTextAligns.push_back(pCell);
-            pCell.m_textAlignChanged = true;
+            pCell.textAlignChanged = true;
         }
 
         public void AddTextAlignByColumn(GrColumn column)
@@ -91,7 +91,7 @@ namespace Ntreev.Library.Grid
             foreach (var value in m_vecTextBounds)
             {
                 value.ComputeTextBounds();
-                value.m_textBoundsChanged = false;
+                value.textBoundsChanged = false;
             }
             m_vecTextBounds.Clear();
         }

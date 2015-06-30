@@ -15,7 +15,7 @@ namespace Ntreev.Library.Grid
 
         public static int SortRowsUp(GrGridCore pGridCore, GrRow row1, GrRow row2, object userData)
         {
-            int result = row1.GetText().CompareTo(row2.GetText());
+            int result = row1.Text.CompareTo(row2.Text);
             if (result == 0)
                 return row1.GetID().CompareTo(row2.GetID());
             return result.CompareTo(0);
@@ -47,11 +47,11 @@ namespace Ntreev.Library.Grid
                     GrColumn column = userData as GrColumn;
                     GrItem pItem1 = (row1 as GrDataRow).GetItem(column);
                     GrItem pItem2 = (row2 as GrDataRow).GetItem(column);
-                    return pItem1.GetText().CompareTo(pItem2.GetText());
+                    return pItem1.Text.CompareTo(pItem2.Text);
                 }
                 else if (row1.GetRowType() == GrRowType.GroupRow)
                 {
-                    return row1.GetText().CompareTo(row2.GetText());
+                    return row1.Text.CompareTo(row2.Text);
                 }
                 else
                 {

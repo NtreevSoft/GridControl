@@ -15,7 +15,7 @@ namespace Ntreev.Library.Grid.States
 
         public override bool GetHitTest(GrCell pHitted, GrPoint localLocation)
         {
-            return pHitted.GetCellType() == GrCellType.Root;
+            return pHitted is GrColumnList;
         }
 
         public override void OnBegin(GrStateEventArgs e)

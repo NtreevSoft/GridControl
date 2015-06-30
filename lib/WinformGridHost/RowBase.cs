@@ -39,12 +39,12 @@ namespace Ntreev.Windows.Forms.Grid
         [Category("Layout")]
         public override int Height
         {
-            get { return m_pDataRow.GetHeight(); }
+            get { return m_pDataRow.Height; }
             set
             {
                 if (value < 0)
                     throw new ArgumentOutOfRangeException("value");
-                m_pDataRow.SetHeight(value);
+                m_pDataRow.Height = value;
             }
         }
 
@@ -53,7 +53,7 @@ namespace Ntreev.Windows.Forms.Grid
         [DefaultValue(true)]
         public virtual bool IsVisible
         {
-            get { return m_pDataRow.GetVisible(); }
+            get { return m_pDataRow.IsVisible; }
             set { throw new NotImplementedException(); }
         }
 
@@ -140,7 +140,7 @@ namespace Ntreev.Windows.Forms.Grid
 
         private bool ShouldSerializeHeight()
         {
-            return m_pDataRow.GetHeight() != GrRow.DefaultHeight;
+            return m_pDataRow.Height != GrRow.DefaultHeight;
         }
     }
 }

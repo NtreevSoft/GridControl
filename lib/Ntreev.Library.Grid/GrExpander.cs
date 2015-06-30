@@ -8,61 +8,70 @@ namespace Ntreev.Library.Grid
 {
     public class GrExpander : GrCell
     {
-        private readonly IDataRow m_pDataRow;
+        private readonly IDataRow pDataRow;
+
         public GrExpander(IDataRow pDataRow)
         {
-            this.m_pDataRow = pDataRow;
+            this.pDataRow = pDataRow;
         }
 
-        public override int GetX()
-        {
-            int dataDepth = m_pDataRow.GetDataDepth();
-            return m_pDataRow.GetRight() + dataDepth * GrDefineUtility.DEF_GROUP_WIDTH;
-        }
-        public override int GetY()
-        {
-            return m_pDataRow.GetY();
-        }
-        public override int GetWidth()
-        {
-            return GrDefineUtility.DEF_GROUP_WIDTH;
-        }
-        public override int GetHeight()
-        {
-            return m_pDataRow.GetHeight();
-        }
+        //public override int X
+        //{
+        //    get
+        //    {
+        //        int dataDepth = this.pDataRow.GetDataDepth();
+        //        return this.pDataRow.Right + dataDepth * GrDefineUtility.DEF_GROUP_WIDTH;
+        //    }
+        //}
+
+        //public override int Y
+        //{
+        //    get { return this.pDataRow.Y; }
+        //}
+
+        //public override int Width
+        //{
+        //    get { return GrDefineUtility.DEF_GROUP_WIDTH; }
+        //}
+
+        //public override int Height
+        //{
+        //    get { return this.pDataRow.Height; }
+        //}
+
         public override GrRow GetRow()
         {
-            return m_pDataRow;
+            return this.pDataRow;
         }
 
+        //public override GrCellType GetCellType()
+        //{
+        //    return GrCellType.Expander;
+        //}
 
-        public override GrCellType GetCellType()
+        public override bool IsVisible
         {
-            return GrCellType.Expander;
+            get { return this.pDataRow.IsVisible && this.pDataRow.GetChildCount() > 0; }
+            set { }
         }
-        public override bool GetVisible()
+
+        public override bool IsDisplayable
         {
-            return m_pDataRow.GetVisible() && m_pDataRow.GetChildCount() > 0;
-        }
-        public override bool GetDisplayable()
-        {
-            return m_pDataRow.GetDisplayable();
+            get { return this.pDataRow.IsDisplayable; }
         }
 
         public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
-            GrRect paintRect = GetRect();
+            GrRect paintRect = this.Bounds;
             GrColor foreColor = GetPaintingLineColor();
             GrColor backColor = GetPaintingBackColor();
 
             GrPaintStyle paintStyle = GrPaintStyle.None;
 
-            if (m_pDataRow.IsLastVisible() == true)
+            if (this.pDataRow.IsLastVisible() == true)
                 paintStyle |= GrPaintStyle.BottomLine;
 
-            painter.DrawExpander(paintStyle, paintRect, (GrControlState)0, m_pDataRow.IsExpanded(), foreColor, backColor);
+            painter.DrawExpander(paintStyle, paintRect, (GrControlState)0, this.pDataRow.IsExpanded(), foreColor, backColor);
         }
-    
     }
 }

@@ -9,8 +9,13 @@ namespace Ntreev.Library.Grid
     {
         IDataRow GetDataRow();
         GrRect GetDisplayRect();
-        bool GetDisplayable();
-        GrCellType GetCellType();
+        
+        //GrCellType GetCellType();
         void Invalidate();
+
+        bool IsDisplayable
+        {
+            get;
+        }
     }
 }

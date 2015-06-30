@@ -7,24 +7,24 @@ namespace Ntreev.Library.Grid
 {
     public class GrRootRow : GrRow
     {
-        private readonly List<GrRow> m_vecVisibleRows = new List<GrRow>();
+        //private readonly List<GrRow> m_vecVisibleRows = new List<GrRow>();
         private readonly List<GrUpdatableRow> m_vecUpdatables = new List<GrUpdatableRow>();
-        bool m_visibleChanged;
-        bool m_fitChanged;
-        bool m_heightChanged;
+        private bool m_visibleChanged;
+        private bool m_fitChanged;
+        private bool m_heightChanged;
 
-        int m_width;
-        int m_height;
+        private int m_width;
+        private int m_height;
 
-        GrRect m_bound;
-        GrColumnList m_columnList;
-        GrDataRowList m_pDataRowList;
-        GrDataRow m_pInsertionRow;
+        private GrRect m_bound;
+        private GrColumnList m_columnList;
+        private GrDataRowList m_pDataRowList;
+        private GrDataRow m_pInsertionRow;
 
         public GrRootRow()
         {
 
-            SetText("Root");
+            this.Text = "Root";
             m_visibleChanged = true;
 
         }
@@ -90,67 +90,78 @@ namespace Ntreev.Library.Grid
 
         public void Clip(GrRect displayRect, int horizontal, int vertical)
         {
-    int y = GetY();
-    foreach(var value in m_vecVisibleRows)
-    {
-        y += value.GetHeight();
-    }
-    m_height = y - GetY();
+            int y = this.Y;
+            foreach (var item in this.Childs)
+            {
+                if (item.IsVisible == false)
+                    continue;
+                y += item.Height;
+            }
+            m_height = y - this.Y;
 
-    m_bound.Location = displayRect.Location;
-    m_bound = GrRect.FromLTRB(displayRect.Left, displayRect.Top, m_bound.Right, m_bound.Bottom);
-    //m_bound.Right = displayRect.left;
-    //m_bound.Bottom = displayRect.top;
+            m_bound.Location = displayRect.Location;
+            m_bound = GrRect.FromLTRB(displayRect.Left, displayRect.Top, m_bound.Right, m_bound.Bottom);
+            //m_bound.Right = displayRect.left;
+            //m_bound.Bottom = displayRect.top;
 
-    foreach(var value in m_vecUpdatables)
-    {
-        if(value.ShouldClip(displayRect, horizontal, vertical) == true)
-            value.Clip(displayRect, horizontal, vertical);
-    }
+            foreach (var value in m_vecUpdatables)
+            {
+                if (value.ShouldClip(displayRect, horizontal, vertical) == true)
+                    value.Clip(displayRect, horizontal, vertical);
+            }
 
-    foreach(var value in m_vecUpdatables)
-    {
-        int left = m_bound.Left;
-        int top = m_bound.Top;
-        int right = Math.Max(value.GetBounds().Right, m_bound.Right);
-        int bottom = Math.Max(value.GetBounds().Bottom, m_bound.Bottom);
-        //m_bound.right = Math.Max(value.GetBounds().Right, m_bound.Right);
-        //m_bound.bottom = Math.Max(value.GetBounds().Bottom, m_bound.Bottom);
-        m_bound = GrRect.FromLTRB(left, top, right, bottom);
-    }
-}
+            foreach (var value in m_vecUpdatables)
+            {
+                int left = m_bound.Left;
+                int top = m_bound.Top;
+                int right = Math.Max(value.GetBounds().Right, m_bound.Right);
+                int bottom = Math.Max(value.GetBounds().Bottom, m_bound.Bottom);
+                //m_bound.right = Math.Max(value.GetBounds().Right, m_bound.Right);
+                //m_bound.bottom = Math.Max(value.GetBounds().Bottom, m_bound.Bottom);
+                m_bound = GrRect.FromLTRB(left, top, right, bottom);
+            }
+        }
 
         public GrRect GetVisibleBounds()
         {
             GrRect rect;
-            int left = this.GetX();
-            int top = this.GetY();
+            int left = this.X;
+            int top = this.Y;
             int right = m_columnList.GetVisibleRight();
             int bottom = m_pDataRowList.GetVisibleBottom();
             rect = GrRect.FromLTRB(left, top, right, bottom);
             return rect;
         }
 
-        public override int GetX()
-        {
-            return this.GridCore.DisplayRectangle.Left;
-        }
+        //public override int X
+        //{
+        //    get { return this.GridCore.DisplayRectangle.Left; }
+        //}
 
-        public override int GetY()
-        {
-            return this.GridCore.DisplayRectangle.Top;
-        }
+        //public override int Y
+        //{
+        //    get { return this.GridCore.DisplayRectangle.Top; }
+        //}
 
-        public override int GetWidth() { return m_width; }
-        public override int GetHeight() { return m_height; }
+        //public override int Width
+        //{
+        //    get { return m_width; }
+        //}
+
+        //public override int Height
+        //{
+        //    get { return m_height; }
+        //}
 
         public override GrRect GetBounds() { return m_bound; }
 
         public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
-            foreach (var value in m_vecVisibleRows)
+            foreach (var item in this.Childs)
             {
-                value.Paint(painter, clipRect);
+                if (item.IsVisible == false)
+                    continue;
+                item.Paint(painter, clipRect);
             }
         }
 
@@ -160,9 +171,12 @@ namespace Ntreev.Library.Grid
             if (pHitted == null)
                 return null;
 
-            foreach (var value in m_vecVisibleRows)
+            foreach (var item in this.Childs)
             {
-                GrCell pSubHitted = value.HitTest(location);
+                if (item.IsVisible == false)
+                    continue;
+
+                GrCell pSubHitted = item.HitTest(location);
                 if (pSubHitted != null)
                 {
                     return pSubHitted;
@@ -178,20 +192,20 @@ namespace Ntreev.Library.Grid
             base.OnGridCoreAttached();
 
             this.GridCore.Created += gridCore_Created;
-            this.GridCore.DisplayRectChanged += gridCore_DisplayRectChanged;
+            this.GridCore.DisplayRectangleChanged += gridCore_DisplayRectChanged;
         }
 
 
         private void BuildVisibleList()
         {
-            m_vecVisibleRows.Clear();
+            //m_vecVisibleRows.Clear();
 
-            for (int i = 0; i < GetChildCount(); i++)
-            {
-                GrRow pChild = GetChild(i);
-                if (pChild.GetVisible() == true)
-                    m_vecVisibleRows.Add(pChild);
-            }
+            //for (int i = 0; i < GetChildCount(); i++)
+            //{
+            //    GrRow pChild = GetChild(i);
+            //    if (pChild.IsVisible == true)
+            //        m_vecVisibleRows.Add(pChild);
+            //}
             m_heightChanged = true;
         }
 
@@ -207,18 +221,30 @@ namespace Ntreev.Library.Grid
 
         private void RepositionVisibleList()
         {
-            int y = GetY();
-            foreach (var value in m_vecVisibleRows)
+            int y = this.Y;
+            foreach (var item in this.Childs)
             {
-                value.SetY(y);
-                y += value.GetHeight();
+                if (item.IsVisible == false)
+                    continue;
+                item.Y = y;
+                y += item.Height;
             }
-            m_height = y - GetY();
+            m_height = y - this.Y;
         }
 
         private void gridCore_Created(object sender, EventArgs e)
         {
             base.OnGridCoreAttached();
+
+            foreach (var item in this.Childs)
+            {
+                if (item is GrUpdatableRow == false)
+                    continue;
+                item.SizeChanged += item_SizeChanged;
+                item.VisibleChanged += item_VisibleChanged;
+                m_vecUpdatables.Add(item as GrUpdatableRow);
+
+            }
 
             for (int i = 0; i < GetChildCount(); i++)
             {
@@ -236,6 +262,16 @@ namespace Ntreev.Library.Grid
             m_pInsertionRow = this.GridCore.InsertionRow;
 
             this.GridCore.DataRowList.DataRowInserted += dataRowList_DataRowInserted;
+        }
+
+        void item_VisibleChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        void item_SizeChanged(object sender, EventArgs e)
+        {
+            
         }
 
         private void gridCore_DisplayRectChanged(object sender, EventArgs e)

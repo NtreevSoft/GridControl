@@ -27,15 +27,15 @@ namespace Ntreev.Windows.Forms.Grid
         [Category("Layout")]
         public string Text
         {
-            get { return this.caption.GetText(); }
-            set { this.caption.SetText(value); }
+            get { return this.caption.Text; }
+            set { this.caption.Text = value; }
         }
 
         [Category("Layout")]
         [DefaultValue(StringAlignment.Near)]
         public StringAlignment Alignment
         {
-            get { return (StringAlignment)this.caption.GetTextHorzAlign(); }
+            get { return (StringAlignment)this.caption.TextHorzAlign; }
             set { this.caption.SetTextHorzAlign((GrHorzAlign)value); }
         }
 
@@ -43,7 +43,7 @@ namespace Ntreev.Windows.Forms.Grid
         [DefaultValue(StringAlignment.Center)]
         public StringAlignment LineAlignment
         {
-            get { return (StringAlignment)this.caption.GetTextVertAlign(); }
+            get { return (StringAlignment)this.caption.TextVertAlign; }
             set { this.caption.SetTextVertAlign((GrVertAlign)value); }
         }
 
@@ -51,8 +51,8 @@ namespace Ntreev.Windows.Forms.Grid
         [DefaultValue(true)]
         public bool IsVisible
         {
-            get { return this.caption.GetVisible(); }
-            set { this.caption.SetVisible(value); }
+            get { return this.caption.IsVisible; }
+            set { this.caption.IsVisible = value; }
         }
 
         [Description("제목의 높이입니다.")]
@@ -60,18 +60,18 @@ namespace Ntreev.Windows.Forms.Grid
         [SettingsBindable(true)]
         public override int Height
         {
-            get { return this.caption.GetHeight(); }
+            get { return this.caption.Height; }
             set
             {
                 if (value < 0)
                     throw new ArgumentOutOfRangeException("value");
-                this.caption.SetHeight(value);
+                this.caption.Height = value;
             }
         }
 
         private bool ShouldSerializeHeight()
         {
-            return this.caption.GetHeight() != this.caption.GetMinHeight();
+            return this.caption.Height != this.caption.GetMinHeight();
         }
 
         private bool ShouldSerializeText()

@@ -12,56 +12,56 @@ namespace Ntreev.Windows.Forms.Grid
 {
     public abstract class CellBase : GridObject, ICellBase
     {
-        private GrCell m_pCell;
+        private readonly GrCell cell;
 
-        internal CellBase(GridControl gridControl, GrCell pCell)
+        internal CellBase(GridControl gridControl, GrCell cell)
             : base(gridControl)
         {
-            m_pCell = pCell;
-            m_pCell.ManagedRef = this;
+            this.cell = cell;
+            this.cell.ManagedRef = this;
         }
 
         internal CellBase(GrCell pCell)
             : base(pCell)
         {
-            m_pCell = pCell;
-            m_pCell.ManagedRef = this;
+            this.cell = pCell;
+            this.cell.ManagedRef = this;
         }
 
         public void ResetForeColor()
         {
-            m_pCell.SetForeColor(GrColor.Empty);
+            this.cell.SetForeColor(GrColor.Empty);
         }
 
         public void ResetBackColor()
         {
-            m_pCell.SetBackColor(GrColor.Empty);
+            this.cell.SetBackColor(GrColor.Empty);
         }
 
         public void ResetFont()
         {
-            //m_pCell->SetFont(GrFont::Empty);
+            //this.pCell->SetFont(GrFont::Empty);
         }
 
         public void Invalidate()
         {
-            m_pCell.Invalidate();
+            this.cell.Invalidate();
         }
 
         [Description("셀의 전경색을 가져오거나 설정합니다.")]
         [Category("Appearance")]
         public Color ForeColor
         {
-            get { return m_pCell.GetForeColor(); }
-            set { m_pCell.SetForeColor(value); }
+            get { return this.cell.GetForeColor(); }
+            set { this.cell.SetForeColor(value); }
         }
 
         [Description("셀의 배경색을 가져오거나 설정합니다.")]
         [Category("Appearance")]
         public Color BackColor
         {
-            get { return m_pCell.GetBackColor(); }
-            set { m_pCell.SetBackColor(value); }
+            get { return this.cell.GetBackColor(); }
+            set { this.cell.SetBackColor(value); }
         }
 
         [Category("Appearance")]
@@ -70,13 +70,13 @@ namespace Ntreev.Windows.Forms.Grid
         {
             get
             {
-                GrFont pFont = m_pCell.GetPaintingFont();
+                GrFont pFont = this.cell.GetPaintingFont();
                 return Utility.ToManaged(pFont);
             }
             set
             {
                 GrFont pFont = Utility.FromManaged(value);
-                m_pCell.SetFont(pFont);
+                this.cell.SetFont(pFont);
             }
         }
 
@@ -87,7 +87,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public bool IsDisplayable
         {
-            get { return m_pCell.GetDisplayable(); }
+            get { return this.cell.IsDisplayable; }
         }
 
         [TypeConverter(typeof(StringConverter))]
@@ -106,7 +106,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public Rectangle Bounds
         {
-            get { return m_pCell.GetRect(); }
+            get { return this.cell.Bounds; }
         }
 
 #if DEBUG
@@ -116,7 +116,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public int X
         {
-            get { return m_pCell.GetX(); }
+            get { return this.cell.X; }
         }
 
 #if DEBUG
@@ -126,7 +126,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public int Y
         {
-            get { return m_pCell.GetY(); }
+            get { return this.cell.Y; }
         }
 
 #if DEBUG
@@ -136,7 +136,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public virtual int Width
         {
-            get { return m_pCell.GetWidth(); }
+            get { return this.cell.Width; }
             set
             {
                 throw new NotImplementedException();
@@ -150,7 +150,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public virtual int Height
         {
-            get { return m_pCell.GetHeight(); }
+            get { return this.cell.Height; }
             set
             {
                 throw new NotImplementedException();
@@ -164,7 +164,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public Point Location
         {
-            get { return m_pCell.GetLocation(); }
+            get { return this.cell.Location; }
         }
 
 #if DEBUG
@@ -174,7 +174,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public Size Size
         {
-            get { return m_pCell.GetSize(); }
+            get { return this.cell.Size; }
         }
 
 #if DEBUG
@@ -184,7 +184,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public int Left
         {
-            get { return m_pCell.GetX(); }
+            get { return this.cell.X; }
         }
 
 #if DEBUG
@@ -194,7 +194,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public int Top
         {
-            get { return m_pCell.GetY(); }
+            get { return this.cell.Y; }
         }
 
 #if DEBUG
@@ -204,7 +204,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public int Right
         {
-            get { return m_pCell.GetRight(); }
+            get { return this.cell.Right; }
         }
 
 #if DEBUG
@@ -214,7 +214,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public int Bottom
         {
-            get { return m_pCell.GetBottom(); }
+            get { return this.cell.Bottom; }
         }
 
 #if DEBUG
@@ -224,7 +224,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public bool Capture
         {
-            get { return m_pCell.GetMousePressed(); }
+            get { return this.cell.GetMousePressed(); }
         }
 
 #if DEBUG
@@ -234,95 +234,95 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public Rectangle ClientRectangle
         {
-            get { return m_pCell.GetClientRect(); }
+            get { return this.cell.ClientRectangle; }
         }
 
         [Description("셀의 안쪽 여백을 가져오거나 설정합니다.")]
         [Category("Layout")]
         public Padding Padding
         {
-            get { return m_pCell.GetPadding(); }
-            set { m_pCell.SetPadding(value); }
+            get { return this.cell.GetPadding(); }
+            set { this.cell.SetPadding(value); }
         }
 
 
 
         internal Color DisplayForeColor
         {
-            get { return m_pCell.GetPaintingForeColor(); }
+            get { return this.cell.GetPaintingForeColor(); }
         }
 
         internal Color DisplayBackColor
         {
-            get { return m_pCell.GetPaintingBackColor(); }
+            get { return this.cell.GetPaintingBackColor(); }
         }
 
         internal GrCell NativeRef
         {
-            get { return m_pCell; }
+            get { return this.cell; }
         }
 
 
         private bool ShouldSerializeForeColor()
         {
-            return m_pCell.GetForeColorCore() != GrColor.Empty;
+            return this.cell.GetForeColorCore() != GrColor.Empty;
         }
 
         private bool ShouldSerializeBackColor()
         {
-            return m_pCell.GetBackColorCore() != GrColor.Empty;
+            return this.cell.GetBackColorCore() != GrColor.Empty;
         }
 
         private bool ShouldSerializeFont()
         {
-            return m_pCell.GetFontCore() != GrFont.Empty;
+            return this.cell.GetFontCore() != GrFont.Empty;
         }
 
         private bool ShouldSerializePadding()
         {
-            return m_pCell.GetPaddingCore() != GrPadding.Empty;
+            return this.cell.GetPaddingCore() != GrPadding.Empty;
         }
 
         private void ResetPadding()
         {
-            m_pCell.SetPadding(GrPadding.Empty);
+            this.cell.SetPadding(GrPadding.Empty);
         }
 
         Color ICellBase.PaintingForeColor
         {
-            get { return m_pCell.GetPaintingForeColor(); }
+            get { return this.cell.GetPaintingForeColor(); }
         }
 
         Color ICellBase.PaintingBackColor
         {
-            get { return m_pCell.GetPaintingBackColor(); }
+            get { return this.cell.GetPaintingBackColor(); }
         }
 
         bool ICellBase.Multiline
         {
-            get { return m_pCell.GetTextMulitiline(); }
+            get { return this.cell.IsTextMulitiline; }
         }
 
         bool ICellBase.WordWrap
         {
-            get { return m_pCell.GetTextWordWrap(); }
+            get { return this.cell.IsTextWordWrap; }
         }
 
         StringAlignment ICellBase.Alignment
         {
-            get { return (StringAlignment)m_pCell.GetTextHorzAlign(); }
+            get { return (StringAlignment)this.cell.TextHorzAlign; }
         }
 
         StringAlignment ICellBase.LineAlignment
         {
-            get { return (StringAlignment)m_pCell.GetTextVertAlign(); }
+            get { return (StringAlignment)this.cell.TextVertAlign; }
         }
 
         CellState ICellBase.State
         {
             get
             {
-                GrPaintStyle flag = m_pCell.ToPaintStyle();
+                GrPaintStyle flag = this.cell.ToPaintStyle();
                 return (CellState)flag & CellState.All;
             }
         }

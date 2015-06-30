@@ -40,7 +40,7 @@ namespace Ntreev.Windows.Forms.Grid
                 this.NativeRef.SetItemMinSize(m_viewControl.PreferredSize);
             }
 
-            NativeRef.m_customItemPaint = this.ViewType != ViewType.Text;
+            NativeRef.customItemPaint = this.ViewType != ViewType.Text;
         }
 
 
@@ -57,7 +57,7 @@ namespace Ntreev.Windows.Forms.Grid
                 this.NativeRef.SetItemMinSize(m_viewControl.PreferredSize);
             }
 
-            NativeRef.m_customItemPaint = this.ViewType != ViewType.Text;
+            NativeRef.customItemPaint = this.ViewType != ViewType.Text;
         }
 
 

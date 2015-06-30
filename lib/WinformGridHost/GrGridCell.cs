@@ -15,47 +15,53 @@ namespace Ntreev.Windows.Forms.Grid
             m_pGridRow = pGridRow;
         }
 
-        public override int GetX()
-        {
-            IDataRow pParent = m_pGridRow.GetParent() as IDataRow;
-            GrExpander pExpander = pParent.GetExpander();
-            return pExpander.GetX();
-        }
+        //public override int X
+        //{
+        //    get
+        //    {
+        //        IDataRow pParent = m_pGridRow.GetParent() as IDataRow;
+        //        GrExpander pExpander = pParent.GetExpander();
+        //        return pExpander.X;
+        //    }
+        //}
 
-        public override int GetY()
-        {
-            return m_pGridRow.GetY();
-        }
+        //public override int Y
+        //{
+        //    get { return m_pGridRow.Y; }
+        //}
 
-        public override int GetWidth()
-        {
-            GrRect displayRect = this.GridCore.DisplayRectangle;
-            return displayRect.Right - GetX();
-        }
+        //public override int Width
+        //{
+        //    get
+        //    {
+        //        GrRect displayRect = this.GridCore.DisplayRectangle;
+        //        return displayRect.Right - this.X;
+        //    }
+        //}
 
-        public override int GetHeight()
-        {
-            return m_pGridRow.GetHeight();
-        }
+        //public override int Height
+        //{
+        //    get { return m_pGridRow.Height; }
+        //}
 
         public override GrRow GetRow()
         {
             return m_pGridRow;
         }
 
-        public override GrCellType GetCellType()
+        //public override GrCellType GetCellType()
+        //{
+        //    return GrCellType.Unknown;
+        //}
+
+        public override bool IsVisible
         {
-            return GrCellType.Unknown;
+            get { return m_pGridRow.IsVisible; }
         }
 
-        public override bool GetVisible()
+        public override bool IsDisplayable
         {
-            return m_pGridRow.GetVisible();
-        }
-
-        public override bool GetDisplayable()
-        {
-            return m_pGridRow.GetDisplayable();
+            get { return m_pGridRow.IsDisplayable; }
         }
 
         public override GrPadding GetPadding()
@@ -77,7 +83,7 @@ namespace Ntreev.Windows.Forms.Grid
 
         public override void Paint(GrGridPainter pPainter, GrRect clipRect)
         {
-            GrRect paintRect = GetRect();
+            GrRect paintRect = this.Bounds;
             GrPaintStyle paintStyle = ToPaintStyle();
             GrColor backColor = GetPaintingBackColor();
             GrColor foreColor = GetPaintingForeColor();
@@ -95,7 +101,7 @@ namespace Ntreev.Windows.Forms.Grid
             return m_pGridRow;
         }
 
-        public GrRect GetDisplayRect() { return GetRect(); }
+        public GrRect GetDisplayRect() { return this.Bounds; }
 
         private GridControl GetGridControl()
         {

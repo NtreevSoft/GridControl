@@ -21,7 +21,7 @@ namespace Ntreev.Library.Grid.States
 
         public override bool GetHitTest(GrCell pHitted, GrPoint localLocation)
         {
-            return pHitted.GetCellType() == GrCellType.Group;
+            return pHitted is GrGroup;
         }
 
         public override void OnPaintAdornments(GrGridPainter g, GrRect displayRect)
@@ -31,17 +31,17 @@ namespace Ntreev.Library.Grid.States
 
             GrGroupPanel groupList = this.GridCore.GroupPanel;
             GrRect paintRect;
-            if (m_where < groupList.GetGroupCount())
+            if (m_where < groupList.Groups.Count)
             {
-                GrGroup pGroup = groupList.GetGroup(m_where);
-                paintRect = pGroup.GetRect();
+                GrGroup pGroup = groupList.Groups[m_where];
+                paintRect = pGroup.Bounds;
             }
             else
             {
-                int lastIndex = groupList.GetGroupCount() - 1;
-                GrGroup pGroup = groupList.GetGroup(lastIndex);
-                paintRect = groupList.GetRect();
-                int left = pGroup.GetRect().Right;
+                int lastIndex = groupList.Groups.Count - 1;
+                GrGroup pGroup = groupList.Groups[lastIndex];
+                paintRect = groupList.Bounds;
+                int left = pGroup.Bounds.Right;
                 int top = paintRect.Top;
                 int right = paintRect.Right;
                 int bottom = paintRect.Bottom;
@@ -92,7 +92,7 @@ namespace Ntreev.Library.Grid.States
 
             if (row.GetRowType() == GrRowType.GroupPanel)
             {
-                if (hitTest.pHitted.GetCellType() == GrCellType.Group)
+                if (hitTest.pHitted is GrGroup == true)
                 {
                     GrGroup pHittedInfo = pHittedCell as GrGroup;
                     if (pHittedInfo != m_pGroup && m_pGroup.GetGroupLevel() + 1 != pHittedInfo.GetGroupLevel())
@@ -104,14 +104,14 @@ namespace Ntreev.Library.Grid.States
                 else
                 {
                     GrGroupPanel groupList = row as GrGroupPanel;
-                    int lastIndex = groupList.GetGroupCount() - 1;
+                    int lastIndex = groupList.Groups.Count - 1;
 
                     if (m_pGroup.GetGroupLevel() != lastIndex)
                     {
-                        GrGroup pLastGroup = groupList.GetGroup(lastIndex);
-                        if (location.X > pLastGroup.GetRect().Right)
+                        GrGroup pLastGroup = groupList.Groups[lastIndex];
+                        if (location.X > pLastGroup.Bounds.Right)
                         {
-                            m_where = groupList.GetGroupCount();
+                            m_where = groupList.Groups.Count;
                             m_targetType = TargetType.Group;
                         }
                     }
@@ -144,7 +144,7 @@ namespace Ntreev.Library.Grid.States
             switch (m_targetType)
             {
                 case TargetType.Remove:
-                    m_pGroup.SetGrouped(false);
+                    m_pGroup.IsGrouped = false;
                     break;
                 case TargetType.Group:
                     m_pGroup.SetGroupLevel(m_where);

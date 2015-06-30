@@ -164,14 +164,14 @@ namespace Ntreev.Library.Grid
             IDataRow pDataRow = pFocusable.GetDataRow();
             if (this.GridCore.GetRowHighlight() == true || this.GridCore.GetFullRowSelect() == true)
             {
-                rect = pDataRow.GetRect();
+                rect = pDataRow.Bounds;
                 rect.Width = this.GridCore.DisplayRectangle.Right - rect.Left;
                 rect.Expand(2);
             }
             else
             {
                 pFocusable.Invalidate();
-                this.GridCore.Invalidate(pDataRow.GetRect());
+                this.GridCore.Invalidate(pDataRow.Bounds);
 
                 if (m_pLastFocusedColumn != null)
                     m_pLastFocusedColumn.Invalidate();
@@ -207,8 +207,8 @@ namespace Ntreev.Library.Grid
                 //GrItemSelector pItemSelector = this.GridCore.GetItemSelector();
                 GrDataRowList dataRowList = this.GridCore.DataRowList;
 
-                GrDataRow pInsertionRow = dataRowList.GetInsertionRow();
-                if (pInsertionRow.GetVisible() == true)
+                GrDataRow pInsertionRow = dataRowList.InsertionRow;
+                if (pInsertionRow.IsVisible == true)
                     return pInsertionRow;
                 if (dataRowList.GetVisibleDataRowCount() == 0)
                     return null;

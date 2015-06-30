@@ -19,7 +19,7 @@ namespace Ntreev.Library.Grid.States
 
         public override bool GetHitTest(GrCell pHitted, GrPoint localLocation)
         {
-            if (pHitted.GetCellType() != GrCellType.Item)
+            if (pHitted is GrItem == false)
                 return false;
 
             GrItem pItem = pHitted as GrItem;

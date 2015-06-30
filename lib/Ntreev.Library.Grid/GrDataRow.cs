@@ -46,32 +46,31 @@ namespace Ntreev.Library.Grid
             return m_vecItems[columnID];
         }
 
-        public bool GetReadOnly()
+        public bool IsReadOnly
         {
-            if (this.GridCore != null && this.GridCore.GetReadOnly() == true)
-                return true;
-            return m_readOnly;
+            get
+            {
+                if (this.GridCore != null && this.GridCore.GetReadOnly() == true)
+                    return true;
+                return m_readOnly;
+            }
+            set { m_readOnly = value; }
+
         }
 
-        public void SetReadOnly(bool b = true)
+        public bool IsSelected
         {
-            m_readOnly = b;
-        }
-
-        public void SetSelected(bool b)
-        {
-            if (GetSelected() == b)
-                return;
-            GrItemSelector pItemSelector = this.GridCore.ItemSelector;
-            if (b == true)
-                pItemSelector.SelectDataRow(this, GrSelectionType.Add);
-            else
-                pItemSelector.SelectDataRow(this, GrSelectionType.Remove);
-        }
-
-        public bool GetSelected()
-        {
-            return m_selected > 0;
+            get { return m_selected > 0;}
+            set
+            {
+                if (this.IsSelected == value)
+                    return;
+                GrItemSelector pItemSelector = this.GridCore.ItemSelector;
+                if (value == true)
+                    pItemSelector.SelectDataRow(this, GrSelectionType.Add);
+                else
+                    pItemSelector.SelectDataRow(this, GrSelectionType.Remove);
+            }
         }
 
         public bool GetSelecting()
@@ -82,7 +81,7 @@ namespace Ntreev.Library.Grid
 
         public int GetVisibleDataRowIndex()
         {
-            if (GetVisible() == false)
+            if (this.IsVisible == false)
                 return -1;
             return m_visibleDataRowIndex;
         }
@@ -169,33 +168,31 @@ namespace Ntreev.Library.Grid
             return m_selected == visibleColumns;
         }
 
-        public virtual void SetVisible(bool b)
+        protected override void OnVisibleChanged()
         {
-            if (m_visible == b)
-                return;
-
-            m_visible = b;
-
-            if (m_pDataRowList == null)
-                return;
-
-            m_pDataRowList.SetVisibleChanged();
-            GrFocuser focuser = this.GridCore.Focuser;
-            if (focuser.GetFocusedRow() == this)
-                focuser.Set(null as IFocusable);
-
-            GrRootRow pHeaderList = GetParent() as GrRootRow;
-
-            if (pHeaderList != null)
+            if (m_pDataRowList != null)
             {
-                pHeaderList.SetVisibleChanged();
+
+                m_pDataRowList.SetVisibleChanged();
+                GrFocuser focuser = this.GridCore.Focuser;
+                if (focuser.GetFocusedRow() == this)
+                    focuser.Set(null as IFocusable);
+
+                GrRootRow pHeaderList = GetParent() as GrRootRow;
+
+                if (pHeaderList != null)
+                {
+                    pHeaderList.SetVisibleChanged();
+                }
+
+                if (this.IsVisible == false && this.IsSelected == true)
+                {
+                    GrItemSelector pItemSelector = this.GridCore.ItemSelector;
+                    pItemSelector.SelectDataRow(this, GrSelectionType.Remove);
+                }
             }
 
-            if (m_visible == false && GetSelected() == true)
-            {
-                GrItemSelector pItemSelector = this.GridCore.ItemSelector;
-                pItemSelector.SelectDataRow(this, GrSelectionType.Remove);
-            }
+            base.OnVisibleChanged();
         }
 
         public override GrRowType GetRowType() { return GetDataRowID() == GrDefineUtility.INSERTION_ROW ? GrRowType.InsertionRow : GrRowType.DataRow; }
@@ -203,7 +200,7 @@ namespace Ntreev.Library.Grid
         public override GrPaintStyle ToPaintStyle()
         {
             GrPaintStyle flag = base.ToPaintStyle();
-            if (GetSelecting() == true || GetSelected() == true)
+            if (GetSelecting() == true || this.IsSelected == true)
                 flag |= GrPaintStyle.Selected;
             return flag;
         }
@@ -212,7 +209,7 @@ namespace Ntreev.Library.Grid
         {
             base.Paint(painter, clipRect);
 
-            GrRect paintRect = GetRect();
+            GrRect paintRect = this.Bounds;
             GrPaintStyle paintStyle = ToPaintStyle();
             GrColor foreColor = GetPaintingForeColor();
             GrColor backColor = GetPaintingBackColor();
@@ -233,7 +230,7 @@ namespace Ntreev.Library.Grid
             for (int i = 0; i < columnList.GetDisplayableColumnCount(); i++)
             {
                 GrColumn column = columnList.GetDisplayableColumn(i);
-                if (column.GetX() > clipRect.Right || column.GetRight() < clipRect.Left)
+                if (column.X > clipRect.Right || column.Right < clipRect.Left)
                     continue;
                 GrItem pItem = GetItem(column);
                 pItem.Paint(painter, clipRect);
@@ -261,7 +258,7 @@ namespace Ntreev.Library.Grid
 
             foreach (var value in m_vecItems)
             {
-                if (value.GetVisible() == false)
+                if (value.IsVisible == false)
                     continue;
                 height = Math.Max(height, value.GetPreferredSize().Height);
             }
@@ -283,7 +280,7 @@ namespace Ntreev.Library.Grid
             GrFocuser focuser = this.GridCore.Focuser;
             if (focuser.GetFocusedRow() == this)
                 focuser.Set(null as IFocusable);
-            SetSelected(false);
+            this.IsSelected = false;
 
             foreach (var value in m_vecItems)
             {
@@ -308,9 +305,10 @@ namespace Ntreev.Library.Grid
             this.GridCore.Invalidate();
         }
 
-        protected override void OnHeightChanged()
+        protected override void OnSizeChanged(EventArgs e)
         {
-            base.OnHeightChanged();
+            base.OnSizeChanged(e);
+        
             GrRootRow pHeaderRow = GetParent() as GrRootRow;
             if (pHeaderRow != null)
                 pHeaderRow.SetHeightChanged();
@@ -348,7 +346,7 @@ namespace Ntreev.Library.Grid
                 numberText = string.Format("{0}", index + 1);
 
             m_dataRowIndex = index;
-            SetText(numberText);
+            this.Text = numberText;
         }
 
         internal void SetDataRowID(int index)
@@ -444,7 +442,7 @@ namespace Ntreev.Library.Grid
             }
             else if (HasFocused() == true &&
                 this.GridCore.GetRowHighlight() == true &&
-                this.GridCore.GetRowHighlightType() != GrRowHighlightType.Line)
+                this.GridCore.RowHighlightType != GrRowHighlightType.Line)
             {
                 color = pStyle.RowHighlightFillColor;
             }

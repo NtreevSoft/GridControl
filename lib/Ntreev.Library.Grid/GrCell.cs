@@ -7,16 +7,18 @@ namespace Ntreev.Library.Grid
 {
     public abstract class GrCell : GrObject
     {
-        internal bool m_textBoundsChanged;
-        internal bool m_textAlignChanged;
+        internal bool textBoundsChanged;
+        internal bool textAlignChanged;
 
-        private string m_text;
-        private GrStyleData m_pStyleData;
+        private string text;
+        private GrStyleData styleData;
 
-        private bool m_textVisible = true;
-        private GrTextLayout m_layout;
+        private bool textVisible = true;
+        private GrTextLayout layout;
 
         private static Dictionary<int, string> s_texts = new Dictionary<int, string>();
+        private bool isVisible = true;
+        private GrRect bounds;
 
         protected GrCell()
         {
@@ -24,21 +26,62 @@ namespace Ntreev.Library.Grid
 
         }
 
-        public abstract int GetX();
+        public int X
+        {
+            get { return this.bounds.X; }
+            set
+            {
+                this.SetBounds(value, this.bounds.Y, this.bounds.Width, this.bounds.Height);
+            }
+        }
 
-        public abstract int GetY();
+        public int Y
+        {
+            get { return this.bounds.Y; }
+            set
+            {
+                this.SetBounds(this.bounds.X, value, this.bounds.Width, this.bounds.Height);
+            }
+        }
 
-        public abstract int GetWidth();
+        public int Width
+        {
+            get { return this.bounds.Width; }
+            set
+            {
+                this.SetBounds(this.bounds.X, this.bounds.Y, value, this.bounds.Height);
+            }
+        }
 
-        public abstract int GetHeight();
+        public int Height
+        {
+            get { return this.bounds.Height; }
+            set
+            {
+                this.SetBounds(this.bounds.X, this.bounds.Y, this.bounds.Width, value);
+            }
+        }
 
         public abstract GrRow GetRow();
 
-        public abstract GrCellType GetCellType();
+        //public abstract GrCellType GetCellType();
 
-        public abstract bool GetVisible();
+        public virtual bool IsVisible
+        {
+            get { return this.isVisible; }
+            set
+            {
+                if (this.isVisible == value)
+                    return;
+                this.isVisible = value;
+                this.OnVisibleChanged(EventArgs.Empty);
+            }
+        }
 
-        public abstract bool GetDisplayable();
+        public abstract bool IsDisplayable
+        {
+            get;
+        }
 
         public abstract void Paint(GrGridPainter painter, GrRect clipRect);
 
@@ -49,21 +92,21 @@ namespace Ntreev.Library.Grid
 
         public bool ContainsHorz(int x)
         {
-            if (x < this.GetX() || x >= this.GetRight())
+            if (x < this.X || x >= this.Right)
                 return false;
             return true;
         }
 
         public bool ContainsVert(int y)
         {
-            if (y < this.GetY() || y >= this.GetBottom())
+            if (y < this.Y || y >= this.Bottom)
                 return false;
             return true;
         }
 
         public bool IntersectsHorzWith(int left, int right)
         {
-            if (this.GetX() > right || this.GetRight() <= left)
+            if (this.X > right || this.Right <= left)
                 return false;
             return true;
         }
@@ -75,7 +118,7 @@ namespace Ntreev.Library.Grid
 
         public bool IntersectsVertWith(int top, int bottom)
         {
-            if (this.GetY() > bottom || this.GetBottom() <= top)
+            if (this.Y > bottom || this.Bottom <= top)
                 return false;
             return true;
         }
@@ -112,150 +155,215 @@ namespace Ntreev.Library.Grid
             return this.GridCore.GetMouseOverState();
         }
 
-        public GrRect GetClientRect()
+        public GrRect ClientRectangle
         {
-            GrPadding padding = this.GetPadding();
-            return GrRect.FromLTRB(padding.Left, padding.Top, this.GetWidth() - (padding.Right), this.GetHeight() - (padding.Bottom));
+            get
+            {
+                GrPadding padding = this.GetPadding();
+                return GrRect.FromLTRB(padding.Left, padding.Top, this.Width - (padding.Right), this.Height - (padding.Bottom));
+            }
         }
 
-        public GrRect GetRect()
+        public GrRect Bounds
         {
-            return new GrRect(this.GetX(), this.GetY(), this.GetWidth(), this.GetHeight());
+            get { return this.bounds; }
+            set
+            {
+                this.SetBounds(value.X, value.Y, value.Width, value.Height);
+            }
         }
 
-        public GrPoint GetLocation()
+        public GrPoint Location
         {
-            return new GrPoint(this.GetX(), this.GetY());
+            get { return this.bounds.Location; }
+            set 
+            {
+                this.SetBounds(value.X, value.Y, this.bounds.Width, this.bounds.Height);
+            }
         }
 
-        public GrSize GetSize()
+        public GrSize Size
         {
-            return new GrSize(this.GetWidth(), this.GetHeight());
+            get { return this.bounds.Size;}
+            set 
+            {
+                this.SetBounds(this.bounds.X, this.bounds.Y, value.Width, value.Height);
+            }
         }
 
-        public int GetBottom()
+        protected virtual void SetBounds(int x, int y, int width, int height)
         {
-            return this.GetY() + this.GetHeight();
+            GrRect bounds = this.bounds;
+            bool locationChanged = bounds.X != x || bounds.Y != y;
+            bool sizeChanged = bounds.Width != width || bounds.Height != height;
+
+            this.bounds.Location = new GrPoint(x, y);
+            this.bounds.Size = new GrSize(width, height);
+
+            if (locationChanged == true)
+            {
+                this.OnLocationChanged(EventArgs.Empty);
+            }
+
+            if (sizeChanged == true)
+            {
+                this.OnSizeChanged(EventArgs.Empty);
+            }
+            
         }
 
-        public int GetRight()
+        protected virtual void OnLocationChanged(EventArgs e)
         {
-            return this.GetX() + this.GetWidth();
+            if (this.LocationChanged != null)
+            {
+                this.LocationChanged(this, e);
+            }
+        }
+
+        protected virtual void OnSizeChanged(EventArgs e)
+        {
+            if (this.SizeChanged != null)
+            {
+                this.SizeChanged(this, e);
+            }
+        }
+
+        public int Top
+        {
+            get { return this.bounds.Top; }
+        }
+
+        public int Left
+        {
+            get { return this.bounds.Left; }
+        }
+
+        public int Bottom
+        {
+            get { return this.bounds.Bottom; }
+        }
+
+        public int Right
+        {
+            get { return this.bounds.Right; }
         }
 
         public void SetBackColor(GrColor color)
         {
-            if (m_pStyleData == null)
-                m_pStyleData = new GrStyleData();
+            if (this.styleData == null)
+                this.styleData = new GrStyleData();
 
-            m_pStyleData.backColor = color;
+            this.styleData.backColor = color;
             this.Invalidate();
         }
 
         public void SetForeColor(GrColor color)
         {
-            if (m_pStyleData == null)
-                m_pStyleData = new GrStyleData();
+            if (this.styleData == null)
+                this.styleData = new GrStyleData();
 
-            m_pStyleData.foreColor = color;
+            this.styleData.foreColor = color;
             this.Invalidate();
 
         }
 
         public void SetLineColor(GrColor color)
         {
-            if (m_pStyleData == null)
-                m_pStyleData = new GrStyleData();
+            if (this.styleData == null)
+                this.styleData = new GrStyleData();
 
-            m_pStyleData.lineColor = color;
+            this.styleData.lineColor = color;
             this.Invalidate();
         }
 
         public void SetFont(GrFont pFont)
         {
-            if (m_pStyleData == null)
-                m_pStyleData = new GrStyleData();
+            if (this.styleData == null)
+                this.styleData = new GrStyleData();
 
-            m_pStyleData.pFont = pFont;
+            this.styleData.pFont = pFont;
             this.SetTextBoundsChanged();
         }
 
         public void SetPadding(GrPadding padding)
         {
-            if (m_pStyleData == null)
-                m_pStyleData = new GrStyleData();
+            if (this.styleData == null)
+                this.styleData = new GrStyleData();
 
-            m_pStyleData.padding = padding;
+            this.styleData.padding = padding;
             this.SetTextBoundsChanged();
         }
 
         public GrColor GetForeColorCore()
         {
-            if (m_pStyleData == null)
+            if (this.styleData == null)
                 return GrStyleData.Default.foreColor;
-            return m_pStyleData.foreColor;
+            return this.styleData.foreColor;
         }
 
         public GrColor GetBackColorCore()
         {
-            if (m_pStyleData == null)
+            if (this.styleData == null)
                 return GrStyleData.Default.backColor;
-            return m_pStyleData.backColor;
+            return this.styleData.backColor;
         }
 
         public GrColor GetLineColorCore()
         {
-            if (m_pStyleData == null)
+            if (this.styleData == null)
                 return GrStyleData.Default.lineColor;
-            return m_pStyleData.lineColor;
+            return this.styleData.lineColor;
         }
 
         public GrFont GetFontCore()
         {
-            if (m_pStyleData == null)
+            if (this.styleData == null)
                 return GrStyleData.Default.pFont;
-            return m_pStyleData.pFont;
+            return this.styleData.pFont;
         }
+
         public GrPadding GetPaddingCore()
         {
-            if (m_pStyleData == null)
+            if (this.styleData == null)
                 return GrStyleData.Default.padding;
-            return m_pStyleData.padding;
+            return this.styleData.padding;
         }
 
-        public string GetText()
+        public string Text
         {
-            if (m_text == null)
-                return string.Empty;
-            return m_text;
-        }
+            get
+            {
+                if (this.text == null)
+                    return string.Empty;
+                return this.text;
+            }
+            set
+            {
+                if (this.text == value)
+                    return;
 
-        public void SetText(string text)
-        {
-            if (m_text == text)
-                return;
-
-            m_text = text;
-            this.OnTextChanged();
+                this.text = value;
+                this.OnTextChanged();
+            }
         }
 
         public int GetTextLineCount()
         {
-            if (m_layout == null)
+            if (this.layout == null)
                 return 0;
-            return m_layout.linesCount;
+            return this.layout.linesCount;
         }
 
         public GrLineDesc GetTextLine(int index)
         {
-            return m_layout.pLines[index];
+            return this.layout.pLines[index];
         }
 
         public GrSize GetTextBounds()
         {
-            if (m_layout == null)
+            if (this.layout == null)
                 return GrSize.Empty;
-            return new GrSize(m_layout.width, m_layout.height);
+            return new GrSize(this.layout.width, this.layout.height);
         }
 
         public virtual GrSize GetPreferredSize()
@@ -271,16 +379,16 @@ namespace Ntreev.Library.Grid
             GrFont pFont = this.GetPaintingFont();
             GrPoint startLocation = new GrPoint();
             GrPadding padding = GetPadding();
-            int width = this.GetWidth() - (padding.Left + padding.Right);
-            int height = this.GetHeight() - (padding.Top + padding.Bottom);
+            int width = this.Width - (padding.Left + padding.Right);
+            int height = this.Height - (padding.Top + padding.Bottom);
 
             int lineHeight = pFont.GetHeight() + pFont.GetExternalLeading();
 
-            //for(int i=0 ; i<m_vecTextLine.size() ; i++)
+            //for(int i=0 ; i<this.vecTextLine.size() ; i++)
             //{
-            //    GrLineDesc& cl = m_vecTextLine[i];
+            //    GrLineDesc& cl = this.vecTextLine[i];
 
-            switch (this.GetTextHorzAlign())
+            switch (this.TextHorzAlign)
             {
                 case GrHorzAlign.Left:
                     startLocation.X = 0;
@@ -295,7 +403,7 @@ namespace Ntreev.Library.Grid
                     break;
             }
 
-            switch (this.GetTextVertAlign())
+            switch (this.TextVertAlign)
             {
                 case GrVertAlign.Top:
                     startLocation.Y = index * lineHeight;
@@ -317,7 +425,7 @@ namespace Ntreev.Library.Grid
 
             //if(i==0)
             //{
-            //    m_textBounds.SetLocation(cl.x, cl.y);
+            //    this.textBounds.SetLocation(cl.x, cl.y);
             //}
             //}
         }
@@ -331,14 +439,14 @@ namespace Ntreev.Library.Grid
             //if(GetTextWordWrap() == false)
             //{
             //    ti_f.pFont = GetPaintingFont();
-            //    ti_f.text = m_text;
+            //    ti_f.text = this.text;
             //    ti_f.multiline = GetTextMulitiline();
 
             //    auto itor = textLayouts_f.find(ti_f);
 
             //    if(itor != textLayouts_f.end())
             //    {
-            //        m_layout = itor.second;
+            //        this.layout = itor.second;
             //        if(GetTextBounds() != oldTextBounds)
             //            OnTextSizeChanged();
             //        return;
@@ -347,7 +455,7 @@ namespace Ntreev.Library.Grid
             //else
             //{
             //    ti.pFont = GetPaintingFont();
-            //    ti.text = m_text;
+            //    ti.text = this.text;
             //    ti.multiline = GetTextMulitiline();
             //    ti.wordwrap = GetTextWordWrap();
             //    ti.width = GetWidth();
@@ -356,7 +464,7 @@ namespace Ntreev.Library.Grid
 
             //    if(itor != textLayouts.end())
             //    {
-            //        m_layout = itor.second;
+            //        this.layout = itor.second;
             //        if(GetTextBounds() != oldTextBounds)
             //            OnTextSizeChanged();
             //        return;
@@ -367,35 +475,35 @@ namespace Ntreev.Library.Grid
             GrFont pFont = this.GetPaintingFont();
             GrPadding padding = GetPadding();
 
-            m_layout = new GrTextLayout();
+            this.layout = new GrTextLayout();
 
             int maxWidth = 0;
             int maxHeight = 0;
 
 
-            if (GetText().Length > 0)
+            if (this.Text.Length > 0)
             {
-                int cellWidth = GetWidth() - (padding.Left + padding.Right);
+                int cellWidth = this.Width - (padding.Left + padding.Right);
 
-                if (GetTextMulitiline() == false)
+                if (this.IsTextMulitiline == false)
                 {
-                    m_layout.pLines = new GrLineDesc[1];
-                    m_layout.pLines[0] = new GrLineDesc();
-                    m_layout.linesCount = 1;
-                    GrTextUtil.SingleLine(ref m_layout.pLines[0], GetText(), pFont);
+                    this.layout.pLines = new GrLineDesc[1];
+                    this.layout.pLines[0] = new GrLineDesc();
+                    this.layout.linesCount = 1;
+                    GrTextUtil.SingleLine(ref this.layout.pLines[0], this.Text, pFont);
                 }
                 else
                 {
                     List<GrLineDesc> lines = new List<GrLineDesc>();
-                    GrTextUtil.MultiLine(lines, GetText(), cellWidth, pFont, GetTextWordWrap());
+                    GrTextUtil.MultiLine(lines, this.Text, cellWidth, pFont, this.IsTextWordWrap);
 
-                    m_layout.linesCount = lines.Count;
-                    m_layout.pLines = lines.ToArray();
+                    this.layout.linesCount = lines.Count;
+                    this.layout.pLines = lines.ToArray();
                 }
 
-                for (int i = 0; i < m_layout.linesCount; i++)
+                for (int i = 0; i < this.layout.linesCount; i++)
                 {
-                    GrLineDesc lineDesc = m_layout.pLines[i];
+                    GrLineDesc lineDesc = this.layout.pLines[i];
                     maxWidth = Math.Max(maxWidth, (int)lineDesc.width);
                     maxHeight += pFont.GetHeight() + pFont.GetExternalLeading();
                 }
@@ -405,55 +513,54 @@ namespace Ntreev.Library.Grid
                 maxHeight = pFont.GetHeight() + pFont.GetExternalLeading();
             }
 
-            m_layout.width = (ushort)maxWidth;
-            m_layout.height = (ushort)maxHeight;
+            this.layout.width = (ushort)maxWidth;
+            this.layout.height = (ushort)maxHeight;
 
-            if (GetTextWordWrap() == false)
+            if (this.IsTextWordWrap == false)
             {
-                //textLayouts_f.insert(std.pair<tbinfo_fixed, GrTextLayout*>(ti_f, m_layout));
+                //textLayouts_f.insert(std.pair<tbinfo_fixed, GrTextLayout*>(ti_f, this.layout));
             }
             else
             {
-                //textLayouts.insert(std.pair<tbinfo, GrTextLayout*>(ti, m_layout));
+                //textLayouts.insert(std.pair<tbinfo, GrTextLayout*>(ti, this.layout));
             }
 
             //if(maxWidth + (padding.left + padding.right) > GetWidth() || 
             //    maxHeight + padding.top + padding.bottom > GetHeight())
-            //    m_textClipped = true;
+            //    this.textClipped = true;
             //else
-            //    m_textClipped = false;
+            //    this.textClipped = false;
 
-            //m_textBounds = GrSize(maxWidth, maxHeight);
+            //this.textBounds = GrSize(maxWidth, maxHeight);
             if (GetTextBounds() != oldTextBounds)
                 OnTextSizeChanged();
         }
 
-        public bool GetTextVisible()
+        public bool IsTextVisible
         {
-            return m_textVisible;
+            get { return this.textVisible; }
+            set { this.textVisible = value; }
         }
 
-        public bool GetTextClipped()
+        public bool IsTextClipped
         {
-            GrPadding padding = GetPaintingPadding();
+            get
+            {
+                GrPadding padding = GetPaintingPadding();
 
-            if (m_layout.width + (padding.Left + padding.Right) > GetWidth() ||
-                m_layout.height + padding.Top + padding.Bottom > GetHeight())
-                return true;
-            return false;
-        }
-
-        public void SetTextVisible(bool b)
-        {
-            m_textVisible = b;
+                if (this.layout.width + (padding.Left + padding.Right) > this.Width ||
+                    this.layout.height + padding.Top + padding.Bottom > this.Height)
+                    return true;
+                return false;
+            }
         }
 
         public virtual void Invalidate()
         {
-            if (this.GridCore == null || this.GetDisplayable() == false)
+            if (this.GridCore == null || this.IsDisplayable == false)
                 return;
 
-            this.GridCore.Invalidate(GetRect());
+            this.GridCore.Invalidate(this.Bounds);
         }
 
         public virtual GrPaintStyle ToPaintStyle()
@@ -468,7 +575,7 @@ namespace Ntreev.Library.Grid
 
         public void DrawText(GrGridPainter painter, GrColor foreColor, GrRect paintRect, GrRect? pClipRect)
         {
-            if (this.GetTextVisible() == false)
+            if (this.IsTextVisible == false)
                 return;
 
             GrFont pFont = this.GetPaintingFont();
@@ -488,7 +595,7 @@ namespace Ntreev.Library.Grid
                 if (textRect.Top > paintRect.Bottom || textRect.Bottom <= paintRect.Top)
                     continue;
 
-                if (this.GetTextClipped() == true || pClipRect != null)
+                if (this.IsTextClipped == true || pClipRect != null)
                 {
                     GrRect clipRect = paintRect;
                     clipRect.Contract(GetPadding());
@@ -500,31 +607,34 @@ namespace Ntreev.Library.Grid
                             Math.Min(clipRect.Bottom, pClipRect.Value.Bottom));
                     }
 
-                    painter.DrawText(pFont, GetText() + cl.textBegin, cl.length, textRect, foreColor, clipRect);
+                    painter.DrawText(pFont, this.Text + cl.textBegin, cl.length, textRect, foreColor, clipRect);
                 }
                 else
                 {
-                    painter.DrawText(pFont, GetText() + cl.textBegin, cl.length, textRect, foreColor, null);
+                    painter.DrawText(pFont, this.Text + cl.textBegin, cl.length, textRect, foreColor, null);
                 }
             }
         }
 
-        public virtual GrHorzAlign GetTextHorzAlign()
+        public virtual GrHorzAlign TextHorzAlign
         {
-            return GrHorzAlign.Left;
+            get { return GrHorzAlign.Left; }
         }
 
-        public virtual GrVertAlign GetTextVertAlign()
+        public virtual GrVertAlign TextVertAlign
         {
-            return GrVertAlign.Top;
+            get { return GrVertAlign.Top; }
         }
 
-        public virtual bool GetTextWordWrap()
+        public virtual bool IsTextWordWrap
         {
-            return false;
+            get { return false; }
         }
 
-        public virtual bool GetTextMulitiline() { return false; }
+        public virtual bool IsTextMulitiline
+        {
+            get { return false; }
+        }
 
         public virtual GrColor GetPaintingForeColor()
         {
@@ -634,10 +744,16 @@ namespace Ntreev.Library.Grid
 
         public virtual int HitMouseOverTest(GrPoint localLocation)
         {
-            if (localLocation.X < 0 || localLocation.Y < 0 || localLocation.X >= this.GetWidth() || localLocation.Y >= this.GetHeight())
+            if (localLocation.X < 0 || localLocation.Y < 0 || localLocation.X >= this.Width || localLocation.Y >= this.Height)
                 return 0;
             return 1;
         }
+
+        public event EventHandler VisibleChanged;
+
+        public event EventHandler LocationChanged;
+
+        public event EventHandler SizeChanged;
 
         protected virtual void OnTextChanged()
         {
@@ -647,6 +763,14 @@ namespace Ntreev.Library.Grid
         protected virtual void OnTextSizeChanged()
         {
 
+        }
+
+        protected virtual void OnVisibleChanged(EventArgs e)
+        {
+            if (this.VisibleChanged != null)
+            {
+                this.VisibleChanged(this, e);
+            }
         }
 
         protected override void OnGridCoreAttached()
@@ -660,9 +784,9 @@ namespace Ntreev.Library.Grid
         protected override void OnGridCoreDetached()
         {
             GrTextUpdater pTextUpdater = this.GridCore.GetTextUpdater();
-            if (m_textAlignChanged == true)
+            if (this.textAlignChanged == true)
                 pTextUpdater.RemoveTextAlign(this);
-            if (m_textBoundsChanged == true)
+            if (this.textBoundsChanged == true)
                 pTextUpdater.RemoveTextBounds(this);
             base.OnGridCoreDetached();
         }
@@ -673,7 +797,7 @@ namespace Ntreev.Library.Grid
             {
                 GrTextUpdater pTextUpdater = this.GridCore.GetTextUpdater();
                 pTextUpdater.AddTextBounds(this);
-                if (this.GetDisplayable() == true)
+                if (this.IsDisplayable == true)
                 {
                     this.Invalidate();
                 }
@@ -686,7 +810,7 @@ namespace Ntreev.Library.Grid
             {
                 GrTextUpdater pTextUpdater = this.GridCore.GetTextUpdater();
                 pTextUpdater.AddTextAlign(this);
-                if (this.GetDisplayable() == true)
+                if (this.IsDisplayable == true)
                 {
                     this.Invalidate();
                 }

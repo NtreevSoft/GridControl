@@ -11,24 +11,25 @@ namespace Ntreev.Library.Grid
 
         public GrRowSplitter()
         {
-            SetText("splitter");
-            SetHeight(DefaultSplitterHeight);
+            this.Text = "splitter";
+            this.Height = DefaultSplitterHeight;
             SetResizable(false);
 
-            SetTextVisible(false);
+            this.IsTextVisible = false;
         }
 
         public override GrRowType GetRowType() { return GrRowType.Splitter; }
-        public override int GetWidth()
-        {
-            return this.GridCore.GetBounds().Width;
-        }
+
+        //public override int Width
+        //{
+        //    get { return this.GridCore.GetBounds().Width; }
+        //}
 
         public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
             GrColor backColor = GetPaintingBackColor();
             GrColor lineColor = GetPaintingLineColor();
-            GrRect paintRect = GetRect();
+            GrRect paintRect = this.Bounds;
 
             GrRect displayRect = this.GridCore.DisplayRectangle;
             GrColumnList columnList = this.GridCore.ColumnList;
@@ -40,11 +41,14 @@ namespace Ntreev.Library.Grid
             painter.DrawRowSplitter(GrPaintStyle.BottomLine, paintRect, lineColor, backColor);
         }
 
-        public override bool GetVisible()
+        public override bool IsVisible
         {
-            return this.GridCore.InsertionRow.GetVisible();
+            get { return this.GridCore.InsertionRow.IsVisible; }
+            set { }
         }
+
         public override int GetMinHeight() { return DefaultSplitterHeight; }
+
         public override bool GetResizable() { return false; }
     }
 }

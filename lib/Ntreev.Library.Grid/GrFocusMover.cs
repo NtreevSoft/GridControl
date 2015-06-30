@@ -30,7 +30,7 @@ namespace Ntreev.Library.Grid
             GrColumn column = pFocused.GetColumn();
             GrDataRow pDataRow = pFocused.GetDataRow();
 
-            if (column.GetFrozen() == true)
+            if (column.IsFrozen == true)
             {
                 int index = column.GetFrozenIndex();
                 if (index == 0)
@@ -125,7 +125,7 @@ namespace Ntreev.Library.Grid
             switch (index)
             {
                 case 0:
-                    if (this.GridCore.GetInsertionRowVisible() == true)
+                    if (this.GridCore.IsInsertionRowVisible == true)
                         index = GrDefineUtility.INSERTION_ROW;
                     else
                         return false;
@@ -144,7 +144,7 @@ namespace Ntreev.Library.Grid
             else
                 SelectMulti(pDataRow, pNewDataRow);
 
-            if (pDataRow.GetDisplayable() == true)
+            if (pDataRow.IsDisplayable == true)
                 DoVertScroll(GrScrollEventType.LargeDecrement);
             else
                 BringIntoView(pNewDataRow);
@@ -181,7 +181,7 @@ namespace Ntreev.Library.Grid
             else
                 SelectMulti(pDataRow, pNewDataRow);
 
-            if (pDataRow != this.GridCore.InsertionRow && pDataRow.GetDisplayable() == true)
+            if (pDataRow != this.GridCore.InsertionRow && pDataRow.IsDisplayable == true)
                 DoVertScroll(GrScrollEventType.LargeIncrement);
             else
                 BringIntoView(pNewDataRow);
@@ -277,7 +277,7 @@ namespace Ntreev.Library.Grid
             switch (index)
             {
                 case 0:
-                    if (this.GridCore.GetInsertionRowVisible() == true)
+                    if (this.GridCore.IsInsertionRowVisible == true)
                         index = GrDefineUtility.INSERTION_ROW;
                     else
                         return false;
@@ -410,8 +410,8 @@ namespace Ntreev.Library.Grid
         {
             m_pDataRowList = this.GridCore.DataRowList;
             m_columnList = this.GridCore.ColumnList;
-            m_pHorzScroll = this.GridCore.GetHorzScroll();
-            m_pVertScroll = this.GridCore.GetVertScroll();
+            m_pHorzScroll = this.GridCore.HorzScroll;
+            m_pVertScroll = this.GridCore.VertScroll;
             m_pFocuser = this.GridCore.Focuser;
             m_pItemSelector = this.GridCore.ItemSelector;
             m_pGridWindow = this.GridCore.GetGridWindow();

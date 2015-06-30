@@ -206,11 +206,11 @@ namespace Ntreev.Windows.Forms.Grid
         internal void SetItemsByDesigner(IEnumerable<object> values)
             {
         GrGroupPanel pGroupPanel = this.GridCore.GroupPanel;
-        List<GrColumn> groupings = new List<GrColumn>(pGroupPanel.GetGroupCount());
+        List<GrColumn> groupings = new List<GrColumn>(pGroupPanel.Groups.Count);
 
-        for(int i=0 ; i<pGroupPanel.GetGroupCount() ; i++)
+        for(int i=0 ; i<pGroupPanel.Groups.Count ; i++)
         {
-            GrColumn pColumn = pGroupPanel.GetGroup(i).GetColumn();
+            GrColumn pColumn = pGroupPanel.Groups[i].Column;
             groupings.Add(pColumn);
         }
 
@@ -224,7 +224,7 @@ namespace Ntreev.Windows.Forms.Grid
 
         foreach(var value in groupings)
         {
-            value.SetGrouped(false);
+            value.IsGrouped = false;
         }
 
         foreach(System.Object item in values)
@@ -240,7 +240,7 @@ namespace Ntreev.Windows.Forms.Grid
         {
             if(value.GetIndex() == GrDefineUtility.INVALID_INDEX)
                 continue;
-            value.SetGrouped(true);
+            value.IsGrouped = true;
         }
     }
 

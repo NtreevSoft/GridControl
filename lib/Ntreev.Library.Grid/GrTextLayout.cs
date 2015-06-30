@@ -11,8 +11,8 @@ namespace Ntreev.Library.Grid
 
         public ushort width;
         public ushort height;
-        public ushort lineHeight;
-        public ushort y;
+        //public ushort lineHeight;
+        //public ushort y;
 
         public GrLineDesc[] pLines;
         public int linesCount;

@@ -30,7 +30,7 @@ namespace Ntreev.Library.Grid.States
 
         public override void OnMouseWheel(GrMouseEventArgs e)
         {
-            GrScroll pVertScroll = this.GridCore.GetVertScroll();
+            GrScroll pVertScroll = this.GridCore.VertScroll;
             GrDataRowList dataRowList = this.GridCore.DataRowList;
 
             if (pVertScroll.IsVisible == false)

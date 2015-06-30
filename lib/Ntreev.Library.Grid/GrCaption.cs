@@ -10,24 +10,24 @@ namespace Ntreev.Library.Grid
         private GrHorzAlign horzAlign;
         private GrVertAlign vertAlign;
 
-        private bool visible1;
+        //private bool visible1;
 
         public GrCaption()
         {
             this.horzAlign = GrHorzAlign.Left;
             this.vertAlign = GrVertAlign.Center;
 
-            this.visible1 = true;
+            //this.visible1 = true;
         }
 
-        public override GrHorzAlign GetTextHorzAlign()
+        public override GrHorzAlign TextHorzAlign
         {
-            return this.horzAlign;
+            get { return this.horzAlign; }
         }
 
-        public override GrVertAlign GetTextVertAlign()
+        public override GrVertAlign TextVertAlign
         {
-            return this.vertAlign;
+            get { return this.vertAlign; }
         }
 
         public void SetTextHorzAlign(GrHorzAlign align)
@@ -48,14 +48,14 @@ namespace Ntreev.Library.Grid
 
         public override GrRowType GetRowType() { return GrRowType.Caption; }
 
-        public override int GetWidth()
-        {
-            return this.GridCore.GetBounds().Width;
-        }
+        //public override int Width
+        //{
+        //    get { return this.GridCore.GetBounds().Width; }
+        //}
 
         public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
-            GrRect paintRect = this.GetRect();
+            GrRect paintRect = this.Bounds;
             GrRect displayRect = this.GridCore.DisplayRectangle;
             GrColumnList columnList = this.GridCore.ColumnList;
             if (this.GridCore.GetFillBlank() == true && columnList.GetDisplayableRight() < displayRect.Right)
@@ -75,22 +75,32 @@ namespace Ntreev.Library.Grid
             this.DrawText(painter, foreColor, paintRect, paintRect);
         }
 
-        public override bool GetVisible()
+        //public override bool IsVisible
+        //{
+        //    get { return this.visible1; }
+        //}
+
+        //public void SetVisible(bool b)
+        //{
+        //    if (this.visible1 == b)
+        //        return;
+
+        //    this.visible1 = b;
+
+        //    if (this.GridCore == null)
+        //        return;
+        //    this.GridCore.RootRow.SetVisibleChanged();
+        //    this.GridCore.Invalidate();
+        //}
+
+        protected override void OnVisibleChanged(EventArgs e)
         {
-            return this.visible1;
-        }
-
-        public void SetVisible(bool b)
-        {
-            if (this.visible1 == b)
-                return;
-
-            this.visible1 = b;
-
-            if (this.GridCore == null)
-                return;
-            this.GridCore.RootRow.SetVisibleChanged();
-            this.GridCore.Invalidate();
+            if (this.GridCore != null)
+            {
+                this.GridCore.RootRow.SetVisibleChanged();
+                this.GridCore.Invalidate();
+            }
+            base.OnVisibleChanged(e);
         }
 
         public override GrColor GetForeColor()
@@ -145,23 +155,16 @@ namespace Ntreev.Library.Grid
             return base.GetFont();
         }
 
-        public event EventHandler HeightChanged;
-
         protected override void OnGridCoreAttached()
         {
             base.OnGridCoreAttached();
             this.GridCore.FontChanged += gridCore_FontChanged;
+            this.GridCore.DisplayRectangleChanged += GridCore_DisplayRectangleChanged;
         }
 
-        protected virtual void OnHeightChanged(EventArgs e)
+        void GridCore_DisplayRectangleChanged(object sender, EventArgs e)
         {
-            this.HeightChanged(this, e);
-        }
-
-        protected override void OnHeightChanged()
-        {
-            base.OnHeightChanged();
-            this.OnHeightChanged(EventArgs.Empty);
+            this.Width = this.GridCore.DisplayRectangle.Width;
         }
 
         private void gridCore_FontChanged(object sender, EventArgs e)

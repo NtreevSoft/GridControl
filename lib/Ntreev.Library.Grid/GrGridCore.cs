@@ -37,11 +37,11 @@ namespace Ntreev.Library.Grid
         bool m_autoFitColumn;
         GrAutoFitColumnType m_autoFitColumnType;
         bool m_autoFitRow;
-        int m_columnSplitterWidth;
-        int m_rowSplitterHeight;
+        //int m_columnSplitterWidth;
+        //int m_rowSplitterHeight;
 
         bool m_updating;
-        bool m_painting;
+        //bool m_painting;
         bool m_fullRowSelect;
         bool m_selectionVisible;
         bool m_rowHighlight;
@@ -68,12 +68,12 @@ namespace Ntreev.Library.Grid
         GrStyle m_pStyle;
 
         int m_attachedCount;
-        int m_createdCell;
+        //int m_createdCell;
 
         public GrGridCore(GrGridWindow pGridWindow)
         {
             this.m_pGridWindow = pGridWindow;
-            m_createdCell = 0;
+            //m_createdCell = 0;
             m_attachedCount = 0;
 
             m_updating = false;
@@ -81,8 +81,8 @@ namespace Ntreev.Library.Grid
             m_autoFitColumn = false;
             m_autoFitColumnType = GrAutoFitColumnType.ColumnIncluded;
             m_autoFitRow = false;
-            m_columnSplitterWidth = 10;
-            m_rowSplitterHeight = 3;
+            //m_columnSplitterWidth = 10;
+            //m_rowSplitterHeight = 3;
 
             m_reservedColumn = 0;
             m_reservedRow = 0;
@@ -145,7 +145,7 @@ namespace Ntreev.Library.Grid
             m_pRootRow.AddChild(m_pCaption);
             m_pRootRow.AddChild(m_groupPanel);
             m_pRootRow.AddChild(m_columnList);
-            m_pRootRow.AddChild(m_pDataRowList.GetInsertionRow());
+            m_pRootRow.AddChild(m_pDataRowList.InsertionRow);
             m_pRootRow.AddChild(m_pSplitterRow);
             m_pRootRow.AddChild(m_pDataRowList);
 
@@ -243,7 +243,7 @@ namespace Ntreev.Library.Grid
 
         public GrDataRow InsertionRow
         {
-            get { return m_pDataRowList.GetInsertionRow(); }
+            get { return m_pDataRowList.InsertionRow; }
         }
 
         public GrCaption CaptionRow
@@ -270,9 +270,15 @@ namespace Ntreev.Library.Grid
 
         public GrTextUpdater GetTextUpdater() { return m_pTextUpdater; }
 
-        public GrScroll GetHorzScroll() { return m_pGridWindow.GetHorzScroll(); }
+        public GrScroll HorzScroll
+        {
+            get { return m_pGridWindow.GetHorzScroll(); }
+        }
 
-        public GrScroll GetVertScroll() { return m_pGridWindow.GetVertScroll(); }
+        public GrScroll VertScroll
+        {
+            get { return m_pGridWindow.GetVertScroll(); }
+        }
 
         public GrGridWindow GetGridWindow() { return m_pGridWindow; }
 
@@ -287,13 +293,12 @@ namespace Ntreev.Library.Grid
                     return;
                 m_displayRect = value;
                 this.Update();
-                int horz = GetHorzScroll().IsVisible == true ? GetHorzScroll().Value : GetHorzScroll().Minimum;
-                int vert = GetVertScroll().IsVisible == true ? GetVertScroll().Value : GetVertScroll().Minimum;
+                int horz = this.HorzScroll.IsVisible == true ? this.HorzScroll.Value : this.HorzScroll.Minimum;
+                int vert = this.VertScroll.IsVisible == true ? this.VertScroll.Value : this.VertScroll.Minimum;
                 m_pRootRow.Clip(m_displayRect, horz, vert);
-                OnDisplayRectChanged(EventArgs.Empty);
+                this.OnDisplayRectangleChanged(EventArgs.Empty);
             }
         }
-
 
         public GrRect GetBounds()
         {
@@ -309,21 +314,17 @@ namespace Ntreev.Library.Grid
         {
 
             int left = m_columnList.GetUnfrozenX();
-            int top = m_pDataRowList.GetY();
+            int top = m_pDataRowList.Y;
             int right = Math.Min(GetBounds().Right, m_displayRect.Right);
             int bottom = Math.Min(GetBounds().Bottom, m_displayRect.Bottom);
             GrRect dataRect = GrRect.FromLTRB(left, top, right, bottom);
             return dataRect;
         }
 
-        public bool GetAutoFitColumn()
+        public bool AutoFitColumn
         {
-            return m_autoFitColumn;
-        }
-
-        public void SetAutoFitColumn(bool b)
-        {
-            m_autoFitColumn = b;
+            get { return m_autoFitColumn; }
+            set { m_autoFitColumn = value; }
         }
 
         public GrAutoFitColumnType GetAutoFitColumnType()
@@ -343,24 +344,16 @@ namespace Ntreev.Library.Grid
             }
         }
 
-        public bool GetAutoFitRow()
+        public bool AutoFitRow
         {
-            return m_autoFitRow;
+            get { return m_autoFitRow; }
+            set { m_autoFitRow = value; }
         }
 
-        public void SetAutoFitRow(bool b)
+        public bool IsInsertionRowVisible
         {
-            m_autoFitRow = b;
-        }
-
-        public bool GetInsertionRowVisible()
-        {
-            return InsertionRow.GetVisible();
-        }
-
-        public void SetInsertionRowVisible(bool b)
-        {
-            InsertionRow.SetVisible(b);
+            get { return this.InsertionRow.IsVisible; }
+            set { this.InsertionRow.IsVisible = value; }
         }
 
         public bool GetRowHighlight()
@@ -376,17 +369,16 @@ namespace Ntreev.Library.Grid
             Invalidate();
         }
 
-        public GrRowHighlightType GetRowHighlightType()
+        public GrRowHighlightType RowHighlightType
         {
-            return m_rowHighlightType;
-        }
-
-        public void SetRowHighlightType(GrRowHighlightType type)
-        {
-            if (m_rowHighlightType == type)
-                return;
-            m_rowHighlightType = type;
-            Invalidate();
+            get { return m_rowHighlightType; }
+            set
+            {
+                if (m_rowHighlightType == value)
+                    return;
+                m_rowHighlightType = value;
+                this.Invalidate();
+            }
         }
 
         public bool GetFullRowSelect()
@@ -438,20 +430,19 @@ namespace Ntreev.Library.Grid
 
         public bool IsGrouped()
         {
-            return m_groupPanel.GetGroupCount() > 0 ? true : false;
+            return m_groupPanel.Groups.Count > 0 ? true : false;
         }
 
         public bool IsUpdating() { return m_updating; }
 
-        public bool GetGroupable()
+        public bool IsGroupable
         {
-            return m_groupPanel.GetGroupable();
-        }
-
-        public void SetGroupable(bool b)
-        {
-            m_groupPanel.SetGroupable(b);
-            m_pRootRow.SetVisibleChanged();
+            get { return m_groupPanel.IsGroupable; }
+            set
+            {
+                m_groupPanel.IsGroupable = value;
+                m_pRootRow.SetVisibleChanged();
+            }
         }
 
         public bool GetColumnMovable()
@@ -631,7 +622,7 @@ namespace Ntreev.Library.Grid
 
             temp = reason;
 
-            if (pItem.GetDisplayable() == false)
+            if (pItem.IsDisplayable == false)
             {
                 pItem.BringIntoView();
             }
@@ -720,7 +711,7 @@ namespace Ntreev.Library.Grid
             if (pCell != null)
             {
                 pHitTest.pHitted = pCell;
-                pHitTest.localHit = location - pCell.GetLocation();
+                pHitTest.localHit = location - pCell.Location;
                 return true;
             }
             return false;
@@ -815,7 +806,7 @@ namespace Ntreev.Library.Grid
 
         public event EventHandler FontChanged;
 
-        public event EventHandler DisplayRectChanged;
+        public event EventHandler DisplayRectangleChanged;
 
         public event GrItemMouseEventHandler ItemMouseEnter;
 
@@ -848,10 +839,13 @@ namespace Ntreev.Library.Grid
             FontChanged(this, e);
         }
 
-        protected virtual void OnDisplayRectChanged(EventArgs e)
+        protected virtual void OnDisplayRectangleChanged(EventArgs e)
         {
-            DisplayRectChanged(this, e);
-            Invalidate();
+            if (this.DisplayRectangleChanged != null)
+            {
+                this.DisplayRectangleChanged(this, e);
+            }
+            this.Invalidate();
         }
 
         protected virtual void OnEditValue(GrEditEventArgs e)
@@ -949,16 +943,16 @@ namespace Ntreev.Library.Grid
         
         protected virtual void Paint(GrGridPainter painter, GrRect clipRect)
         {
-            m_painting = true;
+            //m_painting = true;
             m_pRootRow.Paint(painter, clipRect);
-            m_painting = false;
+            //m_painting = false;
         }
 
         protected virtual void PostPaint(GrGridPainter painter, GrRect clipRect)
         {
-            m_painting = true;
+            //m_painting = true;
             m_pStateManager.OnPaint(painter);
-            m_painting = false;
+            //m_painting = false;
         }
 
         private void focuser_FocusChanging(object sender, GrFocusChangeArgs e)
@@ -1017,8 +1011,8 @@ namespace Ntreev.Library.Grid
 
         internal void BeginPaint()
         {
-            int horz = GetHorzScroll().IsVisible == true ? GetHorzScroll().Value : GetHorzScroll().Minimum;
-            int vert = GetVertScroll().IsVisible == true ? GetVertScroll().Value : GetVertScroll().Minimum;
+            int horz = HorzScroll.IsVisible == true ? HorzScroll.Value : HorzScroll.Minimum;
+            int vert = VertScroll.IsVisible == true ? VertScroll.Value : VertScroll.Minimum;
             m_pRootRow.Clip(m_displayRect, horz, vert);
         }
 

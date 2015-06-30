@@ -33,7 +33,7 @@ namespace Ntreev.Library.Grid.States
         {
             m_row = GetResizingRow(e.GetCell() as GrRow, e.GetLocalHit());
 
-            GrRect rowRect = m_row.GetRect();
+            GrRect rowRect = m_row.Bounds;
 
             m_resizingStart = rowRect.Bottom;
             m_resizingLocation = rowRect.Bottom;
@@ -89,9 +89,9 @@ namespace Ntreev.Library.Grid.States
 
         public override void OnMouseDragEnd(bool cancel, GrHitTest hitTest)
         {
-            int newHeight = m_row.GetHeight() + (m_resizingLocation - m_resizingStart);
+            int newHeight = m_row.Height + (m_resizingLocation - m_resizingStart);
             GrRect displayRect = this.GridCore.DisplayRectangle;
-            if (m_row.GetHeight() != newHeight)
+            if (m_row.Height != newHeight)
             {
                 IDataRow p = m_row as IDataRow;
                 if (p != null && p.GetFullSelected() == true)
@@ -107,9 +107,9 @@ namespace Ntreev.Library.Grid.States
                             continue;
                         if (pDataRow.GetResizable() == false)
                             continue;
-                        pDataRow.SetHeight(newHeight);
+                        pDataRow.Height = newHeight;
 
-                        y = Math.Min(pDataRow.GetY(), y);
+                        y = Math.Min(pDataRow.Y, y);
                     }
 
                     if (y == int.MaxValue)
@@ -118,8 +118,8 @@ namespace Ntreev.Library.Grid.States
                 }
                 else
                 {
-                    m_row.SetHeight(newHeight);
-                    this.GridCore.Invalidate(displayRect.Left, m_row.GetY(), displayRect.Right, displayRect.Bottom);
+                    m_row.Height = newHeight;
+                    this.GridCore.Invalidate(displayRect.Left, m_row.Y, displayRect.Right, displayRect.Bottom);
                 }
             }
             else
@@ -138,7 +138,7 @@ namespace Ntreev.Library.Grid.States
         {
             int margin = row.GetResizingMargin();
 
-            if (localLocation.Y >= row.GetHeight() - margin)
+            if (localLocation.Y >= row.Height - margin)
             {
                 if (row.GetResizable() == true)
                     return row;

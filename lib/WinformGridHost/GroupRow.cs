@@ -26,7 +26,7 @@ namespace Ntreev.Windows.Forms.Grid
             get
             {
                 GrGroupHeader pGroupHeader = m_pGroupRow.GetLabel();
-                return pGroupHeader.GetText();
+                return pGroupHeader.Text;
             }
         }
     }

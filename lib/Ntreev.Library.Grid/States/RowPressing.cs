@@ -8,7 +8,7 @@ namespace Ntreev.Library.Grid.States
     class RowPressing : GrStateBase
     {
         GrRow m_row;
-        bool m_handled;
+        //bool m_handled;
 
         GrDataRowList m_pDataRowList;
         GrColumnList m_columnList;
@@ -29,11 +29,11 @@ namespace Ntreev.Library.Grid.States
 
         public override bool GetHitTest(GrCell pHitted, GrPoint localLocation)
         {
-            if (pHitted.GetCellType() != GrCellType.Row)
+            if (pHitted is GrRow == false)
                 return false;
             GrRow row = pHitted as GrRow;
             int margin = row.GetResizingMargin();
-            if (localLocation.Y < margin || localLocation.Y >= pHitted.GetHeight() - margin)
+            if (localLocation.Y < margin || localLocation.Y >= pHitted.Height - margin)
                 return false;
             return true;
         }
@@ -158,9 +158,9 @@ namespace Ntreev.Library.Grid.States
             if (m_targetIndex == m_pDataRowList.GetDataRowCount())
                 top = this.GridCore.GetDataRect().Bottom;
             else
-                top = m_pTargetDataRow.GetY();
+                top = m_pTargetDataRow.Y;
 
-            GrRect paintRect = GrRect.FromLTRB(m_pDataRowList.GetX(), top - 1, displayRect.Right, top + 1);
+            GrRect paintRect = GrRect.FromLTRB(m_pDataRowList.X, top - 1, displayRect.Right, top + 1);
             g.FillRectangle(paintRect, GrColor.Black);
         }
 
@@ -194,7 +194,7 @@ namespace Ntreev.Library.Grid.States
             {
                 GrDataRow pDataRow = hitTest.pHitted.GetRow() as GrDataRow;
 
-                if (pDataRow != null && pDataRow != m_pDataRowList.GetInsertionRow())
+                if (pDataRow != null && pDataRow != m_pDataRowList.InsertionRow)
                     m_pTargetDataRow = pDataRow;
 
                 if (m_pTargetDataRow == null)
@@ -226,7 +226,7 @@ namespace Ntreev.Library.Grid.States
 
         public override bool GetDragable()
         {
-            if (m_pDataRow == null || m_pDataRow == m_pDataRowList.GetInsertionRow())
+            if (m_pDataRow == null || m_pDataRow == m_pDataRowList.InsertionRow)
                 return false;
 
             if (this.GridCore.IsGrouped() == true || this.GridCore.GetRowMovable() == false)

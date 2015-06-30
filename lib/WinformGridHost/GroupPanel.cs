@@ -22,16 +22,16 @@ namespace Ntreev.Windows.Forms.Grid
         [Category("Layout")]
         public string Text
         {
-            get { return this.groupPanel.GetText(); }
-            set { this.groupPanel.SetText(value); }
+            get { return this.groupPanel.Text; }
+            set { this.groupPanel.Text = value; }
         }
 
         [Category("Appearance")]
         [DefaultValue(true)]
         public bool IsVisible
         {
-            get { return this.groupPanel.GetVisible(); }
-            set { this.groupPanel.SetVisible(value); }
+            get { return this.groupPanel.IsVisible; }
+            set { this.groupPanel.IsVisible = value; }
         }
 
         private bool ShouldSerializeText()

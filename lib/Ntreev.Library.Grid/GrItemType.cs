@@ -8,7 +8,9 @@ namespace Ntreev.Library.Grid
     public enum GrItemType
     {
         Control,
+
         DropDown,
+
         Modal,
     }
 }

@@ -11,51 +11,59 @@ namespace Ntreev.Library.Grid
 
         private readonly GrColumnList m_columnList;
         int m_x;
-        bool m_visible;
 
         public GrColumnSplitter(GrColumnList columnList)
         {
             this.m_columnList = columnList;
-            SetTextVisible(false);
-            SetText("ColumnSplitter");
-
-            m_visible = true;
+            this.IsTextVisible = false;
+            this.Text = "ColumnSplitter";
+            this.Width = DefaultSplitterWidth;
         }
 
 
-        public override GrCellType GetCellType() { return GrCellType.Splitter; }
-        public override int GetX()
+        //public override GrCellType GetCellType() { return GrCellType.Splitter; }
+
+        //public override int X
+        //{
+        //    get { return m_x; }
+        //}
+
+        //public override int Y
+        //{
+        //    get { return m_columnList.Y; }
+        //}
+
+        //public override int Width
+        //{
+        //    get { return DefaultSplitterWidth; }
+        //}
+
+        //public override int Height
+        //{
+        //    get
+        //    {
+        //        GrDataRowList dataRowList = this.GridCore.DataRowList;
+        //        return dataRowList.GetDisplayableBottom() - m_columnList.Y;
+        //    }
+        //}
+
+        public override GrHorzAlign TextHorzAlign
         {
-            return m_x;
-        }
-        public override int GetY()
-        {
-            return m_columnList.GetY(); 
-        }
-        public override int GetWidth()
-        {
-            return DefaultSplitterWidth;
-        }
-        public override int GetHeight()
-        {
-            GrDataRowList dataRowList = this.GridCore.DataRowList;
-            return dataRowList.GetDisplayableBottom() - m_columnList.GetY();
-        }
-        public override bool GetVisible()
-        {
-            return m_visible;
+            get { return GrHorzAlign.Left; }
         }
 
-        public override GrHorzAlign GetTextHorzAlign() { return GrHorzAlign.Left; }
-        public override GrVertAlign GetTextVertAlign() { return GrVertAlign.Top; }
-
-        public override bool GetDisplayable()
+        public override GrVertAlign TextVertAlign
         {
-            return true;
+            get { return GrVertAlign.Top; }
+        }
+
+        public override bool IsDisplayable
+        {
+            get { return true; }
         }
         public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
-            GrRect paintRect = this.GetRect();
+            GrRect paintRect = this.Bounds;
 
             painter.DrawItem(GrPaintStyle.Default, paintRect, this.GetPaintingLineColor(), this.GetPaintingBackColor(), null);
         }
@@ -65,20 +73,20 @@ namespace Ntreev.Library.Grid
             return m_columnList;
         }
 
-        public void SetVisible(bool b)
-        {
-            if (m_visible == b)
-                return;
-            m_visible = b;
+        
 
-            m_columnList.SetVisibleChanged();
-        }
         public GrColumnList GetColumnList()
         {
             return m_columnList;
         }
 
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+            m_columnList.SetVisibleChanged();
+        }
 
-        internal void SetX(int x) { m_x = x; }
+
+        //internal void SetX(int x) { m_x = x; }
     }
 }

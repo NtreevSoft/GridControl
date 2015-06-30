@@ -11,7 +11,7 @@ namespace Ntreev.Library.Grid.States
         GrColumn m_column;
         GrItem m_pItem;
 
-        GrEditingResult m_result;
+        //GrEditingResult m_result;
 
         public ItemEditing()
         {
@@ -68,7 +68,7 @@ namespace Ntreev.Library.Grid.States
 
         private GrGridState OnBegin(GrEditingReason reason)
         {
-            m_result = GrEditingResult.None;
+            //m_result = GrEditingResult.None;
             m_column = m_pItem.GetColumn();
             m_pItem.LockColor(true);
 

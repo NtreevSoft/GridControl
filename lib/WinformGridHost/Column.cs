@@ -263,7 +263,7 @@ namespace Ntreev.Windows.Forms.Grid
             }
             set
             {
-                m_pColumn.SetWidth(value);
+                m_pColumn.Width = value;
             }
         }
 
@@ -271,28 +271,16 @@ namespace Ntreev.Windows.Forms.Grid
         [DefaultValue(0)]
         public int MinWidth
         {
-            get
-            {
-                return m_pColumn.GetMinWidth();
-            }
-            set
-            {
-                m_pColumn.SetMinWidth(value);
-            }
+            get { return m_pColumn.MinWidth; }
+            set { m_pColumn.MinWidth = value; }
         }
 
         [Category("Layout")]
         [DefaultValue(0)]
         public int MaxWidth
         {
-            get
-            {
-                return m_pColumn.GetMaxWidth();
-            }
-            set
-            {
-                m_pColumn.SetMaxWidth(value);
-            }
+            get { return m_pColumn.MaxWidth; }
+            set { m_pColumn.MaxWidth = value; }
         }
 
         [Category("Behavior")]
@@ -304,11 +292,11 @@ namespace Ntreev.Windows.Forms.Grid
             {
                 if (m_propertyDescriptor != null && m_propertyDescriptor.IsBrowsable == false)
                     return false;
-                return m_pColumn.GetVisible();
+                return m_pColumn.IsVisible;
             }
             set
             {
-                m_pColumn.SetVisible(value);
+                m_pColumn.IsVisible = value;
             }
         }
 
@@ -317,14 +305,8 @@ namespace Ntreev.Windows.Forms.Grid
         [SettingsBindable(true)]
         public bool IsMovable
         {
-            get
-            {
-                return m_pColumn.GetMovable();
-            }
-            set
-            {
-                m_pColumn.SetMovable(value);
-            }
+            get { return m_pColumn.IsMovable; }
+            set { m_pColumn.IsMovable = value; }
         }
 
         [Category("Behavior")]
@@ -332,14 +314,8 @@ namespace Ntreev.Windows.Forms.Grid
         [SettingsBindable(true)]
         public bool IsResizable
         {
-            get
-            {
-                return m_pColumn.GetResizable();
-            }
-            set
-            {
-                m_pColumn.SetResizable(value);
-            }
+            get { return m_pColumn.IsResizable; }
+            set { m_pColumn.IsResizable = value; }
         }
 
         [Category("Behavior")]
@@ -347,14 +323,8 @@ namespace Ntreev.Windows.Forms.Grid
         [SettingsBindable(true)]
         public bool IsFrozen
         {
-            get
-            {
-                return m_pColumn.GetFrozen();
-            }
-            set
-            {
-                m_pColumn.SetFrozen(value);
-            }
+            get { return m_pColumn.IsFrozen; }
+            set { m_pColumn.IsFrozen = value; }
         }
 
         [Category("Behavior")]
@@ -367,7 +337,7 @@ namespace Ntreev.Windows.Forms.Grid
                 if (m_propertyDescriptor != null && m_propertyDescriptor.IsReadOnly == true)
                     return true;
 
-                return m_pColumn.GetReadOnly();
+                return m_pColumn.IsReadOnly;
             }
             set
             {
@@ -375,7 +345,7 @@ namespace Ntreev.Windows.Forms.Grid
                 {
                     throw new System.InvalidOperationException("읽기 전용으로 바인딩된 컬럼에는 설정할 수 없습니다.");
                 }
-                m_pColumn.SetReadOnly(value);
+                m_pColumn.IsReadOnly = value;
             }
         }
 
@@ -383,37 +353,22 @@ namespace Ntreev.Windows.Forms.Grid
         [DefaultValue(true)]
         public bool IsSortable
         {
-            get
-            {
-                return m_pColumn.GetSortable();
-            }
-            set
-            {
-                m_pColumn.SetSortable(value);
-            }
+            get { return m_pColumn.IsSortable; }
+            set { m_pColumn.IsSortable = value; }
         }
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsSelected
         {
-            get
-            {
-                return m_pColumn.GetSelected();
-            }
-            set
-            {
-                m_pColumn.SetSelected(value);
-            }
+            get { return m_pColumn.IsSelected; }
+            set { m_pColumn.IsSelected = value; }
         }
 
         [Browsable(false)]
         public bool IsFullSelected
         {
-            get
-            {
-                return m_pColumn.GetFullSelected();
-            }
+            get { return m_pColumn.IsFullSelected; }
         }
 
         [Category("Behavior")]
@@ -421,14 +376,8 @@ namespace Ntreev.Windows.Forms.Grid
         [SettingsBindable(true)]
         public bool IsGrouped
         {
-            get
-            {
-                return m_pColumn.GetGrouped();
-            }
-            set
-            {
-                m_pColumn.SetGrouped(value);
-            }
+            get { return m_pColumn.IsGrouped; }
+            set { m_pColumn.IsGrouped = value; }
         }
 
         [Category("Behavior")]
@@ -436,14 +385,8 @@ namespace Ntreev.Windows.Forms.Grid
         [SettingsBindable(true)]
         public bool IsGroupable
         {
-            get
-            {
-                return m_pColumn.GetGroupable();
-            }
-            set
-            {
-                m_pColumn.SetGroupable(value);
-            }
+            get { return m_pColumn.IsGroupable; }
+            set { m_pColumn.IsGroupable = value; }
         }
 
         [Browsable(false)]
@@ -816,7 +759,7 @@ namespace Ntreev.Windows.Forms.Grid
 
         internal void SyncDisplayText()
         {
-            m_pColumn.SetText(this.Title);
+            m_pColumn.Text = this.Title;
         }
 
         internal bool CanConvertFrom(Type dataType, Type sourceType)
@@ -981,9 +924,9 @@ namespace Ntreev.Windows.Forms.Grid
                 SetEditStyleToNative();
 
                 if (m_propertyDescriptor != null && m_propertyDescriptor.IsReadOnly == true)
-                    m_pColumn.SetReadOnly(true);
+                    m_pColumn.IsReadOnly = true;
                 if (m_propertyDescriptor != null && m_propertyDescriptor.IsBrowsable == false)
-                    m_pColumn.SetVisible(false);
+                    m_pColumn.IsVisible = false;
 
                 SyncDisplayText();
             }
@@ -1124,13 +1067,13 @@ namespace Ntreev.Windows.Forms.Grid
             switch (GetEditStyle())
             {
                 case Design.EditStyle.Control:
-                    m_pColumn.SetItemType(GrItemType.Control);
+                    m_pColumn.ItemType = GrItemType.Control;
                     break;
                 case Design.EditStyle.DropDown:
-                    m_pColumn.SetItemType(GrItemType.DropDown);
+                    m_pColumn.ItemType = GrItemType.DropDown;
                     break;
                 case Design.EditStyle.Modal:
-                    m_pColumn.SetItemType(GrItemType.Modal);
+                    m_pColumn.ItemType = GrItemType.Modal;
                     break;
             }
         }
@@ -1178,7 +1121,7 @@ namespace Ntreev.Windows.Forms.Grid
                     GrDataRow pDataRow = pDataRowList.GetVisibleDataRow(i);
                     GrItem pItem = pDataRow.GetItem(m_pColumn);
 
-                    texts.Add(pItem.GetText());
+                    texts.Add(pItem.Text);
                 }
 
                 return texts.ToArray();

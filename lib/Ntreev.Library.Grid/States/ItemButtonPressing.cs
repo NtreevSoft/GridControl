@@ -18,7 +18,7 @@ namespace Ntreev.Library.Grid.States
 
         public override bool GetHitTest(GrCell pHitted, GrPoint localLocation)
         {
-            if (pHitted.GetCellType() != GrCellType.Item)
+            if (pHitted is GrItem == false)
                 return false;
             return (pHitted as GrItem).HitMouseOverTest(localLocation) == (int)GrMouseOverState.Control;
         }

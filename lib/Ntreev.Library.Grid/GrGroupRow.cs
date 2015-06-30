@@ -53,18 +53,16 @@ namespace Ntreev.Library.Grid
 
         public string GetKey() { return m_key; }
 
-
-        protected override void OnHeightChanged()
+        protected override void OnSizeChanged(EventArgs e)
         {
-            base.OnHeightChanged();
-            SetTextAlignChanged();
+            base.OnSizeChanged(e);
+            this.SetTextAlignChanged();
         }
-
 
         protected virtual void OnUpdatePositionCell(int x, ref GrRect pBounds)
         {
             pBounds.X = x;
-            pBounds.Width = m_pLabel.GetX() + m_pLabel.GetWidth() - x;
+            pBounds.Width = m_pLabel.X + m_pLabel.Width - x;
         }
         protected override void OnGridCoreAttached()
         {
@@ -86,7 +84,7 @@ namespace Ntreev.Library.Grid
             m_column = column;
             m_itemText = itemText;
 
-            m_key = column.GetText();
+            m_key = column.Text;
             m_key += " | ";
             m_key += itemText;
         }
@@ -103,14 +101,14 @@ namespace Ntreev.Library.Grid
                 m_groupLevel = 0;
             }
 
-            string text = GetText();
+            string text = this.Text;
 
 
             //wchar_t itemText[30];
             //swprintf(itemText, 30, L" - %d items", GetChildCount());
             //text = m_itemText + itemText;
             //m_pLabel.SetText(text.c_str());
-            m_pLabel.SetText(m_itemText);
+            m_pLabel.Text = m_itemText;
         }
 
 

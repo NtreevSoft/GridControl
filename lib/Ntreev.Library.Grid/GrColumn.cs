@@ -7,240 +7,240 @@ namespace Ntreev.Library.Grid
 {
     public class GrColumn : GrCell
     {
-        GrColumnList m_columnList;
+        private GrColumnList columnList;
 
+        //private int x;
+        //private int width = 100;
+        private int fitWidth;
 
-        int m_x;
-        int m_width;
-        int m_fitWidth;
+        private int minWidth;
+        private int maxWidth;
 
-        int m_defaultWidth;
-        int m_minWidth;
-        int m_maxWidth;
+        private bool isReadOnly;
+        private bool isSortable = true;
+        private bool isGroupable = true;
+        private bool isMovable = true;
+        private bool isResizable = true;
+        internal bool isFrozen;
+        internal int selected;
+        private bool fitting;
+        private bool isGrouped;
 
-        bool m_visible;
-        bool m_readOnly;
-        bool m_sortable;
-        bool m_groupable;
-        bool m_movable;
-        bool m_resizable;
-        internal bool m_frozen;
-        internal int m_selected;
-        bool m_fitting;
-        bool m_grouped;
+        private int displayIndex = -1;
+        internal int visibleIndex = -1;
+        internal int visibleIndexCore = -1;
+        internal int index = -1;
+        private int columnID = -1;
 
-        int m_displayIndex;
-        internal int m_visibleIndex;
-        internal int m_visibleIndexCore;
-        int m_selectedIndex;
-        internal int m_index;
-        int m_columnID;
+        private bool displayable;
+        private bool clipped;
 
-        bool m_displayable;
-        bool m_clipped;
+        private GrItemType itemType;
+        private GrItemTypeShow itemTypeShow = GrItemTypeShow.SelectedOnly;
+        private GrHorzAlign itemHorzAlign;
+        private GrVertAlign itemVertAlign;
+        private bool itemWordWrap;
+        private bool itemMultiline;
+        private GrColor itemBackColor = GrColor.Empty;
+        private GrColor itemForeColor = GrColor.Empty;
+        private GrPadding itemPadding = GrPadding.Empty;
+        private GrFont pItemFont;
+        private GrClickEditing itemClickEditing;
+        private bool itemTextVisible = true;
+        private bool itemIcon;
+        private GrSize itemMinSize;
 
-        GrItemType m_itemType;
-        GrItemTypeShow m_itemTypeShow;
-        GrHorzAlign m_itemHorzAlign;
-        GrVertAlign m_itemVertAlign;
-        bool m_itemWordWrap;
-        bool m_itemMultiline;
-        GrColor m_itemBackColor;
-        GrColor m_itemForeColor;
-        GrPadding m_itemPadding;
-        GrFont m_pItemFont;
-        GrClickEditing m_itemClickEditing;
-        bool m_itemTextVisible;
-        bool m_itemIcon;
-        GrSize m_itemMinSize;
+        private readonly GrGroup group;
 
-        GrGroup m_pGroup;
+        private GrSort sortType;
+        private readonly GrFuncSortRow[] comparer;
 
-        GrSort m_sortType;
-        GrFuncSortRow[] m_comparer;
-
-        string m_tooltip;
-
+        private string tooltip;
 
         public GrColumn()
         {
-            m_columnList = null;
-            m_visible = true;
-            m_readOnly = false;
-            m_sortable = true;
-            m_groupable = true;
-            m_movable = true;
-            m_resizable = true;
-            m_frozen = false;
-            m_selected = 0;
-            m_fitting = false;
-            m_displayable = false;
-            m_clipped = false;
-            m_grouped = false;
+            //this.columnList = null;
+            //this.sortable = true;
+            //this.groupable = true;
+            //this.movable = true;
+            //this.isResizable = true;
+            //this.frozen = false;
+            //this.selected = 0;
+            //this.fitting = false;
+            //this.displayable = false;
+            //this.clipped = false;
+            //this.grouped = false;
 
-            m_visibleIndex = -1;
-            m_visibleIndexCore = -1;
-            m_displayIndex = -1;
-            m_index = -1;
-            m_columnID = -1;
+            //this.visibleIndex = -1;
+            //this.visibleIndexCore = -1;
+            //this.displayIndex = -1;
+            //this.index = -1;
+            //this.columnID = -1;
 
-            m_x = 0;
-            m_width = 100;
-            m_minWidth = 0;
-            m_maxWidth = 0;
-            m_sortType = GrSort.None;
-            m_fitWidth = 0;
+            //this.x = 0;
+            //this.width = 100;
+            //this.minWidth = 0;
+            //this.maxWidth = 0;
+            //this.sortType = GrSort.None;
+            //this.fitWidth = 0;
 
-            //m_freezablePriority = GetID();
-            //m_priority = GetID();
+            ////this.freezablePriority = GetID();
+            ////this.priority = GetID();
 
-            m_itemType = GrItemType.Control;
-            m_itemTypeShow = GrItemTypeShow.SelectedOnly;
-            m_itemHorzAlign = GrHorzAlign.Left;
-            m_itemVertAlign = GrVertAlign.Top;
-            m_itemWordWrap = false;
-            m_itemMultiline = false;
-            m_itemBackColor = GrColor.Empty;
-            m_itemForeColor = GrColor.Empty;
-            m_itemPadding = GrPadding.Empty;
-            m_pItemFont = null;
-            m_itemClickEditing = GrClickEditing.Default;
-            m_itemTextVisible = true;
-            m_itemIcon = false;
+            //this.itemType = GrItemType.Control;
+            //this.itemTypeShow = GrItemTypeShow.SelectedOnly;
+            //this.itemHorzAlign = GrHorzAlign.Left;
+            //this.itemVertAlign = GrVertAlign.Top;
+            //this.itemWordWrap = false;
+            //this.itemMultiline = false;
+            //this.itemBackColor = GrColor.Empty;
+            //this.itemForeColor = GrColor.Empty;
+            //this.itemPadding = GrPadding.Empty;
+            //this.pItemFont = null;
+            //this.itemClickEditing = GrClickEditing.Default;
+            //this.itemTextVisible = true;
+            //this.itemIcon = false;
 
-            m_comparer = new GrFuncSortRow[Enum.GetNames(typeof(GrSort)).Length];
-            //m_comparer[GrSort_None] = 0;
-            //m_comparer[GrSort_Up] = 0;
-            //m_comparer[GrSort_Down] = 0;
+            this.comparer = new GrFuncSortRow[Enum.GetNames(typeof(GrSort)).Length];
+            ////this.comparer[GrSort_None] = 0;
+            ////this.comparer[GrSort_Up] = 0;
+            ////this.comparer[GrSort_Down] = 0;
 
-            m_customItemPaint = false;
+            //this.customItemPaint = false;
 
-            m_fnColumnBackgroundPaint = null;
-            m_fnColumnContentsPaint = null;
-            m_columnPaintData = null;
+            //this.fnColumnBackgroundPaint = null;
+            //this.fnColumnContentsPaint = null;
+            //this.columnPaintData = null;
 
-            m_pGroup = new GrGroup(this);
+            this.group = new GrGroup(this);
+            this.Width = 100;
 
         }
 
         public GrColumnList GetColumnList()
         {
-            return m_columnList;
+            return this.columnList;
         }
 
-        public GrItemType GetItemType()
+        public GrItemType ItemType
         {
-            return m_itemType;
+            get { return this.itemType; }
+            set
+            {
+                if (this.itemType == value)
+                    return;
+                this.itemType = value;
+            }
         }
 
         public GrItemTypeShow GetItemTypeShow()
         {
-            return m_itemTypeShow;
+            return this.itemTypeShow;
         }
 
         public GrHorzAlign GetItemHorzAlign()
         {
-            return m_itemHorzAlign;
+            return this.itemHorzAlign;
         }
 
         public GrVertAlign GetItemVertAlign()
         {
-            return m_itemVertAlign;
+            return this.itemVertAlign;
         }
 
         public bool GetItemWordWrap()
         {
-            return m_itemWordWrap;
+            return this.itemWordWrap;
         }
 
         public bool GetItemMultiline()
         {
-            return m_itemMultiline;
+            return this.itemMultiline;
         }
 
         public GrColor GetItemForeColor()
         {
-            return m_itemForeColor;
+            return this.itemForeColor;
         }
 
         public GrColor GetItemBackColor()
         {
-            return m_itemBackColor;
+            return this.itemBackColor;
         }
 
         public GrFont GetItemFont()
         {
-            return m_pItemFont;
+            return this.pItemFont;
         }
 
         public GrPadding GetItemPadding()
         {
-            return m_itemPadding;
+            return this.itemPadding;
         }
 
         public GrClickEditing GetItemClickEditing()
         {
-            return m_itemClickEditing;
+            return this.itemClickEditing;
         }
 
         public bool GetItemTextVisible()
         {
-            return m_itemTextVisible;
+            return this.itemTextVisible;
         }
 
         public bool GetItemIcon()
         {
-            return m_itemIcon;
+            return this.itemIcon;
         }
 
         public GrSize GetItemMinSize()
         {
-            return m_itemMinSize;
+            return this.itemMinSize;
         }
 
         public int GetDisplayIndex()
         {
-            return m_displayIndex;
+            return this.displayIndex;
         }
 
         public int GetVisibleIndex()
         {
-            return m_visibleIndexCore;
+            return this.visibleIndexCore;
         }
 
         public void SetVisibleIndex(int index)
         {
-            m_visibleIndex = index;
+            this.visibleIndex = index;
 
-            if (m_index != -1)
+            if (this.index != -1)
             {
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_columnList.Invoke("ColumnVisibleIndexChanged", e);
+                this.columnList.Invoke("ColumnVisibleIndexChanged", e);
             }
         }
 
         public int GetFrozenIndex()
         {
-            if (m_frozen == true)
+            if (this.isFrozen == true)
                 throw new Exception();
-            return m_visibleIndexCore;
+            return this.visibleIndexCore;
         }
 
         public int GetUnfrozenIndex()
         {
-            if (m_frozen == false)
+            if (this.isFrozen == false)
                 throw new Exception();
-            return m_visibleIndexCore - this.GridCore.ColumnList.GetFrozenColumnCount();
+            return this.visibleIndexCore - this.GridCore.ColumnList.GetFrozenColumnCount();
         }
 
         public int GetIndex()
         {
-            return m_index;
+            return this.index;
         }
 
         public int GetColumnID()
         {
-            return m_columnID;
+            return this.columnID;
         }
 
         public int GetResizingMargin()
@@ -248,257 +248,230 @@ namespace Ntreev.Library.Grid
             GrFont pFont = this.GetPaintingFont();
             int margin = (int)((float)pFont.GetHeight() * 0.75f);
 
-            int width = this.GetWidth();
+            int width = this.Width;
             if (margin * 3 > width)
                 margin = (int)((float)width / 3.0f);
 
             return margin;
         }
 
-        public void SetItemType(GrItemType type)
-        {
-            if (m_itemType == type)
-                return;
-            m_itemType = type;
-        }
-
         public void SetItemHorzAlign(GrHorzAlign horzAlign)
         {
-            if (m_itemHorzAlign == horzAlign)
+            if (this.itemHorzAlign == horzAlign)
                 return;
-            m_itemHorzAlign = horzAlign;
-            if (m_index != -1)
+            this.itemHorzAlign = horzAlign;
+            if (this.index != -1)
             {
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_columnList.Invoke("ColumnHorzAlignChanged", e);
+                this.columnList.Invoke("ColumnHorzAlignChanged", e);
             }
         }
 
         public void SetItemVertAlign(GrVertAlign vertAlign)
         {
-            if (m_itemVertAlign == vertAlign)
+            if (this.itemVertAlign == vertAlign)
                 return;
-            m_itemVertAlign = vertAlign;
-            if (m_index != -1)
+            this.itemVertAlign = vertAlign;
+            if (this.index != -1)
             {
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_columnList.Invoke("ColumnVertAlignChanged", e);
+                this.columnList.Invoke("ColumnVertAlignChanged", e);
             }
         }
 
         public void SetItemWordWrap(bool b)
         {
-            if (m_itemWordWrap == b)
+            if (this.itemWordWrap == b)
                 return;
-            m_itemWordWrap = b;
-            if (m_index != -1)
+            this.itemWordWrap = b;
+            if (this.index != -1)
             {
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_columnList.Invoke("ColumnWordwrapChanged", e);
+                this.columnList.Invoke("ColumnWordwrapChanged", e);
             }
         }
 
         public void SetItemMultiline(bool b)
         {
-            if (m_itemMultiline == b)
+            if (this.itemMultiline == b)
                 return;
-            m_itemMultiline = b;
-            if (m_index != -1)
+            this.itemMultiline = b;
+            if (this.index != -1)
             {
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_columnList.Invoke("ColumnMultilineChanged", e);
+                this.columnList.Invoke("ColumnMultilineChanged", e);
             }
         }
 
         public void SetItemForeColor(GrColor color)
         {
-            m_itemForeColor = color;
+            this.itemForeColor = color;
             if (this.GridCore != null)
                 this.GridCore.Invalidate();
         }
 
         public void SetItemBackColor(GrColor color)
         {
-            m_itemBackColor = color;
+            this.itemBackColor = color;
             if (this.GridCore != null)
                 this.GridCore.Invalidate();
         }
 
         public void SetItemFont(GrFont pFont)
         {
-            m_pItemFont = pFont;
+            this.pItemFont = pFont;
             if (this.GridCore != null)
                 this.GridCore.Invalidate();
         }
 
         public void SetItemPadding(GrPadding padding)
         {
-            m_itemPadding = padding;
+            this.itemPadding = padding;
             if (this.GridCore != null)
                 this.GridCore.Invalidate();
-            if (m_index != -1)
+            if (this.index != -1)
             {
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_columnList.Invoke("ColumnPaddingChanged", e);
+                this.columnList.Invoke("ColumnPaddingChanged", e);
             }
         }
 
         public void SetItemClickEditing(GrClickEditing clickEditing)
         {
-            m_itemClickEditing = clickEditing;
+            this.itemClickEditing = clickEditing;
         }
 
         public void SetItemTextVisible(bool b)
         {
-            m_itemTextVisible = b;
+            this.itemTextVisible = b;
         }
 
         public void SetItemIcon(bool b)
         {
-            m_itemIcon = b;
+            this.itemIcon = b;
         }
 
         public void SetItemMinSize(GrSize size)
         {
-            m_itemMinSize = size;
+            this.itemMinSize = size;
         }
 
-        public bool GetMovable()
+        public bool IsMovable
         {
-            return m_movable;
+            get { return this.isMovable; }
+            set { this.isMovable = value; }
         }
 
-        public void SetMovable(bool b)
+        public bool IsResizable
         {
-            m_movable = b;
+            get { return this.isResizable; }
+            set { this.isResizable = value; }
         }
 
-        public bool GetResizable()
+        public bool IsFrozen
         {
-            return m_resizable;
-        }
-
-        public void SetResizable(bool b)
-        {
-            m_resizable = b;
-        }
-
-        public bool GetFrozen()
-        {
-            return m_frozen;
-        }
-
-        public void SetFrozen(bool b)
-        {
-            if (m_frozen == b)
-                return;
-            m_frozen = b;
-            if (m_index != -1)
+            get { return this.isFrozen; }
+            set
             {
-                GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_columnList.Invoke("ColumnFrozenChanged", e);
+                if (this.isFrozen == value)
+                    return;
+                this.isFrozen = value;
+                if (this.index != -1)
+                {
+                    GrColumnEventArgs e = new GrColumnEventArgs(this);
+                    this.columnList.Invoke("ColumnFrozenChanged", e);
+                }
             }
         }
 
-        public bool GetReadOnly()
+        public bool IsReadOnly
         {
-            if (this.GridCore != null && this.GridCore.GetReadOnly() == true)
-                return true;
-            return m_readOnly;
+            get
+            {
+                if (this.GridCore != null && this.GridCore.GetReadOnly() == true)
+                    return true;
+                return this.isReadOnly;
+            }
+            set
+            {
+                if (this.isReadOnly == value)
+                    return;
+                this.isReadOnly = value;
+            }
         }
 
-        public void SetReadOnly(bool b)
+        protected override void OnVisibleChanged(EventArgs e)
         {
-            if (m_readOnly == b)
-                return;
-            m_readOnly = b;
-        }
-
-        public void SetVisible(bool b)
-        {
-            if (m_visible == b)
-                return;
-
             if (this.GridCore != null)
             {
-                if (b == false)
+                if (this.IsVisible == false)
                 {
                     GrFocuser focuser = this.GridCore.Focuser;
                     if (focuser.GetFocusedColumn() == this)
                         focuser.Set(null as IFocusable);
-                    if (GetSelected() == true)
-                        SetSelected(false);
+                    if (this.IsSelected == true)
+                        this.IsSelected = false;
                 }
 
-                m_columnList.SetVisibleChanged();
+                this.columnList.SetVisibleChanged();
             }
 
-            m_visible = b;
+            base.OnVisibleChanged(e);
+        }
+       
+        public int MinWidth
+        {
+            get { return this.minWidth; }
+            set
+            {
+                this.minWidth = Math.Max(value, 0);
+                this.Width = this.Width;
+            }
         }
 
-        public void SetMinWidth(int minWidth)
+        public int MaxWidth
         {
-            if (minWidth < 0)
-                minWidth = 0;
-
-            m_minWidth = minWidth;
-
-            if (m_width < m_minWidth)
-                this.SetWidth(m_minWidth);
+            get { return this.maxWidth; }
+            set
+            {
+                this.maxWidth = Math.Max(value, 0);
+                this.Width = this.Width;
+            }
         }
 
-        public void SetMaxWidth(int maxWidth)
+        public bool IsSelected
         {
-            if (maxWidth < 0)
-                maxWidth = 0;
+            get { return this.selected > 0; }
+            set
+            {
+                if (this.GridCore == null)
+                    return;
 
-            m_maxWidth = maxWidth;
+                if (this.IsSelected == value)
+                    return;
 
-            if (m_width > maxWidth)
-                this.SetWidth(maxWidth);
+                GrItemSelector pItemSelector = this.GridCore.ItemSelector;
+                if (value == true)
+                    pItemSelector.SelectColumn(this, GrSelectionType.Add);
+                else
+                    pItemSelector.SelectColumn(this, GrSelectionType.Remove);
+            }
         }
 
-        public int GetMinWidth()
+        public bool IsFullSelected
         {
-            return m_minWidth;
-        }
-
-        public int GetMaxWidth()
-        {
-            return m_maxWidth;
-        }
-
-        public void SetSelected(bool b)
-        {
-            if (this.GridCore == null)
-                return;
-
-            if (GetSelected() == b)
-                return;
-
-            GrItemSelector pItemSelector = this.GridCore.ItemSelector;
-            if (b == true)
-                pItemSelector.SelectColumn(this, GrSelectionType.Add);
-            else
-                pItemSelector.SelectColumn(this, GrSelectionType.Remove);
-        }
-
-        public bool GetSelected()
-        {
-            return m_selected > 0;
-        }
-
-        public bool GetFullSelected()
-        {
-            if (this.GridCore == null)
-                return false;
-            GrDataRowList dataRowList = this.GridCore.DataRowList;
-            if (dataRowList.GetInsertionRow().GetSelected() == true)
-                return false;
-            int visibles = (int)dataRowList.GetVisibleDataRowCount();
-            if (visibles == 0)
-                return false;
-            return m_selected == visibles;
+            get
+            {
+                if (this.GridCore == null)
+                    return false;
+                GrDataRowList dataRowList = this.GridCore.DataRowList;
+                if (dataRowList.InsertionRow.IsSelected == true)
+                    return false;
+                int visibles = (int)dataRowList.GetVisibleDataRowCount();
+                if (visibles == 0)
+                    return false;
+                return this.selected == visibles;
+            }
         }
 
         public bool GetSelecting()
@@ -526,17 +499,17 @@ namespace Ntreev.Library.Grid
 
         public void AdjustWidth()
         {
-            if (m_fitting == false)
+            if (this.fitting == false)
                 return;
 
             GrDataRowList dataRowList = this.GridCore.DataRowList;
 
-            int width = m_minWidth;
+            int width = this.minWidth;
 
             if (this.GridCore.GetAutoFitColumnType() == GrAutoFitColumnType.ColumnIncluded)
             {
                 int columnWidth = GetPreferredSize().Width;
-                width = Math.Max(m_minWidth, columnWidth);
+                width = Math.Max(this.minWidth, columnWidth);
             }
 
             for (int i = 0; i < dataRowList.GetVisibleDataRowCount(); i++)
@@ -555,193 +528,208 @@ namespace Ntreev.Library.Grid
                 width = Math.Max(width, itemWidth);
             }
 
-            if (GetItemType() != GrItemType.Control)
+            if (this.ItemType != GrItemType.Control)
                 width += GrDefineUtility.DEF_CONTROL_WIDTH;
 
-            if (m_maxWidth != 0)
-                width = Math.Min(width, m_maxWidth);
+            if (this.maxWidth != 0)
+                width = Math.Min(width, this.maxWidth);
 
-            if (m_width != width)
+            if (this.Width != width)
             {
-                m_fitWidth = m_width = width;
+                this.fitWidth = this.Width = width;
 
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_columnList.Invoke("ColumnWidthChanged", e);
+                this.columnList.Invoke("ColumnWidthChanged", e);
             }
-            m_fitting = false;
+            this.fitting = false;
         }
 
         public void SetFit()
         {
-            if (m_fitting == true)
+            if (this.fitting == true)
                 return;
-            m_fitting = true;
-            m_columnList.SetFitChanged();
+            this.fitting = true;
+            this.columnList.SetFitChanged();
         }
 
-        public void SetSortable(bool b)
+        public bool IsSortable
         {
-            m_sortable = b;
+            get { return this.isSortable; }
+            set { this.isSortable = value; }
         }
 
-        public bool GetSortable()
+        public bool IsGroupable
         {
-            return m_sortable;
+            get { return this.isGroupable; }
+            set { this.isGroupable = value; }
         }
 
-        public void SetGroupable(bool b)
+        public bool IsClipped
         {
-            m_groupable = b;
-        }
-
-        public bool GetGroupable()
-        {
-            return m_groupable;
-        }
-
-        public void SetClipped(bool b)
-        {
-            m_clipped = b;
-        }
-
-        public bool GetClipped()
-        {
-            return m_clipped;
+            get { return this.clipped; }
+            internal set { this.clipped = value; }
         }
 
         public bool ShouldBringIntoView()
         {
-            if (m_displayable == false || m_clipped == true)
+            if (this.displayable == false || this.clipped == true)
                 return true;
-            if (m_frozen == true)
+            if (this.isFrozen == true)
                 return false;
             return false;
         }
 
-        public void SetWidth(int width)
+        protected override void SetBounds(int x, int y, int width, int height)
         {
-            if (m_minWidth != 0)
-                width = Math.Max(width, m_minWidth);
-            if (m_maxWidth != 0)
-                width = Math.Min(width, m_maxWidth);
+            if (this.minWidth != 0)
+                width = Math.Max(width, this.minWidth);
+            if (this.maxWidth != 0)
+                width = Math.Min(width, this.maxWidth);
 
-            if (m_width == width)
-                return;
+            base.SetBounds(x, y, width, height);
+        }
 
-            m_width = width;
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
 
-            if (m_index != -1)
+            if (this.index != -1)
             {
-                GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_columnList.Invoke("ColumnWidthChanged", e);
+                this.columnList.Invoke("ColumnWidthChanged", new GrColumnEventArgs(this));
 
                 GrTextUpdater pTextUpdater = this.GridCore.GetTextUpdater();
                 pTextUpdater.AddTextBoundsByColumn(this);
             }
         }
 
+        //public void SetWidth(int width)
+        //{
+        //    if (this.minWidth != 0)
+        //        width = Math.Max(width, this.minWidth);
+        //    if (this.maxWidth != 0)
+        //        width = Math.Min(width, this.maxWidth);
+
+        //    if (this.width == width)
+        //        return;
+
+        //    this.width = width;
+
+        //    if (this.index != -1)
+        //    {
+        //        GrColumnEventArgs e = new GrColumnEventArgs(this);
+        //        this.columnList.Invoke("ColumnWidthChanged", e);
+
+        //        GrTextUpdater pTextUpdater = this.GridCore.GetTextUpdater();
+        //        pTextUpdater.AddTextBoundsByColumn(this);
+        //    }
+        //}
+
         public void SetTooltip(string tooltip)
         {
-            m_tooltip = tooltip;
+            this.tooltip = tooltip;
         }
 
         public string GetTooltip()
         {
-            return m_tooltip;
+            return this.tooltip;
         }
 
-        public bool GetGrouped()
+        public bool IsGrouped
         {
-            return m_grouped;
+            get { return this.isGrouped; }
+            set
+            {
+                if (this.isGrouped == value)
+                    return;
+
+                this.isGrouped = value;
+                this.GroupChanged(this, EventArgs.Empty);
+            }
         }
 
-        public void SetGrouped(bool b)
+        public GrGroup Group
         {
-            if (m_grouped == b)
-                return;
-
-            m_grouped = b;
-            GroupChanged(this, EventArgs.Empty);
-        }
-
-        public GrGroup GetGroup()
-        {
-            return m_pGroup;
+            get { return this.group; }
         }
 
         public void SetSortType(GrSort sortType)
         {
-            if (m_sortable == false)
+            if (this.isSortable == false)
                 return;
-            if (m_columnList == null)
+            if (this.columnList == null)
                 return;
-            m_sortType = sortType;
-            if (m_index != -1)
+            this.sortType = sortType;
+            if (this.index != -1)
             {
                 GrColumnEventArgs e = new GrColumnEventArgs(this);
-                m_columnList.Invoke("ColumnSortTypeChanged", e);
+                this.columnList.Invoke("ColumnSortTypeChanged", e);
             }
         }
 
         public GrSort GetSortType()
         {
-            if (m_columnList == null)
+            if (this.columnList == null)
                 return GrSort.None;
-            if (m_columnList.GetFirstSortColumn() != this)
+            if (this.columnList.GetFirstSortColumn() != this)
                 return GrSort.None;
-            return m_sortType;
+            return this.sortType;
         }
 
         public void SetSortComparer(GrSort sortType, GrFuncSortRow comparer)
         {
-            m_comparer[(int)sortType] = comparer;
+            this.comparer[(int)sortType] = comparer;
         }
 
         public GrFuncSortRow GetSortComparer(GrSort sortType)
         {
-            return m_comparer[(int)sortType];
+            return this.comparer[(int)sortType];
         }
 
-        public override GrCellType GetCellType() { return GrCellType.Column; }
+        //public override GrCellType GetCellType() { return GrCellType.Column; }
 
-        public override int GetX()
+        //public override int X
+        //{
+        //    get { return this.x; }
+        //}
+
+        //public override int Y
+        //{
+        //    get
+        //    {
+        //        if (this.columnList == null)
+        //            return 0;
+        //        return this.columnList.Y;
+        //    }
+        //}
+
+        //public override int Width
+        //{
+        //    get { return this.width; }
+        //}
+
+        //public override int Height
+        //{
+        //    get
+        //    {
+        //        if (this.columnList == null)
+        //            return 0;
+        //        return this.columnList.Height;
+        //    }
+        //}
+
+        //public override bool IsVisible
+        //{
+        //    get { return this.isVisible; }
+        //}
+
+        public override GrHorzAlign TextHorzAlign
         {
-            return m_x;
+            get { return GrHorzAlign.Center; }
         }
 
-        public override int GetY()
+        public override GrVertAlign TextVertAlign
         {
-            if (m_columnList == null)
-                return 0;
-            return m_columnList.GetY();
-        }
-
-        public override int GetWidth()
-        {
-            return m_width;
-        }
-
-        public override int GetHeight()
-        {
-            if (m_columnList == null)
-                return 0;
-            return m_columnList.GetHeight();
-        }
-
-        public override bool GetVisible()
-        {
-
-            return m_visible;
-        }
-
-        public override GrHorzAlign GetTextHorzAlign()
-        {
-            return GrHorzAlign.Center;
-        }
-
-        public override GrVertAlign GetTextVertAlign()
-        {
-            return GrVertAlign.Center;
+            get { return GrVertAlign.Center; }
         }
 
         public override GrColor GetForeColor()
@@ -798,17 +786,17 @@ namespace Ntreev.Library.Grid
 
         public override GrRow GetRow()
         {
-            return m_columnList;
+            return this.columnList;
         }
 
         public override GrPaintStyle ToPaintStyle()
         {
             GrPaintStyle flag = base.ToPaintStyle();
-            if (GetSelecting() == true || GetSelected() == true)
+            if (GetSelecting() == true || this.IsSelected == true)
                 flag |= GrPaintStyle.Selected;
             if (HasFocused() == true)
                 flag |= GrPaintStyle.Focused;
-            if (GetClipped() == true)
+            if (this.IsClipped == true)
                 flag &= ~GrPaintStyle.RightLine;
 
             return flag;
@@ -829,36 +817,39 @@ namespace Ntreev.Library.Grid
             if (pStyle == null)
                 pStyle = GrStyle.Default;
             GrColor backColor;
-            if (GetGrouped() == true)
-                backColor = pStyle.GetGroupBackColor(GetGroup().GetGroupLevel());
+            if (this.IsGrouped == true)
+                backColor = pStyle.GetGroupBackColor(this.Group.GetGroupLevel());
             else
                 backColor = base.GetPaintingBackColor();
 
             return backColor;
         }
 
-        public override bool GetDisplayable()
+        public override bool IsDisplayable
         {
-            if (this.GetVisible() == false)
-                return false;
-            return m_displayable;
+            get
+            {
+                if (this.IsVisible == false)
+                    return false;
+                return this.displayable;
+            }
         }
 
         public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
-            GrRect paintRect = GetRect();
+            GrRect paintRect = this.Bounds;
 
-            if (m_fnColumnBackgroundPaint == null || m_fnColumnBackgroundPaint(painter, this, paintRect, m_columnPaintData) == false)
+            if (this.fnColumnBackgroundPaint == null || this.fnColumnBackgroundPaint(painter, this, paintRect, this.columnPaintData) == false)
             {
                 GrPaintStyle paintStyle = this.ToPaintStyle();
                 GrColor backColor = GetPaintingBackColor();
-                if (GetClipped() == true)
+                if (this.IsClipped == true)
                     painter.DrawColumn(paintStyle, paintRect, GetPaintingLineColor(), backColor, clipRect);
                 else
                     painter.DrawColumn(paintStyle, paintRect, GetPaintingLineColor(), backColor, null);
             }
 
-            if (m_fnColumnContentsPaint == null || m_fnColumnContentsPaint(painter, this, paintRect, m_columnPaintData) == false)
+            if (this.fnColumnContentsPaint == null || this.fnColumnContentsPaint(painter, this, paintRect, this.columnPaintData) == false)
             {
                 GrColor foreColor = GetPaintingForeColor();
 
@@ -882,10 +873,10 @@ namespace Ntreev.Library.Grid
                 if (GetTextLineCount() > 0)
                 {
                     GrLineDesc cl = GetTextLine(0);
-                    if (GetClipped() == true)
-                        painter.DrawColumnText(GetPaintingFont(), GetText() + cl.textBegin, cl.length, textRect, foreColor, clipRect);
+                    if (this.IsClipped == true)
+                        painter.DrawColumnText(GetPaintingFont(), this.Text + cl.textBegin, cl.length, textRect, foreColor, clipRect);
                     else
-                        painter.DrawColumnText(GetPaintingFont(), GetText() + cl.textBegin, cl.length, textRect, foreColor, null);
+                        painter.DrawColumnText(GetPaintingFont(), this.Text + cl.textBegin, cl.length, textRect, foreColor, null);
                 }
             }
         }
@@ -895,8 +886,8 @@ namespace Ntreev.Library.Grid
         protected override void OnGridCoreAttached()
         {
             base.OnGridCoreAttached();
-            m_columnList = this.GridCore.ColumnList;
-            this.GridCore.AttachObject(m_pGroup);
+            this.columnList = this.GridCore.ColumnList;
+            this.GridCore.AttachObject(this.group);
         }
 
         protected override void OnGridCoreDetached()
@@ -908,8 +899,8 @@ namespace Ntreev.Library.Grid
                 this.GridCore.SetMouseUnpress();
 
             base.OnGridCoreDetached();
-            this.GridCore.DetachObject(m_pGroup);
-            m_columnList = null;
+            this.GridCore.DetachObject(this.group);
+            this.columnList = null;
         }
 
         protected override void OnTextChanged()
@@ -918,40 +909,40 @@ namespace Ntreev.Library.Grid
             if (this.GridCore == null)
                 return;
 
-            if (this.GetDisplayable() == false)
+            if (this.IsDisplayable == false)
                 return;
-            this.GridCore.Invalidate(GetRect());
+            this.GridCore.Invalidate(this.Bounds);
         }
 
-        internal void SetX(int x) { m_x = x; }
+        //internal void SetX(int x) { this.x = x; }
 
         internal void SetDisplayable(bool b)
         {
-            m_displayable = b;
+            this.displayable = b;
         }
 
         internal void SetDisplayIndex(int index)
         {
-            m_displayIndex = index;
+            this.displayIndex = index;
         }
 
         internal void SetIndex(int index)
         {
-            m_index = index;
+            this.index = index;
         }
 
         internal void SetColumnID(int id)
         {
-            m_columnID = id;
+            this.columnID = id;
         }
 
-        public bool m_customItemPaint;
+        public bool customItemPaint;
 
-        public GrFuncColumnPaint m_fnColumnBackgroundPaint;
+        public GrFuncColumnPaint fnColumnBackgroundPaint;
 
-        public GrFuncColumnPaint m_fnColumnContentsPaint;
+        public GrFuncColumnPaint fnColumnContentsPaint;
 
-        public object m_columnPaintData;
+        public object columnPaintData;
 
         class SortColumnByVisible : IComparer<GrColumn>
         {
@@ -967,14 +958,14 @@ namespace Ntreev.Library.Grid
         //private:
         public bool ShouldSerializeWidth()
         {
-            if (m_width == 100)
+            if (this.Width == 100)
                 return false;
-            return m_width != m_fitWidth;
+            return this.Width != this.fitWidth;
         }
 
         public bool ShouldSerializeVisibleIndex()
         {
-            return m_visibleIndex != GrDefineUtility.INVALID_INDEX;
+            return this.visibleIndex != GrDefineUtility.INVALID_INDEX;
         }
     }
 }

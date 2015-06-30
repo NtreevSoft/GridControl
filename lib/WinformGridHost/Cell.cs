@@ -344,11 +344,11 @@ namespace Ntreev.Windows.Forms.Grid
             if (m_text != null)
             {
                 this.Row.m_textCapacity += m_text.Length;
-                this.NativeRef.SetText(m_text);
+                this.NativeRef.Text = m_text;
             }
             else
             {
-                this.NativeRef.SetText("");
+                this.NativeRef.Text = string.Empty;
             }
         }
 

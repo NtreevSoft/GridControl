@@ -30,39 +30,51 @@ namespace Ntreev.Library.Grid
             m_pExpander = new GrExpander(this);
         }
 
-        public override int GetY()
-        {
-            if (m_pDataRowList == null)
-                throw new Exception("GridCore에 붙지 않았음");
+        //public override int Y
+        //{
+        //    get
+        //    {
+        //        if (m_pDataRowList == null)
+        //            throw new Exception("GridCore에 붙지 않았음");
 
-            if (m_visibleIndex < 0)
-                return base.GetY();
-            return base.GetY() - m_pDataRowList.GetDisplayOffset();
+        //        if (m_visibleIndex < 0)
+        //            return base.Y;
+        //        return base.Y - m_pDataRowList.GetDisplayOffset();
+        //    }
+        //}
+
+        //public override int Width
+        //{
+        //    get
+        //    {
+        //        if (m_pDataRowList == null)
+        //            return 0;
+        //        if (this.GridCore.GetRowVisible() == false)
+        //            return 0;
+        //        return m_pDataRowList.GetRowWidth();
+        //    }
+        //}
+
+        public override bool IsVisible
+        {
+            get
+            {
+                IDataRow pParent = this.GetParent() as IDataRow;
+                if (pParent == null)
+                    return base.IsVisible;
+
+                return pParent.IsExpanded();
+            }
         }
 
-        public override int GetWidth()
+        public override bool IsDisplayable
         {
-            if (m_pDataRowList == null)
-                return 0;
-            if (this.GridCore.GetRowVisible() == false)
-                return 0;
-            return m_pDataRowList.GetRowWidth();
-        }
-
-        public override bool GetVisible()
-        {
-            IDataRow pParent = this.GetParent() as IDataRow;
-            if (pParent == null)
-                return base.GetVisible();
-
-            return pParent.IsExpanded();
-        }
-
-        public override bool GetDisplayable()
-        {
-            if (this.GetVisible() == false)
-                return false;
-            return m_displayable;
+            get
+            {
+                if (this.IsVisible == false)
+                    return false;
+                return m_displayable;
+            }
         }
 
         public override sealed GrCell HitTest(GrPoint location)
@@ -70,7 +82,7 @@ namespace Ntreev.Library.Grid
             if (ContainsVert(location.Y) == false)
                 return null;
 
-            if (m_pExpander.GetVisible() == true && m_pExpander.ContainsHorz(location.X) == true)
+            if (m_pExpander.IsVisible == true && m_pExpander.ContainsHorz(location.X) == true)
                 return m_pExpander;
 
             GrCell pCell = OnHitTest(location.X);
@@ -83,7 +95,7 @@ namespace Ntreev.Library.Grid
             return this;
         }
 
-        public void SetDisplayable(bool b)
+        internal void SetDisplayable(bool b)
         {
             if (m_displayable == b)
                 return;
@@ -91,7 +103,7 @@ namespace Ntreev.Library.Grid
             OnDisplayableChanged();
         }
 
-        public void SetVisibleIndex(int index)
+        internal void SetVisibleIndex(int index)
         {
             m_visibleIndex = index;
             OnVisibleChanged();
@@ -131,7 +143,7 @@ namespace Ntreev.Library.Grid
 
         public override bool ShouldBringIntoView()
         {
-            if (GetVisible() == false)
+            if (this.IsVisible == false)
                 throw new Exception("");
             if (m_displayable == false || m_clipped == true)
                 return true;
@@ -177,7 +189,7 @@ namespace Ntreev.Library.Grid
 
         public int GetDataDepth()
         {
-            return GetDepth() - (m_pDataRowList.GetDepth() + 1);
+            return this.Depth - (m_pDataRowList.Depth + 1);
         }
 
         public int GetSelectionGroup() { return m_selectionGroup; }
@@ -248,7 +260,7 @@ namespace Ntreev.Library.Grid
 
         public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
-            GrRect paintRect = GetRect();
+            GrRect paintRect = this.Bounds;
             GrPaintStyle paintStyle = ToPaintStyle();
             GrColor foreColor = GetPaintingForeColor();
             GrColor backColor = GetPaintingBackColor();
@@ -292,9 +304,10 @@ namespace Ntreev.Library.Grid
             m_pDataRowList.SetHeightChanged();
         }
 
-        protected override void OnHeightChanged()
+        protected override void OnSizeChanged(EventArgs e)
         {
-            base.OnHeightChanged();
+            base.OnSizeChanged(e);
+        
             if (m_pDataRowList != null)
                 m_pDataRowList.SetHeightChanged();
         }
@@ -327,7 +340,7 @@ namespace Ntreev.Library.Grid
 
         protected void DrawExpander(GrGridPainter painter, GrRect clipRect)
         {
-            if (m_pExpander.GetVisible() == false)
+            if (m_pExpander.IsVisible == false)
                 return;
             m_pExpander.Paint(painter, clipRect);
         }

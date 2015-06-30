@@ -190,7 +190,7 @@ namespace Ntreev.Windows.Forms.Grid
         {
             get
             {
-                GrDataRow pDataRow = m_pDataRowList.GetInsertionRow();
+                GrDataRow pDataRow = m_pDataRowList.InsertionRow;
                 Row row = Ntreev.Windows.Forms.Grid.FromNative.Get(pDataRow);
                 if (row == null)
                     row = this.GridControl.CreateRow(pDataRow);

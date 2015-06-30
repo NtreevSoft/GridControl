@@ -18,9 +18,9 @@ namespace Ntreev.Library.Grid
         public void SetMousePress(GrCell pCell)
         {
             if (m_pMousePressed != null)
-                this.GridCore.Invalidate(m_pMousePressed.GetRect());
+                this.GridCore.Invalidate(m_pMousePressed.Bounds);
             if (pCell != null)
-                this.GridCore.Invalidate(pCell.GetRect());
+                this.GridCore.Invalidate(pCell.Bounds);
 
             m_pMousePressed = pCell;
         }
@@ -28,7 +28,7 @@ namespace Ntreev.Library.Grid
         public void SetMouseUnpress()
         {
             if (m_pMousePressed != null)
-                this.GridCore.Invalidate(m_pMousePressed.GetRect());
+                this.GridCore.Invalidate(m_pMousePressed.Bounds);
             m_pMousePressed = null;
         }
 

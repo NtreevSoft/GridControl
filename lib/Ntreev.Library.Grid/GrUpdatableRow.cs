@@ -51,10 +51,10 @@ namespace Ntreev.Library.Grid
             this.GridCore.RootRow.SetFitChanged();
         }
 
-        protected override void OnHeightChanged()
+        protected override void OnSizeChanged(EventArgs e)
         {
-            base.OnHeightChanged();
-
+            base.OnSizeChanged(e);
+        
             if (this.GridCore == null)
                 return;
             this.GridCore.RootRow.SetHeightChanged();

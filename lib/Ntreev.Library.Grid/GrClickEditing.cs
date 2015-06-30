@@ -8,8 +8,11 @@ namespace Ntreev.Library.Grid
     public enum GrClickEditing
     {
         Default,
+
         Click,
+
         DoubleClick,
+
         FocusedClick
     }
 }

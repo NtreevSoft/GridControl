@@ -25,9 +25,9 @@ namespace Ntreev.Library.Grid
             if (success == true)
             {
                 if (m_pMouseOvered != null)
-                    this.GridCore.Invalidate(m_pMouseOvered.GetRect());
+                    this.GridCore.Invalidate(m_pMouseOvered.Bounds);
                 if (pCell != null)
-                    this.GridCore.Invalidate(pCell.GetRect());
+                    this.GridCore.Invalidate(pCell.Bounds);
             }
 
             m_pMouseOvered = pCell;
@@ -42,7 +42,7 @@ namespace Ntreev.Library.Grid
             {
                 success = true;
                 if (m_pMouseOvered != null)
-                    this.GridCore.Invalidate(m_pMouseOvered.GetRect());
+                    this.GridCore.Invalidate(m_pMouseOvered.Bounds);
             }
             m_mouseOverState = state;
             return success;

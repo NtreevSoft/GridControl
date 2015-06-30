@@ -9,85 +9,86 @@ namespace Ntreev.Library.Grid
     {
         public static int DefaultHeight = 21;
 
-        protected bool m_visible;
+        //private bool isVisible;
 
-        private readonly List<GrRow> m_vecChilds = new List<GrRow>();
-        GrRow m_pParent;
-        int m_depth;
-        uint m_id;
+        private readonly List<GrRow> childs = new List<GrRow>();
+        private GrRow parent;
+        private int depth;
+        private uint id;
 
-        int m_y;
-        int m_height;
+        //private int y;
+        //private int height;
 
-        bool m_resizable;
-        bool m_fitting;
+        private bool isResizable;
+        private bool fitting;
 
-
-        static uint m_snID;
+        private static uint snID;
 
         public GrRow()
         {
-            m_id = m_snID++;
-            m_y = 0;
-            m_visible = true;
-            m_resizable = true;
+            this.id = snID++;
+            //this.y = 0;
+            //this.isVisible = true;
+            this.isResizable = true;
 
-            m_height = DefaultHeight;
-            m_pParent = null;
-            m_depth = 0;
-            m_fitting = false;
+            //this.height = DefaultHeight;
+            this.parent = null;
+            this.depth = 0;
+            this.fitting = false;
+
+            this.Height = DefaultHeight;
         }
 
-        public void SetY(int y)
-        {
-            if (m_y == y)
-                return;
-            m_y = y;
-            this.OnYChanged();
-        }
+        //public void SetY(int y)
+        //{
+        //    if (this.y == y)
+        //        return;
+        //    this.y = y;
+        //    this.OnYChanged();
+        //}
 
-        public void SetHeight(int height)
-        {
-            if (m_height == height)
-                return;
+        //public void SetHeight(int height)
+        //{
+        //    if (this.height == height)
+        //        return;
 
-            m_height = height;
-            this.OnHeightChanged();
-        }
+        //    this.height = height;
+        //    this.OnHeightChanged();
+        //}
 
         public void SetResizable(bool b)
         {
-            m_resizable = b;
+            this.isResizable = b;
         }
 
         public void AdjustHeight()
         {
-            if (m_fitting == false)
+            if (this.fitting == false)
                 return;
 
             int height = this.GetMinHeight();
 
-            if (m_height != height)
+            if (this.Height != height)
             {
-                this.SetHeight(height);
+                this.Height = height;
                 this.OnHeightAdjusted();
             }
-            m_fitting = false;
+            this.fitting = false;
         }
 
-        public override int GetY()
-        {
-            return m_y;
-        }
+        //public override int Y
+        //{
+        //    get { return this.y; }
+        //}
 
-        public override int GetHeight()
-        {
-            return m_height;
-        }
+        //public override int Height
+        //{
+        //    get { return this.height; }
+        //}
 
         public virtual bool GetResizable()
         {
-            return m_resizable;
+            return this.isResizable;
         }
 
         public virtual int GetMinHeight()
@@ -102,36 +103,40 @@ namespace Ntreev.Library.Grid
 
         public override GrRow GetRow() { return this; }
 
-        public override GrCellType GetCellType() { return GrCellType.Row; }
+        //public override GrCellType GetCellType() { return GrCellType.Row; }
 
-        public override int GetX()
+        //public override int X
+        //{
+        //    get { return this.GridCore.DisplayRectangle.Left; }
+        //}
+
+        public override bool IsDisplayable
         {
-            return this.GridCore.DisplayRectangle.Left;
+            get { return true; }
         }
 
-        public override bool GetDisplayable() { return true; }
+        //public override bool IsVisible
+        //{
+        //    get { return this.isVisible; }
+        //}
 
-        public override bool GetVisible()
+        public override GrHorzAlign TextHorzAlign
         {
-            return m_visible;
+            get { return GrHorzAlign.Center; }
         }
 
-        public override GrHorzAlign GetTextHorzAlign()
+        public override GrVertAlign TextVertAlign
         {
-            return GrHorzAlign.Center;
-        }
-
-        public override GrVertAlign GetTextVertAlign()
-        {
-            return GrVertAlign.Center;
+            get { return GrVertAlign.Center; }
         }
 
         public virtual GrRowType GetRowType() { return GrRowType.Dummy; }
 
         public virtual bool ShouldBringIntoView() { return false; }
+
         public virtual GrCell HitTest(GrPoint location)
         {
-            if (this.GetDisplayable() == false)
+            if (this.IsDisplayable == false)
                 return null;
 
             GrRect bound = this.GetBounds();
@@ -141,24 +146,29 @@ namespace Ntreev.Library.Grid
             return this;
         }
 
+        public IReadOnlyList<GrRow> Childs
+        {
+            get { return this.childs; }
+        }
+
         public int GetChildCount()
         {
-            return m_vecChilds.Count;
+            return this.childs.Count;
         }
 
         public GrRow GetChild(int index)
         {
-            return m_vecChilds[index];
+            return this.childs[index];
         }
 
         public GrRow GetParent()
         {
-            return m_pParent;
+            return this.parent;
         }
 
-        public int GetDepth()
+        public int Depth
         {
-            return m_depth;
+            get { return this.depth; }
         }
 
         public int GetResizingMargin()
@@ -166,7 +176,7 @@ namespace Ntreev.Library.Grid
             GrFont pFont = this.GetPaintingFont();
             int margin = (int)((float)pFont.GetHeight() * 0.25f);
 
-            int height = this.GetHeight();
+            int height = this.Height;
             if (margin * 3 > height)
                 margin = (int)((float)height / 3.0f);
 
@@ -175,87 +185,95 @@ namespace Ntreev.Library.Grid
 
         public void SetFit()
         {
-            m_fitting = true;
+            this.fitting = true;
 
             OnFitted();
         }
 
         public override void Paint(GrGridPainter painter, GrRect clipRect) { }
 
-        public virtual GrRect GetBounds() { return GetRect(); }
+        public virtual GrRect GetBounds() { return this.Bounds; }
 
         public override GrPadding GetPadding() { return GrPadding.Default; }
 
         public virtual void Sort(GrSort sortType)
         {
-            switch(sortType)
-    {
-    case GrSort.Up:
-            Sort(GrSortFunc.SortRowsUp, 0);
-        break;
-    case GrSort.Down:
-        Sort(GrSortFunc.SortRowsDown, 0);
-        break;
-    case GrSort.None:
-        Sort(GrSortFunc.SortRowsNone, 0);
-        break;
-    default:
-        break;
-    }
+            switch (sortType)
+            {
+                case GrSort.Up:
+                    Sort(GrSortFunc.SortRowsUp, 0);
+                    break;
+                case GrSort.Down:
+                    Sort(GrSortFunc.SortRowsDown, 0);
+                    break;
+                case GrSort.None:
+                    Sort(GrSortFunc.SortRowsNone, 0);
+                    break;
+                default:
+                    break;
+            }
         }
 
         public virtual void Sort(GrFuncSortRow fnSort, object userData)
         {
-            m_vecChilds.Sort((x, y) => fnSort(this.GridCore, x, y, userData));
+            this.childs.Sort((x, y) => fnSort(this.GridCore, x, y, userData));
         }
 
         public void AddChild(GrRow row)
         {
-            m_vecChilds.Add(row);
-            row.m_pParent = this;
+            this.childs.Add(row);
+            row.parent = this;
             this.OnChildAdded(row);
         }
 
         public void ReserveChild(int reserve)
         {
-            m_vecChilds.Clear();
-            m_vecChilds.Capacity = reserve;
+            this.childs.Clear();
+            this.childs.Capacity = reserve;
         }
 
         public void ClearChild()
         {
-            foreach (var value in m_vecChilds)
+            foreach (var value in this.childs)
             {
-                value.m_pParent = null;
-                value.m_depth = 0;
+                value.parent = null;
+                value.depth = 0;
             }
-            m_vecChilds.Clear();
+            this.childs.Clear();
         }
 
-        public uint GetID() { return m_id; }
+        public uint GetID() { return this.id; }
 
         protected override void OnGridCoreAttached()
         {
             base.OnGridCoreAttached();
 
-            foreach (var value in m_vecChilds)
+            foreach (var value in this.childs)
             {
                 this.GridCore.AttachObject(value);
             }
+
+            this.GridCore.DisplayRectangleChanged += GridCore_DisplayRectangleChanged;
+        }
+
+        void GridCore_DisplayRectangleChanged(object sender, EventArgs e)
+        {
+            this.Width = this.GridCore.DisplayRectangle.Width;
         }
 
         protected override void OnTextSizeChanged()
         {
             base.OnTextSizeChanged();
 
-            if (this.GridCore.GetAutoFitRow() == true && this.GetHeight() != this.GetTextBounds().Height)
+            if (this.GridCore.AutoFitRow == true && this.Height != this.GetTextBounds().Height)
             {
                 this.SetFit();
             }
         }
 
-        protected virtual void OnHeightChanged()
+        protected override void OnSizeChanged(EventArgs e)
         {
+            base.OnSizeChanged(e);
             this.SetTextAlignChanged();
         }
 
@@ -282,7 +300,7 @@ namespace Ntreev.Library.Grid
         {
             if (this.GridCore == null)
                 return;
-            GrRect rect = this.GetRect();
+            GrRect rect = this.Bounds;
             //rect.Right = this.GridCore.GetDisplayRect().Right;
             rect.Width = this.GridCore.DisplayRectangle.Right - rect.Left;
             rect.Expand(2, 2, 2, 2);
@@ -294,36 +312,32 @@ namespace Ntreev.Library.Grid
         {
             GrRow pParent = row.GetParent();
             if (pParent == null)
-                row.m_depth = 0;
+                row.depth = 0;
             else
-                row.m_depth = pParent.m_depth + 1;
+                row.depth = pParent.depth + 1;
 
-            foreach (var value in row.m_vecChilds)
+            foreach (var value in row.childs)
             {
                 this.UpdateDepth(value);
             }
         }
-
-
-
-
-
+        
         //class SortDesc
         //{
         //public:
         //    SortDesc(GrGridCore pGridCore, FuncSortRow fn, object* userData)
-        //        : this.GridCore(pGridCore), m_fn(fn), m_userData(userData)
+        //        : this.GridCore(pGridCore), this.fn(fn), this.userData(userData)
         //    {
         //    }
 
         //    bool operator () ( GrRow row1,  GrRow row2)
         //    {
-        //        return (m_fn)(this.GridCore, row1, row2, m_userData);
+        //        return (this.fn)(this.GridCore, row1, row2, this.userData);
         //    }
 
         //    GrGridCore this.GridCore;
-        //    FuncSortRow m_fn;
-        //    void m_userData;
+        //    FuncSortRow this.fn;
+        //    void this.userData;
         //}
     }
 }

@@ -123,9 +123,9 @@ namespace Ntreev.Library.Grid
             for (int i = visibleColumnRange.Minimum; i < visibleColumnRange.Maximum; i++)
             {
                 GrColumn column = columnList.GetVisibleColumn(i);
-                if (column.GetDisplayable() == false)
+                if (column.IsDisplayable == false)
                     continue;
-                GrRect displayRect = column.GetRect();
+                GrRect displayRect = column.Bounds;
                 int left = Math.Min(rect.Left, displayRect.Left);
                 int top = displayRect.Top;
                 int right = Math.Max(rect.Right, displayRect.Right);
@@ -138,9 +138,9 @@ namespace Ntreev.Library.Grid
             for (int y = visibleRowRange.Minimum; y < visibleRowRange.Maximum; y++)
             {
                 IDataRow pDataRow = dataRowList.GetVisibleRow(y);
-                if (pDataRow.GetDisplayable() == false)
+                if (pDataRow.IsDisplayable == false)
                     continue;
-                GrRect displayRect = pDataRow.GetRect();
+                GrRect displayRect = pDataRow.Bounds;
                 int left = displayRect.Left;
                 int top = Math.Min(rect.Top, displayRect.Top);
                 int right = displayRect.Right;

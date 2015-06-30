@@ -7,60 +7,50 @@ namespace Ntreev.Library.Grid
 {
     public class GrGroupPanel : GrUpdatableRow
     {
-        private readonly List<GrGroup> m_vecGroups = new List<GrGroup>();
-        bool m_enableGroup;
+        private readonly List<GrGroup> groups = new List<GrGroup>();
+        private bool isGroupable = true;
+        private bool groupChanged;
 
-        bool m_groupChanged;
         public GrGroupPanel()
         {
-            m_enableGroup = true;
-            m_visible = true;
-            m_groupChanged = false;
-        }
-        //virtual ~GrGroupPanel();
-
-        public int GetGroupCount()
-        {
-            if (m_enableGroup == false)
-                return 0;
-            return m_vecGroups.Count;
+            
         }
 
-        public GrGroup GetGroup(int level)
+        public IReadOnlyList<GrGroup> Groups
         {
-            return m_vecGroups[level];
+            get { return this.groups; }
         }
 
         public void ExpandGroup(int level, bool expand)
         {
-            GrGroup pGroup = m_vecGroups[level];
+            GrGroup pGroup = this.groups[level];
             pGroup.SetExpanded(true);
         }
 
         public void SetGroupSortState(int level, GrSort sortType)
         {
-            GrGroup pGroup = m_vecGroups[level];
+            GrGroup pGroup = this.groups[level];
             pGroup.SetSortType(sortType);
         }
 
-        public void SetVisible(bool b)
+        protected override void OnVisibleChanged(EventArgs e)
         {
-            m_visible = b;
-            GrRootRow pHeaderList = GetParent() as GrRootRow;
+            GrRootRow pHeaderList = this.GetParent() as GrRootRow;
             pHeaderList.SetVisibleChanged();
+
+            base.OnVisibleChanged(e);
         }
 
-        public bool GetGroupable()
+        public bool IsGroupable
         {
-            return m_enableGroup;
-        }
-
-        public void SetGroupable(bool b)
-        {
-            if (m_enableGroup == b)
-                return;
-            m_enableGroup = b;
-            Changed(this, EventArgs.Empty);
+            get { return this.isGroupable; }
+            set
+            {
+                if (this.isGroupable == value)
+                    return;
+                this.isGroupable = value;
+                this.OnChanged(EventArgs.Empty);
+            }
         }
 
         public void NotifyExpanded(GrGroup pGroup)
@@ -77,33 +67,33 @@ namespace Ntreev.Library.Grid
 
         public override bool ShouldUpdate()
         {
-            return m_groupChanged == true;
+            return this.groupChanged == true;
         }
 
         public override void Update(bool force)
         {
-            if (m_groupChanged == true)
+            if (this.groupChanged == true)
                 RepositionGroup();
 
-            if (m_vecGroups.Count == 0)
-                SetTextVisible(true);
+            if (this.groups.Count == 0)
+                this.IsTextVisible = true;
             else
-                SetTextVisible(false);
-            m_groupChanged = false;
+                this.IsTextVisible = false;
+            this.groupChanged = false;
         }
 
         public override int GetUpdatePriority() { return GrDefineUtility.UPDATEPRIORITY_GROUPPANEL; }
 
         public override GrRowType GetRowType() { return GrRowType.GroupPanel; }
 
-        public override int GetWidth()
-        {
-            return this.GridCore.GetBounds().Width;
-        }
+        //public override int Width
+        //{
+        //    get { return this.GridCore.GetBounds().Width; }
+        //}
 
         public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
-            GrRect paintRect = GetRect();
+            GrRect paintRect = this.Bounds;
             GrRect displayRect = this.GridCore.DisplayRectangle;
             GrColumnList columnList = this.GridCore.ColumnList;
             if (this.GridCore.GetFillBlank() == true && columnList.GetDisplayableRight() < displayRect.Right)
@@ -120,7 +110,7 @@ namespace Ntreev.Library.Grid
 
             painter.DrawItem(paintStyle, paintRect, GetPaintingLineColor(), backColor, null);
 
-            foreach (var value in m_vecGroups)
+            foreach (var value in this.groups)
             {
                 value.Paint(painter, clipRect);
             }
@@ -128,25 +118,31 @@ namespace Ntreev.Library.Grid
             DrawText(painter, foreColor, paintRect, clipRect);
         }
 
-
-        public override GrHorzAlign GetTextHorzAlign() { return GrHorzAlign.Left; }
+        public override GrHorzAlign TextHorzAlign
+        {
+            get { return GrHorzAlign.Left; }
+        }
 
         public virtual bool GetTextMultiline() { return false; }
 
-        public override bool GetVisible()
+        public override bool IsVisible
         {
-            if (m_enableGroup == false)
-                return false;
-            return m_visible;
+            get
+            {
+                if (this.isGroupable == false)
+                    return false;
+                return base.IsVisible;
+            }
+            set { base.IsVisible = value; }
         }
 
         public override int GetMinHeight()
         {
-            if (m_vecGroups.Count == 0)
+            if (this.groups.Count == 0)
             {
                 return base.GetMinHeight();
             }
-            return m_vecGroups[0].GetHeight() + 20;
+            return this.groups[0].Height + 20;
         }
 
         public override GrCell HitTest(GrPoint location)
@@ -154,9 +150,9 @@ namespace Ntreev.Library.Grid
             if (ContainsVert(location.Y) == false)
                 return null;
 
-            foreach (var value in m_vecGroups)
+            foreach (var value in this.groups)
             {
-                GrRect rect = value.GetRect();
+                GrRect rect = value.Bounds;
                 if (rect.Contains(location) == true)
                     return value;
             }
@@ -224,7 +220,6 @@ namespace Ntreev.Library.Grid
 
         public event GroupEventHandler SortChanged;
 
-
         protected override void OnGridCoreAttached()
         {
             base.OnGridCoreAttached();
@@ -236,13 +231,20 @@ namespace Ntreev.Library.Grid
         protected override void OnYChanged()
         {
             base.OnYChanged();
-            RepositionGroup();
+            this.RepositionGroup();
         }
 
+        protected virtual void OnChanged(EventArgs e)
+        {
+            if (this.Changed != null)
+            {
+                this.Changed(this, e);
+            }
+        }
 
         private void gridCore_Cleared(object sender, EventArgs e)
         {
-            m_vecGroups.Clear();
+            this.groups.Clear();
             SetFit();
         }
 
@@ -250,7 +252,7 @@ namespace Ntreev.Library.Grid
         {
             GrColumnList columnList = this.GridCore.ColumnList;
             columnList.ColumnGroupChanged += columnList_ColumnGroupChanged;
-            columnList.ColumnInserted+= columnList_ColumnInserted;
+            columnList.ColumnInserted += columnList_ColumnInserted;
             columnList.ColumnRemoved += columnList_ColumnRemoved;
         }
 
@@ -259,7 +261,7 @@ namespace Ntreev.Library.Grid
             GrTextUpdater pTextUpdater = this.GridCore.GetTextUpdater();
             pTextUpdater.AddTextBounds(this);
 
-            foreach (var value in m_vecGroups)
+            foreach (var value in this.groups)
             {
                 pTextUpdater.AddTextBounds(value);
             }
@@ -268,41 +270,41 @@ namespace Ntreev.Library.Grid
         private void columnList_ColumnInserted(object sender, GrColumnEventArgs e)
         {
             GrColumn column = e.Column;
-            if (column.GetGrouped() == false)
+            if (column.IsGrouped == false)
                 return;
-            AddGroup(column.GetGroup());
+            AddGroup(column.Group);
         }
 
         private void columnList_ColumnRemoved(object sender, GrColumnEventArgs e)
         {
             GrColumn column = e.Column;
-            if (column.GetGrouped() == false)
+            if (column.IsGrouped == false)
                 return;
-            RemoveGroup(column.GetGroup());
+            RemoveGroup(column.Group);
         }
 
         private void columnList_ColumnGroupChanged(object sender, GrColumnEventArgs e)
         {
             GrColumn column = e.Column;
-            if (column.GetGrouped() == true)
-                AddGroup(column.GetGroup());
+            if (column.IsGrouped == true)
+                AddGroup(column.Group);
             else
-                RemoveGroup(column.GetGroup());
+                RemoveGroup(column.Group);
         }
 
         private void groupInfo_LevelChanged(object sender, EventArgs e)
         {
             GrGroup pGroup = sender as GrGroup;
 
-            m_vecGroups[m_vecGroups.IndexOf(pGroup)] = null;
+            this.groups[this.groups.IndexOf(pGroup)] = null;
 
-            int index = Math.Min(pGroup.GetGroupLevel(), m_vecGroups.Count);
+            int index = Math.Min(pGroup.GetGroupLevel(), this.groups.Count);
 
-            m_vecGroups.Insert(index, pGroup);
-            m_vecGroups.Remove(null);
+            this.groups.Insert(index, pGroup);
+            this.groups.Remove(null);
 
             index = 0;
-            foreach (var value in m_vecGroups)
+            foreach (var value in this.groups)
             {
                 value.SetGroupLevelCore(index++);
             }
@@ -313,62 +315,65 @@ namespace Ntreev.Library.Grid
         private void ResetGroupLevel()
         {
             int index = 0;
-            foreach (var value in m_vecGroups)
+            foreach (var value in this.groups)
             {
                 value.SetGroupLevelCore(index++);
             }
         }
+
         private void AddGroup(GrGroup pGroup)
         {
-            int index = m_vecGroups.IndexOf(pGroup);
+            int index = this.groups.IndexOf(pGroup);
 
             if (index >= 0)
                 throw new Exception("이미 Group이 되어 있습니다.");
 
             int level = pGroup.GetGroupLevel();
-            if (level > m_vecGroups.Count)
-                m_vecGroups.Add(pGroup);
+            if (level > this.groups.Count)
+                this.groups.Add(pGroup);
             else
-                m_vecGroups.Insert(level, pGroup);
-            pGroup.SetText();
+                this.groups.Insert(level, pGroup);
+            pGroup.Text = pGroup.Column.Text;
             pGroup.LevelChanged += groupInfo_LevelChanged;
 
             ResetGroupLevel();
             SetFit();
             this.GridCore.Invalidate();
-            m_groupChanged = true;
+            this.groupChanged = true;
             Changed(this, EventArgs.Empty);
         }
 
         private void RemoveGroup(GrGroup pGroup)
         {
-            int index = m_vecGroups.IndexOf(pGroup);
+            int index = this.groups.IndexOf(pGroup);
 
             if (index < 0)
                 throw new Exception("Group이 되어 있지 않은데 해제하려고 합니다.");
 
             pGroup.LevelChanged -= groupInfo_LevelChanged;
             pGroup.SetGroupLevelCore(GrDefineUtility.INVALID_INDEX);
-            m_vecGroups.Remove(pGroup);
+            this.groups.Remove(pGroup);
 
             ResetGroupLevel();
             SetFit();
             this.GridCore.Invalidate();
-            m_groupChanged = true;
+            this.groupChanged = true;
             Changed(this, EventArgs.Empty);
         }
+
         private void RepositionGroup()
         {
             GrPoint pt = new GrPoint();
-            pt.X = GetX();
-            pt.Y = GetY();
+            pt.X = this.X;
+            pt.Y = this.Y;
 
             pt.X += 10;
             pt.Y += 10;
-            foreach (var value in m_vecGroups)
+
+            foreach (var item in this.groups)
             {
-                value.SetPosition(pt);
-                pt.X += value.GetWidth() + 10;
+                item.Location = pt;
+                pt.X += item.Width + 10;
             }
         }
     }
