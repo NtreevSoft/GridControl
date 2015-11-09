@@ -110,7 +110,7 @@ namespace Ntreev.Windows.Forms.Grid
         {
             get
             {
-                return FromNative.Get(this.NativeRef.GetColumn());
+                return FromNative.Get(this.NativeRef.Column);
             }
         }
 
@@ -131,7 +131,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public Row Row
         {
-            get { return FromNative.Get(this.NativeRef.GetDataRow());}
+            get { return FromNative.Get(this.NativeRef.DataRow);}
         }
 
         /// <summary>
@@ -155,10 +155,7 @@ namespace Ntreev.Windows.Forms.Grid
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsSelected
         {
-            get
-            {
-                return this.NativeRef.GetSelected();
-            }
+            get { return this.NativeRef.IsSelected; }
             set
             {
                 if (this.Row.IsVisible == false)
@@ -174,10 +171,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public bool IsFocused
         {
-            get
-            {
-                return this.NativeRef.GetFocused();
-            }
+            get { return this.NativeRef.IsFocused; }
         }
 
 #if DEBUG
@@ -197,14 +191,8 @@ namespace Ntreev.Windows.Forms.Grid
         [DefaultValue(false)]
         public bool IsReadOnly
         {
-            get
-            {
-                return this.NativeRef.GetReadOnly();
-            }
-            set
-            {
-                this.NativeRef.SetReadOnly(value);
-            }
+            get { return this.NativeRef.IsReadOnly; }
+            set { this.NativeRef.IsReadOnly = value; }
         }
 
 #if DEBUG

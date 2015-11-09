@@ -99,7 +99,7 @@ namespace Ntreev.Library.Grid.States
             int newWidth = m_column.Width + (m_resizingLocation - m_resizingStart);
             if (m_column.Width != newWidth)
             {
-                GrColumnList columnList = m_column.GetColumnList();
+                GrColumnList columnList = m_column.ColumnList;
                 int x = int.MaxValue;
                 if (m_column.IsFullSelected == true)
                 {
@@ -163,7 +163,7 @@ namespace Ntreev.Library.Grid.States
                 int index = column.GetVisibleIndex();
                 if ((int)index > 0)
                 {
-                    GrColumnList columnList = column.GetColumnList();
+                    GrColumnList columnList = column.ColumnList;
                     column = columnList.GetVisibleColumn(index - 1);
                     if (column.IsResizable == true)
                         return column;

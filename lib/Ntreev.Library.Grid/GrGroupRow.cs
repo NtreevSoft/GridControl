@@ -22,7 +22,7 @@ namespace Ntreev.Library.Grid
 
             m_pLabel = new GrGroupHeader(this);
 
-            Expand(true);
+            this.IsExpanded = true;
         }
         //virtual ~GrGroupRow();
 
@@ -91,7 +91,7 @@ namespace Ntreev.Library.Grid
 
         internal void ProcessAfterGroup()
         {
-            GrGroupRow pParent = GetParent() as GrGroupRow;
+            GrGroupRow pParent = this.Parent as GrGroupRow;
             if (pParent != null)
             {
                 m_groupLevel = pParent.m_groupLevel + 1;

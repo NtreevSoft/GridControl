@@ -22,9 +22,9 @@ namespace Ntreev.Library.Grid
 
         }
 
-        public virtual int GetUpdatePriority()
+        public virtual int UpdatePriority
         {
-            return int.MaxValue;
+            get { return int.MaxValue; }
         }
 
         public virtual bool ShouldClip(GrRect displayRect, int horizontal, int vertical)
@@ -59,6 +59,14 @@ namespace Ntreev.Library.Grid
                 return;
             this.GridCore.RootRow.SetHeightChanged();
             this.GridCore.Invalidate();
+        }
+
+        public override GrSize PreferredSize
+        {
+            get
+            {
+                return new GrSize(-1, DefaultHeight);
+            }
         }
     }
 }

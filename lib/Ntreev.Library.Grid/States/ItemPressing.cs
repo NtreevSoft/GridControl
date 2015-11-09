@@ -26,10 +26,10 @@ namespace Ntreev.Library.Grid.States
             if (pItem.HitMouseOverTest(localLocation) != (int)GrMouseOverState.In)
                 return false;
 
-            if (pItem.GetReadOnly() == true)
+            if (pItem.IsReadOnly == true)
                 return true;
 
-            GrClickEditing editingType = pItem.GetColumn().GetItemClickEditing();
+            GrClickEditing editingType = pItem.Column.ItemClickEditing;
             if (editingType == GrClickEditing.Default)
             {
                 editingType = this.GridCore.GetClickEditing();
@@ -47,7 +47,7 @@ namespace Ntreev.Library.Grid.States
                     break;
                 case GrClickEditing.FocusedClick:
                     {
-                        if (pItem.GetFocused() == true)
+                        if (pItem.IsFocused == true)
                             return false;
                     }
                     break;
@@ -88,7 +88,7 @@ namespace Ntreev.Library.Grid.States
                             if (m_pItemSelector.CanSelect(m_pItem) == true)
                             {
                                 if (this.GridCore.GetFullRowSelect() == true)
-                                    m_pItemSelector.SelectDataRow(m_pItem.GetDataRow(), GrSelectionType.Add);
+                                    m_pItemSelector.SelectDataRow(m_pItem.DataRow, GrSelectionType.Add);
                                 else
                                     m_pItemSelector.SelectItem(m_pItem, GrSelectionType.Add);
                                 m_pItemSelector.SetAnchor(m_pItem);
@@ -101,16 +101,16 @@ namespace Ntreev.Library.Grid.States
                             m_pItemSelector.SetSelectionGroup(m_pItem);
                             m_pItemSelector.SetAnchor(m_pItem);
                             if (this.GridCore.GetFullRowSelect() == true)
-                                m_pItemSelector.SelectDataRow(m_pItem.GetDataRow(), GrSelectionType.Normal);
+                                m_pItemSelector.SelectDataRow(m_pItem.DataRow, GrSelectionType.Normal);
                             else
                                 m_pItemSelector.SelectItem(m_pItem, GrSelectionType.Normal);
                             m_pFocuser.Set(m_pItem);
 
-                            if (m_pItem.GetReadOnly() == false)
+                            if (m_pItem.IsReadOnly == false)
                             {
                                 //static GrEditingReason editingReason;
                                 GrEditingReason editingReason = new GrEditingReason();
-                                GrClickEditing clickEdit = m_pItem.GetColumn().GetItemClickEditing();
+                                GrClickEditing clickEdit = m_pItem.Column.ItemClickEditing;
                                 if (clickEdit == GrClickEditing.Default)
                                     clickEdit = this.GridCore.GetClickEditing();
 
@@ -144,7 +144,7 @@ namespace Ntreev.Library.Grid.States
         public override void OnMouseDoubleClick(GrStateMouseEventArgs e)
         {
             GrEditingReason reason = new GrEditingReason(e.GetLocalHit());
-            if (m_pItem.GetReadOnly() == true || m_pGridWindow.CanEdit(m_pItem, reason) == false)
+            if (m_pItem.IsReadOnly == true || m_pGridWindow.CanEdit(m_pItem, reason) == false)
             {
                 GrItemMouseEventArgs e1 = new GrItemMouseEventArgs(m_pItem, e.GetLocation(), e.GetModifierKeys());
                 this.GridCore.Invoke("ItemMouseDoubleClick", e1);

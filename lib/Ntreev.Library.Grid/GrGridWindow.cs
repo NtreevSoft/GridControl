@@ -125,7 +125,7 @@ namespace Ntreev.Library.Grid
 
         public virtual bool CanEdit(GrItem pItem, GrEditingReason reason)
         {
-            if (pItem.GetReadOnly() == true)
+            if (pItem.IsReadOnly == true)
                 return false;
 
             switch (reason.editingType)

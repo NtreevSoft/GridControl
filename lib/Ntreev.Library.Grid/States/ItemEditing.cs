@@ -21,7 +21,7 @@ namespace Ntreev.Library.Grid.States
         public override bool GetHitTest(GrCell pHitted, GrPoint localLocation)
         {
             GrItem pItem = pHitted as GrItem;
-            if (pItem == null || pItem.GetFocused() == false)
+            if (pItem == null || pItem.IsFocused == false)
                 return false;
             GrEditingReason reason = new GrEditingReason(localLocation);
             return m_pGridWindow.CanEdit(pItem, reason);
@@ -69,7 +69,7 @@ namespace Ntreev.Library.Grid.States
         private GrGridState OnBegin(GrEditingReason reason)
         {
             //m_result = GrEditingResult.None;
-            m_column = m_pItem.GetColumn();
+            m_column = m_pItem.Column;
             m_pItem.LockColor(true);
 
             GrEditEventArgs e = new GrEditEventArgs(m_pItem, reason);

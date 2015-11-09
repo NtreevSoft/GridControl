@@ -56,6 +56,7 @@
     <Compile Include="GrColumnMouseEventHandler.cs" />
     <Compile Include="GrEditingType.cs" />
     <Compile Include="GrGridUtility.cs" />
+    <Compile Include="GrRowCollection.cs" />
     <Compile Include="States\ColumnResizing.cs" />
     <Compile Include="States\ColumnSplitterMoving.cs" />
     <Compile Include="GrDataRowEventHandler.cs" />
@@ -111,7 +112,6 @@
     <Compile Include="GrHitTest.cs" />
     <Compile Include="GrHorzAlign.cs" />
     <Compile Include="GrGridCore.cs" />
-    <Compile Include="GrInsertionRow.cs" />
     <Compile Include="GrInvalidator.cs" />
     <Compile Include="GrItem.cs" />
     <Compile Include="GrItemMouseEventArgs.cs" />
@@ -126,7 +126,7 @@
     <Compile Include="GrMouseOverState.cs" />
     <Compile Include="GrMousePresser.cs" />
     <Compile Include="GrObject.cs" />
-    <Compile Include="GroupEventHandler.cs" />
+    <Compile Include="GrGroupEventHandler.cs" />
     <Compile Include="GrPadding.cs" />
     <Compile Include="GrPaintStyle.cs" />
     <Compile Include="GrPoint.cs" />

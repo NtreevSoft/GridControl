@@ -7,17 +7,14 @@ namespace Ntreev.Library.Grid
 {
     public class GrCaption : GrUpdatableRow
     {
-        private GrHorzAlign horzAlign;
-        private GrVertAlign vertAlign;
+        private GrHorzAlign horzAlign = GrHorzAlign.Left;
+        private GrVertAlign vertAlign = GrVertAlign.Center;
 
         //private bool visible1;
 
         public GrCaption()
         {
-            this.horzAlign = GrHorzAlign.Left;
-            this.vertAlign = GrVertAlign.Center;
 
-            //this.visible1 = true;
         }
 
         public override GrHorzAlign TextHorzAlign
@@ -162,7 +159,7 @@ namespace Ntreev.Library.Grid
             this.GridCore.DisplayRectangleChanged += GridCore_DisplayRectangleChanged;
         }
 
-        void GridCore_DisplayRectangleChanged(object sender, EventArgs e)
+        private void GridCore_DisplayRectangleChanged(object sender, EventArgs e)
         {
             this.Width = this.GridCore.DisplayRectangle.Width;
         }

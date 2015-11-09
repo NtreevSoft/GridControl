@@ -166,7 +166,7 @@ namespace Ntreev.Library.Grid
                 if (this.GridCore.GetFullRowSelect() == true)
                 {
                     GrColumnList columnList = this.GridCore.ColumnList;
-                    GrDataRow pDataRow = pFocusedItem.GetDataRow();
+                    GrDataRow pDataRow = pFocusedItem.DataRow;
                     for (int i = 0; i < columnList.GetVisibleColumnCount(); i++)
                     {
                         GrColumn column = columnList.GetVisibleColumn(i);
@@ -194,8 +194,8 @@ namespace Ntreev.Library.Grid
             GrItem pItem = pFocusable as GrItem;
             if (pItem != null)
             {
-                GrColumn column = pItem.GetColumn();
-                GrDataRow pDataRow = pItem.GetDataRow();
+                GrColumn column = pItem.Column;
+                GrDataRow pDataRow = pItem.DataRow;
 
                 int visibleColumnIndex = column.GetVisibleIndex();
                 int visibleRowIndex = pDataRow.GetVisibleIndex();

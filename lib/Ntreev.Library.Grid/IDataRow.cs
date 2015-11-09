@@ -59,11 +59,11 @@ namespace Ntreev.Library.Grid
         {
             get
             {
-                IDataRow pParent = this.GetParent() as IDataRow;
+                IDataRow pParent = this.Parent as IDataRow;
                 if (pParent == null)
                     return base.IsVisible;
 
-                return pParent.IsExpanded();
+                return pParent.IsExpanded;
             }
         }
 
@@ -165,20 +165,22 @@ namespace Ntreev.Library.Grid
             this.GridCore.Focuser.Reset();
         }
 
-        public void Expand(bool b)
+        public bool IsExpanded
         {
-            if (m_expanded == b)
-                return;
-            if (m_pDataRowList != null)
-                m_pDataRowList.SetVisibleChanged();
-            m_expanded = b;
-        }
-
-        public bool IsExpanded()
-        {
-            if (GetChildCount() == 0)
-                return false;
-            return m_expanded;
+            get
+            {
+                if (this.Childs.Count == 0)
+                    return false;
+                return m_expanded;
+            }
+            set
+            {
+                if (m_expanded == value)
+                    return;
+                if (m_pDataRowList != null)
+                    m_pDataRowList.SetVisibleChanged();
+                m_expanded = value;
+            }
         }
 
         public GrExpander GetExpander()

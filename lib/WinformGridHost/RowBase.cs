@@ -91,8 +91,8 @@ namespace Ntreev.Windows.Forms.Grid
 
         public bool IsExpanded
         {
-            get { return m_pDataRow.IsExpanded(); }
-            set { m_pDataRow.Expand(value); }
+            get { return m_pDataRow.IsExpanded; }
+            set { m_pDataRow.IsExpanded = value; }
         }
 
 #if DEBUG
@@ -124,7 +124,7 @@ namespace Ntreev.Windows.Forms.Grid
         {
             get
             {
-                IDataRow pParent = m_pDataRow.GetParent() as IDataRow;
+                IDataRow pParent = m_pDataRow.Parent as IDataRow;
                 if (pParent == null)
                     return null;
 

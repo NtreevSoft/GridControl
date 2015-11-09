@@ -148,7 +148,7 @@ namespace Ntreev.Windows.Forms.Grid
         {
             Bitmap errorBitmap = Resources.Error;
             Rectangle bounds = row.Bounds;
-            bounds.Width = this.GridCore.ColumnList.GetBounds().Width;
+            bounds.Width = this.GridCore.ColumnList.Bounds.Width;
             bounds.Height--;
             g.DrawRectangle(m_pen, bounds);
 

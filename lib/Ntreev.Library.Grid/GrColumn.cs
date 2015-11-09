@@ -44,7 +44,7 @@ namespace Ntreev.Library.Grid
         private GrColor itemBackColor = GrColor.Empty;
         private GrColor itemForeColor = GrColor.Empty;
         private GrPadding itemPadding = GrPadding.Empty;
-        private GrFont pItemFont;
+        private GrFont itemFont;
         private GrClickEditing itemClickEditing;
         private bool itemTextVisible = true;
         private bool itemIcon;
@@ -117,9 +117,9 @@ namespace Ntreev.Library.Grid
 
         }
 
-        public GrColumnList GetColumnList()
+        public GrColumnList ColumnList
         {
-            return this.columnList;
+            get { return this.columnList; }
         }
 
         public GrItemType ItemType
@@ -133,59 +133,141 @@ namespace Ntreev.Library.Grid
             }
         }
 
-        public GrItemTypeShow GetItemTypeShow()
+        public GrItemTypeShow ItemTypeShow
         {
-            return this.itemTypeShow;
+            get { return this.itemTypeShow; }
         }
 
-        public GrHorzAlign GetItemHorzAlign()
+        public GrHorzAlign ItemHorzAlign
         {
-            return this.itemHorzAlign;
+            get { return this.itemHorzAlign; }
+            set
+            {
+                if (this.itemHorzAlign == value)
+                    return;
+                this.itemHorzAlign = value;
+                if (this.index != -1)
+                {
+                    GrColumnEventArgs e = new GrColumnEventArgs(this);
+                    this.columnList.Invoke("ColumnHorzAlignChanged", e);
+                }
+            }
         }
 
-        public GrVertAlign GetItemVertAlign()
+        public GrVertAlign ItemVertAlign
         {
-            return this.itemVertAlign;
+            get { return this.itemVertAlign; }
+            set
+            {
+                if (this.itemVertAlign == value)
+                    return;
+                this.itemVertAlign = value;
+                if (this.index != -1)
+                {
+                    GrColumnEventArgs e = new GrColumnEventArgs(this);
+                    this.columnList.Invoke("ColumnVertAlignChanged", e);
+                }
+            }
         }
 
-        public bool GetItemWordWrap()
+        public bool ItemWordWrap
         {
-            return this.itemWordWrap;
+            get { return this.itemWordWrap; }
+            set
+            {
+                if (this.itemWordWrap == value)
+                    return;
+                this.itemWordWrap = value;
+                if (this.index != -1)
+                {
+                    GrColumnEventArgs e = new GrColumnEventArgs(this);
+                    this.columnList.Invoke("ColumnWordwrapChanged", e);
+                }
+            }
         }
 
-        public bool GetItemMultiline()
+        public bool ItemMultiline
         {
-            return this.itemMultiline;
+            get { return this.itemMultiline; }
+            set
+            {
+                if (this.itemMultiline == value)
+                    return;
+                this.itemMultiline = value;
+                if (this.index != -1)
+                {
+                    GrColumnEventArgs e = new GrColumnEventArgs(this);
+                    this.columnList.Invoke("ColumnMultilineChanged", e);
+                }
+            }
         }
 
-        public GrColor GetItemForeColor()
+        public GrColor ItemForeColor
         {
-            return this.itemForeColor;
+            get { return this.itemForeColor; }
+            set
+            {
+                this.itemForeColor = value;
+                if (this.GridCore != null)
+                    this.GridCore.Invalidate();
+            }
         }
 
-        public GrColor GetItemBackColor()
+        public GrColor ItemBackColor
         {
-            return this.itemBackColor;
+            get { return this.itemBackColor; }
+            set
+            {
+                this.itemBackColor = value;
+                if (this.GridCore != null)
+                    this.GridCore.Invalidate();
+            }
         }
 
-        public GrFont GetItemFont()
+        public GrFont ItemFont
         {
-            return this.pItemFont;
+            get { return this.itemFont; }
+            set
+            {
+                this.itemFont = value;
+                if (this.GridCore != null)
+                    this.GridCore.Invalidate();
+            }
         }
 
-        public GrPadding GetItemPadding()
+        public GrPadding ItemPadding
         {
-            return this.itemPadding;
+            get { return this.itemPadding; }
+            set
+            {
+                this.itemPadding = value;
+                if (this.GridCore != null)
+                    this.GridCore.Invalidate();
+                if (this.index != -1)
+                {
+                    GrColumnEventArgs e = new GrColumnEventArgs(this);
+                    this.columnList.Invoke("ColumnPaddingChanged", e);
+                }
+            }
         }
 
-        public GrClickEditing GetItemClickEditing()
+        public GrClickEditing ItemClickEditing
         {
-            return this.itemClickEditing;
+            get { return this.itemClickEditing; }
+            set
+            {
+                this.itemClickEditing = value;
+            }
         }
 
-        public bool GetItemTextVisible()
+        public bool ItemTextVisible
         {
-            return this.itemTextVisible;
+            get { return this.itemTextVisible; }
+            set
+            {
+                this.itemTextVisible = value;
+            }
+
         }
 
         public bool GetItemIcon()
@@ -253,97 +335,6 @@ namespace Ntreev.Library.Grid
                 margin = (int)((float)width / 3.0f);
 
             return margin;
-        }
-
-        public void SetItemHorzAlign(GrHorzAlign horzAlign)
-        {
-            if (this.itemHorzAlign == horzAlign)
-                return;
-            this.itemHorzAlign = horzAlign;
-            if (this.index != -1)
-            {
-                GrColumnEventArgs e = new GrColumnEventArgs(this);
-                this.columnList.Invoke("ColumnHorzAlignChanged", e);
-            }
-        }
-
-        public void SetItemVertAlign(GrVertAlign vertAlign)
-        {
-            if (this.itemVertAlign == vertAlign)
-                return;
-            this.itemVertAlign = vertAlign;
-            if (this.index != -1)
-            {
-                GrColumnEventArgs e = new GrColumnEventArgs(this);
-                this.columnList.Invoke("ColumnVertAlignChanged", e);
-            }
-        }
-
-        public void SetItemWordWrap(bool b)
-        {
-            if (this.itemWordWrap == b)
-                return;
-            this.itemWordWrap = b;
-            if (this.index != -1)
-            {
-                GrColumnEventArgs e = new GrColumnEventArgs(this);
-                this.columnList.Invoke("ColumnWordwrapChanged", e);
-            }
-        }
-
-        public void SetItemMultiline(bool b)
-        {
-            if (this.itemMultiline == b)
-                return;
-            this.itemMultiline = b;
-            if (this.index != -1)
-            {
-                GrColumnEventArgs e = new GrColumnEventArgs(this);
-                this.columnList.Invoke("ColumnMultilineChanged", e);
-            }
-        }
-
-        public void SetItemForeColor(GrColor color)
-        {
-            this.itemForeColor = color;
-            if (this.GridCore != null)
-                this.GridCore.Invalidate();
-        }
-
-        public void SetItemBackColor(GrColor color)
-        {
-            this.itemBackColor = color;
-            if (this.GridCore != null)
-                this.GridCore.Invalidate();
-        }
-
-        public void SetItemFont(GrFont pFont)
-        {
-            this.pItemFont = pFont;
-            if (this.GridCore != null)
-                this.GridCore.Invalidate();
-        }
-
-        public void SetItemPadding(GrPadding padding)
-        {
-            this.itemPadding = padding;
-            if (this.GridCore != null)
-                this.GridCore.Invalidate();
-            if (this.index != -1)
-            {
-                GrColumnEventArgs e = new GrColumnEventArgs(this);
-                this.columnList.Invoke("ColumnPaddingChanged", e);
-            }
-        }
-
-        public void SetItemClickEditing(GrClickEditing clickEditing)
-        {
-            this.itemClickEditing = clickEditing;
-        }
-
-        public void SetItemTextVisible(bool b)
-        {
-            this.itemTextVisible = b;
         }
 
         public void SetItemIcon(bool b)
@@ -418,7 +409,7 @@ namespace Ntreev.Library.Grid
 
             base.OnVisibleChanged(e);
         }
-       
+
         public int MinWidth
         {
             get { return this.minWidth; }
@@ -474,25 +465,31 @@ namespace Ntreev.Library.Grid
             }
         }
 
-        public bool GetSelecting()
+        public bool IsSelecting
         {
-            if (this.GridCore == null)
-                return false;
-            GrItemSelectorInternal pItemSelector = this.GridCore.ItemSelector as GrItemSelectorInternal;
-            return pItemSelector.IsSelecting(this);
+            get
+            {
+                if (this.GridCore == null)
+                    return false;
+                GrItemSelectorInternal pItemSelector = this.GridCore.ItemSelector as GrItemSelectorInternal;
+                return pItemSelector.IsSelecting(this);
+            }
         }
 
-        public bool HasFocused()
+        public bool HasFocused
         {
-            GrFocuser focuser = this.GridCore.Focuser;
-            if (focuser.GetFocusedColumn() == this)
-                return true;
-            return false;
+            get
+            {
+                GrFocuser focuser = this.GridCore.Focuser;
+                if (focuser.GetFocusedColumn() == this)
+                    return true;
+                return false;
+            }
         }
 
         public void KillFocus()
         {
-            if (this.HasFocused() == true)
+            if (this.HasFocused == true)
                 return;
             this.GridCore.Focuser.Reset();
         }
@@ -508,7 +505,7 @@ namespace Ntreev.Library.Grid
 
             if (this.GridCore.GetAutoFitColumnType() == GrAutoFitColumnType.ColumnIncluded)
             {
-                int columnWidth = GetPreferredSize().Width;
+                int columnWidth = PreferredSize.Width;
                 width = Math.Max(this.minWidth, columnWidth);
             }
 
@@ -516,7 +513,7 @@ namespace Ntreev.Library.Grid
             {
                 GrDataRow pDataRow = dataRowList.GetVisibleDataRow(i);
                 GrItem pItem = pDataRow.GetItem(this);
-                int itemWidth = pItem.GetPreferredSize().Width;
+                int itemWidth = pItem.PreferredSize.Width;
                 width = Math.Max(width, itemWidth);
             }
 
@@ -524,7 +521,7 @@ namespace Ntreev.Library.Grid
             {
                 GrDataRow pDataRow = this.GridCore.InsertionRow;
                 GrItem pItem = pDataRow.GetItem(this);
-                int itemWidth = pItem.GetPreferredSize().Width;
+                int itemWidth = pItem.PreferredSize.Width;
                 width = Math.Max(width, itemWidth);
             }
 
@@ -792,9 +789,9 @@ namespace Ntreev.Library.Grid
         public override GrPaintStyle ToPaintStyle()
         {
             GrPaintStyle flag = base.ToPaintStyle();
-            if (GetSelecting() == true || this.IsSelected == true)
+            if (this.IsSelecting == true || this.IsSelected == true)
                 flag |= GrPaintStyle.Selected;
-            if (HasFocused() == true)
+            if (this.HasFocused == true)
                 flag |= GrPaintStyle.Focused;
             if (this.IsClipped == true)
                 flag &= ~GrPaintStyle.RightLine;

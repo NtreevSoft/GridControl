@@ -7,47 +7,42 @@ namespace Ntreev.Library.Grid
 {
     public class GrRootRow : GrRow
     {
-        //private readonly List<GrRow> m_vecVisibleRows = new List<GrRow>();
-        private readonly List<GrUpdatableRow> m_vecUpdatables = new List<GrUpdatableRow>();
-        private bool m_visibleChanged;
-        private bool m_fitChanged;
-        private bool m_heightChanged;
+        //private readonly List<GrRow> vecVisibleRows = new List<GrRow>();
+        private readonly List<GrUpdatableRow> updatables = new List<GrUpdatableRow>();
+        private bool visibleChanged;
+        private bool fitChanged;
+        private bool heightChanged;
 
-        private int m_width;
-        private int m_height;
-
-        private GrRect m_bound;
-        private GrColumnList m_columnList;
-        private GrDataRowList m_pDataRowList;
-        private GrDataRow m_pInsertionRow;
+        private GrRect bound;
+        private GrColumnList columnList;
+        private GrDataRowList pDataRowList;
+        private GrDataRow pInsertionRow;
 
         public GrRootRow()
         {
-
             this.Text = "Root";
-            m_visibleChanged = true;
-
+            this.visibleChanged = true;
         }
 
         public void SetVisibleChanged()
         {
-            m_visibleChanged = true;
+            this.visibleChanged = true;
             this.GridCore.Invalidate();
         }
 
         public void SetFitChanged()
         {
-            m_fitChanged = true;
+            this.fitChanged = true;
         }
 
         public void SetHeightChanged()
         {
-            m_heightChanged = true;
+            this.heightChanged = true;
         }
 
         public bool ShouldUpdate()
         {
-            foreach (var value in m_vecUpdatables)
+            foreach (var value in this.updatables)
             {
                 if (value.ShouldUpdate() == true)
                     return true;
@@ -62,25 +57,25 @@ namespace Ntreev.Library.Grid
 
         public void Update(bool force)
         {
-            foreach (var value in m_vecUpdatables)
+            foreach (var item in this.updatables)
             {
-                value.Update(force);
+                item.Update(force);
             }
 
-            if (m_visibleChanged == true || force == true)
+            if (this.visibleChanged == true || force == true)
                 BuildVisibleList();
 
-            if (m_fitChanged == true || force == true)
+            if (this.fitChanged == true || force == true)
                 AdjustRowHeight();
 
-            if (m_heightChanged == true || force == true)
+            if (this.heightChanged == true || force == true)
                 RepositionVisibleList();
 
-            m_width = m_columnList.GetBounds().Width;
+            this.Width = this.columnList.Bounds.Width;
 
-            m_heightChanged = false;
-            m_visibleChanged = false;
-            m_fitChanged = false;
+            this.heightChanged = false;
+            this.visibleChanged = false;
+            this.fitChanged = false;
         }
 
         public bool ShouldClip()
@@ -97,28 +92,28 @@ namespace Ntreev.Library.Grid
                     continue;
                 y += item.Height;
             }
-            m_height = y - this.Y;
+            this.Height = y - this.Y;
 
-            m_bound.Location = displayRect.Location;
-            m_bound = GrRect.FromLTRB(displayRect.Left, displayRect.Top, m_bound.Right, m_bound.Bottom);
-            //m_bound.Right = displayRect.left;
-            //m_bound.Bottom = displayRect.top;
+            this.bound.Location = displayRect.Location;
+            this.bound = GrRect.FromLTRB(displayRect.Left, displayRect.Top, this.bound.Right, this.bound.Bottom);
+            //this.bound.Right = displayRect.left;
+            //this.bound.Bottom = displayRect.top;
 
-            foreach (var value in m_vecUpdatables)
+            foreach (var item in this.updatables)
             {
-                if (value.ShouldClip(displayRect, horizontal, vertical) == true)
-                    value.Clip(displayRect, horizontal, vertical);
+                if (item.ShouldClip(displayRect, horizontal, vertical) == true)
+                    item.Clip(displayRect, horizontal, vertical);
             }
 
-            foreach (var value in m_vecUpdatables)
+            foreach (var item in this.updatables)
             {
-                int left = m_bound.Left;
-                int top = m_bound.Top;
-                int right = Math.Max(value.GetBounds().Right, m_bound.Right);
-                int bottom = Math.Max(value.GetBounds().Bottom, m_bound.Bottom);
-                //m_bound.right = Math.Max(value.GetBounds().Right, m_bound.Right);
-                //m_bound.bottom = Math.Max(value.GetBounds().Bottom, m_bound.Bottom);
-                m_bound = GrRect.FromLTRB(left, top, right, bottom);
+                int left = this.bound.Left;
+                int top = this.bound.Top;
+                int right = Math.Max(item.Bounds.Right, this.bound.Right);
+                int bottom = Math.Max(item.Bounds.Bottom, this.bound.Bottom);
+                //this.bound.right = Math.Max(value.GetBounds().Right, this.bound.Right);
+                //this.bound.bottom = Math.Max(value.GetBounds().Bottom, this.bound.Bottom);
+                this.bound = GrRect.FromLTRB(left, top, right, bottom);
             }
         }
 
@@ -127,33 +122,11 @@ namespace Ntreev.Library.Grid
             GrRect rect;
             int left = this.X;
             int top = this.Y;
-            int right = m_columnList.GetVisibleRight();
-            int bottom = m_pDataRowList.GetVisibleBottom();
+            int right = this.columnList.GetVisibleRight();
+            int bottom = this.pDataRowList.GetVisibleBottom();
             rect = GrRect.FromLTRB(left, top, right, bottom);
             return rect;
         }
-
-        //public override int X
-        //{
-        //    get { return this.GridCore.DisplayRectangle.Left; }
-        //}
-
-        //public override int Y
-        //{
-        //    get { return this.GridCore.DisplayRectangle.Top; }
-        //}
-
-        //public override int Width
-        //{
-        //    get { return m_width; }
-        //}
-
-        //public override int Height
-        //{
-        //    get { return m_height; }
-        //}
-
-        public override GrRect GetBounds() { return m_bound; }
 
         public override void Paint(GrGridPainter painter, GrRect clipRect)
         {
@@ -186,37 +159,34 @@ namespace Ntreev.Library.Grid
             return null;
         }
 
-
         protected override void OnGridCoreAttached()
         {
             base.OnGridCoreAttached();
 
-            this.GridCore.Created += gridCore_Created;
-            this.GridCore.DisplayRectangleChanged += gridCore_DisplayRectChanged;
+            this.GridCore.Created += GridCore_Created;
+            this.GridCore.DisplayRectangleChanged += GridCore_DisplayRectangleChanged;
         }
-
 
         private void BuildVisibleList()
         {
-            //m_vecVisibleRows.Clear();
+            //this.vecVisibleRows.Clear();
 
             //for (int i = 0; i < GetChildCount(); i++)
             //{
             //    GrRow pChild = GetChild(i);
             //    if (pChild.IsVisible == true)
-            //        m_vecVisibleRows.Add(pChild);
+            //        this.vecVisibleRows.Add(pChild);
             //}
-            m_heightChanged = true;
+            this.heightChanged = true;
         }
 
         private void AdjustRowHeight()
         {
-            for (int i = 0; i < GetChildCount(); i++)
+            foreach(var item in this.Childs)
             {
-                GrRow pChild = GetChild(i);
-                pChild.AdjustHeight();
+                item.AdjustHeight();
             }
-            m_heightChanged = true;
+            this.heightChanged = true;
         }
 
         private void RepositionVisibleList()
@@ -229,10 +199,10 @@ namespace Ntreev.Library.Grid
                 item.Y = y;
                 y += item.Height;
             }
-            m_height = y - this.Y;
+            this.Height = y - this.Y;
         }
 
-        private void gridCore_Created(object sender, EventArgs e)
+        private void GridCore_Created(object sender, EventArgs e)
         {
             base.OnGridCoreAttached();
 
@@ -242,40 +212,33 @@ namespace Ntreev.Library.Grid
                     continue;
                 item.SizeChanged += item_SizeChanged;
                 item.VisibleChanged += item_VisibleChanged;
-                m_vecUpdatables.Add(item as GrUpdatableRow);
+                this.updatables.Add(item as GrUpdatableRow);
 
             }
 
-            for (int i = 0; i < GetChildCount(); i++)
-            {
-                GrUpdatableRow pUpdatableRow = GetChild(i) as GrUpdatableRow;
-                if (pUpdatableRow == null)
-                    continue;
-                m_vecUpdatables.Add(pUpdatableRow);
-            }
+            this.updatables.Sort((x, y) => x.UpdatePriority.CompareTo(y.UpdatePriority));
+            //std::sort(this.vecUpdatables.begin(), this.vecUpdatables.end(), SortUpdatable());
 
-            m_vecUpdatables.Sort((x, y) => x.GetUpdatePriority().CompareTo(y.GetUpdatePriority()));
-            //std::sort(m_vecUpdatables.begin(), m_vecUpdatables.end(), SortUpdatable());
-
-            m_columnList = this.GridCore.ColumnList;
-            m_pDataRowList = this.GridCore.DataRowList;
-            m_pInsertionRow = this.GridCore.InsertionRow;
+            this.columnList = this.GridCore.ColumnList;
+            this.pDataRowList = this.GridCore.DataRowList;
+            this.pInsertionRow = this.GridCore.InsertionRow;
 
             this.GridCore.DataRowList.DataRowInserted += dataRowList_DataRowInserted;
         }
 
-        void item_VisibleChanged(object sender, EventArgs e)
+        private void item_VisibleChanged(object sender, EventArgs e)
         {
             
         }
 
-        void item_SizeChanged(object sender, EventArgs e)
+        private void item_SizeChanged(object sender, EventArgs e)
         {
             
         }
 
-        private void gridCore_DisplayRectChanged(object sender, EventArgs e)
+        private void GridCore_DisplayRectangleChanged(object sender, EventArgs e)
         {
+            this.Size = this.GridCore.DisplayRectangle.Size;
             SetHeightChanged();
         }
 
@@ -286,17 +249,16 @@ namespace Ntreev.Library.Grid
 
             List<GrRow> childs = new List<GrRow>();
 
-            for (int i = 0; i < GetChildCount(); i++)
+            foreach(var item in this.Childs)
             {
-                GrRow pChild = GetChild(i);
-                if (pChild == m_pInsertionRow)
+                if (item == this.pInsertionRow)
                 {
-                    m_pInsertionRow = this.GridCore.InsertionRow;
-                    childs.Add(m_pInsertionRow);
+                    this.pInsertionRow = this.GridCore.InsertionRow;
+                    childs.Add(this.pInsertionRow);
                 }
                 else
                 {
-                    childs.Add(pChild);
+                    childs.Add(item);
                 }
             }
 
@@ -308,21 +270,8 @@ namespace Ntreev.Library.Grid
             }
 
 
-            m_visibleChanged = true;
+            this.visibleChanged = true;
             Update(true);
         }
-
-        //private:
-
-
-        //private:
-        //    class SortUpdatable
-        //    {
-        //    public:
-        //        bool operator () ( GrUpdatableRow p1,  GrUpdatableRow p2)
-        //        {
-        //            return p1.GetUpdatePriority() < p2.GetUpdatePriority();
-        //        }
-        //    };
     }
 }

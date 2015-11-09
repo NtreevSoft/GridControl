@@ -163,7 +163,7 @@ namespace Ntreev.Library.Grid.States
                 int x;
                 if(m_targetCell == null)
                 {
-                    x = Math.Min(displayRect.Right, m_columnList.GetBounds().Right);
+                    x = Math.Min(displayRect.Right, m_columnList.Bounds.Right);
                 }
                 else
                 {

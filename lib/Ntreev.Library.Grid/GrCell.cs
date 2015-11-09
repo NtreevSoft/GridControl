@@ -18,11 +18,10 @@ namespace Ntreev.Library.Grid
 
         private static Dictionary<int, string> s_texts = new Dictionary<int, string>();
         private bool isVisible = true;
-        private GrRect bounds;
+        private GrRect bounds = new GrRect(0, 0, int.MaxValue, int.MaxValue);
 
         protected GrCell()
         {
-
 
         }
 
@@ -366,12 +365,15 @@ namespace Ntreev.Library.Grid
             return new GrSize(this.layout.width, this.layout.height);
         }
 
-        public virtual GrSize GetPreferredSize()
+        public virtual GrSize PreferredSize
         {
-            GrSize size = this.GetTextBounds();
-            size.Width += this.GetPadding().Horizontal;
-            size.Height += this.GetPadding().Vertical;
-            return size;
+            get
+            {
+                GrSize size = this.GetTextBounds();
+                size.Width += this.GetPadding().Horizontal;
+                size.Height += this.GetPadding().Vertical;
+                return size;
+            }
         }
 
         public GrPoint AlignText(GrLineDesc line, int index, int count)

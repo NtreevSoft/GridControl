@@ -35,7 +35,7 @@ namespace Ntreev.Library.Grid
 
         protected override void OnVisibleChanged(EventArgs e)
         {
-            GrRootRow pHeaderList = this.GetParent() as GrRootRow;
+            GrRootRow pHeaderList = this.Parent as GrRootRow;
             pHeaderList.SetVisibleChanged();
 
             base.OnVisibleChanged(e);
@@ -82,7 +82,10 @@ namespace Ntreev.Library.Grid
             this.groupChanged = false;
         }
 
-        public override int GetUpdatePriority() { return GrDefineUtility.UPDATEPRIORITY_GROUPPANEL; }
+        public override int UpdatePriority
+        {
+            get { return GrDefineUtility.UPDATEPRIORITY_GROUPPANEL; }
+        }
 
         public override GrRowType GetRowType() { return GrRowType.GroupPanel; }
 
@@ -216,9 +219,9 @@ namespace Ntreev.Library.Grid
 
         public event EventHandler Changed;
 
-        public event GroupEventHandler Expanded;
+        public event GrGroupEventHandler Expanded;
 
-        public event GroupEventHandler SortChanged;
+        public event GrGroupEventHandler SortChanged;
 
         protected override void OnGridCoreAttached()
         {

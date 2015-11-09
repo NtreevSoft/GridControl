@@ -218,10 +218,10 @@ namespace Ntreev.Library.Grid
             this.GridCore.HorzScroll.IsVisible = visible;
         }
 
-        public override GrRect GetBounds()
-        {
-            return GrRect.FromLTRB(this.X, this.Y, m_displayableRight, this.Y + this.Height);
-        }
+        //public override GrRect GetBounds()
+        //{
+        //    return GrRect.FromLTRB(this.X, this.Y, m_displayableRight, this.Y + this.Height);
+        //}
 
         public override GrColor GetForeColor()
         {

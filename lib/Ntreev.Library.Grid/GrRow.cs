@@ -14,7 +14,7 @@ namespace Ntreev.Library.Grid
         private readonly List<GrRow> childs = new List<GrRow>();
         private GrRow parent;
         private int depth;
-        private uint id;
+        private int id;
 
         //private int y;
         //private int height;
@@ -22,7 +22,7 @@ namespace Ntreev.Library.Grid
         private bool isResizable;
         private bool fitting;
 
-        private static uint snID;
+        private static int snID;
 
         public GrRow()
         {
@@ -36,7 +36,7 @@ namespace Ntreev.Library.Grid
             this.depth = 0;
             this.fitting = false;
 
-            this.Height = DefaultHeight;
+            //this.Height = DefaultHeight;
         }
 
         //public void SetY(int y)
@@ -139,8 +139,7 @@ namespace Ntreev.Library.Grid
             if (this.IsDisplayable == false)
                 return null;
 
-            GrRect bound = this.GetBounds();
-            if (bound.Contains(location) == false)
+            if (this.Bounds.Contains(location) == false)
                 return null;
 
             return this;
@@ -151,19 +150,19 @@ namespace Ntreev.Library.Grid
             get { return this.childs; }
         }
 
-        public int GetChildCount()
-        {
-            return this.childs.Count;
-        }
+        //public int GetChildCount()
+        //{
+        //    return this.childs.Count;
+        //}
 
-        public GrRow GetChild(int index)
-        {
-            return this.childs[index];
-        }
+        //public GrRow GetChild(int index)
+        //{
+        //    return this.childs[index];
+        //}
 
-        public GrRow GetParent()
+        public GrRow Parent
         {
-            return this.parent;
+            get { return this.parent; }
         }
 
         public int Depth
@@ -192,7 +191,7 @@ namespace Ntreev.Library.Grid
 
         public override void Paint(GrGridPainter painter, GrRect clipRect) { }
 
-        public virtual GrRect GetBounds() { return this.Bounds; }
+        //public virtual GrRect GetBounds() { return this.Bounds; }
 
         public override GrPadding GetPadding() { return GrPadding.Default; }
 
@@ -242,7 +241,7 @@ namespace Ntreev.Library.Grid
             this.childs.Clear();
         }
 
-        public uint GetID() { return this.id; }
+        public int GetID() { return this.id; }
 
         protected override void OnGridCoreAttached()
         {
@@ -310,7 +309,7 @@ namespace Ntreev.Library.Grid
 
         protected void UpdateDepth(GrRow row)
         {
-            GrRow pParent = row.GetParent();
+            GrRow pParent = row.Parent;
             if (pParent == null)
                 row.depth = 0;
             else

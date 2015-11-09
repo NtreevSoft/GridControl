@@ -166,9 +166,10 @@ namespace Ntreev.Library.Grid
 
 
         public virtual GrRect GetDisplayRect() { return this.Bounds; }
-        public virtual IDataRow GetDataRow()
+
+        public virtual IDataRow DataRow
         {
-            return m_row;
+            get { return m_row; }
         }
 
 

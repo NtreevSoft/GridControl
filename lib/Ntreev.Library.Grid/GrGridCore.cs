@@ -8,179 +8,179 @@ namespace Ntreev.Library.Grid
 {
     public class GrGridCore : IDisposable
     {
-        GrRootRow m_pRootRow;
-        GrCaption m_pCaption;
-        GrGroupPanel m_groupPanel;
-        GrColumnList m_columnList;
-        GrRowSplitter m_pSplitterRow;
-        GrDataRowList m_pDataRowList;
-        GrFocusMover m_pFocusMover;
+        GrRootRow rootRow;
+        GrCaption paption;
+        GrGroupPanel groupPanel;
+        GrColumnList columnList;
+        GrRowSplitter splitterRow;
+        GrDataRowList dataRowList;
+        GrFocusMover focusMover;
 
-        GrStateManager m_pStateManager;
-        GrGridWindow m_pGridWindow;
-        GrInvalidator m_pInvalidator;
+        GrStateManager stateManager;
+        GrGridWindow gridWindow;
+        GrInvalidator invalidator;
 
-        GrRect m_displayRect;
+        GrRect displayRect;
 
-        GrItemSelector m_pItemSelector;
-        GrFocuser m_pFocuser;
-        GrTextUpdater m_pTextUpdater;
-        GrMouseOverer m_pMouseOverer;
-        GrMousePresser m_pMousePresser;
+        GrItemSelector itemSelector;
+        GrFocuser focuser;
+        GrTextUpdater textUpdater;
+        GrMouseOverer mouseOverer;
+        GrMousePresser mousePresser;
 
 
-        //ulong m_flag;
+        //ulong flag;
 
-        int m_reservedColumn;
-        int m_reservedRow;
+        int reservedColumn;
+        int reservedRow;
 
-        bool m_autoFitColumn;
-        GrAutoFitColumnType m_autoFitColumnType;
-        bool m_autoFitRow;
-        //int m_columnSplitterWidth;
-        //int m_rowSplitterHeight;
+        bool autoFitColumn;
+        GrAutoFitColumnType autoFitColumnType;
+        bool autoFitRow;
+        //int columnSplitterWidth;
+        //int rowSplitterHeight;
 
-        bool m_updating;
-        //bool m_painting;
-        bool m_fullRowSelect;
-        bool m_selectionVisible;
-        bool m_rowHighlight;
-        GrRowHighlightType m_rowHighlightType;
-        bool m_columnMovable;
-        bool m_columnSortable;
-        bool m_columnResizable;
-        bool m_columnFreezable;
-        bool m_readOnly;
-        bool m_rowResizable;
-        bool m_rowMovable;
-        bool m_rowVisible;
-        bool m_hideSelection;
-        bool m_multiSelect;
-        bool m_fillBlank;
-        GrClickEditing m_clickEditing;
+        bool updating;
+        //bool painting;
+        bool fullRowSelect;
+        bool selectionVisible;
+        bool rowHighlight;
+        GrRowHighlightType rowHighlightType;
+        bool columnMovable;
+        bool columnSortable;
+        bool columnResizable;
+        bool columnFreezable;
+        bool readOnly;
+        bool rowResizable;
+        bool rowMovable;
+        bool rowVisible;
+        bool hideSelection;
+        bool multiSelect;
+        bool fillBlank;
+        GrClickEditing clickEditing;
 
-        GrColor m_foreColor;
-        GrColor m_backColor;
-        GrColor m_lineColor;
-        GrFont m_pFont;
-        GrPadding m_padding;
+        GrColor foreColor;
+        GrColor backColor;
+        GrColor lineColor;
+        GrFont pFont;
+        GrPadding padding;
 
-        GrStyle m_pStyle;
+        GrStyle pStyle;
 
-        int m_attachedCount;
-        //int m_createdCell;
+        int attachedCount;
+        //int this.createdCell;
 
-        public GrGridCore(GrGridWindow pGridWindow)
+        public GrGridCore(GrGridWindow gridWindow)
         {
-            this.m_pGridWindow = pGridWindow;
-            //m_createdCell = 0;
-            m_attachedCount = 0;
+            this.gridWindow = gridWindow;
+            //this.createdCell = 0;
+            this.attachedCount = 0;
 
-            m_updating = false;
+            this.updating = false;
 
-            m_autoFitColumn = false;
-            m_autoFitColumnType = GrAutoFitColumnType.ColumnIncluded;
-            m_autoFitRow = false;
-            //m_columnSplitterWidth = 10;
-            //m_rowSplitterHeight = 3;
+            this.autoFitColumn = false;
+            this.autoFitColumnType = GrAutoFitColumnType.ColumnIncluded;
+            this.autoFitRow = false;
+            //this.columnSplitterWidth = 10;
+            //this.rowSplitterHeight = 3;
 
-            m_reservedColumn = 0;
-            m_reservedRow = 0;
+            this.reservedColumn = 0;
+            this.reservedRow = 0;
 
-            m_fullRowSelect = false;
-            m_selectionVisible = true;
-            m_rowHighlight = false;
-            m_rowHighlightType = GrRowHighlightType.Fill;
-            m_columnMovable = true;
-            m_columnSortable = true;
-            m_columnResizable = true;
-            m_columnFreezable = true;
-            m_readOnly = false;
-            m_rowResizable = true;
-            m_rowMovable = false;
-            m_hideSelection = false;
-            m_multiSelect = true;
-            m_rowVisible = true;
-            m_fillBlank = false;
-            m_clickEditing = DefaultClickEditing;
+            this.fullRowSelect = false;
+            this.selectionVisible = true;
+            this.rowHighlight = false;
+            this.rowHighlightType = GrRowHighlightType.Fill;
+            this.columnMovable = true;
+            this.columnSortable = true;
+            this.columnResizable = true;
+            this.columnFreezable = true;
+            this.readOnly = false;
+            this.rowResizable = true;
+            this.rowMovable = false;
+            this.hideSelection = false;
+            this.multiSelect = true;
+            this.rowVisible = true;
+            this.fillBlank = false;
+            this.clickEditing = DefaultClickEditing;
 
-            m_foreColor = GrStyle.Default.ForeColor;
-            m_backColor = GrStyle.Default.BackColor;
-            m_lineColor = GrStyle.Default.LineColor;
-            m_padding = GrStyle.Default.Padding;
-            m_pFont = GrStyle.Default.Font;
-            m_pStyle = null;
+            this.foreColor = GrStyle.Default.ForeColor;
+            this.backColor = GrStyle.Default.BackColor;
+            this.lineColor = GrStyle.Default.LineColor;
+            this.padding = GrStyle.Default.Padding;
+            this.pFont = GrStyle.Default.Font;
+            this.pStyle = null;
 
-            m_pItemSelector = new GrItemSelectorInternal();
-            m_pFocuser = new GrFocuserInternal();
-            m_pTextUpdater = new GrTextUpdater();
-            m_pMouseOverer = new GrMouseOverer();
-            m_pMousePresser = new GrMousePresser();
-            m_pRootRow = new GrRootRow();
-            m_pCaption = new GrCaption();
-            m_groupPanel = new GrGroupPanel();
-            m_columnList = new GrColumnList();
-            m_pDataRowList = new GrDataRowList();
-            m_pSplitterRow = new GrRowSplitter();
-            m_pFocusMover = new GrFocusMover();
-            m_pStateManager = new GrStateManager();
+            this.itemSelector = new GrItemSelectorInternal();
+            this.focuser = new GrFocuserInternal();
+            this.textUpdater = new GrTextUpdater();
+            this.mouseOverer = new GrMouseOverer();
+            this.mousePresser = new GrMousePresser();
+            this.rootRow = new GrRootRow();
+            this.paption = new GrCaption();
+            this.groupPanel = new GrGroupPanel();
+            this.columnList = new GrColumnList();
+            this.dataRowList = new GrDataRowList();
+            this.splitterRow = new GrRowSplitter();
+            this.focusMover = new GrFocusMover();
+            this.stateManager = new GrStateManager();
 
-            m_pInvalidator = m_pGridWindow.GetInvalidator();
+            this.invalidator = this.gridWindow.GetInvalidator();
 
-            AttachObject(m_pItemSelector);
-            AttachObject(m_pFocuser);
-            AttachObject(m_pTextUpdater);
-            AttachObject(m_pMouseOverer);
-            AttachObject(m_pMousePresser);
-            AttachObject(m_pRootRow);
-            AttachObject(m_pCaption);
-            AttachObject(m_groupPanel);
-            AttachObject(m_columnList);
-            AttachObject(m_pDataRowList);
-            AttachObject(m_pSplitterRow);
-            AttachObject(m_pStateManager);
-            AttachObject(m_pGridWindow);
-            AttachObject(m_pFocusMover);
+            AttachObject(this.itemSelector);
+            AttachObject(this.focuser);
+            AttachObject(this.textUpdater);
+            AttachObject(this.mouseOverer);
+            AttachObject(this.mousePresser);
+            AttachObject(this.rootRow);
+            AttachObject(this.paption);
+            AttachObject(this.groupPanel);
+            AttachObject(this.columnList);
+            AttachObject(this.dataRowList);
+            AttachObject(this.splitterRow);
+            AttachObject(this.stateManager);
+            AttachObject(this.gridWindow);
+            AttachObject(this.focusMover);
 
-            m_pRootRow.AddChild(m_pCaption);
-            m_pRootRow.AddChild(m_groupPanel);
-            m_pRootRow.AddChild(m_columnList);
-            m_pRootRow.AddChild(m_pDataRowList.InsertionRow);
-            m_pRootRow.AddChild(m_pSplitterRow);
-            m_pRootRow.AddChild(m_pDataRowList);
+            this.rootRow.AddChild(this.paption);
+            this.rootRow.AddChild(this.groupPanel);
+            this.rootRow.AddChild(this.columnList);
+            this.rootRow.AddChild(this.dataRowList.InsertionRow);
+            this.rootRow.AddChild(this.splitterRow);
+            this.rootRow.AddChild(this.dataRowList);
 
-            m_columnList.ColumnInserted += columnList_ColumnInserted;
-            m_columnList.ColumnRemoved += columnList_ColumnRemoved;
-            m_columnList.ColumnWidthChanged += columnList_ColumnWidthChanged;
-            m_columnList.ColumnWordwrapChanged += columnList_ColumnWordwrapChanged;
-            m_columnList.ColumnHorzAlignChanged += columnList_ColumnHorzAlignChanged;
-            m_columnList.ColumnVertAlignChanged += columnList_ColumnVertAlignChanged;
-            m_columnList.ColumnPaddingChanged += columnList_ColumnPaddingChanged;
+            this.columnList.ColumnInserted += columnList_ColumnInserted;
+            this.columnList.ColumnRemoved += columnList_ColumnRemoved;
+            this.columnList.ColumnWidthChanged += columnList_ColumnWidthChanged;
+            this.columnList.ColumnWordwrapChanged += columnList_ColumnWordwrapChanged;
+            this.columnList.ColumnHorzAlignChanged += columnList_ColumnHorzAlignChanged;
+            this.columnList.ColumnVertAlignChanged += columnList_ColumnVertAlignChanged;
+            this.columnList.ColumnPaddingChanged += columnList_ColumnPaddingChanged;
 
-            m_pFocuser.FocusChanging += focuser_FocusChanging;
+            this.focuser.FocusChanging += focuser_FocusChanging;
 
             this.Created(this, EventArgs.Empty);
         }
 
         public void Reserve(int columnCount, int rowCount)
         {
-            m_reservedColumn = columnCount + 2;
-            m_reservedRow = rowCount + 2;
+            this.reservedColumn = columnCount + 2;
+            this.reservedRow = rowCount + 2;
 
-            m_pDataRowList.Reserve(m_reservedRow);
-            m_columnList.Reserve(m_reservedColumn);
+            this.dataRowList.Reserve(this.reservedRow);
+            this.columnList.Reserve(this.reservedColumn);
 
             this.OnCapacityChanged(EventArgs.Empty);
         }
 
         public int GetReservedColumn()
         {
-            return m_reservedColumn;
+            return this.reservedColumn;
         }
 
         public int GetReservedRow()
         {
-            return m_reservedRow;
+            return this.reservedRow;
         }
         
         public void Clear()
@@ -197,23 +197,23 @@ namespace Ntreev.Library.Grid
 
         public bool Update(bool force)
         {
-            if (m_updating == true)
+            if (this.updating == true)
                 return false;
 
-            m_updating = true;
+            this.updating = true;
 
-            m_pTextUpdater.UpdateTextBounds();
-            m_pRootRow.Update(force);
-            m_pTextUpdater.UpdateTextBounds();
-            m_pTextUpdater.UpdateTextAlign();
+            this.textUpdater.UpdateTextBounds();
+            this.rootRow.Update(force);
+            this.textUpdater.UpdateTextBounds();
+            this.textUpdater.UpdateTextAlign();
 
             int i = 0;
-            while (m_pRootRow.ShouldUpdate() == true)
+            while (this.rootRow.ShouldUpdate() == true)
             {
-                m_pTextUpdater.UpdateTextBounds();
-                m_pRootRow.Update(force);
-                m_pTextUpdater.UpdateTextBounds();
-                m_pTextUpdater.UpdateTextAlign();
+                this.textUpdater.UpdateTextBounds();
+                this.rootRow.Update(force);
+                this.textUpdater.UpdateTextBounds();
+                this.textUpdater.UpdateTextAlign();
                 i++;
 
                 //#ifdef _MANAGED
@@ -222,132 +222,132 @@ namespace Ntreev.Library.Grid
                 //#endif
             }
 
-            m_updating = false;
+            this.updating = false;
             return true;
         }
 
         public GrRootRow RootRow
         {
-            get { return m_pRootRow; }
+            get { return this.rootRow; }
         }
 
         public GrDataRowList DataRowList
         {
-            get { return m_pDataRowList; }
+            get { return this.dataRowList; }
         }
 
         public GrColumnList ColumnList
         {
-            get { return m_columnList; }
+            get { return this.columnList; }
         }
 
         public GrDataRow InsertionRow
         {
-            get { return m_pDataRowList.InsertionRow; }
+            get { return this.dataRowList.InsertionRow; }
         }
 
         public GrCaption CaptionRow
         {
-            get { return m_pCaption; }
+            get { return this.paption; }
         }
 
         public GrGroupPanel GroupPanel
         {
-            get { return m_groupPanel; }
+            get { return this.groupPanel; }
         }
 
         public GrItemSelector ItemSelector
         {
-            get { return m_pItemSelector; }
+            get { return this.itemSelector; }
         }
 
         public GrFocuser Focuser
         {
-            get { return m_pFocuser; }
+            get { return this.focuser; }
         }
 
-        public GrFocusMover GetFocusMover() { return m_pFocusMover; }
+        public GrFocusMover GetFocusMover() { return this.focusMover; }
 
-        public GrTextUpdater GetTextUpdater() { return m_pTextUpdater; }
+        public GrTextUpdater GetTextUpdater() { return this.textUpdater; }
 
         public GrScroll HorzScroll
         {
-            get { return m_pGridWindow.GetHorzScroll(); }
+            get { return this.gridWindow.GetHorzScroll(); }
         }
 
         public GrScroll VertScroll
         {
-            get { return m_pGridWindow.GetVertScroll(); }
+            get { return this.gridWindow.GetVertScroll(); }
         }
 
-        public GrGridWindow GetGridWindow() { return m_pGridWindow; }
+        public GrGridWindow GetGridWindow() { return this.gridWindow; }
 
-        public GrStateManager GetStateManager() { return m_pStateManager; }
+        public GrStateManager GetStateManager() { return this.stateManager; }
 
         public GrRect DisplayRectangle
         {
-            get { return m_displayRect; }
+            get { return this.displayRect; }
             set
             {
-                if (m_displayRect == value)
+                if (this.displayRect == value)
                     return;
-                m_displayRect = value;
+                this.displayRect = value;
                 this.Update();
                 int horz = this.HorzScroll.IsVisible == true ? this.HorzScroll.Value : this.HorzScroll.Minimum;
                 int vert = this.VertScroll.IsVisible == true ? this.VertScroll.Value : this.VertScroll.Minimum;
-                m_pRootRow.Clip(m_displayRect, horz, vert);
+                this.rootRow.Clip(this.displayRect, horz, vert);
                 this.OnDisplayRectangleChanged(EventArgs.Empty);
             }
         }
 
         public GrRect GetBounds()
         {
-            return m_pRootRow.GetBounds();
+            return this.rootRow.Bounds;
         }
 
         public GrRect GetVisibleBounds()
         {
-            return m_pRootRow.GetVisibleBounds();
+            return this.rootRow.GetVisibleBounds();
         }
 
         public GrRect GetDataRect()
         {
 
-            int left = m_columnList.GetUnfrozenX();
-            int top = m_pDataRowList.Y;
-            int right = Math.Min(GetBounds().Right, m_displayRect.Right);
-            int bottom = Math.Min(GetBounds().Bottom, m_displayRect.Bottom);
+            int left = this.columnList.GetUnfrozenX();
+            int top = this.dataRowList.Y;
+            int right = Math.Min(GetBounds().Right, this.displayRect.Right);
+            int bottom = Math.Min(GetBounds().Bottom, this.displayRect.Bottom);
             GrRect dataRect = GrRect.FromLTRB(left, top, right, bottom);
             return dataRect;
         }
 
         public bool AutoFitColumn
         {
-            get { return m_autoFitColumn; }
-            set { m_autoFitColumn = value; }
+            get { return this.autoFitColumn; }
+            set { this.autoFitColumn = value; }
         }
 
         public GrAutoFitColumnType GetAutoFitColumnType()
         {
-            return m_autoFitColumnType;
+            return this.autoFitColumnType;
         }
 
         public void GetAutoFitColumnType(GrAutoFitColumnType value)
         {
-            if (m_autoFitColumnType == value)
+            if (this.autoFitColumnType == value)
                 return;
-            m_autoFitColumnType = value;
+            this.autoFitColumnType = value;
 
-            if (m_autoFitColumn == true)
+            if (this.autoFitColumn == true)
             {
-                m_columnList.SetWidthChanged();
+                this.columnList.SetWidthChanged();
             }
         }
 
         public bool AutoFitRow
         {
-            get { return m_autoFitRow; }
-            set { m_autoFitRow = value; }
+            get { return this.autoFitRow; }
+            set { this.autoFitRow = value; }
         }
 
         public bool IsInsertionRowVisible
@@ -358,260 +358,260 @@ namespace Ntreev.Library.Grid
 
         public bool GetRowHighlight()
         {
-            return m_rowHighlight;
+            return this.rowHighlight;
         }
 
         public void SetRowHighlight(bool b)
         {
-            if (m_rowHighlight == b)
+            if (this.rowHighlight == b)
                 return;
-            m_rowHighlight = b;
+            this.rowHighlight = b;
             Invalidate();
         }
 
         public GrRowHighlightType RowHighlightType
         {
-            get { return m_rowHighlightType; }
+            get { return this.rowHighlightType; }
             set
             {
-                if (m_rowHighlightType == value)
+                if (this.rowHighlightType == value)
                     return;
-                m_rowHighlightType = value;
+                this.rowHighlightType = value;
                 this.Invalidate();
             }
         }
 
         public bool GetFullRowSelect()
         {
-            return m_fullRowSelect;
+            return this.fullRowSelect;
         }
 
         public void SetFullRowSelect(bool b)
         {
-            m_fullRowSelect = b;
+            this.fullRowSelect = b;
         }
 
         public bool GetSelectionVisible()
         {
-            return m_selectionVisible;
+            return this.selectionVisible;
         }
 
         public void SetSelectionVisible(bool b)
         {
-            m_selectionVisible = b;
+            this.selectionVisible = b;
         }
 
         public bool GetRowVisible()
         {
-            return m_rowVisible;
+            return this.rowVisible;
         }
 
         public void SetRowVisible(bool b)
         {
-            if (m_rowVisible == b)
+            if (this.rowVisible == b)
                 return;
-            m_rowVisible = b;
-            m_columnList.SetVisibleChanged();
+            this.rowVisible = b;
+            this.columnList.SetVisibleChanged();
             Invalidate();
         }
 
         public bool GetFillBlank()
         {
-            return m_fillBlank;
+            return this.fillBlank;
         }
 
         public void SetFillBlank(bool b)
         {
-            if (m_fillBlank == b)
+            if (this.fillBlank == b)
                 return;
-            m_fillBlank = b;
+            this.fillBlank = b;
             Invalidate();
         }
 
         public bool IsGrouped()
         {
-            return m_groupPanel.Groups.Count > 0 ? true : false;
+            return this.groupPanel.Groups.Count > 0 ? true : false;
         }
 
-        public bool IsUpdating() { return m_updating; }
+        public bool IsUpdating() { return this.updating; }
 
         public bool IsGroupable
         {
-            get { return m_groupPanel.IsGroupable; }
+            get { return this.groupPanel.IsGroupable; }
             set
             {
-                m_groupPanel.IsGroupable = value;
-                m_pRootRow.SetVisibleChanged();
+                this.groupPanel.IsGroupable = value;
+                this.rootRow.SetVisibleChanged();
             }
         }
 
         public bool GetColumnMovable()
         {
-            return m_columnMovable;
+            return this.columnMovable;
         }
 
         public void SetColumnMovable(bool b)
         {
-            m_columnMovable = b;
+            this.columnMovable = b;
         }
 
         public bool GetColumnSortable()
         {
-            return m_columnSortable;
+            return this.columnSortable;
         }
 
         public void SetColumnSortable(bool b)
         {
-            m_columnSortable = b;
+            this.columnSortable = b;
         }
 
         public bool GetColumnResizable()
         {
-            return m_columnResizable;
+            return this.columnResizable;
         }
 
         public void SetColumnResizable(bool b)
         {
-            m_columnResizable = b;
+            this.columnResizable = b;
         }
 
         public bool GetColumnFreezable()
         {
-            return m_columnFreezable;
+            return this.columnFreezable;
         }
 
         public void SetColumnFreezable(bool b)
         {
-            m_columnFreezable = b;
+            this.columnFreezable = b;
         }
 
         public bool GetReadOnly()
         {
-            return m_readOnly;
+            return this.readOnly;
         }
 
         public void SetReadOnly(bool value)
         {
-            if (m_readOnly == value)
+            if (this.readOnly == value)
                 return;
-            m_readOnly = value;
+            this.readOnly = value;
             Invalidate();
         }
 
         public bool GetRowResizable()
         {
-            return m_rowResizable;
+            return this.rowResizable;
         }
 
         public void SetRowResizable(bool b)
         {
-            m_rowResizable = b;
+            this.rowResizable = b;
         }
 
         public bool GetRowMovable()
         {
-            return m_rowMovable;
+            return this.rowMovable;
         }
 
         public void SetRowMovable(bool b)
         {
-            m_rowMovable = b;
+            this.rowMovable = b;
         }
 
         public bool GetHideSelection()
         {
-            return m_hideSelection;
+            return this.hideSelection;
         }
 
         public void SetHideSelection(bool b)
         {
-            m_hideSelection = b;
+            this.hideSelection = b;
         }
 
         public bool GetMultiSelect()
         {
-            return m_multiSelect;
+            return this.multiSelect;
         }
 
         public void SetMultiSelect(bool b)
         {
-            m_multiSelect = b;
+            this.multiSelect = b;
         }
 
         public GrClickEditing GetClickEditing()
         {
-            return m_clickEditing;
+            return this.clickEditing;
         }
 
         public void SetClickEditing(GrClickEditing clickEditing)
         {
             if (clickEditing == GrClickEditing.Default)
                 clickEditing = DefaultClickEditing;
-            m_clickEditing = clickEditing;
+            this.clickEditing = clickEditing;
         }
 
         public GrColor GetForeColor()
         {
-            return m_foreColor;
+            return this.foreColor;
         }
 
         public GrColor GetBackColor()
         {
-            return m_backColor;
+            return this.backColor;
         }
 
         public GrColor GetLineColor()
         {
-            return m_lineColor;
+            return this.lineColor;
         }
 
         public GrFont GetFont()
         {
-            return m_pFont;
+            return this.pFont;
         }
 
         public GrPadding GetPadding()
         {
-            return m_padding;
+            return this.padding;
         }
 
         public void SetForeColor(GrColor foreColor)
         {
-            if (m_foreColor == foreColor)
+            if (this.foreColor == foreColor)
                 return;
-            m_foreColor = foreColor;
+            this.foreColor = foreColor;
             Invalidate();
         }
 
         public void SetBackColor(GrColor backColor)
         {
-            if (m_backColor == backColor)
+            if (this.backColor == backColor)
                 return;
-            m_backColor = backColor;
+            this.backColor = backColor;
             Invalidate();
         }
 
         public void SetLineColor(GrColor lineColor)
         {
-            if (m_lineColor == lineColor)
+            if (this.lineColor == lineColor)
                 return;
-            m_lineColor = lineColor;
+            this.lineColor = lineColor;
             Invalidate();
         }
 
         public void SetFont(GrFont pFont)
         {
-            if (m_pFont == pFont)
+            if (this.pFont == pFont)
                 return;
-            m_pFont = pFont;
+            this.pFont = pFont;
             OnFontChanged(EventArgs.Empty);
         }
 
         public void SetPadding(GrPadding padding)
         {
-            if (m_padding == padding)
+            if (this.padding == padding)
                 return;
-            m_padding = padding;
+            this.padding = padding;
             Invalidate();
         }
 
@@ -626,7 +626,7 @@ namespace Ntreev.Library.Grid
             {
                 pItem.BringIntoView();
             }
-            m_pStateManager.ChangeState(GrGridState.ItemEditing, pItem, temp);
+            this.stateManager.ChangeState(GrGridState.ItemEditing, pItem, temp);
         }
 
         public void BringIntoView(GrItem pItem)
@@ -635,78 +635,78 @@ namespace Ntreev.Library.Grid
                 return;
 
             Update();
-            m_columnList.BringIntoView(pItem.GetColumn());
-            m_pDataRowList.BringIntoView(pItem.GetDataRow());
+            this.columnList.BringIntoView(pItem.Column);
+            this.dataRowList.BringIntoView(pItem.DataRow);
         }
 
         public bool SetMouseOver(GrCell pCell, GrPoint localLocation)
         {
-            return m_pMouseOverer.SetMouseOver(pCell, localLocation);
+            return this.mouseOverer.SetMouseOver(pCell, localLocation);
         }
 
         public GrCell GetMouseOver()
         {
-            return m_pMouseOverer.GetMouseOver();
+            return this.mouseOverer.GetMouseOver();
         }
 
         public int GetMouseOverState()
         {
-            return m_pMouseOverer.GetMouseOverState();
+            return this.mouseOverer.GetMouseOverState();
         }
 
         public void SetMousePress(GrCell pCell)
         {
-            m_pMousePresser.SetMousePress(pCell);
+            this.mousePresser.SetMousePress(pCell);
         }
 
         public void SetMouseUnpress()
         {
-            m_pMousePresser.SetMouseUnpress();
+            this.mousePresser.SetMouseUnpress();
         }
 
         public GrCell GetMousePress()
         {
-            return m_pMousePresser.GetMousePress();
+            return this.mousePresser.GetMousePress();
         }
 
         public void Invalidate()
         {
-            m_pInvalidator.Invalidate();
+            this.invalidator.Invalidate();
         }
 
         public void Invalidate(int x, int y, int width, int height)
         {
-            m_pInvalidator.Invalidate(x, y, width, height);
+            this.invalidator.Invalidate(x, y, width, height);
         }
 
         public void Invalidate(GrRect rect)
         {
-            m_pInvalidator.Invalidate(rect);
+            this.invalidator.Invalidate(rect);
         }
 
         public void LockInvalidate()
         {
-            m_pInvalidator.Lock();
+            this.invalidator.Lock();
         }
 
         public void UnlockInvalidate()
         {
-            m_pInvalidator.Unlock();
+            this.invalidator.Unlock();
         }
 
         public void ResetInvalidate()
         {
-            m_pInvalidator.Reset();
+            this.invalidator.Reset();
         }
 
         public bool IsInvalidated()
         {
-            return m_pInvalidator.IsInvalidated();
+            return this.invalidator.IsInvalidated();
         }
 
         public bool HitTest(GrPoint location, out GrHitTest pHitTest)
         {
-            GrCell pCell = m_pRootRow.HitTest(location);
+            GrCell pCell = this.rootRow.HitTest(location);
             pHitTest = new GrHitTest();
             if (pCell != null)
             {
@@ -719,12 +719,12 @@ namespace Ntreev.Library.Grid
 
         public GrStyle GetStyle()
         {
-            return m_pStyle;
+            return this.pStyle;
         }
 
         public void SetStyle(GrStyle pStyle)
         {
-            m_pStyle = pStyle;
+            this.pStyle = pStyle;
         }
         
         public void AttachObject(GrObject pObject)
@@ -734,7 +734,7 @@ namespace Ntreev.Library.Grid
             pObject.GridCore = this;
             pObject.InvokeOnGridCoreAttached();
 
-            m_attachedCount++;
+            this.attachedCount++;
         }
 
         public void DetachObject(GrObject pObject)
@@ -743,7 +743,7 @@ namespace Ntreev.Library.Grid
                 return;
             pObject.InvokeOnGridCoreDetached();
             pObject.GridCore = null;
-            m_attachedCount--;
+            this.attachedCount--;
         }
 
         public void Invoke(string eventName, EventArgs e)
@@ -786,7 +786,7 @@ namespace Ntreev.Library.Grid
             }
             else if (eventName.CompareTo("close") == 0)
             {
-                m_pStateManager.ChangeDefaultState();
+                this.stateManager.ChangeDefaultState();
             }
             else if (eventName.CompareTo("FontChanged") == 0)
             {
@@ -794,7 +794,7 @@ namespace Ntreev.Library.Grid
             }
             else
             {
-                m_columnList.Invoke(eventName, e);
+                this.columnList.Invoke(eventName, e);
             }
         }
 
@@ -851,10 +851,10 @@ namespace Ntreev.Library.Grid
         protected virtual void OnEditValue(GrEditEventArgs e)
         {
             e.GetItem().LockColor(true);
-            m_pInvalidator.Invalidate();
-            m_pGridWindow.OnEditValue(e);
+            this.invalidator.Invalidate();
+            this.gridWindow.OnEditValue(e);
             e.GetItem().LockColor(false);
-            m_pInvalidator.Invalidate();
+            this.invalidator.Invalidate();
         }
 
         protected virtual void OnItemMouseEnter(GrItemMouseEventArgs e)
@@ -943,82 +943,82 @@ namespace Ntreev.Library.Grid
         
         protected virtual void Paint(GrGridPainter painter, GrRect clipRect)
         {
-            //m_painting = true;
-            m_pRootRow.Paint(painter, clipRect);
-            //m_painting = false;
+            //this.painting = true;
+            this.rootRow.Paint(painter, clipRect);
+            //this.painting = false;
         }
 
         protected virtual void PostPaint(GrGridPainter painter, GrRect clipRect)
         {
-            //m_painting = true;
-            m_pStateManager.OnPaint(painter);
-            //m_painting = false;
+            //this.painting = true;
+            this.stateManager.OnPaint(painter);
+            //this.painting = false;
         }
 
         private void focuser_FocusChanging(object sender, GrFocusChangeArgs e)
         {
-            if (m_pStateManager.GetGridState() == GrGridState.ItemEditing)
-                m_pStateManager.ChangeDefaultState();
+            if (this.stateManager.GetGridState() == GrGridState.ItemEditing)
+                this.stateManager.ChangeDefaultState();
         }
 
         private void columnList_ColumnInserted(object sender, GrColumnEventArgs e)
         {
-            m_pTextUpdater.AddTextBounds(m_pCaption);
-            m_pTextUpdater.AddTextBounds(m_groupPanel);
+            this.textUpdater.AddTextBounds(this.paption);
+            this.textUpdater.AddTextBounds(this.groupPanel);
         }
 
         private void columnList_ColumnRemoved(object sender, GrColumnEventArgs e)
         {
-            m_pTextUpdater.AddTextBounds(m_pCaption);
-            m_pTextUpdater.AddTextBounds(m_groupPanel);
+            this.textUpdater.AddTextBounds(this.paption);
+            this.textUpdater.AddTextBounds(this.groupPanel);
         }
 
         private void columnList_ColumnWidthChanged(object sender, GrColumnEventArgs e)
         {
-            if (m_updating == true)
+            if (this.updating == true)
                 return;
             GrColumn column = e.Column;
-            if (column.GetItemWordWrap() == true)
-                m_pTextUpdater.AddTextBounds(column);
+            if (column.ItemWordWrap == true)
+                this.textUpdater.AddTextBounds(column);
         }
 
         private void columnList_ColumnWordwrapChanged(object sender, GrColumnEventArgs e)
         {
-            if (m_updating == true)
+            if (this.updating == true)
                 return;
             GrColumn column = e.Column;
-            m_pTextUpdater.AddTextBounds(column);
+            this.textUpdater.AddTextBounds(column);
         }
 
         private void columnList_ColumnHorzAlignChanged(object sender, GrColumnEventArgs e)
         {
             GrColumn column = e.Column;
-            m_pTextUpdater.AddTextAlign(column);
+            this.textUpdater.AddTextAlign(column);
         }
 
         private void columnList_ColumnVertAlignChanged(object sender, GrColumnEventArgs e)
         {
             GrColumn column = e.Column;
-            m_pTextUpdater.AddTextAlign(column);
+            this.textUpdater.AddTextAlign(column);
         }
 
         private void columnList_ColumnPaddingChanged(object sender, GrColumnEventArgs e)
         {
             GrColumn column = e.Column;
-            if (column.GetItemWordWrap() == true)
-                m_pTextUpdater.AddTextBounds(column);
+            if (column.ItemWordWrap == true)
+                this.textUpdater.AddTextBounds(column);
         }
 
         internal void BeginPaint()
         {
             int horz = HorzScroll.IsVisible == true ? HorzScroll.Value : HorzScroll.Minimum;
             int vert = VertScroll.IsVisible == true ? VertScroll.Value : VertScroll.Minimum;
-            m_pRootRow.Clip(m_displayRect, horz, vert);
+            this.rootRow.Clip(this.displayRect, horz, vert);
         }
 
         internal void EndPaint()
         {
-            m_pInvalidator.Reset();
+            this.invalidator.Reset();
         }
 
         public static GrClickEditing DefaultClickEditing;

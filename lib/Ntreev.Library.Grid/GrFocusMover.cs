@@ -27,8 +27,8 @@ namespace Ntreev.Library.Grid
             if (pFocused == null)
                 return false;
 
-            GrColumn column = pFocused.GetColumn();
-            GrDataRow pDataRow = pFocused.GetDataRow();
+            GrColumn column = pFocused.Column;
+            GrDataRow pDataRow = pFocused.DataRow;
 
             if (column.IsFrozen == true)
             {
@@ -80,8 +80,8 @@ namespace Ntreev.Library.Grid
             if (pFocused == null)
                 return false;
 
-            GrColumn column = pFocused.GetColumn();
-            GrDataRow pDataRow = pFocused.GetDataRow();
+            GrColumn column = pFocused.Column;
+            GrDataRow pDataRow = pFocused.DataRow;
 
             int visibleColumnCount = m_columnList.GetVisibleColumnCount();
             int index = visibleColumnCount - 1;
@@ -119,7 +119,7 @@ namespace Ntreev.Library.Grid
             if (m_pDataRowList.GetVisibleRowCount() == 0)
                 return false;
 
-            IDataRow pDataRow = pFocused.GetDataRow();
+            IDataRow pDataRow = pFocused.DataRow;
             int index = pDataRow.GetVisibleIndex();
 
             switch (index)
@@ -159,7 +159,7 @@ namespace Ntreev.Library.Grid
             if (m_pDataRowList.GetVisibleRowCount() == 0)
                 return false;
 
-            IDataRow pDataRow = pFocused.GetDataRow();
+            IDataRow pDataRow = pFocused.DataRow;
             int index = pDataRow.GetVisibleIndex();
             int newIndex;
 
@@ -196,7 +196,7 @@ namespace Ntreev.Library.Grid
             if (m_pDataRowList.GetVisibleRowCount() == 0)
                 return false;
 
-            IDataRow pDataRow = pFocused.GetDataRow();
+            IDataRow pDataRow = pFocused.DataRow;
             int newIndex = 0;
 
             IDataRow pNewDataRow = m_pDataRowList.GetVisibleRow(newIndex);
@@ -218,7 +218,7 @@ namespace Ntreev.Library.Grid
             if (m_pDataRowList.GetVisibleRowCount() == 0)
                 return false;
 
-            IDataRow pDataRow = pFocused.GetDataRow();
+            IDataRow pDataRow = pFocused.DataRow;
             int newIndex = m_pDataRowList.GetVisibleRowCount() - 1;
 
             IDataRow pNewDataRow = m_pDataRowList.GetVisibleRow(newIndex);
@@ -241,7 +241,7 @@ namespace Ntreev.Library.Grid
             if (m_pDataRowList.GetVisibleRowCount() == 0)
                 return false;
 
-            IDataRow pDataRow = pFocused.GetDataRow();
+            IDataRow pDataRow = pFocused.DataRow;
             int index = pDataRow.GetVisibleIndex();
             int lastIndex = m_pDataRowList.GetVisibleRowCount() - 1;
 
@@ -271,7 +271,7 @@ namespace Ntreev.Library.Grid
             if (m_pDataRowList.GetVisibleRowCount() == 0)
                 return false;
 
-            IDataRow pDataRow = pFocused.GetDataRow();
+            IDataRow pDataRow = pFocused.DataRow;
             int index = pDataRow.GetVisibleIndex();
 
             switch (index)
@@ -306,8 +306,8 @@ namespace Ntreev.Library.Grid
             if (pFocused == null)
                 return false;
 
-            GrColumn column = pFocused.GetColumn();
-            GrDataRow pDataRow = pFocused.GetDataRow();
+            GrColumn column = pFocused.Column;
+            GrDataRow pDataRow = pFocused.DataRow;
 
             int visibleColumnCount = m_columnList.GetVisibleColumnCount();
             int index = column.GetVisibleIndex() + 1;
@@ -347,8 +347,8 @@ namespace Ntreev.Library.Grid
             if (pFocused == null)
                 return false;
 
-            GrColumn column = pFocused.GetColumn();
-            GrDataRow pDataRow = pFocused.GetDataRow();
+            GrColumn column = pFocused.Column;
+            GrDataRow pDataRow = pFocused.DataRow;
 
             int index = column.GetVisibleIndex();
             if (index != 0)
@@ -402,7 +402,7 @@ namespace Ntreev.Library.Grid
             GrItem pItem = m_pFocuser.GetItem();
             if (pItem != null)
             {
-                m_pLastDataColumn = pItem.GetColumn();
+                m_pLastDataColumn = pItem.Column;
             }
         }
 
@@ -433,7 +433,7 @@ namespace Ntreev.Library.Grid
                         GrColumn column;
 
                         if (pOldFocusItem != null)
-                            column = pOldFocusItem.GetColumn();
+                            column = pOldFocusItem.Column;
                         else
                             column = m_pItemSelector.GetColumnAnchor();
 
@@ -496,7 +496,7 @@ namespace Ntreev.Library.Grid
                         GrColumn column;
 
                         if (pOldFocusItem != null)
-                            column = pOldFocusItem.GetColumn();
+                            column = pOldFocusItem.Column;
                         else
                             column = m_pLastDataColumn;
 

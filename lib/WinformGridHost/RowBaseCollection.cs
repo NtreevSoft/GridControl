@@ -20,14 +20,14 @@ namespace Ntreev.Windows.Forms.Grid
         {
             get
             {
-                IDataRow pDataRow = m_pDataRow.GetChild(index) as IDataRow;
+                IDataRow pDataRow = m_pDataRow.Childs[index] as IDataRow;
                 return FromNative.Get(pDataRow);
             }
         }
 
         public int Count
         {
-            get { return m_pDataRow.GetChildCount(); }
+            get { return m_pDataRow.Childs.Count; }
         }
 
         #region classes
@@ -46,7 +46,7 @@ namespace Ntreev.Windows.Forms.Grid
             public bool MoveNext()
             {
                 m_index++;
-                return m_index < m_pDataRow.GetChildCount();
+                return m_index < m_pDataRow.Childs.Count;
             }
 
             public void Reset()
@@ -58,7 +58,7 @@ namespace Ntreev.Windows.Forms.Grid
             {
                 get
                 {
-                    IDataRow child = m_pDataRow.GetChild(m_index) as IDataRow;
+                    IDataRow child = m_pDataRow.Childs[m_index] as IDataRow;
                     return FromNative.Get(child);
                 }
             }

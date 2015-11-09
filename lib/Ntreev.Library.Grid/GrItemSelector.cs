@@ -94,11 +94,11 @@ namespace Ntreev.Library.Grid
 
             int beginColumn, endColumn, beginRow, endRow;
 
-            beginColumn = pBegin.GetColumn().GetVisibleIndex();
-            endColumn = pEnd.GetColumn().GetVisibleIndex();
+            beginColumn = pBegin.Column.GetVisibleIndex();
+            endColumn = pEnd.Column.GetVisibleIndex();
 
-            beginRow = pBegin.GetDataRow().GetVisibleDataRowIndex();
-            endRow = pEnd.GetDataRow().GetVisibleDataRowIndex();
+            beginRow = pBegin.DataRow.GetVisibleDataRowIndex();
+            endRow = pEnd.DataRow.GetVisibleDataRowIndex();
 
             if (beginColumn > endColumn)
             {
@@ -322,7 +322,7 @@ namespace Ntreev.Library.Grid
 
         public bool CanSelect(GrItem pItem)
         {
-            return CanSelect(pItem.GetDataRow());
+            return CanSelect(pItem.DataRow);
         }
 
         public IDataRow GetSelectionGroup()
@@ -337,7 +337,7 @@ namespace Ntreev.Library.Grid
 
         public void SetSelectionGroup(GrItem pItem)
         {
-            SetSelectionGroup(pItem.GetDataRow());
+            SetSelectionGroup(pItem.DataRow);
         }
 
         // anchor
@@ -349,7 +349,7 @@ namespace Ntreev.Library.Grid
 
         public void SetColumnAnchor(GrItem pItem)
         {
-            SetColumnAnchor(pItem.GetColumn());
+            SetColumnAnchor(pItem.Column);
         }
 
         public void SetColumnAnchor(GrColumn column)
@@ -359,7 +359,7 @@ namespace Ntreev.Library.Grid
 
         public void SetRowAnchor(GrItem pItem)
         {
-            SetRowAnchor(pItem.GetDataRow());
+            SetRowAnchor(pItem.DataRow);
         }
 
         public void SetRowAnchor(IDataRow pDataRow)
@@ -397,7 +397,7 @@ namespace Ntreev.Library.Grid
 
         public GrRange GetColumnSelections(GrItem pItem)
         {
-            return GetColumnSelections(pItem.GetColumn());
+            return GetColumnSelections(pItem.Column);
         }
 
         public GrRange GetColumnSelections(GrColumn column)
@@ -409,7 +409,7 @@ namespace Ntreev.Library.Grid
 
         public GrRange GetRowSelections(GrItem pItem)
         {
-            return GetRowSelections(pItem.GetDataRow());
+            return GetRowSelections(pItem.DataRow);
         }
 
         public GrRange GetRowSelections(IDataRow pDataRow)
@@ -461,15 +461,15 @@ namespace Ntreev.Library.Grid
 
         protected void DoSelect(GrItem pItem)
         {
-            if (pItem.m_selected == true)
+            if (pItem.selected == true)
                 return;
 
-            GrColumn column = pItem.GetColumn();
-            GrDataRow pDataRow = pItem.GetDataRow();
+            GrColumn column = pItem.Column;
+            GrDataRow pDataRow = pItem.DataRow;
             if (CanSelect(pDataRow) == false)
                 return;
 
-            pItem.m_selected = true;
+            pItem.selected = true;
             if (pDataRow.m_selected == 0)
                 m_selectedRows.Add(pDataRow);
             if (column.selected == 0)
@@ -484,13 +484,13 @@ namespace Ntreev.Library.Grid
 
         protected void DoDeselect(GrItem pItem)
         {
-            if (pItem.m_selected == false)
+            if (pItem.selected == false)
                 return;
 
-            GrColumn column = pItem.GetColumn();
-            GrDataRow pDataRow = pItem.GetDataRow();
+            GrColumn column = pItem.Column;
+            GrDataRow pDataRow = pItem.DataRow;
 
-            pItem.m_selected = false;
+            pItem.selected = false;
             pDataRow.m_selected--;
             column.selected--;
 
@@ -560,9 +560,9 @@ namespace Ntreev.Library.Grid
             {
                 GrColumn column = columnList.GetVisibleColumn(i);
                 GrItem pItem = pDataRow.GetItem(column);
-                if (pItem.m_selected == true)
+                if (pItem.selected == true)
                     continue;
-                pItem.m_selected = true;
+                pItem.selected = true;
                 pDataRow.m_selected++;
                 if (column.selected == 0)
                     m_selectedColumns.Add(column);
@@ -589,9 +589,9 @@ namespace Ntreev.Library.Grid
             {
                 GrColumn column = columnList.GetVisibleColumn(i);
                 GrItem pItem = pDataRow.GetItem(column);
-                if (pItem.m_selected == false)
+                if (pItem.selected == false)
                     continue;
-                pItem.m_selected = false;
+                pItem.selected = false;
                 pDataRow.m_selected--;
                 column.selected--;
                 if (column.selected < 0)

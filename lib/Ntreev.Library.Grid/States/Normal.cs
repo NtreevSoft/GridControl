@@ -70,7 +70,7 @@ namespace Ntreev.Library.Grid.States
                         IDataRow pDataRow = m_pFocuser.GetFocusedRow();
                         if (pDataRow != null)
                         {
-                            pDataRow.Expand(true);
+                            pDataRow.IsExpanded = true;
                             return true;
                         }
                     }
@@ -80,7 +80,7 @@ namespace Ntreev.Library.Grid.States
                         IDataRow pDataRow = m_pFocuser.GetFocusedRow();
                         if (pDataRow != null)
                         {
-                            pDataRow.Expand(false);
+                            pDataRow.IsExpanded = false;
                             return true;
                         }
                     }
@@ -102,8 +102,8 @@ namespace Ntreev.Library.Grid.States
                         {
                             if ((modifierKeys & GrKeys.Alt) != 0)
                             {
-                                IDataRow pDataRow = pFocusable.GetDataRow();
-                                pDataRow.Expand(false);
+                                IDataRow pDataRow = pFocusable.DataRow;
+                                pDataRow.IsExpanded = false;
                             }
                             else
                             {
@@ -122,8 +122,8 @@ namespace Ntreev.Library.Grid.States
                         {
                             if ((modifierKeys & GrKeys.Alt) != 0)
                             {
-                                IDataRow pDataRow = pFocusable.GetDataRow();
-                                pDataRow.Expand(true);
+                                IDataRow pDataRow = pFocusable.DataRow;
+                                pDataRow.IsExpanded = true;
                             }
                             else
                             {

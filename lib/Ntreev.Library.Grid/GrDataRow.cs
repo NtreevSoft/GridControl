@@ -18,8 +18,8 @@ namespace Ntreev.Library.Grid
         private int m_dataRowIndex;
         private int m_dataRowID;
 
-        private GrItem[] m_pItems;
-        private int m_itemsCount;
+        //private GrItem[] m_pItems;
+        //private int m_itemsCount;
 
         internal int m_selected;
 
@@ -36,8 +36,8 @@ namespace Ntreev.Library.Grid
             m_itemBackColor = GrColor.Empty;
             m_itemForeColor = GrColor.Empty;
 
-            m_pItems = null;
-            m_itemsCount = 0;
+            //m_pItems = null;
+            //m_itemsCount = 0;
         }
 
         public GrItem GetItem(GrColumn column)
@@ -73,10 +73,13 @@ namespace Ntreev.Library.Grid
             }
         }
 
-        public bool GetSelecting()
+        public bool IsSelecting
         {
-            GrItemSelectorInternal pItemSelector = this.GridCore.ItemSelector as GrItemSelectorInternal;
-            return pItemSelector.IsSelecting(this);
+            get
+            {
+                GrItemSelectorInternal pItemSelector = this.GridCore.ItemSelector as GrItemSelectorInternal;
+                return pItemSelector.IsSelecting(this);
+            }
         }
 
         public int GetVisibleDataRowIndex()
@@ -98,9 +101,13 @@ namespace Ntreev.Library.Grid
             m_pDataRowList.MoveDataRow(this, index);
         }
 
-        public int GetDataRowID()
+        public int DataRowID
         {
-            return m_dataRowID;
+            get { return m_dataRowID;}
+            internal set
+            {
+                m_dataRowID = value;
+            }
         }
 
         public bool IsInsertionRow()
@@ -178,7 +185,7 @@ namespace Ntreev.Library.Grid
                 if (focuser.GetFocusedRow() == this)
                     focuser.Set(null as IFocusable);
 
-                GrRootRow pHeaderList = GetParent() as GrRootRow;
+                GrRootRow pHeaderList = this.Parent as GrRootRow;
 
                 if (pHeaderList != null)
                 {
@@ -195,12 +202,12 @@ namespace Ntreev.Library.Grid
             base.OnVisibleChanged();
         }
 
-        public override GrRowType GetRowType() { return GetDataRowID() == GrDefineUtility.INSERTION_ROW ? GrRowType.InsertionRow : GrRowType.DataRow; }
+        public override GrRowType GetRowType() { return this.DataRowID == GrDefineUtility.INSERTION_ROW ? GrRowType.InsertionRow : GrRowType.DataRow; }
 
         public override GrPaintStyle ToPaintStyle()
         {
             GrPaintStyle flag = base.ToPaintStyle();
-            if (GetSelecting() == true || this.IsSelected == true)
+            if (this.IsSelecting == true || this.IsSelected == true)
                 flag |= GrPaintStyle.Selected;
             return flag;
         }
@@ -260,7 +267,7 @@ namespace Ntreev.Library.Grid
             {
                 if (value.IsVisible == false)
                     continue;
-                height = Math.Max(height, value.GetPreferredSize().Height);
+                height = Math.Max(height, value.PreferredSize.Height);
             }
             return height;
         }
@@ -309,7 +316,7 @@ namespace Ntreev.Library.Grid
         {
             base.OnSizeChanged(e);
         
-            GrRootRow pHeaderRow = GetParent() as GrRootRow;
+            GrRootRow pHeaderRow = this.Parent as GrRootRow;
             if (pHeaderRow != null)
                 pHeaderRow.SetHeightChanged();
         }
@@ -349,30 +356,23 @@ namespace Ntreev.Library.Grid
             this.Text = numberText;
         }
 
-        internal void SetDataRowID(int index)
-        {
-            m_dataRowID = index;
-        }
-
+        
         internal void AddItem(GrColumn column)
         {
             int columnID = column.GetColumnID();
             GrItem pItem = null;
             if (columnID >= m_vecItems.Count)
             {
-                if ((int)columnID < m_itemsCount)
+                if (columnID < m_vecItems.Count)
                 {
-                    m_pItems[columnID] = new GrItem();
-                    pItem = m_pItems[columnID];
-                    pItem.m_column = column;
-                    pItem.m_pDataRow = this;
+                    pItem = new GrItem(column, this);
+                    m_vecItems[columnID] = pItem;
                 }
                 else
                 {
                     pItem = new GrItem(column, this);
+                    m_vecItems.Add(pItem);
                 }
-
-                m_vecItems.Add(pItem);
             }
             else
             {
@@ -386,12 +386,12 @@ namespace Ntreev.Library.Grid
         internal void Reserve(int count)
         {
             m_vecItems.Capacity = count;
-            m_itemsCount = count;
-            if (count != 0)
-            {
-                //throw std.exception();
-                m_pItems = new GrItem[count];
-            }
+            //m_itemsCount = count;
+            //if (count != 0)
+            //{
+            //    //throw std.exception();
+            //    m_pItems = new GrItem[count];
+            //}
         }
 
         internal void ClearItem()
@@ -402,12 +402,12 @@ namespace Ntreev.Library.Grid
                 //    delete value;
             }
             m_vecItems.Clear();
-            if (m_pItems != null)
-            {
-                //delete [] m_pItems;
-                m_pItems = null;
-            }
-            m_itemsCount = 0;
+            //if (m_pItems != null)
+            //{
+            //    //delete [] m_pItems;
+            //    m_pItems = null;
+            //}
+            //m_itemsCount = 0;
         }
 
         private GrColor GetBlankBackColor()

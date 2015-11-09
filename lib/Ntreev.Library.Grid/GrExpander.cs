@@ -51,7 +51,7 @@ namespace Ntreev.Library.Grid
 
         public override bool IsVisible
         {
-            get { return this.pDataRow.IsVisible && this.pDataRow.GetChildCount() > 0; }
+            get { return this.pDataRow.IsVisible && this.pDataRow.Childs.Count > 0; }
             set { }
         }
 
@@ -71,7 +71,7 @@ namespace Ntreev.Library.Grid
             if (this.pDataRow.IsLastVisible() == true)
                 paintStyle |= GrPaintStyle.BottomLine;
 
-            painter.DrawExpander(paintStyle, paintRect, (GrControlState)0, this.pDataRow.IsExpanded(), foreColor, backColor);
+            painter.DrawExpander(paintStyle, paintRect, (GrControlState)0, this.pDataRow.IsExpanded, foreColor, backColor);
         }
     }
 }

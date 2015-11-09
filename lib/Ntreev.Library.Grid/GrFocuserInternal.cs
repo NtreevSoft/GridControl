@@ -21,7 +21,7 @@ namespace Ntreev.Library.Grid
 
             if (m_pFocusing != null && m_pFocusing.IsDisplayable == true)
             {
-                IDataRow pDataRow = m_pFocusing.GetDataRow();
+                IDataRow pDataRow = m_pFocusing.DataRow;
                 if (this.GridCore.GetRowHighlight() == true || this.GridCore.GetFullRowSelect() == true)
                 {
                     GrRect rect = pDataRow.Bounds;
@@ -65,7 +65,7 @@ namespace Ntreev.Library.Grid
                 IFocusable pFocusable = e.GetFocusable();
                 if (pFocusable != null)
                 {
-                    GrDataRow pDataRow = pFocusable.GetDataRow() as GrDataRow;
+                    GrDataRow pDataRow = pFocusable.DataRow as GrDataRow;
                     GrItemSelectorInternal pItemSelector = this.GridCore.ItemSelector as GrItemSelectorInternal;
                     if (pDataRow != null && pDataRow.GetFullSelected() == true)
                         pItemSelector.SelectDataRow(pDataRow, GrSelectionType.Normal);

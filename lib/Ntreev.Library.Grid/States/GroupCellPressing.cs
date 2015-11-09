@@ -78,7 +78,7 @@ namespace Ntreev.Library.Grid.States
         public override void OnMouseDoubleClick(GrStateMouseEventArgs e)
         {
             GrGroupRow groupRow = m_pGroupCell.GetRow() as GrGroupRow;
-            groupRow.Expand(!groupRow.IsExpanded());
+            groupRow.IsExpanded = !groupRow.IsExpanded;
             this.GridCore.Invalidate();
         }
 

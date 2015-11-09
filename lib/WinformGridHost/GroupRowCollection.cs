@@ -24,7 +24,7 @@ namespace Ntreev.Windows.Forms.Grid
                 if (index >= this.Count)
                     throw new ArgumentOutOfRangeException("index");
 
-                GrGroupRow pGroupRow = m_pDataRowList.GetChild(index) as GrGroupRow;
+                GrGroupRow pGroupRow = m_pDataRowList.Childs[index] as GrGroupRow;
                 return FromNative.Get(pGroupRow);
             }
         }
@@ -49,7 +49,7 @@ namespace Ntreev.Windows.Forms.Grid
                 if (this.GridControl.IsGrouped == false)
                     return 0;
 
-                return m_pDataRowList.GetChildCount();
+                return m_pDataRowList.Childs.Count;
             }
         }
 
@@ -107,7 +107,7 @@ namespace Ntreev.Windows.Forms.Grid
                 int count = 0;
                 if (pGridCore.IsGrouped() == true)
                 {
-                    count = pGridCore.DataRowList.GetChildCount();
+                    count = pGridCore.DataRowList.Childs.Count;
                 }
                 m_index++;
                 return m_index < count;
@@ -124,7 +124,7 @@ namespace Ntreev.Windows.Forms.Grid
                 get
                 {
                     GrDataRowList pDataRowList = this.GridCore.DataRowList;
-                    GrGroupRow pGroupRow = pDataRowList.GetChild(m_index) as GrGroupRow;
+                    GrGroupRow pGroupRow = pDataRowList.Childs[m_index] as GrGroupRow;
 
                     return FromNative.Get(pGroupRow);
                 }

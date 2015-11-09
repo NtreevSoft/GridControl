@@ -96,9 +96,9 @@ namespace Ntreev.Windows.Forms.Grid
             base.Invalidate();
         }
 
-        public IDataRow GetDataRow()
+        public IDataRow DataRow
         {
-            return m_pGridRow;
+            get { return m_pGridRow; }
         }
 
         public GrRect GetDisplayRect() { return this.Bounds; }

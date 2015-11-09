@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Ntreev.Library.Grid
 {
-    //public class GrInsertionRow
-    //{
-    //}
+    public delegate void GrGroupEventHandler(object sender, GrGroupEventArgs e);
 }

@@ -33,7 +33,7 @@ namespace Ntreev.Library.Grid.States
 
         public override void OnMouseUp(GrStateMouseEventArgs e)
         {
-            m_pDataRow.Expand(!m_pDataRow.IsExpanded());
+            m_pDataRow.IsExpanded = !m_pDataRow.IsExpanded;
             this.GridCore.Invalidate();
         }
 

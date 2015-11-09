@@ -63,7 +63,7 @@ namespace Ntreev.Windows.Forms.Grid
                 {
                     if (m_pColumn.GetIndex() != GrDefineUtility.INVALID_INDEX)
                     {
-                        GrColumnList pColumnList = m_pColumn.GetColumnList();
+                        GrColumnList pColumnList = m_pColumn.ColumnList;
                         if (this.GridControl != null)
                             this.GridControl = null;
                         pColumnList.RemoveColumn(m_pColumn);
@@ -147,7 +147,7 @@ namespace Ntreev.Windows.Forms.Grid
 
         public void ResetCellFont()
         {
-            m_pColumn.SetItemFont(null);
+            m_pColumn.ItemFont = null;
         }
 
 
@@ -569,12 +569,12 @@ namespace Ntreev.Windows.Forms.Grid
         {
             get
             {
-                GrHorzAlign align = m_pColumn.GetItemHorzAlign();
+                GrHorzAlign align = m_pColumn.ItemHorzAlign;
                 return (StringAlignment)align;
             }
             set
             {
-                m_pColumn.SetItemHorzAlign((GrHorzAlign)value);
+                m_pColumn.ItemHorzAlign = (GrHorzAlign)value;
             }
         }
 
@@ -585,12 +585,12 @@ namespace Ntreev.Windows.Forms.Grid
         {
             get
             {
-                GrVertAlign align = m_pColumn.GetItemVertAlign();
+                GrVertAlign align = m_pColumn.ItemVertAlign;
                 return (StringAlignment)align;
             }
             set
             {
-                m_pColumn.SetItemVertAlign((GrVertAlign)value);
+                m_pColumn.ItemVertAlign = (GrVertAlign)value;
             }
         }
 
@@ -599,14 +599,8 @@ namespace Ntreev.Windows.Forms.Grid
         [SettingsBindable(true)]
         public bool CellWordWrap
         {
-            get
-            {
-                return m_pColumn.GetItemWordWrap();
-            }
-            set
-            {
-                m_pColumn.SetItemWordWrap(value);
-            }
+            get { return m_pColumn.ItemWordWrap; }
+            set { m_pColumn.ItemWordWrap = value; }
         }
 
         [Category("Cell")]
@@ -614,52 +608,31 @@ namespace Ntreev.Windows.Forms.Grid
         [SettingsBindable(true)]
         public bool CellMultiline
         {
-            get
-            {
-                return m_pColumn.GetItemMultiline();
-            }
-            set
-            {
-                m_pColumn.SetItemMultiline(value);
-            }
+            get { return m_pColumn.ItemMultiline; }
+            set { m_pColumn.ItemMultiline = value; }
         }
 
         [Category("Cell")]
         public Color CellForeColor
         {
-            get
-            {
-                return m_pColumn.GetItemForeColor();
-            }
-            set
-            {
-                m_pColumn.SetItemForeColor(value);
-            }
+            get { return m_pColumn.ItemForeColor; }
+            set { m_pColumn.ItemForeColor = value; }
         }
 
         [Category("Cell")]
         public Color CellBackColor
         {
-            get
-            {
-                return m_pColumn.GetItemBackColor();
-            }
-            set
-            {
-                m_pColumn.SetItemBackColor(value);
-            }
+            get { return m_pColumn.ItemBackColor; }
+            set { m_pColumn.ItemBackColor = value; }
         }
 
         [Category("Cell")]
         public Padding CellPadding
         {
-            get
-            {
-                return m_pColumn.GetItemPadding();
-            }
+            get { return m_pColumn.ItemPadding; }
             set
             {
-                m_pColumn.SetItemPadding(value);
+                m_pColumn.ItemPadding = value;
             }
         }
 
@@ -668,7 +641,7 @@ namespace Ntreev.Windows.Forms.Grid
         {
             get
             {
-                GrFont pFont = m_pColumn.GetItemFont();
+                GrFont pFont = m_pColumn.ItemFont;
                 if (pFont == null)
                     return null;
 
@@ -677,9 +650,9 @@ namespace Ntreev.Windows.Forms.Grid
             set
             {
                 if (value == null)
-                    m_pColumn.SetItemFont(null);
+                    m_pColumn.ItemFont = null;
                 else
-                    m_pColumn.SetItemFont(value.FromManaged());
+                    m_pColumn.ItemFont = value.FromManaged();
             }
         }
 
@@ -689,11 +662,11 @@ namespace Ntreev.Windows.Forms.Grid
         {
             get
             {
-                return (ClickEditType)m_pColumn.GetItemClickEditing();
+                return (ClickEditType)m_pColumn.ItemClickEditing;
             }
             set
             {
-                m_pColumn.SetItemClickEditing((GrClickEditing)value);
+                m_pColumn.ItemClickEditing = (GrClickEditing)value;
             }
         }
 
@@ -960,26 +933,31 @@ namespace Ntreev.Windows.Forms.Grid
 
         private bool ShouldSerializeCellForeColor()
         {
-            return m_pColumn.GetItemForeColor() != GrColor.Empty;
+            return m_pColumn.ItemForeColor != GrColor.Empty;
         }
+
         private bool ShouldSerializeCellBackColor()
         {
-            return m_pColumn.GetItemBackColor() != GrColor.Empty;
+            return m_pColumn.ItemBackColor != GrColor.Empty;
         }
+
         private bool ShouldSerializeCellPadding()
         {
-            return m_pColumn.GetItemPadding() != GrPadding.Empty;
+            return m_pColumn.ItemPadding != GrPadding.Empty;
         }
+
         private bool ShouldSerializeCellFont()
         {
-            return m_pColumn.GetItemFont() != null;
+            return m_pColumn.ItemFont != null;
         }
+
         private bool ShouldSerializeTitle()
         {
             if (this.Title == string.Empty)
                 return true;
             return this.Title != this.ColumnName;
         }
+
         private bool ShouldSerializeDataType()
         {
             if (m_dataType == null)
@@ -991,6 +969,7 @@ namespace Ntreev.Windows.Forms.Grid
             }
             return m_dataType != m_propertyDescriptor.PropertyType;
         }
+
         private bool ShouldSerializeTypeConverter()
         {
             if (m_propertyDescriptor == null)
@@ -999,6 +978,7 @@ namespace Ntreev.Windows.Forms.Grid
             }
             return m_typeConverter != m_propertyDescriptor.Converter;
         }
+
         private bool ShouldSerializeDefaultValue()
         {
             if (m_defaultValue == null)
@@ -1010,10 +990,12 @@ namespace Ntreev.Windows.Forms.Grid
             }
             return true;
         }
+
         private bool ShouldSerializeWidth()
         {
             return m_pColumn.ShouldSerializeWidth();
         }
+
         private bool ShouldSerializeVisibleIndex()
         {
             return m_pColumn.ShouldSerializeVisibleIndex();
@@ -1051,15 +1033,15 @@ namespace Ntreev.Windows.Forms.Grid
             switch (this.ViewType)
             {
                 case ViewType.Text:
-                    m_pColumn.SetItemTextVisible(true);
+                    m_pColumn.ItemTextVisible = true;
                     m_pColumn.SetItemIcon(false);
                     break;
                 case ViewType.Icon:
-                    m_pColumn.SetItemTextVisible(true);
+                    m_pColumn.ItemTextVisible = true;
                     m_pColumn.SetItemIcon(true);
                     break;
                 case ViewType.Custom:
-                    m_pColumn.SetItemTextVisible(false);
+                    m_pColumn.ItemTextVisible = false;
                     m_pColumn.SetItemIcon(false);
                     break;
             }

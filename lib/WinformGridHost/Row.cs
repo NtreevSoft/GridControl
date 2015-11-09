@@ -183,7 +183,7 @@ namespace Ntreev.Windows.Forms.Grid
 #endif
         public int RowID
         {
-            get { return m_pDataRow.GetDataRowID(); }
+            get { return m_pDataRow.DataRowID; }
         }
 
         [Description("표시되고 있는지의 여부를 가져오거나 설정합니다.")]
@@ -407,9 +407,9 @@ namespace Ntreev.Windows.Forms.Grid
 
                     if (column.PropertyDescriptor != null && column.PropertyDescriptor.PropertyType == typeof(IBindingList))
                     {
-                        for (int i = 0; i < m_pDataRow.GetChildCount(); i++)
+                            foreach(var i in m_pDataRow.Childs)
                         {
-                            GrGridRow childRow = m_pDataRow.GetChild(i) as GrGridRow;
+                            GrGridRow childRow = i as GrGridRow;
                             if (childRow != null)
                             {
                                 if (childRow.GetPropertyDescriptor() == column.PropertyDescriptor)

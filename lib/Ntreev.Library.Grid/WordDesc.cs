@@ -8,9 +8,12 @@ namespace Ntreev.Library.Grid
 {
     struct GrWordDesc
     {
-      public  int pos;
-      public int length;
-      public int width;
-      public int validWidth;
-    };
+        public int pos;
+
+        public int length;
+
+        public int width;
+
+        public int validWidth;
+    }
 }

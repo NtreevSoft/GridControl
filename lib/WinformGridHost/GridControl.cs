@@ -2786,7 +2786,7 @@ namespace Ntreev.Windows.Forms.Grid
 
             if (EditingCell != null)
             {
-                GrRect bound = EditingCell.NativeRef.GetDataRow().Bounds;
+                GrRect bound = EditingCell.NativeRef.DataRow.Bounds;
                 GrPoint center = bound.GetCenter();
 
                 Bitmap image = Resources.RowEditing;

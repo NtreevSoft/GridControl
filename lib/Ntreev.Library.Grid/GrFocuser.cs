@@ -34,7 +34,7 @@ namespace Ntreev.Library.Grid
             if (pFocusable != null)
             {
                 m_pFocus = pFocusable;
-                m_pLastFocusedRow = pFocusable.GetDataRow();
+                m_pLastFocusedRow = pFocusable.DataRow;
             }
             else
             {
@@ -74,13 +74,13 @@ namespace Ntreev.Library.Grid
         {
             if (m_pFocusItem == null)
                 return null;
-            return m_pFocusItem.GetColumn();
+            return m_pFocusItem.Column;
         }
         public IDataRow GetFocusedRow()
         {
             if (m_pFocus == null)
                 return null;
-            return m_pFocus.GetDataRow();
+            return m_pFocus.DataRow;
         }
 
         public IFocusable Get()
@@ -118,7 +118,7 @@ namespace Ntreev.Library.Grid
             GrItem pItem = m_pFocus as GrItem;
             if (pItem != null)
             {
-                m_pLastFocusedColumn = pItem.GetColumn();
+                m_pLastFocusedColumn = pItem.Column;
                 m_pLastFocusedColumn.Invalidate();
                 m_pLastFocusedItem = pItem;
             }
@@ -161,7 +161,7 @@ namespace Ntreev.Library.Grid
                 return;
 
             GrRect rect = GrRect.Empty;
-            IDataRow pDataRow = pFocusable.GetDataRow();
+            IDataRow pDataRow = pFocusable.DataRow;
             if (this.GridCore.GetRowHighlight() == true || this.GridCore.GetFullRowSelect() == true)
             {
                 rect = pDataRow.Bounds;
