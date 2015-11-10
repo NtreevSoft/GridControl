@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.5190.32793
+// Ntreev Grid for .Net 2.0.5792.31442
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -978,7 +978,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		if(m_manager != nullptr)
 		{
-			m_pGridCore->Reserve(m_manager->GetItemProperties()->Count, m_manager->List->Count);
+			int r = 1;
+			for each(System::ComponentModel::PropertyDescriptor^ item in m_manager->GetItemProperties())
+			{
+				if(item->PropertyType == System::ComponentModel::IBindingList::typeid)
+				{
+					r++;
+				}
+			}
+			m_pGridCore->Reserve(m_manager->GetItemProperties()->Count, m_manager->List->Count * r);
 			m_manager->ListChanged += m_listChangedEventHandler;
 			m_manager->BindingComplete += m_bindingCompleteEventHandler;
 
@@ -998,7 +1006,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 		case System::ComponentModel::ListChangedType::Reset:
 			{
-				m_pGridCore->Reserve(m_manager->GetItemProperties()->Count, m_manager->List->Count);
+				int r = 1;
+				for each(System::ComponentModel::PropertyDescriptor^ item in m_manager->GetItemProperties())
+				{
+					if(item->PropertyType == System::ComponentModel::IBindingList::typeid)
+					{
+						r++;
+					}
+				}
+
+				m_pGridCore->Reserve(m_manager->GetItemProperties()->Count, m_manager->List->Count * r);
 
 				if(this->BindingContext->Contains(m_dataSource, m_dataMember) == false)
 				{

@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 2.0.5190.32793
+//Ntreev Grid for .Net 2.0.5792.31442
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.
@@ -57,7 +57,7 @@ using System.Runtime.InteropServices;
 // 지정되도록 할 수 있습니다.
 //[assembly: AssemblyVersion("1.1.*")]
 [assembly: AssemblyVersion("2.0.4510.20986")]
-[assembly: AssemblyFileVersion("2.0.5190.32793")]
+[assembly: AssemblyFileVersion("2.0.5792.31442")]
 //[assembly: InternalsVisibleTo("Ntreev.Windows.Forms.Grid, PublicKey=00240000048000009400000006020000002400005253413100040000010001006345cf79e806cbeefceea2a6963996ae219a19a62530c54dadf6d153ac3d5469e5cc2e73520f18da28cfd0966171e825369b52aee496bddff0c8aa146115b55b3a2af80349841f0e3e57ed7c49cbf4cdb092f76723beaac70cdb7aba8f314cd781a803205a424c50ef31a76edae25dc2afd846d260b6bc03ca4218e620a2bda8")]
 
 

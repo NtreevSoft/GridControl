@@ -168,6 +168,9 @@
     <EmbeddedResource Include="ColumnTestControl.resx">
       <DependentUpon>ColumnTestControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DataSetTest.resx">
+      <DependentUpon>DataSetTest.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DataTableTest.resx">
       <DependentUpon>DataTableTest.cs</DependentUpon>
     </EmbeddedResource>
