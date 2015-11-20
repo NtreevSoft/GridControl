@@ -416,6 +416,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			virtual IColumn^ get() sealed = ICell::Column::get;
 		}
 
+		property IRow^ Row_ICell
+		{
+			virtual IRow^ get() sealed = ICell::Row::get;
+		}
+
 	private: // variables
 
 		//GrItem* m_pItem;

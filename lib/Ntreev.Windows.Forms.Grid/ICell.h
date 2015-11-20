@@ -23,6 +23,7 @@
 
 #pragma once
 #include "ICellBase.h"
+#include "IRow.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -41,6 +42,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property IColumn^ Column
         {
             IColumn^ get();
+        }
+
+		property IRow^ Row
+        {
+            IRow^ get();
         }
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

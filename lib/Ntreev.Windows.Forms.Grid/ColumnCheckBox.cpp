@@ -49,7 +49,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
 
     }
 
-    void ColumnCheckBox::SetControlValue(System::Windows::Forms::CheckBox^ control, System::Object^ value)
+    void ColumnCheckBox::SetControlValue(System::Windows::Forms::CheckBox^ control, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value)
     {
         if(value == nullptr)
         {

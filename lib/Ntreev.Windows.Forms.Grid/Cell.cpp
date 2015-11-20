@@ -614,4 +614,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		return this->Column;
 	}
+
+	IRow^ Cell::Row_ICell::get()
+	{
+		return this->Row;
+	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

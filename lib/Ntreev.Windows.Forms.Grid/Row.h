@@ -23,6 +23,7 @@
 
 #pragma once
 #include "RowBase.h"
+#include "IRow.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -30,7 +31,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// 행을 나타냅니다.
     /// </summary>
     [System::ComponentModel::TypeConverterAttribute(System::ComponentModel::ExpandableObjectConverter::typeid)]
-    public ref class Row : RowBase
+    public ref class Row : RowBase, IRow
     {
     public: // methods
 
@@ -182,7 +183,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         property System::Object^ default[System::String^]
         {
-            System::Object^ get(System::String^ columnName); 
+            virtual System::Object^ get(System::String^ columnName); 
             void set(System::String^ columnName, System::Object^);
         }
 

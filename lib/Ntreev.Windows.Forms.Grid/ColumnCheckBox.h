@@ -61,7 +61,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid { namesp
         /// </summary>
         /// <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
         /// <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
-        virtual void SetControlValue(System::Windows::Forms::CheckBox^ control, System::Object^ value) override;
+        virtual void SetControlValue(System::Windows::Forms::CheckBox^ control, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value) override;
 
         ///// <summary>
         ///// 값이 편집될때 호출됩니다.

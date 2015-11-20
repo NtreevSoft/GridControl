@@ -101,8 +101,9 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// 셀의 값을 컨트롤에 적용할때 호출됩니다.
         /// </summary>
         /// <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
+		/// <param name="cell">편집 또는 표시에 사용되는 셀의 인스턴스입니다.</param>
         /// <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
-        virtual void SetControlValue(TControl control, System::Object^ value);
+        virtual void SetControlValue(TControl control, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value);
 
         /// <summary>
         /// 컨트롤을 셀의 위치로 이동하고 셀의 크기로 조정할때 호출됩니다.

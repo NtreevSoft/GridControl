@@ -286,6 +286,7 @@ copy "$(TargetDir)$(TargetName).xml" "$(SolutionDir)..\bin\$(Platform)\$(TargetN
     <ClInclude Include="IColumn.h" />
     <ClInclude Include="IControlPainter.h" />
     <ClInclude Include="IDisplayTextConverter.h" />
+    <ClInclude Include="IRow.h" />
     <ClInclude Include="ITextCacheProvider.h" />
     <ClInclude Include="NativeCollection.h" />
     <ClInclude Include="NativeGridRow.h" />
