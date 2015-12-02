@@ -666,6 +666,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void set(bool);
         }
 
+
         /// <summary>
         /// 그룹화 되었는지에 대한 여부를 가져옵니다.
         /// </summary>
@@ -678,6 +679,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property bool IsGrouped
         {
             bool get();
+        }
+
+		/// <summary>
+        /// 필터를 가져오거나 설정합니다.
+        /// </summary>
+        [System::ComponentModel::DescriptionAttribute("필터를 가져오거나 설정합니다.")]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute("")]
+		property System::String^ Filter
+        {
+            System::String^ get(); 
+            void set(System::String^);
         }
 
         /// <summary>
@@ -2348,6 +2361,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		bool m_paintBackground;
         bool m_disposing;
         bool m_isEditing;
+		System::String^ m_filter;
 
         RowBuilder^ m_rowBuilder;
 

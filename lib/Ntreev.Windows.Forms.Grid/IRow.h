@@ -31,5 +31,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             System::Object^ get(System::String^ columnName); 
         }
+
+		property System::Object^ Component
+		{
+			System::Object^ get(); 
+		}
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

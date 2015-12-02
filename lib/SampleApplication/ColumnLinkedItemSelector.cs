@@ -38,9 +38,9 @@ namespace SampleApplication
             
         }
 
-        protected override void SetControlValue(LinkedItemSelector control, object value)
+        protected override void SetControlValue(LinkedItemSelector control, ICell cell, object value)
         {
-            base.SetControlValue(control, value);
+            base.SetControlValue(control, cell, value);
             if (value != null)
                 control.Text = value.ToString();
             else

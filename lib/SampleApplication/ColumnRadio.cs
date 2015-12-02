@@ -53,9 +53,9 @@ namespace SampleApplication
             return control;
         }
 
-        protected override void SetControlValue(RadioButton control, object value)
+        protected override void SetControlValue(RadioButton control, ICell cell, object value)
         {
-            base.SetControlValue(control, value);
+            base.SetControlValue(control, cell, value);
 
             if (value == null)
             {

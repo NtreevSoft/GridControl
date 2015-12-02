@@ -314,14 +314,31 @@ private:
     IFocusable* m_pFocusable;
 };
 
-
-struct GrLineDesc
+struct GrBlockDesc
 {
+	GrBlockDesc() : textBegin(0), length(0), width(0), b(false) {}
     int textBegin;
     int length;
     int width;
-    //int x;
-    //int y;
+	bool b;
+};
+
+struct GrLineDesc
+{
+	GrLineDesc() : width(0) {}
+	std::vector<GrBlockDesc> blocks;
+    int width;
+};
+
+struct GrTextLayout
+{
+public:
+    unsigned short width;
+    unsigned short height;
+    unsigned short lineHeight;
+    unsigned short y;
+
+    std::vector<GrLineDesc> lines;
 };
 
 typedef std::vector<GrLineDesc> _TextLines;
@@ -378,12 +395,14 @@ public:
 
 	// text method
     const std::wstring& GetText() const;
+	const std::wstring& GetFilter() const;
     void SetText(const std::wstring& text);
+	void SetFilter(const std::wstring& text);
     uint GetTextLineCount() const;
     const GrLineDesc& GetTextLine(uint index) const;
     GrSize GetTextBounds() const;
 	virtual GrSize GetPreferredSize() const;
-    GrPoint AlignText(const GrLineDesc& line, int index, int count) const;
+    GrPoint AlignText(int lineWidth, int index, int count) const;
     void ComputeTextBounds();
     bool GetTextVisible() const;
     bool GetTextClipped() const;
@@ -426,7 +445,8 @@ protected:
 
 private:
     std::wstring* m_text;
-    class GrTextLayout* m_layout;
+	std::wstring* m_filter;
+    struct GrTextLayout* m_layout;
 
     struct GrStyleData
     {

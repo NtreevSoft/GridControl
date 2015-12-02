@@ -99,10 +99,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 	}
 
-	void Row::DetachComponent()
+	void Row::DetachComponent(bool backup)
 	{
 		auto oldComponent = m_component;
 		m_component = nullptr;
+		if(backup == false)
+			return;
+
 		for each(Cell^ item in m_cells)
 		{
 			try

@@ -49,7 +49,7 @@ namespace SampleApplication
             return control.Text;
         }
 
-        protected override void SetControlValue(Button control, object value)
+        protected override void SetControlValue(Button control, ICell cell, object value)
         {
             if (value == null || value.ToString() == bool.FalseString)
                 value = true;

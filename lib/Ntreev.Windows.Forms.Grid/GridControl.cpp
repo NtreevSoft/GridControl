@@ -1954,6 +1954,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return m_pGridCore->IsGrouped();
 	}
 
+	System::String^ GridControl::Filter::get()
+	{
+		return m_filter;
+	}
+
+	void GridControl::Filter::set(System::String^ value)
+	{
+		m_filter = value;
+	}
+
 	void GridControl::InvokeReset()
 	{
 		OnReseted(System::EventArgs::Empty);

@@ -45,7 +45,7 @@ namespace SampleApplication
             this.Control.BorderStyle = BorderStyle.None;
         }
 
-        protected override void SetControlValue(NumericUpDown control, object value)
+        protected override void SetControlValue(NumericUpDown control, ICell cell, object value)
         {
             if (value == null)
                 value = (int)0;

@@ -136,7 +136,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_components->RemoveAt(componentIndex);
 		m_componentToRow->Remove(component);
 		m_pDataRowList->RemoveDataRow(row->NativeRef);
-		row->DetachComponent();
+		row->DetachComponent(false);
 		row->DetachChildControl();
 		this->GridControl->InvokeRowUnbinded(row);
     }
@@ -328,7 +328,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(this->InsertionRow->Component == nullptr)
             return;
 
-		this->InsertionRow->DetachComponent();
+		this->InsertionRow->DetachComponent(true);
 		m_insertion = true;
 		m_manager->CancelCurrentEdit();
     }
@@ -389,7 +389,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         {
             if(isNew == true)
             {
-				item->DetachComponent();
+				item->DetachComponent(false);
                 m_insertion = false;
                 m_manager->CancelCurrentEdit();
             }
@@ -406,7 +406,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 				m_pDataRowList->RemoveDataRow(item->NativeRef);
                 if(isNew == true)
                 {
-					item->DetachComponent();
+					item->DetachComponent(false);
 					m_insertion = true;
                     m_manager->CancelCurrentEdit();
                 }

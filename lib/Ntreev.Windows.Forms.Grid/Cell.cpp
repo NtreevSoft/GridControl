@@ -246,7 +246,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		m_text = text;
 
-		if(m_text != nullptr)
+		if(System::String::IsNullOrEmpty(m_text) == false)
 		{
 			this->Row->m_textCapacity += m_text->Length;
 			this->NativeRef->SetText(ToNativeString::Convert(m_text));
@@ -344,6 +344,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		else
 		{
 			System::Data::DataRowView^ dataRowView = dynamic_cast<System::Data::DataRowView^>(component);
+
 			if(dataRowView != nullptr && propertyDescriptor->PropertyType != IBindingList::typeid)
 			{
 				System::Object^ value = dataRowView->Row[propertyDescriptor->Name];
@@ -363,20 +364,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(propertyDescriptor == nullptr)
 			return;
 
-		System::Object^ value = nullptr;
-		
-		System::Data::DataRowView^ dataRowView = dynamic_cast<System::Data::DataRowView^>(component);
-		if(dataRowView != nullptr && propertyDescriptor->PropertyType != IBindingList::typeid)
-		{
-			value = dataRowView->Row[propertyDescriptor->Name];
-		}
-		else
-		{
-			value = propertyDescriptor->GetValue(component);
-		}
-
 		if(ValueChecker::IsNullOrDBNull(m_value) == false)
 		{
+			System::Object^ value = nullptr;
+
+			System::Data::DataRowView^ dataRowView = dynamic_cast<System::Data::DataRowView^>(component);
+			if(dataRowView != nullptr && propertyDescriptor->PropertyType != IBindingList::typeid)
+			{
+				value = dataRowView->Row[propertyDescriptor->Name];
+			}
+			else
+			{
+				value = propertyDescriptor->GetValue(component);
+			}
+
 			value = this->Column->ConvertToSource(m_value);
 			propertyDescriptor->SetValue(component, value);
 		}
@@ -507,6 +508,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(dataRowView != nullptr && propertyDescriptor->PropertyType != IBindingList::typeid)
 		{
 			System::Object^ value = dataRowView->Row[propertyDescriptor->Name];
+			if(value == System::DBNull::Value)
+				return value;
 			return this->Column->ConvertFromSource(value);
 		}
 		else

@@ -44,7 +44,7 @@ namespace SampleApplication
             this.Control.ValidatingType = typeof(System.DateTime);    
         }
 
-        protected override void SetControlValue(MaskedTextBox control, object value)
+        protected override void SetControlValue(MaskedTextBox control, ICell cell, object value)
         {
             if (value != null)
                 control.Text = value.ToString();

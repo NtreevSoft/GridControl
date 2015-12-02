@@ -30,28 +30,89 @@
 #include <memory.h>
 #include <limits.h>
 
-void GrTextUtil::SingleLine(GrLineDesc* pLine, const std::wstring& cellText, const GrFont* pFont)
+void GrTextUtil::SingleLine(GrTextLayout* pTextLayout, const std::wstring& cellText, const GrFont* pFont)
 {
-    memset(pLine, 0, sizeof(GrLineDesc));
-    pLine->length = (int)cellText.length();
-    pLine->width = pFont->GetStringWidth(cellText);
+	GrLineDesc ld;
+	GrBlockDesc bd;
+	bd.length = (int)cellText.length();
+
+    ld.width = pFont->GetStringWidth(cellText);
+	ld.blocks.push_back(bd);
+	
+	pTextLayout->lines.push_back(ld);
 }
 
-void GrTextUtil::MultiLine(_TextLines* pLines, const std::wstring& cellText, int cellWidth, const GrFont* pFont, bool wordWrap)
+void GrTextUtil::SingleLine(GrTextLayout* pTextLayout, const std::wstring& cellText, const std::wstring& filterText, const GrFont* pFont)
+{
+	std::vector<bool> b(cellText.size());
+
+	std::wstring t = cellText;
+	std::wstring f = filterText;
+	std::transform(t.begin(), t.end(), t.begin(), ::tolower);
+	std::transform(f.begin(), f.end(), f.begin(), ::tolower);
+
+	std::size_t found = t.find(f);
+	while (found != std::wstring::npos)
+	{
+		for(std::size_t i=0 ; i<f.length() ; i++)
+		{
+			b[found + i] = true;
+		}
+		found = t.find(f.c_str(), found + 1, f.length());
+	}
+
+	uint pos = 0;
+    GrLineDesc cl;
+	GrBlockDesc bd;
+	bool ob = *b.begin();
+    while(pos != cellText.length())
+    {
+        wchar_t s = cellText.at(pos);
+		bool cb = b[pos];
+		
+		pos++;
+        int charWidth = pFont->GetCharacterWidth(s);
+        if(s == L'\n')
+        {
+			cl.blocks.push_back(bd);
+            pTextLayout->lines.push_back(cl);
+			bd = GrBlockDesc();
+			cl = GrLineDesc();
+        }
+        else 
+        {
+			if(ob != cb)
+			{
+				cl.blocks.push_back(bd);
+				bd = GrBlockDesc();
+			}
+
+			bd.width += charWidth;
+			bd.length++;
+			cl.width += charWidth;
+        }
+
+		ob = cb;
+		bd.b = cb;
+    }
+
+	cl.blocks.push_back(bd);
+    pTextLayout->lines.push_back(cl);
+}
+
+void GrTextUtil::MultiLine(GrTextLayout* pTextLayout, const std::wstring& cellText, int cellWidth, const GrFont* pFont, bool wordWrap)
 {
     if(wordWrap == true)
-        DoMultilineWordWrap(pLines, cellText, cellWidth, pFont);
+        DoMultilineWordWrap(pTextLayout, cellText, cellWidth, pFont);
     else
-        DoMultiline(pLines, cellText, pFont);
+        DoMultiline(pTextLayout, cellText, pFont);
 }
 
-void GrTextUtil::DoMultiline(_TextLines* pLines, const std::wstring& cellText, const GrFont* pFont)
+void GrTextUtil::DoMultiline(GrTextLayout* pTextLayout, const std::wstring& cellText, const GrFont* pFont)
 {
     uint pos = 0;
     GrLineDesc cl;
-    cl.width = 0;
-    cl.length = 0;
-    cl.textBegin = 0;
+	GrBlockDesc bd;
 
     while(pos != cellText.length())
     {
@@ -59,19 +120,21 @@ void GrTextUtil::DoMultiline(_TextLines* pLines, const std::wstring& cellText, c
         int charWidth = pFont->GetCharacterWidth(s);
         if(s == L'\n')
         {
-            pLines->push_back(cl);
-            cl.textBegin = pos;
-            cl.length = 0;
-            cl.width = 0;
+			cl.blocks.push_back(bd);
+            pTextLayout->lines.push_back(cl);
+			bd = GrBlockDesc();
+			cl = GrLineDesc();
         }
         else 
         {
-            cl.width += charWidth;
-            cl.length++;
+			bd.width += charWidth;
+			bd.length++;
+			cl.width += charWidth;
         }
     }
 
-    pLines->push_back(cl);
+    cl.blocks.push_back(bd);
+    pTextLayout->lines.push_back(cl);
 }
 
 void GrTextUtil::WordWrap(WordList* pWordList, const std::wstring& cellText, const GrFont* pFont, int cellWidth)
@@ -112,29 +175,29 @@ void GrTextUtil::WordWrap(WordList* pWordList, const std::wstring& cellText, con
     }
 }
 
-void GrTextUtil::DoMultilineWordWrap(_TextLines* pLines, const std::wstring& cellText, int cellWidth, const GrFont* pFont)
+void GrTextUtil::DoMultilineWordWrap(GrTextLayout* pTextLayout, const std::wstring& cellText, int cellWidth, const GrFont* pFont)
 {
-    WordList words;
-    WordWrap(&words, cellText, pFont, cellWidth);
+    //WordList words;
+    //WordWrap(&words, cellText, pFont, cellWidth);
 
-    int pos=0;
-    GrLineDesc cl;
-    memset(&cl, 0, sizeof(GrLineDesc));
-    for(auto value : words)
-    {
-        if(cl.width + value.validWidth > cellWidth || cellText.at(value.pos) == L'\n')
-        {
-            pLines->push_back(cl);
-            memset(&cl, 0, sizeof(GrLineDesc));
-            cl.textBegin = pos;
-        }
+    //int pos=0;
+    //GrLineDesc cl;
+    //memset(&cl, 0, sizeof(GrLineDesc));
+    //for(auto value : words)
+    //{
+    //    if(cl.width + value.validWidth > cellWidth || cellText.at(value.pos) == L'\n')
+    //    {
+    //        pLines->push_back(cl);
+    //        memset(&cl, 0, sizeof(GrLineDesc));
+    //        cl.textBegin = pos;
+    //    }
 
-        cl.width += value.width;
-        cl.length += value.length;
-        pos += value.length;
-    }
+    //    cl.width += value.width;
+    //    cl.length += value.length;
+    //    pos += value.length;
+    //}
 
-    pLines->push_back(cl);
+    //pLines->push_back(cl);
 }
 
 GrSelectionTimer::GrSelectionTimer()

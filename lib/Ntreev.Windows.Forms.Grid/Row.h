@@ -385,7 +385,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         property System::Object^ Component
         {
-            System::Object^ get() { return m_component; }
+            virtual System::Object^ get() { return m_component; }
         //internal:
         //    void set(System::Object^);
         }
@@ -433,7 +433,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		void AttachComponent(System::Object^ component);
 
-		void DetachComponent();
+		void DetachComponent(bool backup);
 
     internal: // properties
 
