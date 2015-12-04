@@ -678,9 +678,9 @@ void GrGridPainterDC::DrawRectangle(const GrRect& rect, const GrColor& color)
 	DeleteObject(hPen);
 }
 
-void GrGridPainterDC::FillRectangle(const GrRect& rect, const GrColor& color)
+void GrGridPainterDC::FillRectangle(const GrRect& rect, const GrColor& color, const GrRect* pClipRect)
 {
-	RECT2 rt = rect;
+	RECT2 rt(rect, pClipRect);
 	HBRUSH hBrush = CreateSolidBrush(_RGB(color));
 	FillRect(m_hdc, &rt, hBrush);
 	DeleteObject(hBrush);

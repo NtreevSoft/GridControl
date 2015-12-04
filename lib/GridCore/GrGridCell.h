@@ -317,6 +317,7 @@ private:
 struct GrBlockDesc
 {
 	GrBlockDesc() : textBegin(0), length(0), width(0), b(false) {}
+	GrBlockDesc(int textBegin) : textBegin(textBegin), length(0), width(0), b(false) {}
     int textBegin;
     int length;
     int width;
@@ -396,6 +397,7 @@ public:
 	// text method
     const std::wstring& GetText() const;
 	const std::wstring& GetFilter() const;
+    bool GetFiltered() const { return m_filtered.size() > 0; }
     void SetText(const std::wstring& text);
 	void SetFilter(const std::wstring& text);
     uint GetTextLineCount() const;
@@ -443,9 +445,12 @@ protected:
     void SetTextBoundsChanged();
     void SetTextAlignChanged();
 
+    void DrawFilter(GrGridPainter* pPainter, GrFont* pFont, const GrBlockDesc& bd, const GrRect& paintRect, const GrRect* pClipRect = nullptr) const;
+
 private:
     std::wstring* m_text;
 	std::wstring* m_filter;
+    std::vector<int> m_filtered;
     struct GrTextLayout* m_layout;
 
     struct GrStyleData

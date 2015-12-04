@@ -437,6 +437,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
+        /// 필터링된 셀들의 목록을 가져옵니다.
+        /// </summary>
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
+        property System::Collections::ObjectModel::ObservableCollection<Cell^>^ FilteredCells
+        {
+            System::Collections::ObjectModel::ObservableCollection<Cell^>^ get() { return m_filteredCells; }
+        }
+
+        /// <summary>
         /// Visible 행의 목록을 가져옵니다.
         /// </summary>
 #ifdef _DEBUG
@@ -2333,6 +2346,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         initonly SelectedRowCollection^ m_selectedRows;
         initonly SelectedColumnCollection^ m_selectedColumns;
         initonly GroupRowCollection^ m_groupRows;
+        initonly System::Collections::ObjectModel::ObservableCollection<Cell^>^ m_filteredCells;
 
         _Style^ m_style;
 
