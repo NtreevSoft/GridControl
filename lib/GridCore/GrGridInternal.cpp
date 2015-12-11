@@ -35,217 +35,37 @@ std::vector<GrWordDesc> GrTextUtil::m_swords;
 std::vector<GrLineDesc> GrTextUtil::m_slines;
 std::vector<GrBlockDesc> GrTextUtil::m_sblocks;
 
-//void GrTextUtil::SingleLine(GrTextLayout* pTextLayout, const std::wstring& cellText, const GrFont* pFont)
-//{
-//    GrLineDesc ld;
-//    GrBlockDesc bd((int)cellText.length());
-//
-//    ld.width = pFont->GetStringWidth(cellText);
-//    ld.blocks.push_back(bd);
-//
-//    pTextLayout->lines.push_back(ld);
-//}
-
-void GrTextUtil::SingleLine(GrTextLayout* pTextLayout, const std::wstring& cellText, const std::wstring& filterText, const GrFont* pFont)
+void GrTextUtil::SingleLine(GrTextLayout* pTextLayout, const std::wstring& cellText, const GrFont* pFont)
 {
-    std::vector<bool> b(cellText.size());
-
-    std::wstring t = cellText;
-    std::wstring f = filterText;
-    std::transform(t.begin(), t.end(), t.begin(), ::tolower);
-    std::transform(f.begin(), f.end(), f.begin(), ::tolower);
-
-    std::size_t found = t.find(f);
-    while (found != std::wstring::npos)
-    {
-        for(std::size_t i=0 ; i<f.length() ; i++)
-        {
-            b[found + i] = true;
-        }
-        found = t.find(f.c_str(), found + 1, f.length());
-    }
-
-    uint pos = 0;
-    GrLineDesc cl;
+    GrLineDesc ld;
     GrBlockDesc bd;
-    bool ob = *b.begin();
-    while(pos != cellText.length())
-    {
-        wchar_t s = cellText.at(pos);
-        bool cb = b[pos];
+    bd.length = cellText.length();
+    bd.width = pFont->GetStringWidth(cellText);
+    ld.width = bd.width;
+    ld.blocks.push_back(bd);
 
-        int charWidth = pFont->GetCharacterWidth(s);
-
-        if(s == L'\n')
-        {
-            charWidth = pFont->GetCharacterWidth(' ');
-            bd.width += charWidth;
-            bd.length++;
-            cl.width += charWidth;
-            cl.blocks.push_back(bd);
-            bd = GrBlockDesc();
-            bd.textBegin = pos + 1;
-        }
-        else 
-        {
-            if(ob != cb)
-            {
-                cl.blocks.push_back(bd);
-                bd = GrBlockDesc();
-                bd.textBegin = pos;
-            }
-
-            bd.width += charWidth;
-            bd.length++;
-            cl.width += charWidth;
-        }
-
-        ob = cb;
-        bd.b = cb;
-        pos++;
-    }
-
-    cl.blocks.push_back(bd);
-    pTextLayout->lines.push_back(cl);
+    pTextLayout->lines.push_back(ld);
 }
 
-//void GrTextUtil::MultiLine(GrTextLayout* pTextLayout, const std::wstring& cellText, int cellWidth, const GrFont* pFont, bool wordWrap)
-//{
-//    if(wordWrap == true)
-//        DoMultilineWordWrap(pTextLayout, cellText, L"", cellWidth, pFont);
-//    else
-//        DoMultiline(pTextLayout, cellText, pFont);
-//}
-
-void GrTextUtil::MultiLine(GrTextLayout* pTextLayout, const std::wstring& cellText, const std::wstring& filterText, int cellWidth, const GrFont* pFont, bool wordWrap)
+void GrTextUtil::MultiLine(GrTextLayout* pTextLayout, const std::wstring& cellText, int cellWidth, const GrFont* pFont, bool wordWrap)
 {
     if(wordWrap == true)
-    {
-        DoMultilineWordWrap(pTextLayout, cellText, filterText, cellWidth, pFont);
-    }
+        DoMultilineWordWrap(pTextLayout, cellText, cellWidth, pFont);
     else
-        DoMultiline(pTextLayout, cellText, filterText, pFont);
+        DoMultiline(pTextLayout, cellText, pFont);
 }
 
-//void GrTextUtil::DoMultiline(GrTextLayout* pTextLayout, const std::wstring& cellText, const GrFont* pFont)
-//{
-//    uint pos = 0;
-//    GrLineDesc cl;
-//    GrBlockDesc bd;
-//
-//    while(pos != cellText.length())
-//    {
-//        wchar_t s = cellText.at(pos++);
-//        int charWidth = pFont->GetCharacterWidth(s);
-//        if(s == L'\n')
-//        {
-//            cl.blocks.push_back(bd);
-//            pTextLayout->lines.push_back(cl);
-//            bd = GrBlockDesc(pos);
-//            cl = GrLineDesc();
-//        }
-//        else 
-//        {
-//            bd.width += charWidth;
-//            bd.length++;
-//            cl.width += charWidth;
-//        }
-//    }
-//
-//    cl.blocks.push_back(bd);
-//    pTextLayout->lines.push_back(cl);
-//}
-
-void GrTextUtil::DoMultiline(GrTextLayout* pTextLayout, const std::wstring& cellText, const std::wstring& filterText, const GrFont* pFont)
+void GrTextUtil::WordWrap(WordList* pWordList, const std::wstring& cellText, const GrFont* pFont, int cellWidth)
 {
-    std::vector<bool> b(cellText.size());
-
-    std::wstring t = cellText;
-    std::wstring f = filterText;
-    std::transform(t.begin(), t.end(), t.begin(), ::tolower);
-    std::transform(f.begin(), f.end(), f.begin(), ::tolower);
-
-    std::size_t found = t.find(f);
-    while (found != std::wstring::npos)
-    {
-        for(std::size_t i=0 ; i<f.length() ; i++)
-        {
-            b[found + i] = true;
-        }
-        found = t.find(f.c_str(), found + 1, f.length());
-    }
-
-    uint pos = 0;
-    GrLineDesc cl;
-    GrBlockDesc bd;
-    bool ob = *b.begin();
-    while(pos != cellText.length())
-    {
-        wchar_t s = cellText.at(pos);
-        bool cb = b[pos];
-
-        int charWidth = pFont->GetCharacterWidth(s);
-        if(s == L'\n')
-        {
-            cl.blocks.push_back(bd);
-            pTextLayout->lines.push_back(cl);
-            bd = GrBlockDesc();
-            bd.textBegin = pos;
-            cl = GrLineDesc();
-        }
-        else 
-        {
-            if(ob != cb)
-            {
-                cl.blocks.push_back(bd);
-                bd = GrBlockDesc();
-                bd.textBegin = pos;
-            }
-
-            bd.width += charWidth;
-            bd.length++;
-            cl.width += charWidth;
-        }
-
-        ob = cb;
-        bd.b = cb;
-        pos++;
-    }
-
-    cl.blocks.push_back(bd);
-    pTextLayout->lines.push_back(cl);
-}
-
-void GrTextUtil::WordWrap(WordList* pWordList, const std::wstring& cellText, const std::wstring& filterText, const GrFont* pFont, int cellWidth)
-{
-    std::vector<bool> cellColor(cellText.size());
-
-    std::wstring t = cellText;
-    std::wstring f = filterText;
-    std::transform(t.begin(), t.end(), t.begin(), ::tolower);
-    std::transform(f.begin(), f.end(), f.begin(), ::tolower);
-
-    std::size_t found = t.find(f);
-    while (found != std::wstring::npos)
-    {
-        for(std::size_t i=0 ; i<f.length() ; i++)
-        {
-            cellColor[found + i] = true;
-        }
-        found = t.find(f.c_str(), found + 1, f.length());
-    }
-
     bool wordBreak = false;
 
     uint pos = 0;
     GrWordDesc wd;
     GrBlockDesc bd;
-    bool ob = *cellColor.begin();
 
     while(pos != cellText.length())
     {
         wchar_t s = cellText.at(pos);
-        bool cb = cellColor.at(pos);
         int width = pFont->GetCharacterWidth(s);
 
         if((wordBreak == true && s != L' ') || 
@@ -263,16 +83,9 @@ void GrTextUtil::WordWrap(WordList* pWordList, const std::wstring& cellText, con
             wd = GrWordDesc(pos);
             wordBreak = false;
         }
-        else if(ob != cb)
-        {
-            m_sblocks.push_back(bd);
-            wd.length += bd.length;
-            bd = GrBlockDesc(pos);
-        }
 
         bd.width += width;
         bd.length++;
-        bd.b = cb;
         wd.width += width;
 
         if(s == L' ')
@@ -280,7 +93,6 @@ void GrTextUtil::WordWrap(WordList* pWordList, const std::wstring& cellText, con
         else
             wd.validWidth += width;
 
-        ob = cb;
         pos++;
     }
 
@@ -289,24 +101,48 @@ void GrTextUtil::WordWrap(WordList* pWordList, const std::wstring& cellText, con
     m_sblocks.clear();
 
     pWordList->push_back(wd);
-    //if(wd.length != 0)
-    //{
-    //	pWordList->push_back(wd);
-    //}
 }
 
+void GrTextUtil::DoMultiline(GrTextLayout* pTextLayout, const std::wstring& cellText, const GrFont* pFont)
+{
+    uint pos = 0;
+    GrLineDesc cl;
+    GrBlockDesc bd;
+    while(pos != cellText.length())
+    {
+        wchar_t s = cellText.at(pos);
 
+        int charWidth = pFont->GetCharacterWidth(s);
+        if(s == L'\n')
+        {
+            cl.blocks.push_back(bd);
+            pTextLayout->lines.push_back(cl);
+            bd = GrBlockDesc();
+            bd.begin = pos;
+            cl = GrLineDesc();
+        }
+        else 
+        {
+            bd.width += charWidth;
+            bd.length++;
+            cl.width += charWidth;
+        }
 
-void GrTextUtil::DoMultilineWordWrap(GrTextLayout* pTextLayout, const std::wstring& cellText, const std::wstring& filterText, int cellWidth, const GrFont* pFont)
+        pos++;
+    }
+
+    cl.blocks.push_back(bd);
+    pTextLayout->lines.push_back(cl);
+}
+
+void GrTextUtil::DoMultilineWordWrap(GrTextLayout* pTextLayout, const std::wstring& cellText, int cellWidth, const GrFont* pFont)
 {
     WordList words;
-    WordWrap(&words, cellText, filterText, pFont, cellWidth);
+    WordWrap(&words, cellText, pFont, cellWidth);
 
     m_slines.reserve(100);
 
-    int pos=0;
     GrLineDesc cl;
-    cl.blocks.reserve(100);
 
     for(auto value : words)
     {
@@ -319,8 +155,6 @@ void GrTextUtil::DoMultilineWordWrap(GrTextLayout* pTextLayout, const std::wstri
 
         cl.blocks.insert(cl.blocks.end(), value.blocks.begin(), value.blocks.end());
         cl.width += value.width;
-        //cl.length += value.length;
-        //pos += value.length;
     }
 
     m_slines.push_back(cl);

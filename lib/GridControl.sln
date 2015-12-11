@@ -134,7 +134,6 @@ Global
 		{BE76B14A-8276-448C-A85A-905F189E4D66}.Debug|x86.Build.0 = Debug|Win32
 		{BE76B14A-8276-448C-A85A-905F189E4D66}.Release|Any CPU.ActiveCfg = Release|Win32
 		{BE76B14A-8276-448C-A85A-905F189E4D66}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{BE76B14A-8276-448C-A85A-905F189E4D66}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{BE76B14A-8276-448C-A85A-905F189E4D66}.Release|Win32.ActiveCfg = Release|Win32
 		{BE76B14A-8276-448C-A85A-905F189E4D66}.Release|Win32.Build.0 = Release|Win32
 		{BE76B14A-8276-448C-A85A-905F189E4D66}.Release|x64.ActiveCfg = Release|Win32

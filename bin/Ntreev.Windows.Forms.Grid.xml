@@ -177,42 +177,7 @@ DropDown형식에 컨트롤을 부착해 편집할 수 있는 기능을 제공�
 열거자를 나타내는 <see cref="T:System.Collections.Generic.IEnumerator`1" />입니다.
 </returns>
         </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.RowBaseCollection.Count">
-            <summary>
-항목의 갯수를 가져옵니다.
-</summary>
-            <returns>
-갯수를 나타내는 <see cref="T:System.Int32" />의 정수값입니다.
-</returns>
-        </member>
-        <member name="P:Ntreev.Windows.Forms.Grid.RowBaseCollection.default(System.Int32)">
-            <summary>
-지정한 인덱스에 있는 <see cref="T:Ntreev.Windows.Forms.Grid.RowBase" />을 가져옵니다.
-</summary>
-            <param name="index">
-가져올 <see cref="T:Ntreev.Windows.Forms.Grid.RowBase" />의 인덱스(0부터 시작)입니다.
-</param>
-            <returns>
-지정한 인덱스의 <see cref="T:Ntreev.Windows.Forms.Grid.RowBase" />입니다.
-</returns>
-            <exception cref="T:System.ArgumentOutOfRangeException">
-index가 0보다 작거나, <see cref="P:Ntreev.Windows.Forms.Grid.RowBaseCollection.Count" />보다 클 경우
-</exception>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.RowBaseCollection.GetEnumerator">
-            <summary>
-컬렉션을 반복하는 열거자를 가져옵니다.
-</summary>
-            <returns>
-열거자를 나타내는 <see cref="T:System.Collections.Generic.IEnumerator`1" />입니다.
-</returns>
-        </member>
-        <member name="T:Ntreev.Windows.Forms.Grid.RowBaseCollection">
-            <summary>
-스크롤 되는 열의 컬렉션을 나타냅니다.
-</summary>
-        </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnCheckBox.SetControlValue(System.Windows.Forms.CheckBox,System.Object)">
+        <member name="M:Ntreev.Windows.Forms.Grid.Columns.ColumnCheckBox.SetControlValue(System.Windows.Forms.CheckBox,Ntreev.Windows.Forms.Grid.ICell,System.Object)">
             <summary>
 셀의 값을 컨트롤에 적용할때 호출됩니다.
 </summary>
@@ -251,11 +216,12 @@ CheckBox를 지원하는 Column개체를 나타냅니다.
 </summary>
             <param name="cell">셀의 정보를 나타냅니다..</param>
         </member>
-        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.SetControlValue(`0,System.Object)">
+        <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.SetControlValue(`0,Ntreev.Windows.Forms.Grid.ICell,System.Object)">
             <summary>
 셀의 값을 컨트롤에 적용할때 호출됩니다.
 </summary>
             <param name="control">편집 또는 표시에 사용되는 컨트롤의 인스턴스입니다.</param>
+            <param name="cell">편집 또는 표시에 사용되는 셀의 인스턴스입니다.</param>
             <param name="value">컨트롤에 적용할 셀의 값입니다.</param>
         </member>
         <member name="M:Ntreev.Windows.Forms.Grid.ColumnControl`1.GetControlValue(`0)">
@@ -349,6 +315,41 @@ About에 대한 요약입니다.
 '리소스 파일 이름' 속성도 변경해야 합니다. 그렇지 않은 경우
 디자이너는 이 폼과 관련된 지역화된 리소스와
 올바르게 상호 작용할 수 없습니다.
+</summary>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.RowBaseCollection.Count">
+            <summary>
+항목의 갯수를 가져옵니다.
+</summary>
+            <returns>
+갯수를 나타내는 <see cref="T:System.Int32" />의 정수값입니다.
+</returns>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.RowBaseCollection.default(System.Int32)">
+            <summary>
+지정한 인덱스에 있는 <see cref="T:Ntreev.Windows.Forms.Grid.RowBase" />을 가져옵니다.
+</summary>
+            <param name="index">
+가져올 <see cref="T:Ntreev.Windows.Forms.Grid.RowBase" />의 인덱스(0부터 시작)입니다.
+</param>
+            <returns>
+지정한 인덱스의 <see cref="T:Ntreev.Windows.Forms.Grid.RowBase" />입니다.
+</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+index가 0보다 작거나, <see cref="P:Ntreev.Windows.Forms.Grid.RowBaseCollection.Count" />보다 클 경우
+</exception>
+        </member>
+        <member name="M:Ntreev.Windows.Forms.Grid.RowBaseCollection.GetEnumerator">
+            <summary>
+컬렉션을 반복하는 열거자를 가져옵니다.
+</summary>
+            <returns>
+열거자를 나타내는 <see cref="T:System.Collections.Generic.IEnumerator`1" />입니다.
+</returns>
+        </member>
+        <member name="T:Ntreev.Windows.Forms.Grid.RowBaseCollection">
+            <summary>
+스크롤 되는 열의 컬렉션을 나타냅니다.
 </summary>
         </member>
         <member name="P:Ntreev.Windows.Forms.Grid.GroupRowCollection.Count">
@@ -2678,6 +2679,11 @@ IME 지원을 사용하도록 <see cref="P:System.Windows.Forms.Control.ImeMode"
 이 속성의 값이 false일 경우에는 DataGridView 형식으로 표시합니다.
 </remarks>
         </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.GridControl.Filter">
+            <summary>
+필터를 가져오거나 설정합니다.
+</summary>
+        </member>
         <member name="P:Ntreev.Windows.Forms.Grid.GridControl.IsGrouped">
             <summary>
 그룹화 되었는지에 대한 여부를 가져옵니다.
@@ -2793,6 +2799,11 @@ Displayable 행의 목록을 가져옵니다.
         <member name="P:Ntreev.Windows.Forms.Grid.GridControl.VisibleRows">
             <summary>
 Visible 행의 목록을 가져옵니다.
+</summary>
+        </member>
+        <member name="P:Ntreev.Windows.Forms.Grid.GridControl.FilteredCells">
+            <summary>
+필터링된 셀들의 목록을 가져옵니다.
 </summary>
         </member>
         <member name="P:Ntreev.Windows.Forms.Grid.GridControl.GroupRows">

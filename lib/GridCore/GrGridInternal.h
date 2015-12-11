@@ -45,16 +45,13 @@ typedef std::vector<GrWordDesc> WordList;
 class GrTextUtil
 {
 public:
-    //static void SingleLine(GrTextLayout* pTextLayout, const std::wstring& cellText, const GrFont* pFont);
-	static void SingleLine(GrTextLayout* pTextLayout, const std::wstring& cellText, const std::wstring& filterText, const GrFont* pFont);
-    //static void MultiLine(GrTextLayout* pTextLayout, const std::wstring& cellText, int cellWidth, const GrFont* pFont, bool wordWrap);
-	static void MultiLine(GrTextLayout* pTextLayout, const std::wstring& cellText, const std::wstring& filterText, int cellWidth, const GrFont* pFont, bool wordWrap);
+	static void SingleLine(GrTextLayout* pTextLayout, const std::wstring& cellText, const GrFont* pFont);
+	static void MultiLine(GrTextLayout* pTextLayout, const std::wstring& cellText, int cellWidth, const GrFont* pFont, bool wordWrap);
 
-//private:
-    static void WordWrap(WordList* pWordList, const std::wstring& cellText, const std::wstring& filterText, const GrFont* pFont, int cellWidth);
-    //static void DoMultiline(GrTextLayout* pTextLayout, const std::wstring& cellText, const GrFont* pFont);
-	static void DoMultiline(GrTextLayout* pTextLayout, const std::wstring& cellText, const std::wstring& filterText, const GrFont* pFont);
-    static void DoMultilineWordWrap(GrTextLayout* pTextLayout, const std::wstring& cellText, const std::wstring& filterText, int cellWidth, const GrFont* pFont);
+private:
+    static void WordWrap(WordList* pWordList, const std::wstring& cellText, const GrFont* pFont, int cellWidth);
+	static void DoMultiline(GrTextLayout* pTextLayout, const std::wstring& cellText, const GrFont* pFont);
+    static void DoMultilineWordWrap(GrTextLayout* pTextLayout, const std::wstring& cellText, int cellWidth, const GrFont* pFont);
 
     static std::vector<GrWordDesc> m_swords;
     static std::vector<GrLineDesc> m_slines;
