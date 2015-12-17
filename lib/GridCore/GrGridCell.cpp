@@ -689,9 +689,6 @@ void GrCell::SetText(const std::wstring& text)
 
 void GrCell::SetFilter(const std::wstring& filter, bool ignoreCase)
 {
-    if(filter == L"")
-        return;
-
     m_filtered.clear();
     m_filterLength = 0;
     if(GetText() != L"")

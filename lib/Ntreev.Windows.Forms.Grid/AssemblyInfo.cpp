@@ -54,8 +54,8 @@ using namespace System::Security::Permissions;
 // 모든 값을 지정하거나 아래와 같이 '*'를 사용하여 빌드 번호 및 수정 버전이 자동으로
 // 지정되도록 할 수 있습니다.
 
-[assembly:AssemblyVersionAttribute("2.0.5792.31442")];
-[assembly:AssemblyFileVersion("2.0.5792.31442")];
+[assembly:AssemblyVersionAttribute("2.1.0.0")];
+[assembly:AssemblyFileVersion("2.0.5829.19226")];
 
 
 //[assembly:AssemblyVersionAttribute("2.0.*")];
