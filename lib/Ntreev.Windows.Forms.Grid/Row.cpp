@@ -68,7 +68,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 			try
 			{
-				if(item->Column->PropertyDescriptor->PropertyType == IBindingList::typeid)
+				if (item->Column->PropertyDescriptor == nullptr || item->Column->PropertyDescriptor->PropertyType == IBindingList::typeid)
 					continue;
 				item->LocalValueToSource(component);
 				item->UpdateNativeText();

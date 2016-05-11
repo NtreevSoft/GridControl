@@ -55,10 +55,10 @@ using namespace System::Security::Permissions;
 // 지정되도록 할 수 있습니다.
 
 [assembly:AssemblyVersionAttribute("2.1.0.0")];
-[assembly:AssemblyFileVersion("2.0.5829.19226")];
+[assembly:AssemblyFileVersion("2.1.5975.32357")];
 
 
-//[assembly:AssemblyVersionAttribute("2.0.*")];
+//[assembly:AssemblyVersionAttribute("2.1.*")];
 
 [assembly:ComVisible(false)];
 

@@ -194,7 +194,7 @@ void GrGridPainterDC::EndPaint()
 {
 	SelectObject(m_hdc, (HGDIOBJ)m_hOldFont);
 	SelectObject(m_hOverlayDC, (HGDIOBJ)m_hOverlayBmpOld);
-
+	DeleteDC(m_hOverlayDC);
 	m_hdc = nullptr;
 }
 
