@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.5190.32793
+// Ntreev Grid for .Net 2.0.5792.31442
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -86,7 +86,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     }
 
     generic<class TControl> where TControl : System::Windows::Forms::Control
-        void ColumnControl<TControl>::SetControlValue(TControl /*control*/, System::Object^ /*value*/)
+        void ColumnControl<TControl>::SetControlValue(TControl /*control*/, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ /*value*/)
     {
 
     }
@@ -102,7 +102,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		location.X -= cell->Padding.Left;
 		location.Y -= cell->Padding.Left;
 
-        this->SetControlValue(m_viewControl, value);
+        this->SetControlValue(m_viewControl, cell, value);
 		this->SetControlLayout(m_viewControl, cell);
 
         System::IntPtr hdc = graphics->GetHdc();
@@ -190,7 +190,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         System::Object^ ColumnControl<TControl>::EditValue(Ntreev::Windows::Forms::Grid::Design::IEditorService^ editorService, Ntreev::Windows::Forms::Grid::ICell^ cell, System::Object^ value)
     {
         SetControlLayout(m_control, cell);
-        SetControlValue(m_control, value);
+        SetControlValue(m_control, cell, value);
         m_editorService = editorService;
         editorService->ShowControl(m_control);
         m_editorService = nullptr;
@@ -227,7 +227,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 			return;
 		
 		this->SetControlLayout(m_viewControl, cell);
-		this->SetControlValue(m_viewControl, value);
+		this->SetControlValue(m_viewControl, cell, value);
 		cell->NativeRef->SetTextBounds(m_viewControl->PreferredSize);
     }
 

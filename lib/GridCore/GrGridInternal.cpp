@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.5190.32793
+// Ntreev Grid for .Net 2.0.5792.31442
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -29,73 +29,63 @@
 #include <math.h>
 #include <memory.h>
 #include <limits.h>
+#include <cctype>
 
-void GrTextUtil::SingleLine(GrLineDesc* pLine, const std::wstring& cellText, const GrFont* pFont)
+std::vector<GrWordDesc> GrTextUtil::m_swords;
+std::vector<GrLineDesc> GrTextUtil::m_slines;
+std::vector<GrBlockDesc> GrTextUtil::m_sblocks;
+
+void GrTextUtil::SingleLine(GrTextLayout* pTextLayout, const std::wstring& cellText, const GrFont* pFont)
 {
-    memset(pLine, 0, sizeof(GrLineDesc));
-    pLine->length = (int)cellText.length();
-    pLine->width = pFont->GetStringWidth(cellText);
+    GrLineDesc ld;
+    GrBlockDesc bd;
+    bd.length = cellText.length();
+    bd.width = pFont->GetStringWidth(cellText);
+    ld.width = bd.width;
+    ld.blocks.push_back(bd);
+
+    pTextLayout->lines.push_back(ld);
 }
 
-void GrTextUtil::MultiLine(_TextLines* pLines, const std::wstring& cellText, int cellWidth, const GrFont* pFont, bool wordWrap)
+void GrTextUtil::MultiLine(GrTextLayout* pTextLayout, const std::wstring& cellText, int cellWidth, const GrFont* pFont, bool wordWrap)
 {
     if(wordWrap == true)
-        DoMultilineWordWrap(pLines, cellText, cellWidth, pFont);
+        DoMultilineWordWrap(pTextLayout, cellText, cellWidth, pFont);
     else
-        DoMultiline(pLines, cellText, pFont);
-}
-
-void GrTextUtil::DoMultiline(_TextLines* pLines, const std::wstring& cellText, const GrFont* pFont)
-{
-    uint pos = 0;
-    GrLineDesc cl;
-    cl.width = 0;
-    cl.length = 0;
-    cl.textBegin = 0;
-
-    while(pos != cellText.length())
-    {
-        wchar_t s = cellText.at(pos++);
-        int charWidth = pFont->GetCharacterWidth(s);
-        if(s == L'\n')
-        {
-            pLines->push_back(cl);
-            cl.textBegin = pos;
-            cl.length = 0;
-            cl.width = 0;
-        }
-        else 
-        {
-            cl.width += charWidth;
-            cl.length++;
-        }
-    }
-
-    pLines->push_back(cl);
+        DoMultiline(pTextLayout, cellText, pFont);
 }
 
 void GrTextUtil::WordWrap(WordList* pWordList, const std::wstring& cellText, const GrFont* pFont, int cellWidth)
 {
     bool wordBreak = false;
 
-    GrWordDesc wd;
     uint pos = 0;
-    memset(&wd, 0, sizeof(GrWordDesc));
+    GrWordDesc wd;
+    GrBlockDesc bd;
 
     while(pos != cellText.length())
     {
         wchar_t s = cellText.at(pos);
         int width = pFont->GetCharacterWidth(s);
 
-        if((wordBreak == true && s != L' ') || wd.width + width > cellWidth || s > 0xff || s == L'\n')
+        if((wordBreak == true && s != L' ') || 
+            wd.width + width > cellWidth || 
+            (pos != 0 && s > 0xff) || 
+            s == L'\n')
         {
+            m_sblocks.push_back(bd);
+            wd.blocks = m_sblocks;
+            m_sblocks.clear();
+
+            wd.length += bd.length;
             pWordList->push_back(wd);
-            memset(&wd, 0, sizeof(GrWordDesc));
-            wd.pos = pos;
+            bd = GrBlockDesc(pos);
+            wd = GrWordDesc(pos);
             wordBreak = false;
         }
 
-        wd.length++;
+        bd.width += width;
+        bd.length++;
         wd.width += width;
 
         if(s == L' ')
@@ -106,35 +96,70 @@ void GrTextUtil::WordWrap(WordList* pWordList, const std::wstring& cellText, con
         pos++;
     }
 
-    if(wd.length != 0)
-    {
-        pWordList->push_back(wd);
-    }
+    m_sblocks.push_back(bd);
+    wd.blocks = m_sblocks;
+    m_sblocks.clear();
+
+    pWordList->push_back(wd);
 }
 
-void GrTextUtil::DoMultilineWordWrap(_TextLines* pLines, const std::wstring& cellText, int cellWidth, const GrFont* pFont)
+void GrTextUtil::DoMultiline(GrTextLayout* pTextLayout, const std::wstring& cellText, const GrFont* pFont)
+{
+    uint pos = 0;
+    GrLineDesc cl;
+    GrBlockDesc bd;
+    while(pos != cellText.length())
+    {
+        wchar_t s = cellText.at(pos);
+
+        int charWidth = pFont->GetCharacterWidth(s);
+        if(s == L'\n')
+        {
+            cl.blocks.push_back(bd);
+            pTextLayout->lines.push_back(cl);
+            bd = GrBlockDesc();
+            bd.begin = pos;
+            cl = GrLineDesc();
+        }
+        else 
+        {
+            bd.width += charWidth;
+            bd.length++;
+            cl.width += charWidth;
+        }
+
+        pos++;
+    }
+
+    cl.blocks.push_back(bd);
+    pTextLayout->lines.push_back(cl);
+}
+
+void GrTextUtil::DoMultilineWordWrap(GrTextLayout* pTextLayout, const std::wstring& cellText, int cellWidth, const GrFont* pFont)
 {
     WordList words;
     WordWrap(&words, cellText, pFont, cellWidth);
 
-    int pos=0;
+    m_slines.reserve(100);
+
     GrLineDesc cl;
-    memset(&cl, 0, sizeof(GrLineDesc));
+
     for(auto value : words)
     {
         if(cl.width + value.validWidth > cellWidth || cellText.at(value.pos) == L'\n')
         {
-            pLines->push_back(cl);
-            memset(&cl, 0, sizeof(GrLineDesc));
-            cl.textBegin = pos;
+            m_slines.push_back(cl);
+            cl = GrLineDesc();
+            cl.blocks.reserve(100);
         }
 
+        cl.blocks.insert(cl.blocks.end(), value.blocks.begin(), value.blocks.end());
         cl.width += value.width;
-        cl.length += value.length;
-        pos += value.length;
     }
 
-    pLines->push_back(cl);
+    m_slines.push_back(cl);
+    pTextLayout->lines = m_slines;
+    m_slines.clear();
 }
 
 GrSelectionTimer::GrSelectionTimer()
@@ -373,18 +398,18 @@ void GrFocuserInternal::SetFocusing(IFocusable* pFocusable)
 
     if(m_pFocusing != nullptr && m_pFocusing->GetDisplayable() == true)
     {
-		IDataRow* pDataRow = m_pFocusing->GetDataRow();
-		if(m_pGridCore->GetRowHighlight() == true || m_pGridCore->GetFullRowSelect() == true)
-		{
-			GrRect rect = pDataRow->GetRect();
-			rect.right = m_pGridCore->GetDisplayRect().right;
-			rect.Expand(2);
-			m_pGridCore->Invalidate(rect);
-		}
-		else
-		{
-			m_pFocusing->Invalidate();
-		}
+        IDataRow* pDataRow = m_pFocusing->GetDataRow();
+        if(m_pGridCore->GetRowHighlight() == true || m_pGridCore->GetFullRowSelect() == true)
+        {
+            GrRect rect = pDataRow->GetRect();
+            rect.right = m_pGridCore->GetDisplayRect().right;
+            rect.Expand(2);
+            m_pGridCore->Invalidate(rect);
+        }
+        else
+        {
+            m_pFocusing->Invalidate();
+        }
     }
 
     m_pFocusing = pFocusable;
@@ -429,7 +454,7 @@ void GrFocuserInternal::OnFocusChanging(GrFocusChangeArgs* e)
                 pItemSelector->SelectDataRow(pDataRow, GrSelectionType_Normal);
             else
                 pItemSelector->Select(pFocusable);
-            
+
         }
     }
 

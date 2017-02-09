@@ -12,17 +12,26 @@ namespace SampleApplication
     {
         public ColumnEnable()
         {
-
+            this.Control.CheckedChanged += Control_CheckedChanged;
+            this.DataType = typeof(bool);
         }
 
-        protected override void OnGridControlAttached()
+        void Control_CheckedChanged(object sender, EventArgs e)
         {
-            base.OnGridControlAttached();
+            this.CloseControl();
         }
 
-        protected override void SetControlLayout(EnablePicker control, ICell cell)
+        protected override void SetControlValue(EnablePicker control, ICell cell, object value)
         {
-            base.SetControlLayout(control, cell);
+            if (value == null)
+                control.Checked = true;
+            else
+                control.Checked = (bool)value;
+        }
+
+        protected override object GetControlValue(EnablePicker control)
+        {
+            return control.Checked;
         }
     }
 }

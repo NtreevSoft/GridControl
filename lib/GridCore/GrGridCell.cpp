@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.5190.32793
+// Ntreev Grid for .Net 2.0.5792.31442
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -29,29 +29,7 @@
 #include <assert.h>
 #include <limits.h>
 
-class GrTextLayout
-{
-public:
-    GrTextLayout()
-        : pLines(nullptr), linesCount(0)
-    {
 
-    }
-
-    ~GrTextLayout()
-    {
-        if(pLines != nullptr)
-            delete [] pLines;
-    }
-
-    unsigned short width;
-    unsigned short height;
-    unsigned short lineHeight;
-    unsigned short y;
-
-    GrLineDesc* pLines;
-    int linesCount;
-};
 
 struct tbinfo_fixed
 {
@@ -267,6 +245,7 @@ GrCell::GrCell()
     m_textAlignChanged = false;
     m_textVisible = true;
     m_text = nullptr;
+    m_filterLength = 0;
     m_layout = nullptr;
     m_pStyleData = nullptr;
 }
@@ -312,12 +291,12 @@ GrSize GrCell::GetSize() const
 
 uint GrCell::GetTextLineCount() const
 {
-    return m_layout->linesCount;
+    return m_layout->lines.size();
 }
 
 const GrLineDesc& GrCell::GetTextLine(uint index) const
 {
-    return m_layout->pLines[index];
+    return m_layout->lines[index];
 }
 
 GrSize GrCell::GetTextBounds() const
@@ -335,7 +314,7 @@ GrSize GrCell::GetPreferredSize() const
 	return size;
 }
 
-GrPoint GrCell::AlignText(const GrLineDesc& line, int index, int count) const
+GrPoint GrCell::AlignText(int lineWidth, int index, int count) const
 {
     GrFont* pFont = GetPaintingFont();
     GrPoint startLocation;
@@ -355,10 +334,10 @@ GrPoint GrCell::AlignText(const GrLineDesc& line, int index, int count) const
         startLocation.x = 0;
         break;
     case GrHorzAlign_Center:
-        startLocation.x = (width - line.width) / 2;
+        startLocation.x = (width - lineWidth) / 2;
         break;
     case GrHorzAlign_Right:
-        startLocation.x = width - line.width;
+        startLocation.x = width - lineWidth;
         break;
     default:
         break;
@@ -432,7 +411,6 @@ void GrCell::ComputeTextBounds()
         }
     }
 
-
     GrFont* pFont = GetPaintingFont();
     GrPadding padding = GetPadding();
 
@@ -441,30 +419,22 @@ void GrCell::ComputeTextBounds()
     int maxWidth = 0;
     int maxHeight = 0;
 
-
     if(GetText().length() > 0)
     {
         int cellWidth = GetWidth() - (padding.left + padding.right);
 
         if(GetTextMulitiline() == false)
         {
-            m_layout->pLines = new GrLineDesc[1];
-            m_layout->linesCount = 1;
-            GrTextUtil::SingleLine(&m_layout->pLines[0], GetText(), pFont);
+			GrTextUtil::SingleLine(m_layout, GetText(), pFont);
         }
         else
         {
-            _TextLines lines;
-            GrTextUtil::MultiLine(&lines, GetText(), cellWidth, pFont, GetTextWordWrap());
-
-            m_layout->linesCount = (int)lines.size();
-            m_layout->pLines = new GrLineDesc[m_layout->linesCount];
-            memcpy(m_layout->pLines, &lines[0], sizeof(GrLineDesc) * m_layout->linesCount);
+            GrTextUtil::MultiLine(m_layout, GetText(), cellWidth, pFont, GetTextWordWrap());
         }
 
-        for(int i=0 ; i<m_layout->linesCount ; i++)
+        for(size_t i=0 ; i<m_layout->lines.size() ; i++)
         {
-            const GrLineDesc& lineDesc = m_layout->pLines[i];
+            const GrLineDesc& lineDesc = m_layout->lines[i];
             maxWidth = std::max(maxWidth, (int)lineDesc.width);
             maxHeight += pFont->GetHeight() + pFont->GetExternalLeading();
         }
@@ -528,30 +498,70 @@ void GrCell::DrawText(GrGridPainter* pPainter, GrColor foreColor, const GrRect& 
     {
         const GrLineDesc& cl = GetTextLine(i);
 
-        GrPoint offset = AlignText(cl, i, GetTextLineCount());
-        textRect.left = paintRect.left + offset.x;
+        GrPoint offset = AlignText(cl.width, i, GetTextLineCount());
         textRect.top = paintRect.top + offset.y;
-        textRect.right = paintRect.left + offset.x + cl.width;
         textRect.bottom = paintRect.top + offset.y + pFont->GetHeight();
         if(textRect.top > paintRect.bottom || textRect.bottom <= paintRect.top)
             continue;
 
-        if(GetTextClipped() == true || pClipRect != nullptr)
-        {
-            GrRect clipRect = paintRect;
-            clipRect.Contract(GetPadding());
+		textRect.left = paintRect.left + offset.x;
+        textRect.right = paintRect.left + offset.x;
+		for(uint j=0 ; j < cl.blocks.size() ; j++)
+		{
+			const GrBlockDesc& bd = cl.blocks[j];
+			
+			textRect.right = textRect.left + bd.width;
+			
+			if(GetTextClipped() == true || pClipRect != nullptr)
+			{
+				GrRect clipRect = paintRect;
+				clipRect.Contract(GetPadding());
 
-            if(pClipRect != nullptr)
+				if(pClipRect != nullptr)
+				{
+					clipRect.right = std::min(clipRect.right, pClipRect->right);
+					clipRect.bottom = std::min(clipRect.bottom, pClipRect->bottom);
+				}
+
+                this->DrawFilter(pPainter, pFont, bd, textRect, &clipRect);
+				pPainter->DrawText(pFont, GetText().c_str() + bd.begin, bd.length, textRect, foreColor, &clipRect);
+			}
+			else
+			{
+                this->DrawFilter(pPainter, pFont, bd, textRect);
+				pPainter->DrawText(pFont, GetText().c_str() + bd.begin, bd.length, textRect, foreColor);
+			}
+
+			textRect.left = textRect.right;
+		}
+    }
+}
+
+void GrCell::DrawFilter(GrGridPainter* pPainter, GrFont* pFont, const GrBlockDesc& bd, const GrRect& paintRect, const GrRect* pClipRect) const
+{
+    if(m_filtered.size() > 0)
+    {
+        GrColor filterColor(246, 185, 77);
+
+        for(auto fl : m_filtered)
+        {
+            int fr = fl + m_filterLength;
+            int tl = bd.begin;
+            int tr = bd.begin + bd.length;
+
+            if(!(tr <= fl || tl >= fr))
             {
-                clipRect.right = std::min(clipRect.right, pClipRect->right);
-                clipRect.bottom = std::min(clipRect.bottom, pClipRect->bottom);
-            }
+                int dl = std::max(fl, tl);
+                int dr = std::min(fr, tr);
 
-            pPainter->DrawText(pFont, GetText().c_str() + cl.textBegin, cl.length, textRect, foreColor, &clipRect);
-        }
-        else
-        {
-            pPainter->DrawText(pFont, GetText().c_str() + cl.textBegin, cl.length, textRect, foreColor);
+                int ldiff = pFont->GetStringWidth(GetText().c_str() + tl, dl - tl);
+                int rdiff = pFont->GetStringWidth(GetText().c_str() + dr, tr - dr);
+
+                GrRect backRect = paintRect;
+                backRect.left += ldiff;
+                backRect.right -= rdiff;
+                pPainter->FillRectangle(backRect, filterColor, pClipRect);
+            }
         }
     }
 }
@@ -677,17 +687,35 @@ void GrCell::SetText(const std::wstring& text)
     OnTextChanged();
 }
 
-//const std::wstring& GrCell::GetText() const
-//{
-//    return m_text;
-//}
-//
-//void GrCell::SetText(const std::wstring& text)
-//{
-//    m_text = text;
-//    
-//    OnTextChanged();
-//}
+void GrCell::SetFilter(const std::wstring& filter, bool ignoreCase)
+{
+    m_filtered.clear();
+    m_filterLength = 0;
+    if(GetText() != L"")
+    {
+        std::wstring t = GetText();
+        std::wstring f = filter;
+        if(ignoreCase == true)
+        {
+            std::transform(t.begin(), t.end(), t.begin(), ::tolower);
+            std::transform(f.begin(), f.end(), f.begin(), ::tolower);
+        }
+
+        std::size_t found = t.find(f);
+       
+        while (found != std::wstring::npos)
+        {
+            m_filtered.push_back(found);
+            found = t.find(f.c_str(), found + 1, f.length());
+        }
+    }
+
+    if(m_filtered.size() > 0)
+    {
+        m_filterLength = filter.length();
+        Invalidate();
+    }
+}
 
 void GrCell::SetTextBoundsChanged()
 {
@@ -2598,11 +2626,18 @@ void GrColumn::Paint(GrGridPainter* pPainter, const GrRect& clipRect) const
 
         if(GetTextLineCount() > 0)
         {
+			int left = textRect.left;
             const GrLineDesc& cl = GetTextLine(0);
-            if(GetClipped() == true)
-                pPainter->DrawColumnText(GetPaintingFont(), GetText().c_str() + cl.textBegin, cl.length, textRect, foreColor, &clipRect);
-            else
-                pPainter->DrawColumnText(GetPaintingFont(), GetText().c_str() + cl.textBegin, cl.length, textRect, foreColor);
+			for(uint i=0 ; i<cl.blocks.size() ; i++)
+			{
+				const GrBlockDesc& bd = cl.blocks[i];
+				textRect.left = left;
+				if(GetClipped() == true)
+					pPainter->DrawColumnText(GetPaintingFont(), GetText().c_str() + bd.begin, bd.length, textRect, foreColor, &clipRect);
+				else
+					pPainter->DrawColumnText(GetPaintingFont(), GetText().c_str() + bd.begin, bd.length, textRect, foreColor);
+				left += bd.width;
+			}
         }
     }
 }

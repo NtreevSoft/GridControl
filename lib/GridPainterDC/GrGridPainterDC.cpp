@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.5190.32793
+// Ntreev Grid for .Net 2.0.5792.31442
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -194,7 +194,7 @@ void GrGridPainterDC::EndPaint()
 {
 	SelectObject(m_hdc, (HGDIOBJ)m_hOldFont);
 	SelectObject(m_hOverlayDC, (HGDIOBJ)m_hOverlayBmpOld);
-
+	DeleteDC(m_hOverlayDC);
 	m_hdc = nullptr;
 }
 
@@ -678,9 +678,9 @@ void GrGridPainterDC::DrawRectangle(const GrRect& rect, const GrColor& color)
 	DeleteObject(hPen);
 }
 
-void GrGridPainterDC::FillRectangle(const GrRect& rect, const GrColor& color)
+void GrGridPainterDC::FillRectangle(const GrRect& rect, const GrColor& color, const GrRect* pClipRect)
 {
-	RECT2 rt = rect;
+	RECT2 rt(rect, pClipRect);
 	HBRUSH hBrush = CreateSolidBrush(_RGB(color));
 	FillRect(m_hdc, &rt, hBrush);
 	DeleteObject(hBrush);

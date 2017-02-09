@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 2.0.5190.32793
+//Ntreev Grid for .Net 2.0.5792.31442
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.
@@ -49,7 +49,7 @@ namespace SampleApplication
             return control.Text;
         }
 
-        protected override void SetControlValue(Button control, object value)
+        protected override void SetControlValue(Button control, ICell cell, object value)
         {
             if (value == null || value.ToString() == bool.FalseString)
                 value = true;

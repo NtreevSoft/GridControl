@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 2.0.5190.32793
+//Ntreev Grid for .Net 2.0.5792.31442
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.
@@ -44,7 +44,7 @@ namespace SampleApplication
             this.Control.ValidatingType = typeof(System.DateTime);    
         }
 
-        protected override void SetControlValue(MaskedTextBox control, object value)
+        protected override void SetControlValue(MaskedTextBox control, ICell cell, object value)
         {
             if (value != null)
                 control.Text = value.ToString();

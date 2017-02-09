@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 2.0.5190.32793
+//Ntreev Grid for .Net 2.0.5792.31442
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.
@@ -53,9 +53,9 @@ namespace SampleApplication
             return control;
         }
 
-        protected override void SetControlValue(RadioButton control, object value)
+        protected override void SetControlValue(RadioButton control, ICell cell, object value)
         {
-            base.SetControlValue(control, value);
+            base.SetControlValue(control, cell, value);
 
             if (value == null)
             {

@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.5190.32793
+// Ntreev Grid for .Net 2.0.5792.31442
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -51,6 +51,16 @@ public:
     virtual int GetInternalLeading() const = 0;
     virtual int GetExternalLeading() const = 0;
     virtual int GetStringWidth(const std::wstring& text) const = 0;
+
+    int GetStringWidth(const wchar_t* w, size_t length) const
+    {
+        int width = 0;
+        for(size_t i=0 ; i<length ; i++)
+        {
+            width += GetCharacterWidth(w[i]);
+        }
+        return width;
+    }
 
 #ifdef _MANAGED
     gcroot<System::Drawing::Font^> ManagedRef;
@@ -181,7 +191,7 @@ public:
     virtual void DrawRectangle(const GrRect& rect, const GrColor& color) = 0;
     virtual void DrawLine(int x1, int y1, int x2, int y2, const GrColor& color) = 0;
 
-    virtual void FillRectangle(const GrRect& rect, const GrColor& color) = 0;
+    virtual void FillRectangle(const GrRect& rect, const GrColor& color, const GrRect* pClipRect = nullptr) = 0;
 
     virtual void EndPaint() = 0;
     virtual void SetFont(GrFont* pFont) = 0;

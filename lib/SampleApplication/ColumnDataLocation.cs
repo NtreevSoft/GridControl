@@ -14,7 +14,7 @@ namespace SampleApplication
             this.DataType = typeof(DataLocation);
         }
 
-        protected override void SetControlValue(DataLocationPicker control, object value)
+        protected override void SetControlValue(DataLocationPicker control, ICell cell, object value)
         {
             if (value == null)
                 control.DataLocation = DataLocation.Both;

@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.5190.32793
+// Ntreev Grid for .Net 2.0.5792.31442
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -314,14 +314,31 @@ private:
     IFocusable* m_pFocusable;
 };
 
+struct GrBlockDesc
+{
+	GrBlockDesc() : begin(0), length(0), width(0) {}
+	GrBlockDesc(int begin) : begin(begin), length(0), width(0) {}
+    int begin;
+    int length;
+    int width;
+};
 
 struct GrLineDesc
 {
-    int textBegin;
-    int length;
+	GrLineDesc() : width(0) {}
+	std::vector<GrBlockDesc> blocks;
     int width;
-    //int x;
-    //int y;
+};
+
+struct GrTextLayout
+{
+public:
+    unsigned short width;
+    unsigned short height;
+    unsigned short lineHeight;
+    unsigned short y;
+
+    std::vector<GrLineDesc> lines;
 };
 
 typedef std::vector<GrLineDesc> _TextLines;
@@ -378,12 +395,14 @@ public:
 
 	// text method
     const std::wstring& GetText() const;
+    bool GetFiltered() const { return m_filtered.size() > 0; }
     void SetText(const std::wstring& text);
+	void SetFilter(const std::wstring& text, bool ignoreCase = false);
     uint GetTextLineCount() const;
     const GrLineDesc& GetTextLine(uint index) const;
     GrSize GetTextBounds() const;
 	virtual GrSize GetPreferredSize() const;
-    GrPoint AlignText(const GrLineDesc& line, int index, int count) const;
+    GrPoint AlignText(int lineWidth, int index, int count) const;
     void ComputeTextBounds();
     bool GetTextVisible() const;
     bool GetTextClipped() const;
@@ -424,9 +443,13 @@ protected:
     void SetTextBoundsChanged();
     void SetTextAlignChanged();
 
+    void DrawFilter(GrGridPainter* pPainter, GrFont* pFont, const GrBlockDesc& bd, const GrRect& paintRect, const GrRect* pClipRect = nullptr) const;
+
 private:
     std::wstring* m_text;
-    class GrTextLayout* m_layout;
+    std::vector<int> m_filtered;
+    int m_filterLength;
+    struct GrTextLayout* m_layout;
 
     struct GrStyleData
     {

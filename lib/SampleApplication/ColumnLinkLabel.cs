@@ -1,5 +1,5 @@
 ﻿#region License
-//Ntreev Grid for .Net 2.0.5190.32793
+//Ntreev Grid for .Net 2.0.5792.31442
 //https://github.com/NtreevSoft/GridControl
 
 //Released under the MIT License.
@@ -49,9 +49,9 @@ namespace SampleApplication
             return new LinkLabel();
         }
 
-        protected override void SetControlValue(LinkLabel control, object value)
+        protected override void SetControlValue(LinkLabel control, ICell cell, object value)
         {
-            base.SetControlValue(control, value);
+            base.SetControlValue(control, cell, value);
             if (value != null)
                 control.Text = value.ToString();
             else
@@ -75,7 +75,7 @@ namespace SampleApplication
                 return false;
 
             SetControlLayout(this.testControl, cell);
-            SetControlValue(this.testControl, cell.Value);
+            SetControlValue(this.testControl, cell, cell.Value);
             return (this.testControl as LinkLabel2).LinkTest(reason.Location) != null;
         }
 

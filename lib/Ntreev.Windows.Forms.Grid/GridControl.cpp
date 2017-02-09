@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.5190.32793
+// Ntreev Grid for .Net 2.0.5792.31442
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -30,6 +30,7 @@
 #include "CaptionRow.h"
 #include "GroupRow.h"
 #include "GroupPanel.h"
+#include "GridRow.h"
 #include "Events.h"
 #include "Resources.h"
 #include "CellCollection.h"
@@ -44,6 +45,7 @@
 #include "FrozenColumnCollection.h"
 #include "UnfrozenColumnCollection.h"
 #include "GroupRowCollection.h"
+#include "RowBaseCollection.h"
 #include "NativeUtilities.h"
 #include "NativeClasses.h"
 #include "NativeGridRow.h"
@@ -106,6 +108,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		m_selectedRows = gcnew SelectedRowCollection(this, this->Selector->GetSelectedRows());
 
 		m_groupRows = gcnew GroupRowCollection(this);
+        m_filteredCells = gcnew System::Collections::ObjectModel::ObservableCollection<Cell^>();
 
 		m_captionRow = gcnew Ntreev::Windows::Forms::Grid::CaptionRow(this, m_pGridCore->GetCaptionRow());
 		m_groupPanel = gcnew Ntreev::Windows::Forms::Grid::GroupPanel(this, m_pGridCore->GetGroupPanel());
@@ -978,7 +981,15 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		if(m_manager != nullptr)
 		{
-			m_pGridCore->Reserve(m_manager->GetItemProperties()->Count, m_manager->List->Count);
+			int r = 1;
+			for each(System::ComponentModel::PropertyDescriptor^ item in m_manager->GetItemProperties())
+			{
+				if(item->PropertyType == System::ComponentModel::IBindingList::typeid)
+				{
+					r++;
+				}
+			}
+			m_pGridCore->Reserve(m_manager->GetItemProperties()->Count, m_manager->List->Count * r);
 			m_manager->ListChanged += m_listChangedEventHandler;
 			m_manager->BindingComplete += m_bindingCompleteEventHandler;
 
@@ -998,7 +1009,16 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 		case System::ComponentModel::ListChangedType::Reset:
 			{
-				m_pGridCore->Reserve(m_manager->GetItemProperties()->Count, m_manager->List->Count);
+				int r = 1;
+				for each(System::ComponentModel::PropertyDescriptor^ item in m_manager->GetItemProperties())
+				{
+					if(item->PropertyType == System::ComponentModel::IBindingList::typeid)
+					{
+						r++;
+					}
+				}
+
+				m_pGridCore->Reserve(m_manager->GetItemProperties()->Count, m_manager->List->Count * r);
 
 				if(this->BindingContext->Contains(m_dataSource, m_dataMember) == false)
 				{
@@ -1937,6 +1957,43 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		return m_pGridCore->IsGrouped();
 	}
 
+	System::String^ GridControl::Filter::get()
+	{
+		return m_filter;
+	}
+
+	void GridControl::Filter::set(System::String^ value)
+	{
+		m_filter = value;
+
+        std::wstring filter(value != nullptr ? ToNativeString::Convert(m_filter) : L"");
+
+        m_filteredCells->Clear();
+        for(uint i=0 ; i<m_pDataRowList->GetVisibleDataRowCount() ; i++)
+        {
+            GrDataRow* pDataRow = m_pDataRowList->GetVisibleDataRow(i);
+            for(uint j=0 ; j<m_pColumnList->GetVisibleColumnCount() ; j++)
+            {
+                GrItem* pItem = pDataRow->GetItem(m_pColumnList->GetColumn(j));
+                pItem->SetFilter(filter);
+
+                if(pItem->GetFiltered() == true)
+                    m_filteredCells->Add(FromNative::Get(pItem));
+            }
+        }
+        
+        //for each (Row^ item in this->Rows)
+        //{
+        //    for each(RowBase^ child in item->Childs)
+        //    {
+        //        GridRow^ gridRow = dynamic_cast<GridRow^>(child);
+        //        if(gridRow == nullptr || gridRow->IsVisible == false)
+        //            continue;
+        //        gridRow->ChildGrid->Filter = value;
+        //    }
+        //}
+	}
+
 	void GridControl::InvokeReset()
 	{
 		OnReseted(System::EventArgs::Empty);
@@ -2010,6 +2067,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	{
 		RowRemovingEventArgs e(row);
 		OnRowRemoving(%e);
+        if(e.Cancel == false && System::String::IsNullOrEmpty(this->Filter) == false)
+        {
+            this->Filter = this->Filter;
+        }
 		return e.Cancel != true;
 	}
 

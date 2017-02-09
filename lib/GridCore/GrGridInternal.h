@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.5190.32793
+// Ntreev Grid for .Net 2.0.5792.31442
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -31,10 +31,13 @@ class GrFont;
 
 struct GrWordDesc
 {
+	GrWordDesc() : pos(0), length(0), width(0), validWidth(0) {}
+	GrWordDesc(int pos) : pos(pos), length(0), width(0), validWidth(0) {}
     int pos;
     int length;
     int width;
     int validWidth;
+	std::vector<GrBlockDesc> blocks;
 };
 
 typedef std::vector<GrWordDesc> WordList;
@@ -42,15 +45,17 @@ typedef std::vector<GrWordDesc> WordList;
 class GrTextUtil
 {
 public:
-    static void SingleLine(GrLineDesc* pLine, const std::wstring& cellText, const GrFont* pFont);
-    static void MultiLine(_TextLines* pLines, const std::wstring& cellText, int cellWidth, const GrFont* pFont, bool wordWrap);
+	static void SingleLine(GrTextLayout* pTextLayout, const std::wstring& cellText, const GrFont* pFont);
+	static void MultiLine(GrTextLayout* pTextLayout, const std::wstring& cellText, int cellWidth, const GrFont* pFont, bool wordWrap);
 
 private:
     static void WordWrap(WordList* pWordList, const std::wstring& cellText, const GrFont* pFont, int cellWidth);
-    static void DoMultiline(_TextLines* pLines, const std::wstring& cellText, const GrFont* pFont);
-    static void DoMultilineWordWrap(_TextLines* pLines, const std::wstring& cellText, int cellWidth, const GrFont* pFont);
+	static void DoMultiline(GrTextLayout* pTextLayout, const std::wstring& cellText, const GrFont* pFont);
+    static void DoMultilineWordWrap(GrTextLayout* pTextLayout, const std::wstring& cellText, int cellWidth, const GrFont* pFont);
 
-    static WordList m_sWordList;
+    static std::vector<GrWordDesc> m_swords;
+    static std::vector<GrLineDesc> m_slines;
+    static std::vector<GrBlockDesc> m_sblocks;
 };
 
 class GrSelectionTimer : public GrObject

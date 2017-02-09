@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.5190.32793
+// Ntreev Grid for .Net 2.0.5792.31442
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -23,6 +23,7 @@
 
 #pragma once
 #include "ICellBase.h"
+#include "IRow.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -41,6 +42,11 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property IColumn^ Column
         {
             IColumn^ get();
+        }
+
+		property IRow^ Row
+        {
+            IRow^ get();
         }
     };
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

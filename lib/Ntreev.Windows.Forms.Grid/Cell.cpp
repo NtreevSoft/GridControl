@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.5190.32793
+// Ntreev Grid for .Net 2.0.5792.31442
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -188,6 +188,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		System::Object^ component = this->Row->Component;
 		if(propertyDescriptor == nullptr || component == nullptr)
 			throw gcnew System::ArgumentException();
+
+		System::Data::DataRowView^ dataRowView = dynamic_cast<System::Data::DataRowView^>(component);
+		if(dataRowView != nullptr && propertyDescriptor->PropertyType != IBindingList::typeid)
+		{
+			return dataRowView->Row[propertyDescriptor->Name];
+		}
+		
 		return propertyDescriptor->GetValue(component);
 	}
 
@@ -239,7 +246,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		m_text = text;
 
-		if(m_text != nullptr)
+		if(System::String::IsNullOrEmpty(m_text) == false)
 		{
 			this->Row->m_textCapacity += m_text->Length;
 			this->NativeRef->SetText(ToNativeString::Convert(m_text));
@@ -336,8 +343,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 		else
 		{
-			System::Object^ value = propertyDescriptor->GetValue(component);
-			m_value = this->Column->ConvertFromSource(value);
+			System::Data::DataRowView^ dataRowView = dynamic_cast<System::Data::DataRowView^>(component);
+
+			if(dataRowView != nullptr && propertyDescriptor->PropertyType != IBindingList::typeid)
+			{
+				System::Object^ value = dataRowView->Row[propertyDescriptor->Name];
+				m_value = this->Column->ConvertFromSource(value);
+			}
+			else
+			{
+				System::Object^ value = propertyDescriptor->GetValue(component);
+				m_value = this->Column->ConvertFromSource(value);
+			}
 		}
 	}
 
@@ -347,10 +364,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		if(propertyDescriptor == nullptr)
 			return;
 
-		System::Object^ value = propertyDescriptor->GetValue(component);
-
 		if(ValueChecker::IsNullOrDBNull(m_value) == false)
 		{
+			System::Object^ value = nullptr;
+
+			System::Data::DataRowView^ dataRowView = dynamic_cast<System::Data::DataRowView^>(component);
+			if(dataRowView != nullptr && propertyDescriptor->PropertyType != IBindingList::typeid)
+			{
+				value = dataRowView->Row[propertyDescriptor->Name];
+			}
+			else
+			{
+				value = propertyDescriptor->GetValue(component);
+			}
+
 			value = this->Column->ConvertToSource(m_value);
 			propertyDescriptor->SetValue(component, value);
 		}
@@ -476,8 +503,20 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		System::Object^ component = this->Row->Component;
 		if(propertyDescriptor == nullptr || component == nullptr)
 			throw gcnew System::ArgumentException();
-		System::Object^ value = propertyDescriptor->GetValue(component);
-		return this->Column->ConvertFromSource(value);
+		
+		System::Data::DataRowView^ dataRowView = dynamic_cast<System::Data::DataRowView^>(component);
+		if(dataRowView != nullptr && propertyDescriptor->PropertyType != IBindingList::typeid)
+		{
+			System::Object^ value = dataRowView->Row[propertyDescriptor->Name];
+			if(value == System::DBNull::Value)
+				return value;
+			return this->Column->ConvertFromSource(value);
+		}
+		else
+		{
+			System::Object^ value = propertyDescriptor->GetValue(component);
+			return this->Column->ConvertFromSource(value);
+		}
 	}
 
 	void Cell::SetValueToSource(System::Object^ value)
@@ -577,5 +616,10 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 	IColumn^ Cell::Column_ICell::get()
 	{
 		return this->Column;
+	}
+
+	IRow^ Cell::Row_ICell::get()
+	{
+		return this->Row;
 	}
 } /*namespace Grid*/ } /*namespace Forms*/ } /*namespace Windows*/ } /*namespace Ntreev*/

@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.5190.32793
+// Ntreev Grid for .Net 2.0.5792.31442
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -23,6 +23,7 @@
 
 #pragma once
 #include "RowBase.h"
+#include "IRow.h"
 
 namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 {
@@ -30,7 +31,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
     /// 행을 나타냅니다.
     /// </summary>
     [System::ComponentModel::TypeConverterAttribute(System::ComponentModel::ExpandableObjectConverter::typeid)]
-    public ref class Row : RowBase
+    public ref class Row : RowBase, IRow
     {
     public: // methods
 
@@ -182,7 +183,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         /// </returns>
         property System::Object^ default[System::String^]
         {
-            System::Object^ get(System::String^ columnName); 
+            virtual System::Object^ get(System::String^ columnName); 
             void set(System::String^ columnName, System::Object^);
         }
 
@@ -384,7 +385,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
         property System::Object^ Component
         {
-            System::Object^ get() { return m_component; }
+            virtual System::Object^ get() { return m_component; }
         //internal:
         //    void set(System::Object^);
         }
@@ -432,7 +433,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 
 		void AttachComponent(System::Object^ component);
 
-		void DetachComponent();
+		void DetachComponent(bool backup);
 
     internal: // properties
 

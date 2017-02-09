@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.5190.32793
+// Ntreev Grid for .Net 2.0.5792.31442
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -64,7 +64,7 @@ public:
     virtual void DrawRectangle(const GrRect& rect, const GrColor& color);
     virtual void DrawLine(int x1, int y1, int x2, int y2, const GrColor& color);
 
-    virtual void FillRectangle(const GrRect& rect, const GrColor& color);
+    virtual void FillRectangle(const GrRect& rect, const GrColor& color, const GrRect* pClipRect = nullptr);
 
     virtual void EndPaint();
     virtual void SetFont(GrFont* pFont);

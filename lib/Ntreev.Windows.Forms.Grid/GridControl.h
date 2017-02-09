@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.5190.32793
+// Ntreev Grid for .Net 2.0.5792.31442
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -437,6 +437,19 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         }
 
         /// <summary>
+        /// 필터링된 셀들의 목록을 가져옵니다.
+        /// </summary>
+#ifdef _DEBUG
+        [System::ComponentModel::CategoryAttribute("Debug")]
+#else
+        [System::ComponentModel::BrowsableAttribute(false)]
+#endif
+        property System::Collections::ObjectModel::ObservableCollection<Cell^>^ FilteredCells
+        {
+            System::Collections::ObjectModel::ObservableCollection<Cell^>^ get() { return m_filteredCells; }
+        }
+
+        /// <summary>
         /// Visible 행의 목록을 가져옵니다.
         /// </summary>
 #ifdef _DEBUG
@@ -666,6 +679,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
             void set(bool);
         }
 
+
         /// <summary>
         /// 그룹화 되었는지에 대한 여부를 가져옵니다.
         /// </summary>
@@ -678,6 +692,18 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         property bool IsGrouped
         {
             bool get();
+        }
+
+		/// <summary>
+        /// 필터를 가져오거나 설정합니다.
+        /// </summary>
+        [System::ComponentModel::DescriptionAttribute("필터를 가져오거나 설정합니다.")]
+        [System::ComponentModel::CategoryAttribute("Behavior")]
+        [System::ComponentModel::DefaultValueAttribute("")]
+		property System::String^ Filter
+        {
+            System::String^ get(); 
+            void set(System::String^);
         }
 
         /// <summary>
@@ -2320,6 +2346,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
         initonly SelectedRowCollection^ m_selectedRows;
         initonly SelectedColumnCollection^ m_selectedColumns;
         initonly GroupRowCollection^ m_groupRows;
+        initonly System::Collections::ObjectModel::ObservableCollection<Cell^>^ m_filteredCells;
 
         _Style^ m_style;
 
@@ -2348,6 +2375,7 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		bool m_paintBackground;
         bool m_disposing;
         bool m_isEditing;
+		System::String^ m_filter;
 
         RowBuilder^ m_rowBuilder;
 

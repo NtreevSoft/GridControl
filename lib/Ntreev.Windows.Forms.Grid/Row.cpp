@@ -1,5 +1,5 @@
 ﻿//=====================================================================================================================
-// Ntreev Grid for .Net 2.0.5190.32793
+// Ntreev Grid for .Net 2.0.5792.31442
 // https://github.com/NtreevSoft/GridControl
 // 
 // Released under the MIT License.
@@ -68,6 +68,8 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		{
 			try
 			{
+				if (item->Column->PropertyDescriptor == nullptr || item->Column->PropertyDescriptor->PropertyType == IBindingList::typeid)
+					continue;
 				item->LocalValueToSource(component);
 				item->UpdateNativeText();
 			}
@@ -97,10 +99,13 @@ namespace Ntreev { namespace Windows { namespace Forms { namespace Grid
 		}
 	}
 
-	void Row::DetachComponent()
+	void Row::DetachComponent(bool backup)
 	{
 		auto oldComponent = m_component;
 		m_component = nullptr;
+		if(backup == false)
+			return;
+
 		for each(Cell^ item in m_cells)
 		{
 			try
